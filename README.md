@@ -29,7 +29,7 @@ with and without Workbench are provided in this README.
 ```console
 [~]> mkdir CODE  
 [~]> cd CODE   
-[~/CODE]> git clone https://git-out.gss.anl.gov/jia.zhou/accert.git   
+[~/CODE]> git clone https://github.com/JiaZhou-PU/ACCERT.git  
 [~/CODE]> cd accert
 ```
 
