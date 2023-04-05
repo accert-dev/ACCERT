@@ -1,0 +1,7 @@
+mysql.connector-python==8.0.24
+prettytable
+configparser
+openpyxl
+pandoc
+pytest
+pandas

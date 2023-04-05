@@ -1,0 +1,87 @@
+% ACCERT Test input file
+% Author: J. Zhou (jia.zhou@anl.gov)
+% Last updated: 06/08/2022
+
+
+accert{
+    ref_model = "PWR12-BE"
+    % Define the required parameters
+    % The required parameters are thermal power and electrical power.
+    power(Thermal){ value = 3000   unit = MW }  % Reference value for PWR-12BE is 3431 MW
+    power(Electric){ value = 1000   unit = MW } % Reference value for PWR-12BE is 1143 MW
+%    var(Cont_rad_out_m){value = 20 unit = m}% Reference value for PWR-12BE is 23 m
+
+    % Define the optional parameters
+    % The optional parameters are using the same structure of 
+    % the code of accounts for the estimated nuclear power plant.
+    % for each code of account, the lower level should be inside 
+    % the higher level. For example, COA 221 should be inside COA 22
+    % and COA 22 should be inside COA 2.
+    l0COA(2){
+        l1COA(21){
+            l2COA(211){
+            % Inside COA 211, there several cost elements
+                % The first cost element is the factory cost
+                ce("211_fac"){
+                    % NOTE: The id in each node using the string format:
+                    % STRING [A-Za-z_]([A-Za-z0-9_])*
+                    % It can only contain letters, numbers and  
+                    % underscores. If the id is not starting with a 
+                    % letter, it will be considered as a number. Add 
+                    % quotes to avoid the error. Other type options 
+                    % should follow the SONlexer in Wrokbench:
+                    % https://code.ornl.gov/neams-workbench/wasp/-/blob/master/waspson/SONLexer.lex
+
+                    
+                    % The cost element is calculated by an algorithm called 'esc_1987'
+                    alg("esc_1987"){
+                        % in the algorithm, there are several variables
+                        % the first variable is the cost of reference 211_fac
+                        % user can define the value of this variable as 0.27 million USD
+                        var(ref_211_fac){ value = 0.27   unit = million }
+                        var(ref_211_mat){ value = 10.3   unit = million }
+                    }
+                }   
+            }
+            l2COA(213){
+                ce("213_fac"){
+                    alg("MWth_scale"){
+                        % This cost element is calculated by an algorithm called 'MWth_scale'
+                        % The variable c_213_fac is 1.79 million USD
+                        var(c_213_fac){ value = 1.79   unit = million }
+                    }
+                }   
+            }
+            l2COA(217){
+                % Instead of using the cost element '213_fac', 
+                % we can use the total cost as well.
+                total_cost{value = 28149700 unit = dollar}       
+            }
+        }   
+        l1COA(22){
+            l2COA("220A"){
+                l3COA("221.12"){
+                    ce("221.12_fac"){
+                        alg("unit_weights"){
+                            var("c_221.12_cs_weight"){value = 538 unit = ton} 
+                            var("c_221.12_ss_weight"){value = 40340 unit = lbs}
+                        }
+                    }
+                }
+            }
+        }
+        l1COA(23){
+           l2COA("231"){
+                ce("231_fac"){
+                    alg("dev_factor_ref"){
+                        var("n_231"){
+                            alg("tur_exp_n"){
+                                var(p_in){ value = 68  unit = bar }
+                            }
+                        }
+                    }  
+                }
+            }
+        }
+    }
+}

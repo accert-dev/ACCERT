@@ -1,0 +1,49 @@
+ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units,variables,constants
+1,sum_multi_accounts,c,sum of multiple accounts,sum(kwargs.values()),"sum(account_1,account_2...account_n)",million,"account1, account2.accountn",NULL
+2,sum_multi_weights,v,sum of multiple weights ,sum(kwargs.values()),sum(Weight_1+Weight_2...Weight_n),ton,"weight1,weight2weight3,weit4,weight5",NULL
+3,sum_multi_pumps,c,sum cost of multiple pumps,sum(kwargs.values()),sum(Pump_1+Pump_2+Pump_n),million,"pump1,pump2,pump3,pump4,pump5",NULL
+4,ptn_account,c,portion of account cost,v_1*v_2,account_cost*portion,million,"c_ref,prn_fac",NULL
+5,unit_weights,c,unit cost of weight,v_1*0.14+v_2*0.31,weight_of_carbon_steel*0.14+weight_of_stainless_steel*0.31,million,"Csweight, Ssweight","0.140000, 0.310000"
+6,pump,v,cost per pump based on ref,"v_1*np.power((v_2/v_3),v_4)",ref_cost_of_pump*(CH_of_pump/CH_of_ref)^scale_of_power,million,"c_pump_ref,CH,CH_ref,scale",NULL
+7,containment,c,containment calculation,v_1/1000000,containment structure + equipment + others,million,NOT YET,NULL
+8,MWth_scale,c,thermal power scale from pwr12be,"v_1*np.power((v_2/3431),v_3)",cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale,million,"c_ref,mwth,scale",3431
+9,unit_volume,c,cost by unit volume,v_1*v_2/1000000,dollar_cost_per_unit_vol*vol/1000000,million,"V1_unit_vol, V2_vol",NULL
+10,dev_factor_ref,c,factor of the reference,v_1*v_2/v_3,cost_of_ref*scale/factor,million,"c_ref,scale,n",NULL
+11,tur_exp_n,v,scaling exponent law ,(-0.0032) *v_1+ 1.2497,(-0.0032) *v_1+ 1.2497,1,p_in,
+12,esc_1987,c,escalate from 1987,v_1*v_2,escalator*cost_in_1987,million,"escalate_1987,refCost",NULL
+13,cost_by_weight,c,per-unit mass costs,v_1*v_2,tol_weight*coat_per_unit,million,"tolweight, unitcost",NULL
+14,default_0,c,default as 0,0,set the total cost to 0,million,NULL,0
+15,rpv_mass,v,mass of RPV,v_1+v_2,weight_of_carbon_steel+weight_of_stainless_steel,ton,"c_221.12_cs_weight,c_221.12_ss_weight",NULL
+16,unit_facility,c,per-unit facility costs,v_1*v_2,no_of_facility*cost_per_facility,million,"no_of_unit, unitcost",NULL
+17,MWe_scale,c,electric power scale from pwr12be,"v_1*np.power((v_2/1144),v_3)",cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale,million,"c_ref,mwe,scale",1144
+18,unit_weights_plate,c,unit cost of weight with plate installation,v_1*0.075+v_2*0.31,weight_of_carbon_steel_plate_install*0.075+weight_of_stainless_steel*0.31,million,"Csweight_plate, Ssweight","0.075000, 0.310000"
+19,esc_1978,c,escalate from 1978,v_1*v_2,escalator*cost_in_1978,million,"escalate_1978,refCost",NULL
+20,total_weight_prn,c,unit cost of total weight by portion,v_1*(v_2*0.075+v_3*0.31)*v_4,tol_weight*(portion_of_carbon_steel*0.075+portion_of_stainless_steel*0.31)*no_of_facility,million,"V1_totweight, V2_csprn,V3_ssprn,V4_no_of_facility","0.075000, 0.310000"
+21,unit_weights_factor,c,unit cost of weight with factor,(v_1*0.075+v_2*0.31)*v_3,(weight_of_carbon_steel_plate_install*0.075+weight_of_stainless_steel*0.31)*factor,million,"Csweight, Ssweight,factor","0.075000, 0.310000"
+22,factor_sum,c,sum of multiple accounts with factor,"v_1*v_2*sum(v_3,v_4)",factor*prn*sum(account_2..account_n),million,"factor1, portion,account2.accountn",NULL
+23,complex,c,complex algorithm,v_1,simple cost,million,cost,NULL
+24,MWth_lmfbrscale,c,thermal power scale from lmfbr,"v_1*np.power((v_2/2287),v_3)",cost_of_ref*(thermal_power/thermal_power_of_LMFBR)^thermal_power_scale,million,"c_ref,mwth,scale",2287
+25,MWreth_scale,c,rejected thermal power scale from pwr12be,"v_1*np.power((v_2/3800),v_3)",cost_of_ref*(rejected_hermal_power/rejected_thermal_power_of_LMFBR)^thermal_power_scale,million,"c_ref,mwreth,scale",3800
+26,Sgsum,c,NOT YET,NOT YET,NOT implemented YET,million,NOT YET,NULL
+27,containmentsum,c,NOT YET,NOT YET,NOT implemented YET,million,NOT YET,NULL
+28,inside_rad,v,calculate inside radius,v_1-v_2,radius_out-thickness,m,"r_out, t",NULL
+29,round_surface,v,calculate surface base on radius,"np.pi*np.power(v_1,2)",radius,m^2,r,PI
+30,basemat_volume,v,calculate basemat volume base on surface,v_1*v_2,basemat_surface*thickness,m^3,"S,t",NULL
+31,wall_height,v,calculate wall height base on total height,v_1-v_2,total_height-roof_rad,m,NULL,NULL
+32,walls_surface,v,calculate Walls surface,v_1*2*np.pi*(v_2+v_3),Cont_H_wall_m*2*PI()*(Cont_rad_out_m+Cont_rad_in_m),m^2,NULL,NULL
+33,wall_volume,v,calculate Walls volume,"v_1*np.pi*(np.power(v_2,2)-np.power(v_3,2))",Cont_H_wall_m*PI()*(Cont_rad_out_m^2-Cont_rad_in_m^2),m^3,NULL,NULL
+34,dome_inside_diameter ,v,calculate Dome inside diameter ,v_1-v_2,Cont_rad_out_m-B10,m,NULL,NULL
+35,roof_surface,v,calculate Roof surface,"0.5*4*np.pi*(np.power(v_1,2)+np.power(v_2,2))",0.5*4*PI()*(Cont_rad_out_m^2+Dome_rad_in_m^2),m^2,NULL,NULL
+36,roof_volume,v,calculate Roof volume,"0.5*4/3*np.pi*(np.power(v_1,3)-np.power(v_2,3))",0.5*4/3*PI()*(Cont_rad_out_m^3-Dome_rad_in_m^3),m^3,NULL,NULL
+37,tot_internal_volume,v,calculate Tot internal Volume,"(np.pi*np.power(v_1,2)*v_2)+(0.5*(4/3)*np.pi*np.power(v_3,3))",(PI()*Cont_rad_in_m^2*Cont_H_wall_m)+(0.5*(4/3)*PI()*Dome_rad_in_m^3),m^3,NULL,NULL
+38,building_internal_volume,v,calculate Building internal volume,v_1*(1-v_2),Intern_tot_v_m3*(1-Void_fraction),m^3,NULL,NULL
+39,building_internal _surface,v,calculate Building internal surface,2*v_1/v_2,2*Internal_v_m3/B11,m^2,NULL,NULL
+40,volume_of_the_structures ,v,calculate volume of the structures ,v_1+v_2+v_3+v_4,Basemat_v_m3+Walls_v_m3+Dome_v_m3+Internal_v_m3,m^3,NULL,NULL
+41,Inside_liner_surface,v,calculate Inside liner surface,"(np.power(v_1,2)*np.pi)+(v_2*2*np.pi*v_1)+(0.5*4*np.pi*np.power(v_3,2))",(Cont_rad_in_m^2*PI())+(Cont_H_wall_m*2*PI()*Cont_rad_in_m)+(0.5*4*PI()*Dome_rad_in_m^2),m^2,NULL,NULL
+42,liner_Surface,v,calculate Liner Surface,v_1*v_2,Inside_liner_s*liner_fraction,m^2,NULL,NULL
+43,painted_surface,v,calculate painted surface,"v_1+(v_2*2*np.pi*v_3)+(0.5*4*np.pi*np.power(v_3,2))+v_4",Inside_liner_s+(Cont_H_wall_m*2*PI()*Cont_rad_out_m)+(0.5*4*PI()*Cont_rad_out_m^2)+Internal_s_m2,m^2,NULL,NULL
+44,Inflation_rate,v,calculate Inflation rate,1.03^(1996-1987)*v_1,1.03^(1996-1987)*CPI,1,NULL,NULL
+45,unitcost_v_eedb_to_accert,v,unit cost volume from EEDB with inflation,v_1*v_2,unitcost_EEDB_v*infl,dollar/m^3,NULL,NULL
+46,unitcost_s_eedb_to_accert,v,unit cost surface from EEDB with inflation,v_1*v_2,unitcost_EEDB_s*infl,dollar/m^2,NULL,NULL
+47,tol_contaiment_ce_cost,v,total cost for each part of cotiament,v_1*v_2,unitcost*number_of stucture_unit,dollar,NULL,NULL
+48,sum_ce,v,sum of multiple costelement,sum(kwargs.values()),"sum(cost_element_1,cost_element2,cost_element_n)",dollar,NULL,NULL

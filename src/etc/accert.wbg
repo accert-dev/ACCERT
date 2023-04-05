@@ -1,0 +1,11 @@
+commentDelimiter = "%"
+enabled = true
+extensions = [son]
+highlighter = "accert.wbh"
+maxDepth = 4
+name = accert
+nav = accert % indicates navigation logic for accert documents
+parser = waspson
+schema = "accert.sch"
+templates = "templates"
+validator = wasp

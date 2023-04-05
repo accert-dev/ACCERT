@@ -1,0 +1,8 @@
+*.pyc
+*.xlsx
+**/wasppy
+**/docprint
+**/sonvalidxml
+**/.DS_Store
+**/*.out
+**/install.conf

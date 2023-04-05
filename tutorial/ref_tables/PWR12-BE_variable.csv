@@ -1,0 +1,508 @@
+ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked
+1,c_turbine,Turbine equipment cost,362.62,million,NULL,NULL,NULL
+2,n_231,Scaling exponent law,1.035,1,tur_exp_n,p_in,NULL
+3,p_in,Inlet turbine pressure,67,bar,NULL,NULL,n_231
+4,scale_tur_231_fac,factory scale of cost from turbine,1.017,1,NULL,NULL,NULL
+5,c_231_fac,Turbine factory cost,356.031,million,NULL,NULL,NULL
+6,prn_fac_231_lab,labor portion of cost from factory of 231,0.061,1,NULL,NULL,NULL
+7,prn_fac_231_mat,material portion of cost from factory of 231,0.0112,1,NULL,NULL,NULL
+8,c_262_fac,Heat Rejection System factory cost,86.81393498,million,NULL,NULL,NULL
+9,c_262_lab,Heat Rejection System labor cost,35.89660737,million,NULL,NULL,NULL
+10,c_262_mat,Heat Rejection System material cost,4.510480683,million,NULL,NULL,NULL
+11,mwth,user_input mwth,NULL,MW,NULL,NULL,NULL
+12,scale_0.8,thermal scale 0.8,0.8,1,NULL,NULL,NULL
+13,c_233_fac,Condensing Systems factory cost,56.339442,million,NULL,NULL,NULL
+14,c_233_lab,Condensing Systems labor cost,22.964285,million,NULL,NULL,NULL
+15,c_233_mat,Condensing Systems material cost,3.2777465,million,NULL,NULL,NULL
+16,escalate_1987,escalator 1987 to 2017,2.849407,1,NULL,NULL,NULL
+17,ref_252_fac,"Air, water and steam service systems factory cost ",8.72798,million,NULL,NULL,NULL
+18,ref_252_lab,"Air, water and steam service systems labor cost ",15.572281,million,NULL,NULL,NULL
+19,ref_252_mat,"Air, water and steam service systems material cost ",4.425393,million,NULL,NULL,NULL
+20,c_221.12_cs_weight,weight of the carbon steel parts of the vessel,536,ton,NULL,NULL,c_221.12_tol_weight
+21,c_221.12_ss_weight,weight of the stainless steel cladding of the vessel,18.3,ton,NULL,NULL,c_221.12_tol_weight
+22,c_221.12_tol_weight,weight of the reactor primary vessel,554.3,ton,rpv_mass,"c_221.12_cs_weight,  c_221.12_ss_weight",
+23,c_rpv_lab,per-unit mass cost of labor of RPV,0.0128,million/ton,NULL,NULL,NULL
+24,c_rpv_mat,per-unit mass cost of material of RPV,0.00128,million/ton,NULL,NULL,NULL
+25,ref_211_fac,yardwork factory cost,0.284275,million,NULL,NULL,NULL
+26,ref_211_lab,yardwork labor cost,14.504359,million,NULL,NULL,NULL
+27,ref_211_mat,yardwork material cost,10.203885,million,NULL,NULL,NULL
+28,ref_222.13_fac,steam generator equipment factory cost,0.026371,million,NULL,NULL,NULL
+29,no_of_sg,total number of SG,4,1,NULL,NULL,NULL
+30,c_SG_per_unit_lab,unit site labor cost of SG,0.5265705,million,NULL,NULL,NULL
+31,c_SG_per_unit_mat,unit site material cost of SG,0.05265705,million,NULL,NULL,NULL
+32,c_234_fac,feedwater heating system factory cost,44.87430168,million,NULL,NULL,NULL
+33,c_234_lab,feedwater heating system labor cost,20.31736062,million,NULL,NULL,NULL
+34,c_234_mat,feedwater heating system material cost,2.022431917,million,NULL,NULL,NULL
+35,c_213_fac,Turbine building structure factory cost,1.7706643,million,NULL,NULL,NULL
+36,c_213_lab,Turbine building structure labor cost,31.835162,million,NULL,NULL,NULL
+37,c_213_mat,Turbine building structure material cost,32.364585,million,NULL,NULL,NULL
+38,c_231_lab,Turbine labor cost,21.74613521,million,NULL,NULL,NULL
+39,c_231_mat,Turbine material cost,3.998108627,million,NULL,NULL,NULL
+40,prn_235_of_231_fac,factory portion of cost from factory of 231,0.089454842,1,NULL,NULL,NULL
+41,prn_235_of_231_lab,labor portion of cost from labor of 231,1.302615598,1,NULL,NULL,NULL
+42,prn_235_of_231_mat,material portion of cost from labor of 231,0.858473379,1,NULL,NULL,NULL
+43,mwe,user_input MWE,NULL,MW,NULL,NULL,NULL
+44,scale_0.4,electric scale 0.4,0.4,1,NULL,NULL,NULL
+45,c_241_fac,Switchgear factory cost,32.06748045,million,NULL,NULL,NULL
+46,c_241_lab,Switchgear labor cost,1.720620353,million,NULL,NULL,NULL
+47,c_241_mat,Switchgear material cost,0.251722551,million,NULL,NULL,NULL
+48,c_242_fac,Station service equipment factory cost,52.15781338,million,NULL,NULL,NULL
+49,c_242_lab,Station service equipment labor cost,4.446166005,million,NULL,NULL,NULL
+50,c_242_mat,Station service equipment material cost,0.849719287,million,NULL,NULL,NULL
+51,c_245_fac,Electric structure and wiring contnr.  factory cost,0,million,NULL,NULL,NULL
+52,c_245_lab,Electric structure and wiring contnr. labor cost,51.23668914,million,NULL,NULL,NULL
+53,c_245_mat,Electric structure and wiring contnr. material cost,12.30988227,million,NULL,NULL,NULL
+54,c_246_fac,Power and control wiring factory cost,4.510910469,million,NULL,NULL,NULL
+55,c_246_lab,Power and control wiring labor cost,33.4345167,million,NULL,NULL,NULL
+56,c_246_mat,Power and control wiring material cost,20.75545101,million,NULL,NULL,NULL
+57,ref_227_fac,Reactor instrumentation and control factory cost,13.174092,million,NULL,NULL,NULL
+58,ref_227_lab,Reactor instrumentation and control labor cost,7.707179,million,NULL,NULL,NULL
+59,ref_227_mat,Reactor instrumentation and control material cost,0.673999,million,NULL,NULL,NULL
+60,ref_224_fac,Radwaste processing factory cost,16.16052583,million,NULL,NULL,NULL
+61,ref_224_lab,Radwaste processing labor cost,4.012887083,million,NULL,NULL,NULL
+62,ref_224_mat,Radwaste processing material cost,0.768994167,million,NULL,NULL,NULL
+63,scale_1.0,thermal scale 1.0,1,1,NULL,NULL,NULL
+64,c_226.7_fac,Aux Cool Sys factory cost,28.1793245,million,NULL,NULL,NULL
+65,c_226.7_lab,Aux Cool Sys labor cost,24.62559158,million,NULL,NULL,NULL
+66,c_226.7_mat,Aux Cool Sys material cost,2.393292923,million,NULL,NULL,NULL
+67,no_of_rcpump,total number of reactor coolant pumps,4,1,NULL,NULL,NULL
+68,c_pump_per_unit_fac,Reactor coolant pumps Factory Equipment Cost,31.31,million,pump,"c_pump_ap1000,CH_12be,CH_AP1000,scale_0.52",NULL
+69,c_pump_ap1000,AP1000 factory cost of main coolant pumps,31.25,million,NULL,NULL,c_pump_per_unit_fac
+70,CH_12be,CH factor of PWR-12 BE,28853000,gpm*feet,NULL,NULL,c_pump_per_unit_fac
+71,CH_AP1000,CH factor of AP1000,28743750,gpm*feet,NULL,NULL,c_pump_per_unit_fac
+72,scale_0.52,"SH scale 0,52",0.52,1,NULL,NULL,c_pump_per_unit_fac
+73,c_226.4_fac,Coolant Treatment & Recycle factory cost,19.44327059,million,NULL,NULL,NULL
+74,c_226.4_lab,Coolant Treatment & Recycle labor cost,18.62163221,million,NULL,NULL,NULL
+75,c_226.4_mat,Coolant Treatment & Recycle material cost,2.70578264,million,NULL,NULL,NULL
+76,c_222.11_fac,Fluid Circulation Drive System (Field Cost 222) factory cost,3.780837782,million,NULL,NULL,NULL
+77,c_222.11_lab,Fluid Circulation Drive System (Field Cost 222) labor cost,4.374124686,million,NULL,NULL,NULL
+78,c_222.11_mat,Fluid Circulation Drive System (Field Cost 222) material cost,0.437412469,million,NULL,NULL,NULL
+79,c_222.12_fac,Reactor Coolant Piping System (Field Cost 222) factory cost,4.394349539,million,NULL,NULL,NULL
+80,c_222.12_lab,Reactor Coolant Piping System (Field Cost 222) labor cost,11.38158584,million,NULL,NULL,NULL
+81,c_222.12_mat,Reactor Coolant Piping System (Field Cost 222) material cost,1.119106974,million,NULL,NULL,NULL
+82,c_222.13_fac,Steam Generator Equipment (Field Cost 222) factory cost,0.075141237,million,NULL,NULL,NULL
+83,c_222.13_lab,Steam Generator Equipment (Field Cost 222) labor cost,2.106281654,million,NULL,NULL,NULL
+84,c_222.13_mat,Steam Generator Equipment (Field Cost 222) material cost,0.210628165,million,NULL,NULL,NULL
+85,c_222.14_fac,Pressurizing System (Field Cost 222) factory cost,0.015028247,million,NULL,NULL,NULL
+86,c_222.14_lab,Pressurizing System (Field Cost 222) labor cost,0.281934576,million,NULL,NULL,NULL
+87,c_222.14_mat,Pressurizing System (Field Cost 222) material cost,0.028192508,million,NULL,NULL,NULL
+88,c_222_fac,Main heat transfer transport system factory cost,8.265356805,million,NULL,NULL,NULL
+89,c_222_lab,Main heat transfer transport system labor cost,18.14392675,million,NULL,NULL,NULL
+90,c_222_mat,Main heat transfer transport system material cost,1.795340116,million,NULL,NULL,NULL
+91,c_zero,place holder for weight,0,ton,NULL,NULL,NULL
+92,c_220A.222_ss_weight,weight of the stainless steel reactor coolant piping,36.740982,ton,NULL,NULL,NULL
+93,c_220A.2121_ss_weight,weight of the stainless steel lower internals,102.5,ton,NULL,NULL,NULL
+94,c_220A.2122_ss_weight,weight of the stainless steel upper internals,102.5,ton,NULL,NULL,NULL
+95,no_of_cr,Total control rods,53,1,NULL,NULL,NULL
+96,no_of_crd,Total control rod drives,57,1,NULL,NULL,NULL
+97,c_cr_per_unit_fac,unit cost of rod,0.06,million,NULL,NULL,NULL
+98,c_crd_per_unit_fac,unit cost of rod drive,0.61152,million,NULL,NULL,NULL
+99,c_220A.224_cs_weight_plate,weight of the carbon steel pressurizer,97.3,ton,NULL,NULL,NULL
+100,c_220A.224_ss_weight,weight of the stainless steel pressurizer,3.3,ton,NULL,NULL,NULL
+101,c_237_lab,Turbine plant miscellaneous items labor cost,13.13086529,million,NULL,NULL,NULL
+102,c_237_mat,Turbine plant miscellaneous items material cost,9.795178491,million,NULL,NULL,NULL
+103,ref_228_lab,Reactor plant miscellaneous items labor cost,4.27308,million,NULL,NULL,NULL
+104,ref_228_mat,Reactor plant miscellaneous items material cost,3.179195,million,NULL,NULL,NULL
+105,ref_236_fac,Reactor instrumentation and control factory cost,1.86804,million,NULL,NULL,NULL
+106,ref_236_lab,Reactor instrumentation and control labor cost,4.591575,million,NULL,NULL,NULL
+107,ref_236_mat,Reactor instrumentation and control material cost,0.394597083,million,NULL,NULL,NULL
+108,ref_253_fac,Communications equipment factory cost,1.9488,million,NULL,NULL,NULL
+109,ref_253_lab,Communications equipment labor cost,3.873139,million,NULL,NULL,NULL
+110,ref_253_mat,Communications equipment material cost,0.593107,million,NULL,NULL,NULL
+111,ref_221.14_mat,Transport To Site (Field Cost 221) material cost,5.5385,million,NULL,NULL,NULL
+112,ref_220A.254_fac,Fuel Storage Racks  (NSSS) factory cost,4.4835,million,NULL,NULL,NULL
+113,c_220A.225_ss_weight,weight of the stainless steel pressurizer relief tank  (NSSS),5.97,ton,NULL,NULL,NULL
+114,c_220A.2324_ss_weight,weight of the stainless steel boron injection surge tank  (NSSS),0.14742,ton,NULL,NULL,NULL
+115,c_220A.2322_tot_weight,total weight of accumulator tank  (NSSS),36.2874,ton,NULL,NULL,NULL
+116,prn_220A.2322cs,portion of weight made by carbon steel accumulator tank  (NSSS),0.87,1,NULL,NULL,NULL
+117,prn_220A.2322ss,portion of weight made by stainless steel  accumulator tank  (NSSS),0.13,1,NULL,NULL,NULL
+118,no_of_acu,number of accumulator tank,4,1,NULL,NULL,NULL
+119,c_220A.2323_tot_weight,total weight of Boron injection tank   (NSSS),9.07185,ton,NULL,NULL,NULL
+120,prn_220A.2323cs,portion of weight made by carbon steel Boron injection tank   (NSSS),0.9,1,NULL,NULL,NULL
+121,prn_220A.2323ss,portion of weight made by stainless steel  Boron injection tank   (NSSS),0.1,1,NULL,NULL,NULL
+122,no_of_bit,number of Boron injection tank,1,1,NULL,NULL,NULL
+123,c_220A.251_cs_weight,weight of the carbon steel parts of the fuel handling tools  (NSSS),0,ton,NULL,NULL,NULL
+124,c_220A.251_ss_weight,weight of the stainless steel cladding of the fuel handling tools  (NSSS),0.15,ton,NULL,NULL,NULL
+125,factor_220A.251,factor to calculate fuel handling tool,8.6,1,NULL,NULL,NULL
+126,c_220A.2312_cs_weight,weight of the carbon steel parts of the residual heat removal heat exchanger  (NSSS),5.26168,ton,NULL,NULL,NULL
+127,c_220A.2312_ss_weight,weight of the stainless steel cladding of the residual heat removal heat exchanger  (NSSS),7.89252,ton,NULL,NULL,NULL
+128,factor_220A.2312,facility number of residual heat removal heat exchanger  (NSSS),2,1,NULL,NULL,NULL
+129,vol_223.4,volume of Containment Spray System (Field Cost 223),86488,m^3,NULL,NULL,NULL
+130,c_223.4_unit_vol_fac,unit volume cost of containment spray system (Field Cost 223) for factory cost,100.8568057,dollar/m^3,NULL,NULL,NULL
+131,c_223.4_unit_vol_lab,unit volume cost of containment spray system (Field Cost 223) for labor cost,68.21002196,dollar/m^3,NULL,NULL,NULL
+132,c_223.4_unit_vol_mat,unit volume cost of containment spray system (Field Cost 223) for material cost,6.850324226,dollar/m^3,NULL,NULL,NULL
+133,escalate_1978,escalator 1978 to 2017,6.72,1,NULL,NULL,NULL
+134,ref_220A.254_1978,Fuel Storage Racks  (NSSS) cost from Combustion Engineering (1978),0.374,million,NULL,NULL,NULL
+135,c_226.4111_fac,factory cost of pump 226.4111,0.012369,million,NULL,NULL,NULL
+136,c_226.4112_fac,factory cost of pump 226.4112,0.009969,million,NULL,NULL,NULL
+137,c_226.41131_fac,factory cost of pump 226.41131,0.009315,million,NULL,NULL,NULL
+138,c_226.41132_fac,factory cost of pump 226.41132,1.550825,million,NULL,NULL,NULL
+139,c_226.4114_fac,factory cost of pump 226.4114,0.621445,million,NULL,NULL,NULL
+140,c_226.41151_fac,factory cost of pump 226.41151,0.009969,million,NULL,NULL,NULL
+141,c_226.41152_fac,factory cost of pump 226.41152,0.009315,million,NULL,NULL,NULL
+142,c_226.4121_fac,factory cost of pump 226.4121,0.365595,million,NULL,NULL,NULL
+143,c_226.4122_fac,factory cost of pump 226.4122,0.264535,million,NULL,NULL,NULL
+144,c_226.4123_fac,factory cost of pump 226.4123,0.326246,million,NULL,NULL,NULL
+145,c_226.4124_fac,factory cost of pump 226.4124,0.445745,million,NULL,NULL,NULL
+146,c_226.4125_fac,factory cost of pump 226.4125,0.489879,million,NULL,NULL,NULL
+147,c_226.4126_fac,factory cost of pump 226.4126,0.176357,million,NULL,NULL,NULL
+148,c_226.4127_fac,factory cost of pump 226.4127,0.32332,million,NULL,NULL,NULL
+149,c_226.4128_fac,factory cost of pump 226.4128,0.059058,million,NULL,NULL,NULL
+150,c_226.4133_fac,factory cost of pump 226.4133,0.667914,million,NULL,NULL,NULL
+151,c_226.4134_fac,factory cost of pump 226.4134,0.044225,million,NULL,NULL,NULL
+152,c_226.4135_fac,factory cost of pump 226.4135,0.421841,million,NULL,NULL,NULL
+153,c_226.4131_fac,factory cost of pump 226.4131,0.011249,million,NULL,NULL,NULL
+154,c_226.4141_fac,factory cost of pump 226.4141,0.44012,million,NULL,NULL,NULL
+155,c_226.4142_fac,factory cost of pump 226.4142,0.22006,million,NULL,NULL,NULL
+156,c_226.4143_fac,factory cost of pump 226.4143,0.017,million,NULL,NULL,NULL
+157,c_226.4144_fac,factory cost of pump 226.4144,0.017,million,NULL,NULL,NULL
+158,c_226.4145_fac,factory cost of pump 226.4145,1.757669,million,NULL,NULL,NULL
+159,c_251.12_fac,factory cost of Cont. build,7.3,million,NULL,NULL,NULL
+160,c_251.111_fac,factory cost of Turbine room,3.65,million,NULL,NULL,NULL
+161,c_251.112_fac,factory cost of Heater bay,1.46,million,NULL,NULL,NULL
+162,c_251.16_fac,factory cost of Various,0.88,million,NULL,NULL,NULL
+163,c_251.17_fac,factory cost of Diesel building,1.23,million,NULL,NULL,NULL
+164,c_251.12_lab,labor cost of Cont. build,1.19,million,NULL,NULL,NULL
+165,c_251.111_lab,labor cost of Turbine room,0.42,million,NULL,NULL,NULL
+166,c_251.112_lab,labor cost of Heater bay,0.17,million,NULL,NULL,NULL
+167,c_251.16_lab,labor cost of Various,0.56,million,NULL,NULL,NULL
+168,c_251.17_lab,labor cost of Diesel building,0.1,million,NULL,NULL,NULL
+169,c_251.12_mat,material cost of Cont. build,0.12,million,NULL,NULL,NULL
+170,c_251.111_mat,material cost of Turbine room,0.04,million,NULL,NULL,NULL
+171,c_251.112_mat,material cost of Heater bay,0.02,million,NULL,NULL,NULL
+172,c_251.16_mat,material cost of Various,0.06,million,NULL,NULL,NULL
+173,c_251.17_mat,material cost of Diesel building,0.01,million,NULL,NULL,NULL
+174,fac_223.1,factor to calculate RHR System,0.85,1,NULL,NULL,NULL
+175,prn_223.1_fac,factory cost prtion of RHR,0.436094856,1,NULL,NULL,NULL
+176,prn_223.1_lab,labor cost prtion of RHR,0.51502725,1,NULL,NULL,NULL
+177,prn_223.1_mat,material cost prtion of RHR,0.048877893,1,NULL,NULL,NULL
+178,c_220A.2311_fac,factory cost of residual heat removal Pumps & Drives (NSSS),1.94000166,million,NULL,NULL,NULL
+179,c_220A.2312_fac,factory cost of residual heat removal Heat Exchanger  (NSSS),6.260001859,million,NULL,NULL,NULL
+180,fac_223.3,factor to calculate safety injection system,0.58,1,NULL,NULL,NULL
+181,prn_223.3_fac,factory cost prtion of safety injection system,0.360489103,1,NULL,NULL,NULL
+182,prn_223.3_lab,labor cost prtion of safety injection system,0.547767283,1,NULL,NULL,NULL
+183,prn_223.3_mat,material cost prtion of safety injection system,0.091743613,1,NULL,NULL,NULL
+184,c_220A.2321_fac,factory cost of Safety Injection Pumps And Drives  (NSSS),1.720001794,million,NULL,NULL,NULL
+185,c_220A.2322_fac,factory cost of Accumulator Tank  (NSSS),15.30000486,million,NULL,NULL,NULL
+186,c_220A.2323_fac,factory cost of Boron Injection Tank  (NSSS),0.899999448,million,NULL,NULL,NULL
+187,c_220A.2324_fac,factory cost of Boron Injection Surge Tank  (NSSS),0.050001394,million,NULL,NULL,NULL
+188,c_220A.2325_fac,factory cost of Boron Injection Recirc. Pump & Drives (NSSS),0.039999975,million,NULL,NULL,NULL
+189,c_218B_fac,Placeholder,2.337579893,million,NULL,NULL,NULL
+190,c_218J_fac,Placeholder,0.094628806,million,NULL,NULL,NULL
+191,c_218T_fac,Placeholder,0.121724293,million,NULL,NULL,NULL
+192,c_220A.2311_fac,Placeholder,1.94000166,million,NULL,NULL,NULL
+193,c_220A.2321_fac,Placeholder,1.720001794,million,NULL,NULL,NULL
+194,c_220A.2325_fac,Placeholder,0.039999975,million,NULL,NULL,NULL
+195,c_218B_lab,Placeholder,9.663946677,million,NULL,NULL,NULL
+196,c_218J_lab,Placeholder,15.05977373,million,NULL,NULL,NULL
+197,c_218T_lab,Placeholder,8.910343825,million,NULL,NULL,NULL
+198,c_218B_mat,Placeholder,6.93662252,million,NULL,NULL,NULL
+199,c_218J_mat,Placeholder,7.26234892,million,NULL,NULL,NULL
+200,c_218T_mat,Placeholder,4.065434178,million,NULL,NULL,NULL
+201,CPI,The Consumer Price Index,2.2,1,NULL,NULL,infl
+202,Void_fraction,Void fraction of the inside of the containment ,0.917,1,NULL,NULL,Internal_v_m3
+203,liner_fraction,liner fraction of containment,1,1,NULL,NULL,Liner_s_m2
+204,Cont_H_tot_m,Containment total height ,66.7512,m,NULL,NULL,Cont_H_wall_m
+205,Cont_rad_out_m,Containment outside radius ,23.0124,m,NULL,NULL,"Cont_H_wall_m,Cont_rad_in_m,Basemat_s_m2,Walls_s_m2,Walls_v_m3,Dome_rad_in_m,Dome_s_m2,Dome_v_m3,Surf_paint_m2"
+206,Cont_shell_t_m,Shell wall thickness ,1.3716,m,NULL,NULL,Cont_rad_in_m
+207,Cont_H_wall_m,Containment wall height ,43.7388,m,wall_height,"Cont_H_tot_m,Cont_rad_out_m","Walls_s_m2,Walls_v_m3,Intern_tot_v_m3,Inside_liner_s,Surf_paint_m2"
+208,Basemat_t_m,Basemat thickness ,3.048,m,NULL,NULL,Basemat_v_m3
+209,Dome_t_m,Dome thickness ,1.0668,m,NULL,NULL,Dome_rad_in_m
+210,Intern_wall_t,Internal wall average thickness ,1.2192,m,NULL,NULL,Internal_s_m2
+211,React_cav_A_m2,Reactor cavity area ,1021.93344,m^2,NULL,NULL,"Total_Labor_React_cav_liner,Total_Mat_React_cav_liner"
+212,Cont_rad_in_m,Containment inside radius ,21.6408,m,inside_rad,"Cont_rad_out_m,Cont_shell_t_m","Walls_s_m2,Walls_v_m3,Intern_tot_v_m3,Inside_liner_s"
+213,Basemat_s_m2,Basemat surface,1663.694961,m^2,round_surface,Cont_rad_out_m,"Basemat_v_m3,Total_Labor_Constr_joints_Substr,Total_Labor_Formwork_Substr,Total_Labor_Waterproofing_Substr,Total_Labor_Welded_wire_fabric_Substr,Total_Mat_Constr_joints_Substr,Total_Mat_Formwork_Substr,Total_Mat_Waterproofing_Substr,Total_Mat_Welded_wire_fabric_Substr"
+214,Basemat_v_m3,Basemat volume,5070.942242,m^3,basemat_volume,"Basemat_s_m2,Basemat_t_m","Struct_v_m3,Total_Labor_Cadweld_Substr,Total_Labor_Concrete_Substr,Total_Labor_Embedded_steel_Substr,Total_Labor_Reinforc_steel_Substr,Total_Mat_Cadweld_Substr,Total_Mat_Concrete_Substr,Total_Mat_Embedded_steel_Substr,Total_Mat_Reinforc_steel_Substr"
+215,Walls_s_m2,Walls surface,12271.54712,m^2,walls_surface,"Cont_H_wall_m,Cont_rad_out_m,Cont_rad_in_m","Total_Labor_Constr_joints_Superstr,Total_Labor_Formwork_Superstr,Total_Labor_Rubbing_surfaces_Superstr,Total_Labor_Waterproofing_Superstr,Total_Mat_Constr_joints_Superstr,Total_Mat_Formwork_Superstr,Total_Mat_Rubbing_surfaces_Superstr,Total_Mat_Waterproofing_Superstr"
+216,Walls_v_m3,Walls volume,8415.827018,m^3,wall_volume,"Cont_H_wall_m,Cont_rad_out_m,Cont_rad_in_m","Struct_v_m3,Total_Labor_Cadweld_Superstr,Total_Labor_Concrete_Superstr,Total_Labor_Embedded_steel_Superstr,Total_Labor_Reinforc_steel_Superstr,Total_Mat_Cadweld_Superstr,Total_Mat_Concrete_Superstr,Total_Mat_Embedded_steel_Superstr,Total_Mat_Reinforc_steel_Superstr"
+217,Dome_rad_in_m,Dome inside radius ,21.9456,m,inside_rad,"Cont_rad_out_m,Dome_t_m","Dome_s_m2,Dome_v_m3,Intern_tot_v_m3,Inside_liner_s"
+218,Dome_s_m2,Roof surface,6353.430773,m^2,roof_surface,"Cont_rad_out_m,Dome_rad_in_m","Total_Labor_Constr_joints_Dome,Total_Labor_Formwork_Dome,Total_Labor_Rubbing_surfaces_Dome,Total_Labor_Waterproofing_Dome,Total_Mat_Constr_joints_Dome,Total_Mat_Formwork_Dome,Total_Mat_Rubbing_surfaces_Dome,Total_Mat_Waterproofing_Dome"
+219,Dome_v_m3,Roof volume,3387.648588,m^3,roof_volume,"Cont_rad_out_m,Dome_rad_in_m","Struct_v_m3,Total_Labor_Cadweld_Dome,Total_Labor_Concrete_Dome,Total_Labor_Embedded_steel_Dome,Total_Labor_Reinforc_steel_Dome,Total_Mat_Cadweld_Dome,Total_Mat_Concrete_Dome,Total_Mat_Embedded_steel_Dome,Total_Mat_Reinforc_steel_Dome"
+220,Intern_tot_v_m3,Tot intenal Volume,86488.28818,m^3,tot_internal_volume,"Cont_rad_in_m,Cont_H_wall_m,Dome_rad_in_m","Internal_v_m3,Total_Labor_Lighting_Power,Total_Labor_Plumb_drains,Total_Labor_Special_HVAC,Total_Labor_other,Total_Labor_fl_grate_handrail_stairs,Total_Mat_Lighting_Power,Total_Mat_Plumb_drains,Total_Mat_Special_HVAC,Total_Mat_other,Total_Mat_fl_grate_handrail_stairs"
+221,Internal_v_m3,Building internal volume,7178.527919,m^3,building_internal_volume,"Intern_tot_v_m3,Void_fraction","Internal_s_m2,Struct_v_m3,Total_Labor_Cadweld_Interior,Total_Labor_Concrete_Interior,Total_Labor_Embedded_steel_Interior,Total_Labor_Maj_supp_embedments_Interior,Total_Labor_Reinforc_steel_Interior,Total_Mat_Cadweld_Interior,Total_Mat_Concrete_Interior,Total_Mat_Embedded_steel_Interior,Total_Mat_Maj_supp_embedments_Interior,Total_Mat_Reinforc_steel_Interior"
+222,Internal_s_m2,Building internal surface,11775.80039,m^2,building_internal _surface,"Internal_v_m3,Intern_wall_t","Surf_paint_m2,Total_Labor_Constr_joints_Interior,Total_Labor_Formwork_Interior,Total_Labor_Rubbing_surfaces_Interior,Total_Mat_Constr_joints_Interior,Total_Mat_Formwork_Interior,Total_Mat_Rubbing_surfaces_Interior"
+223,Struct_v_m3,volume of the structures ,24052.94577,m^3,volume_of_the_structures ,"Basemat_v_m3,Walls_v_m3,Dome_v_m3,Internal_v_m3","Total_Labor_Misc_steel_frames,Total_Labor_Struct_steel,Total_Mat_Misc_steel_frames,Total_Mat_Struct_steel"
+224,Inside_liner_s,Inside liner surface,10444.6275,m^2,Inside_liner_surface,"Cont_rad_in_m,Cont_H_wall_m,Dome_rad_in_m","Liner_s_m2,Surf_paint_m2,"
+225,Liner_s_m2,Liner Surface,10444.6275,m^2,liner_Surface,"Inside_liner_s,liner_fraction","Total_Labor_cont_liner,Total_Mat_cont_liner"
+226,Surf_paint_m2,painted surface,31872.06223,m^2,painted_surface,"Inside_liner_s,Cont_H_wall_m,Cont_rad_out_m,Internal_s_m2","Total_Labor_painting,Total_Mat_painting"
+227,infl,Inflation rate,2.870501004,1,Inflation_rate,CPI,"Unit_Labor_Cadweld_Substr,Unit_Labor_Cadweld_Superstr,Unit_Labor_Cadweld_Dome,Unit_Labor_Cadweld_Interior,Unit_Labor_Concrete_Substr,Unit_Labor_Concrete_Superstr,Unit_Labor_Concrete_Dome,Unit_Labor_Concrete_Interior,Unit_Labor_Constr_joints_Substr,Unit_Labor_Constr_joints_Superstr,Unit_Labor_Constr_joints_Dome,Unit_Labor_Constr_joints_Interior,Unit_Labor_Embedded_steel_Substr,Unit_Labor_Embedded_steel_Superstr,Unit_Labor_Embedded_steel_Dome,Unit_Labor_Embedded_steel_Interior,Unit_Labor_Formwork_Substr,Unit_Labor_Formwork_Superstr,Unit_Labor_Formwork_Dome,Unit_Labor_Formwork_Interior,Unit_Labor_Maj_supp_embedments_Interior,Unit_Labor_Reinforc_steel_Substr,Unit_Labor_Reinforc_steel_Superstr,Unit_Labor_Reinforc_steel_Dome,Unit_Labor_Reinforc_steel_Interior,Unit_Labor_Rubbing_surfaces_Superstr,Unit_Labor_Rubbing_surfaces_Dome,Unit_Labor_Rubbing_surfaces_Interior,Unit_Labor_Waterproofing_Substr,Unit_Labor_Waterproofing_Superstr,Unit_Labor_Waterproofing_Dome,Unit_Labor_Welded_wire_fabric_Substr,Unit_Labor_Lighting_Power,Unit_Labor_Plumb_drains,Unit_Labor_Special_HVAC,Unit_Labor_other,Unit_Labor_Misc_steel_frames,Unit_Labor_React_cav_liner,Unit_Labor_Struct_steel,Unit_Labor_cont_liner,Unit_Labor_fl_grate_handrail_stairs,Unit_Labor_painting,Unit_Mat_Cadweld_Substr,Unit_Mat_Cadweld_Superstr,Unit_Mat_Cadweld_Dome,Unit_Mat_Cadweld_Interior,Unit_Mat_Concrete_Substr,Unit_Mat_Concrete_Superstr,Unit_Mat_Concrete_Dome,Unit_Mat_Concrete_Interior,Unit_Mat_Constr_joints_Substr,Unit_Mat_Constr_joints_Superstr,Unit_Mat_Constr_joints_Dome,Unit_Mat_Constr_joints_Interior,Unit_Mat_Embedded_steel_Substr,Unit_Mat_Embedded_steel_Superstr,Unit_Mat_Embedded_steel_Dome,Unit_Mat_Embedded_steel_Interior,Unit_Mat_Formwork_Substr,Unit_Mat_Formwork_Superstr,Unit_Mat_Formwork_Dome,Unit_Mat_Formwork_Interior,Unit_Mat_Maj_supp_embedments_Interior,Unit_Mat_Reinforc_steel_Substr,Unit_Mat_Reinforc_steel_Superstr,Unit_Mat_Reinforc_steel_Dome,Unit_Mat_Reinforc_steel_Interior,Unit_Mat_Rubbing_surfaces_Superstr,Unit_Mat_Rubbing_surfaces_Dome,Unit_Mat_Rubbing_surfaces_Interior,Unit_Mat_Waterproofing_Substr,Unit_Mat_Waterproofing_Superstr,Unit_Mat_Waterproofing_Dome,Unit_Mat_Welded_wire_fabric_Substr,Unit_Mat_Lighting_Power,Unit_Mat_Plumb_drains,Unit_Mat_Special_HVAC,Unit_Mat_other,Unit_Mat_Misc_steel_frames,Unit_Mat_React_cav_liner,Unit_Mat_Struct_steel,Unit_Mat_cont_liner,Unit_Mat_fl_grate_handrail_stairs,Unit_Mat_painting"
+228,Unit_EEDB_Labor_Cadweld_Substr,Unit cost of Labor Cadweld Substructure (base mat) in EEDB,85.46,dollar/m^3,NULL,NULL,Unit_Labor_Cadweld_Substr
+229,Unit_EEDB_Labor_Cadweld_Superstr,Unit cost of Labor Cadweld Superstructure (shell) in EEDB,114.62,dollar/m^3,NULL,NULL,Unit_Labor_Cadweld_Superstr
+230,Unit_EEDB_Labor_Cadweld_Dome,Unit cost of Labor Cadweld Superstructure (dome) in EEDB,231.09,dollar/m^3,NULL,NULL,Unit_Labor_Cadweld_Dome
+231,Unit_EEDB_Labor_Cadweld_Interior,Unit cost of Labor Cadweld Interior structure in EEDB,48.2,dollar/m^3,NULL,NULL,Unit_Labor_Cadweld_Interior
+232,Unit_EEDB_Labor_Concrete_Substr,Unit cost of Labor Concrete Substructure (base mat) in EEDB,72.52,dollar/m^3,NULL,NULL,Unit_Labor_Concrete_Substr
+233,Unit_EEDB_Labor_Concrete_Superstr,Unit cost of Labor Concrete Superstructure (shell) in EEDB,87.39,dollar/m^3,NULL,NULL,Unit_Labor_Concrete_Superstr
+234,Unit_EEDB_Labor_Concrete_Dome,Unit cost of Labor Concrete Superstructure (dome) in EEDB,78.02,dollar/m^3,NULL,NULL,Unit_Labor_Concrete_Dome
+235,Unit_EEDB_Labor_Concrete_Interior,Unit cost of Labor Concrete Interior structure in EEDB,97.57,dollar/m^3,NULL,NULL,Unit_Labor_Concrete_Interior
+236,Unit_EEDB_Labor_Constr_joints_Substr,Unit cost of Labor Construction joints Substructure (base mat) in EEDB,14.51,dollar/m^2,NULL,NULL,Unit_Labor_Constr_joints_Substr
+237,Unit_EEDB_Labor_Constr_joints_Superstr,Unit cost of Labor Construction joints Superstructure (shell) in EEDB,12.44,dollar/m^2,NULL,NULL,Unit_Labor_Constr_joints_Superstr
+238,Unit_EEDB_Labor_Constr_joints_Dome,Unit cost of Labor Construction joints Superstructure (dome) in EEDB,4.75,dollar/m^2,NULL,NULL,Unit_Labor_Constr_joints_Dome
+239,Unit_EEDB_Labor_Constr_joints_Interior,Unit cost of Labor Construction joints Interior structure in EEDB,2.05,dollar/m^2,NULL,NULL,Unit_Labor_Constr_joints_Interior
+240,Unit_EEDB_Labor_Embedded_steel_Substr,Unit cost of Labor Embedded steel Substructure (base mat) in EEDB,3.98,dollar/m^3,NULL,NULL,Unit_Labor_Embedded_steel_Substr
+241,Unit_EEDB_Labor_Embedded_steel_Superstr,Unit cost of Labor Embedded steel Superstructure (shell) in EEDB,15.98,dollar/m^3,NULL,NULL,Unit_Labor_Embedded_steel_Superstr
+242,Unit_EEDB_Labor_Embedded_steel_Dome,Unit cost of Labor Embedded steel Superstructure (dome) in EEDB,0,dollar/m^3,NULL,NULL,Unit_Labor_Embedded_steel_Dome
+243,Unit_EEDB_Labor_Embedded_steel_Interior,Unit cost of Labor Embedded steel Interior structure in EEDB,337.14,dollar/m^3,NULL,NULL,Unit_Labor_Embedded_steel_Interior
+244,Unit_EEDB_Labor_Formwork_Substr,Unit cost of Labor Formwork Substructure (base mat) in EEDB,93.11,dollar/m^2,NULL,NULL,Unit_Labor_Formwork_Substr
+245,Unit_EEDB_Labor_Formwork_Superstr,Unit cost of Labor Formwork Superstructure (shell) in EEDB,109.83,dollar/m^2,NULL,NULL,Unit_Labor_Formwork_Superstr
+246,Unit_EEDB_Labor_Formwork_Dome,Unit cost of Labor Formwork Superstructure (dome) in EEDB,58.66,dollar/m^2,NULL,NULL,Unit_Labor_Formwork_Dome
+247,Unit_EEDB_Labor_Formwork_Interior,Unit cost of Labor Formwork Interior structure in EEDB,231.52,dollar/m^2,NULL,NULL,Unit_Labor_Formwork_Interior
+248,Unit_EEDB_Labor_Maj_supp_embedments_Interior,Unit cost of Labor Major Support Embedments Interior structure in EEDB,153.53,dollar/m^3,NULL,NULL,Unit_Labor_Maj_supp_embedments_Interior
+249,Unit_EEDB_Labor_Reinforc_steel_Substr,Unit cost of Labor Reinforc steel Substructure (base mat) in EEDB,322.55,dollar/m^3,NULL,NULL,Unit_Labor_Reinforc_steel_Substr
+250,Unit_EEDB_Labor_Reinforc_steel_Superstr,Unit cost of Labor Reinforc steel Superstructure (shell) in EEDB,326.13,dollar/m^3,NULL,NULL,Unit_Labor_Reinforc_steel_Superstr
+251,Unit_EEDB_Labor_Reinforc_steel_Dome,Unit cost of Labor Reinforc steel Superstructure (dome) in EEDB,300.56,dollar/m^3,NULL,NULL,Unit_Labor_Reinforc_steel_Dome
+252,Unit_EEDB_Labor_Reinforc_steel_Interior,Unit cost of Labor Reinforc steel Interior structure in EEDB,306.72,dollar/m^3,NULL,NULL,Unit_Labor_Reinforc_steel_Interior
+253,Unit_EEDB_Labor_Rubbing_surfaces_Superstr,Unit cost of Labor Rubbing surfaces Superstructure (shell) in EEDB,8.32,dollar/m^2,NULL,NULL,Unit_Labor_Rubbing_surfaces_Superstr
+254,Unit_EEDB_Labor_Rubbing_surfaces_Dome,Unit cost of Labor Rubbing surfaces Superstructure (dome) in EEDB,5.74,dollar/m^2,NULL,NULL,Unit_Labor_Rubbing_surfaces_Dome
+255,Unit_EEDB_Labor_Rubbing_surfaces_Interior,Unit cost of Labor Rubbing surfaces Interior structure in EEDB,9.91,dollar/m^2,NULL,NULL,Unit_Labor_Rubbing_surfaces_Interior
+256,Unit_EEDB_Labor_Waterproofing_Substr,Unit cost of Labor Waterproofing Substructure (base mat) in EEDB,4.58,dollar/m^2,NULL,NULL,Unit_Labor_Waterproofing_Substr
+257,Unit_EEDB_Labor_Waterproofing_Superstr,Unit cost of Labor Waterproofing Superstructure (shell) in EEDB,0.84,dollar/m^2,NULL,NULL,Unit_Labor_Waterproofing_Superstr
+258,Unit_EEDB_Labor_Waterproofing_Dome,Unit cost of Labor Waterproofing Superstructure (dome) in EEDB,0,dollar/m^2,NULL,NULL,Unit_Labor_Waterproofing_Dome
+259,Unit_EEDB_Labor_Welded_wire_fabric_Substr,Unit cost of Labor Welded wire fabric Substructure (base mat) in EEDB,10.07,dollar/m^2,NULL,NULL,Unit_Labor_Welded_wire_fabric_Substr
+260,Unit_EEDB_Labor_Lighting_Power,Unit cost of Labor Lighting Power in EEDB,9.83,dollar/m^3,NULL,NULL,Unit_Labor_Lighting_Power
+261,Unit_EEDB_Labor_Plumb_drains,Unit cost of Labor Plumb drains in EEDB,3.02,dollar/m^3,NULL,NULL,Unit_Labor_Plumb_drains
+262,Unit_EEDB_Labor_Special_HVAC,Unit cost of Labor Special HVAC in EEDB,11.09,dollar/m^3,NULL,NULL,Unit_Labor_Special_HVAC
+263,Unit_EEDB_Labor_other,Unit cost of Labor other in EEDB,0.53,dollar/m^3,NULL,NULL,Unit_Labor_other
+264,Unit_EEDB_Labor_Misc_steel_frames,Unit cost of Labor miscellaneous steel frames in EEDB,9.94,dollar/m^3,NULL,NULL,Unit_Labor_Misc_steel_frames
+265,Unit_EEDB_Labor_React_cav_liner,Unit cost of Labor Reactor cavity liner plate in EEDB,745.94,dollar/m^2,NULL,NULL,Unit_Labor_React_cav_liner
+266,Unit_EEDB_Labor_Struct_steel,Unit cost of Labor Struct steel in EEDB,13.98,dollar/m^3,NULL,NULL,Unit_Labor_Struct_steel
+267,Unit_EEDB_Labor_cont_liner,Unit cost of Labor Containment liner in EEDB,780.33,dollar/m^2,NULL,NULL,Unit_Labor_cont_liner
+268,Unit_EEDB_Labor_fl_grate_handrail_stairs,"Unit cost of Labor Floor grating (galvanized), Handrail, Stair treads in EEDB",1.75,dollar/m^3,NULL,NULL,Unit_Labor_fl_grate_handrail_stairs
+269,Unit_EEDB_Labor_painting,Unit cost of Labor painting in EEDB,86.8,dollar/m^2,NULL,NULL,Unit_Labor_painting
+270,Unit_EEDB_Mat_Cadweld_Substr,Unit cost of Material Cadweld Substructure (base mat) in EEDB,44.32,dollar/m^3,NULL,NULL,Unit_Mat_Cadweld_Substr
+271,Unit_EEDB_Mat_Cadweld_Superstr,Unit cost of Material Cadweld Superstructure (shell) in EEDB,59.44,dollar/m^3,NULL,NULL,Unit_Mat_Cadweld_Superstr
+272,Unit_EEDB_Mat_Cadweld_Dome,Unit cost of Material Cadweld Superstructure (dome) in EEDB,119.85,dollar/m^3,NULL,NULL,Unit_Mat_Cadweld_Dome
+273,Unit_EEDB_Mat_Cadweld_Interior,Unit cost of Material Cadweld Interior structure in EEDB,25,dollar/m^3,NULL,NULL,Unit_Mat_Cadweld_Interior
+274,Unit_EEDB_Mat_Concrete_Substr,Unit cost of Material Concrete Substructure (base mat) in EEDB,79.1,dollar/m^3,NULL,NULL,Unit_Mat_Concrete_Substr
+275,Unit_EEDB_Mat_Concrete_Superstr,Unit cost of Material Concrete Superstructure (shell) in EEDB,54.47,dollar/m^3,NULL,NULL,Unit_Mat_Concrete_Superstr
+276,Unit_EEDB_Mat_Concrete_Dome,Unit cost of Material Concrete Superstructure (dome) in EEDB,48.63,dollar/m^3,NULL,NULL,Unit_Mat_Concrete_Dome
+277,Unit_EEDB_Mat_Concrete_Interior,Unit cost of Material Concrete Interior structure in EEDB,53.21,dollar/m^3,NULL,NULL,Unit_Mat_Concrete_Interior
+278,Unit_EEDB_Mat_Constr_joints_Substr,Unit cost of Material Construction joints Substructure (base mat) in EEDB,8.9,dollar/m^2,NULL,NULL,Unit_Mat_Constr_joints_Substr
+279,Unit_EEDB_Mat_Constr_joints_Superstr,Unit cost of Material Construction joints Superstructure (shell) in EEDB,7.63,dollar/m^2,NULL,NULL,Unit_Mat_Constr_joints_Superstr
+280,Unit_EEDB_Mat_Constr_joints_Dome,Unit cost of Material Construction joints Superstructure (dome) in EEDB,2.91,dollar/m^2,NULL,NULL,Unit_Mat_Constr_joints_Dome
+281,Unit_EEDB_Mat_Constr_joints_Interior,Unit cost of Material Construction joints Interior structure in EEDB,1.26,dollar/m^2,NULL,NULL,Unit_Mat_Constr_joints_Interior
+282,Unit_EEDB_Mat_Embedded_steel_Substr,Unit cost of Material Embedded steel Substructure (base mat) in EEDB,1.88,dollar/m^3,NULL,NULL,Unit_Mat_Embedded_steel_Substr
+283,Unit_EEDB_Mat_Embedded_steel_Superstr,Unit cost of Material Embedded steel Superstructure (shell) in EEDB,7.57,dollar/m^3,NULL,NULL,Unit_Mat_Embedded_steel_Superstr
+284,Unit_EEDB_Mat_Embedded_steel_Dome,Unit cost of Material Embedded steel Superstructure (dome) in EEDB,0,dollar/m^3,NULL,NULL,Unit_Mat_Embedded_steel_Dome
+285,Unit_EEDB_Mat_Embedded_steel_Interior,Unit cost of Material Embedded steel Interior structure in EEDB,159.73,dollar/m^3,NULL,NULL,Unit_Mat_Embedded_steel_Interior
+286,Unit_EEDB_Mat_Formwork_Substr,Unit cost of Material Formwork Substructure (base mat) in EEDB,13.22,dollar/m^2,NULL,NULL,Unit_Mat_Formwork_Substr
+287,Unit_EEDB_Mat_Formwork_Superstr,Unit cost of Material Formwork Superstructure (shell) in EEDB,13.65,dollar/m^2,NULL,NULL,Unit_Mat_Formwork_Superstr
+288,Unit_EEDB_Mat_Formwork_Dome,Unit cost of Material Formwork Superstructure (dome) in EEDB,7.67,dollar/m^2,NULL,NULL,Unit_Mat_Formwork_Dome
+289,Unit_EEDB_Mat_Formwork_Interior,Unit cost of Material Formwork Interior structure in EEDB,21.85,dollar/m^2,NULL,NULL,Unit_Mat_Formwork_Interior
+290,Unit_EEDB_Mat_Maj_supp_embedments_Interior,Unit cost of Material Major Support Embedments Interior structure in EEDB,225.35,dollar/m^3,NULL,NULL,Unit_Mat_Maj_supp_embedments_Interior
+291,Unit_EEDB_Mat_Reinforc_steel_Substr,Unit cost of Material Reinforc steel Substructure (base mat) in EEDB,364.73,dollar/m^3,NULL,NULL,Unit_Mat_Reinforc_steel_Substr
+292,Unit_EEDB_Mat_Reinforc_steel_Superstr,Unit cost of Material Reinforc steel Superstructure (shell) in EEDB,258.95,dollar/m^3,NULL,NULL,Unit_Mat_Reinforc_steel_Superstr
+293,Unit_EEDB_Mat_Reinforc_steel_Dome,Unit cost of Material Reinforc steel Superstructure (dome) in EEDB,238.65,dollar/m^3,NULL,NULL,Unit_Mat_Reinforc_steel_Dome
+294,Unit_EEDB_Mat_Reinforc_steel_Interior,Unit cost of Material Reinforc steel Interior structure in EEDB,205.66,dollar/m^3,NULL,NULL,Unit_Mat_Reinforc_steel_Interior
+295,Unit_EEDB_Mat_Rubbing_surfaces_Superstr,Unit cost of Material Rubbing surfaces Superstructure (shell) in EEDB,0.68,dollar/m^2,NULL,NULL,Unit_Mat_Rubbing_surfaces_Superstr
+296,Unit_EEDB_Mat_Rubbing_surfaces_Dome,Unit cost of Material Rubbing surfaces Superstructure (dome) in EEDB,0.47,dollar/m^2,NULL,NULL,Unit_Mat_Rubbing_surfaces_Dome
+297,Unit_EEDB_Mat_Rubbing_surfaces_Interior,Unit cost of Material Rubbing surfaces Interior structure in EEDB,0.82,dollar/m^2,NULL,NULL,Unit_Mat_Rubbing_surfaces_Interior
+298,Unit_EEDB_Mat_Waterproofing_Substr,Unit cost of Material Waterproofing Substructure (base mat) in EEDB,2.43,dollar/m^2,NULL,NULL,Unit_Mat_Waterproofing_Substr
+299,Unit_EEDB_Mat_Waterproofing_Superstr,Unit cost of Material Waterproofing Superstructure (shell) in EEDB,0.45,dollar/m^2,NULL,NULL,Unit_Mat_Waterproofing_Superstr
+300,Unit_EEDB_Mat_Waterproofing_Dome,Unit cost of Material Waterproofing Superstructure (dome) in EEDB,0,dollar/m^2,NULL,NULL,Unit_Mat_Waterproofing_Dome
+301,Unit_EEDB_Mat_Welded_wire_fabric_Substr,Unit cost of Material Welded wire fabric Substructure (base mat) in EEDB,5.19,dollar/m^2,NULL,NULL,Unit_Mat_Welded_wire_fabric_Substr
+302,Unit_EEDB_Mat_Lighting_Power,Unit cost of Material Lighting Power in EEDB,4.96,dollar/m^3,NULL,NULL,Unit_Mat_Lighting_Power
+303,Unit_EEDB_Mat_Plumb_drains,Unit cost of Material Plumb drains in EEDB,1.54,dollar/m^3,NULL,NULL,Unit_Mat_Plumb_drains
+304,Unit_EEDB_Mat_Special_HVAC,Unit cost of Material Special HVAC in EEDB,8.79,dollar/m^3,NULL,NULL,Unit_Mat_Special_HVAC
+305,Unit_EEDB_Mat_other,Unit cost of Material other in EEDB,1.96,dollar/m^3,NULL,NULL,Unit_Mat_other
+306,Unit_EEDB_Mat_Misc_steel_frames,Unit cost of Material miscellaneous steel frames in EEDB,16.56,dollar/m^3,NULL,NULL,Unit_Mat_Misc_steel_frames
+307,Unit_EEDB_Mat_React_cav_liner,Unit cost of Material Reactor cavity liner plate in EEDB,607.96,dollar/m^2,NULL,NULL,Unit_Mat_React_cav_liner
+308,Unit_EEDB_Mat_Struct_steel,Unit cost of Material Struct steel in EEDB,27.41,dollar/m^3,NULL,NULL,Unit_Mat_Struct_steel
+309,Unit_EEDB_Mat_cont_liner,Unit cost of Material Containment liner in EEDB,1203,dollar/m^2,NULL,NULL,Unit_Mat_cont_liner
+310,Unit_EEDB_Mat_fl_grate_handrail_stairs,"Unit cost of Material Floor grating (galvanized), Handrail, Stair treads in EEDB",1.98,dollar/m^3,NULL,NULL,Unit_Mat_fl_grate_handrail_stairs
+311,Unit_EEDB_Mat_painting,Unit cost of Material painting in EEDB,24.68,dollar/m^2,NULL,NULL,Unit_Mat_painting
+312,Unit_Labor_Cadweld_Substr,Unit cost of Labor Cadweld Substructure (base mat) in 2017,245.31,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Cadweld_Substr,infl",Total_Labor_Cadweld_Substr
+313,Unit_Labor_Cadweld_Superstr,Unit cost of Labor Cadweld Superstructure (shell) in 2017,329.02,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Cadweld_Superstr,infl",Total_Labor_Cadweld_Superstr
+314,Unit_Labor_Cadweld_Dome,Unit cost of Labor Cadweld Superstructure (dome) in 2017,663.34,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Cadweld_Dome,infl",Total_Labor_Cadweld_Dome
+315,Unit_Labor_Cadweld_Interior,Unit cost of Labor Cadweld Interior structure in 2017,138.36,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Cadweld_Interior,infl",Total_Labor_Cadweld_Interior
+316,Unit_Labor_Concrete_Substr,Unit cost of Labor Concrete Substructure (base mat) in 2017,208.17,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Concrete_Substr,infl",Total_Labor_Concrete_Substr
+317,Unit_Labor_Concrete_Superstr,Unit cost of Labor Concrete Superstructure (shell) in 2017,250.85,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Concrete_Superstr,infl",Total_Labor_Concrete_Superstr
+318,Unit_Labor_Concrete_Dome,Unit cost of Labor Concrete Superstructure (dome) in 2017,223.96,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Concrete_Dome,infl",Total_Labor_Concrete_Dome
+319,Unit_Labor_Concrete_Interior,Unit cost of Labor Concrete Interior structure in 2017,280.07,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Concrete_Interior,infl",Total_Labor_Concrete_Interior
+320,Unit_Labor_Constr_joints_Substr,Unit cost of Labor Construction joints Substructure (base mat) in 2017,41.65,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Constr_joints_Substr,infl",Total_Labor_Constr_joints_Substr
+321,Unit_Labor_Constr_joints_Superstr,Unit cost of Labor Construction joints Superstructure (shell) in 2017,35.71,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Constr_joints_Superstr,infl",Total_Labor_Constr_joints_Superstr
+322,Unit_Labor_Constr_joints_Dome,Unit cost of Labor Construction joints Superstructure (dome) in 2017,13.63,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Constr_joints_Dome,infl",Total_Labor_Constr_joints_Dome
+323,Unit_Labor_Constr_joints_Interior,Unit cost of Labor Construction joints Interior structure in 2017,5.88,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Constr_joints_Interior,infl",Total_Labor_Constr_joints_Interior
+324,Unit_Labor_Embedded_steel_Substr,Unit cost of Labor Embedded steel Substructure (base mat) in 2017,11.42,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Embedded_steel_Substr,infl",Total_Labor_Embedded_steel_Substr
+325,Unit_Labor_Embedded_steel_Superstr,Unit cost of Labor Embedded steel Superstructure (shell) in 2017,45.87,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Embedded_steel_Superstr,infl",Total_Labor_Embedded_steel_Superstr
+326,Unit_Labor_Embedded_steel_Dome,Unit cost of Labor Embedded steel Superstructure (dome) in 2017,0,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Embedded_steel_Dome,infl",Total_Labor_Embedded_steel_Dome
+327,Unit_Labor_Embedded_steel_Interior,Unit cost of Labor Embedded steel Interior structure in 2017,967.76,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Embedded_steel_Interior,infl",Total_Labor_Embedded_steel_Interior
+328,Unit_Labor_Formwork_Substr,Unit cost of Labor Formwork Substructure (base mat) in 2017,267.27,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Formwork_Substr,infl",Total_Labor_Formwork_Substr
+329,Unit_Labor_Formwork_Superstr,Unit cost of Labor Formwork Superstructure (shell) in 2017,315.27,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Formwork_Superstr,infl",Total_Labor_Formwork_Superstr
+330,Unit_Labor_Formwork_Dome,Unit cost of Labor Formwork Superstructure (dome) in 2017,168.38,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Formwork_Dome,infl",Total_Labor_Formwork_Dome
+331,Unit_Labor_Formwork_Interior,Unit cost of Labor Formwork Interior structure in 2017,664.58,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Formwork_Interior,infl",Total_Labor_Formwork_Interior
+332,Unit_Labor_Maj_supp_embedments_Interior,Unit cost of Labor Major Support Embedments Interior structure in 2017,440.71,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Maj_supp_embedments_Interior,infl",Total_Labor_Maj_supp_embedments_Interior
+333,Unit_Labor_Reinforc_steel_Substr,Unit cost of Labor Reinforc steel Substructure (base mat) in 2017,925.88,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Reinforc_steel_Substr,infl",Total_Labor_Reinforc_steel_Substr
+334,Unit_Labor_Reinforc_steel_Superstr,Unit cost of Labor Reinforc steel Superstructure (shell) in 2017,936.16,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Reinforc_steel_Superstr,infl",Total_Labor_Reinforc_steel_Superstr
+335,Unit_Labor_Reinforc_steel_Dome,Unit cost of Labor Reinforc steel Superstructure (dome) in 2017,862.76,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Reinforc_steel_Dome,infl",Total_Labor_Reinforc_steel_Dome
+336,Unit_Labor_Reinforc_steel_Interior,Unit cost of Labor Reinforc steel Interior structure in 2017,880.44,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Reinforc_steel_Interior,infl",Total_Labor_Reinforc_steel_Interior
+337,Unit_Labor_Rubbing_surfaces_Superstr,Unit cost of Labor Rubbing surfaces Superstructure (shell) in 2017,23.88,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Rubbing_surfaces_Superstr,infl",Total_Labor_Rubbing_surfaces_Superstr
+338,Unit_Labor_Rubbing_surfaces_Dome,Unit cost of Labor Rubbing surfaces Superstructure (dome) in 2017,16.48,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Rubbing_surfaces_Dome,infl",Total_Labor_Rubbing_surfaces_Dome
+339,Unit_Labor_Rubbing_surfaces_Interior,Unit cost of Labor Rubbing surfaces Interior structure in 2017,28.45,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Rubbing_surfaces_Interior,infl",Total_Labor_Rubbing_surfaces_Interior
+340,Unit_Labor_Waterproofing_Substr,Unit cost of Labor Waterproofing Substructure (base mat) in 2017,13.15,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Waterproofing_Substr,infl",Total_Labor_Waterproofing_Substr
+341,Unit_Labor_Waterproofing_Superstr,Unit cost of Labor Waterproofing Superstructure (shell) in 2017,2.41,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Waterproofing_Superstr,infl",Total_Labor_Waterproofing_Superstr
+342,Unit_Labor_Waterproofing_Dome,Unit cost of Labor Waterproofing Superstructure (dome) in 2017,0,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Waterproofing_Dome,infl",Total_Labor_Waterproofing_Dome
+343,Unit_Labor_Welded_wire_fabric_Substr,Unit cost of Labor Welded wire fabric Substructure (base mat) in 2017,28.91,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_Welded_wire_fabric_Substr,infl",Total_Labor_Welded_wire_fabric_Substr
+344,Unit_Labor_Lighting_Power,Unit cost of Labor Lighting Power in 2017,28.22,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Lighting_Power,infl",Total_Labor_Lighting_Power
+345,Unit_Labor_Plumb_drains,Unit cost of Labor Plumb drains in 2017,8.67,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Plumb_drains,infl",Total_Labor_Plumb_drains
+346,Unit_Labor_Special_HVAC,Unit cost of Labor Special HVAC in 2017,31.83,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Special_HVAC,infl",Total_Labor_Special_HVAC
+347,Unit_Labor_other,Unit cost of Labor other in 2017,1.52,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_other,infl",Total_Labor_other
+348,Unit_Labor_Misc_steel_frames,Unit cost of Labor miscellaneous steel frames in 2017,28.53,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Misc_steel_frames,infl",Total_Labor_Misc_steel_frames
+349,Unit_Labor_React_cav_liner,Unit cost of Labor Reactor cavity liner plate in 2017,2141.22,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_React_cav_liner,infl",Total_Labor_React_cav_liner
+350,Unit_Labor_Struct_steel,Unit cost of Labor Struct steel in 2017,40.13,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_Struct_steel,infl",Total_Labor_Struct_steel
+351,Unit_Labor_cont_liner,Unit cost of Labor Containment liner in 2017,2239.94,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_cont_liner,infl",Total_Labor_cont_liner
+352,Unit_Labor_fl_grate_handrail_stairs,"Unit cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017",5.02,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Labor_fl_grate_handrail_stairs,infl",Total_Labor_fl_grate_handrail_stairs
+353,Unit_Labor_painting,Unit cost of Labor painting in 2017,249.16,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Labor_painting,infl",Total_Labor_painting
+354,Unit_Mat_Cadweld_Substr,Unit cost of Material Cadweld Substructure (base mat) in 2017,127.22,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Cadweld_Substr,infl",Total_Mat_Cadweld_Substr
+355,Unit_Mat_Cadweld_Superstr,Unit cost of Material Cadweld Superstructure (shell) in 2017,170.62,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Cadweld_Superstr,infl",Total_Mat_Cadweld_Superstr
+356,Unit_Mat_Cadweld_Dome,Unit cost of Material Cadweld Superstructure (dome) in 2017,344.03,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Cadweld_Dome,infl",Total_Mat_Cadweld_Dome
+357,Unit_Mat_Cadweld_Interior,Unit cost of Material Cadweld Interior structure in 2017,71.76,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Cadweld_Interior,infl",Total_Mat_Cadweld_Interior
+358,Unit_Mat_Concrete_Substr,Unit cost of Material Concrete Substructure (base mat) in 2017,227.06,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Concrete_Substr,infl",Total_Mat_Concrete_Substr
+359,Unit_Mat_Concrete_Superstr,Unit cost of Material Concrete Superstructure (shell) in 2017,156.36,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Concrete_Superstr,infl",Total_Mat_Concrete_Superstr
+360,Unit_Mat_Concrete_Dome,Unit cost of Material Concrete Superstructure (dome) in 2017,139.59,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Concrete_Dome,infl",Total_Mat_Concrete_Dome
+361,Unit_Mat_Concrete_Interior,Unit cost of Material Concrete Interior structure in 2017,152.74,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Concrete_Interior,infl",Total_Mat_Concrete_Interior
+362,Unit_Mat_Constr_joints_Substr,Unit cost of Material Construction joints Substructure (base mat) in 2017,25.55,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Constr_joints_Substr,infl",Total_Mat_Constr_joints_Substr
+363,Unit_Mat_Constr_joints_Superstr,Unit cost of Material Construction joints Superstructure (shell) in 2017,21.9,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Constr_joints_Superstr,infl",Total_Mat_Constr_joints_Superstr
+364,Unit_Mat_Constr_joints_Dome,Unit cost of Material Construction joints Superstructure (dome) in 2017,8.35,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Constr_joints_Dome,infl",Total_Mat_Constr_joints_Dome
+365,Unit_Mat_Constr_joints_Interior,Unit cost of Material Construction joints Interior structure in 2017,3.62,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Constr_joints_Interior,infl",Total_Mat_Constr_joints_Interior
+366,Unit_Mat_Embedded_steel_Substr,Unit cost of Material Embedded steel Substructure (base mat) in 2017,5.4,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Embedded_steel_Substr,infl",Total_Mat_Embedded_steel_Substr
+367,Unit_Mat_Embedded_steel_Superstr,Unit cost of Material Embedded steel Superstructure (shell) in 2017,21.73,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Embedded_steel_Superstr,infl",Total_Mat_Embedded_steel_Superstr
+368,Unit_Mat_Embedded_steel_Dome,Unit cost of Material Embedded steel Superstructure (dome) in 2017,0,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Embedded_steel_Dome,infl",Total_Mat_Embedded_steel_Dome
+369,Unit_Mat_Embedded_steel_Interior,Unit cost of Material Embedded steel Interior structure in 2017,458.51,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Embedded_steel_Interior,infl",Total_Mat_Embedded_steel_Interior
+370,Unit_Mat_Formwork_Substr,Unit cost of Material Formwork Substructure (base mat) in 2017,37.95,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Formwork_Substr,infl",Total_Mat_Formwork_Substr
+371,Unit_Mat_Formwork_Superstr,Unit cost of Material Formwork Superstructure (shell) in 2017,39.18,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Formwork_Superstr,infl",Total_Mat_Formwork_Superstr
+372,Unit_Mat_Formwork_Dome,Unit cost of Material Formwork Superstructure (dome) in 2017,22.02,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Formwork_Dome,infl",Total_Mat_Formwork_Dome
+373,Unit_Mat_Formwork_Interior,Unit cost of Material Formwork Interior structure in 2017,62.72,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Formwork_Interior,infl",Total_Mat_Formwork_Interior
+374,Unit_Mat_Maj_supp_embedments_Interior,Unit cost of Material Major Support Embedments Interior structure in 2017,646.87,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Maj_supp_embedments_Interior,infl",Total_Mat_Maj_supp_embedments_Interior
+375,Unit_Mat_Reinforc_steel_Substr,Unit cost of Material Reinforc steel Substructure (base mat) in 2017,1046.96,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Reinforc_steel_Substr,infl",Total_Mat_Reinforc_steel_Substr
+376,Unit_Mat_Reinforc_steel_Superstr,Unit cost of Material Reinforc steel Superstructure (shell) in 2017,743.32,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Reinforc_steel_Superstr,infl",Total_Mat_Reinforc_steel_Superstr
+377,Unit_Mat_Reinforc_steel_Dome,Unit cost of Material Reinforc steel Superstructure (dome) in 2017,685.05,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Reinforc_steel_Dome,infl",Total_Mat_Reinforc_steel_Dome
+378,Unit_Mat_Reinforc_steel_Interior,Unit cost of Material Reinforc steel Interior structure in 2017,590.35,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Reinforc_steel_Interior,infl",Total_Mat_Reinforc_steel_Interior
+379,Unit_Mat_Rubbing_surfaces_Superstr,Unit cost of Material Rubbing surfaces Superstructure (shell) in 2017,1.95,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Rubbing_surfaces_Superstr,infl",Total_Mat_Rubbing_surfaces_Superstr
+380,Unit_Mat_Rubbing_surfaces_Dome,Unit cost of Material Rubbing surfaces Superstructure (dome) in 2017,1.35,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Rubbing_surfaces_Dome,infl",Total_Mat_Rubbing_surfaces_Dome
+381,Unit_Mat_Rubbing_surfaces_Interior,Unit cost of Material Rubbing surfaces Interior structure in 2017,2.35,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Rubbing_surfaces_Interior,infl",Total_Mat_Rubbing_surfaces_Interior
+382,Unit_Mat_Waterproofing_Substr,Unit cost of Material Waterproofing Substructure (base mat) in 2017,6.98,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Waterproofing_Substr,infl",Total_Mat_Waterproofing_Substr
+383,Unit_Mat_Waterproofing_Superstr,Unit cost of Material Waterproofing Superstructure (shell) in 2017,1.29,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Waterproofing_Superstr,infl",Total_Mat_Waterproofing_Superstr
+384,Unit_Mat_Waterproofing_Dome,Unit cost of Material Waterproofing Superstructure (dome) in 2017,0,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Waterproofing_Dome,infl",Total_Mat_Waterproofing_Dome
+385,Unit_Mat_Welded_wire_fabric_Substr,Unit cost of Material Welded wire fabric Substructure (base mat) in 2017,14.9,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_Welded_wire_fabric_Substr,infl",Total_Mat_Welded_wire_fabric_Substr
+386,Unit_Mat_Lighting_Power,Unit cost of Material Lighting Power in 2017,14.24,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Lighting_Power,infl",Total_Mat_Lighting_Power
+387,Unit_Mat_Plumb_drains,Unit cost of Material Plumb drains in 2017,4.42,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Plumb_drains,infl",Total_Mat_Plumb_drains
+388,Unit_Mat_Special_HVAC,Unit cost of Material Special HVAC in 2017,25.23,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Special_HVAC,infl",Total_Mat_Special_HVAC
+389,Unit_Mat_other,Unit cost of Material other in 2017,5.63,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_other,infl",Total_Mat_other
+390,Unit_Mat_Misc_steel_frames,Unit cost of Material miscellaneous steel frames in 2017,47.54,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Misc_steel_frames,infl",Total_Mat_Misc_steel_frames
+391,Unit_Mat_React_cav_liner,Unit cost of Material Reactor cavity liner plate in 2017,1745.15,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_React_cav_liner,infl",Total_Mat_React_cav_liner
+392,Unit_Mat_Struct_steel,Unit cost of Material Struct steel in 2017,78.68,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_Struct_steel,infl",Total_Mat_Struct_steel
+393,Unit_Mat_cont_liner,Unit cost of Material Containment liner in 2017,3453.21,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_cont_liner,infl",Total_Mat_cont_liner
+394,Unit_Mat_fl_grate_handrail_stairs,"Unit cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017",5.68,dollar/m^3,unitcost_v_eedb_to_accert,"Unit_EEDB_Mat_fl_grate_handrail_stairs,infl",Total_Mat_fl_grate_handrail_stairs
+395,Unit_Mat_painting,Unit cost of Material painting in 2017,70.84,dollar/m^2,unitcost_s_eedb_to_accert,"Unit_EEDB_Mat_painting,infl",Total_Mat_painting
+396,Total_Labor_Cadweld_Substr,Total cost of Labor Cadweld Substructure (base mat) in 2017,1243968.134,dollar,tol_contaiment_ce_cost,"Unit_Labor_Cadweld_Substr,Basemat_v_m3",Sum_Labor_Cadweld
+397,Total_Labor_Cadweld_Superstr,Total cost of Labor Cadweld Superstructure (shell) in 2017,2768948.686,dollar,tol_contaiment_ce_cost,"Unit_Labor_Cadweld_Superstr,Walls_v_m3",Sum_Labor_Cadweld
+398,Total_Labor_Cadweld_Dome,Total cost of Labor Cadweld Superstructure (dome) in 2017,2247176.626,dollar,tol_contaiment_ce_cost,"Unit_Labor_Cadweld_Dome,Dome_v_m3",Sum_Labor_Cadweld
+399,Total_Labor_Cadweld_Interior,Total cost of Labor Cadweld Interior structure in 2017,993207.8312,dollar,tol_contaiment_ce_cost,"Unit_Labor_Cadweld_Interior,Internal_v_m3",Sum_Labor_Cadweld
+400,Total_Labor_Concrete_Substr,Total cost of Labor Concrete Substructure (base mat) in 2017,1055611.621,dollar,tol_contaiment_ce_cost,"Unit_Labor_Concrete_Substr,Basemat_v_m3",Sum_Labor_Concrete
+401,Total_Labor_Concrete_Superstr,Total cost of Labor Concrete Superstructure (shell) in 2017,2111136.151,dollar,tol_contaiment_ce_cost,"Unit_Labor_Concrete_Superstr,Walls_v_m3",Sum_Labor_Concrete
+402,Total_Labor_Concrete_Dome,Total cost of Labor Concrete Superstructure (dome) in 2017,758685.8815,dollar,tol_contaiment_ce_cost,"Unit_Labor_Concrete_Dome,Dome_v_m3",Sum_Labor_Concrete
+403,Total_Labor_Concrete_Interior,Total cost of Labor Concrete Interior structure in 2017,2010524.649,dollar,tol_contaiment_ce_cost,"Unit_Labor_Concrete_Interior,Internal_v_m3",Sum_Labor_Concrete
+404,Total_Labor_Constr_joints_Substr,Total cost of Labor Construction joints Substructure (base mat) in 2017,69294.50821,dollar,tol_contaiment_ce_cost,"Unit_Labor_Constr_joints_Substr,Basemat_s_m2",Sum_Labor_Constr_joints
+405,Total_Labor_Constr_joints_Superstr,Total cost of Labor Construction joints Superstructure (shell) in 2017,438205.075,dollar,tol_contaiment_ce_cost,"Unit_Labor_Constr_joints_Superstr,Walls_s_m2",Sum_Labor_Constr_joints
+406,Total_Labor_Constr_joints_Dome,Total cost of Labor Construction joints Superstructure (dome) in 2017,86628.26472,dollar,tol_contaiment_ce_cost,"Unit_Labor_Constr_joints_Dome,Dome_s_m2",Sum_Labor_Constr_joints
+407,Total_Labor_Constr_joints_Interior,Total cost of Labor Construction joints Interior structure in 2017,69295.01605,dollar,tol_contaiment_ce_cost,"Unit_Labor_Constr_joints_Interior,Internal_s_m2",Sum_Labor_Constr_joints
+408,Total_Labor_Embedded_steel_Substr,Total cost of Labor Embedded steel Substructure (base mat) in 2017,57933.4563,dollar,tol_contaiment_ce_cost,"Unit_Labor_Embedded_steel_Substr,Basemat_v_m3",Sum_Labor_Embedded_steel
+409,Total_Labor_Embedded_steel_Superstr,Total cost of Labor Embedded steel Superstructure (shell) in 2017,386039.0857,dollar,tol_contaiment_ce_cost,"Unit_Labor_Embedded_steel_Superstr,Walls_v_m3",Sum_Labor_Embedded_steel
+410,Total_Labor_Embedded_steel_Dome,Total cost of Labor Embedded steel Superstructure (dome) in 2017,0,dollar,tol_contaiment_ce_cost,"Unit_Labor_Embedded_steel_Dome,Dome_v_m3",Sum_Labor_Embedded_steel
+411,Total_Labor_Embedded_steel_Interior,Total cost of Labor Embedded steel Interior structure in 2017,6947097.266,dollar,tol_contaiment_ce_cost,"Unit_Labor_Embedded_steel_Interior,Internal_v_m3",Sum_Labor_Embedded_steel
+412,Total_Labor_Formwork_Substr,Total cost of Labor Formwork Substructure (base mat) in 2017,444659.6595,dollar,tol_contaiment_ce_cost,"Unit_Labor_Formwork_Substr,Basemat_s_m2",Sum_Labor_Formwork
+413,Total_Labor_Formwork_Superstr,Total cost of Labor Formwork Superstructure (shell) in 2017,3868815.385,dollar,tol_contaiment_ce_cost,"Unit_Labor_Formwork_Superstr,Walls_s_m2",Sum_Labor_Formwork
+414,Total_Labor_Formwork_Dome,Total cost of Labor Formwork Superstructure (dome) in 2017,1069813.476,dollar,tol_contaiment_ce_cost,"Unit_Labor_Formwork_Dome,Dome_s_m2",Sum_Labor_Formwork
+415,Total_Labor_Formwork_Interior,Total cost of Labor Formwork Interior structure in 2017,7825942.496,dollar,tol_contaiment_ce_cost,"Unit_Labor_Formwork_Interior,Internal_s_m2",Sum_Labor_Formwork
+416,Total_Labor_Maj_supp_embedments_Interior,Total cost of Labor Major Support Embedments Interior structure in 2017,3163634.82,dollar,tol_contaiment_ce_cost,"Unit_Labor_Maj_supp_embedments_Interior,Internal_v_m3",Sum_Labor_Maj_supp_embedments
+417,Total_Labor_Reinforc_steel_Substr,Total cost of Labor Reinforc steel Substructure (base mat) in 2017,4695084.505,dollar,tol_contaiment_ce_cost,"Unit_Labor_Reinforc_steel_Substr,Basemat_v_m3",Sum_Labor_Reinforc_steel
+418,Total_Labor_Reinforc_steel_Superstr,Total cost of Labor Reinforc steel Superstructure (shell) in 2017,7878531.103,dollar,tol_contaiment_ce_cost,"Unit_Labor_Reinforc_steel_Superstr,Walls_v_m3",Sum_Labor_Reinforc_steel
+419,Total_Labor_Reinforc_steel_Dome,Total cost of Labor Reinforc steel Superstructure (dome) in 2017,2922720.181,dollar,tol_contaiment_ce_cost,"Unit_Labor_Reinforc_steel_Dome,Dome_v_m3",Sum_Labor_Reinforc_steel
+420,Total_Labor_Reinforc_steel_Interior,Total cost of Labor Reinforc steel Interior structure in 2017,6320263.61,dollar,tol_contaiment_ce_cost,"Unit_Labor_Reinforc_steel_Interior,Internal_v_m3",Sum_Labor_Reinforc_steel
+421,Total_Labor_Rubbing_surfaces_Superstr,Total cost of Labor Rubbing surfaces Superstructure (shell) in 2017,293076.063,dollar,tol_contaiment_ce_cost,"Unit_Labor_Rubbing_surfaces_Superstr,Walls_s_m2",Sum_Labor_Rubbing_surfaces
+422,Total_Labor_Rubbing_surfaces_Dome,Total cost of Labor Rubbing surfaces Superstructure (dome) in 2017,104683.4188,dollar,tol_contaiment_ce_cost,"Unit_Labor_Rubbing_surfaces_Dome,Dome_s_m2",Sum_Labor_Rubbing_surfaces
+423,Total_Labor_Rubbing_surfaces_Interior,Total cost of Labor Rubbing surfaces Interior structure in 2017,334982.2483,dollar,tol_contaiment_ce_cost,"Unit_Labor_Rubbing_surfaces_Interior,Internal_s_m2",Sum_Labor_Rubbing_surfaces
+424,Total_Labor_Waterproofing_Substr,Total cost of Labor Waterproofing Substructure (base mat) in 2017,21872.4223,dollar,tol_contaiment_ce_cost,"Unit_Labor_Waterproofing_Substr,Basemat_s_m2",Sum_Labor_Waterproofing
+425,Total_Labor_Waterproofing_Superstr,Total cost of Labor Waterproofing Superstructure (shell) in 2017,29589.41021,dollar,tol_contaiment_ce_cost,"Unit_Labor_Waterproofing_Superstr,Walls_s_m2",Sum_Labor_Waterproofing
+426,Total_Labor_Waterproofing_Dome,Total cost of Labor Waterproofing Superstructure (dome) in 2017,0,dollar,tol_contaiment_ce_cost,"Unit_Labor_Waterproofing_Dome,Dome_s_m2",Sum_Labor_Waterproofing
+427,Total_Labor_Welded_wire_fabric_Substr,Total cost of Labor Welded wire fabric Substructure (base mat) in 2017,48090.67524,dollar,tol_contaiment_ce_cost,"Unit_Labor_Welded_wire_fabric_Substr,Basemat_s_m2",Sum_Labor_Welded_wire_fabric
+428,Total_Labor_Lighting_Power,Total cost of Labor Lighting Power in 2017,2440442.179,dollar,tol_contaiment_ce_cost,"Unit_Labor_Lighting_Power,Intern_tot_v_m3",Tot_Labor_equipment
+429,Total_Labor_Plumb_drains,Total cost of Labor Plumb drains in 2017,749759.4487,dollar,tol_contaiment_ce_cost,"Unit_Labor_Plumb_drains,Intern_tot_v_m3",Tot_Labor_equipment
+430,Total_Labor_Special_HVAC,Total cost of Labor Special HVAC in 2017,2753255.724,dollar,tol_contaiment_ce_cost,"Unit_Labor_Special_HVAC,Intern_tot_v_m3",Tot_Labor_equipment
+431,Total_Labor_other,Total cost of Labor other in 2017,131580.3006,dollar,tol_contaiment_ce_cost,"Unit_Labor_other,Intern_tot_v_m3",Tot_Labor_equipment
+432,Total_Labor_Misc_steel_frames,Total cost of Labor miscellaneous steel frames in 2017,686297.4095,dollar,tol_contaiment_ce_cost,"Unit_Labor_Misc_steel_frames,Struct_v_m3",Tot_Labor_others
+433,Total_Labor_React_cav_liner,Total cost of Labor Reactor cavity liner plate in 2017,2188185.873,dollar,tol_contaiment_ce_cost,"Unit_Labor_React_cav_liner,React_cav_A_m2",Tot_Labor_others
+434,Total_Labor_Struct_steel,Total cost of Labor Struct steel in 2017,965235.1896,dollar,tol_contaiment_ce_cost,"Unit_Labor_Struct_steel,Struct_v_m3",Tot_Labor_others
+435,Total_Labor_cont_liner,Total cost of Labor Containment liner in 2017,23395318.53,dollar,tol_contaiment_ce_cost,"Unit_Labor_cont_liner,Liner_s_m2",Tot_Labor_others
+436,Total_Labor_fl_grate_handrail_stairs,"Total cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017",434463.2567,dollar,tol_contaiment_ce_cost,"Unit_Labor_fl_grate_handrail_stairs,Intern_tot_v_m3",Tot_Labor_others
+437,Total_Labor_painting,Total cost of Labor painting in 2017,7941226.681,dollar,tol_contaiment_ce_cost,"Unit_Labor_painting,Surf_paint_m2",Tot_Labor_others
+438,Total_Mat_Cadweld_Substr,Total cost of Material Cadweld Substructure (base mat) in 2017,645128.3375,dollar,tol_contaiment_ce_cost,"Unit_Mat_Cadweld_Substr,Basemat_v_m3",Sum_Mat_Cadweld
+439,Total_Mat_Cadweld_Superstr,Total cost of Material Cadweld Superstructure (shell) in 2017,1435930.116,dollar,tol_contaiment_ce_cost,"Unit_Mat_Cadweld_Superstr,Walls_v_m3",Sum_Mat_Cadweld
+440,Total_Mat_Cadweld_Dome,Total cost of Material Cadweld Superstructure (dome) in 2017,1165451.204,dollar,tol_contaiment_ce_cost,"Unit_Mat_Cadweld_Dome,Dome_v_m3",Sum_Mat_Cadweld
+441,Total_Mat_Cadweld_Interior,Total cost of Material Cadweld Interior structure in 2017,515149.2901,dollar,tol_contaiment_ce_cost,"Unit_Mat_Cadweld_Interior,Internal_v_m3",Sum_Mat_Cadweld
+442,Total_Mat_Concrete_Substr,Total cost of Material Concrete Substructure (base mat) in 2017,1151391.054,dollar,tol_contaiment_ce_cost,"Unit_Mat_Concrete_Substr,Basemat_v_m3",Sum_Mat_Concrete
+443,Total_Mat_Concrete_Superstr,Total cost of Material Concrete Superstructure (shell) in 2017,1315866.646,dollar,tol_contaiment_ce_cost,"Unit_Mat_Concrete_Superstr,Walls_v_m3",Sum_Mat_Concrete
+444,Total_Mat_Concrete_Dome,Total cost of Material Concrete Superstructure (dome) in 2017,472890.213,dollar,tol_contaiment_ce_cost,"Unit_Mat_Concrete_Dome,Dome_v_m3",Sum_Mat_Concrete
+445,Total_Mat_Concrete_Interior,Total cost of Material Concrete Interior structure in 2017,1096443.749,dollar,tol_contaiment_ce_cost,"Unit_Mat_Concrete_Interior,Internal_v_m3",Sum_Mat_Concrete
+446,Total_Mat_Constr_joints_Substr,Total cost of Material Construction joints Substructure (base mat) in 2017,42503.17871,dollar,tol_contaiment_ce_cost,"Unit_Mat_Constr_joints_Substr,Basemat_s_m2",Sum_Mat_Constr_joints
+447,Total_Mat_Constr_joints_Superstr,Total cost of Material Construction joints Superstructure (shell) in 2017,268770.4761,dollar,tol_contaiment_ce_cost,"Unit_Mat_Constr_joints_Superstr,Walls_s_m2",Sum_Mat_Constr_joints
+448,Total_Mat_Constr_joints_Dome,Total cost of Material Construction joints Superstructure (dome) in 2017,53071.2106,dollar,tol_contaiment_ce_cost,"Unit_Mat_Constr_joints_Dome,Dome_s_m2",Sum_Mat_Constr_joints
+449,Total_Mat_Constr_joints_Interior,Total cost of Material Construction joints Interior structure in 2017,42591.08304,dollar,tol_contaiment_ce_cost,"Unit_Mat_Constr_joints_Interior,Internal_s_m2",Sum_Mat_Constr_joints
+450,Total_Mat_Embedded_steel_Substr,Total cost of Material Embedded steel Substructure (base mat) in 2017,27365.55222,dollar,tol_contaiment_ce_cost,"Unit_Mat_Embedded_steel_Substr,Basemat_v_m3",Sum_Mat_Embedded_steel
+451,Total_Mat_Embedded_steel_Superstr,Total cost of Material Embedded steel Superstructure (shell) in 2017,182873.3341,dollar,tol_contaiment_ce_cost,"Unit_Mat_Embedded_steel_Superstr,Walls_v_m3",Sum_Mat_Embedded_steel
+452,Total_Mat_Embedded_steel_Dome,Total cost of Material Embedded steel Superstructure (dome) in 2017,0,dollar,tol_contaiment_ce_cost,"Unit_Mat_Embedded_steel_Dome,Dome_v_m3",Sum_Mat_Embedded_steel
+453,Total_Mat_Embedded_steel_Interior,Total cost of Material Embedded steel Interior structure in 2017,3291391.844,dollar,tol_contaiment_ce_cost,"Unit_Mat_Embedded_steel_Interior,Internal_v_m3",Sum_Mat_Embedded_steel
+454,Total_Mat_Formwork_Substr,Total cost of Material Formwork Substructure (base mat) in 2017,63133.93512,dollar,tol_contaiment_ce_cost,"Unit_Mat_Formwork_Substr,Basemat_s_m2",Sum_Mat_Formwork
+455,Total_Mat_Formwork_Superstr,Total cost of Material Formwork Superstructure (shell) in 2017,480827.9159,dollar,tol_contaiment_ce_cost,"Unit_Mat_Formwork_Superstr,Walls_s_m2",Sum_Mat_Formwork
+456,Total_Mat_Formwork_Dome,Total cost of Material Formwork Superstructure (dome) in 2017,139881.8506,dollar,tol_contaiment_ce_cost,"Unit_Mat_Formwork_Dome,Dome_s_m2",Sum_Mat_Formwork
+457,Total_Mat_Formwork_Interior,Total cost of Material Formwork Interior structure in 2017,738583.4638,dollar,tol_contaiment_ce_cost,"Unit_Mat_Formwork_Interior,Internal_s_m2",Sum_Mat_Formwork
+458,Total_Mat_Maj_supp_embedments_Interior,Total cost of Material Major Support Embedments Interior structure in 2017,4643555.701,dollar,tol_contaiment_ce_cost,"Unit_Mat_Maj_supp_embedments_Interior,Internal_v_m3",Sum_Mat_Maj_supp_embedments
+459,Total_Mat_Reinforc_steel_Substr,Total cost of Material Reinforc steel Substructure (base mat) in 2017,5309062.692,dollar,tol_contaiment_ce_cost,"Unit_Mat_Reinforc_steel_Substr,Basemat_v_m3",Sum_Mat_Reinforc_steel
+460,Total_Mat_Reinforc_steel_Superstr,Total cost of Material Reinforc steel Superstructure (shell) in 2017,6255620.854,dollar,tol_contaiment_ce_cost,"Unit_Mat_Reinforc_steel_Superstr,Walls_v_m3",Sum_Mat_Reinforc_steel
+461,Total_Mat_Reinforc_steel_Dome,Total cost of Material Reinforc steel Superstructure (dome) in 2017,2320691.946,dollar,tol_contaiment_ce_cost,"Unit_Mat_Reinforc_steel_Dome,Dome_v_m3",Sum_Mat_Reinforc_steel
+462,Total_Mat_Reinforc_steel_Interior,Total cost of Material Reinforc steel Interior structure in 2017,4237824.12,dollar,tol_contaiment_ce_cost,"Unit_Mat_Reinforc_steel_Interior,Internal_v_m3",Sum_Mat_Reinforc_steel
+463,Total_Mat_Rubbing_surfaces_Superstr,Total cost of Material Rubbing surfaces Superstructure (shell) in 2017,23953.33207,dollar,tol_contaiment_ce_cost,"Unit_Mat_Rubbing_surfaces_Superstr,Walls_s_m2",Sum_Mat_Rubbing_surfaces
+464,Total_Mat_Rubbing_surfaces_Dome,Total cost of Material Rubbing surfaces Superstructure (dome) in 2017,8571.638825,dollar,tol_contaiment_ce_cost,"Unit_Mat_Rubbing_surfaces_Dome,Dome_s_m2",Sum_Mat_Rubbing_surfaces
+465,Total_Mat_Rubbing_surfaces_Interior,Total cost of Material Rubbing surfaces Interior structure in 2017,27718.00642,dollar,tol_contaiment_ce_cost,"Unit_Mat_Rubbing_surfaces_Interior,Internal_s_m2",Sum_Mat_Rubbing_surfaces
+466,Total_Mat_Waterproofing_Substr,Total cost of Material Waterproofing Substructure (base mat) in 2017,11604.80048,dollar,tol_contaiment_ce_cost,"Unit_Mat_Waterproofing_Substr,Basemat_s_m2",Sum_Mat_Waterproofing
+467,Total_Mat_Waterproofing_Superstr,Total cost of Material Waterproofing Superstructure (shell) in 2017,15851.46976,dollar,tol_contaiment_ce_cost,"Unit_Mat_Waterproofing_Superstr,Walls_s_m2",Sum_Mat_Waterproofing
+468,Total_Mat_Waterproofing_Dome,Total cost of Material Waterproofing Superstructure (dome) in 2017,0,dollar,tol_contaiment_ce_cost,"Unit_Mat_Waterproofing_Dome,Dome_s_m2",Sum_Mat_Waterproofing
+469,Total_Mat_Welded_wire_fabric_Substr,Total cost of Material Welded wire fabric Substructure (base mat) in 2017,24785.56152,dollar,tol_contaiment_ce_cost,"Unit_Mat_Welded_wire_fabric_Substr,Basemat_s_m2",Sum_Mat_Welded_wire_fabric
+470,Total_Mat_Lighting_Power,Total cost of Material Lighting Power in 2017,1231393.002,dollar,tol_contaiment_ce_cost,"Unit_Mat_Lighting_Power,Intern_tot_v_m3",Tot_Mat_equipment
+471,Total_Mat_Plumb_drains,Total cost of Material Plumb drains in 2017,382327.6659,dollar,tol_contaiment_ce_cost,"Unit_Mat_Plumb_drains,Intern_tot_v_m3",Tot_Mat_equipment
+472,Total_Mat_Special_HVAC,Total cost of Material Special HVAC in 2017,2182246.872,dollar,tol_contaiment_ce_cost,"Unit_Mat_Special_HVAC,Intern_tot_v_m3",Tot_Mat_equipment
+473,Total_Mat_other,Total cost of Material other in 2017,486598.8475,dollar,tol_contaiment_ce_cost,"Unit_Mat_other,Intern_tot_v_m3",Tot_Mat_equipment
+474,Total_Mat_Misc_steel_frames,Total cost of Material miscellaneous steel frames in 2017,1143368.722,dollar,tol_contaiment_ce_cost,"Unit_Mat_Misc_steel_frames,Struct_v_m3",Tot_Mat_others
+475,Total_Mat_React_cav_liner,Total cost of Material Reactor cavity liner plate in 2017,1783426.929,dollar,tol_contaiment_ce_cost,"Unit_Mat_React_cav_liner,React_cav_A_m2",Tot_Mat_others
+476,Total_Mat_Struct_steel,Total cost of Material Struct steel in 2017,1892496.177,dollar,tol_contaiment_ce_cost,"Unit_Mat_Struct_steel,Struct_v_m3",Tot_Mat_others
+477,Total_Mat_cont_liner,Total cost of Material Containment liner in 2017,36067520.4,dollar,tol_contaiment_ce_cost,"Unit_Mat_cont_liner,Liner_s_m2",Tot_Mat_others
+478,Total_Mat_fl_grate_handrail_stairs,"Total cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017",491564.1418,dollar,tol_contaiment_ce_cost,"Unit_Mat_fl_grate_handrail_stairs,Intern_tot_v_m3",Tot_Mat_others
+479,Total_Mat_painting,Total cost of Material painting in 2017,2257943.255,dollar,tol_contaiment_ce_cost,"Unit_Mat_painting,Surf_paint_m2",Tot_Mat_others
+480,Sum_Labor_Cadweld,Total cost of Labor Cadweld,7253301.278,dollar,sum_ce,"Total_Labor_Cadweld_Substr,Total_Labor_Cadweld_Superstr,Total_Labor_Cadweld_Dome,Total_Labor_Cadweld_Interior",Tot_Labor_concr
+481,Sum_Labor_Concrete,Total cost of Labor Concrete,5935958.303,dollar,sum_ce,"Total_Labor_Concrete_Substr,Total_Labor_Concrete_Superstr,Total_Labor_Concrete_Dome,Total_Labor_Concrete_Interior",Tot_Labor_concr
+482,Sum_Labor_Constr_joints,Total cost of Labor Constr joints,663422.864,dollar,sum_ce,"Total_Labor_Constr_joints_Substr,Total_Labor_Constr_joints_Superstr,Total_Labor_Constr_joints_Dome,Total_Labor_Constr_joints_Interior",Tot_Labor_concr
+483,Sum_Labor_Embedded_steel,Total cost of Labor Embedded steel,7391069.808,dollar,sum_ce,"Total_Labor_Embedded_steel_Substr,Total_Labor_Embedded_steel_Superstr,Total_Labor_Embedded_steel_Dome,Total_Labor_Embedded_steel_Interior",Tot_Labor_concr
+484,Sum_Labor_Formwork,Total cost of Labor Formwork,13209231.02,dollar,sum_ce,"Total_Labor_Formwork_Substr,Total_Labor_Formwork_Superstr,Total_Labor_Formwork_Dome,Total_Labor_Formwork_Interior",Tot_Labor_concr
+485,Sum_Labor_Maj_supp_embedments,Total cost of Labor Maj supp embedments,3163634.82,dollar,sum_ce,Total_Labor_Maj_supp_embedments_Interior,Tot_Labor_concr
+486,Sum_Labor_Reinforc_steel,Total cost of Labor Reinforc steel,21816599.4,dollar,sum_ce,"Total_Labor_Reinforc_steel_Substr,Total_Labor_Reinforc_steel_Superstr,Total_Labor_Reinforc_steel_Dome,Total_Labor_Reinforc_steel_Interior",Tot_Labor_concr
+487,Sum_Labor_Rubbing_surfaces,Total cost of Labor Rubbing surfaces,732741.7302,dollar,sum_ce,"Total_Labor_Rubbing_surfaces_Superstr,Total_Labor_Rubbing_surfaces_Dome,Total_Labor_Rubbing_surfaces_Interior",Tot_Labor_concr
+488,Sum_Labor_Waterproofing,Total cost of Labor Waterproofing,51461.83251,dollar,sum_ce,"Total_Labor_Waterproofing_Substr,Total_Labor_Waterproofing_Superstr,Total_Labor_Waterproofing_Dome",Tot_Labor_concr
+489,Sum_Labor_Welded_wire_fabric,Total cost of Labor Welded wire fabric,48090.67524,dollar,sum_ce,Total_Labor_Welded_wire_fabric_Substr,Tot_Labor_concr
+490,Sum_Mat_Cadweld,Total cost of Material Cadweld,3761658.947,dollar,sum_ce,"Total_Mat_Cadweld_Substr,Total_Mat_Cadweld_Superstr,Total_Mat_Cadweld_Dome,Total_Mat_Cadweld_Interior",Tot_Mat_concr
+491,Sum_Mat_Concrete,Total cost of Material Concrete,4036591.661,dollar,sum_ce,"Total_Mat_Concrete_Substr,Total_Mat_Concrete_Superstr,Total_Mat_Concrete_Dome,Total_Mat_Concrete_Interior",Tot_Mat_concr
+492,Sum_Mat_Constr_joints,Total cost of Material Constr joints,406935.9484,dollar,sum_ce,"Total_Mat_Constr_joints_Substr,Total_Mat_Constr_joints_Superstr,Total_Mat_Constr_joints_Dome,Total_Mat_Constr_joints_Interior",Tot_Mat_concr
+493,Sum_Mat_Embedded_steel,Total cost of Material Embedded steel,3501630.73,dollar,sum_ce,"Total_Mat_Embedded_steel_Substr,Total_Mat_Embedded_steel_Superstr,Total_Mat_Embedded_steel_Dome,Total_Mat_Embedded_steel_Interior",Tot_Mat_concr
+494,Sum_Mat_Formwork,Total cost of Material Formwork,1422427.165,dollar,sum_ce,"Total_Mat_Formwork_Substr,Total_Mat_Formwork_Superstr,Total_Mat_Formwork_Dome,Total_Mat_Formwork_Interior",Tot_Mat_concr
+495,Sum_Mat_Maj_supp_embedments,Total cost of Material Maj supp embedments,1467166.11,dollar,sum_ce,Total_Mat_Maj_supp_embedments_Interior,Tot_Mat_concr
+496,Sum_Mat_Reinforc_steel,Total cost of Material Reinforc steel,18123199.61,dollar,sum_ce,"Total_Mat_Reinforc_steel_Substr,Total_Mat_Reinforc_steel_Superstr,Total_Mat_Reinforc_steel_Dome,Total_Mat_Reinforc_steel_Interior",Tot_Mat_concr
+497,Sum_Mat_Rubbing_surfaces,Total cost of Material Rubbing surfaces,60242.97732,dollar,sum_ce,"Total_Mat_Rubbing_surfaces_Superstr,Total_Mat_Rubbing_surfaces_Dome,Total_Mat_Rubbing_surfaces_Interior",Tot_Mat_concr
+498,Sum_Mat_Waterproofing,Total cost of Material Waterproofing,27456.27023,dollar,sum_ce,"Total_Mat_Waterproofing_Substr,Total_Mat_Waterproofing_Superstr,Total_Mat_Waterproofing_Dome",Tot_Mat_concr
+499,Sum_Mat_Welded_wire_fabric,Total cost of Material Welded wire fabric,24785.56152,dollar,sum_ce,Total_Mat_Welded_wire_fabric_Substr,Tot_Mat_concr
+500,Tot_Labor_concr,Total cost of labor of containment construction,60265511.73,dollar,sum_ce,"Sum_Labor_Cadweld,Sum_Labor_Concrete,Sum_Labor_Constr_joints,Sum_Labor_Embedded_steel,Sum_Labor_Formwork,Sum_Labor_Maj_supp_embedments,Sum_Labor_Reinforc_steel,Sum_Labor_Rubbing_surfaces,Sum_Labor_Waterproofing,Sum_Labor_Welded_wire_fabric",Tot_Labor_containment
+501,Tot_Labor_equipment,Total cost of labor of containment equipments,6075037.652,dollar,sum_ce,"Total_Labor_Lighting_Power,Total_Labor_Plumb_drains,Total_Labor_Special_HVAC,Total_Labor_other",Tot_Labor_containment
+502,Tot_Labor_others,Total cost of labor of other non-concrete related items ,35610726.94,dollar,sum_ce,"Total_Labor_Misc_steel_frames,Total_Labor_React_cav_liner,Total_Labor_Struct_steel,Total_Labor_cont_liner,Total_Labor_fl_grate_handrail_stairs,Total_Labor_painting",Tot_Labor_containment
+503,Tot_Mat_concr,Total cost of material of containment construction,32832094.98,dollar,sum_ce,"Sum_Mat_Cadweld,Sum_Mat_Concrete,Sum_Mat_Constr_joints,Sum_Mat_Embedded_steel,Sum_Mat_Formwork,Sum_Mat_Maj_supp_embedments,Sum_Mat_Reinforc_steel,Sum_Mat_Rubbing_surfaces,Sum_Mat_Waterproofing,Sum_Mat_Welded_wire_fabric",Tot_Mat_containment
+504,Tot_Mat_equipment,Total cost of material of containment equipments,4282566.387,dollar,sum_ce,"Total_Mat_Lighting_Power,Total_Mat_Plumb_drains,Total_Mat_Special_HVAC,Total_Mat_other",Tot_Mat_containment
+505,Tot_Mat_others,Total cost of material of other non-concrete related items ,43636319.63,dollar,sum_ce,"Total_Mat_Misc_steel_frames,Total_Mat_React_cav_liner,Total_Mat_Struct_steel,Total_Mat_cont_liner,Total_Mat_fl_grate_handrail_stairs,Total_Mat_painting",Tot_Mat_containment
+506,Tot_Labor_containment,Total cost of labor of containment,101951276.3,dollar,sum_ce,"Tot_Labor_concr,Tot_Labor_equipment,Tot_Labor_others",NULL
+507,Tot_Mat_containment,Total cost of material of containment,80750981,dollar,sum_ce,"Tot_Mat_concr,Tot_Mat_equipment,Tot_Mat_others",NULL

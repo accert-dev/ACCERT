@@ -1,0 +1,1575 @@
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+    -webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+    table, pre {
+        page-break-inside: avoid;
+    }
+    pre {
+        word-wrap: break-word;
+    }
+}
+</style>
+</head>
+<h1 id="getting-started">Getting Started</h1>
+<p>The main function of ACCERT (The Algorithm for the Capital Cost
+Estimation of Reactor Technologies) is to provide an item-by-item
+estimate of the cost of a facility, at present a nuclear reactor
+complex, primarily nuclear power stations. The core of ACCERT is the
+large number of algorithms that have been developed and will continue to
+be developed. ACCERT is also a general methodology for identifying and
+organizing the individual items that are estimated using the ACCERT
+algorithms. ACCERT also summarize status and results; to save results
+and pull information from previous analyses; and to provide an
+interactive dynamic graphical user interface for a wide range of
+functions and visualizations.</p>
+<p>The software comprises three major components: * Relational Database
+* Creation, editing, and linking of different element types * Report
+generation (queries) * Search * Equation solvers (extraction of
+information from elements and evaluation/updating of fields in the
+database) * Algorithms * Escalation * Cost aggregation * Interactive
+Graphical User Interface * Dynamic windows</p>
+<p>ACCERT is designed for integration with the <a
+href="https://www.ornl.gov/project/neams-workbench">NEAMS Workbench</a>
+and relies on input files using Workbench’s SON format. Instructions for
+installing ACCERT both with and without Workbench are provided in this
+README.</p>
+<h2 id="installation">Installation</h2>
+<h3 id="clone-accert">Clone ACCERT</h3>
+<ul>
+<li>Open a terminal window and cd into the folder where you want to
+install ACCERT (e.g., CODE)</li>
+</ul>
+<pre class="console"><code>[~]&gt; mkdir CODE  
+[~]&gt; cd CODE   
+[~/CODE]&gt; git clone https://git-out.gss.anl.gov/jia.zhou/accert.git   
+[~/CODE]&gt; cd accert</code></pre>
+<h3 id="installation-of-mysql-community-server">Installation of MySQL
+Community Server</h3>
+<ul>
+<li><p>Obtain the <a href="https://dev.mysql.com/downloads/mysql/">MySQL
+Community Server</a></p></li>
+<li><p>Install MySQL Community Server</p>
+<p>[<strong>NOTE</strong>] You’ll need to enter a <strong>strong
+password</strong> under Root Account Password. Don’t forget your
+password! It’s extremely important that you keep track of your root
+password for MySQL, as it’s difficult to reset. Write it down somewhere
+easily accessible, or add it to a password manager to keep it
+secure.</p></li>
+</ul>
+<h3 id="installation-of-accert-libraries">Installation of ACCERT
+libraries</h3>
+<ul>
+<li>Install ACCERT libraries</li>
+</ul>
+<pre class="console"><code>[~/accert]&gt;pip install -r requirements.txt</code></pre>
+<h3 id="installation-of-neams-workbench">Installation of NEAMS
+Workbench</h3>
+<ul>
+<li>Obtain and install the <a
+href="https://code.ornl.gov/neams-workbench/downloads">NEAMS
+Workbench</a></li>
+<li>Create symbolic link into ACCERT, cd into ACCERT directory</li>
+</ul>
+<pre><code>[~/accert]&gt; cp src/etc/accert_wb.py /Applications/Workbench-5.0.0.app/Contents/rte/accert.py
+[~/accert]&gt; ln -s /Applications/Workbench-5.0.0.app/Contents/wasppy ./
+[~/accert]&gt; ln -s /Applications/Workbench-5.0.0.app/Contents/bin/sonvalidxml ./bin/sonvalidxml 
+[~/accert]&gt; ln -s /Applications/Workbench-5.0.0.app/Contents/bin/docprint ./bin/docprint</code></pre>
+<h3 id="test-installation">Test installation</h3>
+<ul>
+<li>Edit <code>install.conf</code> file in ‘src’ folder, change line
+‘PASSWD =’, add your own MySQL root password, and commit your
+changes.</li>
+<li>Test python MySQL connection and installation</li>
+</ul>
+<pre><code>[~/ACCERT]&gt; cd src 
+[~/src]&gt; python installCheck.py</code></pre>
+<p><a name="startofinput"></a></p>
+<h3 id="table-of-contents">Table Of Contents</h3>
+<ul>
+<li><a href="#root_anchor">root</a>
+<ul>
+<li><a href="#accert">accert</a>
+<ul>
+<li><a href="#accertpower">power</a></li>
+<li><a href="#accertvar">var</a></li>
+<li><a href="#accertl0coa">l0COA</a>
+<ul>
+<li><a href="#accertl0coal1coa">l1COA</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#refchoicelists">Referenced Choice Lists</a></li>
+</ul>
+<hr />
+<h3 id="section"><a name="root_anchor"></a><a
+href="#root_anchor">/</a></h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><a href="#accert">accert</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">[optional] for accert calculations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="accert"><a name="accert"></a><a href="#root_anchor">/</a><a
+href="#accert">accert</a></h3>
+<h4 id="optional-for-accert-calculations">[optional] for accert
+calculations</h4>
+<h5 id="how-many-0-or-1">How Many: 0 or 1</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">ref_model<a name="accertref_model"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>pwr12-be<br>abr1000<br></td>
+<td style="text-align: center;">[required] User input reference
+model</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a href="#accertpower">power</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">1 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">[required] User input power</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><a href="#accertvar">var</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">changed variable value</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a href="#accertl0coa">l0COA</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">level 0 code of account</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="accertpower"><a name="accertpower"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertpower">power</a></h3>
+<h4 id="required-user-input-power">[required] User input power</h4>
+<h5 id="how-many-1-or-more">How Many: 1 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">id<a name="accertpowerid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>thermal<br>electric<br>rejectedthermal<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;">value<a name="accertpowervalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>(0.0,+INF)</td>
+<td style="text-align: center;">[required] variable value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">unit<a name="accertpowerunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>w<br>kw<br>mw<br></td>
+<td style="text-align: center;">[required] variable unit</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="accertvar"><a name="accertvar"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertvar">var</a></h3>
+<h4 id="changed-variable-value">changed variable value</h4>
+<h5 id="how-many-0-or-more">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">id<a name="accertvarid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>c_213_fac<br>c_213_lab<br>c_213_mat<br>c_220a.2121_ss_weight<br>c_220a.2122_ss_weight<br>c_220a.222_ss_weight<br>c_222_fac<br>c_222_lab<br>c_222_mat<br>c_222.11_fac<br>c_222.11_lab<br>c_222.11_mat<br>c_222.12_fac<br>c_222.12_lab<br>c_222.12_mat<br>c_222.13_fac<br>c_222.14_fac<br>c_222.14_lab<br>c_222.14_mat<br>c_231_fac<br>c_231_lab<br>c_231_mat<br>c_233_fac<br>c_233_lab<br>c_233_mat<br>c_241_fac<br>c_241_lab<br>c_241_mat<br>c_242_fac<br>c_242_lab<br>c_242_mat<br>c_245_fac<br>c_245_lab<br>c_245_mat<br>c_246_fac<br>c_246_lab<br>c_246_mat<br>c_262_fac<br>c_262_lab<br>c_262_mat<br>c_cr_per_unit_fac<br>c_crd_per_unit_fac<br>c_pump_ap1000<br>c_pump_per_unit_fac<br>c_turbine<br>c_zero<br>ch_abr1000<br>ch_ap1000<br>escalate_1987<br>mwe<br>mwreth<br>mwth<br>no_of_cr<br>no_of_crd<br>no_of_rcpump<br>prn_235_of_231_fac<br>prn_235_of_231_lab<br>prn_235_of_231_mat<br>prn_fac_231_lab<br>prn_fac_231_mat<br>r_222.13_lab<br>r_222.13_mat<br>r_78_220a224_fac<br>r_78_226.4_fac<br>ref_211_fac<br>ref_211_lab<br>ref_211_mat<br>ref_224_fac<br>ref_224_lab<br>ref_224_mat<br>ref_227_fac<br>ref_227_lab<br>ref_227_mat<br>ref_252_fac<br>ref_252_lab<br>ref_252_mat<br>scale_0.4<br>scale_0.52<br>scale_0.8<br>scale_1.0<br>scale_tur_231_fac<br>cpi<br>void_fraction<br>liner_fraction<br>cont_h_tot_m<br>cont_rad_out_m<br>cont_shell_t_m<br>cont_h_wall_m<br>basemat_t_m<br>dome_t_m<br>intern_wall_t<br>react_cav_a_m2<br>cont_rad_in_m<br>basemat_s_m2<br>basemat_v_m3<br>walls_s_m2<br>walls_v_m3<br>dome_rad_in_m<br>dome_s_m2<br>dome_v_m3<br>intern_tot_v_m3<br>internal_v_m3<br>internal_s_m2<br>struct_v_m3<br>inside_liner_s<br>liner_s_m2<br>surf_paint_m2<br>infl<br>unit_eedb_labor_cadweld_substr<br>unit_eedb_labor_cadweld_superstr<br>unit_eedb_labor_cadweld_dome<br>unit_eedb_labor_cadweld_interior<br>unit_eedb_labor_concrete_substr<br>unit_eedb_labor_concrete_superstr<br>unit_eedb_labor_concrete_dome<br>unit_eedb_labor_concrete_interior<br>unit_eedb_labor_constr_joints_substr<br>unit_eedb_labor_constr_joints_superstr<br>unit_eedb_labor_constr_joints_dome<br>unit_eedb_labor_constr_joints_interior<br>unit_eedb_labor_embedded_steel_substr<br>unit_eedb_labor_embedded_steel_superstr<br>unit_eedb_labor_embedded_steel_dome<br>unit_eedb_labor_embedded_steel_interior<br>unit_eedb_labor_formwork_substr<br>unit_eedb_labor_formwork_superstr<br>unit_eedb_labor_formwork_dome<br>unit_eedb_labor_formwork_interior<br>unit_eedb_labor_maj_supp_embedments_interior<br>unit_eedb_labor_reinforc_steel_substr<br>unit_eedb_labor_reinforc_steel_superstr<br>unit_eedb_labor_reinforc_steel_dome<br>unit_eedb_labor_reinforc_steel_interior<br>unit_eedb_labor_rubbing_surfaces_superstr<br>unit_eedb_labor_rubbing_surfaces_dome<br>unit_eedb_labor_rubbing_surfaces_interior<br>unit_eedb_labor_waterproofing_substr<br>unit_eedb_labor_waterproofing_superstr<br>unit_eedb_labor_waterproofing_dome<br>unit_eedb_labor_welded_wire_fabric_substr<br>unit_eedb_labor_lighting_power<br>unit_eedb_labor_plumb_drains<br>unit_eedb_labor_special_hvac<br>unit_eedb_labor_other<br>unit_eedb_labor_misc_steel_frames<br>unit_eedb_labor_react_cav_liner<br>unit_eedb_labor_struct_steel<br>unit_eedb_labor_cont_liner<br>unit_eedb_labor_fl_grate_handrail_stairs<br>unit_eedb_labor_painting<br>unit_eedb_mat_cadweld_substr<br>unit_eedb_mat_cadweld_superstr<br>unit_eedb_mat_cadweld_dome<br>unit_eedb_mat_cadweld_interior<br>unit_eedb_mat_concrete_substr<br>unit_eedb_mat_concrete_superstr<br>unit_eedb_mat_concrete_dome<br>unit_eedb_mat_concrete_interior<br>unit_eedb_mat_constr_joints_substr<br>unit_eedb_mat_constr_joints_superstr<br>unit_eedb_mat_constr_joints_dome<br>unit_eedb_mat_constr_joints_interior<br>unit_eedb_mat_embedded_steel_substr<br>unit_eedb_mat_embedded_steel_superstr<br>unit_eedb_mat_embedded_steel_dome<br>unit_eedb_mat_embedded_steel_interior<br>unit_eedb_mat_formwork_substr<br>unit_eedb_mat_formwork_superstr<br>unit_eedb_mat_formwork_dome<br>unit_eedb_mat_formwork_interior<br>unit_eedb_mat_maj_supp_embedments_interior<br>unit_eedb_mat_reinforc_steel_substr<br>unit_eedb_mat_reinforc_steel_superstr<br>unit_eedb_mat_reinforc_steel_dome<br>unit_eedb_mat_reinforc_steel_interior<br>unit_eedb_mat_rubbing_surfaces_superstr<br>unit_eedb_mat_rubbing_surfaces_dome<br>unit_eedb_mat_rubbing_surfaces_interior<br>unit_eedb_mat_waterproofing_substr<br>unit_eedb_mat_waterproofing_superstr<br>unit_eedb_mat_waterproofing_dome<br>unit_eedb_mat_welded_wire_fabric_substr<br>unit_eedb_mat_lighting_power<br>unit_eedb_mat_plumb_drains<br>unit_eedb_mat_special_hvac<br>unit_eedb_mat_other<br>unit_eedb_mat_misc_steel_frames<br>unit_eedb_mat_react_cav_liner<br>unit_eedb_mat_struct_steel<br>unit_eedb_mat_cont_liner<br>unit_eedb_mat_fl_grate_handrail_stairs<br>unit_eedb_mat_painting<br>unit_labor_cadweld_substr<br>unit_labor_cadweld_superstr<br>unit_labor_cadweld_dome<br>unit_labor_cadweld_interior<br>unit_labor_concrete_substr<br>unit_labor_concrete_superstr<br>unit_labor_concrete_dome<br>unit_labor_concrete_interior<br>unit_labor_constr_joints_substr<br>unit_labor_constr_joints_superstr<br>unit_labor_constr_joints_dome<br>unit_labor_constr_joints_interior<br>unit_labor_embedded_steel_substr<br>unit_labor_embedded_steel_superstr<br>unit_labor_embedded_steel_dome<br>unit_labor_embedded_steel_interior<br>unit_labor_formwork_substr<br>unit_labor_formwork_superstr<br>unit_labor_formwork_dome<br>unit_labor_formwork_interior<br>unit_labor_maj_supp_embedments_interior<br>unit_labor_reinforc_steel_substr<br>unit_labor_reinforc_steel_superstr<br>unit_labor_reinforc_steel_dome<br>unit_labor_reinforc_steel_interior<br>unit_labor_rubbing_surfaces_superstr<br>unit_labor_rubbing_surfaces_dome<br>unit_labor_rubbing_surfaces_interior<br>unit_labor_waterproofing_substr<br>unit_labor_waterproofing_superstr<br>unit_labor_waterproofing_dome<br>unit_labor_welded_wire_fabric_substr<br>unit_labor_lighting_power<br>unit_labor_plumb_drains<br>unit_labor_special_hvac<br>unit_labor_other<br>unit_labor_misc_steel_frames<br>unit_labor_react_cav_liner<br>unit_labor_struct_steel<br>unit_labor_cont_liner<br>unit_labor_fl_grate_handrail_stairs<br>unit_labor_painting<br>unit_mat_cadweld_substr<br>unit_mat_cadweld_superstr<br>unit_mat_cadweld_dome<br>unit_mat_cadweld_interior<br>unit_mat_concrete_substr<br>unit_mat_concrete_superstr<br>unit_mat_concrete_dome<br>unit_mat_concrete_interior<br>unit_mat_constr_joints_substr<br>unit_mat_constr_joints_superstr<br>unit_mat_constr_joints_dome<br>unit_mat_constr_joints_interior<br>unit_mat_embedded_steel_substr<br>unit_mat_embedded_steel_superstr<br>unit_mat_embedded_steel_dome<br>unit_mat_embedded_steel_interior<br>unit_mat_formwork_substr<br>unit_mat_formwork_superstr<br>unit_mat_formwork_dome<br>unit_mat_formwork_interior<br>unit_mat_maj_supp_embedments_interior<br>unit_mat_reinforc_steel_substr<br>unit_mat_reinforc_steel_superstr<br>unit_mat_reinforc_steel_dome<br>unit_mat_reinforc_steel_interior<br>unit_mat_rubbing_surfaces_superstr<br>unit_mat_rubbing_surfaces_dome<br>unit_mat_rubbing_surfaces_interior<br>unit_mat_waterproofing_substr<br>unit_mat_waterproofing_superstr<br>unit_mat_waterproofing_dome<br>unit_mat_welded_wire_fabric_substr<br>unit_mat_lighting_power<br>unit_mat_plumb_drains<br>unit_mat_special_hvac<br>unit_mat_other<br>unit_mat_misc_steel_frames<br>unit_mat_react_cav_liner<br>unit_mat_struct_steel<br>unit_mat_cont_liner<br>unit_mat_fl_grate_handrail_stairs<br>unit_mat_painting<br>total_labor_cadweld_substr<br>total_labor_cadweld_superstr<br>total_labor_cadweld_dome<br>total_labor_cadweld_interior<br>total_labor_concrete_substr<br>total_labor_concrete_superstr<br>total_labor_concrete_dome<br>total_labor_concrete_interior<br>total_labor_constr_joints_substr<br>total_labor_constr_joints_superstr<br>total_labor_constr_joints_dome<br>total_labor_constr_joints_interior<br>total_labor_embedded_steel_substr<br>total_labor_embedded_steel_superstr<br>total_labor_embedded_steel_dome<br>total_labor_embedded_steel_interior<br>total_labor_formwork_substr<br>total_labor_formwork_superstr<br>total_labor_formwork_dome<br>total_labor_formwork_interior<br>total_labor_maj_supp_embedments_interior<br>total_labor_reinforc_steel_substr<br>total_labor_reinforc_steel_superstr<br>total_labor_reinforc_steel_dome<br>total_labor_reinforc_steel_interior<br>total_labor_rubbing_surfaces_superstr<br>total_labor_rubbing_surfaces_dome<br>total_labor_rubbing_surfaces_interior<br>total_labor_waterproofing_substr<br>total_labor_waterproofing_superstr<br>total_labor_waterproofing_dome<br>total_labor_welded_wire_fabric_substr<br>total_labor_lighting_power<br>total_labor_plumb_drains<br>total_labor_special_hvac<br>total_labor_other<br>total_labor_misc_steel_frames<br>total_labor_react_cav_liner<br>total_labor_struct_steel<br>total_labor_cont_liner<br>total_labor_fl_grate_handrail_stairs<br>total_labor_painting<br>total_mat_cadweld_substr<br>total_mat_cadweld_superstr<br>total_mat_cadweld_dome<br>total_mat_cadweld_interior<br>total_mat_concrete_substr<br>total_mat_concrete_superstr<br>total_mat_concrete_dome<br>total_mat_concrete_interior<br>total_mat_constr_joints_substr<br>total_mat_constr_joints_superstr<br>total_mat_constr_joints_dome<br>total_mat_constr_joints_interior<br>total_mat_embedded_steel_substr<br>total_mat_embedded_steel_superstr<br>total_mat_embedded_steel_dome<br>total_mat_embedded_steel_interior<br>total_mat_formwork_substr<br>total_mat_formwork_superstr<br>total_mat_formwork_dome<br>total_mat_formwork_interior<br>total_mat_maj_supp_embedments_interior<br>total_mat_reinforc_steel_substr<br>total_mat_reinforc_steel_superstr<br>total_mat_reinforc_steel_dome<br>total_mat_reinforc_steel_interior<br>total_mat_rubbing_surfaces_superstr<br>total_mat_rubbing_surfaces_dome<br>total_mat_rubbing_surfaces_interior<br>total_mat_waterproofing_substr<br>total_mat_waterproofing_superstr<br>total_mat_waterproofing_dome<br>total_mat_welded_wire_fabric_substr<br>total_mat_lighting_power<br>total_mat_plumb_drains<br>total_mat_special_hvac<br>total_mat_other<br>total_mat_misc_steel_frames<br>total_mat_react_cav_liner<br>total_mat_struct_steel<br>total_mat_cont_liner<br>total_mat_fl_grate_handrail_stairs<br>total_mat_painting<br>sum_labor_cadweld<br>sum_labor_concrete<br>sum_labor_constr_joints<br>sum_labor_embedded_steel<br>sum_labor_formwork<br>sum_labor_maj_supp_embedments<br>sum_labor_reinforc_steel<br>sum_labor_rubbing_surfaces<br>sum_labor_waterproofing<br>sum_labor_welded_wire_fabric<br>sum_mat_cadweld<br>sum_mat_concrete<br>sum_mat_constr_joints<br>sum_mat_embedded_steel<br>sum_mat_formwork<br>sum_mat_maj_supp_embedments<br>sum_mat_reinforc_steel<br>sum_mat_rubbing_surfaces<br>sum_mat_waterproofing<br>sum_mat_welded_wire_fabric<br>tot_labor_concr<br>tot_labor_equipment<br>tot_labor_others<br>tot_mat_concr<br>tot_mat_equipment<br>tot_mat_others<br>tot_labor_containment<br>tot_mat_containment<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">value<a name="accertvarvalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>[0.0,+INF)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">unit<a name="accertvarunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>mw<br>w<br>lbs<br>ton<br>kg<br>million<br>gpm*feet<br>1<br>m<br>m<sup>2<br>m</sup>3<br>dollar/m<sup>3<br>dollar/m</sup>2<br></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="accertl0coa"><a name="accertl0coa"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a></h3>
+<h4 id="level-0-code-of-account">level 0 code of account</h4>
+<h5 id="how-many-0-or-more-1">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">id<a name="accertl0coaid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>1<br>2<br>3<br>4<br>5<br>new<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coa">l1COA</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="accertl0coal1coa"><a name="accertl0coal1coa"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a></h3>
+<h5 id="how-many-0-or-more-2">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">id<a name="accertl0coal1coaid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>21<br>22<br>23<br>24<br>25<br>26<br>new<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coatotal_cost">total_cost</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">total cost value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coa">l2COA</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coatotal_cost"><a name="accertl0coal1coatotal_cost"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coatotal_cost">total_cost</a></h3>
+<h4 id="total-cost-value">total cost value</h4>
+<h5 id="how-many-0-or-more-3">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">value<a name="accertl0coal1coatotal_costvalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>[0.0,+INF)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;">unit<a name="accertl0coal1coatotal_costunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>million<br>dollar<br></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="accertl0coal1coal2coa"><a name="accertl0coal1coal2coa"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a></h3>
+<h5 id="how-many-0-or-more-4">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coaid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>211<br>212<br>213<br>214<br>215<br>216<br>217<br>218<br>220a<br>221<br>222<br>223<br>224<br>225<br>226<br>227<br>228<br>231<br>233<br>234<br>235<br>236<br>237<br>241<br>242<br>243<br>244<br>245<br>246<br>251<br>252<br>253<br>254<br>255<br>261<br>262<br>new<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coatotal_cost">total_cost</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">total cost value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coace">ce</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coal3coa">l3COA</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coatotal_cost"><a name="accertl0coal1coal2coatotal_cost"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coatotal_cost">total_cost</a></h3>
+<h4 id="total-cost-value-1">total cost value</h4>
+<h5 id="how-many-0-or-more-5">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">value<a name="accertl0coal1coal2coatotal_costvalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>[0.0,+INF)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;">unit<a name="accertl0coal1coal2coatotal_costunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>million<br>dollar<br></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coace"><a name="accertl0coal1coal2coace"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coace">ce</a></h3>
+<h5 id="how-many-0-or-more-6">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coaceid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>211_fac<br>212_fac<br>213_fac<br>214_fac<br>215_fac<br>216_fac<br>217_fac<br>218_fac<br>220a_fac<br>221_fac<br>222_fac<br>223_fac<br>224_fac<br>225_fac<br>226_fac<br>227_fac<br>228_fac<br>231_fac<br>233_fac<br>234_fac<br>235_fac<br>236_fac<br>237_fac<br>241_fac<br>242_fac<br>243_fac<br>244_fac<br>245_fac<br>246_fac<br>251_fac<br>252_fac<br>253_fac<br>254_fac<br>255_fac<br>261_fac<br>262_fac<br>211_lab<br>212_lab<br>213_lab<br>214_lab<br>215_lab<br>216_lab<br>217_lab<br>218_lab<br>220a_lab<br>221_lab<br>222_lab<br>223_lab<br>224_lab<br>225_lab<br>226_lab<br>227_lab<br>228_lab<br>231_lab<br>233_lab<br>234_lab<br>235_lab<br>236_lab<br>237_lab<br>241_lab<br>242_lab<br>243_lab<br>244_lab<br>245_lab<br>246_lab<br>251_lab<br>252_lab<br>253_lab<br>254_lab<br>255_lab<br>261_lab<br>262_lab<br>211_mat<br>212_mat<br>213_mat<br>214_mat<br>215_mat<br>216_mat<br>217_mat<br>218_mat<br>220a_mat<br>221_mat<br>222_mat<br>223_mat<br>224_mat<br>225_mat<br>226_mat<br>227_mat<br>228_mat<br>231_mat<br>233_mat<br>234_mat<br>235_mat<br>236_mat<br>237_mat<br>241_mat<br>242_mat<br>243_mat<br>244_mat<br>245_mat<br>246_mat<br>251_mat<br>252_mat<br>253_mat<br>254_mat<br>255_mat<br>261_mat<br>262_mat<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coacealg">alg</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coacealg"><a name="accertl0coal1coal2coacealg"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coace">ce</a>/<a
+href="#accertl0coal1coal2coacealg">alg</a></h3>
+<h5 id="how-many-0-or-more-7">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coacealgid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>esc_1987<br>no_alg<br>mwth_scale<br>default_0<br>dev_factor_ref<br>ptn_account<br>mwe_scale<br>sum_multi_accounts<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coacealgvar">var</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">1 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">changed variable value</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coacealgvar"><a name="accertl0coal1coal2coacealgvar"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coace">ce</a>/<a
+href="#accertl0coal1coal2coacealg">alg</a>/<a
+href="#accertl0coal1coal2coacealgvar">var</a></h3>
+<h4 id="changed-variable-value-1">changed variable value</h4>
+<h5 id="how-many-1-or-more-1">How Many: 1 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coacealgvarid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>ref_211_mat<br>ref_211_lab<br>ref_211_fac<br>escalate_1987<br>c_213_mat<br>c_213_lab<br>c_213_fac<br>scale_0.8<br>mwth<br>c_222_mat<br>c_222_lab<br>c_222_fac<br>scale_1.0<br>ref_224_mat<br>ref_224_lab<br>ref_224_fac<br>ref_227_mat<br>ref_227_lab<br>ref_227_fac<br>ref_228_mat<br>ref_228_lab<br>prn_fac_231_mat<br>prn_fac_231_lab<br>c_231_fac<br>scale_tur_231_fac<br>n_231<br>c_turbine<br>c_233_mat<br>c_233_lab<br>c_233_fac<br>c_234_mat<br>c_234_lab<br>c_234_fac<br>prn_235_of_231_mat<br>prn_235_of_231_lab<br>prn_235_of_231_fac<br>c_231_mat<br>c_231_lab<br>ref_236_mat<br>ref_236_lab<br>ref_236_fac<br>c_237_mat<br>c_237_lab<br>c_241_mat<br>c_241_lab<br>c_241_fac<br>scale_0.4<br>mwe<br>c_242_mat<br>c_242_lab<br>c_242_fac<br>c_245_mat<br>c_245_lab<br>c_246_mat<br>c_246_lab<br>c_246_fac<br>c_251.17_mat<br>c_251.16_mat<br>c_251.112_mat<br>c_251.111_mat<br>c_251.12_mat<br>c_251.17_lab<br>c_251.16_lab<br>c_251.112_lab<br>c_251.111_lab<br>c_251.12_lab<br>c_251.17_fac<br>c_251.16_fac<br>c_251.112_fac<br>c_251.111_fac<br>c_251.12_fac<br>ref_252_mat<br>ref_252_lab<br>ref_252_fac<br>ref_253_mat<br>ref_253_lab<br>ref_253_fac<br>c_262_mat<br>c_262_lab<br>c_262_fac<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;">value<a name="accertl0coal1coal2coacealgvarvalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>[0.0,+INF)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td
+style="text-align: center;">unit<a name="accertl0coal1coal2coacealgvarunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>ton<br>lbs<br>million<br>1<br>gpm*feet<br>bar<br>m<sup>3<br>dollar/m</sup>3<br>mw<br>psi<br>psf<br>dollar<br>thousand<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coacealgvaralg">alg</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">valriable algorithm</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coacealgvaralg"><a name="accertl0coal1coal2coacealgvaralg"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coace">ce</a>/<a
+href="#accertl0coal1coal2coacealg">alg</a>/<a
+href="#accertl0coal1coal2coacealgvar">var</a>/<a
+href="#accertl0coal1coal2coacealgvaralg">alg</a></h3>
+<h4 id="valriable-algorithm">valriable algorithm</h4>
+<h5 id="how-many-0-or-1-1">How Many: 0 or 1</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coacealgvaralgid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>tur_exp_n<br>rpv_mass<br>pump<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coacealgvaralgvar">var</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">1 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">changed variable value</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coacealgvaralgvar"><a name="accertl0coal1coal2coacealgvaralgvar"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coace">ce</a>/<a
+href="#accertl0coal1coal2coacealg">alg</a>/<a
+href="#accertl0coal1coal2coacealgvar">var</a>/<a
+href="#accertl0coal1coal2coacealgvaralg">alg</a>/<a
+href="#accertl0coal1coal2coacealgvaralgvar">var</a></h3>
+<h4 id="changed-variable-value-2">changed variable value</h4>
+<h5 id="how-many-1-or-more-2">How Many: 1 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coacealgvaralgvarid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>p_in<br>c_221.12_cs_weight<br>c_221.12_ss_weight<br>c_pump_ap1000<br>ch_12be<br>ch_ap1000<br>scale_0.52<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;">value<a name="accertl0coal1coal2coacealgvaralgvarvalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>[0.0,+INF)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td
+style="text-align: center;">unit<a name="accertl0coal1coal2coacealgvaralgvarunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>bar<br>psi<br>psf<br>lbs<br>ton<br>million<br>gpm*feet<br>1<br></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coal3coa"><a name="accertl0coal1coal2coal3coa"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coal3coa">l3COA</a></h3>
+<h5 id="how-many-0-or-more-8">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coal3coaid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>218a<br>218b<br>218d<br>218e<br>218f<br>218g<br>218h<br>218j<br>218k<br>218l<br>218p<br>218s<br>218t<br>218v<br>220a.211<br>220a.2121<br>220a.2122<br>220a.2131<br>220a.2132<br>220a.221<br>220a.222<br>220a.223<br>220a.224<br>220a.225<br>220a.2311<br>220a.2312<br>220a.2321<br>220a.2322<br>220a.2323<br>220a.2324<br>220a.2325<br>220a.251<br>220a.254<br>220a.2611<br>220a.2612<br>220a.2613<br>220a.2614<br>220a.262<br>220a.27<br>221.11<br>221.12<br>221.13<br>221.14<br>221.21<br>222.11<br>222.12<br>222.13<br>222.14<br>223.1<br>223.3<br>223.4<br>223.5<br>226.1<br>226.3<br>226.4<br>226.6<br>226.7<br>226.8<br>226.9<br>new<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coal3coatotal_cost">total_cost</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">total cost value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coal3coace">ce</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coal3coatotal_cost"><a name="accertl0coal1coal2coal3coatotal_cost"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coal3coa">l3COA</a>/<a
+href="#accertl0coal1coal2coal3coatotal_cost">total_cost</a></h3>
+<h4 id="total-cost-value-2">total cost value</h4>
+<h5 id="how-many-0-or-more-9">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">value<a name="accertl0coal1coal2coal3coatotal_costvalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>[0.0,+INF)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;">unit<a name="accertl0coal1coal2coal3coatotal_costunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>million<br>dollar<br></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coal3coace"><a name="accertl0coal1coal2coal3coace"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coal3coa">l3COA</a>/<a
+href="#accertl0coal1coal2coal3coace">ce</a></h3>
+<h5 id="how-many-0-or-more-10">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coal3coaceid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>218a_fac<br>218b_fac<br>218d_fac<br>218e_fac<br>218f_fac<br>218g_fac<br>218h_fac<br>218j_fac<br>218k_fac<br>218l_fac<br>218p_fac<br>218s_fac<br>218t_fac<br>218v_fac<br>220a.211_fac<br>220a.2121_fac<br>220a.2122_fac<br>220a.2131_fac<br>220a.2132_fac<br>220a.221_fac<br>220a.222_fac<br>220a.223_fac<br>220a.224_fac<br>220a.225_fac<br>220a.2311_fac<br>220a.2312_fac<br>220a.2321_fac<br>220a.2322_fac<br>220a.2323_fac<br>220a.2324_fac<br>220a.2325_fac<br>220a.251_fac<br>220a.254_fac<br>220a.2611_fac<br>220a.2612_fac<br>220a.2613_fac<br>220a.2614_fac<br>220a.262_fac<br>220a.27_fac<br>221.11_fac<br>221.12_fac<br>221.13_fac<br>221.14_fac<br>221.21_fac<br>222.11_fac<br>222.12_fac<br>222.13_fac<br>222.14_fac<br>223.1_fac<br>223.3_fac<br>223.4_fac<br>223.5_fac<br>226.1_fac<br>226.3_fac<br>226.4_fac<br>226.6_fac<br>226.7_fac<br>226.8_fac<br>226.9_fac<br>218a_lab<br>218b_lab<br>218d_lab<br>218e_lab<br>218f_lab<br>218g_lab<br>218h_lab<br>218j_lab<br>218k_lab<br>218l_lab<br>218p_lab<br>218s_lab<br>218t_lab<br>218v_lab<br>220a.211_lab<br>220a.2121_lab<br>220a.2122_lab<br>220a.2131_lab<br>220a.2132_lab<br>220a.221_lab<br>220a.222_lab<br>220a.223_lab<br>220a.224_lab<br>220a.225_lab<br>220a.2311_lab<br>220a.2312_lab<br>220a.2321_lab<br>220a.2322_lab<br>220a.2323_lab<br>220a.2324_lab<br>220a.2325_lab<br>220a.251_lab<br>220a.254_lab<br>220a.2611_lab<br>220a.2612_lab<br>220a.2613_lab<br>220a.2614_lab<br>220a.262_lab<br>220a.27_lab<br>221.11_lab<br>221.12_lab<br>221.13_lab<br>221.14_lab<br>221.21_lab<br>222.11_lab<br>222.12_lab<br>222.13_lab<br>222.14_lab<br>223.1_lab<br>223.3_lab<br>223.4_lab<br>223.5_lab<br>226.1_lab<br>226.3_lab<br>226.4_lab<br>226.6_lab<br>226.7_lab<br>226.8_lab<br>226.9_lab<br>218a_mat<br>218b_mat<br>218d_mat<br>218e_mat<br>218f_mat<br>218g_mat<br>218h_mat<br>218j_mat<br>218k_mat<br>218l_mat<br>218p_mat<br>218s_mat<br>218t_mat<br>218v_mat<br>220a.211_mat<br>220a.2121_mat<br>220a.2122_mat<br>220a.2131_mat<br>220a.2132_mat<br>220a.221_mat<br>220a.222_mat<br>220a.223_mat<br>220a.224_mat<br>220a.225_mat<br>220a.2311_mat<br>220a.2312_mat<br>220a.2321_mat<br>220a.2322_mat<br>220a.2323_mat<br>220a.2324_mat<br>220a.2325_mat<br>220a.251_mat<br>220a.254_mat<br>220a.2611_mat<br>220a.2612_mat<br>220a.2613_mat<br>220a.2614_mat<br>220a.262_mat<br>220a.27_mat<br>221.11_mat<br>221.12_mat<br>221.13_mat<br>221.14_mat<br>221.21_mat<br>222.11_mat<br>222.12_mat<br>222.13_mat<br>222.14_mat<br>223.1_mat<br>223.3_mat<br>223.4_mat<br>223.5_mat<br>226.1_mat<br>226.3_mat<br>226.4_mat<br>226.6_mat<br>226.7_mat<br>226.8_mat<br>226.9_mat<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coal3coacealg">alg</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coal3coacealg"><a name="accertl0coal1coal2coal3coacealg"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coal3coa">l3COA</a>/<a
+href="#accertl0coal1coal2coal3coace">ce</a>/<a
+href="#accertl0coal1coal2coal3coacealg">alg</a></h3>
+<h5 id="how-many-0-or-more-11">How Many: 0 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coal3coacealgid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>no_alg<br>complex<br>unit_weights<br>unit_facility<br>unit_weights_plate<br>unit_weights_factor<br>total_weight_prn<br>esc_1978<br>sum_multi_accounts<br>default_0<br>mwth_scale<br>esc_1987<br>factor_sum<br>unit_volume<br>cost_by_weight<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coal3coacealgvar">var</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">1 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">changed variable value</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coal3coacealgvar"><a name="accertl0coal1coal2coal3coacealgvar"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coal3coa">l3COA</a>/<a
+href="#accertl0coal1coal2coal3coace">ce</a>/<a
+href="#accertl0coal1coal2coal3coacealg">alg</a>/<a
+href="#accertl0coal1coal2coal3coacealgvar">var</a></h3>
+<h4 id="changed-variable-value-3">changed variable value</h4>
+<h5 id="how-many-1-or-more-3">How Many: 1 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coal3coacealgvarid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>c_218b_mat<br>c_218b_lab<br>c_218b_fac<br>c_218j_mat<br>c_218j_lab<br>c_218j_fac<br>c_218t_mat<br>c_218t_lab<br>c_218t_fac<br>c_221.12_ss_weight<br>c_221.12_cs_weight<br>c_220a.2121_ss_weight<br>c_zero<br>c_220a.2122_ss_weight<br>c_cr_per_unit_fac<br>no_of_cr<br>c_crd_per_unit_fac<br>no_of_crd<br>c_pump_per_unit_fac<br>no_of_rcpump<br>c_220a.222_ss_weight<br>c_220a.224_ss_weight<br>c_220a.224_cs_weight_plate<br>c_220a.225_ss_weight<br>c_220a.2311_fac<br>factor_220a.2312<br>c_220a.2312_ss_weight<br>c_220a.2312_cs_weight<br>c_220a.2321_fac<br>no_of_acu<br>prn_220a.2322ss<br>prn_220a.2322cs<br>c_220a.2322_tot_weight<br>no_of_bit<br>prn_220a.2323ss<br>prn_220a.2323cs<br>c_220a.2323_tot_weight<br>c_220a.2324_ss_weight<br>c_220a.2325_fac<br>factor_220a.251<br>c_220a.251_ss_weight<br>c_220a.251_cs_weight<br>ref_220a.254_1978<br>escalate_1978<br>c_226.41152_fac<br>c_226.41151_fac<br>c_226.4114_fac<br>c_226.41132_fac<br>c_226.41131_fac<br>c_226.4112_fac<br>c_226.4111_fac<br>c_226.4128_fac<br>c_226.4127_fac<br>c_226.4126_fac<br>c_226.4125_fac<br>c_226.4124_fac<br>c_226.4123_fac<br>c_226.4122_fac<br>c_226.4121_fac<br>c_226.4131_fac<br>c_226.4135_fac<br>c_226.4134_fac<br>c_226.4133_fac<br>c_226.4145_fac<br>c_226.4144_fac<br>c_226.4143_fac<br>c_226.4142_fac<br>c_226.4141_fac<br>c_rpv_mat<br>c_rpv_lab<br>c_221.12_tol_weight<br>ref_221.14_mat<br>escalate_1987<br>c_222.11_mat<br>c_222.11_lab<br>c_222.11_fac<br>scale_1.0<br>mwth<br>c_222.12_mat<br>c_222.12_lab<br>c_222.12_fac<br>c_sg_per_unit_mat<br>c_sg_per_unit_lab<br>no_of_sg<br>ref_222.13_fac<br>c_222.14_mat<br>c_222.14_lab<br>c_222.14_fac<br>c_220a.2312_fac<br>prn_223.1_mat<br>prn_223.1_lab<br>prn_223.1_fac<br>fac_223.1<br>c_220a.2324_fac<br>c_220a.2323_fac<br>c_220a.2322_fac<br>prn_223.3_mat<br>prn_223.3_lab<br>prn_223.3_fac<br>fac_223.3<br>c_223.4_unit_vol_mat<br>c_223.4_unit_vol_lab<br>c_223.4_unit_vol_fac<br>vol_223.4<br>c_226.4_mat<br>c_226.4_lab<br>c_226.4_fac<br>c_226.7_mat<br>c_226.7_lab<br>c_226.7_fac<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;">value<a name="accertl0coal1coal2coal3coacealgvarvalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>[0.0,+INF)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td
+style="text-align: center;">unit<a name="accertl0coal1coal2coal3coacealgvarunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>million<br>ton<br>lbs<br>1<br>million/ton<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coal3coacealgvaralg">alg</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">0 or 1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">valriable algorithm</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coal3coacealgvaralg"><a name="accertl0coal1coal2coal3coacealgvaralg"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coal3coa">l3COA</a>/<a
+href="#accertl0coal1coal2coal3coace">ce</a>/<a
+href="#accertl0coal1coal2coal3coacealg">alg</a>/<a
+href="#accertl0coal1coal2coal3coacealgvar">var</a>/<a
+href="#accertl0coal1coal2coal3coacealgvaralg">alg</a></h3>
+<h4 id="valriable-algorithm-1">valriable algorithm</h4>
+<h5 id="how-many-0-or-1-2">How Many: 0 or 1</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coal3coacealgvaralgid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>tur_exp_n<br>rpv_mass<br>pump<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a
+href="#accertl0coal1coal2coal3coacealgvaralgvar">var</a></td>
+<td style="text-align: center;">SubObject</td>
+<td style="text-align: center;">1 or more</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">changed variable value</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="accertl0coal1coal2coal3coacealgvaralgvar"><a name="accertl0coal1coal2coal3coacealgvaralgvar"></a><a
+href="#root_anchor">/</a><a href="#accert">accert</a>/<a
+href="#accertl0coa">l0COA</a>/<a href="#accertl0coal1coa">l1COA</a>/<a
+href="#accertl0coal1coal2coa">l2COA</a>/<a
+href="#accertl0coal1coal2coal3coa">l3COA</a>/<a
+href="#accertl0coal1coal2coal3coace">ce</a>/<a
+href="#accertl0coal1coal2coal3coacealg">alg</a>/<a
+href="#accertl0coal1coal2coal3coacealgvar">var</a>/<a
+href="#accertl0coal1coal2coal3coacealgvaralg">alg</a>/<a
+href="#accertl0coal1coal2coal3coacealgvaralgvar">var</a></h3>
+<h4 id="changed-variable-value-4">changed variable value</h4>
+<h5 id="how-many-1-or-more-4">How Many: 1 or more</h5>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">HowMany</th>
+<th style="text-align: center;">ValueType</th>
+<th style="text-align: center;">Restrictions</th>
+<th style="text-align: center;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td
+style="text-align: center;">id<a name="accertl0coal1coal2coal3coacealgvaralgvarid"></a></td>
+<td style="text-align: center;">Tag</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>p_in<br>c_221.12_cs_weight<br>c_221.12_ss_weight<br>c_pump_ap1000<br>ch_12be<br>ch_ap1000<br>scale_0.52<br></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;">value<a name="accertl0coal1coal2coal3coacealgvaralgvarvalue"></a></td>
+<td style="text-align: center;">Value</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Real</td>
+<td
+style="text-align: center;"><strong>Range</strong><br>[0.0,+INF)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td
+style="text-align: center;">unit<a name="accertl0coal1coal2coal3coacealgvaralgvarunit"></a></td>
+<td style="text-align: center;">KeyedValue</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">String</td>
+<td
+style="text-align: center;"><strong>Choices</strong><br>bar<br>lbs<br>ton<br>million<br>gpm*feet<br>1<br>psi<br>psf<br></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
