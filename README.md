@@ -61,7 +61,7 @@ with and without Workbench are provided in this README.
 workbench_path="workbench-<version-number>.app/Contents"
 ```
 
-* Run setup_accert.sh for a Unix-based system, or run setup_accert_win.bat for Windows
+* Run __setup_accert.sh__ for a Unix-based system, or run __setup_accert_win.bat__ for Windows
 ```console
 [~/src]> ./setup_accert.sh 
 ```
