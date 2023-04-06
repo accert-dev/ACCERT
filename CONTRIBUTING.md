@@ -4,8 +4,8 @@
 
 ## Governance
 
-Contributions to PyGriffin must be made through a merge request (MR) at
-https://git-out.gss.anl.gov/nstauff/pygriffin. Even long-term members and
+Contributions to ACCERT must be made through a merge request (MR) at
+https://github.com/accert-dev/ACCERT. Even long-term members and
 developers must submit changes via MRs to provide a consistent record of the
 purpose of contributions as well as to allow other maintainers/developers to
 provide feedback on code changes and design decisions.
@@ -40,12 +40,11 @@ We currently encourage a forking workflow for contributions to ACCERT. This
 workflow involves the following steps:
 
   1. Fork the main ACCERT repository under your user account at
-     https://git-oug.gss.anl.gov. You can reach out to nstauff@anl.gov about
-     creating an account.
+     https://github.com/accert-dev/ACCERT 
   2. Clone your fork of ACCERT locally to make changes to the code.
   ```shell
-  $ git clone https://git-out.gss.anl.gov/your_username/accert
-  $ cd accert
+  $ git clone https://github.com/your_username/ACCERT
+  $ cd ACCERT
   $ git checkout -b new_branch main
   ```
   3. Make your changes in your local branch and push the branch to your fork
