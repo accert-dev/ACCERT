@@ -30,7 +30,7 @@ with and without Workbench are provided in this README.
 [~]> mkdir CODE  
 [~]> cd CODE   
 [~/CODE]> git clone https://github.com/accert-dev/ACCERT.git  
-[~/CODE]> cd accert
+[~/CODE]> cd ACCERT
 ```
 
 ### Installation of MySQL Community Server
@@ -52,7 +52,7 @@ with and without Workbench are provided in this README.
 * Change into the src folder 
 
 ```console
-[~/accert]> cd src 
+[~/ACCERT]> cd src 
 ```
 
 * Edit the workbench.sh file, provide workbench_path to `workbench-<version-number>.app/Contents` folder.
@@ -114,6 +114,6 @@ PASSWD = yourpassword
 ## ACCERT Execution
 
 ACCERT can be executed both through the Workbench interface by pressing `run` or through the command lines:
-`python accert/src/Main.py -i myinput.son`
+`python ACCERT/src/Main.py -i myinput.son`
 
 
