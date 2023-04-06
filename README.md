@@ -86,7 +86,7 @@ PASSWD = yourpassword
 ## Test installation 
 
 *   Test ACCERT 
-```
+```console
 [~/src]> cd ../test 
 [~/test]> pytest
 ```
