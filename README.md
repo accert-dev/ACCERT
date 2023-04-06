@@ -95,7 +95,7 @@ PASSWD = yourpassword
 ## Configuration with Workbench
 
 * For Windows user only:
-    * Go to `accert/src` folder and right-click on the `Main.py` file and select `Properties` from the context menu.
+    * Go to `ACCERT/src` folder and right-click on the `Main.py` file and select `Properties` from the context menu.
     * In the Properties window, select the `Security` tab.
     * Click on the `Edit` button to change the permissions.
     * Click on `Add` to add a new user or group to the permissions list.
