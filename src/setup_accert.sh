@@ -65,18 +65,20 @@ echo -e "${GREEN}Creating symbolic links...${NC}"
 # Copy accert_wb.py to rte/accert.py
 cp src/etc/accert_wb.py "${workbench_path}/rte/accert.py"
 # Check if bin directory exists, if not create it
-if not exist bin mkdir bin
+if [ ! -d "bin" ]; then
+    mkdir bin
+fi
 # Create symbolic links for sonvalidxml and docprint
-if exist bin\sonvalidxml (
-    del bin\sonvalidxml
-)
-ln -s "${workbench_path}/bin/sonvalidxml" ./bin/sonvalidxml
+if [ -L "bin/sonvalidxml" ]; then
+    rm "bin/sonvalidxml"
+fi
+ln -s "${workbench_path}/bin/sonvalidxml" "./bin/sonvalidxml"
 
-if exist bin\docprint (
-    del bin\docprint
-)
-ln -s "${workbench_path}/bin/docprint" ./bin/docprint
+if [ -L "bin/docprint" ]; then
+    rm "bin/docprint"
+fi
+ln -s "${workbench_path}/bin/docprint" "./bin/docprint"
 
 # 10) Confirm installation is finished
 echo -e "${GREEN}ACCERT has been set up.${NC}"
-echo -e """${YELLOW}please change the 'yourpassword'  of 'install.conf' to your MySQL root password.${NC}"""
+echo -e "${YELLOW}Please change the 'yourpassword' of 'install.conf' to your MySQL root password.${NC}"
