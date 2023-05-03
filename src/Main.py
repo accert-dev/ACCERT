@@ -20,6 +20,45 @@ class Accert:
         self.input_path = input_path
         self.accert_path = accert_path
         self.input = self.load_obj(self.input_path, self.accert_path)
+        self.acc_tabl = None
+        self.cel_tabl = None
+        self.var_tabl = None
+        self.vlk_tabl = None
+        self.alg_tabl = None
+        self.esc_tabl = None
+        self.fac_tabl = None
+    
+    def setup_table_names(self,c,xml2obj):
+        """setup table names in the database
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        xml2obj : xml2obj
+            xml2obj class instantiates objects that can convert son file to xml stream and create python data structure.
+
+        Returns
+        -------
+        None
+        """
+        if "abr1000" in str(xml2obj.ref_model.value).lower():
+            self.acc_tabl = 'abr_account'
+            self.cel_tabl = 'abr_cost_element'
+            self.var_tabl = 'abr_variable'
+            self.vlk_tabl = 'abr_variable_links'   
+            self.alg_tabl = 'algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'        
+        elif "pwr12-be" in str(xml2obj.ref_model.value).lower():
+            self.acc_tabl = 'account'
+            self.cel_tabl = 'cost_element'
+            self.var_tabl = 'variable'
+            self.vlk_tabl = 'variable_links'
+            self.alg_tabl = 'algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
+        return None
 
     def load_obj(self, input_path, accert_path):
         """convert son file to xml stream and create python data structure
@@ -63,6 +102,17 @@ class Accert:
             list of COAs' other info, including ind, lft, rgt
         """
         c.execute("""SELECT code_of_account, ind, rgt FROM account WHERE supaccount = '{}';""".format(inp_id))
+        # CREATE PROCEDURE get_current_COAs(IN table_name VARCHAR(50), 
+        #                                   IN inp_id VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT code_of_account, 
+        #                        ind, rgt FROM ', table_name, ' WHERE supaccount = ?');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @inp_id = inp_id;
+        #     EXECUTE stmt USING @inp_id;
+        #     DEALLOCATE PREPARE stmt;
+        # END
+        # c.callproc('get_current_COAs',(self.acc_tabl, inp_id))
         coa_info = c.fetchall()
         coa_lst = []
         coa_other =[]
@@ -1733,6 +1783,7 @@ class Accert:
         ######################
 
         if "abr1000" in str(accert.ref_model.value).lower():
+            self.setup_table_names(c,accert)
             ### print changed variables
             ut.extract_user_changed_abr_variables(c)
             ### print changed total cost_elements
@@ -1757,6 +1808,7 @@ class Accert:
             self.generate_abr_results_table(c, conn,level=3)
 
         elif "pwr12-be" in str(accert.ref_model.value).lower():  
+            self.setup_table_names(c,accert)
             ### print changed variables
             ut.extract_user_changed_variables(c)
             ### print changed total cost_elements
