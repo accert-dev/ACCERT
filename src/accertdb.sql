@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `accert_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `accert_db`;
--- MySQL dump 10.13  Distrib 8.0.27, for macos11 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.30, for macos12 (x86_64)
 --
 -- Host: localhost    Database: accert_db
 -- ------------------------------------------------------
--- Server version	8.0.27
+-- Server version	8.0.30
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -195,7 +195,7 @@ CREATE TABLE `algorithm` (
   `variables` text,
   `constants` text,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -358,6 +358,808 @@ LOCK TABLES `variable_links` WRITE;
 INSERT INTO `variable_links` VALUES (1,'c_turbine',1,79,'231_fac'),(2,'n_231',2,79,'231_fac'),(3,'scale_tur_231_fac',4,79,'231_fac'),(4,'c_231_fac',5,82,'235_fac'),(5,'c_231_fac',5,181,'231_lab'),(6,'c_231_fac',5,283,'231_mat'),(7,'prn_fac_231_lab',6,181,'231_lab'),(8,'prn_fac_231_mat',7,283,'231_mat'),(9,'c_262_fac',8,100,'262_fac'),(10,'c_262_lab',9,202,'262_lab'),(11,'c_262_mat',10,304,'262_mat'),(12,'mwth',11,3,'213_fac'),(13,'mwth',11,56,'222.11_fac'),(14,'mwth',11,57,'222.12_fac'),(15,'mwth',11,59,'222.14_fac'),(16,'mwth',11,60,'222_fac'),(17,'mwth',11,70,'226.4_fac'),(18,'mwth',11,72,'226.7_fac'),(19,'mwth',11,80,'233_fac'),(20,'mwth',11,81,'234_fac'),(21,'mwth',11,100,'262_fac'),(22,'mwth',11,105,'213_lab'),(23,'mwth',11,158,'222.11_lab'),(24,'mwth',11,159,'222.12_lab'),(25,'mwth',11,161,'222.14_lab'),(26,'mwth',11,162,'222_lab'),(27,'mwth',11,172,'226.4_lab'),(28,'mwth',11,174,'226.7_lab'),(29,'mwth',11,182,'233_lab'),(30,'mwth',11,183,'234_lab'),(31,'mwth',11,186,'237_lab'),(32,'mwth',11,202,'262_lab'),(33,'mwth',11,207,'213_mat'),(34,'mwth',11,260,'222.11_mat'),(35,'mwth',11,261,'222.12_mat'),(36,'mwth',11,263,'222.14_mat'),(37,'mwth',11,264,'222_mat'),(38,'mwth',11,274,'226.4_mat'),(39,'mwth',11,276,'226.7_mat'),(40,'mwth',11,284,'233_mat'),(41,'mwth',11,285,'234_mat'),(42,'mwth',11,288,'237_mat'),(43,'mwth',11,304,'262_mat'),(44,'scale_0.8',12,3,'213_fac'),(45,'scale_0.8',12,80,'233_fac'),(46,'scale_0.8',12,81,'234_fac'),(47,'scale_0.8',12,100,'262_fac'),(48,'scale_0.8',12,105,'213_lab'),(49,'scale_0.8',12,182,'233_lab'),(50,'scale_0.8',12,183,'234_lab'),(51,'scale_0.8',12,186,'237_lab'),(52,'scale_0.8',12,202,'262_lab'),(53,'scale_0.8',12,207,'213_mat'),(54,'scale_0.8',12,284,'233_mat'),(55,'scale_0.8',12,285,'234_mat'),(56,'scale_0.8',12,288,'237_mat'),(57,'scale_0.8',12,304,'262_mat'),(58,'c_233_fac',13,80,'233_fac'),(59,'c_233_lab',14,182,'233_lab'),(60,'c_233_mat',15,284,'233_mat'),(61,'escalate_1987',16,1,'211_fac'),(62,'escalate_1987',16,58,'222.13_fac'),(63,'escalate_1987',16,66,'224_fac'),(64,'escalate_1987',16,76,'227_fac'),(65,'escalate_1987',16,83,'236_fac'),(66,'escalate_1987',16,94,'252_fac'),(67,'escalate_1987',16,95,'253_fac'),(68,'escalate_1987',16,103,'211_lab'),(69,'escalate_1987',16,168,'224_lab'),(70,'escalate_1987',16,178,'227_lab'),(71,'escalate_1987',16,179,'228_lab'),(72,'escalate_1987',16,185,'236_lab'),(73,'escalate_1987',16,196,'252_lab'),(74,'escalate_1987',16,197,'253_lab'),(75,'escalate_1987',16,205,'211_mat'),(76,'escalate_1987',16,257,'221.14_mat'),(77,'escalate_1987',16,270,'224_mat'),(78,'escalate_1987',16,280,'227_mat'),(79,'escalate_1987',16,281,'228_mat'),(80,'escalate_1987',16,287,'236_mat'),(81,'escalate_1987',16,298,'252_mat'),(82,'escalate_1987',16,299,'253_mat'),(83,'ref_252_fac',17,94,'252_fac'),(84,'ref_252_lab',18,196,'252_lab'),(85,'ref_252_mat',19,298,'252_mat'),(86,'c_221.12_cs_weight',20,24,'220A.211_fac'),(87,'c_221.12_ss_weight',21,24,'220A.211_fac'),(88,'c_221.12_tol_weight',22,153,'221.12_lab'),(89,'c_221.12_tol_weight',22,255,'221.12_mat'),(90,'c_rpv_lab',23,153,'221.12_lab'),(91,'c_rpv_mat',24,255,'221.12_mat'),(92,'ref_211_fac',25,1,'211_fac'),(93,'ref_211_lab',26,103,'211_lab'),(94,'ref_211_mat',27,205,'211_mat'),(95,'ref_222.13_fac',28,58,'222.13_fac'),(96,'no_of_sg',29,160,'222.13_lab'),(97,'no_of_sg',29,262,'222.13_mat'),(98,'c_SG_per_unit_lab',30,160,'222.13_lab'),(99,'c_SG_per_unit_mat',31,262,'222.13_mat'),(100,'c_234_fac',32,81,'234_fac'),(101,'c_234_lab',33,183,'234_lab'),(102,'c_234_mat',34,285,'234_mat'),(103,'c_213_fac',35,3,'213_fac'),(104,'c_213_lab',36,105,'213_lab'),(105,'c_213_mat',37,207,'213_mat'),(106,'c_231_lab',38,184,'235_lab'),(107,'c_231_mat',39,286,'235_mat'),(108,'prn_235_of_231_fac',40,82,'235_fac'),(109,'prn_235_of_231_lab',41,184,'235_lab'),(110,'prn_235_of_231_mat',42,286,'235_mat'),(111,'mwe',43,86,'241_fac'),(112,'mwe',43,87,'242_fac'),(113,'mwe',43,91,'246_fac'),(114,'mwe',43,188,'241_lab'),(115,'mwe',43,189,'242_lab'),(116,'mwe',43,192,'245_lab'),(117,'mwe',43,193,'246_lab'),(118,'mwe',43,290,'241_mat'),(119,'mwe',43,291,'242_mat'),(120,'mwe',43,294,'245_mat'),(121,'mwe',43,295,'246_mat'),(122,'scale_0.4',44,86,'241_fac'),(123,'scale_0.4',44,87,'242_fac'),(124,'scale_0.4',44,91,'246_fac'),(125,'scale_0.4',44,188,'241_lab'),(126,'scale_0.4',44,189,'242_lab'),(127,'scale_0.4',44,192,'245_lab'),(128,'scale_0.4',44,193,'246_lab'),(129,'scale_0.4',44,290,'241_mat'),(130,'scale_0.4',44,291,'242_mat'),(131,'scale_0.4',44,294,'245_mat'),(132,'scale_0.4',44,295,'246_mat'),(133,'c_241_fac',45,86,'241_fac'),(134,'c_241_lab',46,188,'241_lab'),(135,'c_241_mat',47,290,'241_mat'),(136,'c_242_fac',48,87,'242_fac'),(137,'c_242_lab',49,189,'242_lab'),(138,'c_242_mat',50,291,'242_mat'),(139,'c_245_lab',52,192,'245_lab'),(140,'c_245_mat',53,294,'245_mat'),(141,'c_246_fac',54,91,'246_fac'),(142,'c_246_lab',55,193,'246_lab'),(143,'c_246_mat',56,295,'246_mat'),(144,'ref_227_fac',57,76,'227_fac'),(145,'ref_227_lab',58,178,'227_lab'),(146,'ref_227_mat',59,280,'227_mat'),(147,'ref_224_fac',60,66,'224_fac'),(148,'ref_224_lab',61,168,'224_lab'),(149,'ref_224_mat',62,270,'224_mat'),(150,'scale_1.0',63,56,'222.11_fac'),(151,'scale_1.0',63,57,'222.12_fac'),(152,'scale_1.0',63,59,'222.14_fac'),(153,'scale_1.0',63,60,'222_fac'),(154,'scale_1.0',63,70,'226.4_fac'),(155,'scale_1.0',63,72,'226.7_fac'),(156,'scale_1.0',63,158,'222.11_lab'),(157,'scale_1.0',63,159,'222.12_lab'),(158,'scale_1.0',63,161,'222.14_lab'),(159,'scale_1.0',63,162,'222_lab'),(160,'scale_1.0',63,172,'226.4_lab'),(161,'scale_1.0',63,174,'226.7_lab'),(162,'scale_1.0',63,260,'222.11_mat'),(163,'scale_1.0',63,261,'222.12_mat'),(164,'scale_1.0',63,263,'222.14_mat'),(165,'scale_1.0',63,264,'222_mat'),(166,'scale_1.0',63,274,'226.4_mat'),(167,'scale_1.0',63,276,'226.7_mat'),(168,'c_226.7_fac',64,72,'226.7_fac'),(169,'c_226.7_lab',65,174,'226.7_lab'),(170,'c_226.7_mat',66,276,'226.7_mat'),(171,'no_of_rcpump',67,29,'220A.221_fac'),(172,'c_pump_per_unit_fac',68,29,'220A.221_fac'),(173,'c_226.4_fac',73,70,'226.4_fac'),(174,'c_226.4_lab',74,172,'226.4_lab'),(175,'c_226.4_mat',75,274,'226.4_mat'),(176,'c_222.11_fac',76,56,'222.11_fac'),(177,'c_222.11_lab',77,158,'222.11_lab'),(178,'c_222.11_mat',78,260,'222.11_mat'),(179,'c_222.12_fac',79,57,'222.12_fac'),(180,'c_222.12_lab',80,159,'222.12_lab'),(181,'c_222.12_mat',81,261,'222.12_mat'),(182,'c_222.14_fac',85,59,'222.14_fac'),(183,'c_222.14_lab',86,161,'222.14_lab'),(184,'c_222.14_mat',87,263,'222.14_mat'),(185,'c_222_fac',88,60,'222_fac'),(186,'c_222_lab',89,162,'222_lab'),(187,'c_222_mat',90,264,'222_mat'),(188,'c_zero',91,25,'220A.2121_fac'),(189,'c_zero',91,26,'220A.2122_fac'),(190,'c_zero',91,30,'220A.222_fac'),(191,'c_zero',91,33,'220A.225_fac'),(192,'c_zero',91,39,'220A.2324_fac'),(193,'c_220A.222_ss_weight',92,30,'220A.222_fac'),(194,'c_220A.2121_ss_weight',93,25,'220A.2121_fac'),(195,'c_220A.2122_ss_weight',94,26,'220A.2122_fac'),(196,'no_of_cr',95,27,'220A.2131_fac'),(197,'no_of_crd',96,28,'220A.2132_fac'),(198,'c_cr_per_unit_fac',97,27,'220A.2131_fac'),(199,'c_crd_per_unit_fac',98,28,'220A.2132_fac'),(200,'c_220A.224_cs_weight_plate',99,32,'220A.224_fac'),(201,'c_220A.224_ss_weight',100,32,'220A.224_fac'),(202,'c_237_lab',101,186,'237_lab'),(203,'c_237_mat',102,288,'237_mat'),(204,'ref_228_lab',103,179,'228_lab'),(205,'ref_228_mat',104,281,'228_mat'),(206,'ref_236_fac',105,83,'236_fac'),(207,'ref_236_lab',106,185,'236_lab'),(208,'ref_236_mat',107,287,'236_mat'),(209,'ref_253_fac',108,95,'253_fac'),(210,'ref_253_lab',109,197,'253_lab'),(211,'ref_253_mat',110,299,'253_mat'),(212,'ref_221.14_mat',111,257,'221.14_mat'),(213,'c_220A.225_ss_weight',113,33,'220A.225_fac'),(214,'c_220A.2324_ss_weight',114,39,'220A.2324_fac'),(215,'c_220A.2322_tot_weight',115,37,'220A.2322_fac'),(216,'prn_220A.2322cs',116,37,'220A.2322_fac'),(217,'prn_220A.2322ss',117,37,'220A.2322_fac'),(218,'no_of_acu',118,37,'220A.2322_fac'),(219,'c_220A.2323_tot_weight',119,38,'220A.2323_fac'),(220,'prn_220A.2323cs',120,38,'220A.2323_fac'),(221,'prn_220A.2323ss',121,38,'220A.2323_fac'),(222,'no_of_bit',122,38,'220A.2323_fac'),(223,'c_220A.251_cs_weight',123,41,'220A.251_fac'),(224,'c_220A.251_ss_weight',124,41,'220A.251_fac'),(225,'factor_220A.251',125,41,'220A.251_fac'),(226,'c_220A.2312_cs_weight',126,35,'220A.2312_fac'),(227,'c_220A.2312_ss_weight',127,35,'220A.2312_fac'),(228,'factor_220A.2312',128,35,'220A.2312_fac'),(229,'vol_223.4',129,63,'223.4_fac'),(230,'vol_223.4',129,165,'223.4_lab'),(231,'vol_223.4',129,267,'223.4_mat'),(232,'c_223.4_unit_vol_fac',130,63,'223.4_fac'),(233,'c_223.4_unit_vol_lab',131,165,'223.4_lab'),(234,'c_223.4_unit_vol_mat',132,267,'223.4_mat'),(235,'escalate_1978',133,42,'220A.254_fac'),(236,'ref_220A.254_1978',134,42,'220A.254_fac'),(237,'c_226.4111_fac',135,43,'220A.2611_fac'),(238,'c_226.4112_fac',136,43,'220A.2611_fac'),(239,'c_226.41131_fac',137,43,'220A.2611_fac'),(240,'c_226.41132_fac',138,43,'220A.2611_fac'),(241,'c_226.4114_fac',139,43,'220A.2611_fac'),(242,'c_226.41151_fac',140,43,'220A.2611_fac'),(243,'c_226.41152_fac',141,43,'220A.2611_fac'),(244,'c_226.4121_fac',142,44,'220A.2612_fac'),(245,'c_226.4122_fac',143,44,'220A.2612_fac'),(246,'c_226.4123_fac',144,44,'220A.2612_fac'),(247,'c_226.4124_fac',145,44,'220A.2612_fac'),(248,'c_226.4125_fac',146,44,'220A.2612_fac'),(249,'c_226.4126_fac',147,44,'220A.2612_fac'),(250,'c_226.4127_fac',148,44,'220A.2612_fac'),(251,'c_226.4128_fac',149,44,'220A.2612_fac'),(252,'c_226.4133_fac',150,45,'220A.2613_fac'),(253,'c_226.4134_fac',151,45,'220A.2613_fac'),(254,'c_226.4135_fac',152,45,'220A.2613_fac'),(255,'c_226.4131_fac',153,45,'220A.2613_fac'),(256,'c_226.4141_fac',154,46,'220A.2614_fac'),(257,'c_226.4142_fac',155,46,'220A.2614_fac'),(258,'c_226.4143_fac',156,46,'220A.2614_fac'),(259,'c_226.4144_fac',157,46,'220A.2614_fac'),(260,'c_226.4145_fac',158,46,'220A.2614_fac'),(261,'c_251.12_fac',159,93,'251_fac'),(262,'c_251.111_fac',160,93,'251_fac'),(263,'c_251.112_fac',161,93,'251_fac'),(264,'c_251.16_fac',162,93,'251_fac'),(265,'c_251.17_fac',163,93,'251_fac'),(266,'c_251.12_lab',164,195,'251_lab'),(267,'c_251.111_lab',165,195,'251_lab'),(268,'c_251.112_lab',166,195,'251_lab'),(269,'c_251.16_lab',167,195,'251_lab'),(270,'c_251.17_lab',168,195,'251_lab'),(271,'c_251.12_mat',169,297,'251_mat'),(272,'c_251.111_mat',170,297,'251_mat'),(273,'c_251.112_mat',171,297,'251_mat'),(274,'c_251.16_mat',172,297,'251_mat'),(275,'c_251.17_mat',173,297,'251_mat'),(276,'fac_223.1',174,61,'223.1_fac'),(277,'fac_223.1',174,163,'223.1_lab'),(278,'fac_223.1',174,265,'223.1_mat'),(279,'prn_223.1_fac',175,61,'223.1_fac'),(280,'prn_223.1_lab',176,163,'223.1_lab'),(281,'prn_223.1_mat',177,265,'223.1_mat'),(282,'c_220A.2311_fac',178,34,'220A.2311_fac'),(283,'c_220A.2311_fac',178,61,'223.1_fac'),(284,'c_220A.2311_fac',178,163,'223.1_lab'),(285,'c_220A.2311_fac',178,265,'223.1_mat'),(286,'c_220A.2312_fac',179,61,'223.1_fac'),(287,'c_220A.2312_fac',179,163,'223.1_lab'),(288,'c_220A.2312_fac',179,265,'223.1_mat'),(289,'fac_223.3',180,62,'223.3_fac'),(290,'fac_223.3',180,164,'223.3_lab'),(291,'fac_223.3',180,266,'223.3_mat'),(292,'prn_223.3_fac',181,62,'223.3_fac'),(293,'prn_223.3_lab',182,164,'223.3_lab'),(294,'prn_223.3_mat',183,266,'223.3_mat'),(295,'c_220A.2321_fac',184,36,'220A.2321_fac'),(296,'c_220A.2321_fac',184,62,'223.3_fac'),(297,'c_220A.2321_fac',184,164,'223.3_lab'),(298,'c_220A.2321_fac',184,266,'223.3_mat'),(299,'c_220A.2322_fac',185,62,'223.3_fac'),(300,'c_220A.2322_fac',185,164,'223.3_lab'),(301,'c_220A.2322_fac',185,266,'223.3_mat'),(302,'c_220A.2323_fac',186,62,'223.3_fac'),(303,'c_220A.2323_fac',186,164,'223.3_lab'),(304,'c_220A.2323_fac',186,266,'223.3_mat'),(305,'c_220A.2324_fac',187,62,'223.3_fac'),(306,'c_220A.2324_fac',187,164,'223.3_lab'),(307,'c_220A.2324_fac',187,266,'223.3_mat'),(308,'c_220A.2325_fac',188,40,'220A.2325_fac'),(309,'c_220A.2325_fac',188,62,'223.3_fac'),(310,'c_220A.2325_fac',188,164,'223.3_lab'),(311,'c_220A.2325_fac',188,266,'223.3_mat'),(312,'c_218B_fac',189,9,'218B_fac'),(313,'c_218J_fac',190,15,'218J_fac'),(314,'c_218T_fac',191,20,'218T_fac'),(315,'c_218B_lab',195,111,'218B_lab'),(316,'c_218J_lab',196,117,'218J_lab'),(317,'c_218T_lab',197,122,'218T_lab'),(318,'c_218B_mat',198,213,'218B_mat'),(319,'c_218J_mat',199,219,'218J_mat'),(320,'c_218T_mat',200,224,'218T_mat'),(321,'Tot_Labor_containment',506,104,'212_lab'),(322,'Tot_Mat_containment',507,206,'212_mat');
 /*!40000 ALTER TABLE `variable_links` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'accert_db'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `extract_affected_cost_elements` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_cost_elements`(IN vlk_table varchar(50),
+                                                                              IN var_table varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT vl.variable, group_concat(vl.ce)
+                        FROM
+                        (SELECT * FROM ',var_table,'
+                        WHERE user_input = 1) as va
+                        JOIN ',vlk_table,' as vl
+                        on va.var_name = vl.variable
+                        GROUP BY vl.variable');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_changed_cost_elements` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_changed_cost_elements`(IN cel_table VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT cost_element, cost_2017
+                        FROM ',cel_table,'
+                        WHERE updated != 0
+                        ORDER BY account, cost_element;');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_original_cost_elements` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_original_cost_elements`(IN cel_table VARCHAR(50),
+                                                                             IN var_table VARCHAR(50),
+                                                                             IN vlk_table VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT ce.cost_element,	ce.cost_2017 as orignal_cost
+                        FROM ',cel_table,' as ce JOIN
+                        (SELECT vl.ce
+                        FROM
+                        (SELECT * FROM ',var_table,'
+                        WHERE user_input = 1) as va
+                        JOIN ',vlk_table,' as vl
+                        on va.var_name = vl.variable) as ce_affected
+                        on ce.cost_element = ce_affected.ce');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_super_val` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_super_val`(IN table_name VARCHAR(50),
+                                          IN var_name VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT v_linked FROM ', table_name, ' WHERE var_name = ?');
+ PREPARE stmt FROM @stmt;
+ SET @var_name = var_name;
+ EXECUTE stmt USING @var_name;
+ DEALLOCATE PREPARE stmt;
+ END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_user_changed_variables` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_user_changed_variables`(IN table_name VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT var_name,var_description, var_value, var_unit
+                        FROM ', table_name, ' WHERE user_input = 1 ORDER BY var_name;');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_variable_info_on_name` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_variable_info_on_name`(IN table_name VARCHAR(50),
+                                          IN var_name VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT var_value, var_unit FROM ', table_name, ' WHERE var_name = ?');
+PREPARE stmt FROM @stmt;
+SET @var_name = var_name;
+EXECUTE stmt USING @var_name;
+DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_var_value_by_name` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_var_value_by_name`(IN table_name VARCHAR(50),
+                                                                    IN `var_name` VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT var_value FROM ', table_name, ' WHERE var_name = ?');
+    PREPARE stmt FROM @stmt;
+    SET @var_name = var_name;
+    EXECUTE stmt USING @var_name;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `insert_new_COA` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_COA`(IN table_name VARCHAR(50),
+											IN ind INT,
+											IN supaccount VARCHAR(50),
+											IN level INT,
+											IN lft INT,
+											IN rgt INT,
+											IN code_of_account VARCHAR(50),
+											IN account_description VARCHAR(50),
+											IN total_cost INT,
+											IN unit VARCHAR(50),
+											IN main_subaccounts VARCHAR(100),
+											IN cost_elements VARCHAR(50),
+											IN review_status VARCHAR(50),
+											IN prn VARCHAR(50))
+BEGIN
+	SET @stmt = CONCAT('INSERT INTO ', table_name,
+						' (ind, supaccount, level, lft, rgt, code_of_account, account_description, 
+							total_cost, unit, main_subaccounts, cost_elements, review_status, prn) 
+							VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+PREPARE stmt FROM @stmt;
+SET @ind = ind;
+SET @supaccount = supaccount;
+SET @level = level;
+SET @lft = lft;
+SET @rgt = rgt;
+SET @code_of_account = code_of_account;
+SET @account_description = account_description;
+SET @total_cost = total_cost;
+SET @unit = unit;
+SET @main_subaccounts = main_subaccounts;
+SET @cost_elements = cost_elements;
+SET @review_status = review_status;
+SET @prn = prn;
+EXECUTE stmt USING @ind, @supaccount, @level, @lft, @rgt, @code_of_account, @account_description,
+@total_cost, @unit, @main_subaccounts, @cost_elements, @review_status, @prn;
+DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_account_all` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_account_all`(IN table_name varchar(50),
+                                                                IN level int)
+BEGIN
+    SET @stmt=CONCAT('SELECT * FROM ',table_name,' WHERE level <= ?');
+    PREPARE stmt FROM @stmt;
+    SET @level=level;
+    EXECUTE stmt USING @level;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_account_simple` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_account_simple`(IN table_name varchar(50),
+                                                                   IN level int)
+BEGIN
+    SET @stmt=CONCAT('SELECT ind,
+                            code_of_account,
+                            account_description,
+                            total_cost,
+                            unit,
+                            level,
+                            review_status
+                            FROM ',table_name,' WHERE level <= ?');
+    PREPARE stmt FROM @stmt;
+    SET @level=level;
+    EXECUTE stmt USING @level;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_accounts_all` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_accounts_all`(IN acc_table varchar(50),
+                                                                        IN  cel_table varchar(50),
+                                                                        IN  level int)
+BEGIN
+    SET @stmt=CONCAT('SELECT acc.level,
+                            rankedcoa.COA as code_of_account,
+                            acc.account_description,
+                            sorted_ce.fac_cost,
+                            sorted_ce.lab_cost,
+                            sorted_ce.mat_cost,
+                            acc.total_cost,
+                            acc.unit,
+                            acc.review_status
+                            FROM ',acc_table,' as acc
+                            JOIN
+                            (SELECT node.code_of_account,
+                                    CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
+                                FROM ',acc_table,' AS node,
+                                    ',acc_table,' AS parent
+                                WHERE node.lft BETWEEN parent.lft AND parent.rgt
+                                GROUP BY node.code_of_account) as rankedcoa
+                                ON acc.code_of_account=rankedcoa.code_of_account
+                                JOIN (SELECT splt_act.code_of_account,
+                                    cef.cost_2017 as fac_cost,
+                                    cel.cost_2017 as lab_cost,
+                                    cem.cost_2017 as mat_cost
+                                    FROM 
+                                    (SELECT code_of_account,total_cost,
+                                            SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 1), ",", -1) AS fac_name,
+                                            SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 2), ",", -1) AS lab_name,
+                                            SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 3), ",", -1) AS mat_name
+                                            FROM ',acc_table,') as splt_act
+                                    LEFT JOIN ',cel_table,' as cef
+                                    ON cef.cost_element= splt_act.fac_name
+                                    LEFT JOIN ',cel_table,' as cel
+                                    ON cel.cost_element= splt_act.lab_name
+                                    LEFT JOIN ',cel_table,' as cem
+                                    ON cem.cost_element= splt_act.mat_name) as sorted_ce
+                                    ON sorted_ce.code_of_account=acc.code_of_account
+                                    WHERE acc.level <= ?
+                                    ORDER BY acc.lft;');
+    PREPARE stmt FROM @stmt;
+    SET @level=level;
+    EXECUTE stmt USING @level;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_accounts_simple` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_accounts_simple`(IN acc_table VARCHAR(255), IN level INT)
+BEGIN
+    SET @stmt = CONCAT('SELECT rankedcoa.code_of_account,
+                    acc.account_description,
+                    acc.total_cost,
+                    acc.unit,
+                    acc.level,
+                    acc.review_status
+                    FROM ',acc_table,' as acc
+                    JOIN
+                    (SELECT node.code_of_account AS COA , CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
+                    FROM ',acc_table,' AS node,
+                                    ',acc_table,' AS parent
+                    WHERE node.lft BETWEEN parent.lft AND parent.rgt
+                    GROUP BY node.code_of_account) as rankedcoa
+                    ON acc.code_of_account=rankedcoa.COA
+                    WHERE acc.level <= ?');
+    PREPARE stmt FROM @stmt;
+    SET @level=level;
+    EXECUTE stmt USING @level;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_table` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_table`(IN table_name VARCHAR(255))
+BEGIN
+    SET @stmt = CONCAT('SELECT * FROM ',table_name);
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_updated_cost_elements` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_updated_cost_elements`(IN cel_table VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT ind,
+                                cost_element,
+                                cost_2017,    
+                                sup_cost_ele,
+                                account,
+                                updated
+                        FROM ',cel_table,'
+                        WHERE updated = 1');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_user_request_parameter` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_user_request_parameter`(IN all_col BOOLEAN,
+                                                                           IN var_table VARCHAR(50), 
+                                                                           IN vlk_table VARCHAR(50))
+BEGIN
+    IF all_col THEN
+		SET @stmt = CONCAT('SELECT va.ind, va.var_name, affectv.ce_affected FROM ',var_table,' as va JOIN 
+								(SELECT variable, group_concat(ce) as ce_affected
+								FROM ',vlk_table,' as vlk 
+								group by variable) as affectv on va.var_name = affectv.variable
+								where va.var_value IS NULL
+								order by va.ind');
+    ELSE
+        SET @stmt = CONCAT('SELECT va.var_name, affectv.ce_affected FROM ',var_table,' as va JOIN
+                            (SELECT variable, group_concat(ce) as ce_affected
+                            FROM ',vlk_table,' as vlk
+                            group by variable) as affectv on va.var_name = affectv.variable
+                            where va.var_value IS NULL
+                            order by va.ind;');
+    END IF;
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `roll_up_cost_elements_by_level` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_cost_elements_by_level`(IN table_name varchar(50), 
+                                                                  IN from_level int, IN to_level int)
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', table_name, ',',
+                        '(SELECT c',to_level,'.cost_element as ce',to_level,'_ce, ',
+                            'sum(uc',from_level,'.cost_2017) as c',to_level,'_cal_total_cost ',
+                        'FROM ', table_name, ' as uc',from_level,
+                        ' JOIN ', table_name, ' as c',to_level,
+                        ' on uc',from_level,'.sup_cost_ele=c',to_level,'.cost_element ',
+                        'join account as ac',to_level,
+                        ' on c',to_level,'.account = ac',to_level,'.code_of_account ',
+                        'where ac',to_level,'.level=',to_level,
+                        ' group by c',to_level,'.cost_element) as updated_ce',to_level,
+                        ' SET ',
+                        table_name,'.cost_2017 = updated_ce',to_level,'.c',to_level,'_cal_total_cost,',
+                        table_name,'.updated = 1 ',
+                        'WHERE ',
+                        table_name,'.cost_element = updated_ce',to_level,'.ce',to_level,'_ce');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sup_coa_level` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sup_coa_level`(IN table_name VARCHAR(50),
+                                          IN supaccount VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT level FROM ', table_name, ' WHERE code_of_account = ?');
+PREPARE stmt FROM @stmt;
+SET @supaccount = supaccount;
+EXECUTE stmt USING @supaccount;
+DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_account_before_insert` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_before_insert`(IN table_name VARCHAR(50),
+                                              IN max_ind INT,
+                                              IN max_rgt INT)
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', table_name,
+                       ' SET ind = ind + 1 WHERE ind > ?');
+    PREPARE stmt FROM @stmt;
+    SET @max_ind = max_ind;
+    EXECUTE stmt USING @max_ind;
+    DEALLOCATE PREPARE stmt;  
+    SET @stmt = CONCAT('UPDATE ', table_name,
+                       ' SET lft = lft + 2 WHERE lft > ?');
+    PREPARE stmt FROM @stmt;
+    SET @max_rgt = max_rgt;
+    EXECUTE stmt USING @max_rgt;
+    DEALLOCATE PREPARE stmt;
+    SET @stmt = CONCAT('UPDATE ', table_name,
+                       ' SET rgt = rgt + 2 WHERE rgt > ?');
+    PREPARE stmt FROM @stmt;
+    SET @max_rgt = max_rgt;
+    EXECUTE stmt USING @max_rgt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_account_table_by_cost_elements` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_table_by_cost_elements`(IN acc_tabl_name varchar(50),
+																					IN cel_tabl_name varchar(50))
+BEGIN
+	SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
+						'(SELECT ', acc_tabl_name, '.code_of_account,
+								ce.total_cost as cost,
+								ce.updated as updated,
+								', acc_tabl_name, '.unit
+						FROM ', acc_tabl_name, '
+						JOIN (SELECT account,
+									sum(cost_2017) as total_cost,
+									sum(updated) as updated
+							FROM ', cel_tabl_name, '
+							GROUP BY ', cel_tabl_name, '.account ) as ce
+						on ', acc_tabl_name, '.code_of_account = ce.account
+						ORDER BY ', acc_tabl_name, '.ind) as updated_account
+						SET ', acc_tabl_name, '.total_cost = updated_account.cost,
+						review_status = \'Ready for Review\'
+						WHERE updated_account.updated > 0
+						and ', acc_tabl_name, '.code_of_account = updated_account.code_of_account;');
+	PREPARE stmt FROM @stmt;
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_on_name` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_on_name`(IN table_name VARCHAR(50),
+                                                                          IN `ce_name` VARCHAR(50),
+                                                                          IN `alg_value` FLOAT)
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', table_name, ' SET cost_2017 = ?, updated = 1 WHERE cost_element = ?');
+    PREPARE stmt FROM @stmt;
+    SET @alg_value = alg_value;
+    SET @ce_name = ce_name;
+    EXECUTE stmt USING @alg_value, @ce_name;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_new_cost_elements` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_cost_elements`(IN cel_tabl_name VARCHAR(50),
+                                                                        IN var_tabl_name VARCHAR(50),
+                                                                        IN vlk_tabl_name VARCHAR(50),
+                                                                        IN alg_tabl_name VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT ce_org.ind, ce_org.cost_element,
+                        ce_org.cost_2017, ce_org.alg_name,
+                        ce_org.variables, ce_org.algno,
+                        alg.alg_python, alg.alg_formulation, alg.alg_units FROM
+                        (SELECT ind, cost_element,
+                        cost_2017, alg_name,
+                        variables, algno
+                        FROM ', cel_tabl_name, ' AS ce JOIN
+                        (SELECT vl.ce
+                            FROM (SELECT * FROM ', var_tabl_name, '
+                                WHERE user_input = 1) AS va
+                            JOIN ', vlk_tabl_name, ' AS vl
+                            ON va.var_name = vl.variable) AS ce_affected
+                        ON ce.cost_element = ce_affected.ce) AS ce_org
+                        JOIN ', alg_tabl_name, ' AS alg
+                        ON ce_org.alg_name = alg.alg_name;');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_super_variable` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_super_variable`(IN var_table_name VARCHAR(50),
+                            IN alg_table_name VARCHAR(50), IN `u_i_var_name` VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT var.ind, var.var_name, var.var_value,
+                        var.var_alg, var.var_need, alg.ind, alg.alg_python,
+                        alg.alg_formulation, alg.alg_units, var.var_unit
+                        FROM ', var_table_name, ' as var JOIN ', alg_table_name, ' as alg
+                        ON var.var_alg=alg.alg_name
+                        WHERE var.var_name=?');
+PREPARE stmt FROM @stmt;
+SET @var_name = u_i_var_name;
+EXECUTE stmt USING @var_name;
+DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_total_cost_on_name` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_total_cost_on_name`(IN table_name VARCHAR(50),
+                                                                        IN `tc_id` VARCHAR(50), 
+                                                                        IN `u_i_tc_value` FLOAT, 
+                                                                        IN `u_i_tc_unit` VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', table_name, ' SET total_cost = ?, unit = ?, 
+                                              review_status = "User Input" WHERE code_of_account = ?');
+    PREPARE stmt FROM @stmt;
+    SET @tc_id = tc_id;
+    SET @u_i_tc_value = u_i_tc_value;
+    SET @u_i_tc_unit = u_i_tc_unit;
+    EXECUTE stmt USING @u_i_tc_value, @u_i_tc_unit, @tc_id;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_variable` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable`(
+    IN tbl_name VARCHAR(255), 
+    IN var_id VARCHAR(255), 
+    IN var_value FLOAT, 
+    IN var_unit VARCHAR(255), 
+    IN revised INT
+)
+BEGIN
+    SET @sql = CONCAT('UPDATE ', tbl_name, ' SET var_value = ?, var_unit = ?, user_input = ? WHERE var_name = ?');
+    PREPARE stmt FROM @sql;
+    SET @param1 = var_value,
+		@param2 = var_unit,
+        @param3 = revised,
+        @param4 = var_id;
+    EXECUTE stmt USING @param1, @param2, @param3, @param4;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_variable_info_on_name` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable_info_on_name`(IN table_name VARCHAR(50),
+                            IN `u_i_var_name` VARCHAR(50), IN `value` FLOAT, IN `unit` VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', table_name, ' SET var_value = ?,
+                        var_unit = ?,
+                        user_input = ? WHERE var_name = ?');
+PREPARE stmt FROM @stmt;
+SET @var_value = value;
+SET @var_unit = unit;
+SET @user_input = 1;
+SET @var_name = u_i_var_name;
+EXECUTE stmt USING @var_value, @var_unit, @user_input, @var_name;
+DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -368,4 +1170,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-02 15:38:11
+-- Dump completed on 2023-05-31 14:26:01

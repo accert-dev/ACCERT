@@ -20,6 +20,7 @@ class Accert:
         self.input_path = input_path
         self.accert_path = accert_path
         self.input = self.load_obj(self.input_path, self.accert_path)
+        self.ref_model = None
         self.acc_tabl = None
         self.cel_tabl = None
         self.var_tabl = None
@@ -43,6 +44,7 @@ class Accert:
         None
         """
         if "abr1000" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'abr1000'
             self.acc_tabl = 'abr_account'
             self.cel_tabl = 'abr_cost_element'
             self.var_tabl = 'abr_variable'
@@ -51,6 +53,7 @@ class Accert:
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'        
         elif "pwr12-be" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'pwr12-be'
             self.acc_tabl = 'account'
             self.cel_tabl = 'cost_element'
             self.var_tabl = 'variable'
@@ -133,9 +136,35 @@ class Accert:
         max_rgt : int
             original rgt of the account next to the inserted COA
         """
-        c.execute("UPDATE accert_db.account SET ind = ind + 1 WHERE ind > {}".format(max_ind))
-        c.execute("UPDATE accert_db.account SET lft = lft + 2 WHERE lft > {}".format(max_rgt))
-        c.execute("UPDATE accert_db.account SET rgt = rgt + 2 WHERE rgt > {}".format(max_rgt))
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_before_insert`(IN table_name VARCHAR(50),
+        #                                               IN max_ind INT,
+        #                                               IN max_rgt INT)
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', table_name,
+        #                        ' SET ind = ind + 1 WHERE ind > ?');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @max_ind = max_ind;
+        #     EXECUTE stmt USING @max_ind;
+        #     DEALLOCATE PREPARE stmt;  
+        #     SET @stmt = CONCAT('UPDATE ', table_name,
+        #                        ' SET lft = lft + 2 WHERE lft > ?');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @max_rgt = max_rgt;
+        #     EXECUTE stmt USING @max_rgt;
+        #     DEALLOCATE PREPARE stmt;
+        #     SET @stmt = CONCAT('UPDATE ', table_name,
+        #                        ' SET rgt = rgt + 2 WHERE rgt > ?');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @max_rgt = max_rgt;
+        #     EXECUTE stmt USING @max_rgt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('update_account_before_insert',(self.acc_tabl, max_ind, max_rgt))
+        # c.execute("UPDATE accert_db.account SET ind = ind + 1 WHERE ind > {}".format(max_ind))
+        # c.execute("UPDATE accert_db.account SET lft = lft + 2 WHERE lft > {}".format(max_rgt))
+        # c.execute("UPDATE accert_db.account SET rgt = rgt + 2 WHERE rgt > {}".format(max_rgt))
         return None
 
     def insert_new_COA(self, c, ind, supaccount, level, lft, rgt, 
@@ -175,22 +204,64 @@ class Accert:
         prn : str(float), optional
             percentage of the total cost of new inserted COA, by default '0'
         """       
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_COA`(IN table_name VARCHAR(50),
+        #                                           IN ind INT,
+        #                                           IN supaccount VARCHAR(50),
+        #                                           IN level INT,
+        #                                           IN lft INT,
+        #                                           IN rgt INT,
+        #                                           IN code_of_account VARCHAR(50),
+        #                                           IN account_description VARCHAR(50),
+        #                                           IN total_cost INT,
+        #                                           IN unit VARCHAR(50),
+        #                                           IN main_subaccounts VARCHAR(100),
+        #                                           IN cost_elements VARCHAR(50),
+        #                                           IN review_status VARCHAR(50),
+        #                                           IN prn VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('INSERT INTO ', table_name,
+        #                        ' (ind, supaccount, level, lft, rgt, code_of_account, account_description, 
+        #                           total_cost, unit, main_subaccounts, cost_elements, review_status, prn) 
+        #                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        # PREPARE stmt FROM @stmt;
+        # SET @ind = ind;
+        # SET @supaccount = supaccount;
+        # SET @level = level;
+        # SET @lft = lft;
+        # SET @rgt = rgt;
+        # SET @code_of_account = code_of_account;
+        # SET @account_description = account_description;
+        # SET @total_cost = total_cost;
+        # SET @unit = unit;
+        # SET @main_subaccounts = main_subaccounts;
+        # SET @cost_elements = cost_elements;
+        # SET @review_status = review_status;
+        # SET @prn = prn;
+        # EXECUTE stmt USING @ind, @supaccount, @level, @lft, @rgt, @code_of_account, @account_description,
+        # @total_cost, @unit, @main_subaccounts, @cost_elements, @review_status, @prn;
+        # DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
 
-        c.execute("""INSERT INTO 
-        accert_db.account (ind, code_of_account, account_description, 
-                            total_cost, unit, level, main_subaccounts,
-                            supaccount, cost_elements, review_status, 
-                            lft, rgt, prn) 
-        VALUES (%(ind)s, %(code_of_account)s, %(account_description)s,
-                %(total_cost)s, %(unit)s, %(level)s, %(main_subaccounts)s,
-                %(supaccount)s, %(cost_elements)s, %(review_status)s,
-                %(lft)s, %(rgt)s, %(prn)s)""",
-        {'ind': ind, 'code_of_account': code_of_account, 
-        'account_description': account_description, 
-        'total_cost': total_cost, 'unit': unit, 'level': level, 
-        'main_subaccounts': main_subaccounts, 'supaccount': supaccount, 
-        'cost_elements': cost_elements, 'review_status': 
-        review_status, 'lft': lft, 'rgt': rgt, 'prn': prn})
+        c.callproc('insert_new_COA',(self.acc_tabl, ind, supaccount, level, lft, rgt,
+                                   code_of_account, account_description, total_cost, unit,
+                                  main_subaccounts, cost_elements, review_status, prn))
+        # c.execute("""INSERT INTO 
+        # accert_db.account (ind, code_of_account, account_description, 
+        #                     total_cost, unit, level, main_subaccounts,
+        #                     supaccount, cost_elements, review_status, 
+        #                     lft, rgt, prn) 
+        # VALUES (%(ind)s, %(code_of_account)s, %(account_description)s,
+        #         %(total_cost)s, %(unit)s, %(level)s, %(main_subaccounts)s,
+        #         %(supaccount)s, %(cost_elements)s, %(review_status)s,
+        #         %(lft)s, %(rgt)s, %(prn)s)""",
+        # {'ind': ind, 'code_of_account': code_of_account, 
+        # 'account_description': account_description, 
+        # 'total_cost': total_cost, 'unit': unit, 'level': level, 
+        # 'main_subaccounts': main_subaccounts, 'supaccount': supaccount, 
+        # 'cost_elements': cost_elements, 'review_status': 
+        # review_status, 'lft': lft, 'rgt': rgt, 'prn': prn})
         return None                   
 
     def insert_COA(self, c, sup_coa):
@@ -214,7 +285,23 @@ class Accert:
         # TODO : return a new COA id with the COA list as input
         # new_COA = get_new_COA_id(current_COAs)
         new_COA = "new"
-        c.execute("SELECT level FROM accert_db.account WHERE code_of_account = %s", (sup_coa,))
+
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `sup_coa_level`(IN table_name VARCHAR(50),
+        #                                           IN supaccount VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT level FROM ', table_name, ' WHERE code_of_account = ?');
+        # PREPARE stmt FROM @stmt;
+        # SET @supaccount = supaccount;
+        # EXECUTE stmt USING @supaccount;
+        # DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+
+        c.callproc('sup_coa_level',(self.acc_tabl, sup_coa))
+        for row in c.stored_results():
+            sup_coa_level = row.fetchone()[0]        
+        # c.execute("SELECT level FROM accert_db.account WHERE code_of_account = %s", (sup_coa,))
         sup_coa_level = c.fetchone()[0]
         coa_level = sup_coa_level + 1
         # before inserting new COA, update the current COAs' ind, lft, rgt
@@ -277,33 +364,22 @@ class Accert:
         var_info : List[str]
             variable info including variable name, variable unit
         """
-        c.execute("""SELECT var_value, var_unit 
-                    FROM `accert_db`.`variable` 
-                    WHERE var_name = %(u_i_var_name)s ;""",{'u_i_var_name': var_id})
-        results = c.fetchall()
-        var_info = results[0]
-        return var_info
 
-    def extract_abr_variable_info_on_name(self, c,var_id):
-        """
-        extract variable info on variable name
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_variable_info_on_name`(IN table_name VARCHAR(50),
+        #                                           IN var_name VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT var_value, var_unit FROM ', table_name, ' WHERE var_name = ?');
+        # PREPARE stmt FROM @stmt;
+        # SET @var_name = var_name;
+        # EXECUTE stmt USING @var_name;
+        # DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
 
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        var_id : str
-            variable id
-
-        Returns
-        -------
-        var_info : List[str]
-            variable info including variable name, variable unit
-        """    
-        c.execute("""SELECT var_value, var_unit 
-                    FROM `accert_db`.`abr_variable` 
-                    WHERE var_name = %(u_i_var_name)s ;""",{'u_i_var_name': var_id})
-        results = c.fetchall()
+        c.callproc('extract_variable_info_on_name',(self.var_tabl, var_id))
+        for row in c.stored_results():
+            results = row.fetchall()
         var_info = results[0]
         return var_info
 
@@ -323,32 +399,20 @@ class Accert:
         sup_val : List[str]
             SuperVariable info including SuperVariable name
         """    
-        c.execute("""SELECT v_linked from variable where var_name=%(var_id)s""",{'var_id':var_id})
-        results = c.fetchone()
-        if results is not None:
-            sup_val = results[0]
-        else:
-            sup_val = None
-        return sup_val
-
-    def extract_abr_super_val(self, c,var_id):
-        """
-        extract SuperVariable info on variable name
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        var_id : str
-            variable id
-
-        Returns
-        -------
-        sup_val : List[str]
-            SuperVariable info including SuperVariable name
-        """
-        c.execute("""SELECT v_linked from abr_variable where var_name=%(var_id)s""",{'var_id':var_id})
-        results = c.fetchone()
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_super_val`(IN table_name VARCHAR(50),
+        #                                          IN var_name VARCHAR(50))
+        # BEGIN
+        #    SET @stmt = CONCAT('SELECT v_linked FROM ', table_name, ' WHERE var_name = ?');
+        # PREPARE stmt FROM @stmt;
+        # SET @var_name = var_name;
+        # EXECUTE stmt USING @var_name;
+        # DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('extract_super_val',(self.var_tabl, var_id))
+        for row in c.stored_results():
+           results = row.fetchone()    
         if results is not None:
             sup_val = results[0]
         else:
@@ -392,69 +456,6 @@ class Accert:
             print('[Updated]  Changed from {} {} to {} {}\n'.format(org_var_value,org_var_unit, u_i_var_value, u_i_var_unit))
         return None
 
-    def update_abr_input_variable(self, c,var_id,u_i_var_value,
-                                  u_i_var_unit,var_type='', quite=False):
-        """
-        update input variable value and unit and convert unit if needed
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        var_id : str
-            variable id
-        u_i_var_value : float
-            variable value
-        u_i_var_unit : str
-            variable unit
-        var_type : str, optional
-            variable type, by default ''
-        quite : bool, optional
-            whether to print the update info, by default False
-        """
-        
-        if not quite:
-            print('[Updating] {}Variable {}'.format(var_type,var_id))
-        org_var_info = self.extract_abr_variable_info_on_name(c,var_id)
-        # NOTE: org_var_info is a tuple
-        org_var_value = float(org_var_info[0])
-        org_var_unit = str(org_var_info[1])
-        unit_convert = self.check_unit_conversion(org_var_unit,u_i_var_unit)
-        if unit_convert:
-            u_i_var_value = self.convert_unit(u_i_var_value,u_i_var_unit,org_var_unit)
-            u_i_var_unit = org_var_unit
-        # # DEBUG print
-        self.update_abr_variable_info_on_name(c,var_id,u_i_var_value,u_i_var_unit)
-        if not quite:
-            print('[Updated]  Changed from {} {} to {} {}\n'.format(org_var_value,org_var_unit, u_i_var_value, u_i_var_unit))
-        return None
-
-    def update_abr_variable_info_on_name(self, c,var_id,var_value,var_unit):
-        """
-        update variable info on variable name
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        var_id : str
-            variable id
-        var_value : float
-            variable value
-        var_unit : str
-            variable unit
-        """
-        c.execute(""" UPDATE abr_variable
-                    SET var_value = %(value)s,
-                    var_unit = %(unit)s,
-                    user_input = %(revised)s
-                    WHERE var_name = %(u_i_var_name)s;""",
-                    {'u_i_var_name': var_id,
-                    'value': float(var_value),
-                    'unit': var_unit,
-                    'revised': 1})
-        return None 
-
     def update_variable_info_on_name(self, c,var_id,var_value,var_unit):
         """
         update variable info on variable name
@@ -470,15 +471,23 @@ class Accert:
         var_unit : str
             variable unit
         """
-        c.execute("""UPDATE variable
-                    SET var_value = %(value)s,
-                    var_unit = %(unit)s,
-                    user_input = %(revised)s
-                    WHERE var_name = %(u_i_var_name)s;""",
-                    {'u_i_var_name': var_id,
-                    'value': float(var_value),
-                    'unit': var_unit,
-                    'revised': 1})
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable_info_on_name`(IN table_name VARCHAR(50),
+        #                             IN `u_i_var_name` VARCHAR(50), IN `value` FLOAT, IN `unit` VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', table_name, ' SET var_value = ?,
+        #                         var_unit = ?,
+        #                         user_input = ? WHERE var_name = ?');
+        # PREPARE stmt FROM @stmt;
+        # SET @var_value = value;
+        # SET @var_unit = unit;
+        # SET @user_input = 1;
+        # SET @var_name = u_i_var_name;
+        # EXECUTE stmt USING @var_value, @var_unit, @user_input, @var_name;
+        # DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('update_variable_info_on_name', (self.var_tabl, var_id, var_value, var_unit))
         return None    
 
     def update_super_variable(self, c,var_id):
@@ -492,20 +501,25 @@ class Accert:
         var_id : str
             variable id
         """
-        c.execute(""" SELECT variable.ind, 
-                            variable.var_name, 
-                            variable.var_value, 
-                            variable.var_alg, 
-                            variable.var_need, 
-                            alg.ind,
-                            alg.alg_python, 
-                            alg.alg_formulation,
-                            alg.alg_units, 
-                            variable.var_unit
-        FROM variable JOIN algorithm as alg
-        ON variable.var_alg=alg.alg_name
-        WHERE variable.var_name=%(var_id)s""",{'var_id':var_id})
-        result = c.fetchone()
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_super_variable`(IN var_table_name VARCHAR(50),
+        #                             IN alg_table_name VARCHAR(50), IN `u_i_var_name` VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT var.ind, var.var_name, var.var_value,
+        #                         var.var_alg, var.var_need, alg.ind, alg.alg_python,
+        #                         alg.alg_formulation, alg.alg_units, var.var_unit
+        #                         FROM ', var_table_name, ' as var JOIN ', alg_table_name, ' as alg
+        #                         ON var.var_alg=alg.alg_name
+        #                         WHERE var.var_name=?');
+        # PREPARE stmt FROM @stmt;
+        # SET @var_name = u_i_var_name;
+        # EXECUTE stmt USING @var_name;
+        # DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('update_super_variable',(self.var_tabl, self.alg_tabl, var_id))
+        for row in c.stored_results():
+            result = row.fetchone()
         ### results is a tuple
         sup_var_name = result[1]
         org_var_value = result[2]
@@ -526,57 +540,6 @@ class Accert:
         print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
         alg_value = self.run_pre_alg(alg, **variables)
         self.update_input_variable(c,sup_var_name,alg_value,sup_var_unit,quite = True)
-        if alg_unit == '1':
-            alg_unit=''
-            sup_var_unit=''
-        print('[Updated]  Reference value is : {} {}, calculated value is: {} {}'.format(org_var_value,alg_unit,alg_value,sup_var_unit))
-        print(' ')
-        return None
-
-    def update_abr_super_variable(self, c,var_id):
-        """
-        update super variable info on variable name
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        var_id : str
-            variable id
-        """
-        c.execute(""" SELECT abr_variable.ind, 
-                            abr_variable.var_name, 
-                            abr_variable.var_value, 
-                            abr_variable.var_alg, 
-                            abr_variable.var_need, 
-                            alg.ind,
-                            alg.alg_python, 
-                            alg.alg_formulation,
-                            alg.alg_units, 
-                            abr_variable.var_unit
-        FROM abr_variable JOIN algorithm as alg
-        ON abr_variable.var_alg=alg.alg_name
-        WHERE abr_variable.var_name=%(var_id)s""",{'var_id':var_id})
-        result = c.fetchone()
-        ### results is a tuple
-        sup_var_name = result[1]
-        org_var_value = result[2]
-        alg_name = result[3]
-        var_name_lst = [x.strip() for x in result[4].split(',')]
-        alg_no = result[5]
-        alg = result[6]
-        alg_form = result[7]
-        alg_unit = result[8]
-        sup_var_unit = result[9]
-        # # # create a value list for debugging
-        # # var_value_lst = []
-        variables = {}
-        for var_ind, var_name in enumerate(var_name_lst):
-            # var_value_lst.append(get_var_value_by_name(c, var_name))
-            variables['v_{}'.format(var_ind+1)] = self.get_abr_var_value_by_name(c, var_name)
-        print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
-        alg_value = self.run_pre_alg(alg, **variables)
-        self.update_abr_input_variable(c,sup_var_name,alg_value,sup_var_unit,quite = True)
         if alg_unit == '1':
             alg_unit=''
             sup_var_unit=''
@@ -610,25 +573,6 @@ class Accert:
         # c.execute("""SELECT code_of_account, account_description, total_cost, unit
         #             FROM `accert_db`.`account` 
         #             WHERE code_of_account = %(u_i_tc_name)s ;""",{'u_i_tc_name': str(tc_id).replace('"','')})
-        results = c.fetchall()
-        tc_info = results[0]
-        return tc_info
-
-    def extract_abr_total_cost_on_name(self, c,tc_id):
-        """
-        extract total cost on total cost name
-        
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        tc_id : str
-            total cost id
-        """
-        c.execute("""SELECT code_of_account, account_description, total_cost, unit
-                    FROM `accert_db`.`abr_account` 
-                    WHERE code_of_account = "{}" ;
-                    """.format(tc_id))
         results = c.fetchall()
         tc_info = results[0]
         return tc_info
@@ -804,60 +748,29 @@ class Accert:
         #             {'u_i_tc_value':int(u_i_tc_value),
         #               'u_i_tc_unit':u_i_tc_unit,
         #               'u_i_tc_name':tc_id})
-        c.execute("""UPDATE `accert_db`.`account`
-                    SET `total_cost` = {},
-                    `unit` =  "{}" ,
-                    `review_status` = 'User Input'
-                    WHERE `code_of_account` = "{}";""".format(u_i_tc_value,u_i_tc_unit,tc_id))
-        return None
 
-    def update_abr_total_cost(self, c,tc_id, u_i_tc_value, u_i_tc_unit):
-        """
-        update total cost on total cost name for ABR, check if unit conversion is needed
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        tc_id : str
-            COA of the total cost
-        u_i_tc_value : float
-            total cost value
-        u_i_tc_unit : str
-            total cost unit
-        """
-        print('[Updating] Total cost of account {}'.format(tc_id))
-        org_tc_info = self.extract_abr_total_cost_on_name(c,tc_id)
-        org_tc_value = float(org_tc_info[2])
-        org_tc_unit = org_tc_info[3]
-        unit_convert = self.check_unit_conversion(org_tc_unit,u_i_tc_unit)
-        if unit_convert:
-            u_i_tc_value = self.convert_unit(u_i_tc_value,u_i_tc_unit,org_tc_unit)
-            u_i_tc_unit = org_tc_unit
-        self.update_abr_total_cost_on_name(c,tc_id,u_i_tc_value,u_i_tc_unit)   
-        print('[Updated]  Changed from {:,.2f} {} to {:,.2f} {}\n'.format( org_tc_value,org_tc_unit, int(u_i_tc_value), u_i_tc_unit))
-        return None
-
-    def update_abr_total_cost_on_name(self, c, tc_id, u_i_tc_value, u_i_tc_unit):
-        """
-        update total cost on total cost name for ABR without checking unit conversion
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        tc_id : str
-            COA of the total cost
-        u_i_tc_value : float
-            total cost value
-        u_i_tc_unit : str
-            total cost unit
-        """
-        c.execute("""UPDATE `accert_db`.`abr_account`
-                    SET `total_cost` = {},
-                    `unit` =  "{}" ,
-                    `review_status` = 'User Input'
-                    WHERE `code_of_account` = "{}";""".format(u_i_tc_value,u_i_tc_unit,tc_id))
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_total_cost_on_name`(IN table_name VARCHAR(50),
+        #                                                                         IN `tc_id` VARCHAR(50), 
+        #                                                                         IN `u_i_tc_value` FLOAT, 
+        #                                                                         IN `u_i_tc_unit` VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', table_name, ' SET total_cost = ?, unit = ?, 
+        #                                               review_status = "User Input" WHERE code_of_account = ?');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @tc_id = tc_id;
+        #     SET @u_i_tc_value = u_i_tc_value;
+        #     SET @u_i_tc_unit = u_i_tc_unit;
+        #     EXECUTE stmt USING @u_i_tc_value, @u_i_tc_unit, @tc_id;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('update_total_cost_on_name',(self.acc_tabl,tc_id,u_i_tc_value,u_i_tc_unit))
+        # c.execute("""UPDATE `accert_db`.`account`
+        #             SET `total_cost` = {},
+        #             `unit` =  "{}" ,
+        #             `review_status` = 'User Input'
+        #             WHERE `code_of_account` = "{}";""".format(u_i_tc_value,u_i_tc_unit,tc_id))
         return None
 
     def get_var_value_by_name(self, c, var_name):
@@ -876,28 +789,20 @@ class Accert:
         var_value : str
             variable value
         """
-        c.execute("""SELECT var_value FROM variable WHERE var_name = '{}';""".format(var_name))
-        var_value = c.fetchone()[0]
-        return var_value
-
-    def get_abr_var_value_by_name(self, c, var_name):
-        """
-        get variable value by variable name for ABR
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        var_name : str
-            variable name
-        
-        Returns
-        ------- 
-        var_value : str
-            variable value
-        """
-        c.execute("""SELECT var_value FROM abr_variable WHERE var_name = '{}';""".format(var_name))
-        var_value = c.fetchone()[0]
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `get_var_value_by_name`(IN table_name VARCHAR(50),
+        #                                                                     IN `var_name` VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT var_value FROM ', table_name, ' WHERE var_name = ?');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @var_name = var_name;
+        #     EXECUTE stmt USING @var_name;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('get_var_value_by_name',(self.var_tabl,var_name))
+        for row in c.stored_results():
+            var_value = row.fetchone()[0]
         return var_value
 
     def run_pre_alg(self, alg, **kwargs):
@@ -937,13 +842,28 @@ class Accert:
             cost element value
         """
         c.execute("""SET SQL_SAFE_UPDATES = 0;""")
-        c.execute(""" UPDATE cost_element
-                    set cost_2017 = %(ce_value)s,
-                    updated = %(updated)s
-                    where cost_element = %(ce_name)s ;""",
-                    {'ce_value': float(alg_value),
-                    'updated': 1,
-                    'ce_name': ce_name})         
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_on_name`(IN table_name VARCHAR(50),
+        #                                                                           IN `ce_name` VARCHAR(50),
+        #                                                                           IN `alg_value` FLOAT)
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', table_name, ' SET cost_2017 = ?, updated = 1 WHERE cost_element = ?');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @alg_value = alg_value;
+        #     SET @ce_name = ce_name;
+        #     EXECUTE stmt USING @alg_value, @ce_name;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('update_cost_element_on_name',(self.cel_tabl,ce_name,float(alg_value)))
+
+        # c.execute(""" UPDATE cost_element
+        #             set cost_2017 = %(ce_value)s,
+        #             updated = %(updated)s
+        #             where cost_element = %(ce_name)s ;""",
+        #             {'ce_value': float(alg_value),
+        #             'updated': 1,
+        #             'ce_name': ce_name})         
         return None
 
     def update_new_cost_elements(self, c):
@@ -957,23 +877,53 @@ class Accert:
         """
         print(' Updating cost elements '.center(100,'='))
         print('\n')
-        c.execute(""" SELECT ce_org.ind,	ce_org.cost_element,	
-                ce_org.cost_2017,	ce_org.alg_name,	
-                ce_org.variables,	ce_org.algno, 
-                alg.alg_python, alg.alg_formulation,alg.alg_units from
-                (SELECT ind,	cost_element,	
-                cost_2017,	alg_name,	
-                variables,	algno
-                FROM cost_element as ce JOIN 
-                (SELECT vl.ce  
-                    FROM (SELECT * FROM variable
-                        WHERE user_input = 1) as va
-                    JOIN variable_links as vl
-                    on va.var_name = vl.variable) as ce_affected
-                on ce.cost_element = ce_affected.ce) as ce_org
-                JOIN algorithm as alg
-                on ce_org.alg_name = alg.alg_name;""")
-        results = c.fetchall()
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_cost_elements`(IN cel_tabl_name VARCHAR(50),
+        #                                                                         IN var_tabl_name VARCHAR(50),
+        #                                                                         IN vlk_tabl_name VARCHAR(50),
+        #                                                                         IN alg_tabl_name VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT ce_org.ind, ce_org.cost_element,
+        #                         ce_org.cost_2017, ce_org.alg_name,
+        #                         ce_org.variables, ce_org.algno,
+        #                         alg.alg_python, alg.alg_formulation, alg.alg_units FROM
+        #                         (SELECT ind, cost_element,
+        #                         cost_2017, alg_name,
+        #                         variables, algno
+        #                         FROM ', cel_tabl_name, ' AS ce JOIN
+        #                         (SELECT vl.ce
+        #                             FROM (SELECT * FROM ', var_tabl_name, '
+        #                                 WHERE user_input = 1) AS va
+        #                             JOIN ', vlk_tabl_name, ' AS vl
+        #                             ON va.var_name = vl.variable) AS ce_affected
+        #                         ON ce.cost_element = ce_affected.ce) AS ce_org
+        #                         JOIN ', alg_tabl_name, ' AS alg
+        #                         ON ce_org.alg_name = alg.alg_name;');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.vlk_tabl,self.alg_tabl))
+        for row in c.stored_results():
+            results = row.fetchall()
+        # c.execute(""" SELECT ce_org.ind,	ce_org.cost_element,	
+        #         ce_org.cost_2017,	ce_org.alg_name,	
+        #         ce_org.variables,	ce_org.algno, 
+        #         alg.alg_python, alg.alg_formulation,alg.alg_units from
+        #         (SELECT ind,	cost_element,	
+        #         cost_2017,	alg_name,	
+        #         variables,	algno
+        #         FROM cost_element as ce JOIN 
+        #         (SELECT vl.ce  
+        #             FROM (SELECT * FROM variable
+        #                 WHERE user_input = 1) as va
+        #             JOIN variable_links as vl
+        #             on va.var_name = vl.variable) as ce_affected
+        #         on ce.cost_element = ce_affected.ce) as ce_org
+        #         JOIN algorithm as alg
+        #         on ce_org.alg_name = alg.alg_name;""")
+        # results = c.fetchall()
         for row in results:
             ce_name = row[1]
             org_ce_value = row[2]
@@ -1001,77 +951,6 @@ class Accert:
             print(' ')
         return None
 
-    def update_abr_cost_element_on_name(self, c, ce_name, alg_value):
-        """
-        update cost element on cost element name
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        ce_name : str
-            COA of the cost element
-        alg_value : float
-            cost element value calculated by algorithm
-        """
-
-        c.execute(""" UPDATE abr_cost_element
-                    set cost_2017 = %(ce_value)s,
-                    updated = %(updated)s
-                    where cost_element = %(ce_name)s ;""",
-                    {'ce_value': float(alg_value),
-                    'updated': 1,
-                    'ce_name': ce_name})
-        return None
-
-    def update_new_abr_cost_elements(self, c):
-        print(' Updating cost elements '.center(100,'='))
-        print('\n')
-        c.execute(""" SELECT ce_org.ind,	ce_org.cost_element,	
-                    ce_org.cost_2017,	ce_org.alg_name,	
-                    ce_org.variables,	ce_org.algno, 
-                    alg.alg_python, alg.alg_formulation,alg.alg_units from
-                    (SELECT ind,	cost_element,	
-                    cost_2017,	alg_name,	
-                    variables,	algno
-                    FROM abr_cost_element as ce JOIN 
-                    (SELECT vl.ce  
-                    FROM (SELECT * FROM abr_variable
-                            WHERE user_input = 1) as va
-                    JOIN abr_variable_links as vl
-                    on va.var_name = vl.variable) as ce_affected
-                    on ce.cost_element = ce_affected.ce) as ce_org
-                    JOIN algorithm as alg
-                    on ce_org.alg_name = alg.alg_name;""")
-        results = c.fetchall()
-        for row in results:
-            ce_name = row[1]
-            org_ce_value = row[2]
-            alg_name = row[3]
-            var_name_lst = [x.strip() for x in row[4].split(',')]
-            alg_no = row[5]
-            alg = row[6]
-            alg_form = row[7]
-            alg_unit = row[8]
-            # NOTE cost element unit is always in USD dollar
-            # maybe the unit for cost element can be added to the cost_element table later???
-            # # create a value list for debugging
-            # var_value_lst = []
-            variables = {}
-            for var_ind, var_name in enumerate(var_name_lst):
-                # var_value_lst.append(get_var_value_by_name(c, var_name))
-                variables['v_{}'.format(var_ind+1)] = self.get_abr_var_value_by_name(c, var_name)
-            # print(textwrap.fill('[Updating] Cost element [{}], running algorithm: [{}], with formulation: {}'.format(ce_name, alg_name, alg_form), 120))  
-            print('[Updating] Cost element [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(ce_name, alg_name, alg_form))
-            alg_value = self.run_pre_alg(alg, **variables)
-            unit_convert = self.check_unit_conversion('dollar',alg_unit)
-            if unit_convert:
-                alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
-            print('[Updated]  Reference value is : ${:<11,.0f}, calculated value is: ${:<11,.0f} '.format(org_ce_value,alg_value))
-            self.update_abr_cost_element_on_name(c,ce_name,alg_value) 
-            print(' ')
-        return None
-
     def update_account_table_by_cost_elements(self, c):
         """
         update account table from the sum of the cost elements
@@ -1084,93 +963,57 @@ class Accert:
         print(' Updating account table '.center(100,'='))
         print('\n')
         print('[Updating] Updating account table by cost elements')
-        c.execute("""UPDATE account,
-                    (SELECT account.code_of_account,	
-                            ce.total_cost as cost,
-                            ce.updated as updated,
-                            account.unit
-                    FROM `accert_db`.`account` 
-                    JOIN (SELECT account, 
-                                sum(cost_2017) as total_cost,
-                                sum(updated) as updated
-                        FROM `accert_db`.`cost_element`
-                        GROUP BY `cost_element`.`account` ) as ce
-                    on account.code_of_account = ce.account 
-                    ORDER BY account.ind) as updated_account
-                    SET account.total_cost = updated_account.cost,
-                    review_status = 'Ready for Review'
-                    WHERE updated_account.updated > 0
-                    and account.code_of_account = updated_account.code_of_account;""")
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_table_by_cost_elements`(IN acc_tabl_name varchar(50),
+        #                                                                                     IN cel_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
+        #                         '(SELECT ', acc_tabl_name, '.code_of_account,
+        #                                 ce.total_cost as cost,
+        #                                 ce.updated as updated,
+        #                                 ', acc_tabl_name, '.unit
+        #                         FROM ', acc_tabl_name, '
+        #                         JOIN (SELECT account,
+        #                                     sum(cost_2017) as total_cost,
+        #                                     sum(updated) as updated
+        #                             FROM ', cel_tabl_name, '
+        #                             GROUP BY ', cel_tabl_name, '.account ) as ce
+        #                         on ', acc_tabl_name, '.code_of_account = ce.account
+        #                         ORDER BY ', acc_tabl_name, '.ind) as updated_account
+        #                         SET ', acc_tabl_name, '.total_cost = updated_account.cost,
+        #                         review_status = \'Ready for Review\'
+        #                         WHERE updated_account.updated > 0
+        #                         and ', acc_tabl_name, '.code_of_account = updated_account.code_of_account;');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('update_account_table_by_cost_elements', (self.acc_tabl, self.cel_tabl))
+        # c.execute("""UPDATE account,
+        #             (SELECT account.code_of_account,	
+        #                     ce.total_cost as cost,
+        #                     ce.updated as updated,
+        #                     account.unit
+        #             FROM `accert_db`.`account` 
+        #             JOIN (SELECT account, 
+        #                         sum(cost_2017) as total_cost,
+        #                         sum(updated) as updated
+        #                 FROM `accert_db`.`cost_element`
+        #                 GROUP BY `cost_element`.`account` ) as ce
+        #             on account.code_of_account = ce.account 
+        #             ORDER BY account.ind) as updated_account
+        #             SET account.total_cost = updated_account.cost,
+        #             review_status = 'Ready for Review'
+        #             WHERE updated_account.updated > 0
+        #             and account.code_of_account = updated_account.code_of_account;""")
         print('[Updated]  Account table updated from cost elements\n')
-        # print_accounts(c)
-        return None
-
-    def update_abr_account_table_by_cost_elements(self, c):
-        """
-        update account table from the sum of the cost elements
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        """
-        print(' Updating account table '.center(100,'='))
-        print('\n')
-        print('[Updating] Updating account table by cost elements')
-        c.execute("""UPDATE abr_account,
-                    (SELECT account.code_of_account,	
-                            ce.total_cost as cost,
-                            ce.updated as updated,
-                            account.unit
-                    FROM `accert_db`.`abr_account` as account
-                    JOIN (SELECT account, 
-                                sum(cost_2017) as total_cost,
-                                sum(updated) as updated
-                        FROM `accert_db`.`abr_cost_element`
-                        GROUP BY `abr_cost_element`.`account` ) as ce
-                    on account.code_of_account = ce.account 
-                    ORDER BY account.ind) as updated_account
-                    SET abr_account.total_cost = updated_account.cost,
-                    review_status = 'Ready for Review'
-                    WHERE updated_account.updated > 0
-                    and abr_account.code_of_account = updated_account.code_of_account;""")
-        print('[Updated]  Account table updated from cost elements\n')
-        # print_accounts(c)
-        return None
-
-    def roll_up_abr_cost_elements(self, c):
-        """
-        roll up cost elements from level 3 to 2 for ABR
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        """
-        print(' Roll up cost elements '.center(100,'='))
-        print('\n')
-        print('[Rolling up] Roll up cost elements')
-        c.execute("""UPDATE abr_cost_element,
-                    (SELECT a2.cost_element as ac2_ce, 
-                        sum(ua3.cost_2017) as a2_cal_cost
-                    FROM abr_cost_element as ua3
-                    JOIN abr_cost_element as a2 
-                    on ua3.sup_cost_ele=a2.cost_element
-                    group by a2.cost_element
-                    ) as updated_ce2
-                                SET
-                                    abr_cost_element.cost_2017 = updated_ce2.a2_cal_cost,
-                                    abr_cost_element.updated = %(updated)s
-                                WHERE
-                                    abr_cost_element.cost_element = updated_ce2.ac2_ce;""",{
-                                    'updated': 1})
-        print('[Rolled up] Cost elements rolled up\n')
-        # print_accounts(c)
         return None
 
     def roll_up_cost_elements(self, c):
         """
-        roll up cost elements from level 3 to 0
+        roll up cost elements from level 3 to 0 for pwr
+        only roll up level 3 to 2 for ABR
 
         Parameters
         ----------
@@ -1180,8 +1023,9 @@ class Accert:
         print(' Roll up cost elements '.center(100,'='))
         print('\n')
         self.roll_up_cost_elements_by_level(c,3,2)
-        self.roll_up_cost_elements_by_level(c,2,1)
-        self.roll_up_cost_elements_by_level(c,1,0)
+        if self.ref_model=="pwr12-be":
+            self.roll_up_cost_elements_by_level(c,2,1)
+            self.roll_up_cost_elements_by_level(c,1,0)
         print('[Updated] Cost elements rolled up\n')
         return None
 
@@ -1198,25 +1042,49 @@ class Accert:
         to_level : int
             roll up to level
         """
-
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_cost_elements_by_level`(IN table_name varchar(50), 
+        #                                                                   IN from_level int, IN to_level int)
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', table_name, ',',
+        #                         '(SELECT c',to_level,'.cost_element as ce',to_level,'_ce, ',
+        #                             'sum(uc',from_level,'.cost_2017) as c',to_level,'_cal_total_cost ',
+        #                         'FROM ', table_name, ' as uc',from_level,
+        #                         ' JOIN ', table_name, ' as c',to_level,
+        #                         ' on uc',from_level,'.sup_cost_ele=c',to_level,'.cost_element ',
+        #                         'join account as ac',to_level,
+        #                         ' on c',to_level,'.account = ac',to_level,'.code_of_account ',
+        #                         'where ac',to_level,'.level=',to_level,
+        #                         ' group by c',to_level,'.cost_element) as updated_ce',to_level,
+        #                         ' SET ',
+        #                         table_name,'.cost_2017 = updated_ce',to_level,'.c',to_level,'_cal_total_cost,',
+        #                         table_name,'.updated = 1 ',
+        #                         'WHERE ',
+        #                         table_name,'.cost_element = updated_ce',to_level,'.ce',to_level,'_ce');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('roll_up_cost_elements_by_level',(self.cel_tabl,from_level,to_level))
         print('[Updating] Roll up cost elements from level {} to level {}'.format(from_level,to_level))
-        c.execute("""UPDATE cost_element,
-                    (SELECT c%(to)s.cost_element as ce%(to)s_ce, 
-                        sum(uc%(from)s.cost_2017) as c%(to)s_cal_total_cost
-                    FROM cost_element as uc%(from)s
-                    JOIN cost_element as c%(to)s
-                    on uc%(from)s.sup_cost_ele=c%(to)s.cost_element
-                    join account as ac%(to)s
-                    on c%(to)s.account = ac%(to)s.code_of_account
-                    where ac%(to)s.level=%(to)s
-                    group by c%(to)s.cost_element) as updated_ce%(to)s
-                    SET
-                    cost_element.cost_2017 = updated_ce%(to)s.c%(to)s_cal_total_cost,
-                    cost_element.updated = 1
-                    WHERE
-                    cost_element.cost_element = updated_ce%(to)s.ce%(to)s_ce;""",{
-                                    'from': from_level,
-                                    'to': to_level})  # print_accounts(c)
+        # c.execute("""UPDATE cost_element,
+        #             (SELECT c%(to)s.cost_element as ce%(to)s_ce, 
+        #                 sum(uc%(from)s.cost_2017) as c%(to)s_cal_total_cost
+        #             FROM cost_element as uc%(from)s
+        #             JOIN cost_element as c%(to)s
+        #             on uc%(from)s.sup_cost_ele=c%(to)s.cost_element
+        #             join account as ac%(to)s
+        #             on c%(to)s.account = ac%(to)s.code_of_account
+        #             where ac%(to)s.level=%(to)s
+        #             group by c%(to)s.cost_element) as updated_ce%(to)s
+        #             SET
+        #             cost_element.cost_2017 = updated_ce%(to)s.c%(to)s_cal_total_cost,
+        #             cost_element.updated = 1
+        #             WHERE
+        #             cost_element.cost_element = updated_ce%(to)s.ce%(to)s_ce;""",{
+        #                             'from': from_level,
+        #                             'to': to_level})  # print_accounts(c)
         return None
 
     def roll_up_account_table(self, c):
@@ -1555,13 +1423,16 @@ class Accert:
 
     def execute_accert(self, c, ut):
         self.print_logo()
-        ut.print_user_request_parameter(c)   
+ 
         accert = self.load_obj(input_path, accert_path).accert
-
+        c.execute("USE accert_db")
         print(' Reading user input '.center(100,'='))
         print('\n')
         if accert.ref_model is not None:
             print('[USER_INPUT]', 'Reference model is',str(accert.ref_model.value),'\n')
+            self.setup_table_names(c,accert)
+            ut.setup_table_names(c,Accert)
+        ut.print_user_request_parameter(c)  
         if accert.power is not None:
             for ind, inp in enumerate(accert.power):
                 print('[USER_INPUT]', str(inp.id),'power is',str(inp.value.value),str(inp.unit.value),'\n')
@@ -1571,59 +1442,33 @@ class Accert:
                     var_id = 'mwe'
                 var_value = str(inp.value.value)
                 var_unit = str(inp.unit.value)
-                if "abr1000" in str(accert.ref_model.value).lower():
-                    self.update_abr_variable_info_on_name(c,var_id,var_value,var_unit)
-                    sup_val_lst= self.extract_abr_super_val(c,var_id)
-                if "pwr12-be" in str(accert.ref_model.value).lower():    
-                    self.update_variable_info_on_name(c,var_id,var_value,var_unit)
-                    sup_val_lst= self.extract_super_val(c,var_id)
+                self.update_variable_info_on_name(c,var_id,var_value,var_unit)
+                sup_val_lst= self.extract_super_val(c,var_id)
             if sup_val_lst:
                 sup_val_lst= sup_val_lst.split(',')     
             while sup_val_lst:
                 sup_val = sup_val_lst.pop(0)
                 if sup_val:
-                    if "pwr12-be" in str(accert.ref_model.value).lower(): 
-                        self.update_super_variable(c,sup_val)
-                        new_sup_val = self.extract_super_val(c,sup_val)
-                        if new_sup_val:
-                            sup_val_lst.extend(new_sup_val.split(',')) 
-                    elif "abr1000" in str(accert.ref_model.value).lower():
-                        self.update_abr_super_variable(c,sup_val)
-                        new_sup_val = self.extract_abr_super_val(c,sup_val)
-                        if new_sup_val:
-                            sup_val_lst.extend(new_sup_val.split(','))
-
-
+                    self.update_super_variable(c,sup_val)
+                    new_sup_val = self.extract_super_val(c,sup_val)
+                    if new_sup_val:
+                        sup_val_lst.extend(new_sup_val.split(',')) 
         if accert.var is not None:
             for var_ind, var_inp in enumerate(accert.var):
                 u_i_var_value = float(str(var_inp.value.value))
                 u_i_var_unit = str(var_inp.unit.value)
                 var_id = str(var_inp.id).replace('"','')
-                if "pwr12-be" in str(accert.ref_model.value).lower():
-                    self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
-                    # sup_val = extract_super_val(c,var_id)
-                    sup_val_lst= self.extract_super_val(c,var_id)
-                    if sup_val_lst:
-                        sup_val_lst= sup_val_lst.split(',')
-                    while sup_val_lst:
-                        sup_val = sup_val_lst.pop(0)
-                        if sup_val:
-                            self.update_super_variable(c,sup_val)
-                            new_sup_val = self.extract_super_val(c,sup_val)
-                            if new_sup_val:
-                                sup_val_lst.extend(new_sup_val.split(',')) 
-                if "abr1000" in str(accert.ref_model.value).lower():
-                    self.update_abr_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
-                    sup_val_lst= self.extract_abr_super_val(c,var_id)
-                    if sup_val_lst:
-                        sup_val_lst= sup_val_lst.split(',')
-                    while sup_val_lst:
-                        sup_val = sup_val_lst.pop(0)
-                        if sup_val:
-                            self.update_abr_super_variable(c,sup_val)
-                            new_sup_val = self.extract_abr_super_val(c,sup_val)
-                            if new_sup_val:
-                                sup_val_lst.extend(new_sup_val.split(','))
+                self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
+                sup_val_lst= self.extract_super_val(c,var_id)
+                if sup_val_lst:
+                    sup_val_lst= sup_val_lst.split(',')
+                while sup_val_lst:
+                    sup_val = sup_val_lst.pop(0)
+                    if sup_val:
+                        self.update_super_variable(c,sup_val)
+                        new_sup_val = self.extract_super_val(c,sup_val)
+                        if new_sup_val:
+                            sup_val_lst.extend(new_sup_val.split(',')) 
         if accert.l0COA is not None:
             if accert.l0COA.l1COA is not None:
                 # TODO: check if print info can be verbose or not
@@ -1672,11 +1517,6 @@ class Accert:
                                                                 new_sup_val = self.extract_super_val(c,sup_val)
                                                                 if new_sup_val:
                                                                     sup_val_lst.extend(new_sup_val.split(',')) 
-
-
-                                                        # sup_val = extract_super_val(c,var_id)
-                                                        # if sup_val is not None:
-                                                        # update_super_variable(c,sup_val)
                                                     else:
                                                         ### NOTE variable need to be calculated
                                                         for l2ce_alg_var_alg_ind, l2ce_alg_var_alg_inp in enumerate(l2ce_alg_var_inp.alg):
@@ -1732,12 +1572,6 @@ class Accert:
                                                                         new_sup_val = self.extract_super_val(c,sup_val)
                                                                         if new_sup_val:
                                                                             sup_val_lst.extend(new_sup_val.split(',')) 
-
-
-                                                                # sup_val = extract_super_val(c,var_id)
-                                                                # if sup_val is not None:
-                                                                #     update_super_variable(c,sup_val)
-
                                                             else:
                                                                 ### NOTE variable need to be calculated
                                                                 for l3ce_alg_var_alg_ind, l3ce_alg_var_alg_inp in enumerate(l3ce_alg_var_inp.alg):
@@ -1770,33 +1604,34 @@ class Accert:
                                     tc_id = str(l2_inp.id).replace('"','')
                                     u_i_tc_value = float(str(l2_total_cost_inp.value.value))
                                     u_i_tc_unit = str(l2_total_cost_inp.unit.value)
-                                    if "abr1000" in str(accert.ref_model.value).lower():
-                                        self.update_abr_total_cost(c,tc_id,u_i_tc_value,u_i_tc_unit)
-                                    elif "pwr12-be" in str(accert.ref_model.value).lower():
+                                    if self.ref_model:
                                         self.update_total_cost(c,tc_id,u_i_tc_value,u_i_tc_unit)
                                     else:
                                         print("ERROR: model not found ")
                                         print(accert.ref_model.value)
                                         print("Exiting")
                                         sys.exit(1)
-                                    # update_total_cost(c,tc_id,u_i_tc_value,u_i_tc_unit)
         ######################
 
-        if "abr1000" in str(accert.ref_model.value).lower():
-            self.setup_table_names(c,accert)
-            ### print changed variables
-            ut.extract_user_changed_abr_variables(c)
-            ### print changed total cost_elements
-            ut.extract_affected_abr_cost_elements(c)
-            ### calculate and new cost_elements value update to the database in table cost_elements and also update the account table:
-            self.update_new_abr_cost_elements(c)
-            ###NOTE: cost elements should be rolled up as well
-            # ut.print_updated_abr_cost_elements(c)
-            ### update the account table:
-            self.roll_up_abr_cost_elements(c)
 
+        ### print changed variables
+        ut.extract_user_changed_variables(c)
+        ### print changed total cost_elements
+        ut.extract_affected_cost_elements(c)
+        ### calculate and new cost_elements value update to the database in table cost_elements and also update the account table:
+        self.update_new_cost_elements(c)
+
+        ###NOTE: cost elements should be rolled up as well
+        ### uncomment below to print new cost_elements value
+        # ut.print_updated_cost_elements(c)
+
+        self.roll_up_cost_elements(c)
+
+        if self.ref_model=="abr1000":
             self.sum_cost_elements_2C(c)
-            self.update_abr_account_table_by_cost_elements(c)
+            ### update the account table:
+
+            self.update_account_table_by_cost_elements(c)
 
             ### roll up the account table:
             self.roll_up_abr_account_table(c)
@@ -1807,21 +1642,8 @@ class Accert:
 
             self.generate_abr_results_table(c, conn,level=3)
 
-        elif "pwr12-be" in str(accert.ref_model.value).lower():  
-            self.setup_table_names(c,accert)
-            ### print changed variables
-            ut.extract_user_changed_variables(c)
-            ### print changed total cost_elements
-            ut.extract_affected_cost_elements(c)
-            ### NOTE: uncomment to print original and cost element values
-            # ### print original cost_elements value:
-            # extract_original_cost_elements(c)
-            ### calculate and new cost_elements value update to the database in table cost_elements and also update the account table:
-            self.update_new_cost_elements(c)
-            # ut.extract_changed_cost_elements(c)
-            self.roll_up_cost_elements(c)
-            ### NOTE uncomment below to print new cost_elements value
-            # print_updated_cost_elements(c)
+        elif self.ref_model=="pwr12-be":
+
             ### update the account table:
             self.update_account_table_by_cost_elements(c)
             ### roll up the account table:
