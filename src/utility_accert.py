@@ -673,55 +673,6 @@ class Utility_methods:
             level is the level of account, by default 3
         """
         if all:
-            # DELIMITER $$
-            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_accounts_all`(IN acc_table varchar(50),
-            #                                                                         IN  cel_table varchar(50),
-            #                                                                         IN  level int)
-            # BEGIN
-            #     SET @stmt=CONCAT('SELECT acc.level,
-            #                             rankedcoa.COA as code_of_account,
-            #                             acc.account_description,
-            #                             sorted_ce.fac_cost,
-            #                             sorted_ce.lab_cost,
-            #                             sorted_ce.mat_cost,
-            #                             acc.total_cost,
-            #                             acc.unit,
-            #                             acc.review_status
-            #                             FROM ',acc_table,' as acc
-            #                             JOIN
-            #                             (SELECT node.code_of_account,
-            #                                     CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
-            #                                 FROM ',acc_table,' AS node,
-            #                                     ',acc_table,' AS parent
-            #                                 WHERE node.lft BETWEEN parent.lft AND parent.rgt
-            #                                 GROUP BY node.code_of_account) as rankedcoa
-            #                                 ON acc.code_of_account=rankedcoa.code_of_account
-            #                                 JOIN (SELECT splt_act.code_of_account,
-            #                                     cef.cost_2017 as fac_cost,
-            #                                     cel.cost_2017 as lab_cost,
-            #                                     cem.cost_2017 as mat_cost
-            #                                     FROM 
-            #                                     (SELECT code_of_account,total_cost,
-            #                                             SUBSTRING_INDEX(SUBSTRING_INDEX(total_cost, ',', 1), ',', -1) AS fac_cost,
-            #                                             SUBSTRING_INDEX(SUBSTRING_INDEX(total_cost, ',', 2), ',', -1) AS lab_cost,
-            #                                             SUBSTRING_INDEX(SUBSTRING_INDEX(total_cost, ',', 3), ',', -1) AS mat_cost
-            #                                             FROM ',acc_table,') as splt_act
-            #                                     LEFT JOIN ',cel_table,' as cef
-            #                                     ON splt_act.fac_cost=cef.code_of_account
-            #                                     LEFT JOIN ',cel_table,' as cel
-            #                                     ON splt_act.lab_cost=cel.code_of_account
-            #                                     LEFT JOIN ',cel_table,' as cem
-            #                                     ON splt_act.mat_cost=cem.code_of_account) as sorted_ce
-            #                                     ON sorted_ce.code_of_account=rankedcoa.code_of_account
-            #                                     WHERE acc.level <= ?);
-            #                                     ORDER BY acc.lft');
-            #     PREPARE stmt FROM @stmt;
-            #     SET @level=level;
-            #     EXECUTE stmt USING @level;
-            #     DEALLOCATE PREPARE stmt;
-            # END$$
-            # DELIMITER ;
-            # c.callproc('print_leveled_accounts_all', (self.acc_tabl,self.cel_tabl,level))
             c.execute("""SELECT abr_account.level,
                                 rankedcoa.COA as code_of_account,
                                 abr_account.account_description,
@@ -762,34 +713,6 @@ class Utility_methods:
             align_key=["code_of_account", "account_description", "fac_cost", "lab_cost", "mat_cost", "total_cost"] 
             align=[ "l", "l", "r", "r", "r", "r"]
         else:
-            # DELIMITER $$
-            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_accounts_simple`(IN acc_table VARCHAR(50), 
-            #                                                                             IN level INT)
-            # BEGIN
-            #     SET @stmt = CONCAT('SELECT rankedcoa.COA as code_of_account,
-            #                                 acc.account_description,
-            #                                 acc.total_cost,
-            #                                 acc.unit,
-            #                                 acc.level,
-            #                                 acc.review_status
-            #                                 FROM ',acc_table,' as acc
-            #                                 JOIN
-            #                                 (SELECT node.code_of_account as COA, 
-            #                                   CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
-            #                                 FROM ',acc_table,' AS node,
-            #                                     ',acc_table,' AS parent
-            #                                 WHERE node.lft BETWEEN parent.lft AND parent.rgt
-            #                                 GROUP BY node.code_of_account) as rankedcoa
-            #                                 ON acc.code_of_account=rankedcoa.COA
-            #                                 WHERE acc.level <= ?
-            #                                 ORDER BY acc.lft');
-            #     PREPARE stmt FROM @stmt;
-            #     SET @level=level;
-            #     EXECUTE stmt USING @level;
-            #     DEALLOCATE PREPARE stmt;
-            # END$$
-            # DELIMITER ;
-            # c.callproc('print_leveled_accounts_simple', (self.acc_tabl,level))
             c.execute("""SELECT rankedcoa.code_of_account,
                                 abr_account.account_description,
                                 abr_account.total_cost,	
@@ -811,13 +734,8 @@ class Utility_methods:
             align=[ "l", "l", "r"]
         
         if cost_unit=='million':
-            # for row in c.stored_results():
-            #     results = c.fetchall()
-            #     field_names = [i[0] for i in c.description]
             results = c.fetchall()
             columns = c.description
-            # print()
-            # field_names = [i[0] for i in c.description]
             field_names = [i[0] for i in columns]
             x = PrettyTable(field_names)
             row0=list(results[0])
@@ -847,5 +765,19 @@ class Utility_methods:
                     x.align[k] = align[i]
             print (x)
         else:
-            self.print_table(c, align_key, align)
+            results = c.fetchall()
+            columns = c.description
+            field_names = [i[0] for i in c.description]
+            x = PrettyTable(field_names)
+            for row in results:
+                row = list(row)
+                x.add_row(row)
+            if align_key:
+                for i,k in enumerate(align_key):
+                    x.align[k] = align[i]
+            print('\n')
+            print (x)
+            print('\n')
+
+
         return None
