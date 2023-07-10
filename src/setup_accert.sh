@@ -79,8 +79,8 @@ if [ -d "$ACCERT_DIR/../bin" ]; then
 fi
 mkdir "$ACCERT_DIR/../bin"
 
-cp -f "${workbench_path}/bin/sonvalidxml" "$ACCERT_DIR/../bin/sonvalidxml"
-cp -f "${workbench_path}/bin/docprint" "$ACCERT_DIR/../bin/docprint"
+ln -sf "${workbench_path}/bin/sonvalidxml" "$ACCERT_DIR/../bin/sonvalidxml"
+ln -sf "${workbench_path}/bin/docprint" "$ACCERT_DIR/../bin/docprint"
 
 
 # 10) Confirm installation is finished
