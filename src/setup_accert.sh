@@ -41,7 +41,16 @@ echo -e "${GREEN}ACCERT_DIR set to: $ACCERT_DIR${NC}"
 
 # 6) Use the pip in conda/bin to install requirement.txt located in the parent folder of this shell script
 echo -e "${GREEN}Installing requirements from $ACCERT_DIR/../requirement.txt...${NC}"
-"$conda_path/bin/pip" install -r "$ACCERT_DIR/../requirements.txt"
+if [ -x "$conda_path/bin/pip" ]; then
+  "$conda_path/bin/pip" install -r "$ACCERT_DIR/../requirements.txt"
+elif [ -x "$conda_path/Scripts/pip" ]; then
+  "$conda_path/Scripts/pip" install -r "$ACCERT_DIR/../requirements.txt"
+else
+  print_color "$RED" "Error: pip executable not found in conda directory"
+fi
+
+echo -e "${GREEN}Installing requirements from $ACCERT_DIR/../requirement.txt...${NC} using system pip"
+pip install -r "$ACCERT_DIR/../requirements.txt"
 
 # 7) Create another file called 'install.conf' in current folder
 echo -e "${GREEN}Creating install.conf...${NC}"
@@ -65,21 +74,17 @@ echo -e "${GREEN}Creating symbolic links...${NC}"
 # Copy accert_wb.py to rte/accert.py
 cp src/etc/accert_wb.py "${workbench_path}/rte/accert.py"
 # Check if bin directory exists, if not create it
-if [ ! -d "bin" ]; then
-    mkdir bin
+if [ -d "$ACCERT_DIR/../bin" ]; then
+  rm -r "$ACCERT_DIR/../bin"
 fi
-# Create symbolic links for sonvalidxml and docprint
-if [ -L "bin/sonvalidxml" ]; then
-    rm "bin/sonvalidxml"
-fi
-ln -s "${workbench_path}/bin/sonvalidxml" "./bin/sonvalidxml"
+mkdir "$ACCERT_DIR/../bin"
 
-if [ -L "bin/docprint" ]; then
-    rm "bin/docprint"
-fi
-ln -s "${workbench_path}/bin/docprint" "./bin/docprint"
+ln -sf "${workbench_path}/bin/sonvalidxml" "$ACCERT_DIR/../bin/sonvalidxml"
+ln -sf "${workbench_path}/bin/docprint" "$ACCERT_DIR/../bin/docprint"
+
 
 # 10) Confirm installation is finished
 echo -e "${GREEN}ACCERT has been set up.${NC}"
 
 echo -e "${YELLOW}Please change the 'yourpassword' of 'install.conf' to your MySQL root password.${NC}"
+
