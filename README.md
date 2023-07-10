@@ -25,13 +25,17 @@ with and without Workbench are provided in this README.
 
 ### Clone ACCERT
 
+* For Windows user, obtain and install the [Git bash](https://git-scm.com/download/win)
+
+
+
 *   Open a terminal window and cd into the folder where you want to install ACCERT (e.g., CODE)
-```console
-[~]> mkdir CODE  
-[~]> cd CODE   
-[~/CODE]> git clone https://github.com/accert-dev/ACCERT.git  
-[~/CODE]> cd ACCERT
-```
+    ```console
+    [~]> mkdir CODE  
+    [~]> cd CODE   
+    [~/CODE]> git clone https://github.com/accert-dev/ACCERT.git  
+    [~/CODE]> cd ACCERT
+    ```
 
 ### Installation of MySQL Community Server
 
@@ -46,50 +50,66 @@ with and without Workbench are provided in this README.
 ### Installation of NEAMS Workbench
 
 *   Obtain and install the [NEAMS Workbench](https://code.ornl.gov/neams-workbench/downloads)
+*   **Run NEAMS Workbench** before install ACCERT
 
 ### Set up ACCERT
 
 * Change into the src folder 
 
-```console
-[~/ACCERT]> cd src 
-```
+    ```console
+    [~/ACCERT]> cd src 
+    ```
 
-* Edit the workbench.sh file, provide workbench_path to `workbench-<version-number>.app/Contents` folder.
+* Edit the workbench.sh file, provide workbench_path to your NEAMS workbench location, do not include '/' at the end.
 
-```
-workbench_path="workbench-<version-number>.app/Contents"
-```
+    * For Mac the default location is: 
+        ```console
+        workbench_path="/Applications/workbench-<version-number>.app/Contents"
+        ```
 
-* Run __setup_accert.sh__ for a Unix-based system, or run __setup_accert_win.bat__ for Windows
-```console
-[~/src]> ./setup_accert.sh 
-```
+    * For Windows:
+
+        ```console
+        workbench_path="/c/Workbench-<version-number>"
+        ```
+    * For Unix:
+        ```
+        workbench_path="/home/<USERNAME>/Workbench-<version-number>"
+        ```
+
+* Run __setup_accert.sh__
+    ```console
+    [~/src]> ./setup_accert.sh 
+    ```
 
 * Edit file `install.conf` and change "yourpassword" to your MySQL root password.
 
-```
-[INSTALL]
+    ```console
+    [INSTALL]
 
-PASSWD = yourpassword
+    PASSWD = yourpassword
 
-# NOTE: ALL OTHER information should be set up later 
-# INSTALL_PATH = /usr/local 
-# DATADIR =/mysql/data
-# INSTALL_PACKAGE = 
-# EXP_DIR = 
-```   
+    # NOTE: ALL OTHER information should be set up later 
+    # INSTALL_PATH = /usr/local 
+    # DATADIR =/mysql/data
+    # INSTALL_PACKAGE = 
+    # EXP_DIR = 
+    ```   
 
 *   Change "yourpassword" to your **MySQL root password**.
 
+* Run `database_install.py` to install the accertdb database.
+    ```console
+    [~/src]> python database_install.py
+    ```
 
 ## Test installation 
 
 *   Test ACCERT 
-```console
-[~/src]> cd ../test 
-[~/test]> pytest
-```
+    ```console
+    [~/src]> cd ../test 
+    [~/test]> pytest
+    ```
 
 
 ## Configuration with Workbench
@@ -108,7 +128,7 @@ PASSWD = yourpassword
 
 * Open workbench, and open `Workbench/Configurations` hit `add` on the top
 * Select `Accert` from the drop-down menu, hit `OK`
-* In `executable`: give full path to the directory containing accert/src/Main.py
+* In `executable`: give full path to the directory containing ACCERT/src/Main.py
 * In configuration, hit `load gramma`
 
 ## ACCERT Execution
