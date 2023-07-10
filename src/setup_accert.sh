@@ -74,12 +74,14 @@ echo -e "${GREEN}Creating symbolic links...${NC}"
 # Copy accert_wb.py to rte/accert.py
 cp src/etc/accert_wb.py "${workbench_path}/rte/accert.py"
 # Check if bin directory exists, if not create it
-if [ ! -d "$ACCERT_DIR/../bin" ]; then
-  mkdir "$ACCERT_DIR/../bin"
+if [ -d "$ACCERT_DIR/../bin" ]; then
+  rm -r "$ACCERT_DIR/../bin"
 fi
+mkdir "$ACCERT_DIR/../bin"
 
-ln -sf "${workbench_path}/bin/sonvalidxml" "$ACCERT_DIR/../bin/sonvalidxml"
-ln -sf "${workbench_path}/bin/docprint" "$ACCERT_DIR/../bin/docprint"
+cp -f "${workbench_path}/bin/sonvalidxml" "$ACCERT_DIR/../bin/sonvalidxml"
+cp -f "${workbench_path}/bin/docprint" "$ACCERT_DIR/../bin/docprint"
+
 
 # 10) Confirm installation is finished
 echo -e "${GREEN}ACCERT has been set up.${NC}"
