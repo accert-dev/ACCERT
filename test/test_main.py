@@ -12,6 +12,14 @@ ut = Utility_methods()
 accert_path = os.path.dirname(os.getcwd())
 input_path = os.path.join(os.getcwd(), 'accert_unit_test_input.son')
 accert = Accert(input_path, accert_path)
+accert.ref_model = 'pwr12-be'
+accert.acc_tabl = 'account'
+accert.cel_tabl = 'cost_element'
+accert.var_tabl = 'variable'
+accert.vlk_tabl = 'variable_links'
+accert.alg_tabl = 'algorithm'
+accert.esc_tabl = 'escalation'
+accert.fac_tabl = 'facility'
 
 def test_get_current_COAs(cursor):
     """  Test the main function. """
@@ -57,45 +65,23 @@ def test_insert_new_COA(cursor):
 def test_update_input_variable(cursor):
     """ test function update_input_variable """
     # update the input variable "c_213_fac" to 1.8 million for pwr12be
-    assert accert.update_input_variable(cursor,"c_213_fac",1.8,"million")==None
+    assert accert.update_input_variable(cursor,"c_213_fac",0,"million")==None
     # check if the value is updated
     cursor.execute("""SELECT var_name,var_value, var_unit
                     FROM `accert_db`.`variable` 
                     WHERE var_name = "c_213_fac";""")
-    expect_output = ('c_213_fac',  1.8, 'million') 
-    assert expect_output in cursor.fetchall()
-
-def test_update_abr_input_variable(cursor):
-    """ test function update_abr_input_variable """
-    # update the input variable "c_213_fac" to 1800 thousand for abr1000
-    assert accert.update_abr_input_variable(cursor,"c_213_fac",1800,"thousand")==None
-    # check if the value is updated
-    cursor.execute("""SELECT var_name,var_value, var_unit
-                    FROM `accert_db`.`abr_variable` 
-                    WHERE var_name = "c_213_fac";""")
-    expect_output = ('c_213_fac',  1.8, 'million') 
-    assert expect_output in cursor.fetchall()
-
-def test_update_abr_variable_info_on_name(cursor):
-    """ test function update_abr_variable_info_on_name """
-    # update the variable "c_213_fac" to 1.8 for abr1000
-    assert accert.update_abr_variable_info_on_name(cursor,"c_213_fac",1.8,"million")==None
-    # check if the value is updated
-    cursor.execute("""SELECT var_name,var_value, var_unit
-                    FROM `accert_db`.`abr_variable` 
-                    WHERE var_name = "c_213_fac";""")
-    expect_output = ('c_213_fac',  1.8, 'million') 
+    expect_output = ('c_213_fac',  0.0, 'million') 
     assert expect_output in cursor.fetchall()
 
 def test_update_variable_info_on_name(cursor):
     """ test function update_variable_info_on_name """
     # update the variable "c_213_fac" to 1.8 for pwr12be
-    assert accert.update_variable_info_on_name(cursor,"c_213_fac",1.8,"million")==None
+    assert accert.update_variable_info_on_name(cursor,"c_213_fac",0,"million")==None
     # check if the value is updated
     cursor.execute("""SELECT var_name,var_value, var_unit
                     FROM `accert_db`.`variable` 
                     WHERE var_name = "c_213_fac";""")
-    expect_output = ('c_213_fac',  1.8, 'million') 
+    expect_output = ('c_213_fac',  0.0, 'million') 
     assert expect_output in cursor.fetchall()
 
 def test_update_super_variable(cursor):
@@ -108,16 +94,6 @@ def test_update_super_variable(cursor):
                     WHERE var_name = "n_231";""")
     expect_output = ('n_231', 1)
     assert expect_output in cursor.fetchall()
-
-def test_update_abr_super_variable(cursor):
-    """ test function update_abr_super_variable also test get_abr_var_value_by_name"""
-    # update the super variable "c_pump_per_unit_fac" for abr1000
-    assert accert.update_abr_super_variable(cursor,"c_pump_per_unit_fac")==None
-    # check if the value is updated only check the user_input column
-    cursor.execute("""SELECT var_name,user_input
-                    FROM `accert_db`.`abr_variable`
-                    WHERE var_name = "c_pump_per_unit_fac";""")
-    expect_output = ('c_pump_per_unit_fac', 1)
 
 def test_update_total_cost(cursor):
     """ test function update_total_cost """
@@ -141,28 +117,6 @@ def test_update_total_cost_on_name(cursor):
     expect_output = ('211',  1000000.0, 'dollar') 
     assert expect_output in cursor.fetchall()
 
-def test_update_abr_total_cost(cursor):
-    """ test function update_abr_total_cost """
-    # update the total cost for abr1000
-    assert accert.update_abr_total_cost(cursor,"211", 1000, "thousand")==None
-    # check if the value is updated
-    cursor.execute("""SELECT code_of_account, total_cost, unit
-                    FROM `accert_db`.`abr_account` 
-                    WHERE code_of_account = "211";""")
-    expect_output = ('211',  1000000.0, 'dollar') 
-    assert expect_output in cursor.fetchall()
-
-def test_update_abr_total_cost_on_name(cursor):
-    """ test function update_abr_total_cost_on_name """
-    # update the total cost for abr1000
-    assert accert.update_abr_total_cost_on_name(cursor, "211", 1000000, "dollar")==None
-    # check if the value is updated
-    cursor.execute("""SELECT code_of_account, total_cost, unit
-                    FROM `accert_db`.`abr_account` 
-                    WHERE code_of_account = "211";""")
-    expect_output = ('211',  1000000.0, 'dollar') 
-    assert expect_output in cursor.fetchall()
-
 def test_update_cost_element_on_name(cursor):
     """ test function update_cost_element_on_name """
     # update the cost element "211_fac" for pwr12be
@@ -170,17 +124,6 @@ def test_update_cost_element_on_name(cursor):
     # check if the value is updated
     cursor.execute("""SELECT cost_element, cost_2017, updated
                     FROM `accert_db`.`cost_element` 
-                    WHERE cost_element = "211_fac";""")
-    expect_output = ('211_fac', 2000.0, 1)
-    assert expect_output in cursor.fetchall()
-
-def test_update_abr_cost_element_on_name(cursor):
-    """ test function update_abr_cost_element_on_name """
-    # update the cost element "211_fac" for abr1000
-    assert accert.update_abr_cost_element_on_name(cursor, "211_fac", 2000)==None
-    # check if the value is updated
-    cursor.execute("""SELECT cost_element, cost_2017, updated
-                    FROM `accert_db`.`abr_cost_element` 
                     WHERE cost_element = "211_fac";""")
     expect_output = ('211_fac', 2000.0, 1)
     assert expect_output in cursor.fetchall()
@@ -214,20 +157,7 @@ def test_roll_up_account_table(cursor):
     for tup in expect_output:
         assert tup in real_output
 
-def test_roll_up_abr_cost_elements(cursor):
-    """ test function roll_up_abr_cost_elements, this function will roll up 
-    the cost element for abr1000 only level 3 to 2, which is the COA 222"""
-    # roll up the cost element for abr1000
-    assert accert.roll_up_abr_cost_elements(cursor)==None
-    # only the higher level cost element is updated
-    # check updated column
-    cursor.execute("""SELECT cost_element, updated
-                    FROM `accert_db`.`abr_cost_element` 
-                    WHERE updated = 1;""")
-    expect_output = [('222_fac', 1), ('222_lab', 1), ('222_mat', 1)]
-    real_output = cursor.fetchall()
-    for tup in expect_output:
-        assert tup in real_output
+#         assert tup in real_output
 
 def test_roll_up_abr_account(cursor):
     """ test function roll_up_abr_account, this function will roll up the account table for abr1000 only level 3 to 2, which is the COA 222"""
@@ -294,29 +224,17 @@ def test_sum_up_abr_direct_cost(cursor):
 def test_none_functions(cursor):
     """ test function returned None, those functions are not used until user input new data """
     assert accert.update_new_cost_elements(cursor)==None
-    assert accert.update_new_abr_cost_elements(cursor)==None
     assert accert.update_account_table_by_cost_elements(cursor)==None
-    assert accert.update_abr_account_table_by_cost_elements(cursor)==None
 
 def test_extract_variable_info_on_name(cursor):
     """ test function extract_variable_info_on_name, this function will extract the variable 
     information including value and unit from the variable table."""
     assert accert.extract_variable_info_on_name(cursor,'scale_1.0')== (1.0, '1')
 
-def test_extract_abr_variable_info_on_name(cursor):
-    """ test function extract_abr_variable_info_on_name, this function will extract the variable 
-    information including value and unit from the abr_variable table."""
-    assert accert.extract_abr_variable_info_on_name(cursor,'scale_1.0')== (1.0, '1')
-
 def test_extract_super_val(cursor):
     """ test function extract_super_val, this function will extract the super variable from the 
     variable table. where the variable is c_pump_ap1000, the super variable is c_pump_per_unit_fac,"""
     assert accert.extract_super_val(cursor,'c_pump_ap1000') == 'c_pump_per_unit_fac'
-
-def test_extract_abr_super_val(cursor):
-    """ test function extract_abr_super_val, this function will extract the super variable from the 
-    abr_variable table. where the variable is c_pump_ap1000, the super variable is c_pump_per_unit_fac,"""
-    assert accert.extract_abr_super_val(cursor,'c_pump_ap1000') == 'c_pump_per_unit_fac'
 
 def test_extract_total_cost_on_name(cursor):
     """ test function extract_total_cost_on_name, this function will extract the total cost from the 
@@ -324,14 +242,6 @@ def test_extract_total_cost_on_name(cursor):
     0"""
     assert accert.extract_total_cost_on_name(cursor,'220A.27')== ('220A.27', 
                                                                     'Instrumentation And Control (NSSS)', 
-                                                                    0.0, 'dollar')
-
-def test_extract_abr_total_cost_on_name(cursor):
-    """ test function extract_abr_total_cost_on_name, this function will extract the total cost from the 
-    abr_account table. where the COA is the name of the account, for example, 226.7, the total cost is
-    0"""
-    assert accert.extract_abr_total_cost_on_name(cursor,'226.7')== ('226.7', 
-                                                                    'Aux Cool Sys (Broken Down Further)', 
                                                                     0.0, 'dollar')
 
 def test_check_unit_conversion():

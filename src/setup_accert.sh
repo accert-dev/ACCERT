@@ -81,4 +81,5 @@ ln -s "${workbench_path}/bin/docprint" "./bin/docprint"
 
 # 10) Confirm installation is finished
 echo -e "${GREEN}ACCERT has been set up.${NC}"
+
 echo -e "${YELLOW}Please change the 'yourpassword' of 'install.conf' to your MySQL root password.${NC}"
