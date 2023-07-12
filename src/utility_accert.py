@@ -28,18 +28,18 @@ class Utility_methods:
         return None
 
     def print_table(self, c, align_key=None,align=None,format_col=None):
-        """Print the table in a pretty format
+        """Prints the table in an organized format via the PrettyTable library.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         align_key : list[str], optional
-            list of column names to align, by default None
+            List of column names to align. (By default none)
         align : list[str], optional
-            list of alignment, l,r or c, by default None
+            List of alignments. Left, right or center. (By default none)
         format_col : list[str], optional
-            list of column names to format, by default None
+            List of column names to format. (By default none)
         """
         for itered in c.stored_results():
             results = itered.fetchall()
@@ -64,18 +64,18 @@ class Utility_methods:
         return None
 
     def print_account(self, c, all=False, cost_unit='dollar',level=3):
-        """Print account table
+        """Prints the account table.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         all : bool, optional
-            if True, print all accounts column, by default False
+            If True, print all the accounts columns. (By default False)
         cost_unit : str, optional
-            unit of total cost, by default 'dollar'
+            Unit of the total cost. (By default 'dollar')
         level : int, optional
-            level of account, by default 3
+            Level of account. (By default 3)
         """    
         if all:
             # DELIMITER $$
@@ -152,18 +152,18 @@ class Utility_methods:
         return None
 
     def print_leveled_accounts(self, c, all=False, cost_unit='dollar',level=3):
-        """screen output account table with COA line up as nested list 
+        """Prints the output account table with COA line up as a nested list.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         all : bool, optional
-            if True, print all accounts column, by default False
+            If True, print all the accounts columns. (By default False)
         cost_unit : str, optional
-            unit of total cost, by default 'dollar'
+            Unit of the total cost. (By default 'dollar')
         level : int, optional   
-            level of account, by default 3
+            Level of account. (By default 3)
         """
         if all:
             # DELIMITER $$
@@ -330,7 +330,7 @@ class Utility_methods:
         return None
                                         
     def print_algorithm(self, c):
-        """screen output algorithm table
+        """Prints the output algorithm table.
 
         Parameters
         ----------
@@ -351,7 +351,7 @@ class Utility_methods:
         return None
 
     def print_cost_element(self, c):
-        """screen output cost element table
+        """Prints the output cost element table.
 
         Parameters
         ----------
@@ -363,7 +363,7 @@ class Utility_methods:
         return None
 
     def print_facility(self, c):
-        """screen output facility table
+        """Prints the output facility table.
 
         Parameters
         ----------
@@ -378,7 +378,7 @@ class Utility_methods:
         return None
 
     def print_escalation(self, c):
-        """screen output escalation table
+        """Prints the output escalation table.
 
         Parameters
         ----------
@@ -393,7 +393,7 @@ class Utility_methods:
         return None
 
     def print_variable(self, c):
-        """screen output variable table
+        """Prints the output variable table.
         
         Parameters
         ----------
@@ -408,14 +408,14 @@ class Utility_methods:
         return None
 
     def print_user_request_parameter(self,c, all=False):
-        """screen output user_request_parameter table
+        """Prints the output user request parameter table.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         all : bool, optional
-            if True, print all columns, by default False
+            If True, prints all columns. (By default False)
         """
             # DELIMITER $$
             # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_user_request_parameter`(IN all_col BOOLEAN,
@@ -475,7 +475,7 @@ class Utility_methods:
         return None
 
     def print_updated_cost_elements(self, c):
-        """screen output updated cost elements table
+        """Prints the output updated cost elements table.
 
         Parameters
         ----------
@@ -511,7 +511,7 @@ class Utility_methods:
         self.print_table(c)
 
     def extract_original_cost_elements(self, c):
-        """extract original affected cost elements from cost_element table, this function is ONLY used for debugging
+        """Extracts the original affected cost elements from the cost element table. (This function is ONLY used for debugging)
 
         Parameters
         ----------
@@ -552,7 +552,7 @@ class Utility_methods:
         return None
         
     def extract_affected_cost_elements(self,c):
-        """extract affected cost elements from cost_element table group by changed variables
+        """Extracts affected cost elements from cost element table and groups them by changed variables.
 
         Parameters
         ----------
@@ -595,7 +595,7 @@ class Utility_methods:
         return None
 
     def extract_user_changed_variables(self,c):
-        """extract user changed variables from variable table
+        """Extracts user changed variables from variable table.
 
         Parameters
         ----------
@@ -622,7 +622,7 @@ class Utility_methods:
         return None
 
     def extract_changed_cost_elements(self,c):
-        """extract changed cost elements from cost_element table 
+        """Extracts changed cost elements from the cost element table.
 
         Parameters
         ----------
@@ -653,24 +653,24 @@ class Utility_methods:
 
     def print_leveled_abr_accounts(self, c, abr_fac,abr_lab,abr_mat,all=False, 
                                     cost_unit='dollar',level=3):
-        """screen output leveled abr accounts table
+        """Prints the output leveled abr accounts table.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         abr_fac : float
-            abr_fac is the abr factor for factory cost
+            Abr_fac is the ABR-1000 factor for factory cost.
         abr_lab : float
-            abr_lab is the abr factor for labor cost
+            Abr_lab is the ABR-1000 factor for labor cost.
         abr_mat : float
-            abr_mat is the abr factor for material cost
+            Abr_mat is the ABR-1000 factor for material cost.
         all : bool, optional
-            all is the flag to print all accounts or not, by default False
+            All is the flag to print all accounts or not. (By default not, or false)
         cost_unit : str, optional
-            cost_unit is the unit of cost, by default 'dollar'
+            Cost_unit is the cost unit. (By default 'dollar')
         level : int, optional
-            level is the level of account, by default 3
+            Level is the level of the account. (By default 3)
         """
         if all:
             c.execute("""SELECT abr_account.level,
