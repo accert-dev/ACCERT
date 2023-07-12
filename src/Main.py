@@ -30,7 +30,7 @@ class Accert:
         self.fac_tabl = None
     
     def setup_table_names(self,c,xml2obj):
-        """setup table names in the database
+        """Setup different table names in the database.
 
         Parameters
         ----------
@@ -64,18 +64,18 @@ class Accert:
         return None
 
     def load_obj(self, input_path, accert_path):
-        """convert son file to xml stream and create python data structure
+        """Convert son file to xml stream and creates a python data structure.
 
         Parameters
         ----------
         input_path : PathLike
-            input file path
+            Inputs file path.
         accert_path: PathLike
-            ACCERT repository path
+            ACCERT's repository path.
 
         Returns
         -------
-        A Python object converted from the input file
+        A Python object converted from the input file.
         """    
 
         import subprocess
@@ -88,21 +88,21 @@ class Accert:
         return xml2obj.xml2obj(xmlresult)
 
     def get_current_COAs(self, c, inp_id):
-        """get current Code of accounts based on the input id of SupAccount
+        """Get current Code of Accounts based on the input ID of Super Account.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements. 
         inp_id : str
-            COA id
+            COA ID
 
         Returns
         -------
         coa_lst
-            list of COAs
+            List of COA's.
         coa_others
-            list of COAs' other info, including ind, lft, rgt
+            List of a COA's other info, including ind, lft, rgt.
         """
         c.execute("""SELECT code_of_account, ind, rgt FROM account WHERE supaccount = '{}';""".format(inp_id))
         # CREATE PROCEDURE get_current_COAs(IN table_name VARCHAR(50), 
@@ -125,16 +125,16 @@ class Accert:
         return coa_lst , coa_other
 
     def update_account_before_insert(self, c, max_ind, max_rgt):
-        """ update the current COAs' ind, lft, rgt
+        """Updates the current COAs ind, lft, rgt.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         max_ind : int
-            original ind of the account next to the inserted COA
+            Original index of the account next to the inserted COA.
         max_rgt : int
-            original rgt of the account next to the inserted COA
+            Original rgt of the account next to the inserted COA.
         """
         # DELIMITER $$
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_before_insert`(IN table_name VARCHAR(50),
@@ -171,38 +171,38 @@ class Accert:
                         code_of_account, account_description= None,var_value=None, 
                         var_unit=None, total_cost=0, unit='dollar',main_subaccounts=None, 
                         cost_elements=None, review_status='Added', prn='0'):
-        """insert new COA into account table
+        """Insert a new COA in between an index in the account table.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         ind : int
-            ind of the new inserted COA
+            Index of the new inserted COA.
         supaccount : str
-            SupAccount of the new inserted COA
+            Super account of the new inserted COA.
         level : int
-            level of the new inserted COA
+            Level of the new inserted COA.
         lft : int
-            lft index for nested model of the new inserted COA
+            Lft index for nested model of the new inserted COA.
         rgt : int
-            rgt index for nested model of the new inserted COA
+            Rgt index for nested model of the new inserted COA.
         code_of_account : str, optional
             COA of the new inserted COA, by default "new"
         account_description : str, optional
-            account description of the new inserted COA, by default None
+            Account description of the new inserted COA. (By default none)
         total_cost : int, optional
-            total cost of the new inserted COA, by default 0, unit in dollar
+            Total cost of the new inserted COA. (Set to 0 dollars by default)
         unit : str, optional
-            unit of the new inserted COA, by default 'dollar'
+            Unit of the new inserted COA. (By default set to dollars)
         main_subaccounts : List[str], optional
-            main subaccounts of the new inserted COA, by default None
+            Main subaccounts of the new inserted COA. (By default none)
         cost_elements : List[str], optional
-            cost elements of the new inserted COA, by default None
+            Cost elements of the new inserted COA. (By default none)
         review_status : str, optional
-            review status of the new inserted COA, by default 'Unchanged'
+            Review status of the new inserted COA. (By default 'Unchanged')
         prn : str(float), optional
-            percentage of the total cost of new inserted COA, by default '0'
+            Percentage of the total cost of new inserted COA. (Set to 0% by default)
         """       
         # DELIMITER $$
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_COA`(IN table_name VARCHAR(50),
@@ -265,14 +265,14 @@ class Accert:
         return None                   
 
     def insert_COA(self, c, sup_coa):
-        """insert new COA into account table
+        """Insert a new COA into the account table.
         
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         sup_coa : str
-            SupAccount of the new inserted COA
+            Super account of the new inserted COA.
         """    
         # collect current COAs
         # current_COAs are list of current COAs' code_of_account
@@ -313,28 +313,28 @@ class Accert:
 
     def add_new_alg(self, c,alg_name, alg_for,  alg_description, 
                     alg_python, alg_formulation, alg_units, variables, constants):
-        """add new algorithm into algorithm table
+        """Adds a new algorithm into algorithm table based of the following parameters:
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         alg_name : str
-            name of the algorithm
+            Name of the algorithm.
         alg_for : str
-            whether the algorithm is for cost element or for variable
+            Whether the algorithm is for cost element or for variable.
         alg_description : str
-            description of the algorithm
+            Description of the algorithm.
         alg_python : str
-            python code of the algorithm, variables should be in the form of 'var1', 'var2', 'var3'... 
+            Python code of the algorithm. (Variables should be in the form of 'var1', 'var2', 'var3'...)
         alg_formulation : str
-            print info of the algorithm
+            Prints info of the algorithm.
         alg_units : str
-            units of the output of algorithm
+            Units of the output of algorithm.
         variables : List[str]
-            variables of the algorithm
+            Variables of the algorithm.
         constants : List[str]
-            constants of the algorithm
+            Constants of the algorithm.
         """    
 
         c.execute("""INSERT INTO 
@@ -350,19 +350,19 @@ class Accert:
 
     def extract_variable_info_on_name(self, c,var_id):
         """
-        extract variable info on variable name
+        Extracts variable info based on a specific variable name.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         var_id : str
-            variable id
+            Variable ID.
 
         Returns
         -------
         var_info : List[str]
-            variable info including variable name, variable unit
+            Variable info including variable name and variable unit
         """
 
         # DELIMITER $$
@@ -385,19 +385,19 @@ class Accert:
 
     def extract_super_val(self, c,var_id):
         """
-        extract SuperVariable info on variable name
+        Extracts information on the super variable based on a specific variable name.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         var_id : str
-            variable id
+            Variable ID.
 
         Returns
         -------
         sup_val : List[str]
-            SuperVariable info including SuperVariable name
+            Super variable info including the name of the super variable.
         """    
         # DELIMITER $$
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_super_val`(IN table_name VARCHAR(50),
@@ -422,22 +422,22 @@ class Accert:
     def update_input_variable(self, c,var_id,u_i_var_value,
                               u_i_var_unit,var_type='', quite=False):
         """
-        update input variable value and unit
+        Updates an input variable value and unit based on variable's ID. (Converts unit if needed)
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         var_id : str
-            variable id
+            Variable ID.
         u_i_var_value : float
-            variable value
+            Variable value.
         u_i_var_unit : str
-            variable unit
+            Variable unit.
         var_type : str, optional
-            variable type, by default ''
+            Variable type, by default ''
         quite : bool, optional
-            whether to print the update info, by default False
+            Whether or not to print the update info. (By default not, or false)
         """
 
         if not quite:
@@ -458,18 +458,18 @@ class Accert:
 
     def update_variable_info_on_name(self, c,var_id,var_value,var_unit):
         """
-        update variable info on variable name
+        Updates variable info based on variable name.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         var_id : str
-            variable id
+            Variable ID.
         var_value : float   
-            variable value
+            Variable value.
         var_unit : str
-            variable unit
+            Variable unit.
         """
         # DELIMITER $$
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable_info_on_name`(IN table_name VARCHAR(50),
@@ -492,14 +492,14 @@ class Accert:
 
     def update_super_variable(self, c,var_id):
         """
-        update super variable info on variable name
+        Updates super variable info based on variable name.
         
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         var_id : str
-            variable id
+            Variable ID.
         """
         # DELIMITER $$
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_super_variable`(IN var_table_name VARCHAR(50),
@@ -549,14 +549,14 @@ class Accert:
 
     def extract_total_cost_on_name(self, c,tc_id):
         """
-        extract total cost on total cost name
+        Extracts information of the total cost based on a specific total cost's ID.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         tc_id : str
-            total cost id
+            Total cost ID.
         """
         ## Keep the note here for ref
         ## example with tuple
@@ -579,14 +579,14 @@ class Accert:
 
     def check_unit_conversion(self, org_unit, new_unit):
         """
-        check if unit conversion is needed
+        Checks if unit conversion is needed.
 
         Parameters
         ----------
         org_unit : str
-            original unit
+            Original unit.
         new_unit : str
-            new unit
+            New unit.
         """
         if org_unit == new_unit:
             return False
@@ -595,21 +595,21 @@ class Accert:
 
     def convert_unit(self, current_value, current_unit, to_unit):
         """
-        convert unit from current unit to new unit
+        Converts the current unit to a new unit.
         
         Parameters
         ----------
         current_value : float
-            current value to be converted
+            Current value to be converted.
         current_unit : str
-            current unit
+            Current unit.
         to_unit : str
-            unit to be converted to
+            Unit to be converted to.
         
         Returns
         -------
         to_value : float
-            converted value
+            Converted value.
         """
 
         scale = float(self.convert_unit_scale(current_unit,to_unit))
@@ -620,7 +620,7 @@ class Accert:
 
     def convert_unit_scale(self, current_unit, to_unit):
         """
-        convert unit from current unit to new unit
+        Converts the current unit to a new unit in a scale pattern. (I.e. from kiloWatts to megaWatts or gigaWatts)
 
         Parameters
         ----------
@@ -696,18 +696,18 @@ class Accert:
 
     def update_total_cost(self, c,tc_id, u_i_tc_value, u_i_tc_unit):
         """
-        update total cost on total cost name, check if unit conversion is needed
+        Updates the total cost based on a total cost ID. (Checks if unit conversion is needed)
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         tc_id : str
-            COA of the total cost
+            COA of the total cost.
         u_i_tc_value : float
-            total cost value
+            Total cost's value.
         u_i_tc_unit : str
-            total cost unit
+            Total cost's unit.
         """
         print('[Updating] Total cost of account {}'.format(tc_id))
         org_tc_info = self.extract_total_cost_on_name(c,tc_id)
@@ -723,18 +723,18 @@ class Accert:
 
     def update_total_cost_on_name(self, c, tc_id, u_i_tc_value, u_i_tc_unit):
         """
-        update total cost on total cost name without checking unit conversion
+        Updates the total cost based on a total cost ID, without checking for unit conversion.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         tc_id : str
-            COA of the total cost
+            COA of the total cost.
         u_i_tc_value : float
-            total cost value
+            Total cost's value.
         u_i_tc_unit : str
-            total cost unit
+            Total cost's unit.
         """
         ## NOTE I'm not sure if this is the best way to update the total cost
         ## Statement is not working as expected when passing in a string in a dictionary
@@ -775,19 +775,19 @@ class Accert:
 
     def get_var_value_by_name(self, c, var_name):
         """
-        get variable value by variable name
+        Get a variable value based on a specific variable name.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         var_name : str
-            variable name
+            Variable name.
 
         Returns
         -------
         var_value : str
-            variable value
+            Variable value.
         """
         # DELIMITER $$
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `get_var_value_by_name`(IN table_name VARCHAR(50),
@@ -807,14 +807,14 @@ class Accert:
 
     def run_pre_alg(self, alg, **kwargs):
         """
-        run pre-algorithm
+        Runs pre-algorithms.
 
         Parameters
         ----------
         alg : str
-            pre-algorithm name
+            Pre-algorithm name.
         **kwargs : dict
-            keyword arguments
+            Keyword arguments.
         """
         # NOTE: comments below is the original note from Patrick,
         #       I would want to keep the original note for future reference
@@ -830,16 +830,16 @@ class Accert:
 
     def update_cost_element_on_name(self, c, ce_name, alg_value):
         """
-        update cost element on cost element name, turn off safe update mode
+        Updates the cost element based on cost element name. (Turn off safe update mode)
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         ce_name : str
-            cost element name starting with the COA of the account
+            Cost element name starting with the COA of the account.
         alg_value : float
-            cost element value
+            Cost element value.
         """
         c.execute("""SET SQL_SAFE_UPDATES = 0;""")
         # DELIMITER $$
@@ -868,7 +868,7 @@ class Accert:
 
     def update_new_cost_elements(self, c):
         """
-        Calculate and update affected cost elements based on user input
+        Calculates and updates affected cost elements based on the user input.
 
         Parameters
         ----------
@@ -953,7 +953,7 @@ class Accert:
 
     def update_account_table_by_cost_elements(self, c):
         """
-        update account table from the sum of the cost elements
+        Updates the account table based on the sum of the cost elements.
 
         Parameters
         ----------
@@ -1012,8 +1012,7 @@ class Accert:
 
     def roll_up_cost_elements(self, c):
         """
-        roll up cost elements from level 3 to 0 for pwr
-        only roll up level 3 to 2 for ABR
+        Rolls up cost elements from level 3 to 0 for pwr. Only rolls up level 3 to 2 for ABR.
 
         Parameters
         ----------
@@ -1031,16 +1030,16 @@ class Accert:
 
     def roll_up_cost_elements_by_level(self, c,from_level,to_level):
         """
-        roll up cost elements from from_level to to_level
+        Rolls up cost elements from an input lower level to a higher level.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         from_level : int
-            roll up from level
+            Roll up from a given level.
         to_level : int
-            roll up to level
+            Roll up to a given level.
         """
         # DELIMITER $$
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_cost_elements_by_level`(IN table_name varchar(50), 
@@ -1089,7 +1088,7 @@ class Accert:
 
     def roll_up_account_table(self, c):
         """
-        roll up account table from level 3 to 0
+        Rolls up the account table from level 3 to 0.
         
         Parameters
         ----------
@@ -1108,16 +1107,16 @@ class Accert:
 
     def roll_up_account_table_by_level(self, c, from_level, to_level):
         """
-        roll up account table from from_level to to_level
+        Rolls up the account table from an input lower level to a higher level.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         from_level : int
-            roll up from level
+            Roll up from a given level.
         to_level : int
-            roll up to level
+            Roll up to a given level.
         """
 
         print('[Updating] Rolling up account table from level {} to level {} '.format(from_level,to_level))
@@ -1139,7 +1138,7 @@ class Accert:
 
     def roll_up_abr_account(self, c):
         """
-        roll up account table for ABR from level 3 to 2
+        Rolls up the account table for ABR from level 3 to 2.
 
         Parameters
         ----------
@@ -1168,7 +1167,7 @@ class Accert:
 
     def sum_cost_elements_2C(self, c):
         """
-        sum cost element for ABR COA 2c (calculated cost) 
+        Sums the cost element for ABR COA 2C. (Calculated cost) 
 
         Parameters
         ----------
@@ -1237,7 +1236,7 @@ class Accert:
 
     def sum_up_abr_account_2C(self, c):
         """
-        sum up total cost of account 2C for ABR
+        Sums up total cost of account 2C for the ABR-1000.
 
         Parameters
         ----------
@@ -1263,7 +1262,7 @@ class Accert:
 
     def sum_up_abr_direct_cost(self, c):
         """
-        sum up total cost of account 2 from account 2c for ABR
+        Sums up the total cost of account 2 from account 2C for the ABR-1000.
 
         Parameters
         ----------
@@ -1282,7 +1281,7 @@ class Accert:
 
     def cal_direct_cost_elements(self, c):
         """
-        calculate direct cost elements for ABR including 2C_fac, 2C_lab, 2C_mat
+        Calculates the direct cost elements for the ABR including the factory, labor, and material costs. (2C_fac, 2C_lab, 2C_mat)
 
         Parameters
         ----------
@@ -1315,12 +1314,12 @@ class Accert:
 
     def roll_up_abr_account_table(self, c):
         """
-        roll up account table for ABR
+        Rolls up the account table for the ABR-1000.
 
         Parameters
         ----------
         c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+            MySQLCursor class instantiates objects that can execute MySQL statements
         """
         print(' Rolling up account table '.center(100,'='))
         print('\n')
@@ -1333,7 +1332,7 @@ class Accert:
 
     def print_logo(self):
         """ 
-        print logo
+        Prints the ACCERT logo.
         """
         print('\n')
         print("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
@@ -1349,14 +1348,14 @@ class Accert:
 
     def generate_results_table(self, c, conn, level=3):
         """
-        generate results tables
+        Generates the results tables.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         level : int
-            level of detail in the results table
+            Level of detail in the results table. (How many levels)
         """
 
         statement="SELECT rankedcoa.code_of_account, account.account_description, account.total_cost,	 account.unit,	 account.level, account.review_status	 FROM account JOIN (SELECT node.code_of_account AS COA,  CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM account AS node, account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON account.code_of_account=rankedcoa.COA WHERE account.level <={} ORDER BY account.lft;".format(level)
@@ -1377,14 +1376,14 @@ class Accert:
 
     def generate_abr_results_table(self, c, conn, level=3):
         """
-        generate results tables for ABR
+        Generates the results tables for the ABR-1000.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         level : int
-            level of detail in the results table
+            Level of detail in the results table. (How many levels)
         """
         statement="SELECT rankedcoa.code_of_account, abr_account.account_description, abr_account.total_cost,	 abr_account.unit,	 abr_account.level,abr_account.prn as pct,abr_account.review_status FROM abr_account JOIN (SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM abr_account AS node, abr_account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON abr_account.code_of_account=rankedcoa.COA WHERE abr_account.level <=3 ORDER BY abr_account.lft;".format(level)
         filename = 'ACCERT_updated_account.xlsx'
@@ -1406,14 +1405,14 @@ class Accert:
 
     def write_to_excel(self, statement, filename,conn):
         """
-        write results to excel file
+        Writes the results to an excel file.
 
         Parameters
         ----------
         statement : str
-            SQL statement
+            SQL statement.
         filename : str
-            filename of the excel file
+            Filename of the excel file.
         conn : MySQLConnection
             MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
         """
