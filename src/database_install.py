@@ -55,7 +55,6 @@ def executeScriptsFromFile(filename,c):
         pattern = r'CREATE DEFINER.*?END ;'
         procedureCommands = re.findall(pattern, content, re.DOTALL)
         return procedureCommands
-        # Replace 'your_file_path.txt' with the actual path of your text file
     procedureCommands = extract_blocks_and_other_lines(sqlFile)
     
     sqlCommands = sqlFile.split(';')
@@ -70,11 +69,6 @@ def executeScriptsFromFile(filename,c):
         except Error as e:
             print(f"The error '{e}' occurred at command:")
     return None
-
-    
-
-
-
 
 def main():
     connection = createConnection("localhost", "root", passwd)
