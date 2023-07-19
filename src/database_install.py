@@ -3,7 +3,7 @@ import mysql.connector
 from mysql.connector import Error
 import os
 import re
-
+from subprocess import Popen, PIPE
 
 thisfolder = os.path.dirname(os.path.abspath(__file__))
 initfile = os.path.join(thisfolder, 'install.conf')
@@ -37,16 +37,60 @@ def checkDatabase(cursor, databaseName):
         return False
 
 def executeScriptsFromFile(filename,c):
-    # Open and read the file as a single buffer
-    fd = open(filename, 'r')
-    sqlFile = fd.read()
-    fd.close()
-    sqlCommands = sqlFile.split(';')
-    for command in sqlCommands:
-        try:
-            c.execute(command)
-        except OperationalError:
-            print("Command skipped: ",command)
+    # execute the sql script file
+    # filename: the name of the sql script file
+    # c: the cursor of the connection
+    # return: None
+    curPath = os.path.dirname(os.path.abspath(__file__))
+    sqlPath = os.path.join(curPath, filename)
+    with open(sqlPath, 'r') as f:
+        sqlFile = f.read()
+        # read sql file into lines
+        sqlCommands = sqlFile.split('\n')
+        # remove the empty lines
+        sqlCommands = [line for line in sqlCommands if line.strip() != '']
+        # remove comments start with '--' , 'DELIMITER' and '/*!'
+        sqlCommands = [line for line in sqlCommands if not line.startswith('--')]
+        sqlCommands = [line for line in sqlCommands if not line.startswith('DELIMITER')]
+        sqlCommands = [line for line in sqlCommands if not line.startswith('/*!')]
+        # repalce  ;; with ;
+        sqlCommands = [line.replace(';;',';') for line in sqlCommands]
+
+        def extract_blocks_and_other_lines(content):
+            # split the sqlCommands into database creation and procedure creation
+            # procedure commands start with 'CREATE DEFINER' and end with 'END ;'
+            # all the middle lines between 'CREATE DEFINER' and 'END' are procedure commands
+            # the other lines are database creation commands
+            # extract the procedure commands first
+            # Use regular expressions to find the blocks
+            pattern = r'CREATE DEFINER.*?END ;'
+            procedureCommands = re.findall(pattern, content, re.DOTALL)
+            # Remove the blocks from the content to get the other lines
+            databaseCreation = re.sub(pattern, '', content, flags=re.DOTALL).splitlines()
+
+            return procedureCommands, databaseCreation
+
+        # Replace 'your_file_path.txt' with the actual path of your text file
+        procedureCommands, databaseCreation = extract_blocks_and_other_lines(sqlFile)
+
+        print("Blocks:", type(procedureCommands))
+        for idx, Commands in enumerate(procedureCommands, 1):
+            print(f"Block {idx}:")
+            print(Commands)
+            print("\n")
+
+        # print("Other Lines:")
+        # for line in other_lines:
+        #     print(line)
+        #     print("\n")
+
+    cccc
+    return
+
+    
+
+
+
 
 def main():
     connection = createConnection("localhost", "root", passwd)
@@ -58,6 +102,16 @@ def main():
             executeScriptsFromFile('accertdb.sql',c)
             connection.commit()
             print ("MySQL and its connection has been installed successfully")
+        else:
+            #check if user want to overwrite the database
+            print("Database {} already exist".format(dbName))
+            print("Do you want to overwrite it? (y/n)")
+            answer = input()
+            if answer == 'y':
+                executeScriptsFromFile('accertdb.sql',c)
+                connection.commit()
+                print ("MySQL and its connection has been installed successfully")
+            
     else:
         print("No connection found")
     return
