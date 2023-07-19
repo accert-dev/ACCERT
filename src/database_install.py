@@ -3,7 +3,6 @@ import mysql.connector
 from mysql.connector import Error
 import os
 import re
-from subprocess import Popen, PIPE
 
 thisfolder = os.path.dirname(os.path.abspath(__file__))
 initfile = os.path.join(thisfolder, 'install.conf')
