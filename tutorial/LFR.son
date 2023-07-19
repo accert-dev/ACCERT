@@ -1,0 +1,29 @@
+% ACCERT Test input file
+% Author: J. Zhou (jia.zhou@anl.gov)
+% Last updated: 07/19/2023
+
+
+% This test input file is used to test the
+% assign costs functionality.
+
+
+accert{
+    ref_model = "LFR"
+    power( Thermal ){ value = 1000   unit = MW } 
+    power( Electric ){ value = 380   unit = MW } 
+
+%    var(Cont_H_wall_m){ value = 20  unit = m }
+%    var(c_pump_ap1000){ value = 30  unit = million }
+
+    l0COA( 2 ){
+        l1COA( 21 ){
+            l2COA( 216 ){
+                % Total cost of COA can be assigned here.
+                % If a total cost of level 2 is assigned, 
+                % level 1 account will be recalculated. 
+                total_cost{value = 36750000 unit = dollar}
+       
+            } 
+        }
+    }
+}
