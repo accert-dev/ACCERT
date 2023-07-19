@@ -43,49 +43,34 @@ def executeScriptsFromFile(filename,c):
     # return: None
     curPath = os.path.dirname(os.path.abspath(__file__))
     sqlPath = os.path.join(curPath, filename)
-    with open(sqlPath, 'r') as f:
-        sqlFile = f.read()
-        # read sql file into lines
-        sqlCommands = sqlFile.split('\n')
-        # remove the empty lines
-        sqlCommands = [line for line in sqlCommands if line.strip() != '']
-        # remove comments start with '--' , 'DELIMITER' and '/*!'
-        sqlCommands = [line for line in sqlCommands if not line.startswith('--')]
-        sqlCommands = [line for line in sqlCommands if not line.startswith('DELIMITER')]
-        sqlCommands = [line for line in sqlCommands if not line.startswith('/*!')]
-        # repalce  ;; with ;
-        sqlCommands = [line.replace(';;',';') for line in sqlCommands]
-
-        def extract_blocks_and_other_lines(content):
-            # split the sqlCommands into database creation and procedure creation
-            # procedure commands start with 'CREATE DEFINER' and end with 'END ;'
-            # all the middle lines between 'CREATE DEFINER' and 'END' are procedure commands
-            # the other lines are database creation commands
-            # extract the procedure commands first
-            # Use regular expressions to find the blocks
-            pattern = r'CREATE DEFINER.*?END ;'
-            procedureCommands = re.findall(pattern, content, re.DOTALL)
-            # Remove the blocks from the content to get the other lines
-            databaseCreation = re.sub(pattern, '', content, flags=re.DOTALL).splitlines()
-
-            return procedureCommands, databaseCreation
-
+    f = open(sqlPath, 'r')
+    sqlFile = f.read()
+    f.close()
+    def extract_blocks_and_other_lines(content):
+        # split the sqlCommands into database creation and procedure creation
+        # procedure commands start with 'CREATE DEFINER' and end with 'END ;'
+        # all the middle lines between 'CREATE DEFINER' and 'END' are procedure commands
+        # the other lines are database creation commands
+        # extract the procedure commands first
+        # Use regular expressions to find the blocks
+        pattern = r'CREATE DEFINER.*?END ;'
+        procedureCommands = re.findall(pattern, content, re.DOTALL)
+        return procedureCommands
         # Replace 'your_file_path.txt' with the actual path of your text file
-        procedureCommands, databaseCreation = extract_blocks_and_other_lines(sqlFile)
-
-        print("Blocks:", type(procedureCommands))
-        for idx, Commands in enumerate(procedureCommands, 1):
-            print(f"Block {idx}:")
-            print(Commands)
-            print("\n")
-
-        # print("Other Lines:")
-        # for line in other_lines:
-        #     print(line)
-        #     print("\n")
-
-    cccc
-    return
+    procedureCommands = extract_blocks_and_other_lines(sqlFile)
+    
+    sqlCommands = sqlFile.split(';')
+    for command in sqlCommands:
+        try:
+            c.execute(command)
+        except Error as e:
+            continue
+    for command in procedureCommands:
+        try:
+            c.execute(command)
+        except Error as e:
+            print(f"The error '{e}' occurred at command:")
+    return None
 
     
 
@@ -101,7 +86,10 @@ def main():
             print ("Executing SQL script file: '{}.sql'".format(dbName))
             executeScriptsFromFile('accertdb.sql',c)
             connection.commit()
-            print ("MySQL and its connection has been installed successfully")
+            if checkDatabase(c, dbName):
+                print ("MySQL and its connection has been installed successfully")
+            else:
+                print ("MySQL and its connection failed to install")
         else:
             #check if user want to overwrite the database
             print("Database {} already exist".format(dbName))
@@ -110,8 +98,10 @@ def main():
             if answer == 'y':
                 executeScriptsFromFile('accertdb.sql',c)
                 connection.commit()
-                print ("MySQL and its connection has been installed successfully")
-            
+                if checkDatabase(c, dbName):
+                    print ("MySQL and its connection has been installed successfully")
+                else:
+                    print ("MySQL and its connection failed to install")
     else:
         print("No connection found")
     return
