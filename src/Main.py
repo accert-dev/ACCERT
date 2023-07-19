@@ -61,6 +61,15 @@ class Accert:
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
+        elif "lfr" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'lfr'
+            self.acc_tabl = 'lfr_account'
+            self.cel_tabl = 'abr_cost_element'
+            self.var_tabl = 'abr_variable'
+            self.vlk_tabl = 'abr_variable_links'   
+            self.alg_tabl = 'algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
         return None
 
     def load_obj(self, input_path, accert_path):
@@ -1627,6 +1636,21 @@ class Accert:
         self.roll_up_cost_elements(c)
 
         if self.ref_model=="abr1000":
+            self.sum_cost_elements_2C(c)
+            ### update the account table:
+
+            self.update_account_table_by_cost_elements(c)
+
+            ### roll up the account table:
+            self.roll_up_abr_account_table(c)
+            abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
+            print(' Generating results table for review '.center(100,'='))
+            print('\n')  
+            ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
+
+            self.generate_abr_results_table(c, conn,level=3)
+        
+        elif self.ref_model=="lfr":
             self.sum_cost_elements_2C(c)
             ### update the account table:
 
