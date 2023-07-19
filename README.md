@@ -82,7 +82,7 @@ with and without Workbench are provided in this README.
     [~/src]> ./setup_accert.sh 
     ```
 
-* Edit file `install.conf` and change "yourpassword" to your MySQL root password.
+* Edit or create the file `install.conf` in `src` folder and change "yourpassword" to your MySQL root password.
 
     ```console
     [INSTALL]
