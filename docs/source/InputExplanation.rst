@@ -1,6 +1,6 @@
 Inputs of ACCERT
 ================
-
+Hello!
 In ACCERT there are several different user inputs. For each user input, there is a lot of different variables that can have their values changed.
 
 **NOTE: the ID in each node using the string format can only contain letters, numbers and underscores. If the ID does not start with a letter, it will be considered a number even if it has letters in it. Use quotes to avoid this error.**
