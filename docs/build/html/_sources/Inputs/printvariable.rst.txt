@@ -1,0 +1,8 @@
+Print Variables
+===============
+
+.. autoclass:: UtilityInput.Utility_methods
+    :members:
+
+    .. automethod:: print_variable
+        :noindex:

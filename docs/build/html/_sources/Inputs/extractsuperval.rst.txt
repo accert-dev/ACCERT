@@ -1,0 +1,9 @@
+Extract Super Variable
+======================
+
+.. autoclass:: AccertInput.Accert
+    :members:
+
+    .. automethod:: extract_super_val
+        :noindex:
+

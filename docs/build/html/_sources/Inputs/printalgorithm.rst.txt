@@ -1,0 +1,8 @@
+Prints Algorithms
+=================
+
+.. autoclass:: UtilityInput.Utility_methods
+    :members:
+
+    .. automethod:: print_algorithm
+        :noindex:

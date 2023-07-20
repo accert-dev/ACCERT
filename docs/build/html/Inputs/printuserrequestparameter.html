@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Print User Request Parameters &mdash; ACCERT User Manual 0.2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ACCERT User Manual
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../MainPage.html">About ACCERT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../new_page.html">Using ACCERT (With Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inputACCERT.html">Inputs for ACCERT</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installations:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Installation.Page.html">Installations</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ACCERT User Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Print User Request Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Inputs/printuserrequestparameter.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="print-user-request-parameters">
+<h1>Print User Request Parameters<a class="headerlink" href="#print-user-request-parameters" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">UtilityInput.</span></span><span class="sig-name descname"><span class="pre">Utility_methods</span></span><a class="headerlink" href="#UtilityInput.Utility_methods" title="Permalink to this definition"></a></dt>
+<dd><p>Utility Class</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">print_user_request_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Prints the output user_request_parameter table</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+<dt>all<span class="classifier">bool, optional</span></dt><dd><p>if True, print all columns, by default False</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.extract_affected_abr_cost_elements">
+<span class="sig-name descname"><span class="pre">extract_affected_abr_cost_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.extract_affected_abr_cost_elements" title="Permalink to this definition"></a></dt>
+<dd><p>extract affected abr cost elements from abr_cost_element table group by changed variables</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.extract_affected_cost_elements">
+<span class="sig-name descname"><span class="pre">extract_affected_cost_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.extract_affected_cost_elements" title="Permalink to this definition"></a></dt>
+<dd><p>extract affected cost elements from cost_element table group by changed variables</p>
+<section id="id2">
+<h2>Parameters<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.extract_changed_cost_elements">
+<span class="sig-name descname"><span class="pre">extract_changed_cost_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.extract_changed_cost_elements" title="Permalink to this definition"></a></dt>
+<dd><p>extract changed cost elements from cost_element table</p>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.extract_original_cost_elements">
+<span class="sig-name descname"><span class="pre">extract_original_cost_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.extract_original_cost_elements" title="Permalink to this definition"></a></dt>
+<dd><p>extract original affected cost elements from cost_element table, this function is ONLY used for debugging</p>
+<section id="id4">
+<h2>Parameters<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.extract_user_changed_abr_variables">
+<span class="sig-name descname"><span class="pre">extract_user_changed_abr_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.extract_user_changed_abr_variables" title="Permalink to this definition"></a></dt>
+<dd><p>extract user changed abr variables from abr_variable table</p>
+<section id="id5">
+<h2>Parameters<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.extract_user_changed_variables">
+<span class="sig-name descname"><span class="pre">extract_user_changed_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.extract_user_changed_variables" title="Permalink to this definition"></a></dt>
+<dd><p>extract user changed variables from variable table</p>
+<section id="id6">
+<h2>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_abr_account">
+<span class="sig-name descname"><span class="pre">print_abr_account</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_abr_account" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output abr_account table</p>
+<section id="id7">
+<h2>Parameters<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_abr_cost_element">
+<span class="sig-name descname"><span class="pre">print_abr_cost_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_abr_cost_element" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output abr_cost_element table</p>
+<section id="id8">
+<h2>Parameters<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_abr_variable">
+<span class="sig-name descname"><span class="pre">print_abr_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_abr_variable" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output abr_variable table</p>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_abr_variable_links">
+<span class="sig-name descname"><span class="pre">print_abr_variable_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_abr_variable_links" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output abr_variable_links table</p>
+<section id="id10">
+<h2>Parameters<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_account">
+<span class="sig-name descname"><span class="pre">print_account</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dollar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_account" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the account table.</p>
+<section id="id11">
+<h2>Parameters<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+<dt>all<span class="classifier">bool, optional</span></dt><dd><p>If True, print all the accounts columns. (By default False)</p>
+</dd>
+<dt>cost_unit<span class="classifier">str, optional</span></dt><dd><p>Unit of the total cost. (By default ‘dollar’)</p>
+</dd>
+<dt>level<span class="classifier">int, optional</span></dt><dd><p>Level of account. (By default 3)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_algorithm">
+<span class="sig-name descname"><span class="pre">print_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_algorithm" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output algorithm table.</p>
+<section id="id12">
+<h2>Parameters<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_cost_element">
+<span class="sig-name descname"><span class="pre">print_cost_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_cost_element" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output cost element table.</p>
+<section id="id13">
+<h2>Parameters<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_escalation">
+<span class="sig-name descname"><span class="pre">print_escalation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_escalation" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output escalation table.</p>
+<section id="id14">
+<h2>Parameters<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor </span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_facility">
+<span class="sig-name descname"><span class="pre">print_facility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_facility" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output facility table.</p>
+<section id="id15">
+<h2>Parameters<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_leveled_abr_accounts">
+<span class="sig-name descname"><span class="pre">print_leveled_abr_accounts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abr_fac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abr_lab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abr_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dollar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_leveled_abr_accounts" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output leveled abr accounts table</p>
+<section id="id16">
+<h2>Parameters<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+<dt>abr_fac<span class="classifier">float</span></dt><dd><p>abr_fac is the abr factor for factory cost</p>
+</dd>
+<dt>abr_lab<span class="classifier">float</span></dt><dd><p>abr_lab is the abr factor for labor cost</p>
+</dd>
+<dt>abr_mat<span class="classifier">float</span></dt><dd><p>abr_mat is the abr factor for material cost</p>
+</dd>
+<dt>all<span class="classifier">bool, optional</span></dt><dd><p>all is the flag to print all accounts or not, by default False</p>
+</dd>
+<dt>cost_unit<span class="classifier">str, optional</span></dt><dd><p>cost_unit is the unit of cost, by default ‘dollar’</p>
+</dd>
+<dt>level<span class="classifier">int, optional</span></dt><dd><p>level is the level of account, by default 3</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_leveled_accounts">
+<span class="sig-name descname"><span class="pre">print_leveled_accounts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dollar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_leveled_accounts" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output account table with COA line up as a nested list.</p>
+<section id="id17">
+<h2>Parameters<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+<dt>all<span class="classifier">bool, optional</span></dt><dd><p>If True, print all the accounts columns. (By default False)</p>
+</dd>
+<dt>cost_unit<span class="classifier">str, optional</span></dt><dd><p>Unit of the total cost. (By default ‘dollar’)</p>
+</dd>
+<dt>level<span class="classifier">int, optional   </span></dt><dd><p>Level of account. (By default 3)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_table">
+<span class="sig-name descname"><span class="pre">print_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_table" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the table in an organized format via the PrettyTable library.</p>
+<section id="id18">
+<h2>Parameters<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+<dt>align_key<span class="classifier">list[str], optional</span></dt><dd><p>List of column names to align. (By default none)</p>
+</dd>
+<dt>align<span class="classifier">list[str], optional</span></dt><dd><p>List of alignments. Left, right or center. (By default none)</p>
+</dd>
+<dt>format_col<span class="classifier">list[str], optional</span></dt><dd><p>List of column names to format. (By default none)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_updated_abr_cost_elements">
+<span class="sig-name descname"><span class="pre">print_updated_abr_cost_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_updated_abr_cost_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output updated abr cost elements table</p>
+<section id="id19">
+<h2>Parameters<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_updated_cost_elements">
+<span class="sig-name descname"><span class="pre">print_updated_cost_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_updated_cost_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output updated cost elements table</p>
+<section id="id20">
+<h2>Parameters<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_user_request_parameter">
+<span class="sig-name descname"><span class="pre">print_user_request_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_user_request_parameter" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output user_request_parameter table</p>
+<section id="id21">
+<h2>Parameters<a class="headerlink" href="#id21" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor</span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+<dt>all<span class="classifier">bool, optional</span></dt><dd><p>if True, print all columns, by default False</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UtilityInput.Utility_methods.print_variable">
+<span class="sig-name descname"><span class="pre">print_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilityInput.Utility_methods.print_variable" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the output variable table.</p>
+<section id="id22">
+<h2>Parameters<a class="headerlink" href="#id22" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>c<span class="classifier">MySQLCursor </span></dt><dd><p>MySQLCursor class instantiates objects that can execute MySQL statements.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Argonne National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

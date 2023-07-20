@@ -1,0 +1,9 @@
+Update Variable Info On Name
+============================
+
+.. autoclass:: AccertInput.Accert
+    :members:
+
+    .. automethod:: update_variable_info_on_name
+        :noindex: 
+        

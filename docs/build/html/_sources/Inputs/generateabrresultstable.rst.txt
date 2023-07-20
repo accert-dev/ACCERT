@@ -1,0 +1,8 @@
+Generates ABR-1000 Results Table
+================================
+
+.. autoclass:: AccertInput.Accert
+    :members:
+
+    .. automethod:: generate_abr_results_table
+        :noindex:
