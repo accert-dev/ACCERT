@@ -1,13 +1,16 @@
 .. toctree::
     :maxdepth: 1
-
+    
 Default_0
 =========
 
-**Description**
+.. table:: Algorithm
+   :widths: 15 15 15
 
-Sets the total cost to zero
+   +------------------------+-----------------------------------+-----------------------------------------+
+   | **Algorithm Name**     | **What is this algorithm for?**   | **Description**                         |
+   +========================+===================================+=========================================+
+   | default_0              | Cost Elements                     | Sets the total cost to zero.            |
+   +------------------------+-----------------------------------+-----------------------------------------+
 
-**Variables**
 
-*This algorithm utilizes no variables*

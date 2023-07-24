@@ -18,6 +18,5 @@ Level 2
     :maxdepth: 1
     :caption: Code of Accounts
 
-    level2alg.rst
     level2ce.rst
     level2COA.rst

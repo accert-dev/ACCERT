@@ -1,17 +1,14 @@
 .. toctree::
     :maxdepth: 1
-
+    
 Dev_factor_ref
 ==============
 
-**alg(dev_factor_ref)**
+.. table:: Algorithm
+   :widths: 15 15 15
 
-**Description**
-
-Factor of the reference.
-
-**Equation**
-
-:math: 'dev_factor_ref = \frac{cost_of_ref*scale}{factor}'
-
-**Variables**
+   +------------------------+-----------------------------------+-----------------------------------------+
+   | **Algorithm Name**     | **What is this algorithm for?**   | **Description**                         |
+   +========================+===================================+=========================================+
+   | dev_factor_ref         | Cost Elements                     | Factor of the reference. (millions)     |
+   +------------------------+-----------------------------------+-----------------------------------------+
