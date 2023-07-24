@@ -195,7 +195,7 @@ CREATE TABLE `algorithm` (
   `variables` text,
   `constants` text,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -302,6 +302,131 @@ INSERT INTO `facility` VALUES (1,'Electrical Equipment','Including switchgear, s
 UNLOCK TABLES;
 
 --
+-- Table structure for table `lfr_account`
+--
+
+DROP TABLE IF EXISTS `lfr_account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lfr_account` (
+  `ind` int NOT NULL AUTO_INCREMENT,
+  `code_of_account` text,
+  `account_description` text,
+  `total_cost` double DEFAULT NULL,
+  `unit` text,
+  `level` int DEFAULT NULL,
+  `main_subaccounts` text,
+  `supaccount` text,
+  `cost_elements` text,
+  `review_status` text,
+  `lft` int DEFAULT NULL,
+  `rgt` int DEFAULT NULL,
+  `prn` double DEFAULT NULL,
+  PRIMARY KEY (`ind`)
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lfr_account`
+--
+
+LOCK TABLES `lfr_account` WRITE;
+/*!40000 ALTER TABLE `lfr_account` DISABLE KEYS */;
+INSERT INTO `lfr_account` VALUES (1,'211','Yardwork',71213859.06,'dollar',2,'','21','211_fac,211_lab,211_mat','Unchanged',3,4,0.027628981),(2,'212','Reactor containment building',81425435.33,'dollar',2,'','21','212_fac,212_lab,212_mat','Unchanged',5,6,0.071675596),(3,'213','Turbine room and heater bay',0,'dollar',2,'','21','213_fac,213_lab,213_mat','Unchanged',7,8,0.02559467),(4,'215','Primary auxiliary building and tunnels',12470000,'dollar',2,'','21','215_fac,215_lab,215_mat','Unchanged',9,10,0.020420772),(5,'216','Waste processing building',38750000,'dollar',2,'','21','216_fac,216_lab,216_mat','Unchanged',11,12,0.015882927),(6,'217','Fuel storage building',28149583.82,'dollar',2,'','21','217_fac,217_lab,217_mat','Unchanged',13,14,0.010921249),(7,'218A','Control Room/Diesel Generator Building',16250000,'dollar',3,'','218','218A_fac,218A_lab,218A_mat','Unchanged',15,16,0.020007875),(8,'220A.211','Vessel Structure (NSSS)',137000000,'dollar',3,'','22','220A.211_fac,220A.211_lab,220A.211_mat','Unchanged',17,18,0.027158047),(9,'220A.2121','Lower Internals (NSSS)',45204200,'dollar',3,'','22','220A.2121_fac,220A.2121_lab,220A.2121_mat','Unchanged',19,20,0.012329754),(10,'220A.2122','Upper Internals (NSSS)',45204200,'dollar',3,'','22','220A.2122_fac,220A.2122_lab,220A.2122_mat','Unchanged',21,22,0.012329754),(11,'220A.2131','Control Rods (NSSS)',1320000,'dollar',3,'','22','220A.2131_fac,220A.2131_lab,220A.2131_mat','Unchanged',23,24,0.001202713),(12,'220A.2132','Control Rod Drives (NSSS)',13453440,'dollar',3,'','22','220A.2132_fac,220A.2132_lab,220A.2132_mat','Unchanged',25,26,0.013540226),(13,'220A.221','Main Coolant Pumps (NSSS)',55696873.29,'dollar',3,'','22','220A.221_fac,220A.221_lab,220A.221_mat','Unchanged',27,28,0.048589625),(14,'220A.222','Reactor Coolant Piping (NSSS)',7464800,'dollar',3,'','22','220A.222_fac,220A.222_lab,220A.222_mat','Unchanged',29,30,0.004422882),(15,'220A.223','Steam Generators (NSSS)',122087095.9,'dollar',3,'','22','220A.223_fac,220A.223_lab,220A.223_mat','Unchanged',31,32,0.058118221),(16,'220A.224','Pressurizer (NSSS)',0,'dollar',3,'','22','220A.224_fac,220A.224_lab,220A.224_mat','Unchanged',33,34,0.003220169),(17,'222.11','Fluid Circulation Drive System (Field Cost 222)',2504335.453,'dollar',3,'','222','222.11_fac,222.11_lab,222.11_mat','Unchanged',36,37,0.003333601),(18,'222.12','Reactor Coolant Piping System (Field Cost 222)',4924232.687,'dollar',3,'','222','222.12_fac,222.12_lab,222.12_mat','Unchanged',38,39,0.006554803),(19,'222.13','Steam Generator Equipment (Field Cost 222)',697187.7179,'dollar',3,'','222','222.13_fac,222.13_lab,222.13_mat','Unchanged',40,41,0.000928049),(20,'222.14','Pressurizing System (Field Cost 222)',94769.84553,'dollar',3,'','222','222.14_fac,222.14_lab,222.14_mat','Unchanged',42,43,0.000126151),(21,'222','Main heat transfer transport system',8220525.704,'dollar',2,'222.12','22','222_fac,222_lab,222_mat','Unchanged',35,44,0.010942603),(22,'224','Radwaste processing',59673441.34,'dollar',2,'','22','224_fac,224_lab,224_mat','Unchanged',45,46,0.023151622),(23,'226.4','Coolant Treatment & Recycle',34304867.39,'dollar',3,'','226','226.4_fac,226.4_lab,226.4_mat','Unchanged',47,48,0.015817883),(24,'226.7','Aux Cool Sys (Broken Down Further)',0,'dollar',3,'','226','226.7_fac,226.7_lab,226.7_mat','Unchanged',49,50,0.021415357),(25,'227','Reactor instrumentation and control',61419737.22,'dollar',2,'','22','227_fac,227_lab,227_mat','Unchanged',51,52,0.023829136),(26,'231','Turbine generator',0,'dollar',2,'','23','231_fac,231_lab,231_mat','Unchanged',53,54,0.148118277),(27,'233','Condensing systems',0,'dollar',2,'','23','233_fac,233_lab,233_mat','Unchanged',55,56,0.032039296),(28,'234','Feedwater heating system',0,'dollar',2,'','23','234_fac,234_lab,234_mat','Unchanged',57,58,0.026077184),(29,'235','Other turbine plant equipment',9563415.121,'dollar',2,'','23','235_fac,235_lab,235_mat','Unchanged',59,60,0.024678068),(30,'241','Switchgear',0,'dollar',2,'','24','241_fac,241_lab,241_mat','Unchanged',61,62,0.013206497),(31,'242','Station service equipment',0,'dollar',2,'','24','242_fac,242_lab,242_mat','Unchanged',63,64,0.022290424),(32,'245','Electric structure and wiring contnr.',0,'dollar',2,'','24','245_fac,245_lab,245_mat','Unchanged',65,66,0.024654288),(33,'246','Power and control wiring',0,'dollar',2,'','24','246_fac,246_lab,246_mat','Unchanged',67,68,0.022774295),(34,'252','Air, water and steam service systems',81851078.87,'dollar',2,'','25','252_fac,252_lab,252_mat','Unchanged',69,70,0.031755924),(35,'262','Mechanical equipment',44777444.42,'dollar',2,'','26','262_fac,262_lab,262_mat','Unchanged',71,72,0.04935819),(36,'2C','Calculated DIRECT COST',1225489991,'dollar',0,'','0','2c_fac,2c_lab,2c_mat','Unchanged',2,73,0.863152505),(37,'2','TOTAL DIRECT COST',1419783854,'dollar',0,'','0','','Unchanged',1,74,1),(38,'232','Chilled Water Facilities',0,'dollar',2,'','23','232_fac,232_lab,232_mat','Unchanged',72,75,0.02);
+/*!40000 ALTER TABLE `lfr_account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lfr_cost_element`
+--
+
+DROP TABLE IF EXISTS `lfr_cost_element`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lfr_cost_element` (
+  `ind` int NOT NULL AUTO_INCREMENT,
+  `cost_element` text,
+  `cost_2017` double DEFAULT NULL,
+  `sup_cost_ele` text,
+  `alg_name` text,
+  `fun_unit` text,
+  `variables` text,
+  `account` text,
+  `algno` text,
+  `updated` int DEFAULT NULL,
+  PRIMARY KEY (`ind`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lfr_cost_element`
+--
+
+LOCK TABLES `lfr_cost_element` WRITE;
+/*!40000 ALTER TABLE `lfr_cost_element` DISABLE KEYS */;
+INSERT INTO `lfr_cost_element` VALUES (1,'211_fac',810015.17,'21_fac','esc_1987','million','escalate_1987, ref_211_fac','211','12',0),(2,'212_fac',0,'21_fac','default_0','million','N/A','212','N/A',0),(3,'213_fac',660388.72,'21_fac','MWth_scale','million','c_213_fac, mwth, scale_0.8','213','8',0),(4,'215_fac',2121224.73,'21_fac','NO_ALG','million','N/A','215','N/A',0),(5,'216_fac',1756069.67,'21_fac','NO_ALG','million','N/A','216','N/A',0),(6,'217_fac',2842399.83,'21_fac','NO_ALG','million','N/A','217','N/A',0),(7,'218A_fac',1314294.08,'218_fac','NO_ALG','million','N/A','218A','N/A',0),(8,'220A.211_fac',127380000,'220A_fac','NO_ALG','million','N/A','220A.211','N/A',0),(9,'220A.2121_fac',45204200,'220A_fac','unit_weights','million','c_zero, c_220A.2121_ss_weight','220A.2121','5',0),(10,'220A.2122_fac',45204200,'220A_fac','unit_weights','million','c_zero, c_220A.2122_ss_weight','220A.2122','5',0),(11,'220A.2131_fac',1320000,'220A_fac','unit_facility','million','no_of_cr, c_cr_per_unit_fac','220A.2131','16',0),(12,'220A.2132_fac',13453440,'220A_fac','unit_facility','million','no_of_crd, c_crd_per_unit_fac','220A.2132','16',0),(13,'220A.221_fac',55696873.29,'220A_fac','unit_facility','million','no_of_rcpump, c_pump_per_unit_fac','220A.221','16',0),(14,'220A.222_fac',7464800,'220A_fac','unit_weights','million','c_zero, c_220A.222_ss_weight','220A.222','5',0),(15,'220A.223_fac',118647119.77,'220A_fac','Sgsum','million','N/A','220A.223','N/A',0),(16,'220A.224_fac',1379368.42,'220A_fac','MWth_lmfbrscale','million','r_78_220A224_fac, mwth, scale_1.0','220A.224','24',0),(17,'222.11_fac',1101963.79,'222_fac','MWth_scale','million','c_222.11_fac, mwth, scale_1.0','222.11','8',0),(18,'222.12_fac',1280778.06,'222_fac','MWth_scale','million','c_222.12_fac, mwth, scale_1.0','222.12','8',0),(19,'222.13_fac',21900.68,'222_fac','MWth_scale','million','c_222.13_fac, mwth, scale_1.0','222.13','8',0),(20,'222.14_fac',4380.14,'222_fac','MWth_scale','million','c_222.14_fac, mwth, scale_1.0','222.14','8',0),(21,'222_fac',2409022.68,'22_fac','MWth_scale','million','c_222_fac, mwth, scale_1.0','222','8',0),(22,'224_fac',46047915.43,'22_fac','esc_1987','million','escalate_1987, ref_224_fac','224','12',0),(23,'226.4_fac',34304867.39,'226_fac','MWth_scale','million','r_78_226.4_fac, mwth, scale_1.0','226.4','8',0),(24,'226.7_fac',0,'226_fac','default_0','million','N/A','226.7','14',0),(25,'227_fac',37538349.96,'22_fac','esc_1987','million','escalate_1987, ref_227_fac','227','12',0),(26,'231_fac',53544604.81,'23_fac','dev_factor_ref','million','c_turbine, scale_tur_231_fac, scale_1.0','231','10',0),(27,'233_fac',19829554.55,'23_fac','MWreth_scale','million','c_233_fac, mwreth, scale_0.8','233','25',0),(28,'234_fac',0,'23_fac','default_0','million','N/A','234','14',0),(29,'235_fac',4788444.35,'23_fac','ptn_account','million','c_231_fac, prn_235_of_231_fac','235','4',0),(30,'241_fac',20635161.28,'24_fac','MWe_scale','million','c_241_fac, mwe, scale_0.4','241','17',0),(31,'242_fac',33563126.13,'24_fac','MWe_scale','million','c_242_fac, mwe, scale_0.4','242','17',0),(32,'245_fac',0,'24_fac','MWe_scale','million','c_245_fac, mwe, scale_0.4','245','17',0),(33,'246_fac',2902733.98,'24_fac','MWe_scale','million','c_246_fac, mwe, scale_0.4','246','17',0),(34,'252_fac',24869567.31,'25_fac','esc_1987','million','escalate_1987, ref_252_fac','252','12',0),(35,'262_fac',30555532.85,'26_fac','MWreth_scale','million','c_262_fac, mwreth, scale_0.8','262','25',0),(36,'2c_fac',736246154.62,'','NO_ALG','million','N/A','2','N/A',0),(37,'211_lab',41328822.54,'21_lab','esc_1987','million','escalate_1987, ref_211_lab','211','12',0),(38,'212_lab',43940775.98,'21_lab','containment','million','Tot_Labor_containment','212','7',0),(39,'213_lab',11873274.12,'21_lab','MWth_scale','million','c_213_lab, mwth, scale_0.8','213','8',0),(40,'215_lab',7101615.96,'21_lab','NO_ALG','million','N/A','215','N/A',0),(41,'216_lab',24337584.5,'21_lab','NO_ALG','million','N/A','216','N/A',0),(42,'217_lab',12836637.9,'21_lab','NO_ALG','million','N/A','217','N/A',0),(43,'218A_lab',10038481.64,'218_lab','NO_ALG','million','N/A','218A','N/A',0),(44,'220A.211_lab',8750000,'220A_lab','NO_ALG','million','N/A','220A.211','N/A',0),(45,'220A.2121_lab',0,'220A_lab','default_0','million','N/A','220A.2121','14',0),(46,'220A.2122_lab',0,'220A_lab','default_0','million','N/A','220A.2122','14',0),(47,'220A.2131_lab',0,'220A_lab','default_0','million','N/A','220A.2131','14',0),(48,'220A.2132_lab',0,'220A_lab','default_0','million','N/A','220A.2132','14',0),(49,'220A.221_lab',0,'220A_lab','default_0','million','N/A','220A.221','14',0),(50,'220A.222_lab',0,'220A_lab','default_0','million','N/A','220A.222','14',0),(51,'220A.223_lab',3173085.99,'220A_lab','Sgsum','million','N/A','220A.223','N/A',0),(52,'220A.224_lab',0,'220A_lab','default_0','million','N/A','220A.224','14',0),(53,'222.11_lab',1274883.33,'222_lab','MWth_scale','million','c_222.11_lab, mwth, scale_1.0','222.11','8',0),(54,'222.12_lab',3317279.46,'222_lab','MWth_scale','million','c_222.12_lab, mwth, scale_1.0','222.12','8',0),(55,'222.13_lab',613897.3,'222_lab','MWth_scale','million','r_222.13_lab, mwth, scale_1.0','222.13','8',0),(56,'222.14_lab',82172.71,'222_lab','MWth_scale','million','c_222.14_lab, mwth, scale_1.0','222.14','8',0),(57,'222_lab',5288232.81,'22_mat','MWth_scale','million','c_222_lab, mwth, scale_1.0','222','8',0),(58,'224_lab',11434348.55,'22_lab','esc_1987','million','escalate_1987, ref_224_lab','224','12',0),(59,'226.4_lab',0,'226_lab','default_0','million','N/A','226.4','14',0),(60,'226.7_lab',0,'226_lab','default_0','million','N/A','226.7','14',0),(61,'227_lab',21960889.79,'22_lab','esc_1987','million','escalate_1987, ref_227_lab','227','12',0),(62,'231_lab',588990.65,'23_lab','ptn_account','million','c_231_fac, prn_fac_231_lab','231','4',0),(63,'233_lab',8082642.16,'23_lab','MWreth_scale','million','c_233_lab, mwreth, scale_0.8','233','25',0),(64,'234_lab',0,'23_lab','default_0','million','N/A','234','14',0),(65,'235_lab',4258930.48,'23_lab','ptn_account','million','c_231_lab, prn_235_of_231_lab','235','4',0),(66,'241_lab',1107205.12,'24_lab','MWe_scale','million','c_241_lab, mwe, scale_0.4','241','17',0),(67,'242_lab',2861071.44,'24_lab','MWe_scale','million','c_242_lab, mwe, scale_0.4','242','17',0),(68,'245_lab',32970390.22,'24_lab','MWe_scale','million','c_245_lab, mwe, scale_0.4','245','17',0),(69,'246_lab',21514837.92,'24_lab','MWe_scale','million','c_246_lab, mwe, scale_0.4','246','17',0),(70,'252_lab',44371766.01,'25_lab','esc_1987','million','escalate_1987, ref_252_lab','252','12',0),(71,'262_lab',12634376.8,'26_lab','MWreth_scale','million','c_262_lab, mwreth, scale_0.8','262','25',0),(72,'2c_lab',330450874.57,'','NO_ALG','million','N/A','2','N/A',0),(73,'211_mat',29075021.35,'21_mat','esc_1987','million','escalate_1987, ref_211_mat','211','12',0),(74,'212_mat',37484659.34,'21_mat','containment','million','Tot_Mat_containment','212','7',0),(75,'213_mat',12070727.96,'21_mat','MWth_scale','million','c_213_mat, mwth, scale_0.8','213','8',0),(76,'215_mat',3247159.31,'21_mat','NO_ALG','million','N/A','215','N/A',0),(77,'216_mat',12656345.83,'21_mat','NO_ALG','million','N/A','216','N/A',0),(78,'217_mat',12470546.09,'21_mat','NO_ALG','million','N/A','217','N/A',0),(79,'218A_mat',4897224.28,'218_mat','NO_ALG','million','N/A','218A','N/A',0),(80,'220A.211_mat',870000,'220A_mat','NO_ALG','million','N/A','220A.211','N/A',0),(81,'220A.2121_mat',0,'220A_mat','default_0','million','N/A','220A.2121','14',0),(82,'220A.2122_mat',0,'220A_mat','default_0','million','N/A','220A.2122','14',0),(83,'220A.2131_mat',0,'220A_mat','default_0','million','N/A','220A.2131','14',0),(84,'220A.2132_mat',0,'220A_mat','default_0','million','N/A','220A.2132','14',0),(85,'220A.221_mat',0,'220A_mat','default_0','million','N/A','220A.221','14',0),(86,'220A.222_mat',0,'220A_mat','default_0','million','N/A','220A.222','14',0),(87,'220A.223_mat',266890.16,'220A_mat','Sgsum','million','N/A','220A.223','N/A',0),(88,'220A.224_mat',0,'220A_mat','default_0','million','N/A','220A.224','14',0),(89,'222.11_mat',127488.33,'222_mat','MWth_scale','million','c_222.11_mat, mwth, scale_1.0','222.11','8',0),(90,'222.12_mat',326175.16,'222_mat','MWth_scale','million','c_222.12_mat, mwth, scale_1.0','222.12','8',0),(91,'222.13_mat',61389.73,'222_mat','MWth_scale','million','r_222.13_mat, mwth, scale_1.0','222.13','8',0),(92,'222.14_mat',8217,'222_mat','MWth_scale','million','c_222.14_mat, mwth, scale_1.0','222.14','8',0),(93,'222_mat',523270.22,'22_mat','MWth_scale','million','c_222_mat, mwth, scale_1.0','222','8',0),(94,'224_mat',2191177.36,'22_mat','esc_1987','million','escalate_1987, ref_224_mat','224','12',0),(95,'226.4_mat',0,'226_mat','default_0','million','N/A','226.4','14',0),(96,'226.7_mat',0,'226_mat','default_0','million','N/A','226.7','14',0),(97,'227_mat',1920497.47,'22_mat','esc_1987','million','escalate_1987, ref_227_mat','227','12',0),(98,'231_mat',3266220.89,'23_mat','ptn_account','million','c_231_fac, prn_fac_231_mat','231','4',0),(99,'233_mat',1153654.54,'23_mat','MWreth_scale','million','c_233_mat, mwreth, scale_0.8','233','25',0),(100,'234_mat',0,'23_mat','default_0','million','N/A','234','14',0),(101,'235_mat',516040.29,'23_mat','ptn_account','million','c_231_mat, prn_235_of_231_mat','235','4',0),(102,'241_mat',161981.4,'24_mat','MWe_scale','million','c_241_mat, mwe, scale_0.4','241','17',0),(103,'242_mat',546787.41,'24_mat','MWe_scale','million','c_242_mat, mwe, scale_0.4','242','17',0),(104,'245_mat',7921308.52,'24_mat','MWe_scale','million','c_245_mat, mwe, scale_0.4','245','17',0),(105,'246_mat',13355962.89,'24_mat','MWe_scale','million','c_246_mat, mwe, scale_0.4','246','17',0),(106,'252_mat',12609745.55,'25_mat','esc_1987','million','escalate_1987, ref_252_mat','252','12',0),(107,'262_mat',1587534.77,'26_mat','MWreth_scale','million','c_262_mat, mwreth, scale_0.8','262','25',0),(108,'2c_mat',158795865.48,'','NO_ALG','million','N/A','2','N/A',0);
+/*!40000 ALTER TABLE `lfr_cost_element` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lfr_variable`
+--
+
+DROP TABLE IF EXISTS `lfr_variable`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lfr_variable` (
+  `ind` int NOT NULL AUTO_INCREMENT,
+  `var_name` text,
+  `var_description` text,
+  `var_value` double DEFAULT NULL,
+  `var_unit` text,
+  `var_alg` text,
+  `var_need` text,
+  `v_linked` text,
+  `user_input` int DEFAULT NULL,
+  PRIMARY KEY (`ind`)
+) ENGINE=InnoDB AUTO_INCREMENT=389 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lfr_variable`
+--
+
+LOCK TABLES `lfr_variable` WRITE;
+/*!40000 ALTER TABLE `lfr_variable` DISABLE KEYS */;
+INSERT INTO `lfr_variable` VALUES (1,'c_213_fac','Turbine building structure factory cost',1.7706643,'million','','','',0),(2,'c_213_lab','Turbine building structure labor cost',31.835162,'million','','','',0),(3,'c_213_mat','Turbine building structure material cost',32.364585,'million','','','',0),(4,'c_220A.2121_ss_weight','weight of the stainless steel lower internals',145.82,'ton','','','',0),(5,'c_220A.2122_ss_weight','weight of the stainless steel upper internals',145.82,'ton','','','',0),(6,'c_220A.222_ss_weight','weight of the stainless steel reactor coolant piping',24.08,'ton','','','',0),(7,'c_222_fac','Main heat transfer transport system factory cost',8.265356805,'million','','','',0),(8,'c_222_lab','Main heat transfer transport system labor cost',18.14392675,'million','','','',0),(9,'c_222_mat','Main heat transfer transport system material cost',1.795340116,'million','','','',0),(10,'c_222.11_fac','Fluid Circulation Drive System (Field Cost 222) factory cost',3.780837782,'million','','','',0),(11,'c_222.11_lab','Fluid Circulation Drive System (Field Cost 222) labor cost',4.374124686,'million','','','',0),(12,'c_222.11_mat','Fluid Circulation Drive System (Field Cost 222) material cost',0.437412469,'million','','','',0),(13,'c_222.12_fac','Reactor Coolant Piping System (Field Cost 222) factory cost',4.394349539,'million','','','',0),(14,'c_222.12_lab','Reactor Coolant Piping System (Field Cost 222) labor cost',11.38158584,'million','','','',0),(15,'c_222.12_mat','Reactor Coolant Piping System (Field Cost 222) material cost',1.119106974,'million','','','',0),(16,'c_222.13_fac','Steam Generator Equipment (Field Cost 222) factory cost',0.7514124,'million','','','',0),(17,'c_222.14_fac','Pressurizing System (Field Cost 222) factory cost',0.015028247,'million','','','',0),(18,'c_222.14_lab','Pressurizing System (Field Cost 222) labor cost',0.281934576,'million','','','',0),(19,'c_222.14_mat','Pressurizing System (Field Cost 222) material cost',0.028192508,'million','','','',0),(20,'c_231_fac','Turbine factory cost',53.54460481,'million','','','',0),(21,'c_231_lab','Turbine labor cost',0.588990653,'million','','','',0),(22,'c_231_mat','Turbine material cost',3.26622089,'million','','','',0),(23,'c_233_fac','Condensing Systems factory cost',56.339442,'million','','','',0),(24,'c_233_lab','Condensing Systems labor cost',22.964285,'million','','','',0),(25,'c_233_mat','Condensing Systems material cost',3.2777465,'million','','','',0),(26,'c_241_fac','Switchgear factory cost',32.06748045,'million','','','',0),(27,'c_241_lab','Switchgear labor cost',1.720620353,'million','','','',0),(28,'c_241_mat','Switchgear material cost',0.251722551,'million','','','',0),(29,'c_242_fac','Station service equipment factory cost',52.15781338,'million','','','',0),(30,'c_242_lab','Station service equipment labor cost',4.446166005,'million','','','',0),(31,'c_242_mat','Station service equipment material cost',0.849719287,'million','','','',0),(32,'c_245_fac','Electric structure and wiring contnr.  factory cost',0,'million','','','',0),(33,'c_245_lab','Electric structure and wiring contnr. labor cost',51.23668914,'million','','','',0),(34,'c_245_mat','Electric structure and wiring contnr. material cost',12.30988227,'million','','','',0),(35,'c_246_fac','Power and control wiring factory cost',4.510910469,'million','','','',0),(36,'c_246_lab','Power and control wiring labor cost',33.4345167,'million','','','',0),(37,'c_246_mat','Power and control wiring material cost',20.75545101,'million','','','',0),(38,'c_262_fac','Heat Rejection System factory cost',86.81393498,'million','','','',0),(39,'c_262_lab','Heat Rejection System labor cost',35.89660737,'million','','','',0),(40,'c_262_mat','Heat Rejection System material cost',4.510480683,'million','','','',0),(41,'c_cr_per_unit_fac','unit cost of rod',0.06,'million','','','',0),(42,'c_crd_per_unit_fac','unit cost of rod drive',0.61152,'million','','','',0),(43,'c_pump_ap1000','AP1000 factory cost of main coolant pumps',31.25,'million','','','c_pump_per_unit_fac',0),(44,'c_pump_per_unit_fac','Reactor coolant pumps Factory Equipment Cost',13.92421832,'million','pump','c_pump_ap1000,CH_abr1000,CH_AP1000,scale_0.52','',0),(45,'c_turbine','Turbine equipment cost',52.64956225,'million','','','',0),(46,'c_zero','place holder for weight',0,'ton','','','',0),(47,'CH_abr1000','CH factor of PWR-12 BE',6072830,'gpm*feet','','','c_pump_per_unit_fac',0),(48,'CH_AP1000','CH factor of AP1000',28743750,'gpm*feet','','','c_pump_per_unit_fac',0),(49,'escalate_1987','escalator 1987 to 2017',2.849407,'1','','','',0),(50,'mwe','user_input MWE',0,'MW','','','',0),(51,'mwreth','rejected thermal power',620,'MW','','','',0),(52,'mwth','user_input mwth',0,'MW','','','',0),(53,'no_of_cr','Total control rods',22,'1','','','',0),(54,'no_of_crd','Total control rod drives',22,'1','','','',0),(55,'no_of_rcpump','total number of reactor coolant pumps',4,'1','','','',0),(56,'prn_235_of_231_fac','factory portion of cost from factory of 231',0.089454842,'1','','','',0),(57,'prn_235_of_231_lab','labor portion of cost from labor of 231',1.302615598,'1','','','',0),(58,'prn_235_of_231_mat','material portion of cost from labor of 231',0.858473379,'1','','','',0),(59,'prn_fac_231_lab','labor portion of cost from factory of 231',0.061,'1','','','',0),(60,'prn_fac_231_mat','material portion of cost from factory of 231',0.0112,'1','','','',0),(61,'r_222.13_lab','labor cost of Steam Generator Equipment (Field Cost 222)',2.10628,'million','','','',0),(62,'r_222.13_mat','material cost of Steam Generator Equipment (Field Cost 222)',0.210628,'million','','','',0),(63,'r_78_220A224_fac','factory cost of  pressurizer in ref',5.2416,'million','','','',0),(64,'r_78_226.4_fac','Coolant Treatment & Recycle factory cost',117.7,'million','','','',0),(65,'ref_211_fac','yardwork factory cost',0.284275,'million','','','',0),(66,'ref_211_lab','yardwork labor cost',14.504359,'million','','','',0),(67,'ref_211_mat','yardwork material cost',10.203885,'million','','','',0),(68,'ref_224_fac','Radwaste processing factory cost',16.16052583,'million','','','',0),(69,'ref_224_lab','Radwaste processing labor cost',4.012887083,'million','','','',0),(70,'ref_224_mat','Radwaste processing material cost',0.768994167,'million','','','',0),(71,'ref_227_fac','Reactor instrumentation and control factory cost',13.174092,'million','','','',0),(72,'ref_227_lab','Reactor instrumentation and control labor cost',7.707179,'million','','','',0),(73,'ref_227_mat','Reactor instrumentation and control material cost',0.673999,'million','','','',0),(74,'ref_252_fac','Air, water and steam service systems factory cost ',8.72798,'million','','','',0),(75,'ref_252_lab','Air, water and steam service systems labor cost ',15.572281,'million','','','',0),(76,'ref_252_mat','Air, water and steam service systems material cost ',4.425393,'million','','','',0),(77,'scale_0.4','electric scale 0.4',0.4,'1','','','',0),(78,'scale_0.52','SH scale 1.0',0.52,'1','','','c_pump_per_unit_fac',0),(79,'scale_0.8','thermal scale 0.8',0.8,'1','','','',0),(80,'scale_1.0','thermal scale 1.0',1,'1','','','',0),(81,'scale_tur_231_fac','factory scale of cost from turbine',1.017,'1','','','',0),(82,'CPI','The Consumer Price Index',2.2,'1','','','infl',0),(83,'Void_fraction','Void fraction of the inside of the containment ',0.917,'1','','','Internal_v_m3',0),(84,'liner_fraction','liner fraction of containment',1,'1','','','Liner_s_m2',0),(85,'Cont_H_tot_m','Containment total height ',50.5968,'m','','','Cont_H_wall_m',0),(86,'Cont_rad_out_m','Containment outside radius ',15.24,'m','','','Cont_H_wall_m,Cont_rad_in_m,Basemat_s_m2,Walls_s_m2,Walls_v_m3,Dome_rad_in_m,Dome_s_m2,Dome_v_m3,Surf_paint_m2',0),(87,'Cont_shell_t_m','Shell wall thickness ',1.3716,'m','','','Cont_rad_in_m',0),(88,'Cont_H_wall_m','Containment wall height ',35.3568,'m','wall_height','Cont_H_tot_m,Cont_rad_out_m','Walls_s_m2,Walls_v_m3,Intern_tot_v_m3,Inside_liner_s,Surf_paint_m2',0),(89,'Basemat_t_m','Basemat thickness ',3.048,'m','','','Basemat_v_m3',0),(90,'Dome_t_m','Dome thickness ',1.0668,'m','','','Dome_rad_in_m',0),(91,'Intern_wall_t','Internal wall average thickness ',1.2192,'m','','','Internal_s_m2',0),(92,'React_cav_A_m2','Reactor cavity area ',1021.93344,'m^2','','','Total_Labor_React_cav_liner,Total_Mat_React_cav_liner',0),(93,'Cont_rad_in_m','Containment inside radius ',13.8684,'m','inside_rad','Cont_rad_out_m,Cont_shell_t_m','Walls_s_m2,Walls_v_m3,Intern_tot_v_m3,Inside_liner_s',0),(94,'Basemat_s_m2','Basemat surface',729.6587699,'m^2','round_surface','Cont_rad_out_m','Basemat_v_m3,Total_Labor_Constr_joints_Substr,Total_Labor_Formwork_Substr,Total_Labor_Waterproofing_Substr,Total_Labor_Welded_wire_fabric_Substr,Total_Mat_Constr_joints_Substr,Total_Mat_Formwork_Substr,Total_Mat_Waterproofing_Substr,Total_Mat_Welded_wire_fabric_Substr',0),(95,'Basemat_v_m3','Basemat volume',2223.999931,'m^3','basemat_volume','Basemat_s_m2,Basemat_t_m','Struct_v_m3,Total_Labor_Cadweld_Substr,Total_Labor_Concrete_Substr,Total_Labor_Embedded_steel_Substr,Total_Labor_Reinforc_steel_Substr,Total_Mat_Cadweld_Substr,Total_Mat_Concrete_Substr,Total_Mat_Embedded_steel_Substr,Total_Mat_Reinforc_steel_Substr',0),(96,'Walls_s_m2','Walls surface',6466.527882,'m^2','walls_surface','Cont_H_wall_m,Cont_rad_out_m,Cont_rad_in_m','Total_Labor_Constr_joints_Superstr,Total_Labor_Formwork_Superstr,Total_Labor_Rubbing_surfaces_Superstr,Total_Labor_Waterproofing_Superstr,Total_Mat_Constr_joints_Superstr,Total_Mat_Formwork_Superstr,Total_Mat_Rubbing_surfaces_Superstr,Total_Mat_Waterproofing_Superstr',0),(97,'Walls_v_m3','Walls volume',4434.744822,'m^3','wall_volume','Cont_H_wall_m,Cont_rad_out_m,Cont_rad_in_m','Struct_v_m3,Total_Labor_Cadweld_Superstr,Total_Labor_Concrete_Superstr,Total_Labor_Embedded_steel_Superstr,Total_Labor_Reinforc_steel_Superstr,Total_Mat_Cadweld_Superstr,Total_Mat_Concrete_Superstr,Total_Mat_Embedded_steel_Superstr,Total_Mat_Reinforc_steel_Superstr',0),(98,'Dome_rad_in_m','Dome inside radius ',14.1732,'m','inside_rad','Cont_rad_out_m,Dome_t_m','Dome_s_m2,Dome_v_m3,Intern_tot_v_m3,Inside_liner_s',0),(99,'Dome_s_m2','Roof surface',2721.48128,'m^2','roof_surface','Cont_rad_out_m,Dome_rad_in_m','Total_Labor_Constr_joints_Dome,Total_Labor_Formwork_Dome,Total_Labor_Rubbing_surfaces_Dome,Total_Labor_Waterproofing_Dome,Total_Mat_Constr_joints_Dome,Total_Mat_Formwork_Dome,Total_Mat_Rubbing_surfaces_Dome,Total_Mat_Waterproofing_Dome',0),(100,'Dome_v_m3','Roof volume',1450.366728,'m^3','roof_volume','Cont_rad_out_m,Dome_rad_in_m','Struct_v_m3,Total_Labor_Cadweld_Dome,Total_Labor_Concrete_Dome,Total_Labor_Embedded_steel_Dome,Total_Labor_Reinforc_steel_Dome,Total_Mat_Cadweld_Dome,Total_Mat_Concrete_Dome,Total_Mat_Embedded_steel_Dome,Total_Mat_Reinforc_steel_Dome',0),(101,'Intern_tot_v_m3','Tot intenal Volume',27326.62075,'m^3','tot_internal_volume','Cont_rad_in_m,Cont_H_wall_m,Dome_rad_in_m','Internal_v_m3,Total_Labor_Lighting_Power,Total_Labor_Plumb_drains,Total_Labor_Special_HVAC,Total_Labor_other,Total_Labor_fl_grate_handrail_stairs,Total_Mat_Lighting_Power,Total_Mat_Plumb_drains,Total_Mat_Special_HVAC,Total_Mat_other,Total_Mat_fl_grate_handrail_stairs',0),(102,'Internal_v_m3','Building internal volume',2268.109522,'m^3','building_internal_volume','Intern_tot_v_m3,Void_fraction','Internal_s_m2,Struct_v_m3,Total_Labor_Cadweld_Interior,Total_Labor_Concrete_Interior,Total_Labor_Embedded_steel_Interior,Total_Labor_Maj_supp_embedments_Interior,Total_Labor_Reinforc_steel_Interior,Total_Mat_Cadweld_Interior,Total_Mat_Concrete_Interior,Total_Mat_Embedded_steel_Interior,Total_Mat_Maj_supp_embedments_Interior,Total_Mat_Reinforc_steel_Interior',0),(103,'Internal_s_m2','Building internal surface',3720.652103,'m^2','building_internal _surface','Internal_v_m3,Intern_wall_t','Surf_paint_m2,Total_Labor_Constr_joints_Interior,Total_Labor_Formwork_Interior,Total_Labor_Rubbing_surfaces_Interior,Total_Mat_Constr_joints_Interior,Total_Mat_Formwork_Interior,Total_Mat_Rubbing_surfaces_Interior',0),(104,'Struct_v_m3','volume of the structures ',10377.221,'m^3','volume_of_the_structures ','Basemat_v_m3,Walls_v_m3,Dome_v_m3,Internal_v_m3','Total_Labor_Misc_steel_frames,Total_Labor_Struct_steel,Total_Mat_Misc_steel_frames,Total_Mat_Struct_steel',0),(105,'Inside_liner_s','Inside liner surface',4947.305358,'m^2','Inside_liner_surface','Cont_rad_in_m,Cont_H_wall_m,Dome_rad_in_m','Liner_s_m2,Surf_paint_m2,',0),(106,'Liner_s_m2','Liner Surface',4947.305358,'m^2','liner_Surface','Inside_liner_s,liner_fraction','Total_Labor_cont_liner,Total_Mat_cont_liner',0),(107,'Surf_paint_m2','painted surface',13512.89169,'m^2','painted_surface','Inside_liner_s,Cont_H_wall_m,Cont_rad_out_m,Internal_s_m2','Total_Labor_painting,Total_Mat_painting',0),(108,'infl','Inflation rate',2.870501004,'1','Inflation_rate','CPI','Unit_Labor_Cadweld_Substr,Unit_Labor_Cadweld_Superstr,Unit_Labor_Cadweld_Dome,Unit_Labor_Cadweld_Interior,Unit_Labor_Concrete_Substr,Unit_Labor_Concrete_Superstr,Unit_Labor_Concrete_Dome,Unit_Labor_Concrete_Interior,Unit_Labor_Constr_joints_Substr,Unit_Labor_Constr_joints_Superstr,Unit_Labor_Constr_joints_Dome,Unit_Labor_Constr_joints_Interior,Unit_Labor_Embedded_steel_Substr,Unit_Labor_Embedded_steel_Superstr,Unit_Labor_Embedded_steel_Dome,Unit_Labor_Embedded_steel_Interior,Unit_Labor_Formwork_Substr,Unit_Labor_Formwork_Superstr,Unit_Labor_Formwork_Dome,Unit_Labor_Formwork_Interior,Unit_Labor_Maj_supp_embedments_Interior,Unit_Labor_Reinforc_steel_Substr,Unit_Labor_Reinforc_steel_Superstr,Unit_Labor_Reinforc_steel_Dome,Unit_Labor_Reinforc_steel_Interior,Unit_Labor_Rubbing_surfaces_Superstr,Unit_Labor_Rubbing_surfaces_Dome,Unit_Labor_Rubbing_surfaces_Interior,Unit_Labor_Waterproofing_Substr,Unit_Labor_Waterproofing_Superstr,Unit_Labor_Waterproofing_Dome,Unit_Labor_Welded_wire_fabric_Substr,Unit_Labor_Lighting_Power,Unit_Labor_Plumb_drains,Unit_Labor_Special_HVAC,Unit_Labor_other,Unit_Labor_Misc_steel_frames,Unit_Labor_React_cav_liner,Unit_Labor_Struct_steel,Unit_Labor_cont_liner,Unit_Labor_fl_grate_handrail_stairs,Unit_Labor_painting,Unit_Mat_Cadweld_Substr,Unit_Mat_Cadweld_Superstr,Unit_Mat_Cadweld_Dome,Unit_Mat_Cadweld_Interior,Unit_Mat_Concrete_Substr,Unit_Mat_Concrete_Superstr,Unit_Mat_Concrete_Dome,Unit_Mat_Concrete_Interior,Unit_Mat_Constr_joints_Substr,Unit_Mat_Constr_joints_Superstr,Unit_Mat_Constr_joints_Dome,Unit_Mat_Constr_joints_Interior,Unit_Mat_Embedded_steel_Substr,Unit_Mat_Embedded_steel_Superstr,Unit_Mat_Embedded_steel_Dome,Unit_Mat_Embedded_steel_Interior,Unit_Mat_Formwork_Substr,Unit_Mat_Formwork_Superstr,Unit_Mat_Formwork_Dome,Unit_Mat_Formwork_Interior,Unit_Mat_Maj_supp_embedments_Interior,Unit_Mat_Reinforc_steel_Substr,Unit_Mat_Reinforc_steel_Superstr,Unit_Mat_Reinforc_steel_Dome,Unit_Mat_Reinforc_steel_Interior,Unit_Mat_Rubbing_surfaces_Superstr,Unit_Mat_Rubbing_surfaces_Dome,Unit_Mat_Rubbing_surfaces_Interior,Unit_Mat_Waterproofing_Substr,Unit_Mat_Waterproofing_Superstr,Unit_Mat_Waterproofing_Dome,Unit_Mat_Welded_wire_fabric_Substr,Unit_Mat_Lighting_Power,Unit_Mat_Plumb_drains,Unit_Mat_Special_HVAC,Unit_Mat_other,Unit_Mat_Misc_steel_frames,Unit_Mat_React_cav_liner,Unit_Mat_Struct_steel,Unit_Mat_cont_liner,Unit_Mat_fl_grate_handrail_stairs,Unit_Mat_painting',0),(109,'Unit_EEDB_Labor_Cadweld_Substr','Unit cost of Labor Cadweld Substructure (base mat) in EEDB',85.46,'dollar/m^3','','','Unit_Labor_Cadweld_Substr',0),(110,'Unit_EEDB_Labor_Cadweld_Superstr','Unit cost of Labor Cadweld Superstructure (shell) in EEDB',114.62,'dollar/m^3','','','Unit_Labor_Cadweld_Superstr',0),(111,'Unit_EEDB_Labor_Cadweld_Dome','Unit cost of Labor Cadweld Superstructure (dome) in EEDB',231.09,'dollar/m^3','','','Unit_Labor_Cadweld_Dome',0),(112,'Unit_EEDB_Labor_Cadweld_Interior','Unit cost of Labor Cadweld Interior structure in EEDB',48.2,'dollar/m^3','','','Unit_Labor_Cadweld_Interior',0),(113,'Unit_EEDB_Labor_Concrete_Substr','Unit cost of Labor Concrete Substructure (base mat) in EEDB',72.52,'dollar/m^3','','','Unit_Labor_Concrete_Substr',0),(114,'Unit_EEDB_Labor_Concrete_Superstr','Unit cost of Labor Concrete Superstructure (shell) in EEDB',87.39,'dollar/m^3','','','Unit_Labor_Concrete_Superstr',0),(115,'Unit_EEDB_Labor_Concrete_Dome','Unit cost of Labor Concrete Superstructure (dome) in EEDB',78.02,'dollar/m^3','','','Unit_Labor_Concrete_Dome',0),(116,'Unit_EEDB_Labor_Concrete_Interior','Unit cost of Labor Concrete Interior structure in EEDB',97.57,'dollar/m^3','','','Unit_Labor_Concrete_Interior',0),(117,'Unit_EEDB_Labor_Constr_joints_Substr','Unit cost of Labor Construction joints Substructure (base mat) in EEDB',14.51,'dollar/m^2','','','Unit_Labor_Constr_joints_Substr',0),(118,'Unit_EEDB_Labor_Constr_joints_Superstr','Unit cost of Labor Construction joints Superstructure (shell) in EEDB',12.44,'dollar/m^2','','','Unit_Labor_Constr_joints_Superstr',0),(119,'Unit_EEDB_Labor_Constr_joints_Dome','Unit cost of Labor Construction joints Superstructure (dome) in EEDB',4.75,'dollar/m^2','','','Unit_Labor_Constr_joints_Dome',0),(120,'Unit_EEDB_Labor_Constr_joints_Interior','Unit cost of Labor Construction joints Interior structure in EEDB',2.05,'dollar/m^2','','','Unit_Labor_Constr_joints_Interior',0),(121,'Unit_EEDB_Labor_Embedded_steel_Substr','Unit cost of Labor Embedded steel Substructure (base mat) in EEDB',3.98,'dollar/m^3','','','Unit_Labor_Embedded_steel_Substr',0),(122,'Unit_EEDB_Labor_Embedded_steel_Superstr','Unit cost of Labor Embedded steel Superstructure (shell) in EEDB',15.98,'dollar/m^3','','','Unit_Labor_Embedded_steel_Superstr',0),(123,'Unit_EEDB_Labor_Embedded_steel_Dome','Unit cost of Labor Embedded steel Superstructure (dome) in EEDB',0,'dollar/m^3','','','Unit_Labor_Embedded_steel_Dome',0),(124,'Unit_EEDB_Labor_Embedded_steel_Interior','Unit cost of Labor Embedded steel Interior structure in EEDB',337.14,'dollar/m^3','','','Unit_Labor_Embedded_steel_Interior',0),(125,'Unit_EEDB_Labor_Formwork_Substr','Unit cost of Labor Formwork Substructure (base mat) in EEDB',93.11,'dollar/m^2','','','Unit_Labor_Formwork_Substr',0),(126,'Unit_EEDB_Labor_Formwork_Superstr','Unit cost of Labor Formwork Superstructure (shell) in EEDB',109.83,'dollar/m^2','','','Unit_Labor_Formwork_Superstr',0),(127,'Unit_EEDB_Labor_Formwork_Dome','Unit cost of Labor Formwork Superstructure (dome) in EEDB',58.66,'dollar/m^2','','','Unit_Labor_Formwork_Dome',0),(128,'Unit_EEDB_Labor_Formwork_Interior','Unit cost of Labor Formwork Interior structure in EEDB',231.52,'dollar/m^2','','','Unit_Labor_Formwork_Interior',0),(129,'Unit_EEDB_Labor_Maj_supp_embedments_Interior','Unit cost of Labor Major Support Embedments Interior structure in EEDB',153.53,'dollar/m^3','','','Unit_Labor_Maj_supp_embedments_Interior',0),(130,'Unit_EEDB_Labor_Reinforc_steel_Substr','Unit cost of Labor Reinforc steel Substructure (base mat) in EEDB',322.55,'dollar/m^3','','','Unit_Labor_Reinforc_steel_Substr',0),(131,'Unit_EEDB_Labor_Reinforc_steel_Superstr','Unit cost of Labor Reinforc steel Superstructure (shell) in EEDB',326.13,'dollar/m^3','','','Unit_Labor_Reinforc_steel_Superstr',0),(132,'Unit_EEDB_Labor_Reinforc_steel_Dome','Unit cost of Labor Reinforc steel Superstructure (dome) in EEDB',300.56,'dollar/m^3','','','Unit_Labor_Reinforc_steel_Dome',0),(133,'Unit_EEDB_Labor_Reinforc_steel_Interior','Unit cost of Labor Reinforc steel Interior structure in EEDB',306.72,'dollar/m^3','','','Unit_Labor_Reinforc_steel_Interior',0),(134,'Unit_EEDB_Labor_Rubbing_surfaces_Superstr','Unit cost of Labor Rubbing surfaces Superstructure (shell) in EEDB',8.32,'dollar/m^2','','','Unit_Labor_Rubbing_surfaces_Superstr',0),(135,'Unit_EEDB_Labor_Rubbing_surfaces_Dome','Unit cost of Labor Rubbing surfaces Superstructure (dome) in EEDB',5.74,'dollar/m^2','','','Unit_Labor_Rubbing_surfaces_Dome',0),(136,'Unit_EEDB_Labor_Rubbing_surfaces_Interior','Unit cost of Labor Rubbing surfaces Interior structure in EEDB',9.91,'dollar/m^2','','','Unit_Labor_Rubbing_surfaces_Interior',0),(137,'Unit_EEDB_Labor_Waterproofing_Substr','Unit cost of Labor Waterproofing Substructure (base mat) in EEDB',4.58,'dollar/m^2','','','Unit_Labor_Waterproofing_Substr',0),(138,'Unit_EEDB_Labor_Waterproofing_Superstr','Unit cost of Labor Waterproofing Superstructure (shell) in EEDB',0.84,'dollar/m^2','','','Unit_Labor_Waterproofing_Superstr',0),(139,'Unit_EEDB_Labor_Waterproofing_Dome','Unit cost of Labor Waterproofing Superstructure (dome) in EEDB',0,'dollar/m^2','','','Unit_Labor_Waterproofing_Dome',0),(140,'Unit_EEDB_Labor_Welded_wire_fabric_Substr','Unit cost of Labor Welded wire fabric Substructure (base mat) in EEDB',10.07,'dollar/m^2','','','Unit_Labor_Welded_wire_fabric_Substr',0),(141,'Unit_EEDB_Labor_Lighting_Power','Unit cost of Labor Lighting Power in EEDB',9.83,'dollar/m^3','','','Unit_Labor_Lighting_Power',0),(142,'Unit_EEDB_Labor_Plumb_drains','Unit cost of Labor Plumb drains in EEDB',3.02,'dollar/m^3','','','Unit_Labor_Plumb_drains',0),(143,'Unit_EEDB_Labor_Special_HVAC','Unit cost of Labor Special HVAC in EEDB',11.09,'dollar/m^3','','','Unit_Labor_Special_HVAC',0),(144,'Unit_EEDB_Labor_other','Unit cost of Labor other in EEDB',0.53,'dollar/m^3','','','Unit_Labor_other',0),(145,'Unit_EEDB_Labor_Misc_steel_frames','Unit cost of Labor miscellaneous steel frames in EEDB',9.94,'dollar/m^3','','','Unit_Labor_Misc_steel_frames',0),(146,'Unit_EEDB_Labor_React_cav_liner','Unit cost of Labor Reactor cavity liner plate in EEDB',745.94,'dollar/m^2','','','Unit_Labor_React_cav_liner',0),(147,'Unit_EEDB_Labor_Struct_steel','Unit cost of Labor Struct steel in EEDB',13.98,'dollar/m^3','','','Unit_Labor_Struct_steel',0),(148,'Unit_EEDB_Labor_cont_liner','Unit cost of Labor Containment liner in EEDB',780.33,'dollar/m^2','','','Unit_Labor_cont_liner',0),(149,'Unit_EEDB_Labor_fl_grate_handrail_stairs','Unit cost of Labor Floor grating (galvanized), Handrail, Stair treads in EEDB',1.75,'dollar/m^3','','','Unit_Labor_fl_grate_handrail_stairs',0),(150,'Unit_EEDB_Labor_painting','Unit cost of Labor painting in EEDB',86.8,'dollar/m^2','','','Unit_Labor_painting',0),(151,'Unit_EEDB_Mat_Cadweld_Substr','Unit cost of Material Cadweld Substructure (base mat) in EEDB',44.32,'dollar/m^3','','','Unit_Mat_Cadweld_Substr',0),(152,'Unit_EEDB_Mat_Cadweld_Superstr','Unit cost of Material Cadweld Superstructure (shell) in EEDB',59.44,'dollar/m^3','','','Unit_Mat_Cadweld_Superstr',0),(153,'Unit_EEDB_Mat_Cadweld_Dome','Unit cost of Material Cadweld Superstructure (dome) in EEDB',119.85,'dollar/m^3','','','Unit_Mat_Cadweld_Dome',0),(154,'Unit_EEDB_Mat_Cadweld_Interior','Unit cost of Material Cadweld Interior structure in EEDB',25,'dollar/m^3','','','Unit_Mat_Cadweld_Interior',0),(155,'Unit_EEDB_Mat_Concrete_Substr','Unit cost of Material Concrete Substructure (base mat) in EEDB',79.1,'dollar/m^3','','','Unit_Mat_Concrete_Substr',0),(156,'Unit_EEDB_Mat_Concrete_Superstr','Unit cost of Material Concrete Superstructure (shell) in EEDB',54.47,'dollar/m^3','','','Unit_Mat_Concrete_Superstr',0),(157,'Unit_EEDB_Mat_Concrete_Dome','Unit cost of Material Concrete Superstructure (dome) in EEDB',48.63,'dollar/m^3','','','Unit_Mat_Concrete_Dome',0),(158,'Unit_EEDB_Mat_Concrete_Interior','Unit cost of Material Concrete Interior structure in EEDB',53.21,'dollar/m^3','','','Unit_Mat_Concrete_Interior',0),(159,'Unit_EEDB_Mat_Constr_joints_Substr','Unit cost of Material Construction joints Substructure (base mat) in EEDB',8.9,'dollar/m^2','','','Unit_Mat_Constr_joints_Substr',0),(160,'Unit_EEDB_Mat_Constr_joints_Superstr','Unit cost of Material Construction joints Superstructure (shell) in EEDB',7.63,'dollar/m^2','','','Unit_Mat_Constr_joints_Superstr',0),(161,'Unit_EEDB_Mat_Constr_joints_Dome','Unit cost of Material Construction joints Superstructure (dome) in EEDB',2.91,'dollar/m^2','','','Unit_Mat_Constr_joints_Dome',0),(162,'Unit_EEDB_Mat_Constr_joints_Interior','Unit cost of Material Construction joints Interior structure in EEDB',1.26,'dollar/m^2','','','Unit_Mat_Constr_joints_Interior',0),(163,'Unit_EEDB_Mat_Embedded_steel_Substr','Unit cost of Material Embedded steel Substructure (base mat) in EEDB',1.88,'dollar/m^3','','','Unit_Mat_Embedded_steel_Substr',0),(164,'Unit_EEDB_Mat_Embedded_steel_Superstr','Unit cost of Material Embedded steel Superstructure (shell) in EEDB',7.57,'dollar/m^3','','','Unit_Mat_Embedded_steel_Superstr',0),(165,'Unit_EEDB_Mat_Embedded_steel_Dome','Unit cost of Material Embedded steel Superstructure (dome) in EEDB',0,'dollar/m^3','','','Unit_Mat_Embedded_steel_Dome',0),(166,'Unit_EEDB_Mat_Embedded_steel_Interior','Unit cost of Material Embedded steel Interior structure in EEDB',159.73,'dollar/m^3','','','Unit_Mat_Embedded_steel_Interior',0),(167,'Unit_EEDB_Mat_Formwork_Substr','Unit cost of Material Formwork Substructure (base mat) in EEDB',13.22,'dollar/m^2','','','Unit_Mat_Formwork_Substr',0),(168,'Unit_EEDB_Mat_Formwork_Superstr','Unit cost of Material Formwork Superstructure (shell) in EEDB',13.65,'dollar/m^2','','','Unit_Mat_Formwork_Superstr',0),(169,'Unit_EEDB_Mat_Formwork_Dome','Unit cost of Material Formwork Superstructure (dome) in EEDB',7.67,'dollar/m^2','','','Unit_Mat_Formwork_Dome',0),(170,'Unit_EEDB_Mat_Formwork_Interior','Unit cost of Material Formwork Interior structure in EEDB',21.85,'dollar/m^2','','','Unit_Mat_Formwork_Interior',0),(171,'Unit_EEDB_Mat_Maj_supp_embedments_Interior','Unit cost of Material Major Support Embedments Interior structure in EEDB',225.35,'dollar/m^3','','','Unit_Mat_Maj_supp_embedments_Interior',0),(172,'Unit_EEDB_Mat_Reinforc_steel_Substr','Unit cost of Material Reinforc steel Substructure (base mat) in EEDB',364.73,'dollar/m^3','','','Unit_Mat_Reinforc_steel_Substr',0),(173,'Unit_EEDB_Mat_Reinforc_steel_Superstr','Unit cost of Material Reinforc steel Superstructure (shell) in EEDB',258.95,'dollar/m^3','','','Unit_Mat_Reinforc_steel_Superstr',0),(174,'Unit_EEDB_Mat_Reinforc_steel_Dome','Unit cost of Material Reinforc steel Superstructure (dome) in EEDB',238.65,'dollar/m^3','','','Unit_Mat_Reinforc_steel_Dome',0),(175,'Unit_EEDB_Mat_Reinforc_steel_Interior','Unit cost of Material Reinforc steel Interior structure in EEDB',205.66,'dollar/m^3','','','Unit_Mat_Reinforc_steel_Interior',0),(176,'Unit_EEDB_Mat_Rubbing_surfaces_Superstr','Unit cost of Material Rubbing surfaces Superstructure (shell) in EEDB',0.68,'dollar/m^2','','','Unit_Mat_Rubbing_surfaces_Superstr',0),(177,'Unit_EEDB_Mat_Rubbing_surfaces_Dome','Unit cost of Material Rubbing surfaces Superstructure (dome) in EEDB',0.47,'dollar/m^2','','','Unit_Mat_Rubbing_surfaces_Dome',0),(178,'Unit_EEDB_Mat_Rubbing_surfaces_Interior','Unit cost of Material Rubbing surfaces Interior structure in EEDB',0.82,'dollar/m^2','','','Unit_Mat_Rubbing_surfaces_Interior',0),(179,'Unit_EEDB_Mat_Waterproofing_Substr','Unit cost of Material Waterproofing Substructure (base mat) in EEDB',2.43,'dollar/m^2','','','Unit_Mat_Waterproofing_Substr',0),(180,'Unit_EEDB_Mat_Waterproofing_Superstr','Unit cost of Material Waterproofing Superstructure (shell) in EEDB',0.45,'dollar/m^2','','','Unit_Mat_Waterproofing_Superstr',0),(181,'Unit_EEDB_Mat_Waterproofing_Dome','Unit cost of Material Waterproofing Superstructure (dome) in EEDB',0,'dollar/m^2','','','Unit_Mat_Waterproofing_Dome',0),(182,'Unit_EEDB_Mat_Welded_wire_fabric_Substr','Unit cost of Material Welded wire fabric Substructure (base mat) in EEDB',5.19,'dollar/m^2','','','Unit_Mat_Welded_wire_fabric_Substr',0),(183,'Unit_EEDB_Mat_Lighting_Power','Unit cost of Material Lighting Power in EEDB',4.96,'dollar/m^3','','','Unit_Mat_Lighting_Power',0),(184,'Unit_EEDB_Mat_Plumb_drains','Unit cost of Material Plumb drains in EEDB',1.54,'dollar/m^3','','','Unit_Mat_Plumb_drains',0),(185,'Unit_EEDB_Mat_Special_HVAC','Unit cost of Material Special HVAC in EEDB',8.79,'dollar/m^3','','','Unit_Mat_Special_HVAC',0),(186,'Unit_EEDB_Mat_other','Unit cost of Material other in EEDB',1.96,'dollar/m^3','','','Unit_Mat_other',0),(187,'Unit_EEDB_Mat_Misc_steel_frames','Unit cost of Material miscellaneous steel frames in EEDB',16.56,'dollar/m^3','','','Unit_Mat_Misc_steel_frames',0),(188,'Unit_EEDB_Mat_React_cav_liner','Unit cost of Material Reactor cavity liner plate in EEDB',607.96,'dollar/m^2','','','Unit_Mat_React_cav_liner',0),(189,'Unit_EEDB_Mat_Struct_steel','Unit cost of Material Struct steel in EEDB',27.41,'dollar/m^3','','','Unit_Mat_Struct_steel',0),(190,'Unit_EEDB_Mat_cont_liner','Unit cost of Material Containment liner in EEDB',1203,'dollar/m^2','','','Unit_Mat_cont_liner',0),(191,'Unit_EEDB_Mat_fl_grate_handrail_stairs','Unit cost of Material Floor grating (galvanized), Handrail, Stair treads in EEDB',1.98,'dollar/m^3','','','Unit_Mat_fl_grate_handrail_stairs',0),(192,'Unit_EEDB_Mat_painting','Unit cost of Material painting in EEDB',24.68,'dollar/m^2','','','Unit_Mat_painting',0),(193,'Unit_Labor_Cadweld_Substr','Unit cost of Labor Cadweld Substructure (base mat) in 2017',245.31,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Cadweld_Substr,infl','Total_Labor_Cadweld_Substr',0),(194,'Unit_Labor_Cadweld_Superstr','Unit cost of Labor Cadweld Superstructure (shell) in 2017',329.02,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Cadweld_Superstr,infl','Total_Labor_Cadweld_Superstr',0),(195,'Unit_Labor_Cadweld_Dome','Unit cost of Labor Cadweld Superstructure (dome) in 2017',663.34,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Cadweld_Dome,infl','Total_Labor_Cadweld_Dome',0),(196,'Unit_Labor_Cadweld_Interior','Unit cost of Labor Cadweld Interior structure in 2017',138.36,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Cadweld_Interior,infl','Total_Labor_Cadweld_Interior',0),(197,'Unit_Labor_Concrete_Substr','Unit cost of Labor Concrete Substructure (base mat) in 2017',208.17,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Concrete_Substr,infl','Total_Labor_Concrete_Substr',0),(198,'Unit_Labor_Concrete_Superstr','Unit cost of Labor Concrete Superstructure (shell) in 2017',250.85,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Concrete_Superstr,infl','Total_Labor_Concrete_Superstr',0),(199,'Unit_Labor_Concrete_Dome','Unit cost of Labor Concrete Superstructure (dome) in 2017',223.96,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Concrete_Dome,infl','Total_Labor_Concrete_Dome',0),(200,'Unit_Labor_Concrete_Interior','Unit cost of Labor Concrete Interior structure in 2017',280.07,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Concrete_Interior,infl','Total_Labor_Concrete_Interior',0),(201,'Unit_Labor_Constr_joints_Substr','Unit cost of Labor Construction joints Substructure (base mat) in 2017',41.65,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Constr_joints_Substr,infl','Total_Labor_Constr_joints_Substr',0),(202,'Unit_Labor_Constr_joints_Superstr','Unit cost of Labor Construction joints Superstructure (shell) in 2017',35.71,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Constr_joints_Superstr,infl','Total_Labor_Constr_joints_Superstr',0),(203,'Unit_Labor_Constr_joints_Dome','Unit cost of Labor Construction joints Superstructure (dome) in 2017',13.63,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Constr_joints_Dome,infl','Total_Labor_Constr_joints_Dome',0),(204,'Unit_Labor_Constr_joints_Interior','Unit cost of Labor Construction joints Interior structure in 2017',5.88,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Constr_joints_Interior,infl','Total_Labor_Constr_joints_Interior',0),(205,'Unit_Labor_Embedded_steel_Substr','Unit cost of Labor Embedded steel Substructure (base mat) in 2017',11.42,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Embedded_steel_Substr,infl','Total_Labor_Embedded_steel_Substr',0),(206,'Unit_Labor_Embedded_steel_Superstr','Unit cost of Labor Embedded steel Superstructure (shell) in 2017',45.87,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Embedded_steel_Superstr,infl','Total_Labor_Embedded_steel_Superstr',0),(207,'Unit_Labor_Embedded_steel_Dome','Unit cost of Labor Embedded steel Superstructure (dome) in 2017',0,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Embedded_steel_Dome,infl','Total_Labor_Embedded_steel_Dome',0),(208,'Unit_Labor_Embedded_steel_Interior','Unit cost of Labor Embedded steel Interior structure in 2017',967.76,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Embedded_steel_Interior,infl','Total_Labor_Embedded_steel_Interior',0),(209,'Unit_Labor_Formwork_Substr','Unit cost of Labor Formwork Substructure (base mat) in 2017',267.27,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Formwork_Substr,infl','Total_Labor_Formwork_Substr',0),(210,'Unit_Labor_Formwork_Superstr','Unit cost of Labor Formwork Superstructure (shell) in 2017',315.27,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Formwork_Superstr,infl','Total_Labor_Formwork_Superstr',0),(211,'Unit_Labor_Formwork_Dome','Unit cost of Labor Formwork Superstructure (dome) in 2017',168.38,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Formwork_Dome,infl','Total_Labor_Formwork_Dome',0),(212,'Unit_Labor_Formwork_Interior','Unit cost of Labor Formwork Interior structure in 2017',664.58,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Formwork_Interior,infl','Total_Labor_Formwork_Interior',0),(213,'Unit_Labor_Maj_supp_embedments_Interior','Unit cost of Labor Major Support Embedments Interior structure in 2017',440.71,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Maj_supp_embedments_Interior,infl','Total_Labor_Maj_supp_embedments_Interior',0),(214,'Unit_Labor_Reinforc_steel_Substr','Unit cost of Labor Reinforc steel Substructure (base mat) in 2017',925.88,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Reinforc_steel_Substr,infl','Total_Labor_Reinforc_steel_Substr',0),(215,'Unit_Labor_Reinforc_steel_Superstr','Unit cost of Labor Reinforc steel Superstructure (shell) in 2017',936.16,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Reinforc_steel_Superstr,infl','Total_Labor_Reinforc_steel_Superstr',0),(216,'Unit_Labor_Reinforc_steel_Dome','Unit cost of Labor Reinforc steel Superstructure (dome) in 2017',862.76,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Reinforc_steel_Dome,infl','Total_Labor_Reinforc_steel_Dome',0),(217,'Unit_Labor_Reinforc_steel_Interior','Unit cost of Labor Reinforc steel Interior structure in 2017',880.44,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Reinforc_steel_Interior,infl','Total_Labor_Reinforc_steel_Interior',0),(218,'Unit_Labor_Rubbing_surfaces_Superstr','Unit cost of Labor Rubbing surfaces Superstructure (shell) in 2017',23.88,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Rubbing_surfaces_Superstr,infl','Total_Labor_Rubbing_surfaces_Superstr',0),(219,'Unit_Labor_Rubbing_surfaces_Dome','Unit cost of Labor Rubbing surfaces Superstructure (dome) in 2017',16.48,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Rubbing_surfaces_Dome,infl','Total_Labor_Rubbing_surfaces_Dome',0),(220,'Unit_Labor_Rubbing_surfaces_Interior','Unit cost of Labor Rubbing surfaces Interior structure in 2017',28.45,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Rubbing_surfaces_Interior,infl','Total_Labor_Rubbing_surfaces_Interior',0),(221,'Unit_Labor_Waterproofing_Substr','Unit cost of Labor Waterproofing Substructure (base mat) in 2017',13.15,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Waterproofing_Substr,infl','Total_Labor_Waterproofing_Substr',0),(222,'Unit_Labor_Waterproofing_Superstr','Unit cost of Labor Waterproofing Superstructure (shell) in 2017',2.41,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Waterproofing_Superstr,infl','Total_Labor_Waterproofing_Superstr',0),(223,'Unit_Labor_Waterproofing_Dome','Unit cost of Labor Waterproofing Superstructure (dome) in 2017',0,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Waterproofing_Dome,infl','Total_Labor_Waterproofing_Dome',0),(224,'Unit_Labor_Welded_wire_fabric_Substr','Unit cost of Labor Welded wire fabric Substructure (base mat) in 2017',28.91,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Welded_wire_fabric_Substr,infl','Total_Labor_Welded_wire_fabric_Substr',0),(225,'Unit_Labor_Lighting_Power','Unit cost of Labor Lighting Power in 2017',28.22,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Lighting_Power,infl','Total_Labor_Lighting_Power',0),(226,'Unit_Labor_Plumb_drains','Unit cost of Labor Plumb drains in 2017',8.67,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Plumb_drains,infl','Total_Labor_Plumb_drains',0),(227,'Unit_Labor_Special_HVAC','Unit cost of Labor Special HVAC in 2017',31.83,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Special_HVAC,infl','Total_Labor_Special_HVAC',0),(228,'Unit_Labor_other','Unit cost of Labor other in 2017',1.52,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_other,infl','Total_Labor_other',0),(229,'Unit_Labor_Misc_steel_frames','Unit cost of Labor miscellaneous steel frames in 2017',28.53,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Misc_steel_frames,infl','Total_Labor_Misc_steel_frames',0),(230,'Unit_Labor_React_cav_liner','Unit cost of Labor Reactor cavity liner plate in 2017',2141.22,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_React_cav_liner,infl','Total_Labor_React_cav_liner',0),(231,'Unit_Labor_Struct_steel','Unit cost of Labor Struct steel in 2017',40.13,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Struct_steel,infl','Total_Labor_Struct_steel',0),(232,'Unit_Labor_cont_liner','Unit cost of Labor Containment liner in 2017',2239.94,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_cont_liner,infl','Total_Labor_cont_liner',0),(233,'Unit_Labor_fl_grate_handrail_stairs','Unit cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017',5.02,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_fl_grate_handrail_stairs,infl','Total_Labor_fl_grate_handrail_stairs',0),(234,'Unit_Labor_painting','Unit cost of Labor painting in 2017',249.16,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_painting,infl','Total_Labor_painting',0),(235,'Unit_Mat_Cadweld_Substr','Unit cost of Material Cadweld Substructure (base mat) in 2017',127.22,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Cadweld_Substr,infl','Total_Mat_Cadweld_Substr',0),(236,'Unit_Mat_Cadweld_Superstr','Unit cost of Material Cadweld Superstructure (shell) in 2017',170.62,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Cadweld_Superstr,infl','Total_Mat_Cadweld_Superstr',0),(237,'Unit_Mat_Cadweld_Dome','Unit cost of Material Cadweld Superstructure (dome) in 2017',344.03,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Cadweld_Dome,infl','Total_Mat_Cadweld_Dome',0),(238,'Unit_Mat_Cadweld_Interior','Unit cost of Material Cadweld Interior structure in 2017',71.76,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Cadweld_Interior,infl','Total_Mat_Cadweld_Interior',0),(239,'Unit_Mat_Concrete_Substr','Unit cost of Material Concrete Substructure (base mat) in 2017',227.06,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Concrete_Substr,infl','Total_Mat_Concrete_Substr',0),(240,'Unit_Mat_Concrete_Superstr','Unit cost of Material Concrete Superstructure (shell) in 2017',156.36,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Concrete_Superstr,infl','Total_Mat_Concrete_Superstr',0),(241,'Unit_Mat_Concrete_Dome','Unit cost of Material Concrete Superstructure (dome) in 2017',139.59,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Concrete_Dome,infl','Total_Mat_Concrete_Dome',0),(242,'Unit_Mat_Concrete_Interior','Unit cost of Material Concrete Interior structure in 2017',152.74,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Concrete_Interior,infl','Total_Mat_Concrete_Interior',0),(243,'Unit_Mat_Constr_joints_Substr','Unit cost of Material Construction joints Substructure (base mat) in 2017',25.55,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Constr_joints_Substr,infl','Total_Mat_Constr_joints_Substr',0),(244,'Unit_Mat_Constr_joints_Superstr','Unit cost of Material Construction joints Superstructure (shell) in 2017',21.9,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Constr_joints_Superstr,infl','Total_Mat_Constr_joints_Superstr',0),(245,'Unit_Mat_Constr_joints_Dome','Unit cost of Material Construction joints Superstructure (dome) in 2017',8.35,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Constr_joints_Dome,infl','Total_Mat_Constr_joints_Dome',0),(246,'Unit_Mat_Constr_joints_Interior','Unit cost of Material Construction joints Interior structure in 2017',3.62,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Constr_joints_Interior,infl','Total_Mat_Constr_joints_Interior',0),(247,'Unit_Mat_Embedded_steel_Substr','Unit cost of Material Embedded steel Substructure (base mat) in 2017',5.4,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Embedded_steel_Substr,infl','Total_Mat_Embedded_steel_Substr',0),(248,'Unit_Mat_Embedded_steel_Superstr','Unit cost of Material Embedded steel Superstructure (shell) in 2017',21.73,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Embedded_steel_Superstr,infl','Total_Mat_Embedded_steel_Superstr',0),(249,'Unit_Mat_Embedded_steel_Dome','Unit cost of Material Embedded steel Superstructure (dome) in 2017',0,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Embedded_steel_Dome,infl','Total_Mat_Embedded_steel_Dome',0),(250,'Unit_Mat_Embedded_steel_Interior','Unit cost of Material Embedded steel Interior structure in 2017',458.51,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Embedded_steel_Interior,infl','Total_Mat_Embedded_steel_Interior',0),(251,'Unit_Mat_Formwork_Substr','Unit cost of Material Formwork Substructure (base mat) in 2017',37.95,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Formwork_Substr,infl','Total_Mat_Formwork_Substr',0),(252,'Unit_Mat_Formwork_Superstr','Unit cost of Material Formwork Superstructure (shell) in 2017',39.18,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Formwork_Superstr,infl','Total_Mat_Formwork_Superstr',0),(253,'Unit_Mat_Formwork_Dome','Unit cost of Material Formwork Superstructure (dome) in 2017',22.02,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Formwork_Dome,infl','Total_Mat_Formwork_Dome',0),(254,'Unit_Mat_Formwork_Interior','Unit cost of Material Formwork Interior structure in 2017',62.72,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Formwork_Interior,infl','Total_Mat_Formwork_Interior',0),(255,'Unit_Mat_Maj_supp_embedments_Interior','Unit cost of Material Major Support Embedments Interior structure in 2017',646.87,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Maj_supp_embedments_Interior,infl','Total_Mat_Maj_supp_embedments_Interior',0),(256,'Unit_Mat_Reinforc_steel_Substr','Unit cost of Material Reinforc steel Substructure (base mat) in 2017',1046.96,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Reinforc_steel_Substr,infl','Total_Mat_Reinforc_steel_Substr',0),(257,'Unit_Mat_Reinforc_steel_Superstr','Unit cost of Material Reinforc steel Superstructure (shell) in 2017',743.32,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Reinforc_steel_Superstr,infl','Total_Mat_Reinforc_steel_Superstr',0),(258,'Unit_Mat_Reinforc_steel_Dome','Unit cost of Material Reinforc steel Superstructure (dome) in 2017',685.05,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Reinforc_steel_Dome,infl','Total_Mat_Reinforc_steel_Dome',0),(259,'Unit_Mat_Reinforc_steel_Interior','Unit cost of Material Reinforc steel Interior structure in 2017',590.35,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Reinforc_steel_Interior,infl','Total_Mat_Reinforc_steel_Interior',0),(260,'Unit_Mat_Rubbing_surfaces_Superstr','Unit cost of Material Rubbing surfaces Superstructure (shell) in 2017',1.95,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Rubbing_surfaces_Superstr,infl','Total_Mat_Rubbing_surfaces_Superstr',0),(261,'Unit_Mat_Rubbing_surfaces_Dome','Unit cost of Material Rubbing surfaces Superstructure (dome) in 2017',1.35,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Rubbing_surfaces_Dome,infl','Total_Mat_Rubbing_surfaces_Dome',0),(262,'Unit_Mat_Rubbing_surfaces_Interior','Unit cost of Material Rubbing surfaces Interior structure in 2017',2.35,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Rubbing_surfaces_Interior,infl','Total_Mat_Rubbing_surfaces_Interior',0),(263,'Unit_Mat_Waterproofing_Substr','Unit cost of Material Waterproofing Substructure (base mat) in 2017',6.98,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Waterproofing_Substr,infl','Total_Mat_Waterproofing_Substr',0),(264,'Unit_Mat_Waterproofing_Superstr','Unit cost of Material Waterproofing Superstructure (shell) in 2017',1.29,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Waterproofing_Superstr,infl','Total_Mat_Waterproofing_Superstr',0),(265,'Unit_Mat_Waterproofing_Dome','Unit cost of Material Waterproofing Superstructure (dome) in 2017',0,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Waterproofing_Dome,infl','Total_Mat_Waterproofing_Dome',0),(266,'Unit_Mat_Welded_wire_fabric_Substr','Unit cost of Material Welded wire fabric Substructure (base mat) in 2017',14.9,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Welded_wire_fabric_Substr,infl','Total_Mat_Welded_wire_fabric_Substr',0),(267,'Unit_Mat_Lighting_Power','Unit cost of Material Lighting Power in 2017',14.24,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Lighting_Power,infl','Total_Mat_Lighting_Power',0),(268,'Unit_Mat_Plumb_drains','Unit cost of Material Plumb drains in 2017',4.42,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Plumb_drains,infl','Total_Mat_Plumb_drains',0),(269,'Unit_Mat_Special_HVAC','Unit cost of Material Special HVAC in 2017',25.23,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Special_HVAC,infl','Total_Mat_Special_HVAC',0),(270,'Unit_Mat_other','Unit cost of Material other in 2017',5.63,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_other,infl','Total_Mat_other',0),(271,'Unit_Mat_Misc_steel_frames','Unit cost of Material miscellaneous steel frames in 2017',47.54,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Misc_steel_frames,infl','Total_Mat_Misc_steel_frames',0),(272,'Unit_Mat_React_cav_liner','Unit cost of Material Reactor cavity liner plate in 2017',1745.15,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_React_cav_liner,infl','Total_Mat_React_cav_liner',0),(273,'Unit_Mat_Struct_steel','Unit cost of Material Struct steel in 2017',78.68,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Struct_steel,infl','Total_Mat_Struct_steel',0),(274,'Unit_Mat_cont_liner','Unit cost of Material Containment liner in 2017',3453.21,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_cont_liner,infl','Total_Mat_cont_liner',0),(275,'Unit_Mat_fl_grate_handrail_stairs','Unit cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017',5.68,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_fl_grate_handrail_stairs,infl','Total_Mat_fl_grate_handrail_stairs',0),(276,'Unit_Mat_painting','Unit cost of Material painting in 2017',70.84,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_painting,infl','Total_Mat_painting',0),(277,'Total_Labor_Cadweld_Substr','Total cost of Labor Cadweld Substructure (base mat) in 2017',545576.13,'dollar','tol_contaiment_ce_cost','Unit_Labor_Cadweld_Substr,Basemat_v_m3','Sum_Labor_Cadweld',0),(278,'Total_Labor_Cadweld_Superstr','Total cost of Labor Cadweld Superstructure (shell) in 2017',1459105.66,'dollar','tol_contaiment_ce_cost','Unit_Labor_Cadweld_Superstr,Walls_v_m3','Sum_Labor_Cadweld',0),(279,'Total_Labor_Cadweld_Dome','Total cost of Labor Cadweld Superstructure (dome) in 2017',962092.18,'dollar','tol_contaiment_ce_cost','Unit_Labor_Cadweld_Dome,Dome_v_m3','Sum_Labor_Cadweld',0),(280,'Total_Labor_Cadweld_Interior','Total cost of Labor Cadweld Interior structure in 2017',313811.43,'dollar','tol_contaiment_ce_cost','Unit_Labor_Cadweld_Interior,Internal_v_m3','Sum_Labor_Cadweld',0),(281,'Total_Labor_Concrete_Substr','Total cost of Labor Concrete Substructure (base mat) in 2017',462967.25,'dollar','tol_contaiment_ce_cost','Unit_Labor_Concrete_Substr,Basemat_v_m3','Sum_Labor_Concrete',0),(282,'Total_Labor_Concrete_Superstr','Total cost of Labor Concrete Superstructure (shell) in 2017',1112469.41,'dollar','tol_contaiment_ce_cost','Unit_Labor_Concrete_Superstr,Walls_v_m3','Sum_Labor_Concrete',0),(283,'Total_Labor_Concrete_Dome','Total cost of Labor Concrete Superstructure (dome) in 2017',324819.04,'dollar','tol_contaiment_ce_cost','Unit_Labor_Concrete_Dome,Dome_v_m3','Sum_Labor_Concrete',0),(284,'Total_Labor_Concrete_Interior','Total cost of Labor Concrete Interior structure in 2017',635240.28,'dollar','tol_contaiment_ce_cost','Unit_Labor_Concrete_Interior,Internal_v_m3','Sum_Labor_Concrete',0),(285,'Total_Labor_Constr_joints_Substr','Total cost of Labor Construction joints Substructure (base mat) in 2017',30391,'dollar','tol_contaiment_ce_cost','Unit_Labor_Constr_joints_Substr,Basemat_s_m2','Sum_Labor_Constr_joints',0),(286,'Total_Labor_Constr_joints_Superstr','Total cost of Labor Construction joints Superstructure (shell) in 2017',230913.45,'dollar','tol_contaiment_ce_cost','Unit_Labor_Constr_joints_Superstr,Walls_s_m2','Sum_Labor_Constr_joints',0),(287,'Total_Labor_Constr_joints_Dome','Total cost of Labor Construction joints Superstructure (dome) in 2017',37107.07,'dollar','tol_contaiment_ce_cost','Unit_Labor_Constr_joints_Dome,Dome_s_m2','Sum_Labor_Constr_joints',0),(288,'Total_Labor_Constr_joints_Interior','Total cost of Labor Construction joints Interior structure in 2017',21894.28,'dollar','tol_contaiment_ce_cost','Unit_Labor_Constr_joints_Interior,Internal_s_m2','Sum_Labor_Constr_joints',0),(289,'Total_Labor_Embedded_steel_Substr','Total cost of Labor Embedded steel Substructure (base mat) in 2017',25408.3,'dollar','tol_contaiment_ce_cost','Unit_Labor_Embedded_steel_Substr,Basemat_v_m3','Sum_Labor_Embedded_steel',0),(290,'Total_Labor_Embedded_steel_Superstr','Total cost of Labor Embedded steel Superstructure (shell) in 2017',203424.43,'dollar','tol_contaiment_ce_cost','Unit_Labor_Embedded_steel_Superstr,Walls_v_m3','Sum_Labor_Embedded_steel',0),(291,'Total_Labor_Embedded_steel_Dome','Total cost of Labor Embedded steel Superstructure (dome) in 2017',0,'dollar','tol_contaiment_ce_cost','Unit_Labor_Embedded_steel_Dome,Dome_v_m3','Sum_Labor_Embedded_steel',0),(292,'Total_Labor_Embedded_steel_Interior','Total cost of Labor Embedded steel Interior structure in 2017',2194987.28,'dollar','tol_contaiment_ce_cost','Unit_Labor_Embedded_steel_Interior,Internal_v_m3','Sum_Labor_Embedded_steel',0),(293,'Total_Labor_Formwork_Substr','Total cost of Labor Formwork Substructure (base mat) in 2017',195017.61,'dollar','tol_contaiment_ce_cost','Unit_Labor_Formwork_Substr,Basemat_s_m2','Sum_Labor_Formwork',0),(294,'Total_Labor_Formwork_Superstr','Total cost of Labor Formwork Superstructure (shell) in 2017',2038683.66,'dollar','tol_contaiment_ce_cost','Unit_Labor_Formwork_Superstr,Walls_s_m2','Sum_Labor_Formwork',0),(295,'Total_Labor_Formwork_Dome','Total cost of Labor Formwork Superstructure (dome) in 2017',458252.79,'dollar','tol_contaiment_ce_cost','Unit_Labor_Formwork_Dome,Dome_s_m2','Sum_Labor_Formwork',0),(296,'Total_Labor_Formwork_Interior','Total cost of Labor Formwork Interior structure in 2017',2472664.99,'dollar','tol_contaiment_ce_cost','Unit_Labor_Formwork_Interior,Internal_s_m2','Sum_Labor_Formwork',0),(297,'Total_Labor_Maj_supp_embedments_Interior','Total cost of Labor Major Support Embedments Interior structure in 2017',999574.05,'dollar','tol_contaiment_ce_cost','Unit_Labor_Maj_supp_embedments_Interior,Internal_v_m3','Sum_Labor_Maj_supp_embedments',0),(298,'Total_Labor_Reinforc_steel_Substr','Total cost of Labor Reinforc steel Substructure (base mat) in 2017',2059157.28,'dollar','tol_contaiment_ce_cost','Unit_Labor_Reinforc_steel_Substr,Basemat_v_m3','Sum_Labor_Reinforc_steel',0),(299,'Total_Labor_Reinforc_steel_Superstr','Total cost of Labor Reinforc steel Superstructure (shell) in 2017',4151615.16,'dollar','tol_contaiment_ce_cost','Unit_Labor_Reinforc_steel_Superstr,Walls_v_m3','Sum_Labor_Reinforc_steel',0),(300,'Total_Labor_Reinforc_steel_Dome','Total cost of Labor Reinforc steel Superstructure (dome) in 2017',1251315.18,'dollar','tol_contaiment_ce_cost','Unit_Labor_Reinforc_steel_Dome,Dome_v_m3','Sum_Labor_Reinforc_steel',0),(301,'Total_Labor_Reinforc_steel_Interior','Total cost of Labor Reinforc steel Interior structure in 2017',1996934.5,'dollar','tol_contaiment_ce_cost','Unit_Labor_Reinforc_steel_Interior,Internal_v_m3','Sum_Labor_Reinforc_steel',0),(302,'Total_Labor_Rubbing_surfaces_Superstr','Total cost of Labor Rubbing surfaces Superstructure (shell) in 2017',154437.29,'dollar','tol_contaiment_ce_cost','Unit_Labor_Rubbing_surfaces_Superstr,Walls_s_m2','Sum_Labor_Rubbing_surfaces',0),(303,'Total_Labor_Rubbing_surfaces_Dome','Total cost of Labor Rubbing surfaces Superstructure (dome) in 2017',44840.96,'dollar','tol_contaiment_ce_cost','Unit_Labor_Rubbing_surfaces_Dome,Dome_s_m2','Sum_Labor_Rubbing_surfaces',0),(304,'Total_Labor_Rubbing_surfaces_Interior','Total cost of Labor Rubbing surfaces Interior structure in 2017',105840.14,'dollar','tol_contaiment_ce_cost','Unit_Labor_Rubbing_surfaces_Interior,Internal_s_m2','Sum_Labor_Rubbing_surfaces',0),(305,'Total_Labor_Waterproofing_Substr','Total cost of Labor Waterproofing Substructure (base mat) in 2017',9592.75,'dollar','tol_contaiment_ce_cost','Unit_Labor_Waterproofing_Substr,Basemat_s_m2','Sum_Labor_Waterproofing',0),(306,'Total_Labor_Waterproofing_Superstr','Total cost of Labor Waterproofing Superstructure (shell) in 2017',15592.23,'dollar','tol_contaiment_ce_cost','Unit_Labor_Waterproofing_Superstr,Walls_s_m2','Sum_Labor_Waterproofing',0),(307,'Total_Labor_Waterproofing_Dome','Total cost of Labor Waterproofing Superstructure (dome) in 2017',0,'dollar','tol_contaiment_ce_cost','Unit_Labor_Waterproofing_Dome,Dome_s_m2','Sum_Labor_Waterproofing',0),(308,'Total_Labor_Welded_wire_fabric_Substr','Total cost of Labor Welded wire fabric Substructure (base mat) in 2017',21091.48,'dollar','tol_contaiment_ce_cost','Unit_Labor_Welded_wire_fabric_Substr,Basemat_s_m2','Sum_Labor_Welded_wire_fabric',0),(309,'Total_Labor_Lighting_Power','Total cost of Labor Lighting Power in 2017',771075.94,'dollar','tol_contaiment_ce_cost','Unit_Labor_Lighting_Power,Intern_tot_v_m3','Tot_Labor_equipment',0),(310,'Total_Labor_Plumb_drains','Total cost of Labor Plumb drains in 2017',236892.1,'dollar','tol_contaiment_ce_cost','Unit_Labor_Plumb_drains,Intern_tot_v_m3','Tot_Labor_equipment',0),(311,'Total_Labor_Special_HVAC','Total cost of Labor Special HVAC in 2017',869911.71,'dollar','tol_contaiment_ce_cost','Unit_Labor_Special_HVAC,Intern_tot_v_m3','Tot_Labor_equipment',0),(312,'Total_Labor_other','Total cost of Labor other in 2017',41573.78,'dollar','tol_contaiment_ce_cost','Unit_Labor_other,Intern_tot_v_m3','Tot_Labor_equipment',0),(313,'Total_Labor_Misc_steel_frames','Total cost of Labor miscellaneous steel frames in 2017',296090.96,'dollar','tol_contaiment_ce_cost','Unit_Labor_Misc_steel_frames,Struct_v_m3','Tot_Labor_others',0),(314,'Total_Labor_React_cav_liner','Total cost of Labor Reactor cavity liner plate in 2017',2188185.87,'dollar','tol_contaiment_ce_cost','Unit_Labor_React_cav_liner,React_cav_A_m2','Tot_Labor_others',0),(315,'Total_Labor_Struct_steel','Total cost of Labor Struct steel in 2017',416433.77,'dollar','tol_contaiment_ce_cost','Unit_Labor_Struct_steel,Struct_v_m3','Tot_Labor_others',0),(316,'Total_Labor_cont_liner','Total cost of Labor Containment liner in 2017',11081657.51,'dollar','tol_contaiment_ce_cost','Unit_Labor_cont_liner,Liner_s_m2','Tot_Labor_others',0),(317,'Total_Labor_fl_grate_handrail_stairs','Total cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017',137271.91,'dollar','tol_contaiment_ce_cost','Unit_Labor_fl_grate_handrail_stairs,Intern_tot_v_m3','Tot_Labor_others',0),(318,'Total_Labor_painting','Total cost of Labor painting in 2017',3366865.17,'dollar','tol_contaiment_ce_cost','Unit_Labor_painting,Surf_paint_m2','Tot_Labor_others',0),(319,'Total_Mat_Cadweld_Substr','Total cost of Material Cadweld Substructure (base mat) in 2017',282938.62,'dollar','tol_contaiment_ce_cost','Unit_Mat_Cadweld_Substr,Basemat_v_m3','Sum_Mat_Cadweld',0),(320,'Total_Mat_Cadweld_Superstr','Total cost of Material Cadweld Superstructure (shell) in 2017',756667.6,'dollar','tol_contaiment_ce_cost','Unit_Mat_Cadweld_Superstr,Walls_v_m3','Sum_Mat_Cadweld',0),(321,'Total_Mat_Cadweld_Dome','Total cost of Material Cadweld Superstructure (dome) in 2017',498969.01,'dollar','tol_contaiment_ce_cost','Unit_Mat_Cadweld_Dome,Dome_v_m3','Sum_Mat_Cadweld',0),(322,'Total_Mat_Cadweld_Interior','Total cost of Material Cadweld Interior structure in 2017',162765.27,'dollar','tol_contaiment_ce_cost','Unit_Mat_Cadweld_Interior,Internal_v_m3','Sum_Mat_Cadweld',0),(323,'Total_Mat_Concrete_Substr','Total cost of Material Concrete Substructure (base mat) in 2017',504973.93,'dollar','tol_contaiment_ce_cost','Unit_Mat_Concrete_Substr,Basemat_v_m3','Sum_Mat_Concrete',0),(324,'Total_Mat_Concrete_Superstr','Total cost of Material Concrete Superstructure (shell) in 2017',693399.8,'dollar','tol_contaiment_ce_cost','Unit_Mat_Concrete_Superstr,Walls_v_m3','Sum_Mat_Concrete',0),(325,'Total_Mat_Concrete_Dome','Total cost of Material Concrete Superstructure (dome) in 2017',202460.27,'dollar','tol_contaiment_ce_cost','Unit_Mat_Concrete_Dome,Dome_v_m3','Sum_Mat_Concrete',0),(326,'Total_Mat_Concrete_Interior','Total cost of Material Concrete Interior structure in 2017',346429.59,'dollar','tol_contaiment_ce_cost','Unit_Mat_Concrete_Interior,Internal_v_m3','Sum_Mat_Concrete',0),(327,'Total_Mat_Constr_joints_Substr','Total cost of Material Construction joints Substructure (base mat) in 2017',18640.93,'dollar','tol_contaiment_ce_cost','Unit_Mat_Constr_joints_Substr,Basemat_s_m2','Sum_Mat_Constr_joints',0),(328,'Total_Mat_Constr_joints_Superstr','Total cost of Material Construction joints Superstructure (shell) in 2017',141629.39,'dollar','tol_contaiment_ce_cost','Unit_Mat_Constr_joints_Superstr,Walls_s_m2','Sum_Mat_Constr_joints',0),(329,'Total_Mat_Constr_joints_Dome','Total cost of Material Construction joints Superstructure (dome) in 2017',22732.96,'dollar','tol_contaiment_ce_cost','Unit_Mat_Constr_joints_Dome,Dome_s_m2','Sum_Mat_Constr_joints',0),(330,'Total_Mat_Constr_joints_Interior','Total cost of Material Construction joints Interior structure in 2017',13456.97,'dollar','tol_contaiment_ce_cost','Unit_Mat_Constr_joints_Interior,Internal_s_m2','Sum_Mat_Constr_joints',0),(331,'Total_Mat_Embedded_steel_Substr','Total cost of Material Embedded steel Substructure (base mat) in 2017',12001.91,'dollar','tol_contaiment_ce_cost','Unit_Mat_Embedded_steel_Substr,Basemat_v_m3','Sum_Mat_Embedded_steel',0),(332,'Total_Mat_Embedded_steel_Superstr','Total cost of Material Embedded steel Superstructure (shell) in 2017',96365.64,'dollar','tol_contaiment_ce_cost','Unit_Mat_Embedded_steel_Superstr,Walls_v_m3','Sum_Mat_Embedded_steel',0),(333,'Total_Mat_Embedded_steel_Dome','Total cost of Material Embedded steel Superstructure (dome) in 2017',0,'dollar','tol_contaiment_ce_cost','Unit_Mat_Embedded_steel_Dome,Dome_v_m3','Sum_Mat_Embedded_steel',0),(334,'Total_Mat_Embedded_steel_Interior','Total cost of Material Embedded steel Interior structure in 2017',1039939.84,'dollar','tol_contaiment_ce_cost','Unit_Mat_Embedded_steel_Interior,Internal_v_m3','Sum_Mat_Embedded_steel',0),(335,'Total_Mat_Formwork_Substr','Total cost of Material Formwork Substructure (base mat) in 2017',27689.11,'dollar','tol_contaiment_ce_cost','Unit_Mat_Formwork_Substr,Basemat_s_m2','Sum_Mat_Formwork',0),(336,'Total_Mat_Formwork_Superstr','Total cost of Material Formwork Superstructure (shell) in 2017',253373.69,'dollar','tol_contaiment_ce_cost','Unit_Mat_Formwork_Superstr,Walls_s_m2','Sum_Mat_Formwork',0),(337,'Total_Mat_Formwork_Dome','Total cost of Material Formwork Superstructure (dome) in 2017',59918.15,'dollar','tol_contaiment_ce_cost','Unit_Mat_Formwork_Dome,Dome_s_m2','Sum_Mat_Formwork',0),(338,'Total_Mat_Formwork_Interior','Total cost of Material Formwork Interior structure in 2017',233360.96,'dollar','tol_contaiment_ce_cost','Unit_Mat_Formwork_Interior,Internal_s_m2','Sum_Mat_Formwork',0),(339,'Total_Mat_Maj_supp_embedments_Interior','Total cost of Material Major Support Embedments Interior structure in 2017',1467166.11,'dollar','tol_contaiment_ce_cost','Unit_Mat_Maj_supp_embedments_Interior,Internal_v_m3','Sum_Mat_Maj_supp_embedments',0),(340,'Total_Mat_Reinforc_steel_Substr','Total cost of Material Reinforc steel Substructure (base mat) in 2017',2328434.14,'dollar','tol_contaiment_ce_cost','Unit_Mat_Reinforc_steel_Substr,Basemat_v_m3','Sum_Mat_Reinforc_steel',0),(341,'Total_Mat_Reinforc_steel_Superstr','Total cost of Material Reinforc steel Superstructure (shell) in 2017',3296417.82,'dollar','tol_contaiment_ce_cost','Unit_Mat_Reinforc_steel_Superstr,Walls_v_m3','Sum_Mat_Reinforc_steel',0),(342,'Total_Mat_Reinforc_steel_Dome','Total cost of Material Reinforc steel Superstructure (dome) in 2017',993566.57,'dollar','tol_contaiment_ce_cost','Unit_Mat_Reinforc_steel_Dome,Dome_v_m3','Sum_Mat_Reinforc_steel',0),(343,'Total_Mat_Reinforc_steel_Interior','Total cost of Material Reinforc steel Interior structure in 2017',1338972.19,'dollar','tol_contaiment_ce_cost','Unit_Mat_Reinforc_steel_Interior,Internal_v_m3','Sum_Mat_Reinforc_steel',0),(344,'Total_Mat_Rubbing_surfaces_Superstr','Total cost of Material Rubbing surfaces Superstructure (shell) in 2017',12622.28,'dollar','tol_contaiment_ce_cost','Unit_Mat_Rubbing_surfaces_Superstr,Walls_s_m2','Sum_Mat_Rubbing_surfaces',0),(345,'Total_Mat_Rubbing_surfaces_Dome','Total cost of Material Rubbing surfaces Superstructure (dome) in 2017',3671.65,'dollar','tol_contaiment_ce_cost','Unit_Mat_Rubbing_surfaces_Dome,Dome_s_m2','Sum_Mat_Rubbing_surfaces',0),(346,'Total_Mat_Rubbing_surfaces_Interior','Total cost of Material Rubbing surfaces Interior structure in 2017',8757.71,'dollar','tol_contaiment_ce_cost','Unit_Mat_Rubbing_surfaces_Interior,Internal_s_m2','Sum_Mat_Rubbing_surfaces',0),(347,'Total_Mat_Waterproofing_Substr','Total cost of Material Waterproofing Substructure (base mat) in 2017',5089.6,'dollar','tol_contaiment_ce_cost','Unit_Mat_Waterproofing_Substr,Basemat_s_m2','Sum_Mat_Waterproofing',0),(348,'Total_Mat_Waterproofing_Superstr','Total cost of Material Waterproofing Superstructure (shell) in 2017',8352.98,'dollar','tol_contaiment_ce_cost','Unit_Mat_Waterproofing_Superstr,Walls_s_m2','Sum_Mat_Waterproofing',0),(349,'Total_Mat_Waterproofing_Dome','Total cost of Material Waterproofing Superstructure (dome) in 2017',0,'dollar','tol_contaiment_ce_cost','Unit_Mat_Waterproofing_Dome,Dome_s_m2','Sum_Mat_Waterproofing',0),(350,'Total_Mat_Welded_wire_fabric_Substr','Total cost of Material Welded wire fabric Substructure (base mat) in 2017',10870.38,'dollar','tol_contaiment_ce_cost','Unit_Mat_Welded_wire_fabric_Substr,Basemat_s_m2','Sum_Mat_Welded_wire_fabric',0),(351,'Total_Mat_Lighting_Power','Total cost of Material Lighting Power in 2017',389067.82,'dollar','tol_contaiment_ce_cost','Unit_Mat_Lighting_Power,Intern_tot_v_m3','Tot_Mat_equipment',0),(352,'Total_Mat_Plumb_drains','Total cost of Material Plumb drains in 2017',120799.28,'dollar','tol_contaiment_ce_cost','Unit_Mat_Plumb_drains,Intern_tot_v_m3','Tot_Mat_equipment',0),(353,'Total_Mat_Special_HVAC','Total cost of Material Special HVAC in 2017',689497.2,'dollar','tol_contaiment_ce_cost','Unit_Mat_Special_HVAC,Intern_tot_v_m3','Tot_Mat_equipment',0),(354,'Total_Mat_other','Total cost of Material other in 2017',153744.54,'dollar','tol_contaiment_ce_cost','Unit_Mat_other,Intern_tot_v_m3','Tot_Mat_equipment',0),(355,'Total_Mat_Misc_steel_frames','Total cost of Material miscellaneous steel frames in 2017',493286.35,'dollar','tol_contaiment_ce_cost','Unit_Mat_Misc_steel_frames,Struct_v_m3','Tot_Mat_others',0),(356,'Total_Mat_React_cav_liner','Total cost of Material Reactor cavity liner plate in 2017',1783426.93,'dollar','tol_contaiment_ce_cost','Unit_Mat_React_cav_liner,React_cav_A_m2','Tot_Mat_others',0),(357,'Total_Mat_Struct_steel','Total cost of Material Struct steel in 2017',816484.24,'dollar','tol_contaiment_ce_cost','Unit_Mat_Struct_steel,Struct_v_m3','Tot_Mat_others',0),(358,'Total_Mat_cont_liner','Total cost of Material Containment liner in 2017',17084097.73,'dollar','tol_contaiment_ce_cost','Unit_Mat_cont_liner,Liner_s_m2','Tot_Mat_others',0),(359,'Total_Mat_fl_grate_handrail_stairs','Total cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017',155313.36,'dollar','tol_contaiment_ce_cost','Unit_Mat_fl_grate_handrail_stairs,Intern_tot_v_m3','Tot_Mat_others',0),(360,'Total_Mat_painting','Total cost of Material painting in 2017',957306.82,'dollar','tol_contaiment_ce_cost','Unit_Mat_painting,Surf_paint_m2','Tot_Mat_others',0),(361,'Sum_Labor_Cadweld','Total cost of Labor Cadweld',3280585.404,'dollar','sum_ce','Total_Labor_Cadweld_Substr,Total_Labor_Cadweld_Superstr,Total_Labor_Cadweld_Dome,Total_Labor_Cadweld_Interior','Tot_Labor_concr',0),(362,'Sum_Labor_Concrete','Total cost of Labor Concrete',2535495.979,'dollar','sum_ce','Total_Labor_Concrete_Substr,Total_Labor_Concrete_Superstr,Total_Labor_Concrete_Dome,Total_Labor_Concrete_Interior','Tot_Labor_concr',0),(363,'Sum_Labor_Constr_joints','Total cost of Labor Constr joints',320305.7975,'dollar','sum_ce','Total_Labor_Constr_joints_Substr,Total_Labor_Constr_joints_Superstr,Total_Labor_Constr_joints_Dome,Total_Labor_Constr_joints_Interior','Tot_Labor_concr',0),(364,'Sum_Labor_Embedded_steel','Total cost of Labor Embedded steel',2423820.007,'dollar','sum_ce','Total_Labor_Embedded_steel_Substr,Total_Labor_Embedded_steel_Superstr,Total_Labor_Embedded_steel_Dome,Total_Labor_Embedded_steel_Interior','Tot_Labor_concr',0),(365,'Sum_Labor_Formwork','Total cost of Labor Formwork',5164619.048,'dollar','sum_ce','Total_Labor_Formwork_Substr,Total_Labor_Formwork_Superstr,Total_Labor_Formwork_Dome,Total_Labor_Formwork_Interior','Tot_Labor_concr',0),(366,'Sum_Labor_Maj_supp_embedments','Total cost of Labor Maj supp embedments',999574.0548,'dollar','sum_ce','Total_Labor_Maj_supp_embedments_Interior','Tot_Labor_concr',0),(367,'Sum_Labor_Reinforc_steel','Total cost of Labor Reinforc steel',9459022.117,'dollar','sum_ce','Total_Labor_Reinforc_steel_Substr,Total_Labor_Reinforc_steel_Superstr,Total_Labor_Reinforc_steel_Dome,Total_Labor_Reinforc_steel_Interior','Tot_Labor_concr',0),(368,'Sum_Labor_Rubbing_surfaces','Total cost of Labor Rubbing surfaces',305118.4026,'dollar','sum_ce','Total_Labor_Rubbing_surfaces_Superstr,Total_Labor_Rubbing_surfaces_Dome,Total_Labor_Rubbing_surfaces_Interior','Tot_Labor_concr',0),(369,'Sum_Labor_Waterproofing','Total cost of Labor Waterproofing',25184.97376,'dollar','sum_ce','Total_Labor_Waterproofing_Substr,Total_Labor_Waterproofing_Superstr,Total_Labor_Waterproofing_Dome','Tot_Labor_concr',0),(370,'Sum_Labor_Welded_wire_fabric','Total cost of Labor Welded wire fabric',21091.47636,'dollar','sum_ce','Total_Labor_Welded_wire_fabric_Substr','Tot_Labor_concr',0),(371,'Sum_Mat_Cadweld','Total cost of Material Cadweld',1701340.49,'dollar','sum_ce','Total_Mat_Cadweld_Substr,Total_Mat_Cadweld_Superstr,Total_Mat_Cadweld_Dome,Total_Mat_Cadweld_Interior','Tot_Mat_concr',0),(372,'Sum_Mat_Concrete','Total cost of Material Concrete',1747263.589,'dollar','sum_ce','Total_Mat_Concrete_Substr,Total_Mat_Concrete_Superstr,Total_Mat_Concrete_Dome,Total_Mat_Concrete_Interior','Tot_Mat_concr',0),(373,'Sum_Mat_Constr_joints','Total cost of Material Constr joints',196460.25,'dollar','sum_ce','Total_Mat_Constr_joints_Substr,Total_Mat_Constr_joints_Superstr,Total_Mat_Constr_joints_Dome,Total_Mat_Constr_joints_Interior','Tot_Mat_concr',0),(374,'Sum_Mat_Embedded_steel','Total cost of Material Embedded steel',1148307.391,'dollar','sum_ce','Total_Mat_Embedded_steel_Substr,Total_Mat_Embedded_steel_Superstr,Total_Mat_Embedded_steel_Dome,Total_Mat_Embedded_steel_Interior','Tot_Mat_concr',0),(375,'Sum_Mat_Formwork','Total cost of Material Formwork',574341.9097,'dollar','sum_ce','Total_Mat_Formwork_Substr,Total_Mat_Formwork_Superstr,Total_Mat_Formwork_Dome,Total_Mat_Formwork_Interior','Tot_Mat_concr',0),(376,'Sum_Mat_Maj_supp_embedments','Total cost of Material Maj supp embedments',1467166.11,'dollar','sum_ce','Total_Mat_Maj_supp_embedments_Interior','Tot_Mat_concr',0),(377,'Sum_Mat_Reinforc_steel','Total cost of Material Reinforc steel',7957390.727,'dollar','sum_ce','Total_Mat_Reinforc_steel_Substr,Total_Mat_Reinforc_steel_Superstr,Total_Mat_Reinforc_steel_Dome,Total_Mat_Reinforc_steel_Interior','Tot_Mat_concr',0),(378,'Sum_Mat_Rubbing_surfaces','Total cost of Material Rubbing surfaces',25051.63697,'dollar','sum_ce','Total_Mat_Rubbing_surfaces_Superstr,Total_Mat_Rubbing_surfaces_Dome,Total_Mat_Rubbing_surfaces_Interior','Tot_Mat_concr',0),(379,'Sum_Mat_Waterproofing','Total cost of Material Waterproofing',13442.5802,'dollar','sum_ce','Total_Mat_Waterproofing_Substr,Total_Mat_Waterproofing_Superstr,Total_Mat_Waterproofing_Dome','Tot_Mat_concr',0),(380,'Sum_Mat_Welded_wire_fabric','Total cost of Material Welded wire fabric',10870.38,'dollar','sum_ce','Total_Mat_Welded_wire_fabric_Substr','Tot_Mat_concr',0),(381,'Tot_Labor_concr','Total cost of labor of containment construction',24534817.26,'dollar','sum_ce','Sum_Labor_Cadweld,Sum_Labor_Concrete,Sum_Labor_Constr_joints,Sum_Labor_Embedded_steel,Sum_Labor_Formwork,Sum_Labor_Maj_supp_embedments,Sum_Labor_Reinforc_steel,Sum_Labor_Rubbing_surfaces,Sum_Labor_Waterproofing,Sum_Labor_Welded_wire_fabric','Tot_Labor_containment',0),(382,'Tot_Labor_equipment','Total cost of labor of containment equipments',1919453.529,'dollar','sum_ce','Total_Labor_Lighting_Power,Total_Labor_Plumb_drains,Total_Labor_Special_HVAC,Total_Labor_other','Tot_Labor_containment',0),(383,'Tot_Labor_others','Total cost of labor of other non-concrete related items ',17486505.19,'dollar','sum_ce','Total_Labor_Misc_steel_frames,Total_Labor_React_cav_liner,Total_Labor_Struct_steel,Total_Labor_cont_liner,Total_Labor_fl_grate_handrail_stairs,Total_Labor_painting','Tot_Labor_containment',0),(384,'Tot_Mat_concr','Total cost of material of containment construction',14841635.07,'dollar','sum_ce','Sum_Mat_Cadweld,Sum_Mat_Concrete,Sum_Mat_Constr_joints,Sum_Mat_Embedded_steel,Sum_Mat_Formwork,Sum_Mat_Maj_supp_embedments,Sum_Mat_Reinforc_steel,Sum_Mat_Rubbing_surfaces,Sum_Mat_Waterproofing,Sum_Mat_Welded_wire_fabric','Tot_Mat_containment',0),(385,'Tot_Mat_equipment','Total cost of material of containment equipments',1353108.842,'dollar','sum_ce','Total_Mat_Lighting_Power,Total_Mat_Plumb_drains,Total_Mat_Special_HVAC,Total_Mat_other','Tot_Mat_containment',0),(386,'Tot_Mat_others','Total cost of material of other non-concrete related items ',21289915.44,'dollar','sum_ce','Total_Mat_Misc_steel_frames,Total_Mat_React_cav_liner,Total_Mat_Struct_steel,Total_Mat_cont_liner,Total_Mat_fl_grate_handrail_stairs,Total_Mat_painting','Tot_Mat_containment',0),(387,'Tot_Labor_containment','Total cost of labor of containment',43940775.98,'dollar','sum_ce','Tot_Labor_concr,Tot_Labor_equipment,Tot_Labor_others','',0),(388,'Tot_Mat_containment','Total cost of material of containment',37484659.35,'dollar','sum_ce','Tot_Mat_concr,Tot_Mat_equipment,Tot_Mat_others','',0);
+/*!40000 ALTER TABLE `lfr_variable` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lfr_variable_links`
+--
+
+DROP TABLE IF EXISTS `lfr_variable_links`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lfr_variable_links` (
+  `ind` int NOT NULL AUTO_INCREMENT,
+  `variable` text,
+  `var_ind` int DEFAULT NULL,
+  `ce_ind` int DEFAULT NULL,
+  `ce` text,
+  PRIMARY KEY (`ind`)
+) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lfr_variable_links`
+--
+
+LOCK TABLES `lfr_variable_links` WRITE;
+/*!40000 ALTER TABLE `lfr_variable_links` DISABLE KEYS */;
+INSERT INTO `lfr_variable_links` VALUES (1,'c_213_fac',1,3,'213_fac'),(2,'c_213_lab',2,39,'213_lab'),(3,'c_213_mat',3,75,'213_mat'),(4,'c_220A.2121_ss_weight',4,9,'220A.2121_fac'),(5,'c_220A.2122_ss_weight',5,10,'220A.2122_fac'),(6,'c_220A.222_ss_weight',6,14,'220A.222_fac'),(7,'c_222_fac',7,21,'222_fac'),(8,'c_222_lab',8,57,'222_lab'),(9,'c_222_mat',9,93,'222_mat'),(10,'c_222.11_fac',10,17,'222.11_fac'),(11,'c_222.11_lab',11,53,'222.11_lab'),(12,'c_222.11_mat',12,89,'222.11_mat'),(13,'c_222.12_fac',13,18,'222.12_fac'),(14,'c_222.12_lab',14,54,'222.12_lab'),(15,'c_222.12_mat',15,90,'222.12_mat'),(16,'c_222.13_fac',16,19,'222.13_fac'),(17,'c_222.14_fac',17,20,'222.14_fac'),(18,'c_222.14_lab',18,56,'222.14_lab'),(19,'c_222.14_mat',19,92,'222.14_mat'),(20,'c_231_fac',20,29,'235_fac'),(21,'c_231_fac',20,62,'231_lab'),(22,'c_231_fac',20,98,'231_mat'),(23,'c_231_lab',21,65,'235_lab'),(24,'c_231_mat',22,101,'235_mat'),(25,'c_233_fac',23,27,'233_fac'),(26,'c_233_lab',24,63,'233_lab'),(27,'c_233_mat',25,99,'233_mat'),(28,'c_241_fac',26,30,'241_fac'),(29,'c_241_lab',27,66,'241_lab'),(30,'c_241_mat',28,102,'241_mat'),(31,'c_242_fac',29,31,'242_fac'),(32,'c_242_lab',30,67,'242_lab'),(33,'c_242_mat',31,103,'242_mat'),(34,'c_245_fac',32,32,'245_fac'),(35,'c_245_lab',33,68,'245_lab'),(36,'c_245_mat',34,104,'245_mat'),(37,'c_246_fac',35,33,'246_fac'),(38,'c_246_lab',36,69,'246_lab'),(39,'c_246_mat',37,105,'246_mat'),(40,'c_262_fac',38,35,'262_fac'),(41,'c_262_lab',39,71,'262_lab'),(42,'c_262_mat',40,107,'262_mat'),(43,'c_cr_per_unit_fac',41,11,'220A.2131_fac'),(44,'c_crd_per_unit_fac',42,12,'220A.2132_fac'),(45,'c_pump_per_unit_fac',44,13,'220A.221_fac'),(46,'c_turbine',45,26,'231_fac'),(47,'c_zero',46,9,'220A.2121_fac'),(48,'c_zero',46,10,'220A.2122_fac'),(49,'c_zero',46,14,'220A.222_fac'),(50,'escalate_1987',49,1,'211_fac'),(51,'escalate_1987',49,22,'224_fac'),(52,'escalate_1987',49,25,'227_fac'),(53,'escalate_1987',49,34,'252_fac'),(54,'escalate_1987',49,37,'211_lab'),(55,'escalate_1987',49,58,'224_lab'),(56,'escalate_1987',49,61,'227_lab'),(57,'escalate_1987',49,70,'252_lab'),(58,'escalate_1987',49,73,'211_mat'),(59,'escalate_1987',49,94,'224_mat'),(60,'escalate_1987',49,97,'227_mat'),(61,'escalate_1987',49,106,'252_mat'),(62,'mwe',50,30,'241_fac'),(63,'mwe',50,31,'242_fac'),(64,'mwe',50,32,'245_fac'),(65,'mwe',50,33,'246_fac'),(66,'mwe',50,66,'241_lab'),(67,'mwe',50,67,'242_lab'),(68,'mwe',50,68,'245_lab'),(69,'mwe',50,69,'246_lab'),(70,'mwe',50,102,'241_mat'),(71,'mwe',50,103,'242_mat'),(72,'mwe',50,104,'245_mat'),(73,'mwe',50,105,'246_mat'),(74,'mwreth',51,27,'233_fac'),(75,'mwreth',51,35,'262_fac'),(76,'mwreth',51,63,'233_lab'),(77,'mwreth',51,71,'262_lab'),(78,'mwreth',51,99,'233_mat'),(79,'mwreth',51,107,'262_mat'),(80,'mwth',52,3,'213_fac'),(81,'mwth',52,16,'220A.224_fac'),(82,'mwth',52,17,'222.11_fac'),(83,'mwth',52,18,'222.12_fac'),(84,'mwth',52,19,'222.13_fac'),(85,'mwth',52,20,'222.14_fac'),(86,'mwth',52,21,'222_fac'),(87,'mwth',52,23,'226.4_fac'),(88,'mwth',52,39,'213_lab'),(89,'mwth',52,53,'222.11_lab'),(90,'mwth',52,54,'222.12_lab'),(91,'mwth',52,55,'222.13_lab'),(92,'mwth',52,56,'222.14_lab'),(93,'mwth',52,57,'222_lab'),(94,'mwth',52,75,'213_mat'),(95,'mwth',52,89,'222.11_mat'),(96,'mwth',52,90,'222.12_mat'),(97,'mwth',52,91,'222.13_mat'),(98,'mwth',52,92,'222.14_mat'),(99,'mwth',52,93,'222_mat'),(100,'no_of_cr',53,11,'220A.2131_fac'),(101,'no_of_crd',54,12,'220A.2132_fac'),(102,'no_of_rcpump',55,13,'220A.221_fac'),(103,'prn_235_of_231_fac',56,29,'235_fac'),(104,'prn_235_of_231_lab',57,65,'235_lab'),(105,'prn_235_of_231_mat',58,101,'235_mat'),(106,'prn_fac_231_lab',59,62,'231_lab'),(107,'prn_fac_231_mat',60,98,'231_mat'),(108,'r_222.13_lab',61,55,'222.13_lab'),(109,'r_222.13_mat',62,91,'222.13_mat'),(110,'r_78_220A224_fac',63,16,'220A.224_fac'),(111,'r_78_226.4_fac',64,23,'226.4_fac'),(112,'ref_211_fac',65,1,'211_fac'),(113,'ref_211_lab',66,37,'211_lab'),(114,'ref_211_mat',67,73,'211_mat'),(115,'ref_224_fac',68,22,'224_fac'),(116,'ref_224_lab',69,58,'224_lab'),(117,'ref_224_mat',70,94,'224_mat'),(118,'ref_227_fac',71,25,'227_fac'),(119,'ref_227_lab',72,61,'227_lab'),(120,'ref_227_mat',73,97,'227_mat'),(121,'ref_252_fac',74,34,'252_fac'),(122,'ref_252_lab',75,70,'252_lab'),(123,'ref_252_mat',76,106,'252_mat'),(124,'scale_0.4',77,30,'241_fac'),(125,'scale_0.4',77,31,'242_fac'),(126,'scale_0.4',77,32,'245_fac'),(127,'scale_0.4',77,33,'246_fac'),(128,'scale_0.4',77,66,'241_lab'),(129,'scale_0.4',77,67,'242_lab'),(130,'scale_0.4',77,68,'245_lab'),(131,'scale_0.4',77,69,'246_lab'),(132,'scale_0.4',77,102,'241_mat'),(133,'scale_0.4',77,103,'242_mat'),(134,'scale_0.4',77,104,'245_mat'),(135,'scale_0.4',77,105,'246_mat'),(136,'scale_0.8',79,3,'213_fac'),(137,'scale_0.8',79,27,'233_fac'),(138,'scale_0.8',79,35,'262_fac'),(139,'scale_0.8',79,39,'213_lab'),(140,'scale_0.8',79,63,'233_lab'),(141,'scale_0.8',79,71,'262_lab'),(142,'scale_0.8',79,75,'213_mat'),(143,'scale_0.8',79,99,'233_mat'),(144,'scale_0.8',79,107,'262_mat'),(145,'scale_1.0',80,16,'220A.224_fac'),(146,'scale_1.0',80,17,'222.11_fac'),(147,'scale_1.0',80,18,'222.12_fac'),(148,'scale_1.0',80,19,'222.13_fac'),(149,'scale_1.0',80,20,'222.14_fac'),(150,'scale_1.0',80,21,'222_fac'),(151,'scale_1.0',80,23,'226.4_fac'),(152,'scale_1.0',80,26,'231_fac'),(153,'scale_1.0',80,53,'222.11_lab'),(154,'scale_1.0',80,54,'222.12_lab'),(155,'scale_1.0',80,55,'222.13_lab'),(156,'scale_1.0',80,56,'222.14_lab'),(157,'scale_1.0',80,57,'222_lab'),(158,'scale_1.0',80,89,'222.11_mat'),(159,'scale_1.0',80,90,'222.12_mat'),(160,'scale_1.0',80,91,'222.13_mat'),(161,'scale_1.0',80,92,'222.14_mat'),(162,'scale_1.0',80,93,'222_mat'),(163,'scale_tur_231_fac',81,26,'231_fac'),(164,'Tot_Labor_containment',387,38,'212_lab'),(165,'Tot_Mat_containment',388,74,'212_mat');
+/*!40000 ALTER TABLE `lfr_variable_links` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `variable`
 --
 
@@ -360,15 +485,118 @@ INSERT INTO `variable_links` VALUES (1,'c_turbine',1,79,'231_fac'),(2,'n_231',2,
 UNLOCK TABLES;
 
 --
+-- Dumping events for database 'accert_db'
+--
+
+--
 -- Dumping routines for database 'accert_db'
 --
-/*!50003 DROP PROCEDURE IF EXISTS `extract_affected_cost_elements` */;
+/*!50003 DROP PROCEDURE IF EXISTS `cal_tol_dce_fac` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_fac`(IN cel_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+                        where account=\'2\'
+                        and cost_element=\'2c_fac\' ');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `cal_tol_dce_lab` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_lab`(IN cel_tabl_name varchar(50))
+BEGIN
+     SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+                         where account=\'2\'
+                         and cost_element=\'2c_lab\' ');
+     PREPARE stmt FROM @stmt;
+     EXECUTE stmt;
+     DEALLOCATE PREPARE stmt;
+ END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `cal_tol_dce_mat` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_mat`(IN cel_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+                        where account=\'2\'
+                        and cost_element=\'2c_mat\' ');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `cal_tprn` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tprn`(acc_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT  sum(t1.prn) as tprn FROM
+                        ', acc_tabl_name, ' AS t1 LEFT JOIN ', acc_tabl_name, ' as t2
+                        ON t1.code_of_account = t2.supaccount
+                        WHERE t2.code_of_account IS NULL
+                        and t1.code_of_account!=\'2\'
+                        and t1.code_of_account!=\'2C\'');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_affected_cost_elements` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -397,7 +625,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -422,7 +650,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -454,7 +682,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -478,7 +706,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -501,7 +729,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -525,7 +753,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -549,7 +777,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -601,7 +829,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -625,7 +853,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -656,7 +884,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -717,7 +945,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -748,13 +976,109 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `print_table` */;
+/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_lmt_accounts_all` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_lmt_accounts_all`(IN acc_table VARCHAR(255),   
+                                                                            IN cel_table VARCHAR(255))
+BEGIN
+    SET @stmt = CONCAT('SELECT', acc_table,'.level,
+                                rankedcoa.COA as code_of_account,
+                                ',acc_table,'.account_description,
+                                sorted_ce.fac_cost,
+                                sorted_ce.lab_cost,
+                                sorted_ce.mat_cost,
+                                ',acc_table,'.total_cost,
+                                ',acc_table,'.unit,
+                                ',acc_table,'.review_status
+                        FROM ',acc_table,' JOIN
+                        (SELECT node.code_of_account,
+                                CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
+                            FROM ',acc_table,' AS node,
+                                ',acc_table,' AS parent
+                            WHERE node.lft BETWEEN parent.lft AND parent.rgt
+                            GROUP BY node.code_of_account) as rankedcoa
+                            ON ',acc_table,'.code_of_account=rankedcoa.code_of_account
+                            JOIN (SELECT splt_act.code_of_account,
+                                    cef.cost_2017 as fac_cost,
+                                    cel.cost_2017 as lab_cost,
+                                    cem.cost_2017 as mat_cost
+                                    FROM
+                                    (SELECT code_of_account,total_cost,supaccount,
+                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 1), ",", -1) as fac_name,
+                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 2), ",", -1) as lab_name,
+                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 3), ",", -1) as mat_name
+                                    FROM ',acc_table,') as splt_act
+                                    LEFT JOIN ',cel_table,' as cef
+                                    ON cef.cost_element= splt_act.fac_name
+                                    LEFT JOIN ',cel_table,' as cel
+                                    ON cel.cost_element= splt_act.lab_name
+                                    LEFT JOIN ',cel_table,' as cem
+                                    ON cem.cost_element= splt_act.mat_name) as sorted_ce
+                                    ON sorted_ce.code_of_account=',acc_table,'.code_of_account
+                                    WHERE ',acc_table,'.level <= 3
+                                    ORDER BY ',acc_table,'.lft;');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_lmt_accounts_simple` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_lmt_accounts_simple`(IN acc_table VARCHAR(255), IN level INT)
+BEGIN
+    SET @stmt = CONCAT('SELECT rankedcoa.code_of_account,
+                    acc.account_description,
+                    acc.total_cost,
+                    acc.unit,
+                    acc.level,
+                    acc.review_status
+                    FROM ',acc_table,' as acc
+                    JOIN
+                    (SELECT node.code_of_account AS COA , CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
+                    FROM ',acc_table,' AS node,
+                                    ',acc_table,' AS parent
+                    WHERE node.lft BETWEEN parent.lft AND parent.rgt
+                    GROUP BY node.code_of_account) as rankedcoa
+                    ON acc.code_of_account=rankedcoa.COA
+                    WHERE acc.level <= ?
+                    ORDER BY acc.lft;');
+    PREPARE stmt FROM @stmt;
+    SET @level=level;
+    EXECUTE stmt USING @level;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_table` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -776,7 +1100,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -805,7 +1129,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -837,13 +1161,49 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `roll_up_cost_elements_by_level` */;
+/*!50003 DROP PROCEDURE IF EXISTS `roll_up_account_table_by_level` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_account_table_by_level`(IN table_name varchar(50),
+                                                                        IN from_level int, IN to_level int)
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', table_name, ',',
+                    '(SELECT a',to_level,'.code_of_account as ac',to_level,'_coa, ',
+                            'sum(ua',from_level,'.total_cost) as a',to_level,'_cal_total_cost ',
+                    'FROM ', table_name, ' as ua',from_level,
+                    ' JOIN ', table_name, ' as a',to_level,
+                    ' on ua',from_level,'.supaccount=a',to_level,'.code_of_account ',
+                    'where ua',from_level,'.level=',from_level,
+                    ' and a',to_level,'.level=',to_level,
+                    ' group by a',to_level,'.code_of_account) as updated_ac',to_level,
+                    ' SET ',
+                    table_name,'.total_cost = updated_ac',to_level,'.a',to_level,'_cal_total_cost,',
+                    table_name,'.review_status = \'Updated\' ',
+                    'WHERE ',
+                    table_name,'.code_of_account = updated_ac',to_level,'.ac',to_level,'_coa');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `roll_up_cost_elements_by_level` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -874,13 +1234,177 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sup_coa_level` */;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_cost_elements_2C_fac` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_fac`(IN cel_tabl_name varchar(50),
+                                                                    IN acc_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+                        (SELECT t1.code_of_account,
+                        SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, \',\', 1), \',\', -1) as fac_name
+                        FROM ', acc_tabl_name, ' AS t1
+                        LEFT JOIN ', acc_tabl_name, ' as t2
+                        ON t1.code_of_account = t2.supaccount
+                        WHERE t2.code_of_account IS NULL
+                        and t1.code_of_account!=\'2\'
+                        and t1.code_of_account!=\'2C\' )as ac
+                        join ', cel_tabl_name, ' as cef
+                                on cef.cost_element = ac.fac_name
+                                where ac.code_of_account!=\'2C\'');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_cost_elements_2C_lab` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_lab`(IN cel_tabl_name varchar(50),  
+                                                                    IN acc_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+                        (SELECT t1.code_of_account,
+                        SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, \',\', 2), \',\', -1) as lab_name
+                        FROM ', acc_tabl_name, ' AS t1
+                        LEFT JOIN ', acc_tabl_name, ' as t2
+                        ON t1.code_of_account = t2.supaccount
+                        WHERE t2.code_of_account IS NULL
+                        and t1.code_of_account!=\'2\'
+                        and t1.code_of_account!=\'2C\' )as ac
+                        join ', cel_tabl_name, ' as cef
+                                on cef.cost_element = ac.lab_name
+                                where ac.code_of_account!=\'2C\'');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_cost_elements_2C_mat` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_mat`(IN cel_tabl_name varchar(50),
+                                                                    IN acc_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+                        (SELECT t1.code_of_account,
+                        SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, \',\', 3), \',\', -1) as mat_name
+                        FROM ', acc_tabl_name, ' AS t1
+                        LEFT JOIN ', acc_tabl_name, ' as t2
+                        ON t1.code_of_account = t2.supaccount
+                        WHERE t2.code_of_account IS NULL
+                        and t1.code_of_account!=\'2\'
+                        and t1.code_of_account!=\'2C\' )as ac
+                        join ', cel_tabl_name, ' as cef
+                                on cef.cost_element = ac.mat_name
+                                where ac.code_of_account!=\'2C\'');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_up_lmt_account_2C` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_up_lmt_account_2C`(IN acc_tabl_name varchar(50),
+                                                                IN cel_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
+                        '(SELECT sum(t1.total_cost) as tc, sum(t1.prn) as tprn FROM
+                            ', acc_tabl_name, ' AS t1 LEFT JOIN ', acc_tabl_name, ' as t2
+                            ON t1.code_of_account = t2.supaccount
+                            WHERE t2.code_of_account IS NULL
+                            and t1.code_of_account!=\'2\'
+                            and t1.code_of_account!=\'2C\') as dircost
+                        SET ', acc_tabl_name, '.total_cost = dircost.tc,
+                        ', acc_tabl_name, '.prn=dircost.tprn,
+                        review_status = \'Ready for Review\'
+                        WHERE ', acc_tabl_name, '.code_of_account = \'2C\';');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_up_lmt_direct_cost` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_up_lmt_direct_cost`(IN acc_tabl_name varchar(50),
+                                                                    IN cel_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
+                        '(SELECT  (total_cost/prn) as talcost
+                            FROM ', acc_tabl_name, ' as pre_acc
+                            WHERE pre_acc.code_of_account =\'2C\') as calcost
+                        SET ', acc_tabl_name, '.total_cost = calcost.talcost,
+                        review_status = \'Ready for Review\'
+                        WHERE ', acc_tabl_name, '.code_of_account = \'2\';');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sup_coa_level` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -904,7 +1428,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -942,7 +1466,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -975,13 +1499,91 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_on_name` */;
+/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_fac` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_fac`(IN cel_tabl_name varchar(50),
+                                                                        IN sum_2c_fac float)
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+                        SET cost_2017 = ?, updated = 1
+                        WHERE cost_element = \'2C_fac\'');
+    PREPARE stmt FROM @stmt; 
+    SET @sum_2c_fac = sum_2c_fac;
+    EXECUTE stmt USING @sum_2c_fac;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_lab` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_lab`(IN cel_tabl_name varchar(50),
+                                                                        IN sum_2c_lab float)
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+                        SET cost_2017 = ?, updated = 1
+                        WHERE cost_element = \'2C_lab\'');
+    PREPARE stmt FROM @stmt;
+    SET @sum_2c_lab = sum_2c_lab;
+    EXECUTE stmt USING @sum_2c_lab;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_mat` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_mat`(IN cel_tabl_name varchar(50),
+                                                                         IN sum_2c_mat float)
+BEGIN
+     SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+                         SET cost_2017 = ?, updated = 1
+                         WHERE cost_element = \'2C_mat\'');
+     PREPARE stmt FROM @stmt;
+     SET @sum_2c_mat = sum_2c_mat;
+     EXECUTE stmt USING @sum_2c_mat;
+     DEALLOCATE PREPARE stmt;
+ END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_on_name` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -1007,7 +1609,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -1047,7 +1649,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -1076,7 +1678,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -1105,7 +1707,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -1137,7 +1739,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -1170,4 +1772,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-31 14:26:01
+-- Dump completed on 2023-07-24 15:08:09

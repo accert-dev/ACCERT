@@ -64,9 +64,9 @@ class Accert:
         elif "lfr" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'lfr'
             self.acc_tabl = 'lfr_account'
-            self.cel_tabl = 'abr_cost_element'
-            self.var_tabl = 'abr_variable'
-            self.vlk_tabl = 'abr_variable_links'   
+            self.cel_tabl = 'lfr_cost_element'
+            self.var_tabl = 'lfr_variable'
+            self.vlk_tabl = 'lfr_variable_links'   
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
@@ -1129,49 +1129,30 @@ class Accert:
         """
 
         print('[Updating] Rolling up account table from level {} to level {} '.format(from_level,to_level))
-        c.execute("""
-                UPDATE account,
-                (SELECT a%(to)s.code_of_account as ac%(to)s_coa, 
-                        sum(ua%(from)s.total_cost) as a%(to)s_cal_total_cost
-                FROM account as ua%(from)s
-                JOIN account as a%(to)s on ua%(from)s.supaccount=a%(to)s.code_of_account
-                where ua%(from)s.level=%(from)s and a%(to)s.level=%(to)s
-                group by a%(to)s.code_of_account) as updated_ac%(to)s
-                SET
-                    account.total_cost = updated_ac%(to)s.a%(to)s_cal_total_cost,
-                    account.review_status = 'Updated'
-                WHERE
-                    account.code_of_account = updated_ac%(to)s.ac%(to)s_coa 
-            """,{'from':from_level,'to':to_level})
-        return None
-
-    def roll_up_abr_account(self, c):
-        """
-        Rolls up the account table for ABR from level 3 to 2.
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        """
-
-        print('ABR1000 model only roll up level 3 to 2')
-        ##NOTE inner join only update 222
-        print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
-        c.execute("""
-                UPDATE abr_account,
-                (SELECT a2.code_of_account as ac2_coa, 
-                        sum(ua3.total_cost) as a2_cal_total_cost
-                FROM abr_account as ua3
-                JOIN abr_account as a2 on ua3.supaccount=a2.code_of_account
-                where ua3.level=3 and a2.level=2
-                group by a2.code_of_account) as updated_ac2
-                SET
-                    abr_account.total_cost = updated_ac2.a2_cal_total_cost,
-                    abr_account.review_status = 'Updated'
-                WHERE
-                    abr_account.code_of_account = updated_ac2.ac2_coa 
-            """)
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_account_table_by_level`(IN table_name varchar(50),
+        #                                                                         IN from_level int, IN to_level int)  
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', table_name, ',',
+        #                     '(SELECT a',to_level,'.code_of_account as ac',to_level,'_coa, ',
+        #                             'sum(ua',from_level,'.total_cost) as a',to_level,'_cal_total_cost ',
+        #                     'FROM ', table_name, ' as ua',from_level,
+        #                     ' JOIN ', table_name, ' as a',to_level,
+        #                     ' on ua',from_level,'.supaccount=a',to_level,'.code_of_account ',
+        #                     'where ua',from_level,'.level=',from_level,
+        #                     ' and a',to_level,'.level=',to_level,
+        #                     ' group by a',to_level,'.code_of_account) as updated_ac',to_level,
+        #                     ' SET ',
+        #                     table_name,'.total_cost = updated_ac',to_level,'.a',to_level,'_cal_total_cost,',
+        #                     table_name,'.review_status = \'Updated\' ',
+        #                     'WHERE ',
+        #                     table_name,'.code_of_account = updated_ac',to_level,'.ac',to_level,'_coa');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('roll_up_account_table_by_level',(self.acc_tabl,from_level,to_level))
         return None
 
     def sum_cost_elements_2C(self, c):
@@ -1187,65 +1168,140 @@ class Accert:
         print(' Summing cost elements for direct cost '.center(100,'='))
         print('\n')
         print('[Updating] Summing cost elements')
-        c.execute("""SELECT sum(cef.cost_2017) from
-                    (SELECT t1.code_of_account,
-                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 1), ',', -1) as fac_name
-                    FROM accert_db.abr_account AS t1 
-                    LEFT JOIN abr_account as t2
-                    ON t1.code_of_account = t2.supaccount
-                    WHERE t2.code_of_account IS NULL 
-                    and t1.code_of_account!='2' 
-                    and t1.code_of_account!='2C' )as ac
-                    join accert_db.abr_cost_element as cef
-                            on cef.cost_element = ac.fac_name
-                            where ac.code_of_account!='2C'""")
-        sum_2c_fac = c.fetchone()[0]
-        c.execute("""UPDATE abr_cost_element
-                    SET cost_2017 = %(sum_2c_fac)s,
-                    updated = %(updated)s
-                    WHERE cost_element = '2C_fac'""",{'sum_2c_fac':float(sum_2c_fac),'updated':1})
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_fac`(IN cel_tabl_name varchar(50),
+        #                                                                     IN acc_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+        #                         (SELECT t1.code_of_account,
+        #                         SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, \',\', 1), \',\', -1) as fac_name
+        #                         FROM ', acc_tabl_name, ' AS t1
+        #                         LEFT JOIN ', acc_tabl_name, ' as t2
+        #                         ON t1.code_of_account = t2.supaccount
+        #                         WHERE t2.code_of_account IS NULL
+        #                         and t1.code_of_account!=\'2\'
+        #                         and t1.code_of_account!=\'2C\' )as ac
+        #                         join ', cel_tabl_name, ' as cef
+        #                                 on cef.cost_element = ac.fac_name
+        #                                 where ac.code_of_account!=\'2C\'');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
 
-        c.execute("""SELECT sum(cef.cost_2017) from
-                    (SELECT t1.code_of_account,
-                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 2), ',', -1) as lab_name
-                    FROM accert_db.abr_account AS t1 
-                    LEFT JOIN abr_account as t2
-                    ON t1.code_of_account = t2.supaccount
-                    WHERE t2.code_of_account IS NULL 
-                    and t1.code_of_account!='2' 
-                    and t1.code_of_account!='2C' )as ac
-                    join accert_db.abr_cost_element as cef
-                            on cef.cost_element = ac.lab_name
-                            where ac.code_of_account!='2C'""")
-        sum_2c_lab = c.fetchone()[0]
-        c.execute("""UPDATE abr_cost_element
-                    SET cost_2017 = %(sum_2c_lab)s,
-                    updated = %(updated)s
-                    WHERE cost_element = '2C_lab'""",{'sum_2c_lab':float(sum_2c_lab),'updated':1})
-        c.execute("""SELECT sum(cef.cost_2017) from
-                    (SELECT t1.code_of_account,
-                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 3), ',', -1) as mat_name
-                    FROM accert_db.abr_account AS t1 
-                    LEFT JOIN abr_account as t2
-                    ON t1.code_of_account = t2.supaccount
-                    WHERE t2.code_of_account IS NULL 
-                    and t1.code_of_account!='2' 
-                    and t1.code_of_account!='2C' )as ac
-                    join accert_db.abr_cost_element as cef
-                            on cef.cost_element = ac.mat_name
-                            where ac.code_of_account!='2C'""")
-        sum_2c_mat = c.fetchone()[0]
-        c.execute("""UPDATE abr_cost_element
-                    SET cost_2017 = %(sum_2c_mat)s,
-                    updated = %(updated)s
-                    WHERE cost_element = '2C_mat'""",{'sum_2c_mat':float(sum_2c_mat),'updated':1})
+        c.callproc('sum_cost_elements_2C_fac',(self.cel_tabl,self.acc_tabl))
+        for row in c.stored_results():
+            sum_2c_fac = row.fetchone()[0]
+        print('[Updated]  Sum of 2C_fac is: {:,.0f}'.format(sum_2c_fac))
+
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_fac`(IN cel_tabl_name varchar(50),
+        #                                                                         IN sum_2c_fac float)
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+        #                         SET cost_2017 = ?, updated = 1
+        #                         WHERE cost_element = \'2C_fac\'');
+        #     PREPARE stmt FROM @stmt; 
+        #     SET @sum_2c_fac = sum_2c_fac;
+        #     EXECUTE stmt USING @sum_2c_fac;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+
+        c.callproc('update_cost_element_2C_fac',(self.cel_tabl,float(sum_2c_fac)))
+
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_lab`(IN cel_tabl_name varchar(50),  
+        #                                                                     IN acc_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+        #                         (SELECT t1.code_of_account,
+        #                         SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, \',\', 2), \',\', -1) as lab_name
+        #                         FROM ', acc_tabl_name, ' AS t1
+        #                         LEFT JOIN ', acc_tabl_name, ' as t2
+        #                         ON t1.code_of_account = t2.supaccount
+        #                         WHERE t2.code_of_account IS NULL
+        #                         and t1.code_of_account!=\'2\'
+        #                         and t1.code_of_account!=\'2C\' )as ac
+        #                         join ', cel_tabl_name, ' as cef
+        #                                 on cef.cost_element = ac.lab_name
+        #                                 where ac.code_of_account!=\'2C\'');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+
+        c.callproc('sum_cost_elements_2C_lab',(self.cel_tabl,self.acc_tabl))
+        for row in c.stored_results():
+            sum_2c_lab = row.fetchone()[0]
+        print('[Updated]  Sum of 2C_lab is: {:,.0f}'.format(sum_2c_lab))
+
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_lab`(IN cel_tabl_name varchar(50),
+        #                                                                         IN sum_2c_lab float)
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+        #                         SET cost_2017 = ?, updated = 1
+        #                         WHERE cost_element = \'2C_lab\'');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @sum_2c_lab = sum_2c_lab;
+        #     EXECUTE stmt USING @sum_2c_lab;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+
+        c.callproc('update_cost_element_2C_lab',(self.cel_tabl,float(sum_2c_lab)))
+
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_mat`(IN cel_tabl_name varchar(50),
+        #                                                                     IN acc_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+        #                         (SELECT t1.code_of_account,
+        #                         SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, \',\', 3), \',\', -1) as mat_name
+        #                         FROM ', acc_tabl_name, ' AS t1
+        #                         LEFT JOIN ', acc_tabl_name, ' as t2
+        #                         ON t1.code_of_account = t2.supaccount
+        #                         WHERE t2.code_of_account IS NULL
+        #                         and t1.code_of_account!=\'2\'
+        #                         and t1.code_of_account!=\'2C\' )as ac
+        #                         join ', cel_tabl_name, ' as cef
+        #                                 on cef.cost_element = ac.mat_name
+        #                                 where ac.code_of_account!=\'2C\'');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+
+        c.callproc('sum_cost_elements_2C_mat',(self.cel_tabl,self.acc_tabl))
+        for row in c.stored_results():
+            sum_2c_mat = row.fetchone()[0]
+        print('[Updated]  Sum of 2C_mat is: {:,.0f}'.format(sum_2c_mat))
+
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_mat`(IN cel_tabl_name varchar(50),
+        #                                                                         IN sum_2c_mat float)
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+        #                         SET cost_2017 = ?, updated = 1
+        #                         WHERE cost_element = \'2C_mat\'');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @sum_2c_mat = sum_2c_mat;
+        #     EXECUTE stmt USING @sum_2c_mat;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('update_cost_element_2C_mat',(self.cel_tabl,float(sum_2c_mat)))
 
         print('[Updated] Cost elements summed\n')
         return None
 
-    def sum_up_abr_account_2C(self, c):
+    def sum_up_lmt_account_2C(self, c):
         """
-        Sums up total cost of account 2C for the ABR-1000.
+        Sums up total cost of account 2C for reactor model with limited information.
 
         Parameters
         ----------
@@ -1255,88 +1311,203 @@ class Accert:
 
         print(' Summing up account table '.center(100,'='))
         print('\n')
-        c.execute("""UPDATE abr_account,
-                (SELECT  sum(t1.total_cost) as tc, sum(t1.prn) as tprn FROM
-                    abr_account AS t1 LEFT JOIN abr_account as t2
-                    ON t1.code_of_account = t2.supaccount
-                    WHERE t2.code_of_account IS NULL 
-                    and t1.code_of_account!='2' 
-                    and t1.code_of_account!='2C') as dircost
-                SET abr_account.total_cost = dircost.tc,
-                abr_account.prn=dircost.tprn,
-                review_status = 'Ready for Review'
-                WHERE abr_account.code_of_account = '2C';""")
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_up_lmt_account_2C`(IN acc_tabl_name varchar(50),
+        #                                                                 IN cel_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
+        #                         '(SELECT sum(t1.total_cost) as tc, sum(t1.prn) as tprn FROM
+        #                             ', acc_tabl_name, ' AS t1 LEFT JOIN ', acc_tabl_name, ' as t2
+        #                             ON t1.code_of_account = t2.supaccount
+        #                             WHERE t2.code_of_account IS NULL
+        #                             and t1.code_of_account!=\'2\'
+        #                             and t1.code_of_account!=\'2C\') as dircost
+        #                         SET ', acc_tabl_name, '.total_cost = dircost.tc,
+        #                         ', acc_tabl_name, '.prn=dircost.tprn,
+        #                         review_status = \'Ready for Review\'
+        #                         WHERE ', acc_tabl_name, '.code_of_account = \'2C\';');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('sum_up_lmt_account_2C',(self.acc_tabl,self.cel_tabl))
+
+        # c.execute("""UPDATE abr_account,
+        #         (SELECT  sum(t1.total_cost) as tc, sum(t1.prn) as tprn FROM
+        #             abr_account AS t1 LEFT JOIN abr_account as t2
+        #             ON t1.code_of_account = t2.supaccount
+        #             WHERE t2.code_of_account IS NULL 
+        #             and t1.code_of_account!='2' 
+        #             and t1.code_of_account!='2C') as dircost
+        #         SET abr_account.total_cost = dircost.tc,
+        #         abr_account.prn=dircost.tprn,
+        #         review_status = 'Ready for Review'
+        #         WHERE abr_account.code_of_account = '2C';""")
         print('[Updated]  Account table summed up for calculated direct cost.\n')
         return None
 
-    def sum_up_abr_direct_cost(self, c):
+    def sum_up_lmt_direct_cost(self, c):
         """
-        Sums up the total cost of account 2 from account 2C for the ABR-1000.
+        Sums up the total cost of account 2 from account 2C for reactor model with limited information.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         """
-        c.execute("""UPDATE abr_account,
-                (SELECT  (total_cost/prn) as talcost 
-                    FROM abr_account as pre_abr
-                    WHERE pre_abr.code_of_account ='2C') as calcost
-                SET abr_account.total_cost = calcost.talcost,
-                review_status = 'Ready for Review'
-                WHERE abr_account.code_of_account = '2';""")
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_up_lmt_direct_cost`(IN acc_tabl_name varchar(50),
+        #                                                                     IN cel_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
+        #                         '(SELECT  (total_cost/prn) as talcost
+        #                             FROM ', acc_tabl_name, ' as pre_acc
+        #                             WHERE pre_acc.code_of_account =\'2C\') as calcost
+        #                         SET ', acc_tabl_name, '.total_cost = calcost.talcost,
+        #                         review_status = \'Ready for Review\'
+        #                         WHERE ', acc_tabl_name, '.code_of_account = \'2\';');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('sum_up_lmt_direct_cost',(self.acc_tabl,self.cel_tabl))
+
+        # c.execute("""UPDATE abr_account,
+        #         (SELECT  (total_cost/prn) as talcost 
+        #             FROM abr_account as pre_abr
+        #             WHERE pre_abr.code_of_account ='2C') as calcost
+        #         SET abr_account.total_cost = calcost.talcost,
+        #         review_status = 'Ready for Review'
+        #         WHERE abr_account.code_of_account = '2';""")
         print('[Updated]  Account table summed up for direct cost.\n')
         return None
 
     def cal_direct_cost_elements(self, c):
         """
-        Calculates the direct cost elements for the ABR including the factory, labor, and material costs. (2C_fac, 2C_lab, 2C_mat)
+        Calculates the direct cost elements for the reactor model with limited information
+        including the factory, labor, and material costs. (2C_fac, 2C_lab, 2C_mat)
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         """
-        c.execute("""SELECT  sum(t1.prn) as tprn FROM
-                    abr_account AS t1 LEFT JOIN abr_account as t2
-                    ON t1.code_of_account = t2.supaccount
-                    WHERE t2.code_of_account IS NULL 
-                    and t1.code_of_account!='2' 
-                    and t1.code_of_account!='2C';""")
-        tprn  = c.fetchone()[0]      
-        c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
-                    where account='2'
-                    and cost_element='2c_fac' """)
-        fac = c.fetchone()[0]/tprn
-        c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
-                    where account='2'
-                    and cost_element='2c_lab' """)
-        lab = c.fetchone()[0]/tprn
-        c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
-                    where account='2'
-                    and cost_element='2c_mat' """)     
-        mat = c.fetchone()[0]/tprn        
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tprn`(acc_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT  sum(t1.prn) as tprn FROM
+        #                         ', acc_tabl_name, ' AS t1 LEFT JOIN ', acc_tabl_name, ' as t2
+        #                         ON t1.code_of_account = t2.supaccount
+        #                         WHERE t2.code_of_account IS NULL
+        #                         and t1.code_of_account!=\'2\'
+        #                         and t1.code_of_account!=\'2C\'');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('cal_tprn',(self.acc_tabl,))
+        for row in c.stored_results():
+            tprn = row.fetchone()[0]
+        # c.execute("""SELECT  sum(t1.prn) as tprn FROM
+        #             abr_account AS t1 LEFT JOIN abr_account as t2
+        #             ON t1.code_of_account = t2.supaccount
+        #             WHERE t2.code_of_account IS NULL 
+        #             and t1.code_of_account!='2' 
+        #             and t1.code_of_account!='2C';""")
+        # tprn  = c.fetchone()[0]   
+         
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_fac`(IN cel_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+        #                         where account=\'2\'
+        #                         and cost_element=\'2c_fac\' ');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+
+        c.callproc('cal_tol_dce_fac',(self.cel_tabl,))
+        for row in c.stored_results():
+            fac = row.fetchone()[0]/tprn
+
+
+        # c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
+        #             where account='2'
+        #             and cost_element='2c_fac' """)
+        # fac = c.fetchone()[0]/tprn
+
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_lab`(IN cel_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+        #                         where account=\'2\'
+        #                         and cost_element=\'2c_lab\' ');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+
+        c.callproc('cal_tol_dce_lab',(self.cel_tabl,))
+        for row in c.stored_results():
+            lab = row.fetchone()[0]/tprn
+
+        # c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
+        #             where account='2'
+        #             and cost_element='2c_lab' """)
+        # lab = c.fetchone()[0]/tprn
+
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_mat`(IN cel_tabl_name varchar(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+        #                         where account=\'2\'
+        #                         and cost_element=\'2c_mat\' ');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+
+        c.callproc('cal_tol_dce_mat',(self.cel_tabl,))
+        for row in c.stored_results():
+            mat = row.fetchone()[0]/tprn
+
+        # c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
+        #             where account='2'
+        #             and cost_element='2c_mat' """)     
+        # mat = c.fetchone()[0]/tprn        
         # print(' Direct cost calculation '.center(100,'='))
         # print(fac, lab,mat)
         # print('[Updated]  Account table summed up for direct cost.\n')
         return fac,lab,mat
 
-    def roll_up_abr_account_table(self, c):
+    def roll_up_lmt_account_table(self, c):
         """
-        Rolls up the account table for the ABR-1000.
+        Rolls up the account table for the reactor model with limited information.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements
         """
+
         print(' Rolling up account table '.center(100,'='))
         print('\n')
-        ### only update account 222 and account 2C
-        self.roll_up_abr_account(c)
+        ### limited information model only roll up level 3 to 2
+        ### ABR only update account 222 and account 2C
+        ### update account 222
+        self.roll_up_account_table_by_level(c,from_level=3,to_level=2)
+        ### update account 2C
+
         print('[Updated]  Account table rolled up\n')
-        self.sum_up_abr_account_2C(c)
-        self.sum_up_abr_direct_cost(c)
+        self.sum_up_lmt_account_2C(c)
+        self.sum_up_lmt_direct_cost(c)
         return None
 
     def print_logo(self):
@@ -1383,9 +1554,83 @@ class Accert:
         # filename = 'ACCERT_updated_cost_element.csv'
         self.write_to_excel(statement, filename,conn)
 
-    def generate_abr_results_table(self, c, conn, level=3):
+    def gen_update_account_stmt(self,c,conn, level=3):
         """
-        Generates the results tables for the ABR-1000.
+        Generates the SQL statement to update the account table.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        conn : MySQLConnection
+            MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
+        """
+        acc_tabl = self.acc_tabl
+        statement = """
+            SELECT rankedcoa.code_of_account, {0}.account_description, {0}.total_cost,
+                {0}.unit, {0}.level, {0}.prn as pct, {0}.review_status
+            FROM {0}
+            JOIN (
+                SELECT node.code_of_account AS COA,
+                    CONCAT(REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
+                FROM {0} AS node, {0} AS parent
+                WHERE node.lft BETWEEN parent.lft AND parent.rgt
+                GROUP BY node.code_of_account
+            ) AS rankedcoa ON {0}.code_of_account = rankedcoa.COA
+            WHERE {0}.level <= {1}
+            ORDER BY {0}.lft;
+        """.format(acc_tabl, level)
+        return statement
+
+    def gen_aff_var_stmt(self,c,conn):
+        """
+        Generates the SQL statement to output the updated variable table.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        conn : MySQLConnection
+            MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
+        """
+        var_tabl = self.var_tabl
+        vlk_tabl = self.vlk_tabl
+        statement = """
+            SELECT va.var_name, va.var_description, affectv.ce_affected
+            FROM {0} AS va
+            JOIN (
+                SELECT variable, GROUP_CONCAT(ce) AS ce_affected
+                FROM {1}
+                GROUP BY variable
+            ) AS affectv ON va.var_name = affectv.variable
+            WHERE va.user_input = 1
+            ORDER BY va.ind;
+        """.format(var_tabl, vlk_tabl)
+        return statement
+
+    def gen_update_cost_element_stmt(self,c,conn):
+        """
+        Generates the SQL statement to output the updated cost element table.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        conn : MySQLConnection
+            MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
+        """
+        cel_tabl = self.cel_tabl
+        statement = """
+            SELECT ce.cost_element, ce.cost_2017 AS cost, ce.sup_cost_ele, ce.alg_name, ce.account
+            FROM {0} AS ce
+            WHERE ce.updated != 0
+            ORDER BY ce.ind;
+        """.format(cel_tabl)
+        return statement
+
+    def generate_lmt_results_table(self, c, conn, level=3):
+        """
+        Generates the results tables for reactor model with limited information.
 
         Parameters
         ----------
@@ -1394,19 +1639,19 @@ class Accert:
         level : int
             Level of detail in the results table. (How many levels)
         """
-        statement="SELECT rankedcoa.code_of_account, abr_account.account_description, abr_account.total_cost,	 abr_account.unit,	 abr_account.level,abr_account.prn as pct,abr_account.review_status FROM abr_account JOIN (SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM abr_account AS node, abr_account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON abr_account.code_of_account=rankedcoa.COA WHERE abr_account.level <=3 ORDER BY abr_account.lft;".format(level)
+        statement = self.gen_update_account_stmt(c,conn,level)
         filename = 'ACCERT_updated_account.xlsx'
         # filename = 'ACCERT_updated_account.csv'
 
         self.write_to_excel(statement, filename,conn)
 
-        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db.abr_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db.abr_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
+        statement = self.gen_aff_var_stmt(c,conn)
         filename = 'ACCERT_variable_affected_cost_elements.xlsx'
         # filename = 'ACCERT_variable_affected_cost_elements.csv'
 
         self.write_to_excel(statement, filename,conn)
 
-        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db.abr_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
+        statement = self.gen_update_cost_element_stmt(c,conn)
         filename = 'ACCERT_updated_cost_element.xlsx'
         # filename = 'ACCERT_updated_cost_element.csv'
 
@@ -1635,37 +1880,8 @@ class Accert:
 
         self.roll_up_cost_elements(c)
 
-        if self.ref_model=="abr1000":
-            self.sum_cost_elements_2C(c)
-            ### update the account table:
 
-            self.update_account_table_by_cost_elements(c)
-
-            ### roll up the account table:
-            self.roll_up_abr_account_table(c)
-            abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
-            print(' Generating results table for review '.center(100,'='))
-            print('\n')  
-            ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
-
-            self.generate_abr_results_table(c, conn,level=3)
-        
-        elif self.ref_model=="lfr":
-            self.sum_cost_elements_2C(c)
-            ### update the account table:
-
-            self.update_account_table_by_cost_elements(c)
-
-            ### roll up the account table:
-            self.roll_up_abr_account_table(c)
-            abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
-            print(' Generating results table for review '.center(100,'='))
-            print('\n')  
-            ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
-
-            self.generate_abr_results_table(c, conn,level=3)
-
-        elif self.ref_model=="pwr12-be":
+        if self.ref_model=="pwr12-be":
 
             ### update the account table:
             self.update_account_table_by_cost_elements(c)
@@ -1676,7 +1892,20 @@ class Accert:
             print('\n')
             ut.print_leveled_accounts(c, all=False,cost_unit='million',level=3)
             self.generate_results_table(c, conn,level=3)
+        else:
+            self.sum_cost_elements_2C(c)
+            ### update the account table:
 
+            self.update_account_table_by_cost_elements(c)
+
+            ### roll up the account table:
+            self.roll_up_lmt_account_table(c)
+            lmt_fac,lmt_lab,lmt_mat = self.cal_direct_cost_elements(c)
+            print(' Generating results table for review '.center(100,'='))
+            print('\n')  
+            ut.print_leveled_lmt_accounts(c, lmt_fac,lmt_lab,lmt_mat,all=False,cost_unit='million',level=3)
+
+            self.generate_lmt_results_table(c, conn,level=3)
 
         ### close the connection:
 
