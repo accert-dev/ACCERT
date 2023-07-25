@@ -567,6 +567,22 @@ class Accert:
         tc_id : str
             Total cost ID.
         """
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_total_cost_on_name`(IN table_name VARCHAR(50),
+        #                                           IN tc_name VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT total_cost, unit FROM ', table_name, ' WHERE code_of_account = ?');
+        # PREPARE stmt FROM @stmt;
+        # SET @tc_name = tc_name;
+        # EXECUTE stmt USING @tc_name;
+        # DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('extract_total_cost_on_name',(self.acc_tabl, tc_id))
+        for row in c.stored_results():
+            results = row.fetchall()
+        tc_info = results[0]
+        return tc_info
         ## Keep the note here for ref
         ## example with tuple
         # c.execute("""SELECT code_of_account, account_description, total_cost, unit
@@ -574,17 +590,18 @@ class Accert:
         #             WHERE code_of_account = %s;""",(tc_id,))
 
         ## example with direct format string
-        c.execute("""SELECT code_of_account, account_description, total_cost, unit
-                    FROM `accert_db`.`account` 
-                    WHERE code_of_account = "{}" ;
-                    """.format(tc_id))
-        ## example with direct format string
+
         # c.execute("""SELECT code_of_account, account_description, total_cost, unit
         #             FROM `accert_db`.`account` 
-        #             WHERE code_of_account = %(u_i_tc_name)s ;""",{'u_i_tc_name': str(tc_id).replace('"','')})
-        results = c.fetchall()
-        tc_info = results[0]
-        return tc_info
+        #             WHERE code_of_account = "{}" ;
+        #             """.format(tc_id))
+        # ## example with direct format string
+        # # c.execute("""SELECT code_of_account, account_description, total_cost, unit
+        # #             FROM `accert_db`.`account` 
+        # #             WHERE code_of_account = %(u_i_tc_name)s ;""",{'u_i_tc_name': str(tc_id).replace('"','')})
+        # results = c.fetchall()
+        # tc_info = results[0]
+        # return tc_info
 
     def check_unit_conversion(self, org_unit, new_unit):
         """
