@@ -1,0 +1,8 @@
+Get Current COAs
+================
+
+.. autoclass:: AccertInput.Accert
+    :members:
+
+    .. automethod:: get_current_COAs
+        :noindex:

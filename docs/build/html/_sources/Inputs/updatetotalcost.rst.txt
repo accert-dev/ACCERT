@@ -1,0 +1,8 @@
+Update Total Cost
+=================
+
+.. autoclass:: AccertInput.Accert
+    :members:
+
+    .. automethod:: update_total_cost
+        :noindex:

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation For Linux &mdash; ACCERT User Manual 0.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation For Mac" href="installMAC.html" />
+    <link rel="prev" title="Installation For Windows" href="installACCERT.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ACCERT User Manual
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="MainPage.html">About ACCERT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new_page.html">Using ACCERT (With Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inputACCERT.html">Code for ACCERT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InputExplanation.html">Inputs of ACCERT</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installations:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="Installation.Page.html">Installations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="installACCERT.html">Installation For Windows</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation For Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installMAC.html">Installation For Mac</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ACCERT User Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="Installation.Page.html">Installations</a></li>
+      <li class="breadcrumb-item active">Installation For Linux</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/installLINUX.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-for-linux">
+<h1>Installation For Linux<a class="headerlink" href="#installation-for-linux" title="Permalink to this heading"></a></h1>
+<p>For certain aspects of this process, you will need to be an administrator to download certain files. It is recommended that you follow the process on your own device, or a device where you have administrative privileges.</p>
+<p>You will also need to have some python coding program. Visual Studio Code is heavily recommended for this, but not required.</p>
+<p><strong>Cloning ACCERT</strong></p>
+<ul class="simple">
+<li><p>In your file explorer, create a folder where you want to install ACCERT. (e.g., CODE)</p></li>
+<li><p>Open a terminal window in Git.</p>
+<ul>
+<li><p>If git is not yet installed, install it on the website.</p></li>
+<li><p>[Git - Downloading Package] (<a class="reference external" href="https://git-scm.com/download/win">https://git-scm.com/download/win</a>)</p></li>
+<li><p>To confirm Git installed properly, open the terminal and type in git.</p></li>
+<li><p>If various commands appear, Git is successfully installed.</p></li>
+</ul>
+</li>
+</ul>
+<figure class="align-default">
+<a class="reference internal image-reference" href="_images/gitbash.png"><img alt="Git Bash for Mac" src="_images/gitbash.png" style="width: 600px;" /></a>
+</figure>
+<ul class="simple">
+<li><p>Follow the next steps one at a time to create an ACCERT folder in your previously created folder.</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ mkdir CODE
+$ cd CODE
+$ git clone https://github.com/accert-dev/ACCERT.git
+$ cd ACCERT
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If you created the folder to install ACCERT, you do not have to use the mkdir command.</p></li>
+</ul>
+<p>Within this ACCERT folder you should have very similar stuff as the above folder.</p>
+<p><strong>Install the MySQL Community Server</strong></p>
+<ul class="simple">
+<li><p>[MySQL Community Server] (<a class="reference external" href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a>)</p>
+<ul>
+<li><p>Click the recommended download.</p></li>
+<li><p>You can go through with all the recommended settings. (Developer Default)</p></li>
+</ul>
+</li>
+</ul>
+<p>[<strong>NOTE</strong>] You will have to create a <strong>strong password encryption</strong>, and enter said password in during the download process. <strong>Write this password down somewhere or keep it secure with a password manager!!! It is very time consuming and difficult to reset this password!</strong></p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="_images/password1.png"><img alt="password1" src="_images/password1.png" style="width: 600px;" /></a>
+</figure>
+<figure class="align-default">
+<a class="reference internal image-reference" href="_images/password2.png"><img alt="password2" src="_images/password2.png" style="width: 600px;" /></a>
+</figure>
+<p><strong>Install NEAMS Workbench</strong></p>
+<ul class="simple">
+<li><p>[NEAMS Workbench] (<a class="reference external" href="https://code.ornl.gov/neams-workbench/downloads">https://code.ornl.gov/neams-workbench/downloads</a>)</p>
+<ul>
+<li><p>Click the .tar.gz extension. This is for Linux.</p></li>
+<li><p>This file could be considered as unsafe. <strong>This file is safe!</strong> Click more options to keep the file!</p></li>
+<li><p><strong>Run NEAMS Workbench before continuing to the next step.</strong></p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Set up ACCERT</strong></p>
+<ul class="simple">
+<li><p>Change into the src folder</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ cd src
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Edit the workbench.sh file, provide workbench_path to <cite>workbench-&lt;version-number&gt;.app/Contents</cite> folder.</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>workbench_path=&quot;workbench-&lt;version-number&gt;.app/Contents&quot;
+</pre></div>
+</div>
+<p>Follow the text for the appropriate system, in this case Linux,</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>workbench_path=&quot;Workbench-5.3.1&quot;
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Run <strong>./setup_accert.sh</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ ./setup_accert.sh
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Edit file <cite>install.conf</cite> and change “yourpassword” to your MySQL root password.</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[INSTALL]
+
+PASSWD = yourpassword
+
+# NOTE: ALL OTHER information should be set up later
+# INSTALL_PATH = /usr/local
+# DATADIR =/mysql/data
+# INSTALL_PACKAGE =
+# EXP_DIR =
+</pre></div>
+</div>
+<p><strong>Test installation</strong></p>
+<ul class="simple">
+<li><p>Test ACCERT</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ cd ../test
+$ pytest
+</pre></div>
+</div>
+<p><strong>Configuration with Workbench</strong></p>
+<ul class="simple">
+<li><p>Open workbench, and open <cite>Workbench/Configurations</cite> hit <cite>add</cite> on the top</p>
+<ul>
+<li><p>Select <cite>Accert</cite> from the drop-down menu, hit <cite>OK</cite></p></li>
+<li><p>In <cite>executable</cite>: give full path to the directory containing accert/src/Main.py</p></li>
+<li><p>In configuration, hit <cite>load gramma</cite></p></li>
+</ul>
+</li>
+</ul>
+<p><strong>ACCERT Execution</strong></p>
+<p>ACCERT can be executed both through the Workbench interface by pressing <cite>run</cite> or through the command lines:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ python ACCERT/src/Main.py -i myinput.son
+</pre></div>
+</div>
+<p><strong>Where myinput.son refers to one of the two reference models, PWR12-BE.son or ABR-1000.son</strong></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installACCERT.html" class="btn btn-neutral float-left" title="Installation For Windows" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installMAC.html" class="btn btn-neutral float-right" title="Installation For Mac" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Argonne National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

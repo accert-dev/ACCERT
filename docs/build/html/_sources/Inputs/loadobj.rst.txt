@@ -1,0 +1,8 @@
+Load Object
+===========
+
+.. autoclass:: AccertInput.Accert
+    :members:
+
+    .. automethod:: load_obj
+        :noindex:

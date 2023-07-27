@@ -1,0 +1,8 @@
+Roll Up Cost Elements
+=====================
+
+.. autoclass:: AccertInput.Accert
+    :members:
+
+    .. automethod:: roll_up_cost_elements
+        :noindex:

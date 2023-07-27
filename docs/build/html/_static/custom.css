@@ -1,0 +1,5 @@
+/* custom.css */
+
+table.custom-table td {
+    white-space: normal;
+}
