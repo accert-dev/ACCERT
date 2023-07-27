@@ -1,9 +1,0 @@
-Update Super Variable
-=====================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: update_super_variable
-        :noindex:
-

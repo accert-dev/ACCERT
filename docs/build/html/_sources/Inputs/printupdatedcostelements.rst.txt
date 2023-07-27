@@ -1,8 +1,0 @@
-Print Updated Cost Elements
-===========================
-
-.. autoclass:: UtilityInput.Utility_methods
-    :members:
-
-    .. automethod:: print_updated_cost_elements
-        :noindex:

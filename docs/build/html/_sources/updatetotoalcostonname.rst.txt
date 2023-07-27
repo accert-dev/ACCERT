@@ -1,9 +1,0 @@
-Update Total Cost On Name
-=========================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: update_total_cost_on_name
-        :noindex:
-

@@ -1,7 +1,0 @@
-Insert COA
-==========
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: insert_COA
-        :noindex:

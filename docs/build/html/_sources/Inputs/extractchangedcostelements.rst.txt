@@ -1,8 +1,0 @@
-Extract Changed Cost Elements
-=============================
-
-.. autoclass:: UtilityInput.Utility_methods
-    :members:
-
-    .. automethod:: extract_changed_cost_elements
-        :noindex:

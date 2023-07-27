@@ -1,8 +1,0 @@
-Extract Original Cost Elements
-==============================
-
-.. autoclass:: UtilityInput.Utility_methods
-    :members:
-
-    .. automethod:: extract_original_cost_elements
-        :noindex:

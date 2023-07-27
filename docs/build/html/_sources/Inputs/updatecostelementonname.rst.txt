@@ -1,8 +1,0 @@
-Update Cost Element On Name
-===========================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: update_cost_element_on_name
-        :noindex:

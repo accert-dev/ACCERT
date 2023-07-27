@@ -1,8 +1,0 @@
-Get Variable Value By Name
-==========================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: get_var_value_by_name
-        :noindex:

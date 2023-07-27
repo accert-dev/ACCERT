@@ -1,8 +1,0 @@
-Get ABR-1000 Variable Value By Name
-===================================
-
-.. autoclass:: Main.Accert
-
-
-    .. automethod:: get_abr_var_value_by_name
-        :noindex:

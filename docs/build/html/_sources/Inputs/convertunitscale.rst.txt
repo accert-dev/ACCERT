@@ -1,8 +1,0 @@
-Convert Unit Scale
-==================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: convert_unit_scale
-        :noindex:

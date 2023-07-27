@@ -1,8 +1,0 @@
-Prints Facility Costs
-=====================
-
-.. autoclass:: UtilityInput.Utility_methods
-    :members:
-
-    .. automethod:: print_facility
-        :noindex:

@@ -5,9 +5,15 @@
 
 import os
 import sys
+from urllib.parse import quote
+
+password = '@Darn12213529L'
+encoded_password = quote(password)
 
 sys.path.insert(0, os.path.abspath(r"C:\Users\Darne\OneDrive\Documents\ACCERTGit\ACCERT\docs\source\inputsIndex"))
 sys.path.append(r"C:\Users\Darne\OneDrive\Documents\ACCERTGit\ACCERT\docs\source\inputsIndex\Main.py")
+
+sqltable_connection_string = 'mysql+pymysql://root:{encoded_password}@localhost:3306/accert_db'
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -22,6 +28,7 @@ release = '0.2'
 extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.autodoc',
+    'sphinxcontrib.sqltable',
 ]
 
 templates_path = ['_templates']

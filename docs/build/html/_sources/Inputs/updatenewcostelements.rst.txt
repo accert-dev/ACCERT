@@ -1,9 +1,0 @@
-Update New Cost Elements
-========================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: update_new_cost_elements
-        :noindex:
-
