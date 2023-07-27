@@ -6,9 +6,19 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(r"C:\Users\Darne\OneDrive\Documents\ACCERTGit\ACCERT\docs\source\inputsIndex"))
-sys.path.append(r"C:\Users\Darne\OneDrive\Documents\ACCERTGit\ACCERT\docs\source\inputsIndex\Main.py")
+current_dir = os.getcwd()
 
+relative_path=r'\inputsIndex'
+
+relative_path_to_main_py = r'..\src\Main.py'
+
+absolute_path = os.path.join(current_dir, relative_path)
+
+accert_path = os.path.join(current_dir, relative_path_to_main_py)
+
+sys.path.append(absolute_path)
+
+sys.path.append(accert_path)
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
