@@ -11,7 +11,7 @@ import sys
 
 current_dir = os.getcwd()
 
-relative_path=r'\inputsIndex'
+relative_path=r'.\inputsIndex'
 
 relative_path_to_main_py = r'..\src\Main.py'
 

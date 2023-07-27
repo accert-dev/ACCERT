@@ -1,8 +1,8 @@
 .. toctree::
     :maxdepth: 2
      
-Code of Accounts (COA)
-======================
+Code of Account (COA)
+=====================
 
 .. toctree::
     :maxdepth: 1
