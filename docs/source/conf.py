@@ -5,12 +5,14 @@
 
 import os
 import sys
+# from urllib.parse import quote
 
-sys.path.insert(0, os.path.abspath('../inputsIndex'))
-
-
-
-
+#password = '@Darn12213529L'
+#encoded_password = quote(password)
+#
+sys.path.insert(0, os.path.abspath('./inputsIndex'))
+#
+#sqltable_connection_string = 'mysql+pymysql://root:{encoded_password}@localhost:3306/variables'
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -25,6 +27,7 @@ release = '0.2'
 extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.autodoc',
+    'sphinxcontrib.sqltable',
 ]
 
 templates_path = ['_templates']
