@@ -23,7 +23,7 @@ absolute_path = os.path.join(current_dir, relative_path)
 
 accert_path = os.path.join(current_dir, relative_path_to_main_py)
 
-sys.path.append(absolute_path)
+sys.path.insert(0, os.path.abspath(absolute_path))
 
 sys.path.append(accert_path)
 
