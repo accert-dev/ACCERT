@@ -27,7 +27,6 @@ release = '0.2'
 extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.autodoc',
-    'sphinxcontrib.sqltable',
 ]
 
 templates_path = ['_templates']
