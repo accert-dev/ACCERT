@@ -4,7 +4,7 @@
 ABR-1000 Variables
 ==================
 
-.. csv-table:: PWR12-BE Variables
+.. csv-table:: ABR-1000 Variables
     :header: "Index", "Name", "Description", "Unit"
     :widths: 15, 30, 30, 30
 

@@ -13,4 +13,5 @@ Below are the commands that can have their variables changed, as well as the var
     accertExplanation.rst
     levelExplanation.rst
     algorithmExplanation.rst
+    CodeOfAccountsDesc
     variableExplanation.rst
