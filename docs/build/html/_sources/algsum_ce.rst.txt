@@ -2,7 +2,7 @@
     :maxdepth: 1
 
 Sum_ce
-====================
+======
 
 .. table:: Algorithm
    :widths: 15 15 15

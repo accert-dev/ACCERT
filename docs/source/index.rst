@@ -51,6 +51,7 @@ Welcome to ACCERT User Manual!
    new_page.rst
    inputACCERT.rst
    InputExplanation.rst
+   OutputsACCERT.rst
 
 .. toctree::
    :maxdepth: 1

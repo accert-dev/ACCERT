@@ -1,5 +1,5 @@
 Sum up of Direct Costs of the ABR-1000
-===================================
+======================================
 
 .. autoclass:: Main.Accert
 

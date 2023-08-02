@@ -1,0 +1,456 @@
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::'###:::::'######:::'######::'########:'########::'########:
+::'## ##:::'##... ##:'##... ##: ##.....:: ##.... ##:... ##..::
+:'##:. ##:: ##:::..:: ##:::..:: ##::::::: ##:::: ##:::: ##::::
+'##:::. ##: ##::::::: ##::::::: ######::: ########::::: ##::::
+ #########: ##::::::: ##::::::: ##...:::: ##.. ##:::::: ##::::
+ ##.... ##: ##::: ##: ##::: ##: ##::::::: ##::. ##::::: ##::::
+ ##:::: ##:. ######::. ######:: ########: ##:::. ##:::: ##::::
+..:::::..:::.......::::......::........::..:::::..:::::..:::::
+
+
+======================================== Reading user input ========================================
+
+
+[USER_INPUT] Reference model is "PWR12-BE" 
+
+Parameter "mwth" is required for cost elements:
+233_lab,237_mat,226.7_lab,222.14_lab,222.12_lab,222.11_fac,222_lab,226.4_lab,222.11_lab,213_lab,262_
+fac,222.14_fac,222_fac,226.4_fac,222_mat,226.4_mat,226.7_mat,213_fac,234_fac,233_fac,226.7_fac,234_l
+ab,237_lab,233_mat,262_lab,213_mat,222.11_mat,234_mat,222.12_fac,222.12_mat,222.14_mat,262_mat
+
+Parameter "mwe" is required for cost elements:
+241_mat,246_lab,245_lab,242_lab,241_lab,246_fac,242_fac,241_fac,242_mat,246_mat,245_mat
+
+[USER_INPUT] Thermal power is 3000 MW 
+
+[USER_INPUT] Electric power is 1000 MW 
+
+[Updating] Variable ref_211_fac
+[Updated]  Changed from 0.284275 million to 0.27 million
+
+[Updating] Variable ref_211_mat
+[Updated]  Changed from 10.203885 million to 10.3 million
+
+[Updating] Variable c_213_fac
+[Updated]  Changed from 1.7706643 million to 1.79 million
+
+[Updating] Total cost of account 217
+[Updated]  Changed from 28,149,600.00 dollar to 28,149,700.00 dollar
+
+[Updating] Variable c_221.12_cs_weight
+[Updated]  Changed from 536.0 ton to 538.0 ton
+
+[Updating] Sup Variable c_221.12_tol_weight, running algorithm: [rpv_mass], 
+[Updating] with formulation: weight_of_carbon_steel+weight_of_stainless_steel
+[Updated]  Reference value is : 554.3 ton, calculated value is: 556.3 ton
+ 
+[Updating] Variable c_221.12_ss_weight
+[Unit Changed] Converted input from 40340.0 lbs to 18.29790128 ton
+[Updated]  Changed from 18.3 ton to 18.29790128 ton
+
+[Updating] Sup Variable c_221.12_tol_weight, running algorithm: [rpv_mass], 
+[Updating] with formulation: weight_of_carbon_steel+weight_of_stainless_steel
+[Updated]  Reference value is : 556.2999877929688 ton, calculated value is: 556.2979011535645 ton
+ 
+[Updating] Sub Variable p_in
+[Updated]  Changed from 67.0 bar to 68.0 bar
+
+[Updating] Sup Variable n_231, running algorithm: [tur_exp_n], 
+[Updating] with formulation: (-0.0032) *v_1+ 1.2497
+[Updated]  Reference value is : 1.035 , calculated value is: 1.0321 
+ 
+=================================Extracting user changed variables==================================
+
+
++---------------------+------------------------------------------------------+-----------+----------+
+|       var_name      |                   var_description                    | var_value | var_unit |
++---------------------+------------------------------------------------------+-----------+----------+
+|      c_213_fac      |       Turbine building structure factory cost        |    1.79   | million  |
+|  c_221.12_cs_weight |    weight of the carbon steel parts of the vessel    |   538.00  |   ton    |
+|  c_221.12_ss_weight | weight of the stainless steel cladding of the vessel |   18.30   |   ton    |
+| c_221.12_tol_weight |         weight of the reactor primary vessel         |   556.30  |   ton    |
+|         mwe         |                    user_input MWE                    |  1,000.00 |    MW    |
+|         mwth        |                   user_input mwth                    |  3,000.00 |    MW    |
+|        n_231        |                 Scaling exponent law                 |    1.03   |    1     |
+|         p_in        |                Inlet turbine pressure                |   68.00   |   bar    |
+|     ref_211_fac     |                yardwork factory cost                 |    0.27   | million  |
+|     ref_211_mat     |                yardwork material cost                |   10.30   | million  |
++---------------------+------------------------------------------------------+-----------+----------+
+
+
+================================ Extracting affected cost elements =================================
+
+
+variable "c_213_fac" affects cost element(s):
+213_fac
+
+variable "c_221.12_cs_weight" affects cost element(s):
+220A.211_fac
+
+variable "c_221.12_ss_weight" affects cost element(s):
+220A.211_fac
+
+variable "c_221.12_tol_weight" affects cost element(s):
+221.12_mat,221.12_lab
+
+variable "mwe" affects cost element(s):
+246_mat,245_mat,242_mat,241_mat,246_lab,245_lab,242_lab,241_lab,246_fac,242_fac,241_fac
+
+variable "mwth" affects cost element(s):
+226.4_lab,226.7_lab,233_lab,234_lab,237_lab,262_lab,213_mat,222.11_mat,222.12_mat,222.14_mat,222_mat
+,226.4_mat,226.7_mat,233_mat,234_mat,237_mat,262_mat,222_lab,222.14_lab,222.12_lab,222.11_lab,213_fa
+c,222.11_fac,213_lab,262_fac,234_fac,233_fac,226.7_fac,226.4_fac,222_fac,222.14_fac,222.12_fac
+
+variable "n_231" affects cost element(s):
+231_fac
+
+variable "ref_211_fac" affects cost element(s):
+211_fac
+
+variable "ref_211_mat" affects cost element(s):
+211_mat
+
+====================================== Updating cost elements ======================================
+
+
+[Updating] Cost element [231_fac], running algorithm: [dev_factor_ref], 
+[Updating] with formulation: cost_of_ref*scale/factor
+[Updated]  Reference value is : $356,031,000, calculated value is: $357,314,750 
+ 
+[Updating] Cost element [262_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $4,510,480  , calculated value is: $4,051,196   
+ 
+[Updating] Cost element [237_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $9,795,180  , calculated value is: $8,797,774   
+ 
+[Updating] Cost element [234_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $2,022,430  , calculated value is: $1,816,496   
+ 
+[Updating] Cost element [233_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $3,277,750  , calculated value is: $2,943,986   
+ 
+[Updating] Cost element [226.7_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $2,393,290  , calculated value is: $2,092,649   
+ 
+[Updating] Cost element [226.4_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $2,705,780  , calculated value is: $2,365,884   
+ 
+[Updating] Cost element [222_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,795,340  , calculated value is: $1,569,811   
+ 
+[Updating] Cost element [222.14_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $28,193     , calculated value is: $24,651      
+ 
+[Updating] Cost element [222.12_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,119,110  , calculated value is: $978,525     
+ 
+[Updating] Cost element [222.11_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $437,412    , calculated value is: $382,465     
+ 
+[Updating] Cost element [213_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $32,364,600 , calculated value is: $29,069,025  
+ 
+[Updating] Cost element [262_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $35,896,600 , calculated value is: $32,241,396  
+ 
+[Updating] Cost element [237_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $13,130,900 , calculated value is: $11,793,800  
+ 
+[Updating] Cost element [234_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $20,317,400 , calculated value is: $18,248,523  
+ 
+[Updating] Cost element [233_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $22,964,300 , calculated value is: $20,625,921  
+ 
+[Updating] Cost element [226.7_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $24,625,600 , calculated value is: $21,532,141  
+ 
+[Updating] Cost element [226.4_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $18,621,600 , calculated value is: $16,282,395  
+ 
+[Updating] Cost element [222_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $18,143,900 , calculated value is: $15,864,698  
+ 
+[Updating] Cost element [222.14_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $281,935    , calculated value is: $246,518     
+ 
+[Updating] Cost element [222.12_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $11,381,600 , calculated value is: $9,951,838   
+ 
+[Updating] Cost element [222.11_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $4,374,120  , calculated value is: $3,824,650   
+ 
+[Updating] Cost element [213_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $31,835,200 , calculated value is: $28,593,512  
+ 
+[Updating] Cost element [262_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $86,813,900 , calculated value is: $77,974,010  
+ 
+[Updating] Cost element [234_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $44,874,300 , calculated value is: $40,304,926  
+ 
+[Updating] Cost element [233_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $56,339,400 , calculated value is: $50,602,616  
+ 
+[Updating] Cost element [226.7_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $28,179,300 , calculated value is: $24,639,456  
+ 
+[Updating] Cost element [226.4_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $19,443,300 , calculated value is: $17,000,820  
+ 
+[Updating] Cost element [222_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $8,265,360  , calculated value is: $7,227,068   
+ 
+[Updating] Cost element [222.14_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $15,028     , calculated value is: $13,140      
+ 
+[Updating] Cost element [222.12_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $4,394,350  , calculated value is: $3,842,334   
+ 
+[Updating] Cost element [222.11_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $3,780,840  , calculated value is: $3,305,891   
+ 
+[Updating] Cost element [213_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,770,660  , calculated value is: $1,607,731   
+ 
+[Updating] Cost element [220A.211_fac], running algorithm: [unit_weights], 
+[Updating] with formulation: weight_of_carbon_steel*0.14+weight_of_stainless_steel*0.31
+[Updated]  Reference value is : $70,000,000 , calculated value is: $80,992,349  
+ 
+[Updating] Cost element [220A.211_fac], running algorithm: [unit_weights], 
+[Updating] with formulation: weight_of_carbon_steel*0.14+weight_of_stainless_steel*0.31
+[Updated]  Reference value is : $70,000,000 , calculated value is: $80,992,349  
+ 
+[Updating] Cost element [221.12_mat], running algorithm: [cost_by_weight], 
+[Updating] with formulation: tol_weight*coat_per_unit
+[Updated]  Reference value is : $639,771    , calculated value is: $712,061     
+ 
+[Updating] Cost element [221.12_lab], running algorithm: [cost_by_weight], 
+[Updating] with formulation: tol_weight*coat_per_unit
+[Updated]  Reference value is : $6,397,710  , calculated value is: $7,120,613   
+ 
+[Updating] Cost element [211_fac], running algorithm: [esc_1987], 
+[Updating] with formulation: escalator*cost_in_1987
+[Updated]  Reference value is : $810,015    , calculated value is: $769,340     
+ 
+[Updating] Cost element [211_mat], running algorithm: [esc_1987], 
+[Updating] with formulation: escalator*cost_in_1987
+[Updated]  Reference value is : $29,075,000 , calculated value is: $29,348,893  
+ 
+[Updating] Cost element [213_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,770,660  , calculated value is: $1,607,731   
+ 
+[Updating] Cost element [246_mat], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $20,755,500 , calculated value is: $19,668,071  
+ 
+[Updating] Cost element [245_mat], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $12,309,900 , calculated value is: $11,664,966  
+ 
+[Updating] Cost element [242_mat], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $849,719    , calculated value is: $805,202     
+ 
+[Updating] Cost element [241_mat], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $251,723    , calculated value is: $238,535     
+ 
+[Updating] Cost element [246_lab], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $33,434,500 , calculated value is: $31,682,879  
+ 
+[Updating] Cost element [245_lab], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $51,236,700 , calculated value is: $48,552,394  
+ 
+[Updating] Cost element [242_lab], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $4,446,170  , calculated value is: $4,213,231   
+ 
+[Updating] Cost element [241_lab], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $1,720,620  , calculated value is: $1,630,477   
+ 
+[Updating] Cost element [246_fac], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $4,510,910  , calculated value is: $4,274,583   
+ 
+[Updating] Cost element [242_fac], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $52,157,800 , calculated value is: $49,425,260  
+ 
+[Updating] Cost element [241_fac], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $32,067,500 , calculated value is: $30,387,462  
+ 
+====================================== Roll up cost elements =======================================
+
+
+[Updating] Roll up cost elements from level 3 to level 2
+[Updating] Roll up cost elements from level 2 to level 1
+[Updating] Roll up cost elements from level 1 to level 0
+[Updated] Cost elements rolled up
+
+====================================== Updating account table ======================================
+
+
+[Updating] Updating account table by cost elements
+[Updated]  Account table updated from cost elements
+
+===================================== Rolling up account table =====================================
+
+
+[Updating] Rolling up account table from level 3 to level 2 
+[Updating] Rolling up account table from level 2 to level 1 
+[Updating] Rolling up account table from level 1 to level 0 
+[Updated]  Account table rolled up
+
+=============================== Generating results table for review ================================
+
+
++-----------------+-------------------------------------------------+------------+---------+-------+------------------+
+| code_of_account | account_description                             | total_cost |   unit  | level |  review_status   |
++-----------------+-------------------------------------------------+------------+---------+-------+------------------+
+|   211           | Yardwork                                        |      71.45 | million |   2   | Ready for Review |
+|   212           | Reactor containment building                    |     182.70 | million |   2   |    Unchanged     |
+|   213           | Turbine room and heater bay                     |      59.27 | million |   2   | Ready for Review |
+|   214           | Security building                               |       3.88 | million |   2   |    Unchanged     |
+|   215           | Primary auxiliary building and tunnels          |      52.63 | million |   2   |    Unchanged     |
+|   216           | Waste processing building                       |      40.94 | million |   2   |    Unchanged     |
+|   217           | Fuel storage building                           |      28.15 | million |   2   |    User Input    |
+|    218A         | Control Room/Diesel Generator Building          |      51.57 | million |   3   |    Unchanged     |
+|    218B         | Administration + Services Building              |      18.94 | million |   3   |    Unchanged     |
+|    218D         | Fire Pump House, Including Foundations          |       1.22 | million |   3   |    Unchanged     |
+|    218E         | Emergency Feed Pump Building                    |       7.12 | million |   3   |    Unchanged     |
+|    218F         | Manway Tnls. (Radiological Ctrl Access Tunnels) |       2.17 | million |   3   |    Unchanged     |
+|    218G         | Elec. Tunnels                                   |       0.19 | million |   3   |    Unchanged     |
+|    218H         | Non- Essen. Switchgear Bldg.                    |       1.53 | million |   3   |    Unchanged     |
+|    218J         | Main Steam + Feedwater Pipe Enc.                |      22.42 | million |   3   |    Unchanged     |
+|    218K         | Pipe Tunnels                                    |       0.90 | million |   3   |    Unchanged     |
+|    218L         | Technical Support Center                        |       2.25 | million |   3   |    Unchanged     |
+|    218P         | Containment Equipment Hatch Missile Shield      |       0.63 | million |   3   |    Unchanged     |
+|    218S         | Waste Water Treatment                           |       2.19 | million |   3   |    Unchanged     |
+|    218T         | Ultimate Heat Sink Structures                   |      13.10 | million |   3   |    Unchanged     |
+|    218V         | Control Rm Emergency Air Intake Building        |       0.25 | million |   3   |    Unchanged     |
+|   218           | Other structures                                |     124.47 | million |   2   |     Updated      |
+|  21             | Structures and improvements subtotal            |     563.49 | million |   1   |     Updated      |
+|    220A.211     | Vessel Structure (NSSS)                         |      80.99 | million |   3   | Ready for Review |
+|    220A.2121    | Lower Internals (NSSS)                          |      31.78 | million |   3   |    Unchanged     |
+|    220A.2122    | Upper Internals (NSSS)                          |      31.78 | million |   3   |    Unchanged     |
+|    220A.2131    | Control Rods (NSSS)                             |       3.10 | million |   3   |    Unchanged     |
+|    220A.2132    | Control Rod Drives (NSSS)                       |      34.90 | million |   3   |    Unchanged     |
+|    220A.221     | Main Coolant Pumps (NSSS)                       |     125.24 | million |   3   |    Unchanged     |
+|    220A.222     | Reactor Coolant Piping (NSSS)                   |      11.40 | million |   3   |    Unchanged     |
+|    220A.223     | Steam Generators (NSSS)                         |     149.80 | million |   3   |    Unchanged     |
+|    220A.224     | Pressurizer (NSSS)                              |       8.30 | million |   3   |    Unchanged     |
+|    220A.225     | Pressurizer Relief Tank (NSSS)                  |       1.85 | million |   3   |    Unchanged     |
+|    220A.2311    | Residual Heat Removal Pumps & Drives (NSSS)     |       1.94 | million |   3   |    Unchanged     |
+|    220A.2312    | Residual Heat Removal Heat Exchanger (NSSS)     |       6.26 | million |   3   |    Unchanged     |
+|    220A.2321    | Safety Injection Pumps And Drives (NSSS)        |       1.72 | million |   3   |    Unchanged     |
+|    220A.2322    | Accumulator Tank (NSSS)                         |      15.30 | million |   3   |    Unchanged     |
+|    220A.2323    | Boron Injection Tank (NSSS)                     |       0.90 | million |   3   |    Unchanged     |
+|    220A.2324    | Boron Injection Surge Tank (NSSS)               |       0.05 | million |   3   |    Unchanged     |
+|    220A.2325    | Boron Injection Recirc. Pump & Drives (NSSS)    |       0.04 | million |   3   |    Unchanged     |
+|    220A.251     | Fuel Handling Tools (NSSS)                      |       0.40 | million |   3   |    Unchanged     |
+|    220A.254     | Fuel Storage Racks (NSSS)                       |       2.51 | million |   3   |    Unchanged     |
+|    220A.2611    | Rotating Machinery (Pumps And Motors) (NSSS)    |       2.22 | million |   3   |    Unchanged     |
+|    220A.2612    | Heat Transfer Equipment (NSSS)                  |       2.45 | million |   3   |    Unchanged     |
+|    220A.2613    | Tanks And Pressure Vessels (NSSS)               |       1.14 | million |   3   |    Unchanged     |
+|    220A.2614    | Purification And Filtration Equipment (NSSS)    |       2.45 | million |   3   |    Unchanged     |
+|    220A.262     | Maintenance Equipment (NSSS)                    |       9.19 | million |   3   |    Unchanged     |
+|    220A.27      | Instrumentation And Control (NSSS)              |       0.00 | million |   3   |    Unchanged     |
+|   220A          | Nuclear steam supply (NSSS)                     |     525.71 | million |   2   |     Updated      |
+|    221.11       | Reactor Support (Field Cost 221)                |       3.91 | million |   3   |    Unchanged     |
+|    221.12       | Vessel Structure (Field Cost 221)               |       7.83 | million |   3   | Ready for Review |
+|    221.13       | Vessel Internals (Field Cost 221)               |       1.70 | million |   3   |    Unchanged     |
+|    221.14       | Transport To Site (Field Cost 221)              |      15.78 | million |   3   |    Unchanged     |
+|    221.21       | Control Rod System (Field Cost 221)             |       1.53 | million |   3   |    Unchanged     |
+|   221           | Reactor equipment                               |      30.76 | million |   2   |     Updated      |
+|    222.11       | Fluid Circulation Drive System (Field Cost 222) |       7.51 | million |   3   | Ready for Review |
+|    222.12       | Reactor Coolant Piping System (Field Cost 222)  |      14.77 | million |   3   | Ready for Review |
+|    222.13       | Steam Generator Equipment (Field Cost 222)      |       2.39 | million |   3   |    Unchanged     |
+|    222.14       | Pressurizing System (Field Cost 222)            |       0.28 | million |   3   | Ready for Review |
+|   222           | Main heat transfer transport system             |      24.96 | million |   2   |     Updated      |
+|    223.1        | Residual Heat Removal Sys (Field Cost 223)      |       6.81 | million |   3   |    Unchanged     |
+|    223.3        | Safety Injection System (Field Cost 223)        |      10.38 | million |   3   |    Unchanged     |
+|    223.4        | Containment Spray System (Field Cost 223)       |      15.11 | million |   3   |    Unchanged     |
+|    223.5        | Combustible Gas Control System (Field Cost 223) |       3.08 | million |   3   |    Unchanged     |
+|   223           | Safeguards system                               |      35.38 | million |   2   |     Updated      |
+|   224           | Radwaste processing                             |      59.67 | million |   2   |    Unchanged     |
+|   225           | Fuel handling and storage                       |       9.02 | million |   2   |    Unchanged     |
+|    226.1        | Inert Gas Sys                                   |       3.53 | million |   3   |    Unchanged     |
+|    226.3        | Reactor Makeup Water Sys                        |       4.25 | million |   3   |    Unchanged     |
+|    226.4        | Coolant Treatment & Recycle                     |      35.65 | million |   3   | Ready for Review |
+|    226.6        | Fluid Leak Detection Sys                        |       0.49 | million |   3   |    Unchanged     |
+|    226.7        | Aux Cool Sys (Broken Down Further)              |      48.26 | million |   3   | Ready for Review |
+|    226.8        | Maintenance Equipment                           |       1.52 | million |   3   |    Unchanged     |
+|    226.9        | Sampling Equip                                  |       1.83 | million |   3   |    Unchanged     |
+|   226           | Other reactor plant equipment                   |      95.54 | million |   2   |     Updated      |
+|   227           | Reactor instrumentation and control             |      61.42 | million |   2   |    Unchanged     |
+|   228           | Reactor plant miscellaneous items               |      21.23 | million |   2   |    Unchanged     |
+|  22             | Reactor plant equipment                         |     863.71 | million |   1   |     Updated      |
+|   231           | Turbine generator                               |     383.06 | million |   2   | Ready for Review |
+|   233           | Condensing systems                              |      74.17 | million |   2   | Ready for Review |
+|   234           | Feedwater heating system                        |      60.37 | million |   2   | Ready for Review |
+|   235           | Other turbine plant equipment                   |      63.61 | million |   2   |    Unchanged     |
+|   236           | Instrumentation and control                     |      19.53 | million |   2   |    Unchanged     |
+|   237           | Turbine plant miscellaneous items               |      20.59 | million |   2   | Ready for Review |
+|  23             | Turbine plant equipment                         |     621.33 | million |   1   |     Updated      |
+|   241           | Switchgear                                      |      32.26 | million |   2   | Ready for Review |
+|   242           | Station service equipment                       |      54.44 | million |   2   | Ready for Review |
+|   243           | Switchboards                                    |       5.84 | million |   2   |    Unchanged     |
+|   244           | Protective equipment                            |      12.14 | million |   2   |    Unchanged     |
+|   245           | Electric structure and wiring contnr.           |      60.22 | million |   2   | Ready for Review |
+|   246           | Power and control wiring                        |      55.63 | million |   2   | Ready for Review |
+|  24             | Electric plant equipment                        |     220.52 | million |   1   |     Updated      |
+|   251           | Transportation and lifting equipment            |      17.08 | million |   2   |    Unchanged     |
+|   252           | Air, water and steam service systems            |      81.85 | million |   2   |    Unchanged     |
+|   253           | Communications equipment                        |      18.28 | million |   2   |    Unchanged     |
+|   254           | Furnishings and fixtures                        |       7.80 | million |   2   |    Unchanged     |
+|   255           | Waste water treatment equipment                 |       8.07 | million |   2   |    Unchanged     |
+|  25             | Miscellaneous plant equipment subtotal          |     133.07 | million |   1   |     Updated      |
+|   261           | Structures                                      |      12.35 | million |   2   |    Unchanged     |
+|   262           | Mechanical equipment                            |     114.27 | million |   2   | Ready for Review |
+|  26             | Main condenser heat rejection system            |     126.61 | million |   1   |     Updated      |
+| 2               | TOTAL DIRECT COST                               |   2,528.74 | million |   0   |     Updated      |
++-----------------+-------------------------------------------------+------------+---------+-------+------------------+
+Successfully created excel file ACCERT_updated_account.xlsx
+Successfully created excel file ACCERT_variable_affected_cost_elements.xlsx
+Successfully created excel file ACCERT_updated_cost_element.xlsx

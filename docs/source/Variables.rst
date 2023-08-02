@@ -4,7 +4,7 @@
 Variables
 =========
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
     extractuserchangedvariables.rst
     getvarvaluebyname.rst
