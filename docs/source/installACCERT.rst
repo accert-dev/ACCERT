@@ -40,7 +40,9 @@ Within this ACCERT folder you should have very similar stuff as the above folder
     *   Click the recommended download.
     *   You can go through with all the recommended settings. (Developer Default)
 
-    [**NOTE**] You will have to create a **strong password encryption**, and enter said password in during the download process. **Write this password down somewhere or keep it secure with a password manager!!! It is very time consuming and difficult to reset this password!**
+.. admonition:: NOTE!
+    
+    You will have to create a **strong password encryption**, and enter said password in during the download process. **Write this password down somewhere or keep it secure with a password manager!!! It is very time consuming and difficult to reset this password!**
 
 .. figure:: _static/password1.png
     :alt: password1
