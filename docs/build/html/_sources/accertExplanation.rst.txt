@@ -4,7 +4,7 @@
 ACCERT Inputs and Explanations
 ==============================
 
-The Algorithm for the Capital Cost Elements of Reactor  (ACCERT) relies on several different references to properly calculate the cost of a nuclear facility.
+The Algorithm for the Capital Cost Elements of Reactor Technologies (ACCERT) relies on several different references to properly calculate the cost of a nuclear facility.
 
 This stage of ACCERT bases the calculations off of two user inputs:
 
