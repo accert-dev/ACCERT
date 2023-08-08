@@ -12,7 +12,9 @@ Level 2
 
         *   For example, if the cost element is the first cost element in level 2, the code would be written as l2COA(211) or l1COA(212) for the second.
 
-**All the cost elements and their descriptions are broken down in the MySQL database.**
+.. admonition:: NOTICE!
+
+    **All the cost elements and their descriptions are broken down in the "Cost Elements and Code of Accounts" tab.**
 
 .. toctree::
     :maxdepth: 1

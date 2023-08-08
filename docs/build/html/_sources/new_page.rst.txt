@@ -1,7 +1,8 @@
 Using ACCERT (With Python)
 ==========================
+.. admonition:: Using ACCERT!
 
-To begin using ACCERT, there are terms and applications to familiarize yourself with.
+    To begin using ACCERT, there are terms and applications to familiarize yourself with.
 
 *   Code of Account (COA)
 

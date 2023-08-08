@@ -8,7 +8,9 @@ Level 0
 
         *   This could also be written as l0COA(2C), this just the calculation before the total cost.
 
-**All the cost elements and their descriptions are broken down in the MySQL database.**
+.. admonition:: NOTICE!
+
+    **All the cost elements and their descriptions are broken down in the "Cost Elements and Code of Accounts" tab.**
 
 .. toctree::
     :maxdepth: 1

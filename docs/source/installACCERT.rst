@@ -42,7 +42,7 @@ Within this ACCERT folder you should have very similar stuff as the above folder
 
 .. admonition:: NOTE!
     
-    You will have to create a **strong password encryption**, and enter said password in during the download process. **Write this password down somewhere or keep it secure with a password manager!!! It is very time consuming and difficult to reset this password!**
+    You will have to create a **strong password encryption**, and enter said password in during the download process. **Write this password down somewhere or keep it secure with a password manager!!! It is very time consuming and difficult to reset this password!** This password does not have to be complex, nor personal info.
 
 .. figure:: _static/password1.png
     :alt: password1

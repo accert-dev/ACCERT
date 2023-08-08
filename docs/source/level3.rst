@@ -10,7 +10,9 @@ Level 3
         *   For example, if the cost element is the first cost element in level 2, the code would be written as l3COA(211A) or l3COA(211B) for the second.
         *   Refer to the database to see which cost element refers to what.
 
-**All the cost elements and their descriptions are broken down in the cost elements and COA tabs.**
+.. admonition:: NOTICE!
+
+    **All the cost elements and their descriptions are broken down in the "Cost Elements and Code of Accounts" tab.**
 
 .. toctree::
     :maxdepth: 1
