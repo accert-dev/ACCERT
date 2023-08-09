@@ -4,6 +4,10 @@
 Summation
 =========
 
+.. admonition:: Summation
+
+    These codes allow for ACCERT to sum up the total cost of various accounts.
+
 .. toctree::
     :maxdepth: 1
 

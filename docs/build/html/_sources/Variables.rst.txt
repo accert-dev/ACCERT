@@ -3,8 +3,13 @@
      
 Variables
 =========
+
+.. admonition:: Variables
+
+    These codes allow ACCERT to find user changed variables by name.
+
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     extractuserchangedvariables.rst
     getvarvaluebyname.rst

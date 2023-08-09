@@ -4,6 +4,10 @@
 Prints
 ======
 
+.. admonition:: Prints
+
+    These codes print various output tables.
+    
 .. toctree::
     :maxdepth: 1
 

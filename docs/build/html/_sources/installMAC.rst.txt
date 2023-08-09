@@ -31,7 +31,7 @@ You will also need to have some python coding program. Visual Studio Code is hea
 
 *	If you created the folder to install ACCERT, you do not have to use the mkdir command.
 
-Within this ACCERT folder you should have very similar stuff as the above folder.
+Within this ACCERT folder you should have very similar stuff as the ACCERT Git folder.
 
 **Install the MySQL Community Server**
 

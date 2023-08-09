@@ -4,6 +4,10 @@
 Extractions
 ===========
 
+.. admonition:: Extractions
+
+    Extractions allows ACCERT to read any changed parameters, and their effect on the total cost of a nuclear reactor.
+
 .. toctree::
     :maxdepth: 1
 

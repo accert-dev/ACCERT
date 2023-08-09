@@ -4,6 +4,12 @@
 Algorithm Inputs and Explanations
 =================================
 
+Algorithms can be called up using the function **alg("insert algorithm name")**
+
+.. admonition:: NOTE!
+
+    If the algorithm you are calling up contains both letters and numbers, then the quotes are essential to properly call the algorithm.
+    
 .. toctree::
     :maxdepth: 1
 

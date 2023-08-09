@@ -4,6 +4,10 @@
 New Algorithms
 ==============
 
+.. admonition:: New Algorithms
+
+    Algorithms are the staple of the ACCERT program. These allow you to create or run different algorithms.
+    
 .. toctree::
     :maxdepth: 1
 

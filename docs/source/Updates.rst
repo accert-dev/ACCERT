@@ -4,6 +4,10 @@
 Updates
 =======
 
+.. admonition:: Updates
+
+    Much like the extractions, these codes update any changed variables and cost elements associated with them.
+
 .. toctree::
     :maxdepth: 1
 

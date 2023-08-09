@@ -84,6 +84,10 @@ Using ACCERT (With Python)
         $ python ../src/Main.py -i myinput.son
         $ code output.out
 
+.. admonition:: NOTICE!
+
+    Replace **../src/Main.py** with the path to your Main.py file, and the **myinput.son** file with the desired reactor .son file.
+
 *  This is used to collect various inputs from any given database for a nuclear reactor.
 
       *  For example:
@@ -99,3 +103,7 @@ Using ACCERT (With Python)
     *   ACCERT will then sum up all the costs and display it into one easy to read graph that displays the COA, account description, costs, unit, level, and the review status.
 
         *   The review status is just whether or not the COA or any of it's sub-levels have been changed.
+
+.. admonition:: NOTICE!
+
+    An output of ACCERT can be found in the "*Output of ACCERT*" tab.
