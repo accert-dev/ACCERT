@@ -651,20 +651,20 @@ class Utility_methods:
         self.print_table(c,format_col=[2])
         return None
 
-    def print_leveled_abr_accounts(self, c, abr_fac,abr_lab,abr_mat,all=False, 
+    def print_leveled_lmt_accounts(self, c, lmt_fac,lmt_lab,lmt_mat,all=False, 
                                     cost_unit='dollar',level=3):
-        """Prints the output leveled abr accounts table.
+        """Prints the output leveled accounts table for reactor with limited information.
 
         Parameters
         ----------
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
-        abr_fac : float
-            Abr_fac is the ABR-1000 factor for factory cost.
-        abr_lab : float
-            Abr_lab is the ABR-1000 factor for labor cost.
-        abr_mat : float
-            Abr_mat is the ABR-1000 factor for material cost.
+        lmt_fac : float
+            The factor for factory cost.
+        lmt_lab : float
+            The factor for labor cost.
+        lmt_mat : float
+            The factor for material cost.
         all : bool, optional
             All is the flag to print all accounts or not. (By default not, or false)
         cost_unit : str, optional
@@ -673,76 +673,155 @@ class Utility_methods:
             Level is the level of the account. (By default 3)
         """
         if all:
-            c.execute("""SELECT abr_account.level,
-                                rankedcoa.COA as code_of_account,
-                                abr_account.account_description,
-                                sorted_ce.fac_cost,
-                                sorted_ce.lab_cost,
-                                sorted_ce.mat_cost,
-                                abr_account.total_cost,	
-                                abr_account.unit,
-                                abr_account.review_status
-                            FROM abr_account 
-                            JOIN 
-                            (SELECT node.code_of_account,
-                                    CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
-                                FROM abr_account AS node,
-                                    abr_account AS parent
-                                WHERE node.lft BETWEEN parent.lft AND parent.rgt
-                                GROUP BY node.code_of_account) as rankedcoa
-                                    ON abr_account.code_of_account=rankedcoa.code_of_account
-                                    JOIN (SELECT splt_act.code_of_account,
-                                                cef.cost_2017 as fac_cost,
-                                                cel.cost_2017 as lab_cost,
-                                                cem.cost_2017 as mat_cost
-                                                FROM
-                                                (SELECT code_of_account,total_cost,supaccount,
-                                                SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 1), ',', -1) as fac_name,
-                                                SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 2), ',', -1) as lab_name,
-                                                SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 3), ',', -1) as mat_name
-                                                FROM accert_db.abr_account) as splt_act
-                                                LEFT JOIN abr_cost_element as cef 
-                                                ON cef.cost_element = splt_act.fac_name
-                                                LEFT JOIN abr_cost_element as cel
-                                                ON cel.cost_element = splt_act.lab_name
-                                                LEFT JOIN abr_cost_element as cem
-                                                ON cem.cost_element = splt_act.mat_name) as sorted_ce
-                            ON sorted_ce.code_of_account = abr_account.code_of_account
-                            WHERE abr_account.level <= 3
-                            ORDER BY abr_account.lft;""")
+            # DELIMITER $$
+            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_lmt_accounts_all`(IN acc_table VARCHAR(255),   
+            #                                                                             IN cel_table VARCHAR(255))
+            # BEGIN
+            #     SET @stmt = CONCAT('SELECT', acc_table,'.level,
+            #                                 rankedcoa.COA as code_of_account,
+            #                                 ',acc_table,'.account_description,
+            #                                 sorted_ce.fac_cost,
+            #                                 sorted_ce.lab_cost,
+            #                                 sorted_ce.mat_cost,
+            #                                 ',acc_table,'.total_cost,
+            #                                 ',acc_table,'.unit,
+            #                                 ',acc_table,'.review_status
+            #                         FROM ',acc_table,' JOIN
+            #                         (SELECT node.code_of_account,
+            #                                 CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
+            #                             FROM ',acc_table,' AS node,
+            #                                 ',acc_table,' AS parent
+            #                             WHERE node.lft BETWEEN parent.lft AND parent.rgt
+            #                             GROUP BY node.code_of_account) as rankedcoa
+            #                             ON ',acc_table,'.code_of_account=rankedcoa.code_of_account
+            #                             JOIN (SELECT splt_act.code_of_account,
+            #                                     cef.cost_2017 as fac_cost,
+            #                                     cel.cost_2017 as lab_cost,
+            #                                     cem.cost_2017 as mat_cost
+            #                                     FROM
+            #                                     (SELECT code_of_account,total_cost,supaccount,
+            #                                     SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 1), ",", -1) as fac_name,
+            #                                     SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 2), ",", -1) as lab_name,
+            #                                     SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 3), ",", -1) as mat_name
+            #                                     FROM ',acc_table,') as splt_act
+            #                                     LEFT JOIN ',cel_table,' as cef
+            #                                     ON cef.cost_element= splt_act.fac_name
+            #                                     LEFT JOIN ',cel_table,' as cel
+            #                                     ON cel.cost_element= splt_act.lab_name
+            #                                     LEFT JOIN ',cel_table,' as cem
+            #                                     ON cem.cost_element= splt_act.mat_name) as sorted_ce
+            #                                     ON sorted_ce.code_of_account=',acc_table,'.code_of_account
+            #                                     WHERE ',acc_table,'.level <= 3
+            #                                     ORDER BY ',acc_table,'.lft;');
+            #     PREPARE stmt FROM @stmt;
+            #     EXECUTE stmt;
+            #     DEALLOCATE PREPARE stmt;
+            # END$$
+            # DELIMITER ;
+            c.callproc('print_leveled_lmt_accounts_all', (self.acc_tabl,self.cel_tabl))
+
+
+            # c.execute("""SELECT abr_account.level,
+            #                     rankedcoa.COA as code_of_account,
+            #                     abr_account.account_description,
+            #                     sorted_ce.fac_cost,
+            #                     sorted_ce.lab_cost,
+            #                     sorted_ce.mat_cost,
+            #                     abr_account.total_cost,	
+            #                     abr_account.unit,
+            #                     abr_account.review_status
+            #                 FROM abr_account 
+            #                 JOIN 
+            #                 (SELECT node.code_of_account,
+            #                         CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
+            #                     FROM abr_account AS node,
+            #                         abr_account AS parent
+            #                     WHERE node.lft BETWEEN parent.lft AND parent.rgt
+            #                     GROUP BY node.code_of_account) as rankedcoa
+            #                         ON abr_account.code_of_account=rankedcoa.code_of_account
+            #                         JOIN (SELECT splt_act.code_of_account,
+            #                                     cef.cost_2017 as fac_cost,
+            #                                     cel.cost_2017 as lab_cost,
+            #                                     cem.cost_2017 as mat_cost
+            #                                     FROM
+            #                                     (SELECT code_of_account,total_cost,supaccount,
+            #                                     SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 1), ',', -1) as fac_name,
+            #                                     SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 2), ',', -1) as lab_name,
+            #                                     SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 3), ',', -1) as mat_name
+            #                                     FROM accert_db.abr_account) as splt_act
+            #                                     LEFT JOIN abr_cost_element as cef 
+            #                                     ON cef.cost_element = splt_act.fac_name
+            #                                     LEFT JOIN abr_cost_element as cel
+            #                                     ON cel.cost_element = splt_act.lab_name
+            #                                     LEFT JOIN abr_cost_element as cem
+            #                                     ON cem.cost_element = splt_act.mat_name) as sorted_ce
+            #                 ON sorted_ce.code_of_account = abr_account.code_of_account
+            #                 WHERE abr_account.level <= 3
+            #                 ORDER BY abr_account.lft;""")
             align_key=["code_of_account", "account_description", "fac_cost", "lab_cost", "mat_cost", "total_cost"] 
             align=[ "l", "l", "r", "r", "r", "r"]
         else:
-            c.execute("""SELECT rankedcoa.code_of_account,
-                                abr_account.account_description,
-                                abr_account.total_cost,	
-                                abr_account.unit,	
-                                abr_account.level,
-                                abr_account.review_status	
-                            FROM abr_account
-                            JOIN 
-                            (
-                            SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
-                            FROM abr_account AS node,
-                                            abr_account AS parent
-                            WHERE node.lft BETWEEN parent.lft AND parent.rgt
-                            GROUP BY node.code_of_account) as rankedcoa
-                            ON abr_account.code_of_account=rankedcoa.COA
-                            WHERE abr_account.level <= %(u_i_level)s
-                            ORDER BY abr_account.lft;""",{'u_i_level': str(level)})
+            # DELIMITER $$
+            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_lmt_accounts_simple`(IN acc_table VARCHAR(255), IN level INT)
+            # BEGIN
+            #     SET @stmt = CONCAT('SELECT rankedcoa.code_of_account,
+            #                     acc.account_description,
+            #                     acc.total_cost,
+            #                     acc.unit,
+            #                     acc.level,
+            #                     acc.review_status
+            #                     FROM ',acc_table,' as acc
+            #                     JOIN
+            #                     (SELECT node.code_of_account AS COA , CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
+            #                     FROM ',acc_table,' AS node,
+            #                                     ',acc_table,' AS parent
+            #                     WHERE node.lft BETWEEN parent.lft AND parent.rgt
+            #                     GROUP BY node.code_of_account) as rankedcoa
+            #                     ON acc.code_of_account=rankedcoa.COA
+            #                     WHERE acc.level <= ?
+            #                     ORDER BY acc.lft;');
+            #     PREPARE stmt FROM @stmt;
+            #     SET @level=level;
+            #     EXECUTE stmt USING @level;
+            #     DEALLOCATE PREPARE stmt;
+            # END$$
+            # DELIMITER ;
+            c.callproc('print_leveled_lmt_accounts_simple', (self.acc_tabl,level))
+
+
+            # c.execute("""SELECT rankedcoa.code_of_account,
+            #                     abr_account.account_description,
+            #                     abr_account.total_cost,	
+            #                     abr_account.unit,	
+            #                     abr_account.level,
+            #                     abr_account.review_status	
+            #                 FROM abr_account
+            #                 JOIN 
+            #                 (
+            #                 SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
+            #                 FROM abr_account AS node,
+            #                                 abr_account AS parent
+            #                 WHERE node.lft BETWEEN parent.lft AND parent.rgt
+            #                 GROUP BY node.code_of_account) as rankedcoa
+            #                 ON abr_account.code_of_account=rankedcoa.COA
+            #                 WHERE abr_account.level <= %(u_i_level)s
+            #                 ORDER BY abr_account.lft;""",{'u_i_level': str(level)})
             align_key=["code_of_account", "account_description", "total_cost"] 
             align=[ "l", "l", "r"]
         
         if cost_unit=='million':
-            results = c.fetchall()
-            columns = c.description
-            field_names = [i[0] for i in columns]
+            for row in c.stored_results():
+                results = row.fetchall()
+                field_names = [i[0] for i in row.description]
+            # results = c.fetchall()
+            # columns = c.description
+            # field_names = [i[0] for i in columns]
             x = PrettyTable(field_names)
             row0=list(results[0])
             if all:
-                row0[3]="{:,.2f}".format(abr_fac/1000000)
-                row0[4]="{:,.2f}".format(abr_lab/1000000)
-                row0[5]="{:,.2f}".format(abr_mat/1000000)
+                row0[3]="{:,.2f}".format(lmt_fac/1000000)
+                row0[4]="{:,.2f}".format(lmt_lab/1000000)
+                row0[5]="{:,.2f}".format(lmt_mat/1000000)
                 row0[6]="{:,.2f}".format(row0[6]/1000000)
                 row0[7]="million"
             else:
@@ -765,9 +844,12 @@ class Utility_methods:
                     x.align[k] = align[i]
             print (x)
         else:
-            results = c.fetchall()
-            columns = c.description
-            field_names = [i[0] for i in c.description]
+            for row in c.stored_results():
+                results = row.fetchall()
+                field_names = [i[0] for i in row.description]
+            # results = c.fetchall()
+            # columns = c.description
+            # field_names = [i[0] for i in c.description]
             x = PrettyTable(field_names)
             for row in results:
                 row = list(row)
