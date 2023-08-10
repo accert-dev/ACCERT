@@ -1,8 +1,0 @@
-Generate Results Table
-======================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: generate_results_table
-        :noindex:

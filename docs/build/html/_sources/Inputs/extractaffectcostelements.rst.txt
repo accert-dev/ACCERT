@@ -1,8 +1,0 @@
-Extract Affected Cost Elements
-==============================
-
-.. autoclass:: UtilityInput.Utility_methods
-    :members:
-
-    .. automethod:: extract_affected_cost_elements
-        :noindex:

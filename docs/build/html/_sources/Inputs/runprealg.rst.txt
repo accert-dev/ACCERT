@@ -1,8 +1,0 @@
-Run pre-Algorithms
-==================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: run_pre_alg
-        :noindex:

@@ -1,9 +1,0 @@
-Update Account Before Insert
-============================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: update_account_before_insert
-        :noindex:
-

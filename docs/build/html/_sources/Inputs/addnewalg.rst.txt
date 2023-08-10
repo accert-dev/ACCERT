@@ -1,9 +1,0 @@
-Add New Algorithm
-=================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: add_new_alg
-        :noindex:
-

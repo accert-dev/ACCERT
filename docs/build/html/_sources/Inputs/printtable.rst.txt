@@ -1,8 +1,0 @@
-Print Table
-===========
-
-.. autoclass:: UtilityInput.Utility_methods
-    :members:
-
-    .. automethod:: print_table
-        :noindex:

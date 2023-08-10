@@ -1,8 +1,0 @@
-Sum of Cost Elements
-====================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: sum_cost_elements_2C
-        :noindex:

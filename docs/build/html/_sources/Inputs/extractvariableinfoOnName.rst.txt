@@ -1,8 +1,0 @@
-Extract Variable Info On Name
-=============================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: extract_variable_info_on_name
-        :noindex:

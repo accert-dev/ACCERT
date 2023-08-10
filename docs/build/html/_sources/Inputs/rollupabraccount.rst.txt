@@ -1,8 +1,0 @@
-Roll Up ABR-1000 Account
-========================
-
-.. autoclass:: AccertInput.Accert
-    :members:
-
-    .. automethod:: roll_up_abr_account
-        :noindex:
