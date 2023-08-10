@@ -30,13 +30,21 @@ This section uses various algorithms to update the cost of the affected cost ele
 
 This section "rolls up" all the cost elements from the lowest level to the highest level. This allows for the charts generated to make more sense with the levels.
 
+*Summing Cost Elements for Direct Cost*
+
+This section sums up the cost elements.
+
 *Updating Account Table*
 
-This section updates the final account table with the newly updated cost elements.
+This section updates the final account table based on the changed cost elements.
 
 *Rolling Up Account Table*
 
 This section "rolls up" all the code of accounts from the lowest level to the highest level. This allows for the final generate chart to make logical sense by level.
+
+*Summing Up Account Table*
+
+This section sums up both the calculated direct cost and the total direct cost.
 
 *Generating Results Table for Review*
 
@@ -45,6 +53,6 @@ This section prints out the final result table with all the code of accounts, th
 .. admonition:: NOTICE!
 
     At the end, ACCERT also prints off three different excel files for the outputs.
-    
+
 .. include:: outputabr.out.txt
     :literal:
