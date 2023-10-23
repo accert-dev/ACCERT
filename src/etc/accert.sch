@@ -10,7 +10,7 @@ accert{
         MaxOccurs = 1
         InputTmpl = "ref_model"
         ValType = String
-        ValEnums = [ "PWR12-BE" "ABR1000" "LFR"]
+        ValEnums = [ "PWR12-BE" "ABR1000" "LFR", "heatPipeMR"]
         }        
     
 

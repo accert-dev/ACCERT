@@ -51,7 +51,16 @@ class Accert:
             self.vlk_tabl = 'abr_variable_links'   
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
-            self.fac_tabl = 'facility'        
+            self.fac_tabl = 'facility'    
+        elif "heatpipemr" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'abr1000'
+            self.acc_tabl = 'abr_account'
+            self.cel_tabl = 'abr_cost_element'
+            self.var_tabl = 'abr_variable'
+            self.vlk_tabl = 'abr_variable_links'   
+            self.alg_tabl = 'algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'         
         elif "pwr12-be" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'pwr12-be'
             self.acc_tabl = 'account'

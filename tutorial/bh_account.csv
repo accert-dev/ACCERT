@@ -1,0 +1,38 @@
+ind,code_of_account,account_description,total_cost,unit,review_status
+1,211,Yardwork,71213859.06,dollar,Unchanged
+2,212,Reactor containment building,81425435.33,dollar,Unchanged
+3,213,Turbine room and heater bay,24604390.8,dollar,Unchanged
+4,215,Primary auxiliary building and tunnels,12470000,dollar,Unchanged
+5,216,Waste processing building,38750000,dollar,Unchanged
+6,217,Fuel storage building,28149583.82,dollar,Unchanged
+7,218A,Control Room/Diesel Generator Building,16250000,dollar,Unchanged
+8,220A.211,Vessel Structure (NSSS),137000000,dollar,Unchanged
+9,220A.2121,Lower Internals (NSSS),45204200,dollar,Unchanged
+10,220A.2122,Upper Internals (NSSS),45204200,dollar,Unchanged
+11,220A.2131,Control Rods (NSSS),1320000,dollar,Unchanged
+12,220A.2132,Control Rod Drives (NSSS),13453440,dollar,Unchanged
+13,220A.221,Main Coolant Pumps (NSSS),55696873.29,dollar,Unchanged
+14,220A.222,Reactor Coolant Piping (NSSS),7464800,dollar,Unchanged
+15,220A.223,Steam Generators (NSSS),122087095.9,dollar,Unchanged
+16,220A.224,Pressurizer (NSSS),1379368.421,dollar,Unchanged
+17,222.11,Fluid Circulation Drive System (Field Cost 222),2504335.453,dollar,Unchanged
+18,222.12,Reactor Coolant Piping System (Field Cost 222),4924232.687,dollar,Unchanged
+19,222.13,Steam Generator Equipment (Field Cost 222),697187.7179,dollar,Unchanged
+20,222.14,Pressurizing System (Field Cost 222),94769.84553,dollar,Unchanged
+21,222,Main heat transfer transport system,8220525.704,dollar,Unchanged
+22,224,Radwaste processing,59673441.34,dollar,Unchanged
+23,226.4,Coolant Treatment & Recycle,34304867.39,dollar,Unchanged
+24,226.7,Aux Cool Sys (Broken Down Further),0,dollar,Unchanged
+25,227,Reactor instrumentation and control,61419737.22,dollar,Unchanged
+26,231,Turbine generator,57399816.35,dollar,Unchanged
+27,233,Condensing systems,29065851.25,dollar,Unchanged
+28,234,Feedwater heating system,0,dollar,Unchanged
+29,235,Other turbine plant equipment,9563415.121,dollar,Unchanged
+30,241,Switchgear,21904347.8,dollar,Unchanged
+31,242,Station service equipment,36970984.98,dollar,Unchanged
+32,245,Electric structure and wiring contnr.,40891698.73,dollar,Unchanged
+33,246,Power and control wiring,37773534.79,dollar,Unchanged
+34,252,"Air, water and steam service systems",81851078.87,dollar,Unchanged
+35,262,Mechanical equipment,44777444.42,dollar,Unchanged
+36,2C,Calculated DIRECT COST,1225489991,dollar,Unchanged
+37,2,TOTAL DIRECT COST,1419783854,dollar,Unchanged
