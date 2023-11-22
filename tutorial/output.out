@@ -1,0 +1,127 @@
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::'###:::::'######:::'######::'########:'########::'########:
+::'## ##:::'##... ##:'##... ##: ##.....:: ##.... ##:... ##..::
+:'##:. ##:: ##:::..:: ##:::..:: ##::::::: ##:::: ##:::: ##::::
+'##:::. ##: ##::::::: ##::::::: ######::: ########::::: ##::::
+ #########: ##::::::: ##::::::: ##...:::: ##.. ##:::::: ##::::
+ ##.... ##: ##::: ##: ##::: ##: ##::::::: ##::. ##::::: ##::::
+ ##:::: ##:. ######::. ######:: ########: ##:::. ##:::: ##::::
+..:::::..:::.......::::......::........::..:::::..:::::..:::::
+
+
+======================================== Reading user input ========================================
+
+
+[USER_INPUT] Reference model is "heatpipe" 
+
+[USER_INPUT] Thermal power is 6 MW 
+
+[USER_INPUT] Electric power is 2 MW 
+
+[Updating] Variable land_surface_area
+[Updated]  Changed from 32000.0 squareMeter to 40000.0 squareMeter
+
+=================================Extracting user changed variables==================================
+
+
++-------------------+-------------------+-----------+-------------+
+|      var_name     |  var_description  | var_value |   var_unit  |
++-------------------+-------------------+-----------+-------------+
+| land_surface_area | land surface area | 40,000.00 | squareMeter |
+|        mwe        |   user_input MWE  |    2.00   |      MW     |
+|        mwth       |  user_input mwth  |    6.00   |      MW     |
++-------------------+-------------------+-----------+-------------+
+
+
+================================ Extracting affected cost elements =================================
+
+
+variable "land_surface_area" affects cost element(s):
+211_lab
+
+variable "mwe" affects cost element(s):
+231_fac
+
+variable "mwth" affects cost element(s):
+231_fac
+
+====================================== Updating cost elements ======================================
+
+
+hello1 heatpipe_cost_element heatpipe_variable heatpipe_variable_links algorithm
+MySQLCursorBuffered: (a result of CALL update_new_cost_elemen.. hello123
+[(1, '211_lab', 2609431.0, 'Yardwork_cost', 'land_surface_area', '49', '81.5*v_1', '81.5*land_surface_area', 'dollar'), (19, '231_fac', 18734511.0, 'turb_and_elec_sys_cost', 'mwth, mwe', '67', '282553*v_1+213800000*(pow(v_2/1144, 0.4) + pow(v_1/3431, 0.8))', '282553*mwth+ 213800000*(pow(mwe/1144, 0.4) + pow(mwth/3431, 0.8))', 'dollar'), (19, '231_fac', 18734511.0, 'turb_and_elec_sys_cost', 'mwth, mwe', '67', '282553*v_1+213800000*(pow(v_2/1144, 0.4) + pow(v_1/3431, 0.8))', '282553*mwth+ 213800000*(pow(mwe/1144, 0.4) + pow(mwth/3431, 0.8))', 'dollar')] hello123
+[Updating] Cost element [211_lab], running algorithm: [Yardwork_cost], 
+[Updating] with formulation: 81.5*land_surface_area
+[Updated]  Reference value is : $2,609,431  , calculated value is: $3,260,000   
+ 
+[Updating] Cost element [231_fac], running algorithm: [turb_and_elec_sys_cost], 
+[Updating] with formulation: 282553*mwth+ 213800000*(pow(mwe/1144, 0.4) + pow(mwth/3431, 0.8))
+[Updated]  Reference value is : $18,734,511 , calculated value is: $19,893,806  
+ 
+[Updating] Cost element [231_fac], running algorithm: [turb_and_elec_sys_cost], 
+[Updating] with formulation: 282553*mwth+ 213800000*(pow(mwe/1144, 0.4) + pow(mwth/3431, 0.8))
+[Updated]  Reference value is : $18,734,511 , calculated value is: $19,893,806  
+ 
+====================================== Roll up cost elements =======================================
+
+
+[Updating] Roll up cost elements from level 3 to level 2
+[Updated] Cost elements rolled up
+
+============================== Summing cost elements for direct cost ===============================
+
+
+[Updating] Summing cost elements
+[Updated] Cost elements summed
+
+====================================== Updating account table ======================================
+
+
+[Updating] Updating account table by cost elements
+[Updated]  Account table updated from cost elements
+
+===================================== Rolling up account table =====================================
+
+
+Only rolling up level 3 to 2
+[Updating] Rolling up account table from level 3 to level 2 
+[Updated]  Account table rolled up
+
+===================================== Summing up account table =====================================
+
+
+[Updated]  Account table summed up for calculated direct cost.
+
+[Updated]  Account table summed up for direct cost.
+
+MySQLCursor: SELECT  sum(t1.prn) as tprn FROM
+       .. None hello9
+=============================== Generating results table for review ================================
+
+
++-----------------+-------------------------------------+------------+---------+-------+------------------+
+| code_of_account | account_description                 | total_cost |   unit  | level |  review_status   |
++-----------------+-------------------------------------+------------+---------+-------+------------------+
+| 2               | TOTAL DIRECT COST                   |      78.64 | million |   0   | Ready for Review |
+|  2C             | Calculated DIRECT COST              |      78.64 | million |   0   | Ready for Review |
+|   211           | Yardwork                            |       3.26 | million |   2   | Ready for Review |
+|   212           | Reactor containment                 |       0.42 | million |   2   |    Unchanged     |
+|   213           | Building and utilities              |      16.30 | million |   2   |    Unchanged     |
+|   218T          |  Reactor startup facility           |       1.03 | million |   3   |    Unchanged     |
+|   221.12        | Outer vessel                        |       0.10 | million |   3   |    Unchanged     |
+|   221.13        | Inner vessel                        |       0.32 | million |   3   |    Unchanged     |
+|   221.21        | Reactivity control system           |       9.04 | million |   3   |    Unchanged     |
+|   221.22        | Reflector                           |       3.28 | million |   3   |    Unchanged     |
+|   221.23        | Shield                              |       3.90 | million |   3   |    Unchanged     |
+|   221.24        | Moderator                           |       0.00 | million |   3   |    Unchanged     |
+|   222.12        | Reactor coolant system (heat pipes) |      11.34 | million |   3   |    Unchanged     |
+|   222.13        | Heat exchangers                     |       1.25 | million |   3   |    Unchanged     |
+|   227           | Instrumentation & control           |       8.50 | million |   2   |    Unchanged     |
+|   231           | Turbine and electric systems        |      19.89 | million |   2   | Ready for Review |
++-----------------+-------------------------------------+------------+---------+-------+------------------+
+Successfully created excel file heatpipe_updated_account.xlsx
+Successfully created excel file heatpipe_variable_affected_cost_elements.xlsx
+Successfully created excel file heatpipe_updated_cost_element.xlsx
