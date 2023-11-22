@@ -52,15 +52,15 @@ class Accert:
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'    
-        elif "heatpipemr" in str(xml2obj.ref_model.value).lower():
-            self.ref_model = 'abr1000'
-            self.acc_tabl = 'abr_account'
-            self.cel_tabl = 'abr_cost_element'
-            self.var_tabl = 'abr_variable'
-            self.vlk_tabl = 'abr_variable_links'   
-            self.alg_tabl = 'algorithm'
-            self.esc_tabl = 'escalation'
-            self.fac_tabl = 'facility'         
+        elif "heatpipe" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'heatpipe'
+            self.acc_tabl =  'heatpipe_account'
+            self.cel_tabl =  'heatpipe_cost_element'
+            self.var_tabl =  'heatpipe_variable'
+            self.vlk_tabl =  'heatpipe_variable_links'   
+            self.alg_tabl =  'algorithm'
+            self.esc_tabl =  'escalation'
+            self.fac_tabl =  'facility'         
         elif "pwr12-be" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'pwr12-be'
             self.acc_tabl = 'account'
@@ -457,7 +457,6 @@ class Accert:
         quite : bool, optional
             Whether or not to print the update info. (By default not, or false)
         """
-
         if not quite:
             print('[Updating] {}Variable {}'.format(var_type,var_id))
         org_var_info = self.extract_variable_info_on_name(c,var_id)
@@ -505,7 +504,7 @@ class Accert:
         # DEALLOCATE PREPARE stmt;
         # END$$
         # DELIMITER ;
-        c.callproc('update_variable_info_on_name', (self.var_tabl, var_id, var_value, var_unit))
+        c.callproc('update_variable_info_on_name', (self.var_tabl, var_id, float(var_value), var_unit))
         return None    
 
     def update_super_variable(self, c,var_id):
@@ -629,7 +628,6 @@ class Accert:
         to_value : float
             Converted value.
         """
-
         scale = float(self.convert_unit_scale(current_unit,to_unit))
         to_value = current_value * scale
         if to_unit != 'dollar':
@@ -923,8 +921,11 @@ class Accert:
         # END$$
         # DELIMITER ;
         c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.vlk_tabl,self.alg_tabl))
+        print("hello1", self.cel_tabl,self.var_tabl,self.vlk_tabl,self.alg_tabl)
         for row in c.stored_results():
+            print(row, "hello123")
             results = row.fetchall()
+            print(results, "hello123")
         # c.execute(""" SELECT ce_org.ind,	ce_org.cost_element,	
         #         ce_org.cost_2017,	ce_org.alg_name,	
         #         ce_org.variables,	ce_org.algno, 
@@ -1164,7 +1165,7 @@ class Accert:
             MySQLCursor class instantiates objects that can execute MySQL statements.
         """
 
-        print('ABR1000 model only roll up level 3 to 2')
+        print('Only rolling up level 3 to 2')
         ##NOTE inner join only update 222
         print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
         c.execute("""
@@ -1180,6 +1181,35 @@ class Accert:
                     abr_account.review_status = 'Updated'
                 WHERE
                     abr_account.code_of_account = updated_ac2.ac2_coa 
+            """)
+        return None
+    
+    def roll_up_heatpipe_account(self, c):
+        """
+        Rolls up the account table for Heatpipe reactor from level 3 to 2.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+
+        print('Only rolling up level 3 to 2')
+        ##NOTE inner join only update 222
+        print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
+        c.execute("""
+                UPDATE heatpipe_account,
+                (SELECT a2.code_of_account as ac2_coa, 
+                        sum(ua3.total_cost) as a2_cal_total_cost
+                FROM heatpipe_account as ua3
+                JOIN heatpipe_account as a2 on ua3.supaccount=a2.code_of_account
+                where ua3.level=3 and a2.level=2
+                group by a2.code_of_account) as updated_ac2
+                SET
+                    heatpipe_account.total_cost = updated_ac2.a2_cal_total_cost,
+                    heatpipe_account.review_status = 'Updated'
+                WHERE
+                    heatpipe_account.code_of_account = updated_ac2.ac2_coa 
             """)
         return None
 
@@ -1251,6 +1281,81 @@ class Accert:
 
         print('[Updated] Cost elements summed\n')
         return None
+    
+    
+    def sum_cost_elements_2C_heatpipe(self, c):
+        # print(c.fetchone()[0], "hellooooo")
+        """
+        Sums the cost element for heatpipe COA 2C. (Calculated cost) 
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+
+        print(' Summing cost elements for direct cost '.center(100,'='))
+        print('\n')
+        print('[Updating] Summing cost elements')
+        c.execute("""SELECT sum(cef.cost_2017) from
+                    (SELECT t1.code_of_account,
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 1), ',', -1) as fac_name
+                    FROM accert_db.heatpipe_account AS t1 
+                    LEFT JOIN heatpipe_account as t2
+                    ON t1.code_of_account = t2.supaccount
+                    WHERE t2.code_of_account IS NULL 
+                    and t1.code_of_account!='2' 
+                    and t1.code_of_account!='2C' )as ac
+                    join accert_db.heatpipe_cost_element as cef
+                            on cef.cost_element = ac.fac_name
+                            where ac.code_of_account!='2C'""")
+        sum_2c_fac = c.fetchone()[0]
+        c.execute("""UPDATE heatpipe_cost_element
+                    SET cost_2017 = %(sum_2c_fac)s,
+                    updated = %(updated)s
+                    WHERE cost_element = '2C_fac'""",{'sum_2c_fac':float(sum_2c_fac),'updated':1})
+
+        c.execute("""SELECT sum(cef.cost_2017) from
+                    (SELECT t1.code_of_account,
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 2), ',', -1) as lab_name
+                    FROM accert_db.heatpipe_account AS t1 
+                    LEFT JOIN heatpipe_account as t2
+                    ON t1.code_of_account = t2.supaccount
+                    WHERE t2.code_of_account IS NULL 
+                    and t1.code_of_account!='2' 
+                    and t1.code_of_account!='2C' )as ac
+                    join accert_db.heatpipe_cost_element as cef
+                            on cef.cost_element = ac.lab_name
+                            where ac.code_of_account!='2C'""")
+        sum_2c_lab = c.fetchone()[0]
+        c.execute("""UPDATE heatpipe_cost_element
+                    SET cost_2017 = %(sum_2c_lab)s,
+                    updated = %(updated)s
+                    WHERE cost_element = '2C_lab'""",{'sum_2c_lab':float(sum_2c_lab),'updated':1})
+        c.execute("""SELECT sum(cef.cost_2017) from
+                    (SELECT t1.code_of_account,
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 3), ',', -1) as mat_name
+                    FROM accert_db.heatpipe_account AS t1 
+                    LEFT JOIN heatpipe_account as t2
+                    ON t1.code_of_account = t2.supaccount
+                    WHERE t2.code_of_account IS NULL 
+                    and t1.code_of_account!='2' 
+                    and t1.code_of_account!='2C' )as ac
+                    join accert_db.heatpipe_cost_element as cef
+                            on cef.cost_element = ac.mat_name
+                            where ac.code_of_account!='2C'""")
+        sum_2c_mat = c.fetchone()[0]
+        c.execute("""UPDATE heatpipe_cost_element
+                    SET cost_2017 = %(sum_2c_mat)s,
+                    updated = %(updated)s
+                    WHERE cost_element = '2C_mat'""",{'sum_2c_mat':float(sum_2c_mat),'updated':1})
+
+        print('[Updated] Cost elements summed\n')
+        return None
+
+
+    
+
 
     def sum_up_abr_account_2C(self, c):
         """
@@ -1277,6 +1382,32 @@ class Accert:
                 WHERE abr_account.code_of_account = '2C';""")
         print('[Updated]  Account table summed up for calculated direct cost.\n')
         return None
+    
+    def sum_up_heatpipe_account_2C(self, c):
+        """
+        Sums up total cost of account 2C for the heatpipe reactor.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+
+        print(' Summing up account table '.center(100,'='))
+        print('\n')
+        c.execute("""UPDATE heatpipe_account,
+                (SELECT  sum(t1.total_cost) as tc, sum(t1.prn) as tprn FROM
+                    heatpipe_account AS t1 LEFT JOIN heatpipe_account as t2
+                    ON t1.code_of_account = t2.supaccount
+                    WHERE t2.code_of_account IS NULL 
+                    and t1.code_of_account!='2' 
+                    and t1.code_of_account!='2C') as dircost
+                SET heatpipe_account.total_cost = dircost.tc,
+                heatpipe_account.prn=dircost.tprn,
+                review_status = 'Ready for Review'
+                WHERE heatpipe_account.code_of_account = '2C';""")
+        print('[Updated]  Account table summed up for calculated direct cost.\n')
+        return None
 
     def sum_up_abr_direct_cost(self, c):
         """
@@ -1294,6 +1425,25 @@ class Accert:
                 SET abr_account.total_cost = calcost.talcost,
                 review_status = 'Ready for Review'
                 WHERE abr_account.code_of_account = '2';""")
+        print('[Updated]  Account table summed up for direct cost.\n')
+        return None
+    
+    def sum_up_heatpipe_direct_cost(self, c):
+        """
+        Sums up the total cost of account 2 from account 2C for the heatpipe reactor.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+        c.execute("""UPDATE heatpipe_account,
+                (SELECT  (total_cost/prn) as talcost 
+                    FROM heatpipe_account as pre_heatpipe
+                    WHERE pre_heatpipe.code_of_account ='2C') as calcost
+                SET heatpipe_account.total_cost = calcost.talcost,
+                review_status = 'Ready for Review'
+                WHERE heatpipe_account.code_of_account = '2';""")
         print('[Updated]  Account table summed up for direct cost.\n')
         return None
 
@@ -1329,6 +1479,41 @@ class Accert:
         # print(fac, lab,mat)
         # print('[Updated]  Account table summed up for direct cost.\n')
         return fac,lab,mat
+    
+    def cal_direct_cost_elements_heatpipe(self, c):
+        """
+        Calculates the direct cost elements for the heatpipe reactor including the factory, labor, and material costs. (2C_fac, 2C_lab, 2C_mat)
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+        c.execute("""SELECT  sum(t1.prn) as tprn FROM
+                    heatpipe_account AS t1 LEFT JOIN heatpipe_account as t2
+                    ON t1.code_of_account = t2.supaccount
+                    WHERE t2.code_of_account IS NULL 
+                    and t1.code_of_account!='2' 
+                    and t1.code_of_account!='2C';""")
+        tprn  = c.fetchone()[0]  
+        print(c, c.fetchone(), "hello9")    
+        c.execute("""SELECT cost_2017 FROM accert_db.heatpipe_cost_element
+                    where account='2'
+                    and cost_element='2c_fac' """)
+        
+        fac = c.fetchone()[0]/tprn
+        c.execute("""SELECT cost_2017 FROM accert_db.heatpipe_cost_element
+                    where account='2'
+                    and cost_element='2c_lab' """)
+        lab = c.fetchone()[0]/tprn
+        c.execute("""SELECT cost_2017 FROM accert_db.heatpipe_cost_element
+                    where account='2'
+                    and cost_element='2c_mat' """)     
+        mat = c.fetchone()[0]/tprn        
+        # print(' Direct cost calculation '.center(100,'='))
+        # print(fac, lab,mat)
+        # print('[Updated]  Account table summed up for direct cost.\n')
+        return fac,lab,mat
 
     def roll_up_abr_account_table(self, c):
         """
@@ -1347,6 +1532,42 @@ class Accert:
         self.sum_up_abr_account_2C(c)
         self.sum_up_abr_direct_cost(c)
         return None
+
+    def roll_up_heatpipe_account_table(self, c):
+        """
+        Rolls up the account table for the heatpipe.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements
+        """
+        print(' Rolling up account table '.center(100,'='))
+        print('\n')
+        ### only update account 222 and account 2C
+        self.roll_up_heatpipe_account(c)
+        print('[Updated]  Account table rolled up\n')
+        self.sum_up_heatpipe_account_2C(c)
+        self.sum_up_heatpipe_direct_cost(c)
+        return None
+    
+    # def roll_up_heatpipe_account_table(self, c):
+    #     """
+    #     Rolls up the account table for the heatpipe reactor.
+
+    #     Parameters
+    #     ----------
+    #     c : MySQLCursor
+    #         MySQLCursor class instantiates objects that can execute MySQL statements
+    #     """
+    #     print(' Rolling up account table '.center(100,'='))
+    #     print('\n')
+    #     ### only update account 222 and account
+    #     self.roll_up_abr_account(c)
+    #     print('[Updated]  Account table rolled up\n')
+    #     self.sum_up_abr_account_2C(c)
+    #     self.sum_up_abr_direct_cost(c)
+    #     return None
 
     def print_logo(self):
         """ 
@@ -1377,18 +1598,18 @@ class Accert:
         """
 
         statement="SELECT rankedcoa.code_of_account, account.account_description, account.total_cost,	 account.unit,	 account.level, account.review_status	 FROM account JOIN (SELECT node.code_of_account AS COA,  CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM account AS node, account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON account.code_of_account=rankedcoa.COA WHERE account.level <={} ORDER BY account.lft;".format(level)
-        filename = 'ACCERT_updated_account.xlsx'
+        filename = str(self.ref_model) + '_updated_account.xlsx'
         # filename = 'ACCERT_updated_account.csv'
         self.write_to_excel(statement, filename,conn)
 
         statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db.variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db.variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
-        filename = 'ACCERT_variable_affected_cost_elements.xlsx'
+        filename = str(self.ref_model) + '_variable_affected_cost_elements.xlsx'
         # filename = 'ACCERT_variable_affected_cost_elements.csv'
 
         self.write_to_excel(statement, filename,conn)
 
         statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db.cost_element as ce WHERE ce.updated != 0 order by ce.ind"
-        filename = 'ACCERT_updated_cost_element.xlsx'    
+        filename = str(self.ref_model) +'_updated_cost_element.xlsx'    
         # filename = 'ACCERT_updated_cost_element.csv'
         self.write_to_excel(statement, filename,conn)
 
@@ -1404,22 +1625,47 @@ class Accert:
             Level of detail in the results table. (How many levels)
         """
         statement="SELECT rankedcoa.code_of_account, abr_account.account_description, abr_account.total_cost,	 abr_account.unit,	 abr_account.level,abr_account.prn as pct,abr_account.review_status FROM abr_account JOIN (SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM abr_account AS node, abr_account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON abr_account.code_of_account=rankedcoa.COA WHERE abr_account.level <=3 ORDER BY abr_account.lft;".format(level)
-        filename = 'ACCERT_updated_account.xlsx'
+        filename1 = str(self.ref_model) + '_updated_account.xlsx'
+
+        self.write_to_excel(statement, filename1,conn)
+
+        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db.abr_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db.abr_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
+        filename2 = str(self.ref_model) +'_variable_affected_cost_elements.xlsx'
+
+        self.write_to_excel(statement, filename2,conn)
+
+        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db.abr_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
+        filename3 = str(self.ref_model) + '_updated_cost_element.xlsx'
+
+        self.write_to_excel(statement, filename3,conn)
+
+    def generate_heatpipe_results_table(self, c, conn, level=3):
+        """
+        Generates the results tables for the ABR-1000.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        level : int
+            Level of detail in the results table. (How many levels)
+        """
+        statement="SELECT rankedcoa.code_of_account, heatpipe_account.account_description, heatpipe_account.total_cost,	 heatpipe_account.unit,	 heatpipe_account.level,heatpipe_account.prn as pct,heatpipe_account.review_status FROM heatpipe_account JOIN (SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM heatpipe_account AS node, heatpipe_account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON heatpipe_account.code_of_account=rankedcoa.COA WHERE heatpipe_account.level <=3 ORDER BY heatpipe_account.lft;".format(level)
+        filename = str(self.ref_model) + '_updated_account.xlsx'
         # filename = 'ACCERT_updated_account.csv'
 
         self.write_to_excel(statement, filename,conn)
 
-        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db.abr_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db.abr_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
-        filename = 'ACCERT_variable_affected_cost_elements.xlsx'
+        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db.heatpipe_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db.heatpipe_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
+        filename = str(self.ref_model) +'_variable_affected_cost_elements.xlsx'
         # filename = 'ACCERT_variable_affected_cost_elements.csv'
 
         self.write_to_excel(statement, filename,conn)
 
-        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db.abr_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
-        filename = 'ACCERT_updated_cost_element.xlsx'
-        # filename = 'ACCERT_updated_cost_element.csv'
-
+        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db.heatpipe_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
+        filename = str(self.ref_model) + '_updated_cost_element.xlsx'
         self.write_to_excel(statement, filename,conn)
+        # filename = 'ACCERT_updated_cost_element.csv'        
 
     def write_to_excel(self, statement, filename,conn):
         """
@@ -1658,6 +1904,21 @@ class Accert:
             ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
 
             self.generate_abr_results_table(c, conn,level=3)
+        
+        elif self.ref_model=="heatpipe":
+            self.sum_cost_elements_2C_heatpipe(c)
+            ### update the account table:
+
+            self.update_account_table_by_cost_elements(c)
+
+        #     ### roll up the account table:
+            self.roll_up_heatpipe_account_table(c)
+            heatpipe_fac,heatpipe_lab,heatpipe_mat = self.cal_direct_cost_elements_heatpipe(c)
+            print(' Generating results table for review '.center(100,'='))
+            print('\n')  
+            ut.print_leveled_heatpipe_accounts(c, heatpipe_fac,heatpipe_lab,heatpipe_mat,all=False,cost_unit='million',level=3)
+
+            self.generate_heatpipe_results_table(c, conn,level=3)
         
         elif self.ref_model=="lfr":
             self.sum_cost_elements_2C(c)

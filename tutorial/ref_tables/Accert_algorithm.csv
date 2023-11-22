@@ -47,3 +47,22 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units,variab
 46,unitcost_s_eedb_to_accert,v,unit cost surface from EEDB with inflation,v_1*v_2,unitcost_EEDB_s*infl,dollar/m^2,NULL,NULL
 47,tol_contaiment_ce_cost,v,total cost for each part of cotiament,v_1*v_2,unitcost*number_of stucture_unit,dollar,NULL,NULL
 48,sum_ce,v,sum of multiple costelement,sum(kwargs.values()),"sum(cost_element_1,cost_element2,cost_element_n)",dollar,NULL,NULL
+49,Yardwork_cost,c,the cost of the land 2017,81.5*v_1,81.5*land_surface_area,dollar,land_surface_area,81.5
+50,Reactor_containment_mat_cost,c,Reactor_containment_mat_cost,130.8*v_1,130.8*containment_subVolume,dollar,containment_subVolume,130.8
+51,Reactor_containment_lab_cost,c,Reactor_containment_lab_cost,915.6*v_1,915.6*Containment_hole_volume,dollar,Containment_hole_volume,915.6
+52,Building_and_utilities_mat_cost,c,Building_and_utilities_mat_cost,6458.3*v_1,6458.3*Turbine_building_surface_area,dollar,Turbine_building_surface_area,6458.3
+53,Building_and_utilities_lab_cost,c,Building_and_utilities_lab_cost,9843*v_1+10000*v_2,9843*Distance_to_utilities+10000*Number_of_shipping_containers,dollar,"Distance_to_utilities, Number_of_shipping_containers","9843, 10000"
+54,Reactor_startup_facility_cost,c,Reactor_startup_facility_cost,7600*v_1+1100,7600*Battery_capacity_required+1100,dollar,Battery_capacity_required,"7600, 1100"
+55,Outer_vessel_mat_cost,c,Outer_vessel_mat_cost,310000*v_1,310000*primary_outer_vessel_SS_mass,dollar,primary_outer_vessel_SS_mass,310000
+56,Outer_vessel_lab_cost,c,Outer_vessel_lab_cost,14080*v_1,14080*primary_outer_vessel_SS_mass,dollar,primary_outer_vessel_SS_mass,14080
+57,Inner_vessel_cost,c,Inner_vessel_cost,310000*v_1,310000*primary_inner_vessel_SS_mass,dollar,primary_inner_vessel_SS_mass,310000
+58,Reactivity_control_system_cost,c,Reactivity_control_system_cost,950*v_1+610000*(v_2+v_3),950*B4C_total_neutron_poison_mass_Kg+610000*(Number_of_control_rod_drums+number_of_emergency_control_rods),dollar,"B4C_total_neutron_poison_mass_Kg, Number_of_control_rod_drums, number_of_emergency_control_rods","950, 610000"
+59,Reflector_cost,c,Reflector_cost,310000*v_1+120000*v_2+1000000*v_3,310000*stainless_steel_316_reflector_mass+120000*Al2O3_reflector_mass+1000000*BeO_reflector_mass,dollar,"stainless_steel_316_reflector_mass, Al2O3_reflector_mass, BeO_reflector_mass","310000, 120000, 1000000"
+60,Shield_cost,c,Shield_cost,949.9*v_1,949.9*shield_B4C_mass,dollar,shield_B4C_mass,949.9
+61,Moderator_cost,c,Moderator_cost,310000*v_1,310000*moderator_ZrH_mass,dollar,moderator_ZrH_mass,310000
+62,cooling_heat_pipes_cost,c,cooling_heat_pipes_cost,10000*v_1*(1-v_2),10000*number_of_core_cooling_heat_pipes*(1-mass_production_cost_reduction_factor),dollar,"number_of_core_cooling_heat_pipes, mass_production_cost_reduction_factor",10000
+63,heat_exchangers_mat_cost,c,heat_exchangers_mat_cost,50000*v_1,50000*number_of_heat_exchangers,dollar,number_of_heat_exchangers,50000
+64,heat_exchangers_lab_cost,c,heat_exchangers_lab_cost,530000*v_1,530000*number_of_heat_exchangers,dollar,number_of_heat_exchangers,530000
+65,heat_exchangers_fac_cost,c,heat_exchangers_fac_cost,120000*v_1*v_2,120000*number_of_heat_exchangers*heat_exchangers_mass,dollar,"number_of_heat_exchangers, heat_exchangers_mass",120000
+66,instrumentation_contorl_cost,c,instrumentation_contorl_cost,2000*v_1+6500000,2000*number_of_IO_sensors+6500000,dollar,number_of_IO_sensors,2000
+67,turb_and_elec_sys_cost,c,turb_and_elec_sys_cost,"282553*v_1+213800000*(pow(v_2/1144, 0.4) + pow(v_1/3431, 0.8))","282553*mwth+ 213800000*(pow(mwe/1144, 0.4) + pow(mwth/3431, 0.8))",dollar,"mwth, mwe","282553, 1144, 0.4, 3431, 0.8"

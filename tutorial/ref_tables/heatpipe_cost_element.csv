@@ -1,0 +1,23 @@
+ind,cost_element,cost_2017,sup_cost_ele,alg_name,fun_unit,variables,account,algno,updated
+1,211_lab,2609431,21_lab,Yardwork_cost,million,land_surface_area,211,49,0
+2,212_mat,10043,21_mat,Reactor_containment_mat_cost,million,containment_subVolume,212,50,0
+3,212_lab,408651,21_lab,Reactor_containment_lab_cost,million,Containment_hole_volume,212,51,0
+4,213_mat,6458349,21_mat,Building_and_utilities_mat_cost,million,Turbine_building_surface_area,213,52,0
+5,213_lab,9843000,21_lab,Building_and_utilities_lab_cost,million,"Distance_to_utilities, Number_of_shipping_containers",213,53,0
+6,218T_fac,1027100,21_fac,Reactor_startup_facility_cost,million,Battery_capacity_required,218T,54,0
+7,221.12_mat,99430,22_mat,Outer_vessel_mat_cost,million,primary_outer_vessel_SS_mass,221,55,0
+8,221.12_lab,4516,22_lab,Outer_vessel_lab_cost,million,primary_outer_vessel_SS_mass,221,56,0
+9,221.13_mat,318739,22_mat,Inner_vessel_cost,million,primary_inner_vessel_SS_mass,221,57,0
+10,221.21_mat,9043404,22_mat,Reactivity_control_system_cost,million,"B4C_total_neutron_poison_mass_Kg, Number_of_control_rod_drums, number_of_emergency_control_rods",221,58,0
+11,221.22_mat,3277300,22_mat,Reflector_cost,million,"stainless_steel_316_reflector_mass, Al2O3_reflector_mass, BeO_reflector_mass",221,59,0
+12,221.23_mat,3902600,22_mat,Shield_cost,million,shield_B4C_mass,221,60,0
+13,221.24_mat,0,22_mat,Moderator_cost,million,moderator_ZrH_mass,221,61,0
+14,222.12_mat,11340000,22_mat,cooling_heat_pipes_cost,million,"number_of_core_cooling_heat_pipes, mass_production_cost_reduction_factor",222,62,0
+15,222.13_mat,100000,22_mat,heat_exchangers_mat_cost,million,number_of_heat_exchangers,222,63,0
+16,222.13_lab,1060000,22_lab,heat_exchangers_lab_cost,million,number_of_heat_exchangers,222,64,0
+17,222.13_fac,94784,22_fac,heat_exchangers_fac_cost,million,"number_of_heat_exchangers, heat_exchangers_mass",222,65,0
+18,227_fac,8500000,22_fac,instrumentation_contorl_cost,million,number_of_IO_sensors,227,66,0
+19,231_fac,18734511,23_fac,turb_and_elec_sys_cost,million,"mwth, mwe",231,67,0
+20,2c_mat,34549864,,NO_ALG,million,N/A,2,N/A,0
+21,2c_lab,13925597,,NO_ALG,million,N/A,2,N/A,0
+22,2c_fac,28356395,,NO_ALG,million,N/A,2,N/A,0

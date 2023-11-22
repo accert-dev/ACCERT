@@ -1,0 +1,31 @@
+% ACCERT Test input file
+% Author: J. Zhou (jia.zhou@anl.gov)
+% Last updated: 09/20/2022
+
+
+% This test input file is used to test the
+% assign costs functionality.
+
+
+accert{
+    ref_model = "heatpipe"
+    power( Thermal ){ value = 6   unit = MW }
+    power(Electric){ value = 2   unit = MW }
+    var(land_surface_area){ value = 40000  unit = squareMeter }
+    var(containment_subVolume){ value = 80  unit = cubeMeter }
+    %var(Containment_hole_volume){ value = 600  unit = cubeMeter }
+    %var(Turbine_building_surface_area){ value = 2000  unit = squareMeter }
+    %var(Distance_to_utilities){ value = 20000  unit = m }
+    %var(Number_of_shipping_containers){ value = 2  unit = 1 }
+    %var(Battery_capacity_required){ value = 150  unit = kW }
+    %var(primary_outer_vessel_SS_mass){ value = 0.5  unit = ton }
+    %var(primary_inner_vessel_SS_mass){ value = 0.5  unit = ton }
+    
+    %var(B4C_total_neutron_poison_mass_Kg){ value = 550  unit = kg }
+    %var(Number_of_control_rod_drums){ value = 13  unit = 1 }
+    %var(number_of_emergency_control_rods){ value = 2  unit = 1 }
+
+    
+ 
+}
+

@@ -1,0 +1,25 @@
+ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_input
+1,land_surface_area,land surface area,32000,squareMeter,NULL,NULL,NULL,0
+2,containment_subVolume,containment  subVolume = ISO width* ISO length *ISO subheight,76.8,cubeMeter,NULL,NULL,NULL,0
+3,Containment_hole_volume,Containment hole volume  = (2 concrete thickness * ISO width) *  (2 concrete thickness * ISO length) *  (2 concrete thickness * ISO sub_height) - ISO width *ISO length* ISO subheight   ,446.3,cubeMeter,NULL,NULL,NULL,0
+4,Turbine_building_surface_area,Turbine building surface area,1000,squareMeter,NULL,NULL,NULL,0
+5,Distance_to_utilities,Distance to utilities,1000,m,NULL,NULL,NULL,0
+6,Number_of_shipping_containers,Number of shipping containers,0,1,NULL,NULL,NULL,0
+7,Battery_capacity_required,Battery capacity required,135,kW,NULL,NULL,NULL,0
+8,primary_outer_vessel_SS_mass,primary outer vessel SS mass,0.3,ton,NULL,NULL,NULL,0
+9,primary_inner_vessel_SS_mass,primary inner vessel SS mass,1,ton,NULL,NULL,NULL,0
+10,B4C_total_neutron_poison_mass_Kg,B4C total neutron poison mass (Kg),529.9,kg,NULL,NULL,NULL,0
+11,Number_of_control_rod_drums,Number of control rod drums,12,1,NULL,NULL,NULL,0
+12,number_of_emergency_control_rods,number of emergency control rods,2,1,NULL,NULL,NULL,0
+13,stainless_steel_316_reflector_mass,stainless steel 316 reflector mass,2,ton,NULL,NULL,NULL,0
+14,Al2O3_reflector_mass,Al2O3 reflector mass,7.9,ton,NULL,NULL,NULL,0
+15,BeO_reflector_mass,BeO reflector mass,1.7,ton,NULL,NULL,NULL,0
+16,shield_B4C_mass,shield B4C mass,4108.5,kg,NULL,NULL,NULL,0
+17,moderator_ZrH_mass,moderator ZrH mass,0,ton,NULL,NULL,NULL,0
+18,mass_production_cost_reduction_factor,mass production cost reduction factor,0,1,NULL,NULL,NULL,0
+19,number_of_core_cooling_heat_pipes,number of core cooling heat pipes,1134,1,NULL,NULL,NULL,0
+20,number_of_heat_exchangers,number of heat exchangers,2,1,NULL,NULL,NULL,0
+21,heat_exchangers_mass,heat exchangers mass,0.4,ton,NULL,NULL,NULL,0
+22,number_of_IO_sensors,number of IO sensors,1000,1,NULL,NULL,NULL,0
+23,mwth,user_input mwth,5,MW,NULL,NULL,NULL,0
+24,mwe,user_input MWE,1.8,MW,NULL,NULL,NULL,0

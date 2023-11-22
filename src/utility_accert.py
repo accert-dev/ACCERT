@@ -781,3 +781,135 @@ class Utility_methods:
 
 
         return None
+
+
+    def print_leveled_heatpipe_accounts(self, c, heatpipe_fac,heatpipe_lab,heatpipe_mat,all=False, 
+                                    cost_unit='dollar',level=3):
+        """Prints the output leveled heatpipe accounts table.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        heatpipe_fac : float
+            Abr_fac is the ABR-1000 factor for factory cost.
+        heatpipe_lab : float
+            Abr_lab is the ABR-1000 factor for labor cost.
+        heatpipe_mat : float
+            Abr_mat is the ABR-1000 factor for material cost.
+        all : bool, optional
+            All is the flag to print all accounts or not. (By default not, or false)
+        cost_unit : str, optional
+            Cost_unit is the cost unit. (By default 'dollar')
+        level : int, optional
+            Level is the level of the account. (By default 3)
+        """
+        if all:
+            c.execute("""SELECT heatpipe_account.level,
+                                rankedcoa.COA as code_of_account,
+                                heatpipe_account.account_description,
+                                sorted_ce.fac_cost,
+                                sorted_ce.lab_cost,
+                                sorted_ce.mat_cost,
+                                heatpipe_account.total_cost,	
+                                heatpipe_account.unit,
+                                heatpipe_account.review_status
+                            FROM heatpipe_account 
+                            JOIN 
+                            (SELECT node.code_of_account,
+                                    CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
+                                FROM heatpipe_account AS node,
+                                    heatpipe_account AS parent
+                                WHERE node.lft BETWEEN parent.lft AND parent.rgt
+                                GROUP BY node.code_of_account) as rankedcoa
+                                    ON heatpipe_account.code_of_account=rankedcoa.code_of_account
+                                    JOIN (SELECT splt_act.code_of_account,
+                                                cef.cost_2017 as fac_cost,
+                                                cel.cost_2017 as lab_cost,
+                                                cem.cost_2017 as mat_cost
+                                                FROM
+                                                (SELECT code_of_account,total_cost,supaccount,
+                                                SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 1), ',', -1) as fac_name,
+                                                SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 2), ',', -1) as lab_name,
+                                                SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 3), ',', -1) as mat_name
+                                                FROM accert_db.heatpipe_account) as splt_act
+                                                LEFT JOIN heatpipe_cost_element as cef 
+                                                ON cef.cost_element = splt_act.fac_name
+                                                LEFT JOIN heatpipe_cost_element as cel
+                                                ON cel.cost_element = splt_act.lab_name
+                                                LEFT JOIN heatpipe_cost_element as cem
+                                                ON cem.cost_element = splt_act.mat_name) as sorted_ce
+                            ON sorted_ce.code_of_account = heatpipe_account.code_of_account
+                            WHERE heatpipe_account.level <= 3
+                            ORDER BY heatpipe_account.lft;""")
+            align_key=["code_of_account", "account_description", "fac_cost", "lab_cost", "mat_cost", "total_cost"] 
+            align=[ "l", "l", "r", "r", "r", "r"]
+        else:
+            c.execute("""SELECT rankedcoa.code_of_account,
+                                heatpipe_account.account_description,
+                                heatpipe_account.total_cost,	
+                                heatpipe_account.unit,	
+                                heatpipe_account.level,
+                                heatpipe_account.review_status	
+                            FROM heatpipe_account
+                            JOIN 
+                            (
+                            SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
+                            FROM heatpipe_account AS node,
+                                            heatpipe_account AS parent
+                            WHERE node.lft BETWEEN parent.lft AND parent.rgt
+                            GROUP BY node.code_of_account) as rankedcoa
+                            ON heatpipe_account.code_of_account=rankedcoa.COA
+                            WHERE heatpipe_account.level <= %(u_i_level)s
+                            ORDER BY heatpipe_account.lft;""",{'u_i_level': str(level)})
+            align_key=["code_of_account", "account_description", "total_cost"] 
+            align=[ "l", "l", "r"]
+        
+        if cost_unit=='million':
+            results = c.fetchall()
+            columns = c.description
+            field_names = [i[0] for i in columns]
+            x = PrettyTable(field_names)
+            row0=list(results[0])
+            if all:
+                row0[3]="{:,.2f}".format(heatpipe_fac/1000000)
+                row0[4]="{:,.2f}".format(heatpipe_lab/1000000)
+                row0[5]="{:,.2f}".format(heatpipe_mat/1000000)
+                row0[6]="{:,.2f}".format(row0[6]/1000000)
+                row0[7]="million"
+            else:
+                row0[2] = '{:,.2f}'.format(row0[2]/1000000)
+                row0[3] = 'million'
+            x.add_row(row0)
+            for row in results[1:]:
+                row = list(row)
+                # NOTE the index of the row need to have a function
+                # just place this as a temporary solution
+                if all:
+                    row[3:7] = list(map(lambda x: '{:,.2f}'.format(x/1000000), row[3:7]))
+                    row[7] = 'million'
+                else:
+                    row[2] = '{:,.2f}'.format(row[2]/1000000)
+                    row[3] = 'million'
+                x.add_row(row)
+            if align_key:
+                for i,k in enumerate(align_key):
+                    x.align[k] = align[i]
+            print (x)
+        else:
+            results = c.fetchall()
+            columns = c.description
+            field_names = [i[0] for i in c.description]
+            x = PrettyTable(field_names)
+            for row in results:
+                row = list(row)
+                x.add_row(row)
+            if align_key:
+                for i,k in enumerate(align_key):
+                    x.align[k] = align[i]
+            print('\n')
+            print (x)
+            print('\n')
+
+
+        return None

@@ -5,4 +5,4 @@
 ########################################################################
 
 # Provide path to workbench-<version-number>.app/Contents
-workbench_path="/Applications/Workbench-5.3.1.app/Contents"
+workbench_path="/Applications/Workbench-5.3.2.app/Contents"
