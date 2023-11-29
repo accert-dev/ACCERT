@@ -783,7 +783,7 @@ class Utility_methods:
         return None
 
 
-    def print_leveled_heatpipe_accounts(self, c, heatpipe_fac,heatpipe_lab,heatpipe_mat,all=False, 
+    def print_leveled_heatpipe_accounts(self, c, heatpipe_fac, heatpipe_lab, heatpipe_mat,all=False, 
                                     cost_unit='dollar',level=3):
         """Prints the output leveled heatpipe accounts table.
 
@@ -792,11 +792,11 @@ class Utility_methods:
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         heatpipe_fac : float
-            Abr_fac is the ABR-1000 factor for factory cost.
+            heatpipe_fac is the Heat pipe reactor factor for factory cost.
         heatpipe_lab : float
-            Abr_lab is the ABR-1000 factor for labor cost.
+            heatpipe_lab is the Heat pipe reactor factor for labor cost.
         heatpipe_mat : float
-            Abr_mat is the ABR-1000 factor for material cost.
+            heatpipe_mat is the Heat pipe reactorfactor for material cost.
         all : bool, optional
             All is the flag to print all accounts or not. (By default not, or false)
         cost_unit : str, optional
