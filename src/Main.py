@@ -921,11 +921,8 @@ class Accert:
         # END$$
         # DELIMITER ;
         c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.vlk_tabl,self.alg_tabl))
-        print("hello1", self.cel_tabl,self.var_tabl,self.vlk_tabl,self.alg_tabl)
         for row in c.stored_results():
-            print(row, "hello123")
             results = row.fetchall()
-            print(results, "hello123")
         # c.execute(""" SELECT ce_org.ind,	ce_org.cost_element,	
         #         ce_org.cost_2017,	ce_org.alg_name,	
         #         ce_org.variables,	ce_org.algno, 
@@ -1164,7 +1161,6 @@ class Accert:
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         """
-
         print('Only rolling up level 3 to 2')
         ##NOTE inner join only update 222
         print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
@@ -1193,7 +1189,6 @@ class Accert:
         c : MySQLCursor
             MySQLCursor class instantiates objects that can execute MySQL statements.
         """
-
         print('Only rolling up level 3 to 2')
         ##NOTE inner join only update 222
         print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
@@ -1284,7 +1279,6 @@ class Accert:
     
     
     def sum_cost_elements_2C_heatpipe(self, c):
-        # print(c.fetchone()[0], "hellooooo")
         """
         Sums the cost element for heatpipe COA 2C. (Calculated cost) 
 
@@ -1496,7 +1490,6 @@ class Accert:
                     and t1.code_of_account!='2' 
                     and t1.code_of_account!='2C';""")
         tprn  = c.fetchone()[0]  
-        print(c, c.fetchone(), "hello9")    
         c.execute("""SELECT cost_2017 FROM accert_db.heatpipe_cost_element
                     where account='2'
                     and cost_element='2c_fac' """)
@@ -1886,7 +1879,7 @@ class Accert:
 
         ###NOTE: cost elements should be rolled up as well
         ### uncomment below to print new cost_elements value
-        # ut.print_updated_cost_elements(c)
+        ut.print_updated_cost_elements(c)
 
         self.roll_up_cost_elements(c)
 
@@ -1914,7 +1907,7 @@ class Accert:
         #     ### roll up the account table:
             self.roll_up_heatpipe_account_table(c)
             heatpipe_fac,heatpipe_lab,heatpipe_mat = self.cal_direct_cost_elements_heatpipe(c)
-            print(' Generating results table for review '.center(100,'='))
+            print(f' Generating { self.ref_model} results table for review '.center(100,'='))
             print('\n')  
             ut.print_leveled_heatpipe_accounts(c, heatpipe_fac,heatpipe_lab,heatpipe_mat,all=False,cost_unit='million',level=3)
 
@@ -1994,4 +1987,3 @@ if __name__ == "__main__":
         raise SystemExit
     Accert = Accert(input_path,accert_path)
     Accert.execute_accert(c,ut)
-
