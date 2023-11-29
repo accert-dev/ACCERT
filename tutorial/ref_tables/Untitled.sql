@@ -1,1 +1,0 @@
-SELECT * FROM accert_db.heatpipe_account;
