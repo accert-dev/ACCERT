@@ -9,7 +9,7 @@ accert{
     % The required parameters are thermal power and electrical power.
     power(Thermal){ value = 3000   unit = MW }  % Reference value for PWR-12BE is 3431 MW
     power(Electric){ value = 1000   unit = MW } % Reference value for PWR-12BE is 1143 MW
-%    var(Cont_rad_out_m){value = 20 unit = m}% Reference value for PWR-12BE is 23 m
+    var(Cont_rad_out_m){value = 20 unit = m}    % Reference value for PWR-12BE is 23 m
 
     % Define the optional parameters
     % The optional parameters are using the same structure of 
