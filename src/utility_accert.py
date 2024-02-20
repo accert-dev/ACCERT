@@ -20,7 +20,7 @@ class Utility_methods:
         self.acc_tabl = Accert.acc_tabl
         self.cel_tabl = Accert.cel_tabl
         self.var_tabl = Accert.var_tabl
-        self.vlk_tabl = Accert.vlk_tabl
+        # self.vlk_tabl = Accert.vlk_tabl
         self.alg_tabl = Accert.alg_tabl
         self.esc_tabl = Accert.esc_tabl
         self.fac_tabl = Accert.fac_tabl
@@ -243,7 +243,7 @@ class Utility_methods:
             #                             SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 1), ',', -1) as fac_name,
             #                             SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 2), ',', -1) as lab_name,
             #                             SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 3), ',', -1) as mat_name
-            #                         FROM accert_db.account) as splt_act
+            #                         FROM accert_db_test.account) as splt_act
             #                         LEFT JOIN cost_element as cef 
             #                         ON cef.cost_element = splt_act.fac_name
             #                         LEFT JOIN cost_element as cel
@@ -443,23 +443,23 @@ class Utility_methods:
             # END$$
             # DELIMITER ;
         if all:
-            c.callproc('print_user_request_parameter', (True, self.var_tabl, self.vlk_tabl))
+            c.callproc('print_user_request_parameter', (True, self.var_tabl, self.cel_tabl))
 
             # c.execute("""SELECT va.ind, va.var_name, affectv.ce_affected
-            #             FROM accert_db.variable as va JOIN
+            #             FROM accert_db_test.variable as va JOIN
             #             (SELECT variable,group_concat(ce) as ce_affected
-            #             FROM accert_db.variable_links
+            #             FROM accert_db_test.variable_links
             #             group by variable) as affectv
             #             on va.var_name = affectv.variable
             #             where va.var_value IS NULL
             #             order by va.ind;""")
             self.print_table(c)
         else:
-            c.callproc('print_user_request_parameter', (False, self.var_tabl, self.vlk_tabl))
+            c.callproc('print_user_request_parameter', (False, self.var_tabl, self.cel_tabl))
             # c.execute("""SELECT va.var_name,affectv.ce_affected
-            #             FROM accert_db.variable as va JOIN
+            #             FROM accert_db_test.variable as va JOIN
             #             (SELECT variable,group_concat(ce) as ce_affected
-            #             FROM accert_db.variable_links
+            #             FROM accert_db_test.variable_links
             #             group by variable) as affectv
             #             on va.var_name = affectv.variable
             #             where va.var_value IS NULL
@@ -578,7 +578,7 @@ class Utility_methods:
         # END$$
         # DELIMITER ;
 
-        c.callproc('extract_affected_cost_elements',(self.vlk_tabl,self.var_tabl))
+        c.callproc('extract_affected_cost_elements',(self.cel_tabl,self.var_tabl))
         for row in c.stored_results():
             results = row.fetchall()
         # c.execute(""" SELECT vl.variable, group_concat(vl.ce)
@@ -615,7 +615,7 @@ class Utility_methods:
         # DELIMITER ;
         c.callproc('extract_user_changed_variables',(self.var_tabl,))
         # c.execute("""SELECT var_name,var_description, var_value, var_unit 
-        #                 FROM `accert_db`.`variable` 
+        #                 FROM `accert_db_test`.`variable` 
         #                 WHERE user_input = 1
         #                 ORDER BY var_name;""")
         self.print_table(c,format_col=[3])
@@ -645,7 +645,7 @@ class Utility_methods:
         c.callproc('extract_changed_cost_elements',(self.cel_tabl,))
         
         # c.execute("""SELECT cost_element, cost_2017
-        #             FROM `accert_db`.`cost_element`
+        #             FROM `accert_db_test`.`cost_element`
         #             WHERE updated != 0
         #             ORDER BY account, cost_element;""")
         self.print_table(c,format_col=[2])
@@ -700,7 +700,7 @@ class Utility_methods:
                                                 SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 1), ',', -1) as fac_name,
                                                 SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 2), ',', -1) as lab_name,
                                                 SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 3), ',', -1) as mat_name
-                                                FROM accert_db.abr_account) as splt_act
+                                                FROM accert_db_test.abr_account) as splt_act
                                                 LEFT JOIN abr_cost_element as cef 
                                                 ON cef.cost_element = splt_act.fac_name
                                                 LEFT JOIN abr_cost_element as cel
@@ -716,27 +716,26 @@ class Utility_methods:
             c.execute("""SELECT rankedcoa.code_of_account,
                                 abr_account.account_description,
                                 abr_account.total_cost,	
-                                abr_account.unit,	
                                 abr_account.level,
                                 abr_account.review_status	
                             FROM abr_account
                             JOIN 
-                            (
-                            SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
-                            FROM abr_account AS node,
-                                            abr_account AS parent
-                            WHERE node.lft BETWEEN parent.lft AND parent.rgt
-                            GROUP BY node.code_of_account) as rankedcoa
+                            (SELECT node.code_of_account AS COA , 
+                    CONCAT( REPEAT(" ", node.level), node.code_of_account) AS code_of_account
+                    FROM abr_account AS node
+                    ORDER BY node.ind) as rankedcoa
                             ON abr_account.code_of_account=rankedcoa.COA
                             WHERE abr_account.level <= %(u_i_level)s
-                            ORDER BY abr_account.lft;""",{'u_i_level': str(level)})
+                            ORDER BY abr_account.ind;""",{'u_i_level': str(level)})
             align_key=["code_of_account", "account_description", "total_cost"] 
             align=[ "l", "l", "r"]
-        
+
+
         if cost_unit=='million':
             results = c.fetchall()
             columns = c.description
             field_names = [i[0] for i in columns]
+            field_names[2] = 'total_cost[Million]'
             x = PrettyTable(field_names)
             row0=list(results[0])
             if all:
@@ -744,10 +743,8 @@ class Utility_methods:
                 row0[4]="{:,.2f}".format(abr_lab/1000000)
                 row0[5]="{:,.2f}".format(abr_mat/1000000)
                 row0[6]="{:,.2f}".format(row0[6]/1000000)
-                row0[7]="million"
             else:
                 row0[2] = '{:,.2f}'.format(row0[2]/1000000)
-                row0[3] = 'million'
             x.add_row(row0)
             for row in results[1:]:
                 row = list(row)
@@ -755,10 +752,8 @@ class Utility_methods:
                 # just place this as a temporary solution
                 if all:
                     row[3:7] = list(map(lambda x: '{:,.2f}'.format(x/1000000), row[3:7]))
-                    row[7] = 'million'
                 else:
                     row[2] = '{:,.2f}'.format(row[2]/1000000)
-                    row[3] = 'million'
                 x.add_row(row)
             if align_key:
                 for i,k in enumerate(align_key):
@@ -832,7 +827,7 @@ class Utility_methods:
                                                 SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 1), ',', -1) as fac_name,
                                                 SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 2), ',', -1) as lab_name,
                                                 SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ',', 3), ',', -1) as mat_name
-                                                FROM accert_db.heatpipe_account) as splt_act
+                                                FROM accert_db_test.heatpipe_account) as splt_act
                                                 LEFT JOIN heatpipe_cost_element as cef 
                                                 ON cef.cost_element = splt_act.fac_name
                                                 LEFT JOIN heatpipe_cost_element as cel

@@ -24,7 +24,7 @@ class Accert:
         self.acc_tabl = None
         self.cel_tabl = None
         self.var_tabl = None
-        self.vlk_tabl = None
+        # self.vlk_tabl = None
         self.alg_tabl = None
         self.esc_tabl = None
         self.fac_tabl = None
@@ -48,7 +48,7 @@ class Accert:
             self.acc_tabl = 'abr_account'
             self.cel_tabl = 'abr_cost_element'
             self.var_tabl = 'abr_variable'
-            self.vlk_tabl = 'abr_variable_links'   
+            # self.vlk_tabl = 'abr_variable_links'   
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'    
@@ -57,7 +57,7 @@ class Accert:
             self.acc_tabl =  'heatpipe_account'
             self.cel_tabl =  'heatpipe_cost_element'
             self.var_tabl =  'heatpipe_variable'
-            self.vlk_tabl =  'heatpipe_variable_links'   
+            # self.vlk_tabl =  'heatpipe_variable_links'   
             self.alg_tabl =  'algorithm'
             self.esc_tabl =  'escalation'
             self.fac_tabl =  'facility'         
@@ -66,7 +66,7 @@ class Accert:
             self.acc_tabl = 'account'
             self.cel_tabl = 'cost_element'
             self.var_tabl = 'variable'
-            self.vlk_tabl = 'variable_links'
+            # self.vlk_tabl = 'variable_links'
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
@@ -75,7 +75,7 @@ class Accert:
             self.acc_tabl = 'lfr_account'
             self.cel_tabl = 'abr_cost_element'
             self.var_tabl = 'abr_variable'
-            self.vlk_tabl = 'abr_variable_links'   
+            # self.vlk_tabl = 'abr_variable_links'   
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
@@ -180,9 +180,9 @@ class Accert:
         # END$$
         # DELIMITER ;
         c.callproc('update_account_before_insert',(self.acc_tabl, max_ind, max_rgt))
-        # c.execute("UPDATE accert_db.account SET ind = ind + 1 WHERE ind > {}".format(max_ind))
-        # c.execute("UPDATE accert_db.account SET lft = lft + 2 WHERE lft > {}".format(max_rgt))
-        # c.execute("UPDATE accert_db.account SET rgt = rgt + 2 WHERE rgt > {}".format(max_rgt))
+        # c.execute("UPDATE accert_db_test.account SET ind = ind + 1 WHERE ind > {}".format(max_ind))
+        # c.execute("UPDATE accert_db_test.account SET lft = lft + 2 WHERE lft > {}".format(max_rgt))
+        # c.execute("UPDATE accert_db_test.account SET rgt = rgt + 2 WHERE rgt > {}".format(max_rgt))
         return None
 
     def insert_new_COA(self, c, ind, supaccount, level, lft, rgt, 
@@ -266,7 +266,7 @@ class Accert:
                                    code_of_account, account_description, total_cost, unit,
                                   main_subaccounts, cost_elements, review_status, prn))
         # c.execute("""INSERT INTO 
-        # accert_db.account (ind, code_of_account, account_description, 
+        # accert_db_test.account (ind, code_of_account, account_description, 
         #                     total_cost, unit, level, main_subaccounts,
         #                     supaccount, cost_elements, review_status, 
         #                     lft, rgt, prn) 
@@ -319,7 +319,7 @@ class Accert:
         c.callproc('sup_coa_level',(self.acc_tabl, sup_coa))
         for row in c.stored_results():
             sup_coa_level = row.fetchone()[0]        
-        # c.execute("SELECT level FROM accert_db.account WHERE code_of_account = %s", (sup_coa,))
+        # c.execute("SELECT level FROM accert_db_test.account WHERE code_of_account = %s", (sup_coa,))
         sup_coa_level = c.fetchone()[0]
         coa_level = sup_coa_level + 1
         # before inserting new COA, update the current COAs' ind, lft, rgt
@@ -356,7 +356,7 @@ class Accert:
         """    
 
         c.execute("""INSERT INTO 
-        accert_db.algorithm ( alg_name, alg_for,  alg_description, 
+        accert_db_test.algorithm ( alg_name, alg_for,  alg_description, 
                             alg_python, alg_formulation, alg_units, variables, constants)
         VALUES (%(alg_name)s, %(alg_for)s, %(alg_description)s, 
                 %(alg_python)s, %(alg_formulation)s, %(alg_units)s, 
@@ -578,17 +578,17 @@ class Accert:
         ## Keep the note here for ref
         ## example with tuple
         # c.execute("""SELECT code_of_account, account_description, total_cost, unit
-        #             FROM `accert_db`.`account` 
+        #             FROM `accert_db_test`.`account` 
         #             WHERE code_of_account = %s;""",(tc_id,))
 
         ## example with direct format string
-        c.execute("""SELECT code_of_account, account_description, total_cost, unit
-                    FROM `accert_db`.`account` 
+        c.execute("""SELECT code_of_account, account_description, total_cost
+                    FROM `accert_db_test`.`account` 
                     WHERE code_of_account = "{}" ;
                     """.format(tc_id))
         ## example with direct format string
         # c.execute("""SELECT code_of_account, account_description, total_cost, unit
-        #             FROM `accert_db`.`account` 
+        #             FROM `accert_db_test`.`account` 
         #             WHERE code_of_account = %(u_i_tc_name)s ;""",{'u_i_tc_name': str(tc_id).replace('"','')})
         results = c.fetchall()
         tc_info = results[0]
@@ -728,16 +728,16 @@ class Accert:
         print('[Updating] Total cost of account {}'.format(tc_id))
         org_tc_info = self.extract_total_cost_on_name(c,tc_id)
         org_tc_value = float(org_tc_info[2])
-        org_tc_unit = org_tc_info[3]
+        org_tc_unit = "dollar"
         unit_convert = self.check_unit_conversion(org_tc_unit,u_i_tc_unit)
         if unit_convert:
             u_i_tc_value = self.convert_unit(u_i_tc_value,u_i_tc_unit,org_tc_unit)
             u_i_tc_unit = org_tc_unit
-        self.update_total_cost_on_name(c,tc_id,u_i_tc_value,u_i_tc_unit)   
+        self.update_total_cost_on_name(c,tc_id,u_i_tc_value)   
         print('[Updated]  Changed from {:,.2f} {} to {:,.2f} {}\n'.format( org_tc_value,org_tc_unit, int(u_i_tc_value), u_i_tc_unit))
         return None
 
-    def update_total_cost_on_name(self, c, tc_id, u_i_tc_value, u_i_tc_unit):
+    def update_total_cost_on_name(self, c, tc_id, u_i_tc_value):
         """
         Updates the total cost based on a total cost ID, without checking for unit conversion.
 
@@ -756,7 +756,7 @@ class Accert:
         ## Statement is not working as expected when passing in a string in a dictionary
         ## but it works when passing in the string directly in .format() method
 
-        # c.execute("""UPDATE `accert_db`.`account`
+        # c.execute("""UPDATE `accert_db_test`.`account`
         #             SET `total_cost` = %(u_i_tc_value)s ,
         #             `unit` =  %(u_i_tc_unit)s ,
         #             `review_status` = 'User Input'  
@@ -781,8 +781,8 @@ class Accert:
         #     DEALLOCATE PREPARE stmt;
         # END$$
         # DELIMITER ;
-        c.callproc('update_total_cost_on_name',(self.acc_tabl,tc_id,u_i_tc_value,u_i_tc_unit))
-        # c.execute("""UPDATE `accert_db`.`account`
+        c.callproc('update_total_cost_on_name',(self.acc_tabl,tc_id,u_i_tc_value))
+        # c.execute("""UPDATE `accert_db_test`.`account`
         #             SET `total_cost` = {},
         #             `unit` =  "{}" ,
         #             `review_status` = 'User Input'
@@ -920,7 +920,7 @@ class Accert:
         #     DEALLOCATE PREPARE stmt;
         # END$$
         # DELIMITER ;
-        c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.vlk_tabl,self.alg_tabl))
+        c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.alg_tabl))
         for row in c.stored_results():
             results = row.fetchall()
         # c.execute(""" SELECT ce_org.ind,	ce_org.cost_element,	
@@ -1011,11 +1011,11 @@ class Accert:
         #                     ce.total_cost as cost,
         #                     ce.updated as updated,
         #                     account.unit
-        #             FROM `accert_db`.`account` 
+        #             FROM `accert_db_test`.`account` 
         #             JOIN (SELECT account, 
         #                         sum(cost_2017) as total_cost,
         #                         sum(updated) as updated
-        #                 FROM `accert_db`.`cost_element`
+        #                 FROM `accert_db_test`.`cost_element`
         #                 GROUP BY `cost_element`.`account` ) as ce
         #             on account.code_of_account = ce.account 
         #             ORDER BY account.ind) as updated_account
@@ -1221,63 +1221,77 @@ class Accert:
         print(' Summing cost elements for direct cost '.center(100,'='))
         print('\n')
         print('[Updating] Summing cost elements')
-        c.execute("""SELECT sum(cef.cost_2017) from
-                    (SELECT t1.code_of_account,
-                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 1), ',', -1) as fac_name
-                    FROM accert_db.abr_account AS t1 
-                    LEFT JOIN abr_account as t2
-                    ON t1.code_of_account = t2.supaccount
-                    WHERE t2.code_of_account IS NULL 
-                    and t1.code_of_account!='2' 
-                    and t1.code_of_account!='2C' )as ac
-                    join accert_db.abr_cost_element as cef
-                            on cef.cost_element = ac.fac_name
-                            where ac.code_of_account!='2C'""")
-        sum_2c_fac = c.fetchone()[0]
+        c.callproc('sum_cost_elements_2C_fac',(self.cel_tabl,self.acc_tabl))
+        for row in c.stored_results():
+            results = row.fetchall()
+        sum_2c_fac = results[0][0]
+        # print('[Updated]  Sum of 2C_fac is : ${:<11,.0f}'.format(sum_2c_fac))
+        # print(' cccccccc')    
+        # c.execute("""SELECT sum(cef.cost_2017) from
+        #             (SELECT t1.code_of_account,
+        #             SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 1), ',', -1) as fac_name
+        #             FROM abr_account AS t1 
+        #             LEFT JOIN abr_account as t2
+        #             ON t1.code_of_account = t2.supaccount
+        #             WHERE t2.code_of_account IS NULL 
+        #             and t1.code_of_account!='2' 
+        #             and t1.code_of_account!='2C' )as ac
+        #             join abr_cost_element as cef
+        #                     on cef.cost_element = ac.fac_name
+        #                     where ac.code_of_account!='2C'""")
+        # sum_2c_fac = c.fetchone()[0]
         c.execute("""UPDATE abr_cost_element
                     SET cost_2017 = %(sum_2c_fac)s,
                     updated = %(updated)s
                     WHERE cost_element = '2C_fac'""",{'sum_2c_fac':float(sum_2c_fac),'updated':1})
 
-        c.execute("""SELECT sum(cef.cost_2017) from
-                    (SELECT t1.code_of_account,
-                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 2), ',', -1) as lab_name
-                    FROM accert_db.abr_account AS t1 
-                    LEFT JOIN abr_account as t2
-                    ON t1.code_of_account = t2.supaccount
-                    WHERE t2.code_of_account IS NULL 
-                    and t1.code_of_account!='2' 
-                    and t1.code_of_account!='2C' )as ac
-                    join accert_db.abr_cost_element as cef
-                            on cef.cost_element = ac.lab_name
-                            where ac.code_of_account!='2C'""")
-        sum_2c_lab = c.fetchone()[0]
+        # c.execute("""SELECT sum(cef.cost_2017) from
+        #             (SELECT t1.code_of_account,
+        #             SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 2), ',', -1) as lab_name
+        #             FROM abr_account AS t1 
+        #             LEFT JOIN abr_account as t2
+        #             ON t1.code_of_account = t2.supaccount
+        #             WHERE t2.code_of_account IS NULL 
+        #             and t1.code_of_account!='2' 
+        #             and t1.code_of_account!='2C' )as ac
+        #             join abr_cost_element as cef
+        #                     on cef.cost_element = ac.lab_name
+        #                     where ac.code_of_account!='2C'""")
+        # sum_2c_lab = c.fetchone()[0]
+        c.callproc('sum_cost_elements_2C_lab',(self.cel_tabl,self.acc_tabl))
+        for row in c.stored_results():
+            results = row.fetchall()
+        sum_2c_lab = results[0][0]
+
         c.execute("""UPDATE abr_cost_element
                     SET cost_2017 = %(sum_2c_lab)s,
                     updated = %(updated)s
                     WHERE cost_element = '2C_lab'""",{'sum_2c_lab':float(sum_2c_lab),'updated':1})
-        c.execute("""SELECT sum(cef.cost_2017) from
-                    (SELECT t1.code_of_account,
-                    SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 3), ',', -1) as mat_name
-                    FROM accert_db.abr_account AS t1 
-                    LEFT JOIN abr_account as t2
-                    ON t1.code_of_account = t2.supaccount
-                    WHERE t2.code_of_account IS NULL 
-                    and t1.code_of_account!='2' 
-                    and t1.code_of_account!='2C' )as ac
-                    join accert_db.abr_cost_element as cef
-                            on cef.cost_element = ac.mat_name
-                            where ac.code_of_account!='2C'""")
-        sum_2c_mat = c.fetchone()[0]
+        # c.execute("""SELECT sum(cef.cost_2017) from
+        #             (SELECT t1.code_of_account,
+        #             SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 3), ',', -1) as mat_name
+        #             FROM abr_account AS t1 
+        #             LEFT JOIN abr_account as t2
+        #             ON t1.code_of_account = t2.supaccount
+        #             WHERE t2.code_of_account IS NULL 
+        #             and t1.code_of_account!='2' 
+        #             and t1.code_of_account!='2C' )as ac
+        #             join abr_cost_element as cef
+        #                     on cef.cost_element = ac.mat_name
+        #                     where ac.code_of_account!='2C'""")
+        # sum_2c_mat = c.fetchone()[0]
+        c.callproc('sum_cost_elements_2C_mat',(self.cel_tabl,self.acc_tabl))
+        for row in c.stored_results():
+            results = row.fetchall()
+        sum_2c_mat = results[0][0]
         c.execute("""UPDATE abr_cost_element
                     SET cost_2017 = %(sum_2c_mat)s,
                     updated = %(updated)s
                     WHERE cost_element = '2C_mat'""",{'sum_2c_mat':float(sum_2c_mat),'updated':1})
-
+        print('[Updated] ABR Cost elements fac, lab, mat are: ${:<11,.0f}, ${:<11,.0f}, ${:<11,.0f}'.format(sum_2c_fac,sum_2c_lab,sum_2c_mat))
         print('[Updated] Cost elements summed\n')
         return None
-    
-    
+     
     def sum_cost_elements_2C_heatpipe(self, c):
         """
         Sums the cost element for heatpipe COA 2C. (Calculated cost) 
@@ -1294,13 +1308,13 @@ class Accert:
         c.execute("""SELECT sum(cef.cost_2017) from
                     (SELECT t1.code_of_account,
                     SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 1), ',', -1) as fac_name
-                    FROM accert_db.heatpipe_account AS t1 
+                    FROM heatpipe_account AS t1 
                     LEFT JOIN heatpipe_account as t2
                     ON t1.code_of_account = t2.supaccount
                     WHERE t2.code_of_account IS NULL 
                     and t1.code_of_account!='2' 
                     and t1.code_of_account!='2C' )as ac
-                    join accert_db.heatpipe_cost_element as cef
+                    join heatpipe_cost_element as cef
                             on cef.cost_element = ac.fac_name
                             where ac.code_of_account!='2C'""")
         sum_2c_fac = c.fetchone()[0]
@@ -1312,13 +1326,13 @@ class Accert:
         c.execute("""SELECT sum(cef.cost_2017) from
                     (SELECT t1.code_of_account,
                     SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 2), ',', -1) as lab_name
-                    FROM accert_db.heatpipe_account AS t1 
+                    FROM heatpipe_account AS t1 
                     LEFT JOIN heatpipe_account as t2
                     ON t1.code_of_account = t2.supaccount
                     WHERE t2.code_of_account IS NULL 
                     and t1.code_of_account!='2' 
                     and t1.code_of_account!='2C' )as ac
-                    join accert_db.heatpipe_cost_element as cef
+                    join heatpipe_cost_element as cef
                             on cef.cost_element = ac.lab_name
                             where ac.code_of_account!='2C'""")
         sum_2c_lab = c.fetchone()[0]
@@ -1329,13 +1343,13 @@ class Accert:
         c.execute("""SELECT sum(cef.cost_2017) from
                     (SELECT t1.code_of_account,
                     SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 3), ',', -1) as mat_name
-                    FROM accert_db.heatpipe_account AS t1 
+                    FROM heatpipe_account AS t1 
                     LEFT JOIN heatpipe_account as t2
                     ON t1.code_of_account = t2.supaccount
                     WHERE t2.code_of_account IS NULL 
                     and t1.code_of_account!='2' 
                     and t1.code_of_account!='2C' )as ac
-                    join accert_db.heatpipe_cost_element as cef
+                    join heatpipe_cost_element as cef
                             on cef.cost_element = ac.mat_name
                             where ac.code_of_account!='2C'""")
         sum_2c_mat = c.fetchone()[0]
@@ -1346,10 +1360,6 @@ class Accert:
 
         print('[Updated] Cost elements summed\n')
         return None
-
-
-    
-
 
     def sum_up_abr_account_2C(self, c):
         """
@@ -1457,15 +1467,15 @@ class Accert:
                     and t1.code_of_account!='2' 
                     and t1.code_of_account!='2C';""")
         tprn  = c.fetchone()[0]      
-        c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
+        c.execute("""SELECT cost_2017 FROM abr_cost_element
                     where account='2'
                     and cost_element='2c_fac' """)
         fac = c.fetchone()[0]/tprn
-        c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
+        c.execute("""SELECT cost_2017 FROM abr_cost_element
                     where account='2'
                     and cost_element='2c_lab' """)
         lab = c.fetchone()[0]/tprn
-        c.execute("""SELECT cost_2017 FROM accert_db.abr_cost_element
+        c.execute("""SELECT cost_2017 FROM abr_cost_element
                     where account='2'
                     and cost_element='2c_mat' """)     
         mat = c.fetchone()[0]/tprn        
@@ -1490,16 +1500,16 @@ class Accert:
                     and t1.code_of_account!='2' 
                     and t1.code_of_account!='2C';""")
         tprn  = c.fetchone()[0]  
-        c.execute("""SELECT cost_2017 FROM accert_db.heatpipe_cost_element
+        c.execute("""SELECT cost_2017 FROM heatpipe_cost_element
                     where account='2'
                     and cost_element='2c_fac' """)
         
         fac = c.fetchone()[0]/tprn
-        c.execute("""SELECT cost_2017 FROM accert_db.heatpipe_cost_element
+        c.execute("""SELECT cost_2017 FROM heatpipe_cost_element
                     where account='2'
                     and cost_element='2c_lab' """)
         lab = c.fetchone()[0]/tprn
-        c.execute("""SELECT cost_2017 FROM accert_db.heatpipe_cost_element
+        c.execute("""SELECT cost_2017 FROM heatpipe_cost_element
                     where account='2'
                     and cost_element='2c_mat' """)     
         mat = c.fetchone()[0]/tprn        
@@ -1590,18 +1600,18 @@ class Accert:
             Level of detail in the results table. (How many levels)
         """
 
-        statement="SELECT rankedcoa.code_of_account, account.account_description, account.total_cost,	 account.unit,	 account.level, account.review_status	 FROM account JOIN (SELECT node.code_of_account AS COA,  CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM account AS node, account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON account.code_of_account=rankedcoa.COA WHERE account.level <={} ORDER BY account.lft;".format(level)
+        statement="SELECT rankedcoa.code_of_account, account.account_description, account.total_cost,account.level, account.review_status	 FROM account JOIN (SELECT node.code_of_account AS COA , CONCAT( REPEAT(' ', node.level), node.code_of_account) AS code_of_account FROM account AS node ORDER BY node.ind) as rankedcoa ON account.code_of_account=rankedcoa.COA WHERE account.level <={} ORDER BY account.ind;".format(level)
         filename = str(self.ref_model) + '_updated_account.xlsx'
         # filename = 'ACCERT_updated_account.csv'
         self.write_to_excel(statement, filename,conn)
 
-        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db.variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db.variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
+        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db_test.variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db_test.variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
         filename = str(self.ref_model) + '_variable_affected_cost_elements.xlsx'
         # filename = 'ACCERT_variable_affected_cost_elements.csv'
 
         self.write_to_excel(statement, filename,conn)
 
-        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db.cost_element as ce WHERE ce.updated != 0 order by ce.ind"
+        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db_test.cost_element as ce WHERE ce.updated != 0 order by ce.ind"
         filename = str(self.ref_model) +'_updated_cost_element.xlsx'    
         # filename = 'ACCERT_updated_cost_element.csv'
         self.write_to_excel(statement, filename,conn)
@@ -1617,17 +1627,17 @@ class Accert:
         level : int
             Level of detail in the results table. (How many levels)
         """
-        statement="SELECT rankedcoa.code_of_account, abr_account.account_description, abr_account.total_cost,	 abr_account.unit,	 abr_account.level,abr_account.prn as pct,abr_account.review_status FROM abr_account JOIN (SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM abr_account AS node, abr_account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON abr_account.code_of_account=rankedcoa.COA WHERE abr_account.level <=3 ORDER BY abr_account.lft;".format(level)
+        statement="SELECT rankedcoa.code_of_account, abr_account.account_description, abr_account.total_cost, abr_account.level,abr_account.review_status FROM abr_account JOIN (SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', node.level), node.code_of_account) AS code_of_account FROM abr_account AS node ORDER BY node.ind) as rankedcoa ON abr_account.code_of_account=rankedcoa.COA WHERE abr_account.level <=3 ORDER BY abr_account.ind;".format(level)
         filename1 = str(self.ref_model) + '_updated_account.xlsx'
 
         self.write_to_excel(statement, filename1,conn)
 
-        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db.abr_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db.abr_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
+        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db_test.abr_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db_test.abr_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
         filename2 = str(self.ref_model) +'_variable_affected_cost_elements.xlsx'
 
         self.write_to_excel(statement, filename2,conn)
 
-        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db.abr_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
+        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db_test.abr_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
         filename3 = str(self.ref_model) + '_updated_cost_element.xlsx'
 
         self.write_to_excel(statement, filename3,conn)
@@ -1649,13 +1659,13 @@ class Accert:
 
         self.write_to_excel(statement, filename,conn)
 
-        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db.heatpipe_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db.heatpipe_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
+        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db_test.heatpipe_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db_test.heatpipe_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
         filename = str(self.ref_model) +'_variable_affected_cost_elements.xlsx'
         # filename = 'ACCERT_variable_affected_cost_elements.csv'
 
         self.write_to_excel(statement, filename,conn)
 
-        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db.heatpipe_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
+        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db_test.heatpipe_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
         filename = str(self.ref_model) + '_updated_cost_element.xlsx'
         self.write_to_excel(statement, filename,conn)
         # filename = 'ACCERT_updated_cost_element.csv'        
@@ -1681,7 +1691,8 @@ class Accert:
         self.print_logo()
  
         accert = self.load_obj(input_path, accert_path).accert
-        c.execute("USE accert_db")
+        c.execute("USE accert_db_test")
+        # c.execute("USE accert_db")
         print(' Reading user input '.center(100,'='))
         print('\n')
         if accert.ref_model is not None:
@@ -1972,7 +1983,7 @@ if __name__ == "__main__":
     host="localhost",
     user="root",
     password=passwd,
-    database="accert_db",
+    database="accert_db_test",
     auth_plugin="mysql_native_password"
     )
     # conn.commit()
