@@ -75,7 +75,6 @@ class Accert:
             self.acc_tabl = 'lfr_account'
             self.cel_tabl = 'abr_cost_element'
             self.var_tabl = 'abr_variable'
-            # self.vlk_tabl = 'abr_variable_links'   
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
@@ -180,9 +179,9 @@ class Accert:
         # END$$
         # DELIMITER ;
         c.callproc('update_account_before_insert',(self.acc_tabl, max_ind, max_rgt))
-        # c.execute("UPDATE accert_db_test.account SET ind = ind + 1 WHERE ind > {}".format(max_ind))
-        # c.execute("UPDATE accert_db_test.account SET lft = lft + 2 WHERE lft > {}".format(max_rgt))
-        # c.execute("UPDATE accert_db_test.account SET rgt = rgt + 2 WHERE rgt > {}".format(max_rgt))
+        # c.execute("UPDATE account SET ind = ind + 1 WHERE ind > {}".format(max_ind))
+        # c.execute("UPDATE account SET lft = lft + 2 WHERE lft > {}".format(max_rgt))
+        # c.execute("UPDATE account SET rgt = rgt + 2 WHERE rgt > {}".format(max_rgt))
         return None
 
     def insert_new_COA(self, c, ind, supaccount, level, lft, rgt, 
@@ -266,7 +265,7 @@ class Accert:
                                    code_of_account, account_description, total_cost, unit,
                                   main_subaccounts, cost_elements, review_status, prn))
         # c.execute("""INSERT INTO 
-        # accert_db_test.account (ind, code_of_account, account_description, 
+        #               account (ind, code_of_account, account_description, 
         #                     total_cost, unit, level, main_subaccounts,
         #                     supaccount, cost_elements, review_status, 
         #                     lft, rgt, prn) 
@@ -319,7 +318,7 @@ class Accert:
         c.callproc('sup_coa_level',(self.acc_tabl, sup_coa))
         for row in c.stored_results():
             sup_coa_level = row.fetchone()[0]        
-        # c.execute("SELECT level FROM accert_db_test.account WHERE code_of_account = %s", (sup_coa,))
+        # c.execute("SELECT level FROM account WHERE code_of_account = %s", (sup_coa,))
         sup_coa_level = c.fetchone()[0]
         coa_level = sup_coa_level + 1
         # before inserting new COA, update the current COAs' ind, lft, rgt
@@ -356,7 +355,7 @@ class Accert:
         """    
 
         c.execute("""INSERT INTO 
-        accert_db_test.algorithm ( alg_name, alg_for,  alg_description, 
+        algorithm ( alg_name, alg_for,  alg_description, 
                             alg_python, alg_formulation, alg_units, variables, constants)
         VALUES (%(alg_name)s, %(alg_for)s, %(alg_description)s, 
                 %(alg_python)s, %(alg_formulation)s, %(alg_units)s, 
@@ -578,20 +577,34 @@ class Accert:
         ## Keep the note here for ref
         ## example with tuple
         # c.execute("""SELECT code_of_account, account_description, total_cost, unit
-        #             FROM `accert_db_test`.`account` 
+        #             FROM account
         #             WHERE code_of_account = %s;""",(tc_id,))
 
         ## example with direct format string
-        c.execute("""SELECT code_of_account, account_description, total_cost
-                    FROM `accert_db_test`.`account` 
-                    WHERE code_of_account = "{}" ;
-                    """.format(tc_id))
+        # c.execute("""SELECT code_of_account, account_description, total_cost
+        #             FROM account
+        #             WHERE code_of_account = "{}" ;
+        #             """.format(tc_id))
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_total_cost_on_name`(IN tc_id VARCHAR(50),
+        #                                         IN table_name VARCHAR(50))
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT code_of_account, account_description, total_cost, unit
+        #                         FROM ', table_name, ' WHERE code_of_account = ?');
+        #     PREPARE stmt FROM @stmt;
+        #     SET @tc_id = tc_id;
+        #     EXECUTE stmt USING @tc_id;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('extract_total_cost_on_name',(self.acc_tabl, tc_id))
         ## example with direct format string
         # c.execute("""SELECT code_of_account, account_description, total_cost, unit
-        #             FROM `accert_db_test`.`account` 
+        #             FROM account 
         #             WHERE code_of_account = %(u_i_tc_name)s ;""",{'u_i_tc_name': str(tc_id).replace('"','')})
-        results = c.fetchall()
-        tc_info = results[0]
+        for row in c.stored_results():
+            results = row.fetchall()
+        tc_info = results[0]    
         return tc_info
 
     def check_unit_conversion(self, org_unit, new_unit):
@@ -734,7 +747,7 @@ class Accert:
             u_i_tc_value = self.convert_unit(u_i_tc_value,u_i_tc_unit,org_tc_unit)
             u_i_tc_unit = org_tc_unit
         self.update_total_cost_on_name(c,tc_id,u_i_tc_value)   
-        print('[Updated]  Changed from {:,.2f} {} to {:,.2f} {}\n'.format( org_tc_value,org_tc_unit, int(u_i_tc_value), u_i_tc_unit))
+        print('[Updated]  Changed from {:,.2f} {} to {:,.2f} {}\n'.format( org_tc_value,org_tc_unit, int(u_i_tc_value), org_tc_unit))
         return None
 
     def update_total_cost_on_name(self, c, tc_id, u_i_tc_value):
@@ -756,7 +769,7 @@ class Accert:
         ## Statement is not working as expected when passing in a string in a dictionary
         ## but it works when passing in the string directly in .format() method
 
-        # c.execute("""UPDATE `accert_db_test`.`account`
+        # c.execute("""UPDATE account
         #             SET `total_cost` = %(u_i_tc_value)s ,
         #             `unit` =  %(u_i_tc_unit)s ,
         #             `review_status` = 'User Input'  
@@ -782,7 +795,7 @@ class Accert:
         # END$$
         # DELIMITER ;
         c.callproc('update_total_cost_on_name',(self.acc_tabl,tc_id,u_i_tc_value))
-        # c.execute("""UPDATE `accert_db_test`.`account`
+        # c.execute("""UPDATE `account
         #             SET `total_cost` = {},
         #             `unit` =  "{}" ,
         #             `review_status` = 'User Input'
@@ -1011,11 +1024,11 @@ class Accert:
         #                     ce.total_cost as cost,
         #                     ce.updated as updated,
         #                     account.unit
-        #             FROM `accert_db_test`.`account` 
+        #             FROM account
         #             JOIN (SELECT account, 
         #                         sum(cost_2017) as total_cost,
         #                         sum(updated) as updated
-        #                 FROM `accert_db_test`.`cost_element`
+        #                 FROM cost_element
         #                 GROUP BY `cost_element`.`account` ) as ce
         #             on account.code_of_account = ce.account 
         #             ORDER BY account.ind) as updated_account
@@ -1136,20 +1149,22 @@ class Accert:
         """
 
         print('[Updating] Rolling up account table from level {} to level {} '.format(from_level,to_level))
-        c.execute("""
-                UPDATE account,
-                (SELECT a%(to)s.code_of_account as ac%(to)s_coa, 
-                        sum(ua%(from)s.total_cost) as a%(to)s_cal_total_cost
-                FROM account as ua%(from)s
-                JOIN account as a%(to)s on ua%(from)s.supaccount=a%(to)s.code_of_account
-                where ua%(from)s.level=%(from)s and a%(to)s.level=%(to)s
-                group by a%(to)s.code_of_account) as updated_ac%(to)s
-                SET
-                    account.total_cost = updated_ac%(to)s.a%(to)s_cal_total_cost,
-                    account.review_status = 'Updated'
-                WHERE
-                    account.code_of_account = updated_ac%(to)s.ac%(to)s_coa 
-            """,{'from':from_level,'to':to_level})
+        c.callproc('roll_up_account_table_by_level',(self.acc_tabl,from_level,to_level))
+
+        # c.execute("""
+        #         UPDATE account,
+        #         (SELECT a%(to)s.code_of_account as ac%(to)s_coa, 
+        #                 sum(ua%(from)s.total_cost) as a%(to)s_cal_total_cost
+        #         FROM account as ua%(from)s
+        #         JOIN account as a%(to)s on ua%(from)s.supaccount=a%(to)s.code_of_account
+        #         where ua%(from)s.level=%(from)s and a%(to)s.level=%(to)s
+        #         group by a%(to)s.code_of_account) as updated_ac%(to)s
+        #         SET
+        #             account.total_cost = updated_ac%(to)s.a%(to)s_cal_total_cost,
+        #             account.review_status = 'Updated'
+        #         WHERE
+        #             account.code_of_account = updated_ac%(to)s.ac%(to)s_coa 
+        #     """,{'from':from_level,'to':to_level})
         return None
 
     def roll_up_abr_account(self, c):
@@ -1164,20 +1179,21 @@ class Accert:
         print('Only rolling up level 3 to 2')
         ##NOTE inner join only update 222
         print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
-        c.execute("""
-                UPDATE abr_account,
-                (SELECT a2.code_of_account as ac2_coa, 
-                        sum(ua3.total_cost) as a2_cal_total_cost
-                FROM abr_account as ua3
-                JOIN abr_account as a2 on ua3.supaccount=a2.code_of_account
-                where ua3.level=3 and a2.level=2
-                group by a2.code_of_account) as updated_ac2
-                SET
-                    abr_account.total_cost = updated_ac2.a2_cal_total_cost,
-                    abr_account.review_status = 'Updated'
-                WHERE
-                    abr_account.code_of_account = updated_ac2.ac2_coa 
-            """)
+        c.callproc('roll_up_account_table_by_level',(self.acc_tabl,3,2))
+        # c.execute("""
+        #         UPDATE abr_account,
+        #         (SELECT a2.code_of_account as ac2_coa, 
+        #                 sum(ua3.total_cost) as a2_cal_total_cost
+        #         FROM abr_account as ua3
+        #         JOIN abr_account as a2 on ua3.supaccount=a2.code_of_account
+        #         where ua3.level=3 and a2.level=2
+        #         group by a2.code_of_account) as updated_ac2
+        #         SET
+        #             abr_account.total_cost = updated_ac2.a2_cal_total_cost,
+        #             abr_account.review_status = 'Updated'
+        #         WHERE
+        #             abr_account.code_of_account = updated_ac2.ac2_coa 
+        #     """)
         return None
     
     def roll_up_heatpipe_account(self, c):
@@ -1192,20 +1208,21 @@ class Accert:
         print('Only rolling up level 3 to 2')
         ##NOTE inner join only update 222
         print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
-        c.execute("""
-                UPDATE heatpipe_account,
-                (SELECT a2.code_of_account as ac2_coa, 
-                        sum(ua3.total_cost) as a2_cal_total_cost
-                FROM heatpipe_account as ua3
-                JOIN heatpipe_account as a2 on ua3.supaccount=a2.code_of_account
-                where ua3.level=3 and a2.level=2
-                group by a2.code_of_account) as updated_ac2
-                SET
-                    heatpipe_account.total_cost = updated_ac2.a2_cal_total_cost,
-                    heatpipe_account.review_status = 'Updated'
-                WHERE
-                    heatpipe_account.code_of_account = updated_ac2.ac2_coa 
-            """)
+        c.callproc('roll_up_account_table_by_level',(self.acc_tabl,3,2))
+        # c.execute("""
+        #         UPDATE heatpipe_account,
+        #         (SELECT a2.code_of_account as ac2_coa, 
+        #                 sum(ua3.total_cost) as a2_cal_total_cost
+        #         FROM heatpipe_account as ua3
+        #         JOIN heatpipe_account as a2 on ua3.supaccount=a2.code_of_account
+        #         where ua3.level=3 and a2.level=2
+        #         group by a2.code_of_account) as updated_ac2
+        #         SET
+        #             heatpipe_account.total_cost = updated_ac2.a2_cal_total_cost,
+        #             heatpipe_account.review_status = 'Updated'
+        #         WHERE
+        #             heatpipe_account.code_of_account = updated_ac2.ac2_coa 
+        #     """)
         return None
 
     def sum_cost_elements_2C(self, c):
@@ -1226,7 +1243,6 @@ class Accert:
             results = row.fetchall()
         sum_2c_fac = results[0][0]
         # print('[Updated]  Sum of 2C_fac is : ${:<11,.0f}'.format(sum_2c_fac))
-        # print(' cccccccc')    
         # c.execute("""SELECT sum(cef.cost_2017) from
         #             (SELECT t1.code_of_account,
         #             SUBSTRING_INDEX(SUBSTRING_INDEX(t1.cost_elements, ',', 1), ',', -1) as fac_name
@@ -1600,75 +1616,44 @@ class Accert:
             Level of detail in the results table. (How many levels)
         """
 
-        statement="SELECT rankedcoa.code_of_account, account.account_description, account.total_cost,account.level, account.review_status	 FROM account JOIN (SELECT node.code_of_account AS COA , CONCAT( REPEAT(' ', node.level), node.code_of_account) AS code_of_account FROM account AS node ORDER BY node.ind) as rankedcoa ON account.code_of_account=rankedcoa.COA WHERE account.level <={} ORDER BY account.ind;".format(level)
-        filename = str(self.ref_model) + '_updated_account.xlsx'
-        # filename = 'ACCERT_updated_account.csv'
-        self.write_to_excel(statement, filename,conn)
+        c.callproc('print_leveled_accounts_simple', (self.acc_tabl, level))
+        for itered in c.stored_results():
+            results = itered.fetchall()
+            field_names = [i[0] for i in itered.description]
 
-        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db_test.variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db_test.variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
+        df = pd.DataFrame(results, columns=field_names)
+        filename = str(self.ref_model) + '_updated_account.xlsx'
+        # Write DataFrame to an Excel file
+        df.to_excel(filename, index=False)
+
+
+        c.callproc('extract_affected_cost_elements_w_dis', (self.cel_tabl, self.var_tabl))
+        print('Successfully created excel file {}'.format(filename))
+                # Fetch the result set
+        for itered in c.stored_results():
+            results = itered.fetchall()
+            field_names = [i[0] for i in itered.description]
+
+        df = pd.DataFrame(results, columns=field_names)
+
         filename = str(self.ref_model) + '_variable_affected_cost_elements.xlsx'
-        # filename = 'ACCERT_variable_affected_cost_elements.csv'
+        # Write DataFrame to an Excel file
+        df.to_excel(filename, index=False)
+        print("Successfully created excel file {}".format(filename))
 
-        self.write_to_excel(statement, filename,conn)
+        c.callproc('print_updated_cost_elements', (self.cel_tabl,))
+        for itered in c.stored_results():
+            results = itered.fetchall()
+            field_names = [i[0] for i in itered.description]
 
-        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db_test.cost_element as ce WHERE ce.updated != 0 order by ce.ind"
-        filename = str(self.ref_model) +'_updated_cost_element.xlsx'    
-        # filename = 'ACCERT_updated_cost_element.csv'
-        self.write_to_excel(statement, filename,conn)
-
-    def generate_abr_results_table(self, c, conn, level=3):
-        """
-        Generates the results tables for the ABR-1000.
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        level : int
-            Level of detail in the results table. (How many levels)
-        """
-        statement="SELECT rankedcoa.code_of_account, abr_account.account_description, abr_account.total_cost, abr_account.level,abr_account.review_status FROM abr_account JOIN (SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', node.level), node.code_of_account) AS code_of_account FROM abr_account AS node ORDER BY node.ind) as rankedcoa ON abr_account.code_of_account=rankedcoa.COA WHERE abr_account.level <=3 ORDER BY abr_account.ind;".format(level)
-        filename1 = str(self.ref_model) + '_updated_account.xlsx'
-
-        self.write_to_excel(statement, filename1,conn)
-
-        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db_test.abr_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db_test.abr_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
-        filename2 = str(self.ref_model) +'_variable_affected_cost_elements.xlsx'
-
-        self.write_to_excel(statement, filename2,conn)
-
-        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db_test.abr_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
-        filename3 = str(self.ref_model) + '_updated_cost_element.xlsx'
-
-        self.write_to_excel(statement, filename3,conn)
-
-    def generate_heatpipe_results_table(self, c, conn, level=3):
-        """
-        Generates the results tables for the ABR-1000.
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        level : int
-            Level of detail in the results table. (How many levels)
-        """
-        statement="SELECT rankedcoa.code_of_account, heatpipe_account.account_description, heatpipe_account.total_cost,	 heatpipe_account.unit,	 heatpipe_account.level,heatpipe_account.prn as pct,heatpipe_account.review_status FROM heatpipe_account JOIN (SELECT node.code_of_account AS COA, CONCAT( REPEAT(' ', COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account FROM heatpipe_account AS node, heatpipe_account AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.code_of_account) as rankedcoa ON heatpipe_account.code_of_account=rankedcoa.COA WHERE heatpipe_account.level <=3 ORDER BY heatpipe_account.lft;".format(level)
-        filename = str(self.ref_model) + '_updated_account.xlsx'
-        # filename = 'ACCERT_updated_account.csv'
-
-        self.write_to_excel(statement, filename,conn)
-
-        statement="SELECT va.var_name, va.var_description, affectv.ce_affected FROM accert_db_test.heatpipe_variable as va JOIN (SELECT variable,group_concat(ce) as ce_affected FROM accert_db_test.heatpipe_variable_links group by variable) as affectv on va.var_name = affectv.variable WHERE va.user_input = 1 order by va.ind"
-        filename = str(self.ref_model) +'_variable_affected_cost_elements.xlsx'
-        # filename = 'ACCERT_variable_affected_cost_elements.csv'
-
-        self.write_to_excel(statement, filename,conn)
-
-        statement="SELECT ce.cost_element, ce.cost_2017 as cost, ce.sup_cost_ele, ce.alg_name, ce.account FROM accert_db_test.heatpipe_cost_element as ce WHERE ce.updated != 0 order by ce.ind"
+        df = pd.DataFrame(results, columns=field_names)
+        # remove last column
+        df = df.iloc[:, :-1]
         filename = str(self.ref_model) + '_updated_cost_element.xlsx'
-        self.write_to_excel(statement, filename,conn)
-        # filename = 'ACCERT_updated_cost_element.csv'        
+        # Write DataFrame to an Excel file
+        df.to_excel(filename, index=False)
+        print("Successfully created excel file {}".format(filename))
+
 
     def write_to_excel(self, statement, filename,conn):
         """
@@ -1897,39 +1882,29 @@ class Accert:
         if self.ref_model=="abr1000":
             self.sum_cost_elements_2C(c)
             ### update the account table:
-
             self.update_account_table_by_cost_elements(c)
-
             ### roll up the account table:
             self.roll_up_abr_account_table(c)
             abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
             print(' Generating results table for review '.center(100,'='))
             print('\n')  
             ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
-
-            self.generate_abr_results_table(c, conn,level=3)
         
         elif self.ref_model=="heatpipe":
             self.sum_cost_elements_2C_heatpipe(c)
             ### update the account table:
-
             self.update_account_table_by_cost_elements(c)
-
-        #     ### roll up the account table:
+            ### roll up the account table:
             self.roll_up_heatpipe_account_table(c)
             heatpipe_fac,heatpipe_lab,heatpipe_mat = self.cal_direct_cost_elements_heatpipe(c)
             print(f' Generating { self.ref_model} results table for review '.center(100,'='))
             print('\n')  
             ut.print_leveled_heatpipe_accounts(c, heatpipe_fac,heatpipe_lab,heatpipe_mat,all=False,cost_unit='million',level=3)
-
-            self.generate_heatpipe_results_table(c, conn,level=3)
         
         elif self.ref_model=="lfr":
             self.sum_cost_elements_2C(c)
             ### update the account table:
-
             self.update_account_table_by_cost_elements(c)
-
             ### roll up the account table:
             self.roll_up_abr_account_table(c)
             abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
@@ -1937,10 +1912,7 @@ class Accert:
             print('\n')  
             ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
 
-            self.generate_abr_results_table(c, conn,level=3)
-
         elif self.ref_model=="pwr12-be":
-
             ### update the account table:
             self.update_account_table_by_cost_elements(c)
             ### roll up the account table:
@@ -1949,8 +1921,8 @@ class Accert:
             print(' Generating results table for review '.center(100,'='))
             print('\n')
             ut.print_leveled_accounts(c, all=False,cost_unit='million',level=3)
-            self.generate_results_table(c, conn,level=3)
 
+        self.generate_results_table(c, conn,level=3)
 
         ### close the connection:
 
