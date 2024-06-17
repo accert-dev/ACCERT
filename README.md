@@ -138,7 +138,7 @@ ACCERT can be executed both through the Workbench interface by pressing `run` or
 
 
 
-# NEW! : A New Tool is implemented in ACCERT to Quantify Capital Cost Reduction Pathways for Advanced Nuclear Reactors
+# A New Tool is implemented in ACCERT to Quantify Capital Cost Reduction Pathways for Advanced Nuclear Reactors
 - A tool to showcase different pathways to reducing the capital cost of advanced reactor plants.
 - The methodology and assumptions behind this tool are explained in a recently published report: https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_109810.pdf
 - There are two versions of this tool
