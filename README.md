@@ -137,3 +137,10 @@ ACCERT can be executed both through the Workbench interface by pressing `run` or
 `python ACCERT/src/Main.py -i myinput.son`
 
 
+
+# NEW! : A New Tool is implemented in ACCERT to Quantify Capital Cost Reduction Pathways for Advanced Nuclear Reactors
+- A tool to showcase different pathways to reducing the capital cost of advanced reactor plants.
+- The methodology and assumptions behind this tool are explained in a recently published report: https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_109810.pdf
+- There are two versions of this tool
+	1. The Python version (notebooks) : is found in the folder: "Cost_Reduction"
+	2. The excel version :  is found in the folder: "excel_framework"
