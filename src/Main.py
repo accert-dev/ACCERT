@@ -1672,265 +1672,481 @@ class Accert:
         df.to_excel(filename,index=False)       
         print("Successfully created excel file {}".format(filename))
 
+    # def execute_accert(self, c, ut):
+    #     self.print_logo()
+ 
+    #     accert = self.load_obj(input_path, accert_path).accert
+    #     c.execute("USE accert_db_test")
+    #     # c.execute("USE accert_db")
+    #     print(' Reading user input '.center(100,'='))
+    #     print('\n')
+    #     if accert.ref_model is not None:
+    #         print('[USER_INPUT]', 'Reference model is',str(accert.ref_model.value),'\n')
+    #         self.setup_table_names(c,accert)
+    #         ut.setup_table_names(c,Accert)
+    #     ut.print_user_request_parameter(c)  
+    #     if accert.power is not None:
+    #         for ind, inp in enumerate(accert.power):
+    #             print('[USER_INPUT]', str(inp.id),'power is',str(inp.value.value),str(inp.unit.value),'\n')
+    #             if str(inp.id)=='Thermal':
+    #                 var_id = 'mwth'
+    #             if str(inp.id)=='Electric':
+    #                 var_id = 'mwe'
+    #             var_value = str(inp.value.value)
+    #             var_unit = str(inp.unit.value)
+    #             self.update_variable_info_on_name(c,var_id,var_value,var_unit)
+    #             sup_val_lst= self.extract_super_val(c,var_id)
+    #         if sup_val_lst:
+    #             sup_val_lst= sup_val_lst.split(',')     
+    #         while sup_val_lst:
+    #             sup_val = sup_val_lst.pop(0)
+    #             if sup_val:
+    #                 self.update_super_variable(c,sup_val)
+    #                 new_sup_val = self.extract_super_val(c,sup_val)
+    #                 if new_sup_val:
+    #                     sup_val_lst.extend(new_sup_val.split(',')) 
+    #     if accert.var is not None:
+    #         for var_ind, var_inp in enumerate(accert.var):
+    #             u_i_var_value = float(str(var_inp.value.value))
+    #             u_i_var_unit = str(var_inp.unit.value)
+    #             var_id = str(var_inp.id).replace('"','')
+    #             self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
+    #             sup_val_lst= self.extract_super_val(c,var_id)
+    #             if sup_val_lst:
+    #                 sup_val_lst= sup_val_lst.split(',')
+    #             while sup_val_lst:
+    #                 sup_val = sup_val_lst.pop(0)
+    #                 if sup_val:
+    #                     self.update_super_variable(c,sup_val)
+    #                     new_sup_val = self.extract_super_val(c,sup_val)
+    #                     if new_sup_val:
+    #                         sup_val_lst.extend(new_sup_val.split(',')) 
+    #     if accert.l0COA is not None:
+    #         if accert.l0COA.l1COA is not None:
+    #             # TODO: check if print info can be verbose or not
+    #             # # DEBUG print
+    #             # print('l1')
+    #             for l1_ind, l1_inp in enumerate(accert.l0COA.l1COA):
+    #                 # # DEBUG print
+    #                 # print('',l1_ind, l1_inp.id)
+    #                 if l1_inp.l2COA is not None:
+    #                     # # DEBUG print
+    #                     # print(' l2')
+    #                     for l2_ind, l2_inp in enumerate(l1_inp.l2COA):
+    #                         if "new" in str(l2_inp.id):
+    #                             self.insert_COA(c, str(l1_inp.id))
+    #                         # # DEBUG print
+    #                         # print(' ', l2_inp.id)
+    #                         if l2_inp.ce is not None:
+    #                             # # DEBUG print
+    #                             # print('    l2ce')
+    #                             for l2ce_ind, l2ce_inp in enumerate(l2_inp.ce):
+    #                                 # # DEBUG print
+    #                                 # print('     ', l2ce_inp.id)
+    #                                 if l2ce_inp.alg is not None:
+    #                                     # # DEBUG print
+    #                                     # print('        l2ce alg')
+    #                                     for l2ce_alg_ind, l2ce_alg_inp in enumerate(l2ce_inp.alg):
+    #                                         # # DEBUG print
+    #                                         # print('         ', l2ce_alg_inp.id)
+    #                                         if l2ce_alg_inp.var is not None:
+    #                                             # # DEBUG print
+    #                                             # print('            l2ce alg var')
+    #                                             for l2ce_alg_var_ind, l2ce_alg_var_inp in enumerate(l2ce_alg_inp.var):
+    #                                                 if l2ce_alg_var_inp.alg is None:
+    #                                                     ### NOTE variable will be user input values
+    #                                                     u_i_var_value = float(str(l2ce_alg_var_inp.value.value))
+    #                                                     u_i_var_unit = str(l2ce_alg_var_inp.unit.value)
+    #                                                     var_id = str(l2ce_alg_var_inp.id).replace('"','')
+    #                                                     self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
+    #                                                     sup_val_lst= self.extract_super_val(c,var_id)
+    #                                                     if sup_val_lst:
+    #                                                         sup_val_lst= sup_val_lst.split(',')     
+    #                                                     while sup_val_lst:
+    #                                                         sup_val = sup_val_lst.pop(0)
+    #                                                         if sup_val:
+    #                                                             self.update_super_variable(c,sup_val)
+    #                                                             new_sup_val = self.extract_super_val(c,sup_val)
+    #                                                             if new_sup_val:
+    #                                                                 sup_val_lst.extend(new_sup_val.split(',')) 
+    #                                                 else:
+    #                                                     ### NOTE variable need to be calculated
+    #                                                     for l2ce_alg_var_alg_ind, l2ce_alg_var_alg_inp in enumerate(l2ce_alg_var_inp.alg):
+    #                                                         if l2ce_alg_var_alg_inp.var is not None:
+    #                                                             ### update sub_variable info for each sup_variable in the algorithm(for sup_variable)
+    #                                                             for l2ce_alg_var_alg_var_ind, l2ce_alg_var_alg_var_inp in enumerate(l2ce_alg_var_alg_inp.var):
+    #                                                                 var_id = str(l2ce_alg_var_alg_var_inp.id).replace('"','')
+    #                                                                 u_i_var_value = float(str(l2ce_alg_var_alg_var_inp.value.value))
+    #                                                                 u_i_var_unit = str(l2ce_alg_var_alg_var_inp.unit.value)
+    #                                                                 self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit,var_type='Sub ')
+    #                                                     ### updating sup_variable 
+    #                                                     var_id = str(l2ce_alg_var_inp.id).replace('"','')
+    #                                                     self.update_super_variable(c,var_id)
+    #                         if l2_inp.l3COA is not None:
+    #                             # # DEBUG print
+    #                             # print('    l3')
+    #                             for l3_ind, l3_inp in enumerate(l2_inp.l3COA):
+    #                                 ## NOTE this is not a great way to check if the 'new'
+    #                                 ## is in the string, but it works for now
+    #                                 if "new" in str(l3_inp.id):
+    #                                     self.insert_COA(c, str(l2_inp.id))
+    #                                 # # DEBUG print
+    #                                 # print('     ', l3_inp.id)
+    #                                 if l3_inp.ce is not None:
+    #                                     # # DEBUG print
+    #                                     # print('        l3ce')
+    #                                     for l3ce_ind, l3ce_inp in enumerate(l3_inp.ce):
+    #                                         # # DEBUG print
+    #                                         # print('         ', l3ce_inp.id)
+    #                                         if l3ce_inp.alg is not None:
+    #                                             # # DEBUG print
+    #                                             # print('            l3ce alg')
+    #                                             for l3ce_alg_ind, l3ce_alg_inp in enumerate(l3ce_inp.alg):
+    #                                                 # # DEBUG print
+    #                                                 # print('             ', l3ce_alg_inp.id)
+    #                                                 if l3ce_alg_inp.var is not None:
+    #                                                     # # DEBUG print
+    #                                                     # print('                l3ce alg var')
+    #                                                     for l3ce_alg_var_ind, l3ce_alg_var_inp in enumerate(l3ce_alg_inp.var):
+    #                                                         if l3ce_alg_var_inp.alg is None:
+    #                                                             ### NOTE variable will be user input values
+    #                                                             u_i_var_value = float(str(l3ce_alg_var_inp.value.value))
+    #                                                             u_i_var_unit = str(l3ce_alg_var_inp.unit.value)
+    #                                                             var_id = str(l3ce_alg_var_inp.id).replace('"','')
+    #                                                             self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
+    #                                                             sup_val_lst= self.extract_super_val(c,var_id)
+    #                                                             if sup_val_lst:
+    #                                                                 sup_val_lst= sup_val_lst.split(',')
+    #                                                             while sup_val_lst:
+    #                                                                 sup_val = sup_val_lst.pop(0)
+    #                                                                 if sup_val:
+    #                                                                     self.update_super_variable(c,sup_val)
+    #                                                                     new_sup_val = self.extract_super_val(c,sup_val)
+    #                                                                     if new_sup_val:
+    #                                                                         sup_val_lst.extend(new_sup_val.split(',')) 
+    #                                                         else:
+    #                                                             ### NOTE variable need to be calculated
+    #                                                             for l3ce_alg_var_alg_ind, l3ce_alg_var_alg_inp in enumerate(l3ce_alg_var_inp.alg):
+    #                                                                 if l3ce_alg_var_alg_inp.var is not None:
+    #                                                                     ### update sub_variable info for each sup_variable in the algorithm(for sup_variable)
+    #                                                                     for l3ce_alg_var_alg_var_ind, l3ce_alg_var_alg_var_inp in enumerate(l3ce_alg_var_alg_inp.var):
+    #                                                                         var_id = str(l3ce_alg_var_alg_var_inp.id).replace('"','')
+    #                                                                         u_i_var_value = float(str(l3ce_alg_var_alg_var_inp.value.value))
+    #                                                                         u_i_var_unit = str(l3ce_alg_var_alg_var_inp.unit.value)
+    #                                                                         self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit,var_type='Sub ')
+    #                                                             ### updating sup_variable 
+    #                                                             var_id = str(l3ce_alg_var_inp.id).replace('"','')
+    #                                                             self.update_super_variable(c,var_id)
+    #                                 if l3_inp.total_cost is not None:
+    #                                     # # DEBUG print
+    #                                     # print('     l3 total cost')
+    #                                     for l3_total_cost_ind, l3_total_cost_inp in enumerate(l3_inp.total_cost):
+    #                                         # # DEBUG print
+    #                                         # print('     ', l3_inp.id, l3_total_cost_inp.value.value, l3_total_cost_inp.unit.value)
+    #                                         tc_id = str(l3_inp.id).replace('"','')
+    #                                         u_i_tc_value = float(str(l3_total_cost_inp.value.value))
+    #                                         u_i_tc_unit = str(l3_total_cost_inp.unit.value)
+    #                                         self.update_total_cost(c, tc_id, u_i_tc_value, u_i_tc_unit)
+    #                         if l2_inp.total_cost is not None:
+    #                             # # DEBUG print
+    #                             # print('    l2 total cost')
+    #                             for l2_total_cost_ind, l2_total_cost_inp in enumerate(l2_inp.total_cost):
+    #                                 # # DEBUG print
+    #                                 # print('     ', l2_inp.id, l2_total_cost_inp.value.value, l2_total_cost_inp.unit.value)
+    #                                 tc_id = str(l2_inp.id).replace('"','')
+    #                                 u_i_tc_value = float(str(l2_total_cost_inp.value.value))
+    #                                 u_i_tc_unit = str(l2_total_cost_inp.unit.value)
+    #                                 if self.ref_model:
+    #                                     self.update_total_cost(c,tc_id,u_i_tc_value,u_i_tc_unit)
+    #                                 else:
+    #                                     print("ERROR: model not found ")
+    #                                     print(accert.ref_model.value)
+    #                                     print("Exiting")
+    #                                     sys.exit(1)
+    #     ######################
+
+
+        # ### print changed variables
+        # ut.extract_user_changed_variables(c)
+        # ### print changed total cost_elements
+        # ut.extract_affected_cost_elements(c)
+        # ### calculate and new cost_elements value update to the database in table cost_elements and also update the account table:
+        # self.update_new_cost_elements(c)
+
+        # ###NOTE: cost elements should be rolled up as well
+        # ### uncomment below to print new cost_elements value
+        # ut.print_updated_cost_elements(c)
+
+        # self.roll_up_cost_elements(c)
+
+        # if self.ref_model=="abr1000":
+        #     self.sum_cost_elements_2C(c)
+        #     ### update the account table:
+        #     self.update_account_table_by_cost_elements(c)
+        #     #NOTE: maybe need to update the total cost here rather than the input part
+        #     ### roll up the account table:
+        #     self.roll_up_abr_account_table(c)
+        #     abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
+        #     print(' Generating results table for review '.center(100,'='))
+        #     print('\n')  
+        #     ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
+        
+        # elif self.ref_model=="heatpipe":
+        #     self.sum_cost_elements_2C_heatpipe(c)
+        #     ### update the account table:
+        #     self.update_account_table_by_cost_elements(c)
+        #     ### roll up the account table:
+        #     self.roll_up_heatpipe_account_table(c)
+        #     heatpipe_fac,heatpipe_lab,heatpipe_mat = self.cal_direct_cost_elements_heatpipe(c)
+        #     print(f' Generating { self.ref_model} results table for review '.center(100,'='))
+        #     print('\n')  
+        #     ut.print_leveled_heatpipe_accounts(c, heatpipe_fac,heatpipe_lab,heatpipe_mat,all=False,cost_unit='million',level=3)
+        
+        # elif self.ref_model=="lfr":
+        #     self.sum_cost_elements_2C(c)
+        #     ### update the account table:
+        #     self.update_account_table_by_cost_elements(c)
+        #     ### roll up the account table:
+        #     self.roll_up_abr_account_table(c)
+        #     abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
+        #     print(' Generating results table for review '.center(100,'='))
+        #     print('\n')  
+        #     ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
+
+        # elif self.ref_model=="pwr12-be":
+        #     ### update the account table:
+        #     self.update_account_table_by_cost_elements(c)
+        #     ### roll up the account table:
+        #     self.roll_up_account_table(c)
+        #     ### print the account table:
+        #     print(' Generating results table for review '.center(100,'='))
+        #     print('\n')
+        #     ut.print_leveled_accounts(c, all=False,cost_unit='million',level=3)
+
+        # self.generate_results_table(c, conn,level=3)
+
+        # ### close the connection:
+
+        # conn.close()
+
+        # sys.stdout.close()
+        # sys.stdout=stdoutOrigin
+
+
     def execute_accert(self, c, ut):
         self.print_logo()
- 
+
         accert = self.load_obj(input_path, accert_path).accert
         c.execute("USE accert_db_test")
         # c.execute("USE accert_db")
-        print(' Reading user input '.center(100,'='))
+        print(' Reading user input '.center(100, '='))
         print('\n')
-        if accert.ref_model is not None:
-            print('[USER_INPUT]', 'Reference model is',str(accert.ref_model.value),'\n')
-            self.setup_table_names(c,accert)
-            ut.setup_table_names(c,Accert)
-        ut.print_user_request_parameter(c)  
-        if accert.power is not None:
-            for ind, inp in enumerate(accert.power):
-                print('[USER_INPUT]', str(inp.id),'power is',str(inp.value.value),str(inp.unit.value),'\n')
-                if str(inp.id)=='Thermal':
-                    var_id = 'mwth'
-                if str(inp.id)=='Electric':
-                    var_id = 'mwe'
-                var_value = str(inp.value.value)
-                var_unit = str(inp.unit.value)
-                self.update_variable_info_on_name(c,var_id,var_value,var_unit)
-                sup_val_lst= self.extract_super_val(c,var_id)
-            if sup_val_lst:
-                sup_val_lst= sup_val_lst.split(',')     
-            while sup_val_lst:
-                sup_val = sup_val_lst.pop(0)
-                if sup_val:
-                    self.update_super_variable(c,sup_val)
-                    new_sup_val = self.extract_super_val(c,sup_val)
-                    if new_sup_val:
-                        sup_val_lst.extend(new_sup_val.split(',')) 
-        if accert.var is not None:
-            for var_ind, var_inp in enumerate(accert.var):
+
+        if accert.ref_model:
+            self.process_reference_model(c, ut, accert)
+
+        self.process_power_inputs(c, accert)
+        self.process_variables(c, accert)
+        self.process_COA(c, accert)
+
+        self.finalize_process(c, ut, accert)
+        self.process_total_cost(c, accert)
+        self.generate_results(c, ut, accert)
+        conn.close()
+        sys.stdout.close()
+        sys.stdout = stdoutOrigin
+
+
+    def process_reference_model(self, c, ut, accert):
+        print('[USER_INPUT]', 'Reference model is', str(accert.ref_model.value), '\n')
+        self.setup_table_names(c, accert)
+        ut.setup_table_names(c, Accert)
+        ut.print_user_request_parameter(c)
+
+    def process_power_inputs(self, c, accert):
+        if accert.power:
+            for inp in accert.power:
+                print('[USER_INPUT]', str(inp.id), 'power is', str(inp.value.value), str(inp.unit.value), '\n')
+                var_id = 'mwth' if str(inp.id) == 'Thermal' else 'mwe' if str(inp.id) == 'Electric' else None
+                if var_id:
+                    self.update_variable_info_on_name(c, var_id, str(inp.value.value), str(inp.unit.value))
+                    self.process_super_values(c, var_id)
+
+    def process_variables(self, c, accert):
+        if accert.var:
+            for var_inp in accert.var:
                 u_i_var_value = float(str(var_inp.value.value))
                 u_i_var_unit = str(var_inp.unit.value)
-                var_id = str(var_inp.id).replace('"','')
-                self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
-                sup_val_lst= self.extract_super_val(c,var_id)
-                if sup_val_lst:
-                    sup_val_lst= sup_val_lst.split(',')
-                while sup_val_lst:
-                    sup_val = sup_val_lst.pop(0)
-                    if sup_val:
-                        self.update_super_variable(c,sup_val)
-                        new_sup_val = self.extract_super_val(c,sup_val)
-                        if new_sup_val:
-                            sup_val_lst.extend(new_sup_val.split(',')) 
-        if accert.l0COA is not None:
-            if accert.l0COA.l1COA is not None:
-                # TODO: check if print info can be verbose or not
-                # # DEBUG print
-                # print('l1')
-                for l1_ind, l1_inp in enumerate(accert.l0COA.l1COA):
-                    # # DEBUG print
-                    # print('',l1_ind, l1_inp.id)
-                    if l1_inp.l2COA is not None:
-                        # # DEBUG print
-                        # print(' l2')
-                        for l2_ind, l2_inp in enumerate(l1_inp.l2COA):
-                            if "new" in str(l2_inp.id):
-                                self.insert_COA(c, str(l1_inp.id))
-                            # # DEBUG print
-                            # print(' ', l2_inp.id)
-                            if l2_inp.ce is not None:
-                                # # DEBUG print
-                                # print('    l2ce')
-                                for l2ce_ind, l2ce_inp in enumerate(l2_inp.ce):
-                                    # # DEBUG print
-                                    # print('     ', l2ce_inp.id)
-                                    if l2ce_inp.alg is not None:
-                                        # # DEBUG print
-                                        # print('        l2ce alg')
-                                        for l2ce_alg_ind, l2ce_alg_inp in enumerate(l2ce_inp.alg):
-                                            # # DEBUG print
-                                            # print('         ', l2ce_alg_inp.id)
-                                            if l2ce_alg_inp.var is not None:
-                                                # # DEBUG print
-                                                # print('            l2ce alg var')
-                                                for l2ce_alg_var_ind, l2ce_alg_var_inp in enumerate(l2ce_alg_inp.var):
-                                                    if l2ce_alg_var_inp.alg is None:
-                                                        ### NOTE variable will be user input values
-                                                        u_i_var_value = float(str(l2ce_alg_var_inp.value.value))
-                                                        u_i_var_unit = str(l2ce_alg_var_inp.unit.value)
-                                                        var_id = str(l2ce_alg_var_inp.id).replace('"','')
-                                                        self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
-                                                        sup_val_lst= self.extract_super_val(c,var_id)
-                                                        if sup_val_lst:
-                                                            sup_val_lst= sup_val_lst.split(',')     
-                                                        while sup_val_lst:
-                                                            sup_val = sup_val_lst.pop(0)
-                                                            if sup_val:
-                                                                self.update_super_variable(c,sup_val)
-                                                                new_sup_val = self.extract_super_val(c,sup_val)
-                                                                if new_sup_val:
-                                                                    sup_val_lst.extend(new_sup_val.split(',')) 
-                                                    else:
-                                                        ### NOTE variable need to be calculated
-                                                        for l2ce_alg_var_alg_ind, l2ce_alg_var_alg_inp in enumerate(l2ce_alg_var_inp.alg):
-                                                            if l2ce_alg_var_alg_inp.var is not None:
-                                                                ### update sub_variable info for each sup_variable in the algorithm(for sup_variable)
-                                                                for l2ce_alg_var_alg_var_ind, l2ce_alg_var_alg_var_inp in enumerate(l2ce_alg_var_alg_inp.var):
-                                                                    var_id = str(l2ce_alg_var_alg_var_inp.id).replace('"','')
-                                                                    u_i_var_value = float(str(l2ce_alg_var_alg_var_inp.value.value))
-                                                                    u_i_var_unit = str(l2ce_alg_var_alg_var_inp.unit.value)
-                                                                    self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit,var_type='Sub ')
-                                                        ### updating sup_variable 
-                                                        var_id = str(l2ce_alg_var_inp.id).replace('"','')
-                                                        self.update_super_variable(c,var_id)
-                            if l2_inp.l3COA is not None:
-                                # # DEBUG print
-                                # print('    l3')
-                                for l3_ind, l3_inp in enumerate(l2_inp.l3COA):
-                                    ## NOTE this is not a great way to check if the 'new'
-                                    ## is in the string, but it works for now
-                                    if "new" in str(l3_inp.id):
-                                        self.insert_COA(c, str(l2_inp.id))
-                                    # # DEBUG print
-                                    # print('     ', l3_inp.id)
-                                    if l3_inp.ce is not None:
-                                        # # DEBUG print
-                                        # print('        l3ce')
-                                        for l3ce_ind, l3ce_inp in enumerate(l3_inp.ce):
-                                            # # DEBUG print
-                                            # print('         ', l3ce_inp.id)
-                                            if l3ce_inp.alg is not None:
-                                                # # DEBUG print
-                                                # print('            l3ce alg')
-                                                for l3ce_alg_ind, l3ce_alg_inp in enumerate(l3ce_inp.alg):
-                                                    # # DEBUG print
-                                                    # print('             ', l3ce_alg_inp.id)
-                                                    if l3ce_alg_inp.var is not None:
-                                                        # # DEBUG print
-                                                        # print('                l3ce alg var')
-                                                        for l3ce_alg_var_ind, l3ce_alg_var_inp in enumerate(l3ce_alg_inp.var):
-                                                            if l3ce_alg_var_inp.alg is None:
-                                                                ### NOTE variable will be user input values
-                                                                u_i_var_value = float(str(l3ce_alg_var_inp.value.value))
-                                                                u_i_var_unit = str(l3ce_alg_var_inp.unit.value)
-                                                                var_id = str(l3ce_alg_var_inp.id).replace('"','')
-                                                                self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit)
-                                                                sup_val_lst= self.extract_super_val(c,var_id)
-                                                                if sup_val_lst:
-                                                                    sup_val_lst= sup_val_lst.split(',')
-                                                                while sup_val_lst:
-                                                                    sup_val = sup_val_lst.pop(0)
-                                                                    if sup_val:
-                                                                        self.update_super_variable(c,sup_val)
-                                                                        new_sup_val = self.extract_super_val(c,sup_val)
-                                                                        if new_sup_val:
-                                                                            sup_val_lst.extend(new_sup_val.split(',')) 
-                                                            else:
-                                                                ### NOTE variable need to be calculated
-                                                                for l3ce_alg_var_alg_ind, l3ce_alg_var_alg_inp in enumerate(l3ce_alg_var_inp.alg):
-                                                                    if l3ce_alg_var_alg_inp.var is not None:
-                                                                        ### update sub_variable info for each sup_variable in the algorithm(for sup_variable)
-                                                                        for l3ce_alg_var_alg_var_ind, l3ce_alg_var_alg_var_inp in enumerate(l3ce_alg_var_alg_inp.var):
-                                                                            var_id = str(l3ce_alg_var_alg_var_inp.id).replace('"','')
-                                                                            u_i_var_value = float(str(l3ce_alg_var_alg_var_inp.value.value))
-                                                                            u_i_var_unit = str(l3ce_alg_var_alg_var_inp.unit.value)
-                                                                            self.update_input_variable(c,var_id,u_i_var_value,u_i_var_unit,var_type='Sub ')
-                                                                ### updating sup_variable 
-                                                                var_id = str(l3ce_alg_var_inp.id).replace('"','')
-                                                                self.update_super_variable(c,var_id)
-                                    if l3_inp.total_cost is not None:
-                                        # # DEBUG print
-                                        # print('     l3 total cost')
-                                        for l3_total_cost_ind, l3_total_cost_inp in enumerate(l3_inp.total_cost):
-                                            # # DEBUG print
-                                            # print('     ', l3_inp.id, l3_total_cost_inp.value.value, l3_total_cost_inp.unit.value)
-                                            tc_id = str(l3_inp.id).replace('"','')
-                                            u_i_tc_value = float(str(l3_total_cost_inp.value.value))
-                                            u_i_tc_unit = str(l3_total_cost_inp.unit.value)
-                                            self.update_total_cost(c, tc_id, u_i_tc_value, u_i_tc_unit)
-                            if l2_inp.total_cost is not None:
-                                # # DEBUG print
-                                # print('    l2 total cost')
-                                for l2_total_cost_ind, l2_total_cost_inp in enumerate(l2_inp.total_cost):
-                                    # # DEBUG print
-                                    # print('     ', l2_inp.id, l2_total_cost_inp.value.value, l2_total_cost_inp.unit.value)
-                                    tc_id = str(l2_inp.id).replace('"','')
-                                    u_i_tc_value = float(str(l2_total_cost_inp.value.value))
-                                    u_i_tc_unit = str(l2_total_cost_inp.unit.value)
-                                    if self.ref_model:
-                                        self.update_total_cost(c,tc_id,u_i_tc_value,u_i_tc_unit)
-                                    else:
-                                        print("ERROR: model not found ")
-                                        print(accert.ref_model.value)
-                                        print("Exiting")
-                                        sys.exit(1)
-        ######################
+                var_id = str(var_inp.id).replace('"', '')
+                self.update_input_variable(c, var_id, u_i_var_value, u_i_var_unit)
+                self.process_super_values(c, var_id)
+
+    def process_super_values(self, c, var_id):
+        sup_val_lst = self.extract_super_val(c, var_id)
+        if sup_val_lst:
+            sup_val_lst = sup_val_lst.split(',')
+        while sup_val_lst:
+            sup_val = sup_val_lst.pop(0)
+            if sup_val:
+                self.update_super_variable(c, sup_val)
+                new_sup_val = self.extract_super_val(c, sup_val)
+                if new_sup_val:
+                    sup_val_lst.extend(new_sup_val.split(','))
+
+    def process_COA(self, c, accert):
+        if accert.l0COA and accert.l0COA.l1COA:
+            for l1_inp in accert.l0COA.l1COA:
+                if l1_inp.l2COA:
+                    self.process_level_accounts(c, l1_inp.l2COA, accert, l1_inp.id)
 
 
-        ### print changed variables
+    def process_level_accounts(self, c, level_accounts, accert, parent_id=None):
+        for account in level_accounts:
+            if "new" in str(account.id):
+                self.insert_COA(c, str(parent_id))
+            self.process_ce(c, account)
+            if hasattr(account, 'l3COA') and account.l3COA:
+                self.process_level_accounts(c, account.l3COA, accert, account.id)
+
+    def process_ce(self, c, account):
+        if account.ce:
+            for ce in account.ce:
+                if ce.alg:
+                    for alg in ce.alg:
+                        if alg.var:
+                            for var in alg.var:
+                                if var.alg is None:
+                                    self.process_var(c, var)
+                                else:
+                                    self.process_alg(c, var)
+
+
+    def process_var(self, c, var_inp):
+        u_i_var_value = float(str(var_inp.value.value))
+        u_i_var_unit = str(var_inp.unit.value)
+        var_id = str(var_inp.id).replace('"', '')
+        self.update_input_variable(c, var_id, u_i_var_value, u_i_var_unit)
+        self.process_super_values(c, var_id)
+
+
+    def process_alg(self, c, alg_inp):
+        for alg_var in alg_inp.alg:
+            if alg_var.var:
+                for var in alg_var.var:
+                    var_id = str(var.id).replace('"', '')
+                    u_i_var_value = float(str(var.value.value))
+                    u_i_var_unit = str(var.unit.value)
+                    self.update_input_variable(c, var_id, u_i_var_value, u_i_var_unit, var_type='Sub ')
+        var_id = str(alg_inp.id).replace('"', '')
+        self.update_super_variable(c, var_id)
+
+
+    def process_total_cost(self, c, accert):
+        changed_cost_elements = False
+        if accert.l0COA and accert.l0COA.l1COA:
+            for l1_inp in accert.l0COA.l1COA:
+                if l1_inp.l2COA:
+                    changed_cost_elements |= self.check_if_total_cost(c, l1_inp.l2COA, accert)
+        if changed_cost_elements:
+            print('IMPORTANT NOTE'.center(100, '='))
+            print("Some accounts' cost have changed by the user and may not be reflected correctly in the cost elements table.")
+            print("The changed total costs are:")
+            self.process_total_cost_accounts(c, l1_inp.l2COA, accert)
+
+            
+    def check_if_total_cost(self, c, level_accounts, accert):
+        changed = False
+        for account in level_accounts:
+            if account.total_cost:
+                for total_cost_inp in account.total_cost:
+                    if accert.ref_model:
+                        changed = True
+                    else:
+                        self.exit_with_error(accert)
+            if hasattr(account, 'l3COA') and account.l3COA:
+                changed |= self.check_if_total_cost(c, account.l3COA, accert)
+        return changed
+
+    def process_total_cost_accounts(self, c, level_accounts, accert):
+        for account in level_accounts:
+            if account.total_cost:
+                for total_cost_inp in account.total_cost:
+                    tc_id = str(account.id).replace('"', '')
+                    u_i_tc_value = float(str(total_cost_inp.value.value))
+                    u_i_tc_unit = str(total_cost_inp.unit.value)
+                    if accert.ref_model:
+                        self.update_total_cost(c, tc_id, u_i_tc_value, u_i_tc_unit)
+                    else:
+                        self.exit_with_error(accert)
+            if hasattr(account, 'l3COA') and account.l3COA:
+                self.process_total_cost_accounts(c, account.l3COA, accert)
+        return None
+
+
+    def exit_with_error(self, accert):
+        print("ERROR: model not found ")
+        print(accert.ref_model.value)
+        print("Exiting")
+        sys.exit(1)
+
+
+    def finalize_process(self, c, ut, accert):
         ut.extract_user_changed_variables(c)
-        ### print changed total cost_elements
         ut.extract_affected_cost_elements(c)
-        ### calculate and new cost_elements value update to the database in table cost_elements and also update the account table:
         self.update_new_cost_elements(c)
-
-        ###NOTE: cost elements should be rolled up as well
-        ### uncomment below to print new cost_elements value
         ut.print_updated_cost_elements(c)
-
         self.roll_up_cost_elements(c)
 
-        if self.ref_model=="abr1000":
-            self.sum_cost_elements_2C(c)
-            ### update the account table:
-            self.update_account_table_by_cost_elements(c)
-            ### roll up the account table:
-            self.roll_up_abr_account_table(c)
-            abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
-            print(' Generating results table for review '.center(100,'='))
-            print('\n')  
-            ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
-        
-        elif self.ref_model=="heatpipe":
-            self.sum_cost_elements_2C_heatpipe(c)
-            ### update the account table:
-            self.update_account_table_by_cost_elements(c)
-            ### roll up the account table:
-            self.roll_up_heatpipe_account_table(c)
-            heatpipe_fac,heatpipe_lab,heatpipe_mat = self.cal_direct_cost_elements_heatpipe(c)
-            print(f' Generating { self.ref_model} results table for review '.center(100,'='))
-            print('\n')  
-            ut.print_leveled_heatpipe_accounts(c, heatpipe_fac,heatpipe_lab,heatpipe_mat,all=False,cost_unit='million',level=3)
-        
-        elif self.ref_model=="lfr":
-            self.sum_cost_elements_2C(c)
-            ### update the account table:
-            self.update_account_table_by_cost_elements(c)
-            ### roll up the account table:
-            self.roll_up_abr_account_table(c)
-            abr_fac,abr_lab,abr_mat = self.cal_direct_cost_elements(c)
-            print(' Generating results table for review '.center(100,'='))
-            print('\n')  
-            ut.print_leveled_abr_accounts(c, abr_fac,abr_lab,abr_mat,all=False,cost_unit='million',level=3)
 
-        elif self.ref_model=="pwr12-be":
-            ### update the account table:
-            self.update_account_table_by_cost_elements(c)
-            ### roll up the account table:
-            self.roll_up_account_table(c)
-            ### print the account table:
-            print(' Generating results table for review '.center(100,'='))
-            print('\n')
-            ut.print_leveled_accounts(c, all=False,cost_unit='million',level=3)
+    def generate_results(self, c, ut, accert):
+        if accert.ref_model == "abr1000":
+            self.generate_abr1000_results(c, ut)
+        elif accert.ref_model == "heatpipe":
+            self.generate_heatpipe_results(c, ut)
+        elif accert.ref_model == "lfr":
+            self.generate_lfr_results(c, ut)
+        elif accert.ref_model == "pwr12-be":
+            self.generate_pwr12be_results(c, ut)
 
-        self.generate_results_table(c, conn,level=3)
+        self.generate_results_table(c, conn, level=3)
 
-        ### close the connection:
 
-        conn.close()
+    def generate_abr1000_results(self, c, ut):
+        self.sum_cost_elements_2C(c)
+        self.update_account_table_by_cost_elements(c)
+        self.roll_up_abr_account_table(c)
+        abr_fac, abr_lab, abr_mat = self.cal_direct_cost_elements(c)
+        print(' Generating results table for review '.center(100, '='))
+        print('\n')
+        ut.print_leveled_abr_accounts(c, abr_fac, abr_lab, abr_mat, all=False, cost_unit='million', level=3)
 
-        sys.stdout.close()
-        sys.stdout=stdoutOrigin
 
+    def generate_heatpipe_results(self, c, ut):
+        self.sum_cost_elements_2C_heatpipe(c)
+        self.update_account_table_by_cost_elements(c)
+        self.roll_up_heatpipe_account_table(c)
+        heatpipe_fac, heatpipe_lab, heatpipe_mat = self.cal_direct_cost_elements_heatpipe(c)
+        print(f' Generating {self.ref_model} results table for review '.center(100, '='))
+        print('\n')
+        ut.print_leveled_heatpipe_accounts(c, heatpipe_fac, heatpipe_lab, heatpipe_mat, all=False, cost_unit='million', level=3)
+
+
+    def generate_lfr_results(self, c, ut):
+        self.sum_cost_elements_2C(c)
+        self.update_account_table_by_cost_elements(c)
+        self.roll_up_abr_account_table(c)
+        abr_fac, abr_lab, abr_mat = self.cal_direct_cost_elements(c)
+        print(' Generating results table for review '.center(100, '='))
+        print('\n')
+        ut.print_leveled_abr_accounts(c, abr_fac, abr_lab, abr_mat, all=False, cost_unit='million', level=3)
+
+
+    def generate_pwr12be_results(self, c, ut):
+        self.update_account_table_by_cost_elements(c)
+        self.roll_up_account_table(c)
+        print(' Generating results table for review '.center(100, '='))
+        print('\n')
+        ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
 
 if __name__ == "__main__":
     """
