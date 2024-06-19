@@ -1944,18 +1944,19 @@ class Accert:
 
         if accert.ref_model:
             self.process_reference_model(c, ut, accert)
-
+        else:
+            print('ERROR: model not found ')
+            self.exit_with_error(accert)
         self.process_power_inputs(c, accert)
         self.process_variables(c, accert)
         self.process_COA(c, accert)
 
         self.finalize_process(c, ut, accert)
-        self.process_total_cost(c, accert)
+        # self.check_and_process_total_cost(c, accert)
         self.generate_results(c, ut, accert)
         conn.close()
         sys.stdout.close()
         sys.stdout = stdoutOrigin
-
 
     def process_reference_model(self, c, ut, accert):
         print('[USER_INPUT]', 'Reference model is', str(accert.ref_model.value), '\n')
@@ -1972,6 +1973,7 @@ class Accert:
                     self.update_variable_info_on_name(c, var_id, str(inp.value.value), str(inp.unit.value))
                     self.process_super_values(c, var_id)
 
+
     def process_variables(self, c, accert):
         if accert.var:
             for var_inp in accert.var:
@@ -1980,6 +1982,7 @@ class Accert:
                 var_id = str(var_inp.id).replace('"', '')
                 self.update_input_variable(c, var_id, u_i_var_value, u_i_var_unit)
                 self.process_super_values(c, var_id)
+
 
     def process_super_values(self, c, var_id):
         sup_val_lst = self.extract_super_val(c, var_id)
@@ -1993,6 +1996,7 @@ class Accert:
                 if new_sup_val:
                     sup_val_lst.extend(new_sup_val.split(','))
 
+
     def process_COA(self, c, accert):
         if accert.l0COA and accert.l0COA.l1COA:
             for l1_inp in accert.l0COA.l1COA:
@@ -2005,8 +2009,11 @@ class Accert:
             if "new" in str(account.id):
                 self.insert_COA(c, str(parent_id))
             self.process_ce(c, account)
-            if hasattr(account, 'l3COA') and account.l3COA:
-                self.process_level_accounts(c, account.l3COA, accert, account.id)
+            # self.process_total_cost_for_account(c, account, accert)
+            for i in range(3, 7):
+                next_level = getattr(account, f'l{i}COA', None)
+                if next_level:
+                    self.process_level_accounts(c, next_level, accert, account.id)
 
     def process_ce(self, c, account):
         if account.ce:
@@ -2040,32 +2047,36 @@ class Accert:
         var_id = str(alg_inp.id).replace('"', '')
         self.update_super_variable(c, var_id)
 
+    def check_and_process_total_cost(self, c, accert):
+        if self.check_total_cost_changed(c, accert):
+            print(" IMPORTANT NOTE ".center(100, '='))
+            print("Some cost have changed by user inputs and may not be reflected correctly in the cost elements table.")
+            self.process_total_cost(c, accert)
 
-    def process_total_cost(self, c, accert):
-        changed_cost_elements = False
+    def check_total_cost_changed(self, c, accert):
+        changed = False
         if accert.l0COA and accert.l0COA.l1COA:
             for l1_inp in accert.l0COA.l1COA:
                 if l1_inp.l2COA:
-                    changed_cost_elements |= self.check_if_total_cost(c, l1_inp.l2COA, accert)
-        if changed_cost_elements:
-            print('IMPORTANT NOTE'.center(100, '='))
-            print("Some accounts' cost have changed by the user and may not be reflected correctly in the cost elements table.")
-            print("The changed total costs are:")
-            self.process_total_cost_accounts(c, l1_inp.l2COA, accert)
+                    changed |= self.check_total_cost_accounts(c, l1_inp.l2COA, accert)
+        return changed
 
-            
-    def check_if_total_cost(self, c, level_accounts, accert):
+    def check_total_cost_accounts(self, c, level_accounts, accert):
         changed = False
         for account in level_accounts:
             if account.total_cost:
-                for total_cost_inp in account.total_cost:
-                    if accert.ref_model:
-                        changed = True
-                    else:
-                        self.exit_with_error(accert)
-            if hasattr(account, 'l3COA') and account.l3COA:
-                changed |= self.check_if_total_cost(c, account.l3COA, accert)
+                changed = True
+            for i in range(3, 7):
+                next_level = getattr(account, f'l{i}COA', None)
+                if next_level:
+                    changed |= self.check_total_cost_accounts(c, next_level, accert)
         return changed
+
+    def process_total_cost(self, c, accert):
+        if accert.l0COA and accert.l0COA.l1COA:
+            for l1_inp in accert.l0COA.l1COA:
+                if l1_inp.l2COA:
+                    self.process_total_cost_accounts(c, l1_inp.l2COA, accert)
 
     def process_total_cost_accounts(self, c, level_accounts, accert):
         for account in level_accounts:
@@ -2078,17 +2089,27 @@ class Accert:
                         self.update_total_cost(c, tc_id, u_i_tc_value, u_i_tc_unit)
                     else:
                         self.exit_with_error(accert)
-            if hasattr(account, 'l3COA') and account.l3COA:
-                self.process_total_cost_accounts(c, account.l3COA, accert)
-        return None
+            for i in range(3, 7):
+                next_level = getattr(account, f'l{i}COA', None)
+                if next_level:
+                    self.process_total_cost_accounts(c, next_level, accert)
 
+    def process_total_cost_for_account(self, c, account, accert):
+        if account.total_cost:
+            for total_cost_inp in account.total_cost:
+                tc_id = str(account.id).replace('"', '')
+                u_i_tc_value = float(str(total_cost_inp.value.value))
+                u_i_tc_unit = str(total_cost_inp.unit.value)
+                if accert.ref_model:
+                    self.update_total_cost(c, tc_id, u_i_tc_value, u_i_tc_unit)
+                else:
+                    self.exit_with_error(accert)
 
     def exit_with_error(self, accert):
         print("ERROR: model not found ")
         print(accert.ref_model.value)
         print("Exiting")
         sys.exit(1)
-
 
     def finalize_process(self, c, ut, accert):
         ut.extract_user_changed_variables(c)
@@ -2097,23 +2118,21 @@ class Accert:
         ut.print_updated_cost_elements(c)
         self.roll_up_cost_elements(c)
 
-
     def generate_results(self, c, ut, accert):
-        if accert.ref_model == "abr1000":
-            self.generate_abr1000_results(c, ut)
-        elif accert.ref_model == "heatpipe":
-            self.generate_heatpipe_results(c, ut)
-        elif accert.ref_model == "lfr":
-            self.generate_lfr_results(c, ut)
-        elif accert.ref_model == "pwr12-be":
-            self.generate_pwr12be_results(c, ut)
-
+        if Accert.ref_model == "abr1000":
+            self.generate_abr1000_results(c, ut, accert)
+        elif Accert.ref_model == "heatpipe":
+            self.generate_heatpipe_results(c, ut, accert)
+        elif Accert.ref_model == "lfr":
+            self.generate_lfr_results(c, ut, accert)
+        elif Accert.ref_model == "pwr12-be":
+            self.generate_pwr12be_results(c, ut, accert)
         self.generate_results_table(c, conn, level=3)
 
-
-    def generate_abr1000_results(self, c, ut):
+    def generate_abr1000_results(self, c, ut, accert):
         self.sum_cost_elements_2C(c)
         self.update_account_table_by_cost_elements(c)
+        self.check_and_process_total_cost(c, accert)
         self.roll_up_abr_account_table(c)
         abr_fac, abr_lab, abr_mat = self.cal_direct_cost_elements(c)
         print(' Generating results table for review '.center(100, '='))
@@ -2121,32 +2140,36 @@ class Accert:
         ut.print_leveled_abr_accounts(c, abr_fac, abr_lab, abr_mat, all=False, cost_unit='million', level=3)
 
 
-    def generate_heatpipe_results(self, c, ut):
+    def generate_heatpipe_results(self, c, ut, accert):
         self.sum_cost_elements_2C_heatpipe(c)
         self.update_account_table_by_cost_elements(c)
+        self.check_and_process_total_cost(c, accert)
         self.roll_up_heatpipe_account_table(c)
         heatpipe_fac, heatpipe_lab, heatpipe_mat = self.cal_direct_cost_elements_heatpipe(c)
         print(f' Generating {self.ref_model} results table for review '.center(100, '='))
         print('\n')
         ut.print_leveled_heatpipe_accounts(c, heatpipe_fac, heatpipe_lab, heatpipe_mat, all=False, cost_unit='million', level=3)
 
-
-    def generate_lfr_results(self, c, ut):
+    def generate_lfr_results(self, c, ut, accert):
         self.sum_cost_elements_2C(c)
         self.update_account_table_by_cost_elements(c)
+        self.check_and_process_total_cost(c, accert)
         self.roll_up_abr_account_table(c)
         abr_fac, abr_lab, abr_mat = self.cal_direct_cost_elements(c)
         print(' Generating results table for review '.center(100, '='))
         print('\n')
         ut.print_leveled_abr_accounts(c, abr_fac, abr_lab, abr_mat, all=False, cost_unit='million', level=3)
 
-
-    def generate_pwr12be_results(self, c, ut):
+    def generate_pwr12be_results(self, c, ut, accert):
         self.update_account_table_by_cost_elements(c)
+        self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c)
         print(' Generating results table for review '.center(100, '='))
         print('\n')
-        ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
+        ut.print_leveled_accounts(c, all=False, cost_unit='million', level=3)
+
+
+
 
 if __name__ == "__main__":
     """
