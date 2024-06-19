@@ -138,9 +138,12 @@ ACCERT can be executed both through the Workbench interface by pressing `run` or
 
 
 
-# A New Tool is implemented in ACCERT to Quantify Capital Cost Reduction Pathways for Advanced Nuclear Reactors
-- A tool to showcase different pathways to reducing the capital cost of advanced reactor plants.
-- The methodology and assumptions behind this tool are explained in a recently published report: https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_109810.pdf
-- There are two versions of this tool
-	1. The Python version (notebooks) : is found in the folder: "Cost_Reduction"
-	2. The excel version :  is found in the folder: "excel_framework"
+# A Tool for Quantifying Capital Cost Reduction Reduction Pathways for Advanced Nuclear Reactors
+- A new tool has been developed to simulate the different pathways to reduce the costs of advanced nuclear power plants when constructed through large order books. This tool inputs various levers that represent high-level decision making and outputs the capital costs and construction duration starting from the first plant to the last plant in the order book.
+
+-The methodology and assumptions behind this tool are documented [here]: https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_109810.pdf
+- There are two versions of this tool,
+	1. A Python Jupyter Notebook in the folder, "Cost_Reduction". 
+	2. An excel spreadsheet that can be found [here](https://fuelcycleoptions.inl.gov/Shared%20Documents/Nuclear-Reactor-Capital-Cost-Reduction-Pathway-Tool.pdf).
+
+As currently implemented, this cost reduction tool is separate from the ACCERT cost estimation tool. In the future, the ACCERT cost estimation and cost reduction tools may be integrated so that users can estimate the costs of their own design using the estimation tool and use the cost reduction tool to simulate the evolution of its capital costs from FOAK to NOAK plants.
