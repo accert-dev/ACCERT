@@ -1815,7 +1815,7 @@ class Accert:
                     u_i_tc_unit = str(total_cost_inp.unit.value)
                     if accert.ref_model:
                         # TODO: change the new into any thing else
-                        # check if the total cost is a new added account in accoun table check if
+                        # check if the total cost is a new added account in account table check if
                         # the revivew status is added
                         if "new" in tc_id:
                             user_add_coa_name = str(account.newCOA.id)
