@@ -57,6 +57,10 @@ accert{
                 % we can use the total cost as well.
                 total_cost{value = 28149700 unit = dollar}       
             }
+            l2COA(new){ 
+                newCOA(useraddcoa){descr = 'a user added coa'}
+                total_cost{value = 9 unit = million}       
+            }
         }   
         l1COA(22){
             l2COA("220A"){
