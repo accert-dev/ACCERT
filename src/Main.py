@@ -1662,8 +1662,7 @@ class Accert:
         self.print_logo()
 
         accert = self.load_obj(input_path, accert_path).accert
-        c.execute("USE accert_db_test")
-        # c.execute("USE accert_db")
+        c.execute("USE accert_db")
         print(' Reading user input '.center(100, '='))
         print('\n')
 
@@ -1930,7 +1929,7 @@ if __name__ == "__main__":
     host="localhost",
     user="root",
     password=passwd,
-    database="accert_db_test",
+    database="accert_db",
     auth_plugin="mysql_native_password"
     )
     # conn.commit()
