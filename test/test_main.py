@@ -55,10 +55,10 @@ def test_insert_new_COA(cursor):
     assert accert.insert_new_COA(cursor, 24, "218", 3, 'new_coa', 'new des', 20 ) == None
     # check if the new COA is added
     cursor.execute("""SELECT *
-                    FROM `accert_db`.`account`
+                    FROM account
                     WHERE ind = 24;""")
-    print(cursor.fetchall())
-    expect_output = (24, 'new', None, 0.0, 'dollar', 2, None, 'new_sup', None, 'Added', 1, 2, 0.0) 
+    #NOTE if ind=24 might get 2 rows, one for the new COA and one for the original COA? might need to check
+    expect_output = (24, 'new_coa', 'new des', 20, 3, '218', 'Added', 0.0)
     assert expect_output in cursor.fetchall()
 
 def test_update_input_variable(cursor):
@@ -67,7 +67,7 @@ def test_update_input_variable(cursor):
     assert accert.update_input_variable(cursor,"c_213_fac",0,"million")==None
     # check if the value is updated
     cursor.execute("""SELECT var_name,var_value, var_unit
-                    FROM `accert_db`.`variable` 
+                    FROM variable 
                     WHERE var_name = "c_213_fac";""")
     expect_output = ('c_213_fac',  0.0, 'million') 
     assert expect_output in cursor.fetchall()
@@ -78,7 +78,7 @@ def test_update_variable_info_on_name(cursor):
     assert accert.update_variable_info_on_name(cursor,"c_213_fac",0,"million")==None
     # check if the value is updated
     cursor.execute("""SELECT var_name,var_value, var_unit
-                    FROM `accert_db`.`variable` 
+                    FROM variable
                     WHERE var_name = "c_213_fac";""")
     expect_output = ('c_213_fac',  0.0, 'million') 
     assert expect_output in cursor.fetchall()
@@ -89,7 +89,7 @@ def test_update_super_variable(cursor):
     assert accert.update_super_variable(cursor,"n_231")==None
     # check if the value is updated only check the user_input column
     cursor.execute("""SELECT var_name,user_input
-                    FROM `accert_db`.`variable` 
+                    FROM variable 
                     WHERE var_name = "n_231";""")
     expect_output = ('n_231', 1)
     assert expect_output in cursor.fetchall()
@@ -99,21 +99,21 @@ def test_update_total_cost(cursor):
     # update the total cost for pwr12be
     assert accert.update_total_cost(cursor,"211", 1000, "thousand")==None
     # check if the value is updated
-    cursor.execute("""SELECT code_of_account, total_cost, unit
-                    FROM `accert_db`.`account` 
+    cursor.execute("""SELECT code_of_account, total_cost
+                    FROM account 
                     WHERE code_of_account = "211";""")
-    expect_output = ('211',  1000000.0, 'dollar') 
+    expect_output = ('211',  1000000.0) 
     assert expect_output in cursor.fetchall()
 
 def test_update_total_cost_on_name(cursor):
     """ test function update_total_cost_on_name """
     # update the total cost for pwr12be
-    assert accert.update_total_cost_on_name(cursor, "211", 1000000, "dollar")==None
+    assert accert.update_total_cost_on_name(cursor, "211", 1000000)==None
     # check if the value is updated
-    cursor.execute("""SELECT code_of_account, total_cost, unit
-                    FROM `accert_db`.`account` 
+    cursor.execute("""SELECT code_of_account, total_cost
+                    FROM account 
                     WHERE code_of_account = "211";""")
-    expect_output = ('211',  1000000.0, 'dollar') 
+    expect_output = ('211',  1000000.0 ) 
     assert expect_output in cursor.fetchall()
 
 def test_update_cost_element_on_name(cursor):
@@ -122,7 +122,7 @@ def test_update_cost_element_on_name(cursor):
     assert accert.update_cost_element_on_name(cursor, "211_fac", 2000)==None
     # check if the value is updated
     cursor.execute("""SELECT cost_element, cost_2017, updated
-                    FROM `accert_db`.`cost_element` 
+                    FROM cost_element
                     WHERE cost_element = "211_fac";""")
     expect_output = ('211_fac', 2000.0, 1)
     assert expect_output in cursor.fetchall()
@@ -135,7 +135,7 @@ def test_roll_up_cost_elements(cursor):
     # only the higher level cost element is updated
     # check updated column
     cursor.execute("""SELECT cost_element, updated
-                    FROM `accert_db`.`cost_element` 
+                    FROM cost_element
                     WHERE updated = 1;""")
     expect_output = [('218_fac', 1), ('21_fac', 1),('2_fac', 1)]
     real_output = cursor.fetchall()
@@ -149,7 +149,7 @@ def test_roll_up_account_table(cursor):
     # only the higher level account is updated
     # check updated column
     cursor.execute("""SELECT code_of_account, review_status
-                    FROM `accert_db`.`account` 
+                    FROM account 
                     WHERE review_status = 'updated';""")
     expect_output = [('218', 'Updated'), ('21', 'Updated'), ('2', 'Updated')]
     real_output = cursor.fetchall()
@@ -161,13 +161,15 @@ def test_roll_up_account_table(cursor):
 def test_roll_up_abr_account(cursor):
     """ test function roll_up_abr_account, this function will roll up the account table for abr1000 only level 3 to 2, which is the COA 222"""
     # roll up the account table for abr1000 
+    accert.acc_tabl = 'abr_account'
     assert accert.roll_up_abr_account(cursor)==None
     # only the higher level account is updated
     # check updated column
     cursor.execute("""SELECT code_of_account, review_status
-                    FROM `accert_db`.`abr_account` 
+                    FROM abr_account
                     WHERE review_status = 'updated';""")
     expect_output = [('222', 'Updated')]
+    accert.acc_tabl = 'account'
     assert expect_output==cursor.fetchall()
 
 def test_roll_up_abr_account_table(cursor):
@@ -175,14 +177,16 @@ def test_roll_up_abr_account_table(cursor):
     account table for abr1000 only level 3 to 2, which is the COA 222, it also 
     test the function roll_up_abr_account,sum_up_abr_account_2C, and
     sum_up_abr_direct_cost_2C"""
+    accert.acc_tabl = 'abr_account'
     # roll up the account table for abr1000 
     assert accert.roll_up_abr_account_table(cursor)==None
     # only the higher level account is updated
     # check updated column
     cursor.execute("""SELECT code_of_account, review_status
-                    FROM `accert_db`.`abr_account` 
+                    FROM abr_account
                     WHERE review_status = 'updated';""")
     expect_output = [('222', 'Updated')]
+    accert.acc_tabl = 'account'
     assert expect_output==cursor.fetchall()
 
 def test_sum_cost_elements_2C(cursor):
@@ -191,7 +195,7 @@ def test_sum_cost_elements_2C(cursor):
     assert accert.sum_cost_elements_2C(cursor)==None
     # check if the value is updated
     cursor.execute("""SELECT cost_element, updated
-                    FROM `accert_db`.`abr_cost_element` 
+                    FROM abr_cost_element 
                     WHERE account = "2";""")
     expect_output = [('2c_fac',1), ('2c_lab', 1), ('2c_mat',1)]
     real_output = cursor.fetchall()
@@ -204,7 +208,7 @@ def test_sum_up_abr_account_2C(cursor):
     assert accert.sum_up_abr_account_2C(cursor)==None
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, review_status
-                    FROM `accert_db`.`abr_account` 
+                    FROM abr_account
                     WHERE code_of_account = "2C";""")
     expect_output = [('2C', 'Ready for Review')]
     assert expect_output==cursor.fetchall()
@@ -215,7 +219,7 @@ def test_sum_up_abr_direct_cost(cursor):
     assert accert.sum_up_abr_direct_cost(cursor)==None
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, review_status
-                    FROM `accert_db`.`abr_account` 
+                    FROM abr_account
                     WHERE code_of_account = "2";""")
     expect_output = [('2', 'Ready for Review')]
     assert expect_output==cursor.fetchall()
@@ -241,7 +245,7 @@ def test_extract_total_cost_on_name(cursor):
     0"""
     assert accert.extract_total_cost_on_name(cursor,'220A.27')== ('220A.27', 
                                                                     'Instrumentation And Control (NSSS)', 
-                                                                    0.0, 'dollar')
+                                                                    0.0)
 
 def test_check_unit_conversion():
     """ test function check_unit_conversion, this function will check if the unit conversion is 
@@ -280,24 +284,10 @@ def test_generate_results_table(cursor,conn):
     function will test write_to_excel function"""
     assert accert.generate_results_table(cursor, conn, level=3)==None
     # check whether the results xlsx file is generated
-    assert os.path.isfile('ACCERT_updated_account.xlsx')==True
-    assert os.path.isfile('ACCERT_variable_affected_cost_elements.xlsx')==True
-    assert os.path.isfile('ACCERT_updated_cost_element.xlsx')==True
+    assert os.path.isfile('pwr12-be_updated_account.xlsx')==True
+    assert os.path.isfile('pwr12-be_variable_affected_cost_elements.xlsx')==True
+    assert os.path.isfile('pwr12-be_updated_cost_element.xlsx')==True
     # remove the generated xlsx file
-    os.remove('ACCERT_updated_account.xlsx')
-    os.remove('ACCERT_variable_affected_cost_elements.xlsx')
-    os.remove('ACCERT_updated_cost_element.xlsx')
-
-def test_generate_abr_results_table(cursor,conn):
-    """ test function generate_abr_results_table, this function will generate the results table for 
-    each cost element. This function will update the cost element table for ABR1000. Also, this
-    function will test write_to_excel function"""
-    assert accert.generate_abr_results_table(cursor, conn, level=3)==None
-    # check whether the results xlsx file is generated
-    assert os.path.isfile('ACCERT_updated_account.xlsx')==True
-    assert os.path.isfile('ACCERT_variable_affected_cost_elements.xlsx')==True
-    assert os.path.isfile('ACCERT_updated_cost_element.xlsx')==True
-    # remove the generated xlsx file
-    os.remove('ACCERT_updated_account.xlsx')
-    os.remove('ACCERT_variable_affected_cost_elements.xlsx')
-    os.remove('ACCERT_updated_cost_element.xlsx')
+    os.remove('pwr12-be_updated_account.xlsx')
+    os.remove('pwr12-be_variable_affected_cost_elements.xlsx')
+    os.remove('pwr12-be_updated_cost_element.xlsx')

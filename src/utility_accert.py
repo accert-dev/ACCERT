@@ -510,46 +510,6 @@ class Utility_methods:
         #             WHERE updated = 1""")
         self.print_table(c)
 
-    def extract_original_cost_elements(self, c):
-        """Extracts the original affected cost elements from the cost element table. (This function is ONLY used for debugging)
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        """
-        # # ce.updated, ce.algno
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_original_cost_elements`(IN cel_table VARCHAR(50),
-        #                                                                              IN var_table VARCHAR(50),
-        #                                                                              IN vlk_table VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT ce.cost_element,	ce.cost_2017 as orignal_cost
-        #                         FROM ',cel_table,' as ce JOIN
-        #                         (SELECT vl.ce
-        #                         FROM
-        #                         (SELECT * FROM ',var_table,'
-        #                         WHERE user_input = 1) as va
-        #                         JOIN ',vlk_table,' as vl
-        #                         on va.var_name = vl.variable) as ce_affected
-        #                         on ce.cost_element = ce_affected.ce');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
-        c.callproc('extract_original_cost_elements', (self.cel_tabl, self.var_tabl, self.vlk_tabl))
-        # c.execute(""" SELECT ce.cost_element,	ce.cost_2017 as orignal_cost
-        #                 FROM cost_element as ce JOIN 
-        #                 (SELECT vl.ce
-        #                 FROM
-        #                 (SELECT * FROM variable
-        #                 WHERE user_input = 1) as va
-        #                 JOIN variable_links as vl
-        #                 on va.var_name = vl.variable) as ce_affected
-        #                 on ce.cost_element = ce_affected.ce""")
-        self.print_table(c)
-        return None
         
     def extract_affected_cost_elements(self,c):
         """Extracts affected cost elements from cost element table and groups them by changed variables.
