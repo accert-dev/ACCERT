@@ -123,11 +123,11 @@ class Accert:
         """
         # c.execute("""SELECT code_of_account, ind, rgt FROM account WHERE supaccount = '{}';""".format(inp_id))
         # DELIMITER $$
-        # CREATE PROCEDURE get_current_COAs(IN table_name VARCHAR(50), 
-        #                                   IN inp_id VARCHAR(50))
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `get_current_COAs`(IN table_name VARCHAR(50), 
+        #                                 IN inp_id VARCHAR(50))
         # BEGIN
         #     SET @stmt = CONCAT('SELECT code_of_account, 
-        #                        ind, rgt FROM ', table_name, ' WHERE supaccount = ?');
+        #                     ind FROM ', table_name, ' WHERE supaccount = ?');
         #     PREPARE stmt FROM @stmt;
         #     SET @inp_id = inp_id;
         #     EXECUTE stmt USING @inp_id;
@@ -145,7 +145,7 @@ class Accert:
         return coa_lst , coa_other
 
     def update_account_before_insert(self, c, min_ind):
-        """Updates the current COAs ind, lft, rgt.
+        """Updates the current COAs ind.
 
         Parameters
         ----------
@@ -318,6 +318,10 @@ class Accert:
         coa_level = sup_coa_level + 1
 
         # before inserting new COA, update the current COAs' ind
+        # for example if the new COA is inserted between 1 and 2,
+        # then the min_ind is 2, so the current COAs' ind will be updated
+        # from 2 to n change to 3 to n+1
+        # and the new COA will be inserted at 2
         self.update_account_before_insert(c, min_ind)
         # insert new COA
         ## NOTE need to fix this for passing supaccount

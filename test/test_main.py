@@ -16,7 +16,6 @@ accert.ref_model = 'pwr12-be'
 accert.acc_tabl = 'account'
 accert.cel_tabl = 'cost_element'
 accert.var_tabl = 'variable'
-accert.vlk_tabl = 'variable_links'
 accert.alg_tabl = 'algorithm'
 accert.esc_tabl = 'escalation'
 accert.fac_tabl = 'facility'
@@ -24,14 +23,13 @@ accert.fac_tabl = 'facility'
 def test_get_current_COAs(cursor):
     """  Test the main function. """
     expect_output = (['21', '22', '23', '24', '25', '26'], 
-            [(23, 47), (78, 157), (85, 171), (92, 185), 
-            (98, 197), (101, 203)]) 
+            [(2,), (25,), (80,), (87,), (94,), (100,)]) 
     assert accert.get_current_COAs(cursor, '2') == expect_output
 
 def test_update_account_before_insert(cursor):
     """ test function update_account_before_insert """
     # set up an empty place to insert the new COA
-    assert accert.update_account_before_insert(cursor, "23", "47") == None
+    assert accert.update_account_before_insert(cursor, 24) == None
     # ind 24 will be empty
     cursor.execute("""SELECT *
                     FROM account
@@ -42,23 +40,24 @@ def test_add_new_alg(cursor):
     """ test function add_new_alg """
     # add a new alg called "alg_name" to the database
     assert accert.add_new_alg(cursor,"alg_name", "v", 
-                                "alg_description", "alg_python", "alg_formulation", 
+                                "testdes", "alg_python", "alg_formulation", 
                                 "alg_units", "v1, v2", "0")==None
     # check if the new alg is added
     cursor.execute("""SELECT alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units,variables,constants
-                    FROM `accert_db`.`algorithm`
+                    FROM algorithm
                     WHERE alg_name = "alg_name";""")
-    expect_output = ('alg_name', 'v', 'alg_description', 'alg_python', 'alg_formulation', 'alg_units', 'v1, v2', '0') 
+    expect_output = ('alg_name', 'v', 'testdes', 'alg_python', 'alg_formulation', 'alg_units', 'v1, v2', '0') 
     assert expect_output in cursor.fetchall()
 
 def test_insert_new_COA(cursor):
     """ test function insert_new_COA """
     # insert a new COA with ind 24 and name "new"
-    assert accert.insert_new_COA(cursor, 24, "new_sup", 2, 1, 2, "new", ) == None
+    assert accert.insert_new_COA(cursor, 24, "218", 3, 'new_coa', 'new des', 20 ) == None
     # check if the new COA is added
     cursor.execute("""SELECT *
                     FROM `accert_db`.`account`
                     WHERE ind = 24;""")
+    print(cursor.fetchall())
     expect_output = (24, 'new', None, 0.0, 'dollar', 2, None, 'new_sup', None, 'Added', 1, 2, 0.0) 
     assert expect_output in cursor.fetchall()
 

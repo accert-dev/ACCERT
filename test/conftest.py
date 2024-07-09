@@ -16,7 +16,7 @@ def conn():
     host="localhost",
     user="root",
     password=passwd,
-    database="accert_db",
+    database="accert_db_test",
     auth_plugin="mysql_native_password"
     )
     return conn
