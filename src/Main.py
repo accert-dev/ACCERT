@@ -972,17 +972,33 @@ class Accert:
             # # create a value list for debugging
             # var_value_lst = []
             variables = {}
-            for var_ind, var_name in enumerate(var_name_lst):
-                # var_value_lst.append(get_var_value_by_name(c, var_name))
-                variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
-            print('[Updating] Cost element [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(ce_name, alg_name, alg_form))
-            alg_value = self.run_pre_alg(alg, **variables)
-            unit_convert = self.check_unit_conversion('dollar',alg_unit)
-            if unit_convert:
-                alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
-            print('[Updated]  Reference value is : ${:<11,.0f}, calculated value is: ${:<11,.0f} '.format(org_ce_value,alg_value))
-            self.update_cost_element_on_name(c,ce_name,alg_value) 
-            print(' ')
+
+            # add user-defined options if alg started with 'user_defined' or 'fusion'
+            if alg_name.startswith('alg|fusion'):
+                # if it is alg.fusion, then it is a fusion algorithm
+                for var_ind, var_name in enumerate(var_name_lst):
+                    variables[var_name] = self.get_var_value_by_name(c, var_name)
+                func_name = alg_name.split('|')[1].strip()
+                # import fusion function module from Algorithm/fusion_func.py
+                fusion_module = importlib.import_module('fusion_func')
+                user_func = getattr(user_func_module, func_name)
+                alg_value = user_func(**variables)
+            elif alg_name.startswith('alg|user_defined'):
+                # if it is alg.user_defined, then it is a user-defined algorithm
+                # edit it later
+                ccccc
+            else:    
+                for var_ind, var_name in enumerate(var_name_lst):
+                    # var_value_lst.append(get_var_value_by_name(c, var_name))
+                    variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
+                print('[Updating] Cost element [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(ce_name, alg_name, alg_form))
+                alg_value = self.run_pre_alg(alg, **variables)
+                unit_convert = self.check_unit_conversion('dollar',alg_unit)
+                if unit_convert:
+                    alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
+                print('[Updated]  Reference value is : ${:<11,.0f}, calculated value is: ${:<11,.0f} '.format(org_ce_value,alg_value))
+                self.update_cost_element_on_name(c,ce_name,alg_value) 
+                print(' ')
         return None
 
     def update_account_table_by_cost_elements(self, c):
