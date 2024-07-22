@@ -78,6 +78,14 @@ class Accert:
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
+        elif "fusion" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'fusion'
+            self.acc_tabl = 'fusion_account'
+            self.cel_tabl = 'fusion_cost_element'
+            self.var_tabl = 'fusion_variable'
+            self.alg_tabl = 'fusion_algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
         return None
 
     def load_obj(self, input_path, accert_path):
@@ -293,6 +301,7 @@ class Accert:
         # print current COAs wrapped word for easy reading
         current_COAs = ', '.join(current_COAs)
         print('[Updating] Current COAs under COA {}: {}'.format(sup_coa, current_COAs))
+        print(' ')
         
         min_ind = min(current_COA_others,key=lambda item:item[0])[0]
         # NOTE : if new COA is added, it will be added to the end of the top suplist
@@ -911,53 +920,31 @@ class Accert:
         """
         print(' Updating cost elements '.center(100,'='))
         print('\n')
+        c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.alg_tabl))
+        for row in c.stored_results():
+            results = row.fetchall()
         # DELIMITER $$
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_cost_elements`(IN cel_tabl_name VARCHAR(50),
         #                                                                         IN var_tabl_name VARCHAR(50),
-        #                                                                         IN vlk_tabl_name VARCHAR(50),
         #                                                                         IN alg_tabl_name VARCHAR(50))
         # BEGIN
-        #     SET @stmt = CONCAT('SELECT ce_org.ind, ce_org.cost_element,
-        #                         ce_org.cost_2017, ce_org.alg_name,
-        #                         ce_org.variables, ce_org.algno,
-        #                         alg.alg_python, alg.alg_formulation, alg.alg_units FROM
-        #                         (SELECT ind, cost_element,
-        #                         cost_2017, alg_name,
-        #                         variables, algno
-        #                         FROM ', cel_tabl_name, ' AS ce JOIN
-        #                         (SELECT vl.ce
-        #                             FROM (SELECT * FROM ', var_tabl_name, '
-        #                                 WHERE user_input = 1) AS va
-        #                             JOIN ', vlk_tabl_name, ' AS vl
-        #                             ON va.var_name = vl.variable) AS ce_affected
-        #                         ON ce.cost_element = ce_affected.ce) AS ce_org
-        #                         JOIN ', alg_tabl_name, ' AS alg
-        #                         ON ce_org.alg_name = alg.alg_name;');
+        # 	SET SQL_SAFE_UPDATES = 0;
+        #     SET @stmt = CONCAT("SELECT ce.ind, ce.cost_element,
+        #        ce.cost_2017, ce.alg_name,
+        #        ce.variables, ce.algno,
+        #        alg.alg_python, alg.alg_formulation, alg.alg_units 
+        # 		FROM ", cel_tabl_name, " AS ce 
+        # 		JOIN ", alg_tabl_name, " AS alg ON ce.alg_name = alg.alg_name
+        # 		WHERE EXISTS (
+        # 			SELECT 1
+        # 			FROM ", var_tabl_name, " AS va
+        # 			WHERE va.user_input = 1
+        # 			AND FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0);");
         #     PREPARE stmt FROM @stmt;
         #     EXECUTE stmt;
         #     DEALLOCATE PREPARE stmt;
         # END$$
         # DELIMITER ;
-        c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.alg_tabl))
-        for row in c.stored_results():
-            results = row.fetchall()
-        # c.execute(""" SELECT ce_org.ind,	ce_org.cost_element,	
-        #         ce_org.cost_2017,	ce_org.alg_name,	
-        #         ce_org.variables,	ce_org.algno, 
-        #         alg.alg_python, alg.alg_formulation,alg.alg_units from
-        #         (SELECT ind,	cost_element,	
-        #         cost_2017,	alg_name,	
-        #         variables,	algno
-        #         FROM cost_element as ce JOIN 
-        #         (SELECT vl.ce  
-        #             FROM (SELECT * FROM variable
-        #                 WHERE user_input = 1) as va
-        #             JOIN variable_links as vl
-        #             on va.var_name = vl.variable) as ce_affected
-        #         on ce.cost_element = ce_affected.ce) as ce_org
-        #         JOIN algorithm as alg
-        #         on ce_org.alg_name = alg.alg_name;""")
-        # results = c.fetchall()
         for row in results:
             ce_name = row[1]
             org_ce_value = row[2]
@@ -971,35 +958,111 @@ class Accert:
             # maybe the unit for cost element can be added to the cost_element table later???
             # # create a value list for debugging
             # var_value_lst = []
-            variables = {}
-
-            # add user-defined options if alg started with 'user_defined' or 'fusion'
-            if alg_name.startswith('alg|fusion'):
-                # if it is alg.fusion, then it is a fusion algorithm
-                for var_ind, var_name in enumerate(var_name_lst):
-                    variables[var_name] = self.get_var_value_by_name(c, var_name)
-                func_name = alg_name.split('|')[1].strip()
-                # import fusion function module from Algorithm/fusion_func.py
-                fusion_module = importlib.import_module('fusion_func')
-                user_func = getattr(user_func_module, func_name)
-                alg_value = user_func(**variables)
-            elif alg_name.startswith('alg|user_defined'):
-                # if it is alg.user_defined, then it is a user-defined algorithm
-                # edit it later
-                ccccc
-            else:    
-                for var_ind, var_name in enumerate(var_name_lst):
-                    # var_value_lst.append(get_var_value_by_name(c, var_name))
-                    variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
-                print('[Updating] Cost element [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(ce_name, alg_name, alg_form))
-                alg_value = self.run_pre_alg(alg, **variables)
-                unit_convert = self.check_unit_conversion('dollar',alg_unit)
-                if unit_convert:
-                    alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
-                print('[Updated]  Reference value is : ${:<11,.0f}, calculated value is: ${:<11,.0f} '.format(org_ce_value,alg_value))
-                self.update_cost_element_on_name(c,ce_name,alg_value) 
-                print(' ')
+            variables = {}    
+            for var_ind, var_name in enumerate(var_name_lst):
+                # var_value_lst.append(get_var_value_by_name(c, var_name))
+                variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
+            print('[Updating] Cost element [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(ce_name, alg_name, alg_form))
+            alg_value = self.run_pre_alg(alg, **variables)
+            unit_convert = self.check_unit_conversion('dollar',alg_unit)
+            if unit_convert:
+                alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
+            print('[Updated]  Reference value is : ${:<11,.0f}, calculated value is: ${:<11,.0f} '.format(org_ce_value,alg_value))
+            self.update_cost_element_on_name(c,ce_name,alg_value) 
+            print(' ')
         return None
+
+    def update_new_accounts(self, c):
+        """
+        Updates the affected accounts based on the variables. This funstion is called
+        when there is no cost element table.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+        # for fusion or user defined table,  there is no cost_element table
+        # so the update_new_cost_elements will not be executed
+        # instead, the update_new_accounts will be executed
+        print(' Updating accounts '.center(100,'='))
+        # DELIMITER $$
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_accounts`(IN acc_tabl_name VARCHAR(50),
+        #                                                                         IN var_tabl_name VARCHAR(50),
+        #                                                                         IN alg_tabl_name VARCHAR(50))
+        # BEGIN
+        #     SET SQL_SAFE_UPDATES = 0;
+        #     SET @stmt = CONCAT("SELECT ac.ind, ac.code_of_account,
+        #     ac.total_cost, ac.alg_name,
+        #     ac.variables, 
+        #     alg.alg_python, alg.alg_formulation, alg.alg_units 
+        #         FROM ", acc_tabl_name, " AS ac 
+        #         JOIN ", alg_tabl_name, " AS alg ON ac.alg_name = alg.alg_name
+        #         WHERE EXISTS (
+        #             SELECT 1
+        #             FROM ", var_tabl_name, " AS va
+        #             WHERE va.user_input = 1
+        #             AND FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0);");
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        c.callproc('update_new_accounts',(self.acc_tabl,self.var_tabl,self.alg_tabl))
+        for row in c.stored_results():
+            results = row.fetchall()
+        # result [(27, '220A.211', 70000000.0, 'fusion_ac211', 'csi, lsa, cland', 'ac211_python', 'ac211_for', 'million')]
+
+        for row in results:
+            print('row0 ',row[0])
+            print('row1 ',row[1])
+            print('row2 ',row[2])
+            print('row3 ',row[3])
+            print('row4 ',row[4])
+            print('row5 ',row[5])
+            print('row6 ',row[6])
+            print('row7 ',row[7])
+            cccc
+            acc_name = row[1]
+            org_acc_value = row[2]
+            alg_name = row[3]
+            var_name_lst = [x.strip() for x in row[4].split(',')]
+            alg_no = row[5]
+            alg = row[6]
+            alg_unit = row[7]
+            # # create a value list for debugging
+            # var_value_lst = []
+            variables = {}    
+            for var_ind, var_name in enumerate(var_name_lst):
+                # var_value_lst.append(get_var_value_by_name(c, var_name))
+                variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
+            print('[Updating] Account [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(acc_name, alg_name, alg_form))
+            alg_value = self.run_pre_alg(alg, **variables)
+            unit_convert = self.check_unit_conversion('dollar',alg_unit)
+            if unit_convert:
+                alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
+            print('[Updated]  Reference value is : ${:<11,.0f}, calculated value is: ${:<11,.0f} '.format(org_acc_value,alg_value))
+            self.update_account_on_name(c,acc_name,alg_value) 
+            print(' ')
+
+        # # add user-defined options if alg started with 'user_defined' or 'fusion'
+        #     if alg_name.startswith('fusion'):
+        #         cccc
+        #         # if it is alg.fusion, then it is a fusion algorithm
+        #         for var_ind, var_name in enumerate(var_name_lst):
+        #             variables[var_name] = self.get_var_value_by_name(c, var_name)
+        #         # funcname is the name after 'alg|fusion|'
+        #         func_name = alg_name.split('_')[1].strip()
+        #         # import fusion function module from Algorithm/fusion_func.py
+        #         fusion_module = importlib.import_module('fusion_func')
+        #         user_func = getattr(user_func_module, func_name)
+        #         alg_value = user_func(**variables)
+        #     elif alg_name.startswith('alg|user_defined'):
+        #         # if it is alg.user_defined, then it is a user-defined algorithm
+        #         # edit it later
+        #         ccccc
+
+
+
 
     def update_account_table_by_cost_elements(self, c):
         """
@@ -1712,6 +1775,9 @@ class Accert:
                 if var_id:
                     self.update_variable_info_on_name(c, var_id, str(inp.value.value), str(inp.unit.value))
                     self.process_super_values(c, var_id)
+        else:
+            # warning
+            print('WARNING: No power input found in the user input file\n')            
 
     def process_variables(self, c, accert):
         if accert.var:
@@ -1756,13 +1822,17 @@ class Accert:
                     user_added_coa_total_cost = 0
                 print('[USER_INPUT]', 'New account', user_added_coa, user_added_coa_desc, user_added_coa_total_cost, '\n')
                 self.insert_COA(c, str(parent_id),user_added_coa,user_added_coa_desc,user_added_coa_total_cost)
-                
-            self.process_ce(c, account)
-            # self.process_total_cost_for_account(c, account, accert)
+            # if ref.model is not fusion then process cost elements:
+            if accert.ref_model!="fusion":
+                self.process_ce(c, account)
+            else:
+                self.process_ce(c, account)
+                # self.process_total_cost_for_account(c, account, accert)
             for i in range(3, 7):
                 next_level = getattr(account, f'l{i}COA', None)
                 if next_level:
-                    self.process_level_accounts(c, next_level, accert, account.id)
+                    self.process_level_accounts(c, next_level, accert, account.id)                
+
 
     def process_ce(self, c, account):
         if account.ce:
@@ -1866,11 +1936,21 @@ class Accert:
         sys.exit(1)
 
     def finalize_process(self, c, ut, accert):
+
         ut.extract_user_changed_variables(c)
-        ut.extract_affected_cost_elements(c)
-        self.update_new_cost_elements(c)
-        ut.print_updated_cost_elements(c)
-        self.roll_up_cost_elements(c)
+
+        # if the model is not fusion or user assigned then process the cost elements
+        # NOTE: Accert is the instance of the Accert class use Capital A
+        if Accert.ref_model!="fusion" and Accert.ref_model!="user_assigned":
+            ut.extract_affected_cost_elements(c)
+            self.update_new_cost_elements(c)
+            ut.print_updated_cost_elements(c)
+            self.roll_up_cost_elements(c)
+        else:
+            ut.extract_affected_accounts(c)
+            self.update_new_accounts(c)
+
+ 
 
     def generate_results(self, c, ut, accert):
         if Accert.ref_model == "abr1000":
@@ -1881,6 +1961,8 @@ class Accert:
             self.generate_lfr_results(c, ut, accert)
         elif Accert.ref_model == "pwr12-be":
             self.generate_pwr12be_results(c, ut, accert)
+        elif Accert.ref_model == "fusion":
+            self.generate_fusion_results(c, ut, accert)
         self.generate_results_table(c, conn, level=3)
 
     def generate_abr1000_results(self, c, ut, accert):
@@ -1892,7 +1974,6 @@ class Accert:
         print(' Generating results table for review '.center(100, '='))
         print('\n')
         ut.print_leveled_abr_accounts(c, abr_fac, abr_lab, abr_mat, all=False, cost_unit='million', level=3)
-
 
     def generate_heatpipe_results(self, c, ut, accert):
         self.sum_cost_elements_2C_heatpipe(c)
@@ -1915,6 +1996,14 @@ class Accert:
         ut.print_leveled_abr_accounts(c, abr_fac, abr_lab, abr_mat, all=False, cost_unit='million', level=3)
 
     def generate_pwr12be_results(self, c, ut, accert):
+        self.update_account_table_by_cost_elements(c)
+        self.check_and_process_total_cost(c, accert)
+        self.roll_up_account_table(c)
+        print(' Generating results table for review '.center(100, '='))
+        print('\n')
+        ut.print_leveled_accounts(c, all=False, cost_unit='million', level=3)
+
+    def generate_fusion_results(self, c, ut, accert):
         self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c)

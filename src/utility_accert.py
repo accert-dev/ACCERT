@@ -522,37 +522,70 @@ class Utility_methods:
         print(' Extracting affected cost elements '.center(100,'='))
         print('\n')
         # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_cost_elements`(IN vlk_table varchar(50),
+        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_cost_elements`(IN cel_table varchar(50),
         #                                                                               IN var_table varchar(50))
         # BEGIN
-        #     SET @stmt = CONCAT('SELECT vl.variable, group_concat(vl.ce)
+        #     SET @stmt = CONCAT("SELECT va.var_name, (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
+        #         FROM ", cel_table, " ce
+        #         WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) AS ce_affected
         #                         FROM
-        #                         (SELECT * FROM ',var_table,'
+        #                         (SELECT * FROM ",var_table,"
         #                         WHERE user_input = 1) as va
-        #                         JOIN ',vlk_table,' as vl
-        #                         on va.var_name = vl.variable
-        #                         GROUP BY vl.variable');
+        #                         WHERE (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
+        # 								FROM ", cel_table, " ce
+        # 						WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) IS NOT NULL
+        #                         ");
         #     PREPARE stmt FROM @stmt;
         #     EXECUTE stmt;
         #     DEALLOCATE PREPARE stmt;
-        # END$$
+        # END
         # DELIMITER ;
 
         c.callproc('extract_affected_cost_elements',(self.cel_tabl,self.var_tabl))
         for row in c.stored_results():
             results = row.fetchall()
-        # c.execute(""" SELECT vl.variable, group_concat(vl.ce)
-        #                 FROM
-        #                 (SELECT * FROM variable
-        #                 WHERE user_input = 1) as va
-        #                 JOIN variable_links as vl
-        #                 on va.var_name = vl.variable
-        #                 GROUP BY vl.variable""")
-        # results = c.fetchall()
         for row in results:
             print('variable "{}" affects cost element(s):'.format(row[0]))
             print('{}\n'.format(textwrap.fill(row[1], 100)))
         return None
+
+    def extract_affected_accounts(self,c):
+        """ Extracts affected accounts from account table.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+        print('Extracting affected accounts'.center(100,'='))
+        # DELIMITER $$
+        # CREATE DEFINER=`root@`localhost` PROCEDURE `extract_affected_accounts`(IN acc_table VARCHAR(50),
+        #                                                                         IN var_table VARCHAR(50)) 
+        # BEGIN
+        #     SET @stmt = CONCAT('SELECT va.var_name,
+        #                             (SELECT GROUP_CONCAT(ac.code_of_account SEPARATOR ", ")
+        #                             FROM ',acc_table,' ac
+        #                             WHERE FIND_IN_SET(va.var_name, REPLACE(ac.variables, " ", "")) > 0) AS ac_affected
+        #                             FROM
+        #                             (SELECT * FROM ',var_table,'
+        #                             WHERE user_input = 1) as va
+        #                             WHERE (SELECT GROUP_CONCAT(ac.code_of_account SEPARATOR ", ")
+        #                             FROM ',acc_table,' ac
+        #                             WHERE FIND_IN_SET(va.var_name, REPLACE(ac.variables, " ", "")) > 0) IS NOT NULL;');
+        #     PREPARE stmt FROM @stmt;
+        #     EXECUTE stmt;
+        #     DEALLOCATE PREPARE stmt;
+        # END$$
+        # DELIMITER ;
+        c.callproc('extract_affected_accounts',(self.acc_tabl,self.var_tabl))
+        for row in c.stored_results():
+            results = row.fetchall()
+        for row in results:
+            print('variable "{}" affects account(s):'.format(row[0]))
+            print('{}\n'.format(textwrap.fill(row[1], 100)))
+        return None
+    
+
 
     def extract_user_changed_variables(self,c):
         """Extracts user changed variables from variable table.
