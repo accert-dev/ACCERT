@@ -20,7 +20,6 @@ class Utility_methods:
         self.acc_tabl = Accert.acc_tabl
         self.cel_tabl = Accert.cel_tabl
         self.var_tabl = Accert.var_tabl
-        # self.vlk_tabl = Accert.vlk_tabl
         self.alg_tabl = Accert.alg_tabl
         self.esc_tabl = Accert.esc_tabl
         self.fac_tabl = Accert.fac_tabl

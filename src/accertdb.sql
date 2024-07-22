@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `accert_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `accert_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `accert_db`;
 -- MySQL dump 10.13  Distrib 8.0.27, for macos11 (x86_64)
 --
--- Host: localhost    Database: accert_db_test
+-- Host: localhost    Database: accert_db
 -- ------------------------------------------------------
 -- Server version	8.0.27
 
@@ -34,7 +34,7 @@ CREATE TABLE `abr_account` (
   `review_status` text,
   `prn` double DEFAULT NULL,
   PRIMARY KEY (`code_of_account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `abr_cost_element` (
   `algno` text,
   `updated` int DEFAULT NULL,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +97,7 @@ CREATE TABLE `abr_variable` (
   `v_linked` text,
   `user_input` int DEFAULT NULL,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=389 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=389 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +127,7 @@ CREATE TABLE `account` (
   `review_status` text,
   `prn` double DEFAULT NULL,
   PRIMARY KEY (`code_of_account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,7 +158,7 @@ CREATE TABLE `algorithm` (
   `variables` text,
   `constants` text,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -190,7 +190,7 @@ CREATE TABLE `cost_element` (
   `algno` text,
   `updated` int DEFAULT NULL,
   PRIMARY KEY (`ind`,`cost_element`)
-) ENGINE=InnoDB AUTO_INCREMENT=307 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=307 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,7 +218,7 @@ CREATE TABLE `escalation` (
   `value` double DEFAULT NULL,
   `year_of_interest` datetime DEFAULT NULL,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,7 +249,7 @@ CREATE TABLE `facility` (
   `escalation_name` varchar(30) DEFAULT NULL,
   `escalation_factorsValue` double DEFAULT NULL,
   PRIMARY KEY (`ind`,`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -284,7 +284,7 @@ CREATE TABLE `lfr_account` (
   `rgt` int DEFAULT NULL,
   `prn` double DEFAULT NULL,
   PRIMARY KEY (`code_of_account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -316,7 +316,7 @@ CREATE TABLE `lfr_cost_element` (
   `algno` text,
   `updated` int DEFAULT NULL,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -347,7 +347,7 @@ CREATE TABLE `lfr_variable` (
   `v_linked` text,
   `user_input` int DEFAULT NULL,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=389 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=389 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -378,7 +378,7 @@ CREATE TABLE `variable` (
   `v_linked` text,
   `user_input` int DEFAULT NULL,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=508 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=508 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -392,11 +392,11 @@ INSERT INTO `variable` VALUES (1,'c_turbine','Turbine equipment cost',362.62,'mi
 UNLOCK TABLES;
 
 --
--- Dumping events for database 'accert_db_test'
+-- Dumping events for database 'accert_db'
 --
 
 --
--- Dumping routines for database 'accert_db_test'
+-- Dumping routines for database 'accert_db'
 --
 /*!50003 DROP PROCEDURE IF EXISTS `cal_tol_dce_fac` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -566,6 +566,38 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_affected_accounts` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_accounts`(IN acc_table VARCHAR(50),
+																		IN var_table VARCHAR(50))
+BEGIN
+	SET @stmt = CONCAT("SELECT va.var_name, (SELECT GROUP_CONCAT(ac.code_of_account SEPARATOR ', ')
+        FROM ", acc_table, " ac
+        WHERE FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0) AS ac_affected
+                        FROM
+                        (SELECT * FROM ",var_table,"
+                        WHERE user_input = 1) as va
+                        WHERE (SELECT GROUP_CONCAT(ac.code_of_account SEPARATOR ', ')
+								FROM ", acc_table, " ac
+						WHERE FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0) IS NOT NULL
+                        ");
+	PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `extract_affected_cost_elements` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -586,7 +618,7 @@ BEGIN
                         (SELECT * FROM ",var_table,"
                         WHERE user_input = 1) as va
                         WHERE (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
-								FROM cost_element ce
+								FROM ", cel_table, " ce
 						WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) IS NOT NULL
                         ");
     PREPARE stmt FROM @stmt;
@@ -1614,6 +1646,41 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_new_accounts` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_accounts`(IN acc_tabl_name VARCHAR(50),
+                                                                        IN var_tabl_name VARCHAR(50),
+                                                                        IN alg_tabl_name VARCHAR(50))
+BEGIN
+	SET SQL_SAFE_UPDATES = 0;
+    SET @stmt = CONCAT("SELECT ac.ind, ac.code_of_account,
+       ac.total_cost, ac.alg_name,
+       ac.variables, 
+       alg.alg_python, alg.alg_formulation, alg.alg_units 
+		FROM ", acc_tabl_name, " AS ac 
+		JOIN ", alg_tabl_name, " AS alg ON ac.alg_name = alg.alg_name
+		WHERE EXISTS (
+			SELECT 1
+			FROM ", var_tabl_name, " AS va
+			WHERE va.user_input = 1
+			AND FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0);");
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `update_new_cost_elements` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1779,4 +1846,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-09 18:03:17
+-- Dump completed on 2024-07-22 16:56:47
