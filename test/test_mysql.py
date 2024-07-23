@@ -19,31 +19,24 @@ def test_table_exists(cursor):
     assert ('abr_account',) in tables
     assert ('abr_cost_element',) in tables
     assert ('abr_variable',) in tables
-    assert ('abr_variable_links',) in tables
     assert ('account',) in tables
     assert ('algorithm',) in tables
     assert ('cost_element',) in tables
     assert ('escalation',) in tables
     assert ('facility',) in tables
     assert ('variable',) in tables
-    assert ('variable_links',) in tables
 
 def test_table_columns(cursor):
     """  Test the columns of the table. """
     cursor.execute("SHOW COLUMNS FROM abr_account")
     columns = cursor.fetchall()
-    assert ('ind', b'int', 'NO', 'PRI', None, 'auto_increment') in columns
-    assert ('code_of_account', b'text', 'YES', '', None, '') in columns
+    assert ('ind', b'int', 'YES', '', None, '') in columns
+    assert ('code_of_account', b'varchar(20)', 'NO', 'PRI', None, '') in columns
     assert ('account_description', b'text', 'YES', '', None, '') in columns
     assert ('total_cost', b'double', 'YES', '', None, '') in columns
-    assert ('unit', b'text', 'YES', '', None, '') in columns
     assert ('level', b'int', 'YES', '', None, '') in columns
-    assert ('main_subaccounts', b'text', 'YES', '', None, '') in columns
     assert ('supaccount', b'text', 'YES', '', None, '') in columns
-    assert ('cost_elements', b'text', 'YES', '', None, '') in columns
     assert ('review_status', b'text', 'YES', '', None, '') in columns
-    assert ('lft', b'int', 'YES', '', None, '') in columns
-    assert ('rgt', b'int', 'YES', '', None, '') in columns
     assert ('prn', b'double', 'YES', '', None, '') in columns
 
 
@@ -74,29 +67,15 @@ def test_table_columns(cursor):
     assert ('user_input', b'int', 'YES', '', None, '')in columns
 
 
-    cursor.execute("SHOW COLUMNS FROM abr_variable_links")
-    columns = cursor.fetchall()
-    assert ('ind', b'int', 'NO', 'PRI', None, 'auto_increment') in columns
-    assert ('variable', b'text', 'YES', '', None, '') in columns
-    assert ('var_ind', b'int', 'YES', '', None, '') in columns
-    assert ('ce_ind', b'int', 'YES', '', None, '') in columns
-    assert ('ce', b'text', 'YES', '', None, '') in columns
-
-
     cursor.execute("SHOW COLUMNS FROM account")
     columns = cursor.fetchall()
-    assert ('ind', b'int', 'NO', 'PRI', None, 'auto_increment') in columns
+    assert ('ind', b'int', 'YES', '', None, '') in columns
     assert ('code_of_account', b'varchar(20)', 'NO', 'PRI', None, '') in columns
     assert ('account_description', b'text', 'YES', '', None, '') in columns
     assert ('total_cost', b'double', 'YES', '', None, '') in columns
-    assert ('unit', b'text', 'YES', '', None, '') in columns
     assert ('level', b'int', 'YES', '', None, '') in columns
-    assert ('main_subaccounts', b'text', 'YES', '', None, '') in columns
     assert ('supaccount', b'text', 'YES', '', None, '') in columns
-    assert ('cost_elements', b'text', 'YES', '', None, '') in columns
     assert ('review_status', b'text', 'YES', '', None, '') in columns
-    assert ('lft', b'int', 'YES', '', None, '') in columns
-    assert ('rgt', b'int', 'YES', '', None, '') in columns
     assert ('prn', b'double', 'YES', '', None, '') in columns
 
     
@@ -116,8 +95,6 @@ def test_table_columns(cursor):
     columns = cursor.fetchall()
     assert ('ind', b'int', 'NO', 'PRI', None, 'auto_increment') in columns
     assert ('cost_element', b'varchar(20)', 'NO', 'PRI', None, '') in columns
-    assert ('cost_2011', b'double', 'YES', '', None, '') in columns
-    assert ('cost_1987', b'double', 'YES', '', None, '') in columns
     assert ('cost_2017', b'double', 'YES', '', None, '') in columns
     assert ('sup_cost_ele', b'text', 'YES', '', None, '') in columns
     assert ('alg_name', b'text', 'YES', '', None, '') in columns
@@ -160,10 +137,3 @@ def test_table_columns(cursor):
     assert ('v_linked', b'text', 'YES', '', None, '') in columns
     assert ('user_input', b'int', 'YES', '', None, '') in columns
     
-    cursor.execute("SHOW COLUMNS FROM variable_links")
-    columns = cursor.fetchall()
-    assert ('ind', b'int', 'NO', 'PRI', None, '') in columns
-    assert ('variable', b'text', 'YES', '', None, '') in columns
-    assert ('var_ind', b'int', 'YES', '', None, '') in columns
-    assert ('ce_ind', b'int', 'YES', '', None, '') in columns
-    assert ('ce', b'text', 'YES', '', None, '') in columns

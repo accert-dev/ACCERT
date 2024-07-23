@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `accert_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `accert_db`;
--- MySQL dump 10.13  Distrib 8.0.30, for macos12 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.27, for macos11 (x86_64)
 --
 -- Host: localhost    Database: accert_db
 -- ------------------------------------------------------
--- Server version	8.0.30
+-- Server version	8.0.27
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,21 +25,16 @@ DROP TABLE IF EXISTS `abr_account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `abr_account` (
-  `ind` int NOT NULL AUTO_INCREMENT,
-  `code_of_account` text,
+  `ind` int DEFAULT NULL,
+  `code_of_account` varchar(20) NOT NULL,
   `account_description` text,
   `total_cost` double DEFAULT NULL,
-  `unit` text,
   `level` int DEFAULT NULL,
-  `main_subaccounts` text,
   `supaccount` text,
-  `cost_elements` text,
   `review_status` text,
-  `lft` int DEFAULT NULL,
-  `rgt` int DEFAULT NULL,
   `prn` double DEFAULT NULL,
-  PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`code_of_account`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +43,7 @@ CREATE TABLE `abr_account` (
 
 LOCK TABLES `abr_account` WRITE;
 /*!40000 ALTER TABLE `abr_account` DISABLE KEYS */;
-INSERT INTO `abr_account` VALUES (1,'211','Yardwork',71213859.06,'dollar',2,'','21','211_fac,211_lab,211_mat','Unchanged',3,4,0.027628981),(2,'212','Reactor containment building',81425435.33,'dollar',2,'','21','212_fac,212_lab,212_mat','Unchanged',5,6,0.071675596),(3,'213','Turbine room and heater bay',24604390.8,'dollar',2,'','21','213_fac,213_lab,213_mat','Unchanged',7,8,0.02559467),(4,'215','Primary auxiliary building and tunnels',12470000,'dollar',2,'','21','215_fac,215_lab,215_mat','Unchanged',9,10,0.020420772),(5,'216','Waste processing building',38750000,'dollar',2,'','21','216_fac,216_lab,216_mat','Unchanged',11,12,0.015882927),(6,'217','Fuel storage building',28149583.82,'dollar',2,'','21','217_fac,217_lab,217_mat','Unchanged',13,14,0.010921249),(7,'218A','Control Room/Diesel Generator Building',16250000,'dollar',3,'','218','218A_fac,218A_lab,218A_mat','Unchanged',15,16,0.020007875),(8,'220A.211','Vessel Structure (NSSS)',137000000,'dollar',3,'','220A','220A.211_fac,220A.211_lab,220A.211_mat','Unchanged',17,18,0.027158047),(9,'220A.2121','Lower Internals (NSSS)',45204200,'dollar',3,'','220A','220A.2121_fac,220A.2121_lab,220A.2121_mat','Unchanged',19,20,0.012329754),(10,'220A.2122','Upper Internals (NSSS)',45204200,'dollar',3,'','220A','220A.2122_fac,220A.2122_lab,220A.2122_mat','Unchanged',21,22,0.012329754),(11,'220A.2131','Control Rods (NSSS)',1320000,'dollar',3,'','220A','220A.2131_fac,220A.2131_lab,220A.2131_mat','Unchanged',23,24,0.001202713),(12,'220A.2132','Control Rod Drives (NSSS)',13453440,'dollar',3,'','220A','220A.2132_fac,220A.2132_lab,220A.2132_mat','Unchanged',25,26,0.013540226),(13,'220A.221','Main Coolant Pumps (NSSS)',55696873.29,'dollar',3,'','220A','220A.221_fac,220A.221_lab,220A.221_mat','Unchanged',27,28,0.048589625),(14,'220A.222','Reactor Coolant Piping (NSSS)',7464800,'dollar',3,'','220A','220A.222_fac,220A.222_lab,220A.222_mat','Unchanged',29,30,0.004422882),(15,'220A.223','Steam Generators (NSSS)',122087095.9,'dollar',3,'','220A','220A.223_fac,220A.223_lab,220A.223_mat','Unchanged',31,32,0.058118221),(16,'220A.224','Pressurizer (NSSS)',1379368.421,'dollar',3,'','220A','220A.224_fac,220A.224_lab,220A.224_mat','Unchanged',33,34,0.003220169),(17,'222.11','Fluid Circulation Drive System (Field Cost 222)',2504335.453,'dollar',3,'','222','222.11_fac,222.11_lab,222.11_mat','Unchanged',36,37,0.003333601),(18,'222.12','Reactor Coolant Piping System (Field Cost 222)',4924232.687,'dollar',3,'','222','222.12_fac,222.12_lab,222.12_mat','Unchanged',38,39,0.006554803),(19,'222.13','Steam Generator Equipment (Field Cost 222)',697187.7179,'dollar',3,'','222','222.13_fac,222.13_lab,222.13_mat','Unchanged',40,41,0.000928049),(20,'222.14','Pressurizing System (Field Cost 222)',94769.84553,'dollar',3,'','222','222.14_fac,222.14_lab,222.14_mat','Unchanged',42,43,0.000126151),(21,'222','Main heat transfer transport system',8220525.704,'dollar',2,'222.12','22','222_fac,222_lab,222_mat','Unchanged',35,44,0.010942603),(22,'224','Radwaste processing',59673441.34,'dollar',2,'','22','224_fac,224_lab,224_mat','Unchanged',45,46,0.023151622),(23,'226.4','Coolant Treatment & Recycle',34304867.39,'dollar',3,'','226','226.4_fac,226.4_lab,226.4_mat','Unchanged',47,48,0.015817883),(24,'226.7','Aux Cool Sys (Broken Down Further)',0,'dollar',3,'','226','226.7_fac,226.7_lab,226.7_mat','Unchanged',49,50,0.021415357),(25,'227','Reactor instrumentation and control',61419737.22,'dollar',2,'','22','227_fac,227_lab,227_mat','Unchanged',51,52,0.023829136),(26,'231','Turbine generator',57399816.35,'dollar',2,'','23','231_fac,231_lab,231_mat','Unchanged',53,54,0.148118277),(27,'233','Condensing systems',29065851.25,'dollar',2,'','23','233_fac,233_lab,233_mat','Unchanged',55,56,0.032039296),(28,'234','Feedwater heating system',0,'dollar',2,'','23','234_fac,234_lab,234_mat','Unchanged',57,58,0.026077184),(29,'235','Other turbine plant equipment',9563415.121,'dollar',2,'','23','235_fac,235_lab,235_mat','Unchanged',59,60,0.024678068),(30,'241','Switchgear',21904347.8,'dollar',2,'','24','241_fac,241_lab,241_mat','Unchanged',61,62,0.013206497),(31,'242','Station service equipment',36970984.98,'dollar',2,'','24','242_fac,242_lab,242_mat','Unchanged',63,64,0.022290424),(32,'245','Electric structure and wiring contnr.',40891698.73,'dollar',2,'','24','245_fac,245_lab,245_mat','Unchanged',65,66,0.024654288),(33,'246','Power and control wiring',37773534.79,'dollar',2,'','24','246_fac,246_lab,246_mat','Unchanged',67,68,0.022774295),(34,'252','Air, water and steam service systems',81851078.87,'dollar',2,'','25','252_fac,252_lab,252_mat','Unchanged',69,70,0.031755924),(35,'262','Mechanical equipment',44777444.42,'dollar',2,'','26','262_fac,262_lab,262_mat','Unchanged',71,72,0.04935819),(36,'2C','Calculated DIRECT COST',1225489991,'dollar',0,'','','2c_fac,2c_lab,2c_mat','Unchanged',2,73,0.863152505),(37,'2','TOTAL DIRECT COST',1419783854,'dollar',0,'','','','Unchanged',1,74,1);
+INSERT INTO `abr_account` VALUES (1,'2','TOTAL DIRECT COST',1419783854,0,'','Unchanged',1),(3,'211','Yardwork',71213859.06,2,'21','Unchanged',0.027628981),(4,'212','Reactor containment building',81425435.33,2,'21','Unchanged',0.071675596),(5,'213','Turbine room and heater bay',24604390.8,2,'21','Unchanged',0.02559467),(6,'215','Primary auxiliary building and tunnels',12470000,2,'21','Unchanged',0.020420772),(7,'216','Waste processing building',38750000,2,'21','Unchanged',0.015882927),(8,'217','Fuel storage building',28149583.82,2,'21','Unchanged',0.010921249),(9,'218A','Control Room/Diesel Generator Building',16250000,3,'218','Unchanged',0.020007875),(10,'220A.211','Vessel Structure (NSSS)',137000000,3,'220A','Unchanged',0.027158047),(11,'220A.2121','Lower Internals (NSSS)',45204200,3,'220A','Unchanged',0.012329754),(12,'220A.2122','Upper Internals (NSSS)',45204200,3,'220A','Unchanged',0.012329754),(13,'220A.2131','Control Rods (NSSS)',1320000,3,'220A','Unchanged',0.001202713),(14,'220A.2132','Control Rod Drives (NSSS)',13453440,3,'220A','Unchanged',0.013540226),(15,'220A.221','Main Coolant Pumps (NSSS)',55696873.29,3,'220A','Unchanged',0.048589625),(16,'220A.222','Reactor Coolant Piping (NSSS)',7464800,3,'220A','Unchanged',0.004422882),(17,'220A.223','Steam Generators (NSSS)',122087095.9,3,'220A','Unchanged',0.058118221),(18,'220A.224','Pressurizer (NSSS)',1379368.421,3,'220A','Unchanged',0.003220169),(19,'222','Main heat transfer transport system',8220525.704,2,'22','Unchanged',0.010942603),(20,'222.11','Fluid Circulation Drive System (Field Cost 222)',2504335.453,3,'222','Unchanged',0.003333601),(21,'222.12','Reactor Coolant Piping System (Field Cost 222)',4924232.687,3,'222','Unchanged',0.006554803),(22,'222.13','Steam Generator Equipment (Field Cost 222)',697187.7179,3,'222','Unchanged',0.000928049),(23,'222.14','Pressurizing System (Field Cost 222)',94769.84553,3,'222','Unchanged',0.000126151),(24,'224','Radwaste processing',59673441.34,2,'22','Unchanged',0.023151622),(25,'226.4','Coolant Treatment & Recycle',34304867.39,3,'226','Unchanged',0.015817883),(26,'226.7','Aux Cool Sys (Broken Down Further)',0,3,'226','Unchanged',0.021415357),(27,'227','Reactor instrumentation and control',61419737.22,2,'22','Unchanged',0.023829136),(28,'231','Turbine generator',57399816.35,2,'23','Unchanged',0.148118277),(29,'233','Condensing systems',29065851.25,2,'23','Unchanged',0.032039296),(30,'234','Feedwater heating system',0,2,'23','Unchanged',0.026077184),(31,'235','Other turbine plant equipment',9563415.121,2,'23','Unchanged',0.024678068),(32,'241','Switchgear',21904347.8,2,'24','Unchanged',0.013206497),(33,'242','Station service equipment',36970984.98,2,'24','Unchanged',0.022290424),(34,'245','Electric structure and wiring contnr.',40891698.73,2,'24','Unchanged',0.024654288),(35,'246','Power and control wiring',37773534.79,2,'24','Unchanged',0.022774295),(36,'252','Air, water and steam service systems',81851078.87,2,'25','Unchanged',0.031755924),(37,'262','Mechanical equipment',44777444.42,2,'26','Unchanged',0.04935819),(2,'2C','Calculated DIRECT COST',1225489991,0,'','Unchanged',0.863152505);
 /*!40000 ALTER TABLE `abr_account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,33 +111,6 @@ INSERT INTO `abr_variable` VALUES (1,'c_213_fac','Turbine building structure fac
 UNLOCK TABLES;
 
 --
--- Table structure for table `abr_variable_links`
---
-
-DROP TABLE IF EXISTS `abr_variable_links`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `abr_variable_links` (
-  `ind` int NOT NULL AUTO_INCREMENT,
-  `variable` text,
-  `var_ind` int DEFAULT NULL,
-  `ce_ind` int DEFAULT NULL,
-  `ce` text,
-  PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `abr_variable_links`
---
-
-LOCK TABLES `abr_variable_links` WRITE;
-/*!40000 ALTER TABLE `abr_variable_links` DISABLE KEYS */;
-INSERT INTO `abr_variable_links` VALUES (1,'c_213_fac',1,3,'213_fac'),(2,'c_213_lab',2,39,'213_lab'),(3,'c_213_mat',3,75,'213_mat'),(4,'c_220A.2121_ss_weight',4,9,'220A.2121_fac'),(5,'c_220A.2122_ss_weight',5,10,'220A.2122_fac'),(6,'c_220A.222_ss_weight',6,14,'220A.222_fac'),(7,'c_222_fac',7,21,'222_fac'),(8,'c_222_lab',8,57,'222_lab'),(9,'c_222_mat',9,93,'222_mat'),(10,'c_222.11_fac',10,17,'222.11_fac'),(11,'c_222.11_lab',11,53,'222.11_lab'),(12,'c_222.11_mat',12,89,'222.11_mat'),(13,'c_222.12_fac',13,18,'222.12_fac'),(14,'c_222.12_lab',14,54,'222.12_lab'),(15,'c_222.12_mat',15,90,'222.12_mat'),(16,'c_222.13_fac',16,19,'222.13_fac'),(17,'c_222.14_fac',17,20,'222.14_fac'),(18,'c_222.14_lab',18,56,'222.14_lab'),(19,'c_222.14_mat',19,92,'222.14_mat'),(20,'c_231_fac',20,29,'235_fac'),(21,'c_231_fac',20,62,'231_lab'),(22,'c_231_fac',20,98,'231_mat'),(23,'c_231_lab',21,65,'235_lab'),(24,'c_231_mat',22,101,'235_mat'),(25,'c_233_fac',23,27,'233_fac'),(26,'c_233_lab',24,63,'233_lab'),(27,'c_233_mat',25,99,'233_mat'),(28,'c_241_fac',26,30,'241_fac'),(29,'c_241_lab',27,66,'241_lab'),(30,'c_241_mat',28,102,'241_mat'),(31,'c_242_fac',29,31,'242_fac'),(32,'c_242_lab',30,67,'242_lab'),(33,'c_242_mat',31,103,'242_mat'),(34,'c_245_fac',32,32,'245_fac'),(35,'c_245_lab',33,68,'245_lab'),(36,'c_245_mat',34,104,'245_mat'),(37,'c_246_fac',35,33,'246_fac'),(38,'c_246_lab',36,69,'246_lab'),(39,'c_246_mat',37,105,'246_mat'),(40,'c_262_fac',38,35,'262_fac'),(41,'c_262_lab',39,71,'262_lab'),(42,'c_262_mat',40,107,'262_mat'),(43,'c_cr_per_unit_fac',41,11,'220A.2131_fac'),(44,'c_crd_per_unit_fac',42,12,'220A.2132_fac'),(45,'c_pump_per_unit_fac',44,13,'220A.221_fac'),(46,'c_turbine',45,26,'231_fac'),(47,'c_zero',46,9,'220A.2121_fac'),(48,'c_zero',46,10,'220A.2122_fac'),(49,'c_zero',46,14,'220A.222_fac'),(50,'escalate_1987',49,1,'211_fac'),(51,'escalate_1987',49,22,'224_fac'),(52,'escalate_1987',49,25,'227_fac'),(53,'escalate_1987',49,34,'252_fac'),(54,'escalate_1987',49,37,'211_lab'),(55,'escalate_1987',49,58,'224_lab'),(56,'escalate_1987',49,61,'227_lab'),(57,'escalate_1987',49,70,'252_lab'),(58,'escalate_1987',49,73,'211_mat'),(59,'escalate_1987',49,94,'224_mat'),(60,'escalate_1987',49,97,'227_mat'),(61,'escalate_1987',49,106,'252_mat'),(62,'mwe',50,30,'241_fac'),(63,'mwe',50,31,'242_fac'),(64,'mwe',50,32,'245_fac'),(65,'mwe',50,33,'246_fac'),(66,'mwe',50,66,'241_lab'),(67,'mwe',50,67,'242_lab'),(68,'mwe',50,68,'245_lab'),(69,'mwe',50,69,'246_lab'),(70,'mwe',50,102,'241_mat'),(71,'mwe',50,103,'242_mat'),(72,'mwe',50,104,'245_mat'),(73,'mwe',50,105,'246_mat'),(74,'mwreth',51,27,'233_fac'),(75,'mwreth',51,35,'262_fac'),(76,'mwreth',51,63,'233_lab'),(77,'mwreth',51,71,'262_lab'),(78,'mwreth',51,99,'233_mat'),(79,'mwreth',51,107,'262_mat'),(80,'mwth',52,3,'213_fac'),(81,'mwth',52,16,'220A.224_fac'),(82,'mwth',52,17,'222.11_fac'),(83,'mwth',52,18,'222.12_fac'),(84,'mwth',52,19,'222.13_fac'),(85,'mwth',52,20,'222.14_fac'),(86,'mwth',52,21,'222_fac'),(87,'mwth',52,23,'226.4_fac'),(88,'mwth',52,39,'213_lab'),(89,'mwth',52,53,'222.11_lab'),(90,'mwth',52,54,'222.12_lab'),(91,'mwth',52,55,'222.13_lab'),(92,'mwth',52,56,'222.14_lab'),(93,'mwth',52,57,'222_lab'),(94,'mwth',52,75,'213_mat'),(95,'mwth',52,89,'222.11_mat'),(96,'mwth',52,90,'222.12_mat'),(97,'mwth',52,91,'222.13_mat'),(98,'mwth',52,92,'222.14_mat'),(99,'mwth',52,93,'222_mat'),(100,'no_of_cr',53,11,'220A.2131_fac'),(101,'no_of_crd',54,12,'220A.2132_fac'),(102,'no_of_rcpump',55,13,'220A.221_fac'),(103,'prn_235_of_231_fac',56,29,'235_fac'),(104,'prn_235_of_231_lab',57,65,'235_lab'),(105,'prn_235_of_231_mat',58,101,'235_mat'),(106,'prn_fac_231_lab',59,62,'231_lab'),(107,'prn_fac_231_mat',60,98,'231_mat'),(108,'r_222.13_lab',61,55,'222.13_lab'),(109,'r_222.13_mat',62,91,'222.13_mat'),(110,'r_78_220A224_fac',63,16,'220A.224_fac'),(111,'r_78_226.4_fac',64,23,'226.4_fac'),(112,'ref_211_fac',65,1,'211_fac'),(113,'ref_211_lab',66,37,'211_lab'),(114,'ref_211_mat',67,73,'211_mat'),(115,'ref_224_fac',68,22,'224_fac'),(116,'ref_224_lab',69,58,'224_lab'),(117,'ref_224_mat',70,94,'224_mat'),(118,'ref_227_fac',71,25,'227_fac'),(119,'ref_227_lab',72,61,'227_lab'),(120,'ref_227_mat',73,97,'227_mat'),(121,'ref_252_fac',74,34,'252_fac'),(122,'ref_252_lab',75,70,'252_lab'),(123,'ref_252_mat',76,106,'252_mat'),(124,'scale_0.4',77,30,'241_fac'),(125,'scale_0.4',77,31,'242_fac'),(126,'scale_0.4',77,32,'245_fac'),(127,'scale_0.4',77,33,'246_fac'),(128,'scale_0.4',77,66,'241_lab'),(129,'scale_0.4',77,67,'242_lab'),(130,'scale_0.4',77,68,'245_lab'),(131,'scale_0.4',77,69,'246_lab'),(132,'scale_0.4',77,102,'241_mat'),(133,'scale_0.4',77,103,'242_mat'),(134,'scale_0.4',77,104,'245_mat'),(135,'scale_0.4',77,105,'246_mat'),(136,'scale_0.8',79,3,'213_fac'),(137,'scale_0.8',79,27,'233_fac'),(138,'scale_0.8',79,35,'262_fac'),(139,'scale_0.8',79,39,'213_lab'),(140,'scale_0.8',79,63,'233_lab'),(141,'scale_0.8',79,71,'262_lab'),(142,'scale_0.8',79,75,'213_mat'),(143,'scale_0.8',79,99,'233_mat'),(144,'scale_0.8',79,107,'262_mat'),(145,'scale_1.0',80,16,'220A.224_fac'),(146,'scale_1.0',80,17,'222.11_fac'),(147,'scale_1.0',80,18,'222.12_fac'),(148,'scale_1.0',80,19,'222.13_fac'),(149,'scale_1.0',80,20,'222.14_fac'),(150,'scale_1.0',80,21,'222_fac'),(151,'scale_1.0',80,23,'226.4_fac'),(152,'scale_1.0',80,26,'231_fac'),(153,'scale_1.0',80,53,'222.11_lab'),(154,'scale_1.0',80,54,'222.12_lab'),(155,'scale_1.0',80,55,'222.13_lab'),(156,'scale_1.0',80,56,'222.14_lab'),(157,'scale_1.0',80,57,'222_lab'),(158,'scale_1.0',80,89,'222.11_mat'),(159,'scale_1.0',80,90,'222.12_mat'),(160,'scale_1.0',80,91,'222.13_mat'),(161,'scale_1.0',80,92,'222.14_mat'),(162,'scale_1.0',80,93,'222_mat'),(163,'scale_tur_231_fac',81,26,'231_fac'),(164,'Tot_Labor_containment',387,38,'212_lab'),(165,'Tot_Mat_containment',388,74,'212_mat');
-/*!40000 ALTER TABLE `abr_variable_links` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `account`
 --
 
@@ -150,21 +118,16 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `account` (
-  `ind` int NOT NULL AUTO_INCREMENT,
+  `ind` int DEFAULT NULL,
   `code_of_account` varchar(20) NOT NULL,
   `account_description` text,
   `total_cost` double DEFAULT NULL,
-  `unit` text,
   `level` int DEFAULT NULL,
-  `main_subaccounts` text,
   `supaccount` text,
-  `cost_elements` text,
   `review_status` text,
-  `lft` int DEFAULT NULL,
-  `rgt` int DEFAULT NULL,
   `prn` double DEFAULT NULL,
-  PRIMARY KEY (`ind`,`code_of_account`)
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`code_of_account`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,7 +136,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'211','Yardwork',71213900,'dollar',2,NULL,'21','211_fac,211_lab,211_mat','Unchanged',3,4,0.027628952),(2,'212','Reactor containment building',182702257.3,'dollar',2,NULL,'21','212_fac,212_lab,212_mat','Unchanged',5,6,0.071675377),(3,'213','Turbine room and heater bay',65970400,'dollar',2,NULL,'21','213_fac,213_lab,213_mat','Unchanged',7,8,0.025594624),(4,'214','Security building',3880760,'dollar',2,NULL,'21','214_fac,214_lab,214_mat','Unchanged',9,10,0.001505624),(5,'215','Primary auxiliary building and tunnels',52634700,'dollar',2,NULL,'21','215_fac,215_lab,215_mat','Unchanged',11,12,0.020420755),(6,'216','Waste processing building',40938300,'dollar',2,NULL,'21','216_fac,216_lab,216_mat','Unchanged',13,14,0.015882887),(7,'217','Fuel storage building',28149600,'dollar',2,NULL,'21','217_fac,217_lab,217_mat','Unchanged',15,16,0.010921238),(8,'218A','Control Room/Diesel Generator Building',51570400,'dollar',3,NULL,'218','218A_fac,218A_lab,218A_mat','Unchanged',18,19,0.020007837),(9,'218B','Administration + Services Building',18938200,'dollar',3,NULL,'218','218B_fac,218B_lab,218B_mat','Unchanged',20,21,0.007347479),(10,'218D','Fire Pump House, Including Foundations',1216200,'dollar',3,NULL,'218','218D_fac,218D_lab,218D_mat','Unchanged',22,23,0.000471851),(11,'218E','Emergency Feed Pump Building',7119140,'dollar',3,NULL,'218','218E_fac,218E_lab,218E_mat','Unchanged',24,25,0.002762022),(12,'218F','Manway Tnls. (Radiological Ctrl Access Tunnels)',2170960,'dollar',3,NULL,'218','218F_fac,218F_lab,218F_mat','Unchanged',26,27,0.00084227),(13,'218G','Elec. Tunnels',193104,'dollar',3,NULL,'218','218G_fac,218G_lab,218G_mat','Unchanged',28,29,0.0000749188),(14,'218H','Non- Essen. Switchgear Bldg.',1526990,'dollar',3,NULL,'218','218H_fac,218H_lab,218H_mat','Unchanged',30,31,0.000592428),(15,'218J','Main Steam + Feedwater Pipe Enc.',22416800,'dollar',3,NULL,'218','218J_fac,218J_lab,218J_mat','Unchanged',32,33,0.008697076),(16,'218K','Pipe Tunnels',904119,'dollar',3,NULL,'218','218K_fac,218K_lab,218K_mat','Unchanged',34,35,0.000350772),(17,'218L','Technical Support Center',2249450,'dollar',3,NULL,'218','218L_fac,218L_lab,218L_mat','Unchanged',36,37,0.000872722),(18,'218P','Containment Equipment Hatch Missile Shield',626665,'dollar',3,NULL,'218','218P_fac,218P_lab,218P_mat','Unchanged',38,39,0.000243128),(19,'218S','Waste Water Treatment',2186330,'dollar',3,NULL,'218','218S_fac,218S_lab,218S_mat','Unchanged',40,41,0.000848233),(20,'218T','Ultimate Heat Sink Structures',13097500,'dollar',3,NULL,'218','218T_fac,218T_lab,218T_mat','Unchanged',42,43,0.005081455),(21,'218V','Control Rm Emergency Air Intake Building',253976,'dollar',3,NULL,'218','218V_fac,218V_lab,218V_mat','Unchanged',44,45,0.0000985354),(22,'218','Other structures',124470000,'dollar',2,'218A, 218B, 218J, 218T','21','218_fac,218_lab,218_mat','Unchanged',17,46,0.048290792),(23,'21','Structures and improvements subtotal',569959917.3,'dollar',1,'211, 212, 213, 215, 216, 217, 218','2','21_fac,21_lab,21_mat','Unchanged',2,47,0.221920381),(24,'220A.211','Vessel Structure (NSSS)',70000000,'dollar',3,NULL,'220A','220A.211_fac,220A.211_lab,220A.211_mat','Unchanged',50,51,0.027157994),(25,'220A.2121','Lower Internals (NSSS)',31780000,'dollar',3,NULL,'220A','220A.2121_fac,220A.2121_lab,220A.2121_mat','Unchanged',52,53,0.012329729),(26,'220A.2122','Upper Internals (NSSS)',31780000,'dollar',3,NULL,'220A','220A.2122_fac,220A.2122_lab,220A.2122_mat','Unchanged',54,55,0.012329729),(27,'220A.2131','Control Rods (NSSS)',3100000,'dollar',3,NULL,'220A','220A.2131_fac,220A.2131_lab,220A.2131_mat','Unchanged',56,57,0.001202711),(28,'220A.2132','Control Rod Drives (NSSS)',34900000,'dollar',3,NULL,'220A','220A.2132_fac,220A.2132_lab,220A.2132_mat','Unchanged',58,59,0.0135402),(29,'220A.221','Main Coolant Pumps (NSSS)',125240000,'dollar',3,NULL,'220A','220A.221_fac,220A.221_lab,220A.221_mat','Unchanged',60,61,0.04858953),(30,'220A.222','Reactor Coolant Piping (NSSS)',11400000,'dollar',3,NULL,'220A','220A.222_fac,220A.222_lab,220A.222_mat','Unchanged',62,63,0.004422873),(31,'220A.223','Steam Generators (NSSS)',149800000,'dollar',3,NULL,'220A','220A.223_fac,220A.223_lab,220A.223_mat','Unchanged',64,65,0.058118106),(32,'220A.224','Pressurizer (NSSS)',8300000,'dollar',3,NULL,'220A','220A.224_fac,220A.224_lab,220A.224_mat','Unchanged',66,67,0.003220162),(33,'220A.225','Pressurizer Relief Tank (NSSS)',1850000,'dollar',3,NULL,'220A','220A.225_fac,220A.225_lab,220A.225_mat','Unchanged',68,69,0.000717747),(34,'220A.2311','Residual Heat Removal Pumps & Drives (NSSS)',1940000,'dollar',3,NULL,'220A','220A.2311_fac,220A.2311_lab,220A.2311_mat','Unchanged',70,71,0.000752664),(35,'220A.2312','Residual Heat Removal Heat Exchanger (NSSS)',6260000,'dollar',3,NULL,'220A','220A.2312_fac,220A.2312_lab,220A.2312_mat','Unchanged',72,73,0.002428701),(36,'220A.2321','Safety Injection Pumps And Drives (NSSS)',1720000,'dollar',3,NULL,'220A','220A.2321_fac,220A.2321_lab,220A.2321_mat','Unchanged',74,75,0.000667311),(37,'220A.2322','Accumulator Tank (NSSS)',15300000,'dollar',3,NULL,'220A','220A.2322_fac,220A.2322_lab,220A.2322_mat','Unchanged',76,77,0.005935961),(38,'220A.2323','Boron Injection Tank (NSSS)',899999,'dollar',3,NULL,'220A','220A.2323_fac,220A.2323_lab,220A.2323_mat','Unchanged',78,79,0.000349174),(39,'220A.2324','Boron Injection Surge Tank (NSSS)',50001,'dollar',3,NULL,'220A','220A.2324_fac,220A.2324_lab,220A.2324_mat','Unchanged',80,81,0.000019399),(40,'220A.2325','Boron Injection Recirc. Pump & Drives (NSSS)',40000,'dollar',3,NULL,'220A','220A.2325_fac,220A.2325_lab,220A.2325_mat','Unchanged',82,83,0.0000155189),(41,'220A.251','Fuel Handling Tools (NSSS)',400000,'dollar',3,NULL,'220A','220A.251_fac,220A.251_lab,220A.251_mat','Unchanged',84,85,0.000155189),(42,'220A.254','Fuel Storage Racks (NSSS)',2510000,'dollar',3,NULL,'220A','220A.254_fac,220A.254_lab,220A.254_mat','Unchanged',86,87,0.000973808),(43,'220A.2611','Rotating Machinery (Pumps And Motors) (NSSS)',2220000,'dollar',3,NULL,'220A','220A.2611_fac,220A.2611_lab,220A.2611_mat','Unchanged',88,89,0.000861296),(44,'220A.2612','Heat Transfer Equipment (NSSS)',2450000,'dollar',3,NULL,'220A','220A.2612_fac,220A.2612_lab,220A.2612_mat','Unchanged',90,91,0.00095053),(45,'220A.2613','Tanks And Pressure Vessels (NSSS)',1140000,'dollar',3,NULL,'220A','220A.2613_fac,220A.2613_lab,220A.2613_mat','Unchanged',92,93,0.000442287),(46,'220A.2614','Purification And Filtration Equipment (NSSS)',2450000,'dollar',3,NULL,'220A','220A.2614_fac,220A.2614_lab,220A.2614_mat','Unchanged',94,95,0.00095053),(47,'220A.262','Maintenance Equipment (NSSS)',9190000,'dollar',3,NULL,'220A','220A.262_fac,220A.262_lab,220A.262_mat','Unchanged',96,97,0.003565457),(48,'220A.27','Instrumentation And Control (NSSS)',0,'dollar',3,NULL,'220A','220A.27_fac,220A.27_lab,220A.27_mat','Unchanged',98,99,0),(49,'220A','Nuclear steam supply (NSSS)',514720000,'dollar',2,'220A.211, 220A.2121, 220A.2122, 220A.2131, 220A.2132, 220A.221, 220A.222, 220A.223, 220A.224, 220A.225, 220A.2311, 220A.2312, 220A.2321, 220A.2322, 220A.2323, 220A.2324, 220A.2325, 220A.251, 220A.254, 220A.2611, 220A.2612, 220A.2613, 220A.2614, 220A.262, 220A.27, 220A.28','22','220A_fac,220A_lab,220A_mat','Unchanged',49,100,0.199696606),(50,'221.11','Reactor Support (Field Cost 221)',3910160,'dollar',3,NULL,'221','221.11_fac,221.11_lab,221.11_mat','Unchanged',102,103,0.00151703),(51,'221.12','Vessel Structure (Field Cost 221)',7037480,'dollar',3,NULL,'221','221.12_fac,221.12_lab,221.12_mat','Unchanged',104,105,0.002730341),(52,'221.13','Vessel Internals (Field Cost 221)',1703810,'dollar',3,NULL,'221','221.13_fac,221.13_lab,221.13_mat','Unchanged',106,107,0.000661029),(53,'221.14','Transport To Site (Field Cost 221)',15781400,'dollar',3,NULL,'221','221.14_fac,221.14_lab,221.14_mat','Unchanged',108,109,0.006122731),(54,'221.21','Control Rod System (Field Cost 221)',1533970,'dollar',3,NULL,'221','221.21_fac,221.21_lab,221.21_mat','Unchanged',110,111,0.000595136),(55,'221','Reactor equipment',29966900,'dollar',2,'221.14','22','221_fac,221_lab,221_mat','Unchanged',101,112,0.011626298),(56,'222.11','Fluid Circulation Drive System (Field Cost 222)',8592380,'dollar',3,NULL,'222','222.11_fac,222.11_lab,222.11_mat','Unchanged',114,115,0.003333597),(57,'222.12','Reactor Coolant Piping System (Field Cost 222)',16895000,'dollar',3,NULL,'222','222.12_fac,222.12_lab,222.12_mat','Unchanged',116,117,0.006554776),(58,'222.13','Steam Generator Equipment (Field Cost 222)',2392050,'dollar',3,NULL,'222','222.13_fac,222.13_lab,222.13_mat','Unchanged',118,119,0.000928047),(59,'222.14','Pressurizing System (Field Cost 222)',325156,'dollar',3,NULL,'222','222.14_fac,222.14_lab,222.14_mat','Unchanged',120,121,0.000126151),(60,'222','Main heat transfer transport system',28204600,'dollar',2,'222.12','22','222_fac,222_lab,222_mat','Unchanged',113,122,0.010942576),(61,'223.1','Residual Heat Removal Sys (Field Cost 223)',6810250,'dollar',3,NULL,'223','223.1_fac,223.1_lab,223.1_mat','Unchanged',124,125,0.002642182),(62,'223.3','Safety Injection System (Field Cost 223)',10383200,'dollar',3,NULL,'223','223.3_fac,223.3_lab,223.3_mat','Unchanged',126,127,0.004028384),(63,'223.4','Containment Spray System (Field Cost 223)',15105600,'dollar',3,NULL,'223','223.4_fac,223.4_lab,223.4_mat','Unchanged',128,129,0.00586054),(64,'223.5','Combustible Gas Control System (Field Cost 223)',3079990,'dollar',3,NULL,'223','223.5_fac,223.5_lab,223.5_mat','Unchanged',130,131,0.001194948),(65,'223','Safeguards system',35379000,'dollar',2,'223.1, 223.3, 223.4','22','223_fac,223_lab,223_mat','Unchanged',123,132,0.013726038),(66,'224','Radwaste processing',59673400,'dollar',2,NULL,'22','224_fac,224_lab,224_mat','Unchanged',133,134,0.023151569),(67,'225','Fuel handling and storage',9024530,'dollar',2,NULL,'22','225_fac,225_lab,225_mat','Unchanged',135,136,0.003501259),(68,'226.1','Inert Gas Sys',3533410,'dollar',3,NULL,'226','226.1_fac,226.1_lab,226.1_mat','Unchanged',138,139,0.001370862),(69,'226.3','Reactor Makeup Water Sys',4252970,'dollar',3,NULL,'226','226.3_fac,226.3_lab,226.3_mat','Unchanged',140,141,0.00165003),(70,'226.4','Coolant Treatment & Recycle',40770700,'dollar',3,NULL,'226','226.4_fac,226.4_lab,226.4_mat','Unchanged',142,143,0.015817863),(71,'226.6','Fluid Leak Detection Sys',492958,'dollar',3,NULL,'226','226.6_fac,226.6_lab,226.6_mat','Unchanged',144,145,0.000191254),(72,'226.7','Aux Cool Sys (Broken Down Further)',55198200,'dollar',3,NULL,'226','226.7_fac,226.7_lab,226.7_mat','Unchanged',146,147,0.021415319),(73,'226.8','Maintenance Equipment',1519680,'dollar',3,NULL,'226','226.8_fac,226.8_lab,226.8_mat','Unchanged',148,149,0.000589592),(74,'226.9','Sampling Equip',1831380,'dollar',3,NULL,'226','226.9_fac,226.9_lab,226.9_mat','Unchanged',150,151,0.000710523),(75,'226','Other reactor plant equipment',107592000,'dollar',2,'226.4,226.7','22','226_fac,226_lab,226_mat','Unchanged',137,152,0.041742612),(76,'227','Reactor instrumentation and control',61419700,'dollar',2,NULL,'22','227_fac,227_lab,227_mat','Unchanged',153,154,0.023829083),(77,'228','Reactor plant miscellaneous items',21234600,'dollar',2,NULL,'22','228_fac,228_lab,228_mat','Unchanged',155,156,0.008238416),(78,'22','Reactor plant equipment',867215000,'dollar',1,'220A, 221, 222, 223, 224, 226, 227, 228','2','22_fac,22_lab,22_mat','Unchanged',48,157,0.336454563),(79,'231','Turbine generator',381776000,'dollar',2,NULL,'23','231_fac,231_lab,231_mat','Unchanged',159,160,0.148118145),(80,'233','Condensing systems',82581500,'dollar',2,NULL,'23','233_fac,233_lab,233_mat','Unchanged',161,162,0.032039255),(81,'234','Feedwater heating system',67214100,'dollar',2,NULL,'23','234_fac,234_lab,234_mat','Unchanged',163,164,0.026077144),(82,'235','Other turbine plant equipment',63607900,'dollar',2,NULL,'23','235_fac,235_lab,235_mat','Unchanged',165,166,0.024678042),(83,'236','Instrumentation and control',19530400,'dollar',2,NULL,'23','236_fac,236_lab,236_mat','Unchanged',167,168,0.007577235),(84,'237','Turbine plant miscellaneous items',22926000,'dollar',2,NULL,'23','237_fac,237_lab,237_mat','Unchanged',169,170,0.008894631),(85,'23','Turbine plant equipment',637636000,'dollar',1,'231, 233, 234, 235, 236, 237','2','23_fac,23_lab,23_mat','Unchanged',158,171,0.247384491),(86,'241','Switchgear',34039800,'dollar',2,NULL,'24','241_fac,241_lab,241_mat','Unchanged',173,174,0.013206467),(87,'242','Station service equipment',57453700,'dollar',2,NULL,'24','242_fac,242_lab,242_mat','Unchanged',175,176,0.022290389),(88,'243','Switchboards',5838140,'dollar',2,NULL,'24','243_fac,243_lab,243_mat','Unchanged',177,178,0.002265031),(89,'244','Protective equipment',12142400,'dollar',2,NULL,'24','244_fac,244_lab,244_mat','Unchanged',179,180,0.004710903),(90,'245','Electric structure and wiring contnr.',63546600,'dollar',2,NULL,'24','245_fac,245_lab,245_mat','Unchanged',181,182,0.024654259),(91,'246','Power and control wiring',58700900,'dollar',2,NULL,'24','246_fac,246_lab,246_mat','Unchanged',183,184,0.022774267),(92,'24','Electric plant equipment',231722000,'dollar',1,'241, 242, 245, 246','2','24_fac,24_lab,24_mat','Unchanged',172,185,0.089901494),(93,'251','Transportation and lifting equipment',17078900,'dollar',2,NULL,'25','251_fac,251_lab,251_mat','Unchanged',187,188,0.006626124),(94,'252','Air, water and steam service systems',81851100,'dollar',2,NULL,'25','252_fac,252_lab,252_mat','Unchanged',189,190,0.031755881),(95,'253','Communications equipment',18279100,'dollar',2,NULL,'25','253_fac,253_lab,253_mat','Unchanged',191,192,0.007091767),(96,'254','Furnishings and fixtures',7795930,'dollar',2,NULL,'25','254_fac,254_lab,254_mat','Unchanged',193,194,0.003024597),(97,'255','Waste water treatment equipment',8067760,'dollar',2,NULL,'25','255_fac,255_lab,255_mat','Unchanged',195,196,0.00313006),(98,'25','Miscellaneous plant equipment subtotal',133073000,'dollar',1,'251, 252, 253','2','25_fac,25_lab,25_mat','Unchanged',186,197,0.05162851),(99,'261','Structures',12345700,'dollar',2,NULL,'26','261_fac,261_lab,261_mat','Unchanged',199,200,0.004789778),(100,'262','Mechanical equipment',127221000,'dollar',2,NULL,'26','262_fac,262_lab,262_mat','Unchanged',201,202,0.049358101),(101,'26','Main condenser heat rejection system',139567000,'dollar',1,'262','2','26_fac,26_lab,26_mat','Unchanged',198,203,0.054147996),(102,'2','TOTAL DIRECT COST',2579172917,'dollar',0,NULL,'','2_fac,2_lab,2_mat','Unchanged',1,204,1);
+INSERT INTO `account` VALUES (1,'2','TOTAL DIRECT COST',2579172917,0,'','Unchanged',1),(2,'21','Structures and improvements subtotal',569959917,1,'2','Unchanged',0.221920381),(3,'211','Yardwork',71213900,2,'21','Unchanged',0.027628952),(4,'212','Reactor containment building',182702257,2,'21','Unchanged',0.071675377),(5,'213','Turbine room and heater bay',65970400,2,'21','Unchanged',0.025594624),(6,'214','Security building',3880760,2,'21','Unchanged',0.001505624),(7,'215','Primary auxiliary building and tunnels',52634700,2,'21','Unchanged',0.020420755),(8,'216','Waste processing building',40938300,2,'21','Unchanged',0.015882887),(9,'217','Fuel storage building',28149600,2,'21','Unchanged',0.010921238),(10,'218','Other structures',124470000,2,'21','Unchanged',0.048290792),(11,'218A','Control Room/Diesel Generator Building',51570400,3,'218','Unchanged',0.020007837),(12,'218B','Administration + Services Building',18938200,3,'218','Unchanged',0.007347479),(13,'218D','Fire Pump House, Including Foundations',1216200,3,'218','Unchanged',0.000471851),(14,'218E','Emergency Feed Pump Building',7119140,3,'218','Unchanged',0.002762022),(15,'218F','Manway Tnls. (Radiological Ctrl Access Tunnels)',2170960,3,'218','Unchanged',0.00084227),(16,'218G','Elec. Tunnels',193104,3,'218','Unchanged',0.0000749188),(17,'218H','Non- Essen. Switchgear Bldg.',1526990,3,'218','Unchanged',0.000592428),(18,'218J','Main Steam + Feedwater Pipe Enc.',22416800,3,'218','Unchanged',0.008697076),(19,'218K','Pipe Tunnels',904119,3,'218','Unchanged',0.000350772),(20,'218L','Technical Support Center',2249450,3,'218','Unchanged',0.000872722),(21,'218P','Containment Equipment Hatch Missile Shield',626665,3,'218','Unchanged',0.000243128),(22,'218S','Waste Water Treatment',2186330,3,'218','Unchanged',0.000848233),(23,'218T','Ultimate Heat Sink Structures',13097500,3,'218','Unchanged',0.005081455),(24,'218V','Control Rm Emergency Air Intake Building',253976,3,'218','Unchanged',0.0000985354),(25,'22','Reactor plant equipment',867215000,1,'2','Unchanged',0.336454563),(26,'220A','Nuclear steam supply (NSSS)',514720000,2,'22','Unchanged',0.199696606),(27,'220A.211','Vessel Structure (NSSS)',70000000,3,'220A','Unchanged',0.027157994),(28,'220A.2121','Lower Internals (NSSS)',31780000,3,'220A','Unchanged',0.012329729),(29,'220A.2122','Upper Internals (NSSS)',31780000,3,'220A','Unchanged',0.012329729),(30,'220A.2131','Control Rods (NSSS)',3100000,3,'220A','Unchanged',0.001202711),(31,'220A.2132','Control Rod Drives (NSSS)',34900000,3,'220A','Unchanged',0.0135402),(32,'220A.221','Main Coolant Pumps (NSSS)',125240000,3,'220A','Unchanged',0.04858953),(33,'220A.222','Reactor Coolant Piping (NSSS)',11400000,3,'220A','Unchanged',0.004422873),(34,'220A.223','Steam Generators (NSSS)',149800000,3,'220A','Unchanged',0.058118106),(35,'220A.224','Pressurizer (NSSS)',8300000,3,'220A','Unchanged',0.003220162),(36,'220A.225','Pressurizer Relief Tank (NSSS)',1850000,3,'220A','Unchanged',0.000717747),(37,'220A.2311','Residual Heat Removal Pumps & Drives (NSSS)',1940000,3,'220A','Unchanged',0.000752664),(38,'220A.2312','Residual Heat Removal Heat Exchanger (NSSS)',6260000,3,'220A','Unchanged',0.002428701),(39,'220A.2321','Safety Injection Pumps And Drives (NSSS)',1720000,3,'220A','Unchanged',0.000667311),(40,'220A.2322','Accumulator Tank (NSSS)',15300000,3,'220A','Unchanged',0.005935961),(41,'220A.2323','Boron Injection Tank (NSSS)',899999,3,'220A','Unchanged',0.000349174),(42,'220A.2324','Boron Injection Surge Tank (NSSS)',50001,3,'220A','Unchanged',0.000019399),(43,'220A.2325','Boron Injection Recirc. Pump & Drives (NSSS)',40000,3,'220A','Unchanged',0.0000155189),(44,'220A.251','Fuel Handling Tools (NSSS)',400000,3,'220A','Unchanged',0.000155189),(45,'220A.254','Fuel Storage Racks (NSSS)',2510000,3,'220A','Unchanged',0.000973808),(46,'220A.2611','Rotating Machinery (Pumps And Motors) (NSSS)',2220000,3,'220A','Unchanged',0.000861296),(47,'220A.2612','Heat Transfer Equipment (NSSS)',2450000,3,'220A','Unchanged',0.00095053),(48,'220A.2613','Tanks And Pressure Vessels (NSSS)',1140000,3,'220A','Unchanged',0.000442287),(49,'220A.2614','Purification And Filtration Equipment (NSSS)',2450000,3,'220A','Unchanged',0.00095053),(50,'220A.262','Maintenance Equipment (NSSS)',9190000,3,'220A','Unchanged',0.003565457),(51,'220A.27','Instrumentation And Control (NSSS)',0,3,'220A','Unchanged',0),(52,'221','Reactor equipment',29966900,2,'22','Unchanged',0.011626298),(53,'221.11','Reactor Support (Field Cost 221)',3910160,3,'221','Unchanged',0.00151703),(54,'221.12','Vessel Structure (Field Cost 221)',7037480,3,'221','Unchanged',0.002730341),(55,'221.13','Vessel Internals (Field Cost 221)',1703810,3,'221','Unchanged',0.000661029),(56,'221.14','Transport To Site (Field Cost 221)',15781400,3,'221','Unchanged',0.006122731),(57,'221.21','Control Rod System (Field Cost 221)',1533970,3,'221','Unchanged',0.000595136),(58,'222','Main heat transfer transport system',28204600,2,'22','Unchanged',0.010942576),(59,'222.11','Fluid Circulation Drive System (Field Cost 222)',8592380,3,'222','Unchanged',0.003333597),(60,'222.12','Reactor Coolant Piping System (Field Cost 222)',16895000,3,'222','Unchanged',0.006554776),(61,'222.13','Steam Generator Equipment (Field Cost 222)',2392050,3,'222','Unchanged',0.000928047),(62,'222.14','Pressurizing System (Field Cost 222)',325156,3,'222','Unchanged',0.000126151),(63,'223','Safeguards system',35379000,2,'22','Unchanged',0.013726038),(64,'223.1','Residual Heat Removal Sys (Field Cost 223)',6810250,3,'223','Unchanged',0.002642182),(65,'223.3','Safety Injection System (Field Cost 223)',10383200,3,'223','Unchanged',0.004028384),(66,'223.4','Containment Spray System (Field Cost 223)',15105600,3,'223','Unchanged',0.00586054),(67,'223.5','Combustible Gas Control System (Field Cost 223)',3079990,3,'223','Unchanged',0.001194948),(68,'224','Radwaste processing',59673400,2,'22','Unchanged',0.023151569),(69,'225','Fuel handling and storage',9024530,2,'22','Unchanged',0.003501259),(70,'226','Other reactor plant equipment',107592000,2,'22','Unchanged',0.041742612),(71,'226.1','Inert Gas Sys',3533410,3,'226','Unchanged',0.001370862),(72,'226.3','Reactor Makeup Water Sys',4252970,3,'226','Unchanged',0.00165003),(73,'226.4','Coolant Treatment & Recycle',40770700,3,'226','Unchanged',0.015817863),(74,'226.6','Fluid Leak Detection Sys',492958,3,'226','Unchanged',0.000191254),(75,'226.7','Aux Cool Sys (Broken Down Further)',55198200,3,'226','Unchanged',0.021415319),(76,'226.8','Maintenance Equipment',1519680,3,'226','Unchanged',0.000589592),(77,'226.9','Sampling Equip',1831380,3,'226','Unchanged',0.000710523),(78,'227','Reactor instrumentation and control',61419700,2,'22','Unchanged',0.023829083),(79,'228','Reactor plant miscellaneous items',21234600,2,'22','Unchanged',0.008238416),(80,'23','Turbine plant equipment',637636000,1,'2','Unchanged',0.247384491),(81,'231','Turbine generator',381776000,2,'23','Unchanged',0.148118145),(82,'233','Condensing systems',82581500,2,'23','Unchanged',0.032039255),(83,'234','Feedwater heating system',67214100,2,'23','Unchanged',0.026077144),(84,'235','Other turbine plant equipment',63607900,2,'23','Unchanged',0.024678042),(85,'236','Instrumentation and control',19530400,2,'23','Unchanged',0.007577235),(86,'237','Turbine plant miscellaneous items',22926000,2,'23','Unchanged',0.008894631),(87,'24','Electric plant equipment',231722000,1,'2','Unchanged',0.089901494),(88,'241','Switchgear',34039800,2,'24','Unchanged',0.013206467),(89,'242','Station service equipment',57453700,2,'24','Unchanged',0.022290389),(90,'243','Switchboards',5838140,2,'24','Unchanged',0.002265031),(91,'244','Protective equipment',12142400,2,'24','Unchanged',0.004710903),(92,'245','Electric structure and wiring contnr.',63546600,2,'24','Unchanged',0.024654259),(93,'246','Power and control wiring',58700900,2,'24','Unchanged',0.022774267),(94,'25','Miscellaneous plant equipment subtotal',133073000,1,'2','Unchanged',0.05162851),(95,'251','Transportation and lifting equipment',17078900,2,'25','Unchanged',0.006626124),(96,'252','Air, water and steam service systems',81851100,2,'25','Unchanged',0.031755881),(97,'253','Communications equipment',18279100,2,'25','Unchanged',0.007091767),(98,'254','Furnishings and fixtures',7795930,2,'25','Unchanged',0.003024597),(99,'255','Waste water treatment equipment',8067760,2,'25','Unchanged',0.00313006),(100,'26','Main condenser heat rejection system',139567000,1,'2','Unchanged',0.054147996),(101,'261','Structures',12345700,2,'26','Unchanged',0.004789778),(102,'262','Mechanical equipment',127221000,2,'26','Unchanged',0.049358101);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,7 +158,7 @@ CREATE TABLE `algorithm` (
   `variables` text,
   `constants` text,
   PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,8 +181,6 @@ DROP TABLE IF EXISTS `cost_element`;
 CREATE TABLE `cost_element` (
   `ind` int NOT NULL AUTO_INCREMENT,
   `cost_element` varchar(20) NOT NULL,
-  `cost_2011` double DEFAULT NULL,
-  `cost_1987` double DEFAULT NULL,
   `cost_2017` double DEFAULT NULL,
   `sup_cost_ele` text,
   `alg_name` text,
@@ -238,7 +199,7 @@ CREATE TABLE `cost_element` (
 
 LOCK TABLES `cost_element` WRITE;
 /*!40000 ALTER TABLE `cost_element` DISABLE KEYS */;
-INSERT INTO `cost_element` VALUES (1,'211_fac',682260,284275,810015,'21_fac','esc_1987','million','escalate_1987, ref_211_fac','211','12',0),(2,'212_fac',34247900,14269900,0,'21_fac','NO_ALG','million','N/A','212','N/A',0),(3,'213_fac',1491400,621415,1770660,'21_fac','MWth_scale','million','c_213_fac, mwth, scale_0.8','213','8',0),(4,'214_fac',124610,51921,147944,'21_fac','NO_ALG','million','N/A','214','N/A',0),(5,'215_fac',7541340,3142230,8953480,'21_fac','NO_ALG','million','N/A','215','N/A',0),(6,'216_fac',1562630,651097,1855240,'21_fac','NO_ALG','million','N/A','216','N/A',0),(7,'217_fac',2394100,997541,2842400,'21_fac','NO_ALG','million','N/A','217','N/A',0),(8,'218A_fac',3513150,1463810,4171000,'218_fac','NO_ALG','million','N/A','218A','N/A',0),(9,'218B_fac',1968900,820374,2337580,'218_fac','complex','million','c_218B_fac','218B','23',0),(10,'218D_fac',94678,39449,112407,'218_fac','NO_ALG','million','N/A','218D','N/A',0),(11,'218E_fac',53575,22323,63607,'218_fac','NO_ALG','million','N/A','218E','N/A',0),(12,'218F_fac',0,0,0,'218_fac','NO_ALG','million','N/A','218F','N/A',0),(13,'218G_fac',23119,9633,27448,'218_fac','NO_ALG','million','N/A','218G','N/A',0),(14,'218H_fac',45960,19150,54566,'218_fac','NO_ALG','million','N/A','218H','N/A',0),(15,'218J_fac',79704,33210,94629,'218_fac','complex','million','c_218J_fac','218J','23',0),(16,'218K_fac',0,0,0,'218_fac','NO_ALG','million','N/A','218K','N/A',0),(17,'218L_fac',124610,51921,147944,'218_fac','NO_ALG','million','N/A','218L','N/A',0),(18,'218P_fac',0,0,0,'218_fac','NO_ALG','million','N/A','218P','N/A',0),(19,'218S_fac',19937,8307,23670,'218_fac','NO_ALG','million','N/A','218S','N/A',0),(20,'218T_fac',102526,42719,121724,'218_fac','complex','million','c_218T_fac','218T','23',0),(21,'218V_fac',0,0,0,'218_fac','NO_ALG','million','N/A','218V','N/A',0),(22,'218_fac',6026160,2510900,7154570,'21_fac','NO_ALG','million','N/A','218','N/A',0),(23,'21_fac',54070400,22529300,64195200,'2_fac','NO_ALG','million','N/A','21','N/A',0),(24,'220A.211_fac',68866600,28694400,70000000,'220A_fac','unit_weights','million','c_221.12_cs_weight, c_221.12_ss_weight','220A.211','5',0),(25,'220A.2121_fac',25825000,10760400,31780000,'220A_fac','unit_weights','million','c_zero, c_220A.2121_ss_weight','220A.2121','5',0),(26,'220A.2122_fac',25825000,10760400,31780000,'220A_fac','unit_weights','million','c_zero, c_220A.2122_ss_weight','220A.2122','5',0),(27,'220A.2131_fac',25825000,10760400,3100000,'220A_fac','unit_facility','million','no_of_cr, c_cr_per_unit_fac','220A.2131','16',0),(28,'220A.2132_fac',25825000,10760400,34900000,'220A_fac','unit_facility','million','no_of_crd, c_crd_per_unit_fac','220A.2132','16',0),(29,'220A.221_fac',38737400,16140600,125240000,'220A_fac','unit_facility','million','no_of_rcpump, c_pump_per_unit_fac','220A.221','16',0),(30,'220A.222_fac',19368700,8070300,11400000,'220A_fac','unit_weights','million','c_zero, c_220A.222_ss_weight','220A.222','5',0),(31,'220A.223_fac',51649900,21520800,149800000,'220A_fac','NO_ALG','million','N/A','220A.223','N/A',0),(32,'220A.224_fac',12912500,5380200,8300000,'220A_fac','unit_weights_plate','million','c_220A.224_cs_weight_plate, c_220A.224_ss_weight','220A.224','18',0),(33,'220A.225_fac',6456240,2690100,1850000,'220A_fac','unit_weights','million','c_zero, c_220A.225_ss_weight','220A.225','5',0),(34,'220A.2311_fac',12912500,5380200,1940000,'220A_fac','complex','million','c_220A.2311_fac','220A.2311','23',0),(35,'220A.2312_fac',12912500,5380200,6260000,'220A_fac','unit_weights_factor','million','c_220A.2312_cs_weight, c_220A.2312_ss_weight, factor_220A.2312','220A.2312','21',0),(36,'220A.2321_fac',12912500,5380200,1720000,'220A_fac','complex','million','c_220A.2321_fac','220A.2321','23',0),(37,'220A.2322_fac',6456240,2690100,15300000,'220A_fac','total_weight_prn','million','c_220A.2322_tot_weight, prn_220A.2322cs, prn_220A.2322ss, no_of_acu','220A.2322','20',0),(38,'220A.2323_fac',6456240,2690100,899999,'220A_fac','total_weight_prn','million','c_220A.2323_tot_weight, prn_220A.2323cs, prn_220A.2323ss, no_of_bit','220A.2323','20',0),(39,'220A.2324_fac',6456240,2690100,50001,'220A_fac','unit_weights','million','c_zero, c_220A.2324_ss_weight','220A.2324','5',0),(40,'220A.2325_fac',6456240,2690100,40000,'220A_fac','complex','million','c_220A.2325_fac','220A.2325','23',0),(41,'220A.251_fac',10760400,4483500,400000,'220A_fac','unit_weights_factor','million','c_220A.251_cs_weight, c_220A.251_ss_weight, factor_220A.251','220A.251','21',0),(42,'220A.254_fac',10760400,4483500,2510000,'220A_fac','esc_1978','million','escalate_1978, ref_220A.254_1978','220A.254','19',0),(43,'220A.2611_fac',5380200,2241750,2220000,'220A_fac','sum_multi_accounts','million','c_226.4111_fac, c_226.4112_fac, c_226.41131_fac, c_226.41132_fac, c_226.4114_fac, c_226.41151_fac, c_226.41152_fac','220A.2611','1',0),(44,'220A.2612_fac',5380200,2241750,2450000,'220A_fac','sum_multi_accounts','million','c_226.4121_fac, c_226.4122_fac, c_226.4123_fac, c_226.4124_fac, c_226.4125_fac, c_226.4126_fac, c_226.4127_fac, c_226.4128_fac','220A.2612','1',0),(45,'220A.2613_fac',3228120,1345050,1140000,'220A_fac','sum_multi_accounts','million','c_226.4133_fac, c_226.4134_fac, c_226.4135_fac, c_226.4131_fac','220A.2613','1',0),(46,'220A.2614_fac',5380200,2241750,2450000,'220A_fac','sum_multi_accounts','million','c_226.4141_fac, c_226.4142_fac, c_226.4143_fac, c_226.4144_fac, c_226.4145_fac','220A.2614','1',0),(47,'220A.262_fac',2152080,896700,9190000,'220A_fac','NO_ALG','million','N/A','220A.262','N/A',0),(48,'220A.27_fac',21520800,8967000,0,'220A_fac','default_0','million','N/A','220A.27','14',0),(49,'220A_fac',430416000,179340000,514720000,'0_fac','NO_ALG','million','N/A','220A','N/A',0),(50,'221.11_fac',1951810,813253,2317290,'221_fac','NO_ALG','million','N/A','221.11','N/A',0),(51,'221.12_fac',0,0,0,'221_fac','default_0','million','N/A','221.12','14',0),(52,'221.13_fac',0,0,0,'221_fac','default_0','million','N/A','221.13','14',0),(53,'221.14_fac',0,0,0,'221_fac','default_0','million','N/A','221.14','14',0),(54,'221.21_fac',60420,25175,71734,'221_fac','NO_ALG','million','N/A','221.21','N/A',0),(55,'221_fac',2012230,838428,2389020,'22_fac','NO_ALG','million','N/A','221','N/A',0),(56,'222.11_fac',3184530,1326890,3780840,'222_fac','MWth_scale','million','c_222.11_fac, mwth, scale_1.0','222.11','8',0),(57,'222.12_fac',3701280,1542200,4394350,'222_fac','MWth_scale','million','c_222.12_fac, mwth, scale_1.0','222.12','8',0),(58,'222.13_fac',63290,26371,75141,'222_fac','esc_1987','million','escalate_1987, ref_222.13_fac','222.13','12',0),(59,'222.14_fac',12658,5274,15028,'222_fac','MWth_scale','million','c_222.14_fac, mwth, scale_1.0','222.14','8',0),(60,'222_fac',6961750,2900730,8265360,'22_fac','MWth_scale','million','c_222_fac, mwth, scale_1.0','222','8',0),(61,'223.1_fac',2501500,1042290,2969910,'223_fac','factor_sum','million','fac_223.1, prn_223.1_fac, c_220A.2311_fac, c_220A.2312_fac','223.1','22',0),(62,'223.3_fac',3152680,1313620,3743030,'223_fac','factor_sum','million','fac_223.3, prn_223.3_fac, c_220A.2321_fac, c_220A.2322_fac, c_220A.2323_fac, c_220A.2324_fac, c_220A.2325_fac','223.3','22',0),(63,'223.4_fac',7294410,3039340,8660310,'223_fac','unit_volume','million','c_223.4_unit_vol_fac, vol_223.4','223.4','9',0),(64,'223.5_fac',2071620,863174,2459540,'223_fac','NO_ALG','million','N/A','223.5','N/A',0),(65,'223_fac',15020200,6258420,17832800,'22_fac','NO_ALG','million','N/A','223','N/A',0),(66,'224_fac',38785300,16160500,46047900,'22_fac','esc_1987','million','escalate_1987, ref_224_fac','224','12',0),(67,'225_fac',5288390,2203500,6278660,'22_fac','NO_ALG','million','N/A','225','N/A',0),(68,'226.1_fac',1733720,722383,2058360,'226_fac','NO_ALG','million','N/A','226.1','N/A',0),(69,'226.3_fac',1915800,798248,2274530,'226_fac','NO_ALG','million','N/A','226.3','N/A',0),(70,'226.4_fac',16376700,6823620,19443300,'226_fac','MWth_scale','million','c_226.4_fac, mwth, scale_1.0','226.4','8',0),(71,'226.6_fac',372715,155298,442507,'226_fac','NO_ALG','million','N/A','226.6','N/A',0),(72,'226.7_fac',23734900,9889540,28179300,'226_fac','MWth_scale','million','c_226.7_fac, mwth, scale_1.0','226.7','8',0),(73,'226.8_fac',0,0,0,'226_fac','NO_ALG','million','N/A','226.8','N/A',0),(74,'226.9_fac',874382,364326,1038110,'226_fac','NO_ALG','million','N/A','226.9','N/A',0),(75,'226_fac',45008200,18753400,53436100,'22_fac','NO_ALG','million','N/A','226','N/A',0),(76,'227_fac',31617800,13174100,37538400,'22_fac','esc_1987','million','escalate_1987, ref_227_fac','227','12',0),(77,'228_fac',0,0,0,'22_fac','default_0','million','N/A','228','14',0),(78,'22_fac',575110000,239629000,686508000,'2_fac','NO_ALG','million','N/A','22','N/A',0),(79,'231_fac',299878000,124949000,356031000,'23_fac','dev_factor_ref','million','c_turbine, scale_tur_231_fac, n_231','231','10',0),(80,'233_fac',47453600,19772300,56339400,'23_fac','MWth_scale','million','c_233_fac, mwth, scale_0.8','233','8',0),(81,'234_fac',37796800,15748600,44874300,'23_fac','MWth_scale','million','c_234_fac, mwth, scale_0.8','234','8',0),(82,'235_fac',26825600,11177300,31848700,'23_fac','ptn_account','million','c_231_fac, prn_235_of_231_fac','235','4',0),(83,'236_fac',4483300,1868040,5322810,'23_fac','esc_1987','million','escalate_1987, ref_236_fac','236','12',0),(84,'237_fac',0,0,0,'23_fac','default_0','million','N/A','237','14',0),(85,'23_fac',416438000,173516000,494417000,'2_fac','NO_ALG','million','N/A','23','N/A',0),(86,'241_fac',27009800,11254100,32067500,'24_fac','MWe_scale','million','c_241_fac, mwe, scale_0.4','241','17',0),(87,'242_fac',43931500,18304800,52157800,'24_fac','MWe_scale','million','c_242_fac, mwe, scale_0.4','242','17',0),(88,'243_fac',3771430,1571430,4477640,'24_fac','NO_ALG','million','N/A','243','N/A',0),(89,'244_fac',0,0,0,'24_fac','NO_ALG','million','N/A','244','N/A',0),(90,'245_fac',0,0,0,'24_fac','default_0','million','N/A','245','14',0),(91,'246_fac',3799450,1583100,4510910,'24_fac','MWe_scale','million','c_246_fac, mwe, scale_0.4','246','17',0),(92,'24_fac',78512200,32713400,93213800,'2_fac','NO_ALG','million','N/A','24','N/A',0),(93,'251_fac',12142700,5059460,14416500,'25_fac','sum_multi_accounts','million','c_251.12_fac, c_251.111_fac, c_251.112_fac, c_251.16_fac, c_251.17_fac','251','1',0),(94,'252_fac',20947200,8727980,24869600,'25_fac','esc_1987','million','escalate_1987, ref_252_fac','252','12',0),(95,'253_fac',4677120,1948800,5552920,'25_fac','esc_1987','million','escalate_1987, ref_253_fac','253','12',0),(96,'254_fac',5206970,2169570,6181990,'25_fac','NO_ALG','million','N/A','254','N/A',0),(97,'255_fac',1820570,758570,2161480,'25_fac','NO_ALG','million','N/A','255','N/A',0),(98,'25_fac',44794500,18664400,53182400,'2_fac','NO_ALG','million','N/A','25','N/A',0),(99,'261_fac',420247,175103,498939,'26_fac','NO_ALG','million','N/A','261','N/A',0),(100,'262_fac',73121700,30467400,86813900,'26_fac','MWth_scale','million','c_262_fac, mwth, scale_0.8','262','8',0),(101,'26_fac',73541900,30642500,87312900,'2_fac','NO_ALG','million','N/A','26','N/A',0),(102,'2_fac',1242470000,517694000,1475120000,'','NO_ALG','million','N/A','2','N/A',0),(103,'211_lab',34810500,14504400,41328800,'21_lab','esc_1987','million','escalate_1987, ref_211_lab','211','12',0),(104,'212_lab',85504500,35626900,101951276.3,'21_lab','containment','million','Tot_Labor_containment','212','7',0),(105,'213_lab',26814100,11172600,31835200,'21_lab','MWth_scale','million','c_213_lab, mwth, scale_0.8','213','8',0),(106,'214_lab',2262490,942705,2686150,'21_lab','NO_ALG','million','N/A','214','N/A',0),(107,'215_lab',25247600,10519800,29975200,'21_lab','NO_ALG','million','N/A','215','N/A',0),(108,'216_lab',21656700,9023630,25712000,'21_lab','NO_ALG','million','N/A','216','N/A',0),(109,'217_lab',10812000,4505020,12836600,'21_lab','NO_ALG','million','N/A','217','N/A',0),(110,'218A_lab',26833200,11180500,31857800,'218_lab','NO_ALG','million','N/A','218A','N/A',0),(111,'218B_lab',8139750,3391560,9663950,'218_lab','complex','million','c_218B_lab','218B','23',0),(112,'218D_lab',574711,239463,682327,'218_lab','NO_ALG','million','N/A','218D','N/A',0),(113,'218E_lab',4104150,1710060,4872660,'218_lab','NO_ALG','million','N/A','218E','N/A',0),(114,'218F_lab',1293650,539020,1535890,'218_lab','NO_ALG','million','N/A','218F','N/A',0),(115,'218G_lab',101218,42174,120171,'218_lab','NO_ALG','million','N/A','218G','N/A',0),(116,'218H_lab',694121,289217,824097,'218_lab','NO_ALG','million','N/A','218H','N/A',0),(117,'218J_lab',12684600,5285230,15059800,'218_lab','complex','million','c_218J_lab','218J','23',0),(118,'218K_lab',490862,204526,582777,'218_lab','NO_ALG','million','N/A','218K','N/A',0),(119,'218L_lab',1193580,497324,1417080,'218_lab','NO_ALG','million','N/A','218L','N/A',0),(120,'218P_lab',402192,167580,477504,'218_lab','NO_ALG','million','N/A','218P','N/A',0),(121,'218S_lab',1161060,483775,1378470,'218_lab','NO_ALG','million','N/A','218S','N/A',0),(122,'218T_lab',7505010,3127090,8910340,'218_lab','complex','million','c_218T_lab','218T','23',0),(123,'218V_lab',145932,60805,173258,'218_lab','NO_ALG','million','N/A','218V','N/A',0),(124,'218_lab',65324000,27218300,77556100,'21_lab','NO_ALG','million','N/A','218','N/A',0),(125,'21_lab',272432000,113513000,323446000,'2_lab','NO_ALG','million','N/A','21','N/A',0),(126,'220A.211_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.211','14',0),(127,'220A.2121_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2121','14',0),(128,'220A.2122_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2122','14',0),(129,'220A.2131_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2131','14',0),(130,'220A.2132_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2132','14',0),(131,'220A.221_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.221','14',0),(132,'220A.222_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.222','14',0),(133,'220A.223_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.223','14',0),(134,'220A.224_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.224','14',0),(135,'220A.225_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.225','14',0),(136,'220A.2311_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2311','14',0),(137,'220A.2312_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2312','14',0),(138,'220A.2321_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2321','14',0),(139,'220A.2322_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2322','14',0),(140,'220A.2323_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2323','14',0),(141,'220A.2324_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2324','14',0),(142,'220A.2325_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2325','14',0),(143,'220A.251_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.251','14',0),(144,'220A.254_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.254','14',0),(145,'220A.2611_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2611','14',0),(146,'220A.2612_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2612','14',0),(147,'220A.2613_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2613','14',0),(148,'220A.2614_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.2614','14',0),(149,'220A.262_lab',0,0,0,'220A_lab','NO_ALG','million','N/A','220A.262','N/A',0),(150,'220A.27_lab',0,0,0,'220A_lab','default_0','million','N/A','220A.27','14',0),(151,'220A_lab',0,0,0,'0_lab','NO_ALG','million','N/A','220A','N/A',0),(152,'221.11_lab',1219680,508200,1448070,'221_lab','NO_ALG','million','N/A','221.11','N/A',0),(153,'221.12_lab',5388670,2245280,6397710,'221_lab','cost_by_weight','million','c_221.12_tol_weight, c_rpv_lab','221.12','13',0),(154,'221.13_lab',1304620,543594,1548920,'221_lab','NO_ALG','million','N/A','221.13','N/A',0),(155,'221.14_lab',0,0,0,'221_lab','default_0','million','N/A','221.14','14',0),(156,'221.21_lab',1119650,466520,1329300,'221_lab','NO_ALG','million','N/A','221.21','N/A',0),(157,'221_lab',9032620,3763590,10724000,'22_lab','NO_ALG','million','N/A','221','N/A',0),(158,'222.11_lab',3684240,1535100,4374120,'222_lab','MWth_scale','million','c_222.11_lab, mwth, scale_1.0','222.11','8',0),(159,'222.12_lab',9586490,3994370,11381600,'222_lab','MWth_scale','million','c_222.12_lab, mwth, scale_1.0','222.12','8',0),(160,'222.13_lab',1774080,739200,2106280,'222_lab','unit_facility','million','no_of_sg, c_SG_per_unit_lab','222.13','16',0),(161,'222.14_lab',237468,98945,281935,'222_lab','MWth_scale','million','c_222.14_lab, mwth, scale_1.0','222.14','8',0),(162,'222_lab',15282300,6367620,18143900,'22_lab','MWth_scale','million','c_222_lab, mwth, scale_1.0','222','8',0),(163,'223.1_lab',2954270,1230940,3507460,'223_lab','factor_sum','million','fac_223.1, prn_223.1_lab, c_220A.2311_fac, c_220A.2312_fac','223.1','22',0),(164,'223.3_lab',4790530,1996050,5687570,'223_lab','factor_sum','million','fac_223.3, prn_223.3_lab, c_220A.2321_fac, c_220A.2322_fac, c_220A.2323_fac, c_220A.2324_fac, c_220A.2325_fac','223.3','22',0),(165,'223.4_lab',4933250,2055520,5857020,'223_lab','unit_volume','million','c_223.4_unit_vol_lab, vol_223.4','223.4','9',0),(166,'223.5_lab',475798,198249,564893,'223_lab','NO_ALG','million','N/A','223.5','N/A',0),(167,'223_lab',13153800,5480770,15616900,'22_lab','NO_ALG','million','N/A','223','N/A',0),(168,'224_lab',9630930,4012890,11434300,'22_lab','esc_1987','million','escalate_1987, ref_224_lab','224','12',0),(169,'225_lab',2058940,857891,2444480,'22_lab','NO_ALG','million','N/A','225','N/A',0),(170,'226.1_lab',1130770,471155,1342510,'226_lab','NO_ALG','million','N/A','226.1','N/A',0),(171,'226.3_lab',1317310,548881,1563980,'226_lab','NO_ALG','million','N/A','226.3','N/A',0),(172,'226.4_lab',15684600,6535270,18621600,'226_lab','MWth_scale','million','c_226.4_lab, mwth, scale_1.0','226.4','8',0),(173,'226.6_lab',40471,16863,48049,'226_lab','NO_ALG','million','N/A','226.6','N/A',0),(174,'226.7_lab',20741700,8642360,24625600,'226_lab','MWth_scale','million','c_226.7_lab, mwth, scale_1.0','226.7','8',0),(175,'226.8_lab',1280000,533333,1519680,'226_lab','NO_ALG','million','N/A','226.8','N/A',0),(176,'226.9_lab',603192,251330,716141,'226_lab','NO_ALG','million','N/A','226.9','N/A',0),(177,'226_lab',39681600,16534000,47112100,'22_lab','NO_ALG','million','N/A','226','N/A',0),(178,'227_lab',18497200,7707180,21960900,'22_lab','esc_1987','million','escalate_1987, ref_227_lab','227','12',0),(179,'228_lab',10255400,4273080,12175700,'22_lab','esc_1987','million','escalate_1987, ref_228_lab','228','12',0),(180,'22_lab',117593000,48997000,139612000,'2_lab','NO_ALG','million','N/A','22','N/A',0),(181,'231_lab',18316300,7631810,21746100,'23_lab','ptn_account','million','c_231_fac, prn_fac_231_lab','231','4',0),(182,'233_lab',19342400,8059320,22964300,'23_lab','MWth_scale','million','c_233_lab, mwth, scale_0.8','233','8',0),(183,'234_lab',17112900,7130380,20317400,'23_lab','MWth_scale','million','c_234_lab, mwth, scale_0.8','234','8',0),(184,'235_lab',23859200,9941320,28326900,'23_lab','ptn_account','million','c_231_lab, prn_235_of_231_lab','235','4',0),(185,'236_lab',11019800,4591580,13083300,'23_lab','esc_1987','million','escalate_1987, ref_236_lab','236','12',0),(186,'237_lab',11059900,4608280,13130900,'23_lab','MWth_scale','million','c_237_lab, mwth, scale_0.8','237','8',0),(187,'23_lab',100710000,41962700,119569000,'2_lab','NO_ALG','million','N/A','23','N/A',0),(188,'241_lab',1449240,603852,1720620,'24_lab','MWe_scale','million','c_241_lab, mwe, scale_0.4','241','17',0),(189,'242_lab',3744920,1560380,4446170,'24_lab','MWe_scale','million','c_242_lab, mwe, scale_0.4','242','17',0),(190,'243_lab',846787,352828,1005350,'24_lab','NO_ALG','million','N/A','243','N/A',0),(191,'244_lab',5982360,2492650,7102570,'24_lab','NO_ALG','million','N/A','244','N/A',0),(192,'245_lab',43155700,17981500,51236700,'24_lab','MWe_scale','million','c_245_lab, mwe, scale_0.4','245','17',0),(193,'246_lab',28161200,11733900,33434500,'24_lab','MWe_scale','million','c_246_lab, mwe, scale_0.4','246','17',0),(194,'24_lab',83340200,34725100,98945900,'2_lab','NO_ALG','million','N/A','24','N/A',0),(195,'251_lab',2038620,849427,2420360,'25_lab','sum_multi_accounts','million','c_251.12_lab, c_251.111_lab, c_251.112_lab, c_251.16_lab, c_251.17_lab','251','1',0),(196,'252_lab',37373500,15572300,44371800,'25_lab','esc_1987','million','escalate_1987, ref_252_lab','252','12',0),(197,'253_lab',9295530,3873140,11036100,'25_lab','esc_1987','million','escalate_1987, ref_253_lab','253','12',0),(198,'254_lab',1206090,502539,1431940,'25_lab','NO_ALG','million','N/A','254','N/A',0),(199,'255_lab',4522500,1884380,5369350,'25_lab','NO_ALG','million','N/A','255','N/A',0),(200,'25_lab',54436200,22681800,64629600,'2_lab','NO_ALG','million','N/A','25','N/A',0),(201,'261_lab',6437230,2682180,7642620,'26_lab','NO_ALG','million','N/A','261','N/A',0),(202,'262_lab',30235000,12597900,35896600,'26_lab','MWth_scale','million','c_262_lab, mwth, scale_0.8','262','8',0),(203,'26_lab',36672200,15280100,43539200,'2_lab','NO_ALG','million','N/A','26','N/A',0),(204,'2_lab',665184000,277160000,789741000,'','NO_ALG','million','N/A','2','N/A',0),(205,'211_mat',24489300,10203900,29075000,'21_mat','esc_1987','million','escalate_1987, ref_211_mat','211','12',0),(206,'212_mat',35854200,14939200,80750981,'21_mat','containment','million','Tot_Mat_containment','212','7',0),(207,'213_mat',27260100,11358400,32364600,'21_mat','MWth_scale','million','c_213_mat, mwth, scale_0.8','213','8',0),(208,'214_mat',881590,367329,1046670,'21_mat','NO_ALG','million','N/A','214','N/A',0),(209,'215_mat',11544200,4810100,13705900,'21_mat','NO_ALG','million','N/A','215','N/A',0),(210,'216_mat',11262200,4692590,13371100,'21_mat','NO_ALG','million','N/A','216','N/A',0),(211,'217_mat',10503700,4376540,12470500,'21_mat','NO_ALG','million','N/A','217','N/A',0),(212,'218A_mat',13090400,5454350,15541700,'218_mat','NO_ALG','million','N/A','218A','N/A',0),(213,'218B_mat',5842580,2434410,6936620,'218_mat','complex','million','c_218B_mat','218B','23',0),(214,'218D_mat',354994,147914,421468,'218_mat','NO_ALG','million','N/A','218D','N/A',0),(215,'218E_mat',1838590,766078,2182870,'218_mat','NO_ALG','million','N/A','218E','N/A',0),(216,'218F_mat',534914,222881,635078,'218_mat','NO_ALG','million','N/A','218F','N/A',0),(217,'218G_mat',38311,15963,45485,'218_mat','NO_ALG','million','N/A','218G','N/A',0),(218,'218H_mat',546072,227530,648326,'218_mat','NO_ALG','million','N/A','218H','N/A',0),(219,'218J_mat',6116940,2548720,7262350,'218_mat','complex','million','c_218J_mat','218J','23',0),(220,'218K_mat',270660,112775,321342,'218_mat','NO_ALG','million','N/A','218K','N/A',0),(221,'218L_mat',576480,240200,684428,'218_mat','NO_ALG','million','N/A','218L','N/A',0),(222,'218P_mat',125635,52348,149161,'218_mat','NO_ALG','million','N/A','218P','N/A',0),(223,'218S_mat',660504,275210,784185,'218_mat','NO_ALG','million','N/A','218S','N/A',0),(224,'218T_mat',3424240,1426760,4065430,'218_mat','complex','million','c_218T_mat','218T','23',0),(225,'218V_mat',67987,28328,80718,'218_mat','NO_ALG','million','N/A','218V','N/A',0),(226,'218_mat',33488300,13953500,39759100,'21_mat','NO_ALG','million','N/A','218','N/A',0),(227,'21_mat',155284000,64701500,184361000,'2_mat','NO_ALG','million','N/A','21','N/A',0),(228,'220A.211_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.211','14',0),(229,'220A.2121_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2121','14',0),(230,'220A.2122_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2122','14',0),(231,'220A.2131_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2131','14',0),(232,'220A.2132_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2132','14',0),(233,'220A.221_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.221','14',0),(234,'220A.222_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.222','14',0),(235,'220A.223_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.223','14',0),(236,'220A.224_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.224','14',0),(237,'220A.225_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.225','14',0),(238,'220A.2311_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2311','14',0),(239,'220A.2312_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2312','14',0),(240,'220A.2321_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2321','14',0),(241,'220A.2322_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2322','14',0),(242,'220A.2323_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2323','14',0),(243,'220A.2324_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2324','14',0),(244,'220A.2325_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2325','14',0),(245,'220A.251_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.251','14',0),(246,'220A.254_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.254','14',0),(247,'220A.2611_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2611','14',0),(248,'220A.2612_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2612','14',0),(249,'220A.2613_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2613','14',0),(250,'220A.2614_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.2614','14',0),(251,'220A.262_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.262','14',0),(252,'220A.27_mat',0,0,0,'220A_mat','default_0','million','N/A','220A.27','14',0),(253,'220A_mat',0,0,0,'0_mat','default_0','million','N/A','220A','14',0),(254,'221.11_mat',121968,50820,144807,'221_mat','NO_ALG','million','N/A','221.11','N/A',0),(255,'221.12_mat',538867,224528,639771,'221_mat','cost_by_weight','million','c_221.12_tol_weight, c_rpv_mat','221.12','13',0),(256,'221.13_mat',130461,54359,154890,'221_mat','NO_ALG','million','N/A','221.13','N/A',0),(257,'221.14_mat',13292400,5538500,15781400,'221_mat','esc_1987','million','escalate_1987, ref_221.14_mat','221.14','12',0),(258,'221.21_mat',111965,46652,132931,'221_mat','NO_ALG','million','N/A','221.21','N/A',0),(259,'221_mat',14195700,5914860,16853800,'22_mat','NO_ALG','million','N/A','221','N/A',0),(260,'222.11_mat',368424,153510,437412,'222_mat','MWth_scale','million','c_222.11_mat, mwth, scale_1.0','222.11','8',0),(261,'222.12_mat',942602,392751,1119110,'222_mat','MWth_scale','million','c_222.12_mat, mwth, scale_1.0','222.12','8',0),(262,'222.13_mat',177408,73920,210628,'222_mat','unit_facility','million','no_of_sg, c_SG_per_unit_mat','222.13','16',0),(263,'222.14_mat',23746,9894,28193,'222_mat','MWth_scale','million','c_222.14_mat, mwth, scale_1.0','222.14','8',0),(264,'222_mat',1512180,630075,1795340,'22_mat','MWth_scale','million','c_222_mat, mwth, scale_1.0','222','8',0),(265,'223.1_mat',280370,116821,332871,'223_mat','factor_sum','million','fac_223.1, prn_223.1_mat, c_220A.2311_fac, c_220A.2312_fac','223.1','22',0),(266,'223.3_mat',802349,334312,952591,'223_mat','factor_sum','million','fac_223.3, prn_223.3_mat, c_220A.2321_fac, c_220A.2322_fac, c_220A.2323_fac, c_220A.2324_fac, c_220A.2325_fac','223.3','22',0),(267,'223.4_mat',495446,206436,588220,'223_mat','unit_volume','million','c_223.4_unit_vol_mat, vol_223.4','223.4','9',0),(268,'223.5_mat',46800,19500,55563,'223_mat','NO_ALG','million','N/A','223.5','N/A',0),(269,'223_mat',1624960,677069,1929240,'22_mat','NO_ALG','million','N/A','223','N/A',0),(270,'224_mat',1845590,768994,2191180,'22_mat','esc_1987','million','escalate_1987, ref_224_mat','224','12',0),(271,'225_mat',253858,105774,301394,'22_mat','NO_ALG','million','N/A','225','N/A',0),(272,'226.1_mat',111631,46513,132534,'226_mat','NO_ALG','million','N/A','226.1','N/A',0),(273,'226.3_mat',349087,145453,414455,'226_mat','NO_ALG','million','N/A','226.3','N/A',0),(274,'226.4_mat',2279030,949595,2705780,'226_mat','MWth_scale','million','c_226.4_mat, mwth, scale_1.0','226.4','8',0),(275,'226.6_mat',2023,843,2402,'226_mat','NO_ALG','million','N/A','226.6','N/A',0),(276,'226.7_mat',2015820,839927,2393290,'226_mat','MWth_scale','million','c_226.7_mat, mwth, scale_1.0','226.7','8',0),(277,'226.8_mat',0,0,0,'226_mat','default_0','million','N/A','226.8','14',0),(278,'226.9_mat',64958,27066,77122,'226_mat','NO_ALG','million','N/A','226.9','N/A',0),(279,'226_mat',5933030,2472090,7044000,'22_mat','NO_ALG','million','N/A','226','N/A',0),(280,'227_mat',1617600,673999,1920500,'22_mat','esc_1987','million','escalate_1987, ref_227_mat','227','12',0),(281,'228_mat',7630070,3179200,9058820,'22_mat','esc_1987','million','escalate_1987, ref_228_mat','228','12',0),(282,'22_mat',34612900,14422100,41094300,'2_mat','NO_ALG','million','N/A','22','N/A',0),(283,'231_mat',3367530,1403140,3998110,'23_mat','ptn_account','million','c_231_fac, prn_fac_231_mat','231','4',0),(284,'233_mat',2760780,1150330,3277750,'23_mat','MWth_scale','million','c_233_mat, mwth, scale_0.8','233','8',0),(285,'234_mat',1703460,709773,2022430,'23_mat','MWth_scale','million','c_234_mat, mwth, scale_0.8','234','8',0),(286,'235_mat',2890930,1204560,3432270,'23_mat','ptn_account','million','c_231_mat, prn_235_of_231_mat','235','4',0),(287,'236_mat',947033,394597,1124370,'23_mat','esc_1987','million','escalate_1987, ref_236_mat','236','12',0),(288,'237_mat',8250290,3437620,9795180,'23_mat','MWth_scale','million','c_237_mat, mwth, scale_0.8','237','8',0),(289,'23_mat',19920000,8300010,23650100,'2_mat','NO_ALG','million','N/A','23','N/A',0),(290,'241_mat',212021,88342,251723,'24_mat','MWe_scale','million','c_241_mat, mwe, scale_0.4','241','17',0),(291,'242_mat',715702,298209,849719,'24_mat','MWe_scale','million','c_242_mat, mwe, scale_0.4','242','17',0),(292,'243_mat',299141,124642,355156,'24_mat','NO_ALG','million','N/A','243','N/A',0),(293,'244_mat',4244970,1768740,5039850,'24_mat','NO_ALG','million','N/A','244','N/A',0),(294,'245_mat',10368400,4320160,12309900,'24_mat','MWe_scale','million','c_245_mat, mwe, scale_0.4','245','17',0),(295,'246_mat',17481900,7284130,20755500,'24_mat','MWe_scale','million','c_246_mat, mwe, scale_0.4','246','17',0),(296,'24_mat',33322100,13884200,39561800,'2_mat','NO_ALG','million','N/A','24','N/A',0),(297,'251_mat',203863,84943,242037,'25_mat','sum_multi_accounts','million','c_251.12_mat, c_251.111_mat, c_251.112_mat, c_251.16_mat, c_251.17_mat','251','1',0),(298,'252_mat',10620900,4425390,12609700,'25_mat','esc_1987','million','escalate_1987, ref_252_mat','252','12',0),(299,'253_mat',1423460,593107,1690000,'25_mat','esc_1987','million','escalate_1987, ref_253_mat','253','12',0),(300,'254_mat',153302,63876,182008,'25_mat','NO_ALG','million','N/A','254','N/A',0),(301,'255_mat',452251,188438,536936,'25_mat','NO_ALG','million','N/A','255','N/A',0),(302,'25_mat',12853800,5355760,15260700,'2_mat','NO_ALG','million','N/A','25','N/A',0),(303,'261_mat',3541050,1475440,4204130,'26_mat','NO_ALG','million','N/A','261','N/A',0),(304,'262_mat',3799090,1582950,4510480,'26_mat','MWth_scale','million','c_262_mat, mwth, scale_0.8','262','8',0),(305,'26_mat',7340140,3058390,8714610,'2_mat','NO_ALG','million','N/A','26','N/A',0),(306,'2_mat',263333000,109722000,312642000,'','NO_ALG','million','N/A','2','N/A',0);
+INSERT INTO `cost_element` VALUES (1,'211_fac',810015,'21_fac','esc_1987','million','escalate_1987, ref_211_fac','211','12',0),(2,'212_fac',0,'21_fac','NO_ALG','million','N/A','212','N/A',0),(3,'213_fac',1770660,'21_fac','MWth_scale','million','c_213_fac, mwth, scale_0.8','213','8',0),(4,'214_fac',147944,'21_fac','NO_ALG','million','N/A','214','N/A',0),(5,'215_fac',8953480,'21_fac','NO_ALG','million','N/A','215','N/A',0),(6,'216_fac',1855240,'21_fac','NO_ALG','million','N/A','216','N/A',0),(7,'217_fac',2842400,'21_fac','NO_ALG','million','N/A','217','N/A',0),(8,'218A_fac',4171000,'218_fac','NO_ALG','million','N/A','218A','N/A',0),(9,'218B_fac',2337580,'218_fac','complex','million','c_218B_fac','218B','23',0),(10,'218D_fac',112407,'218_fac','NO_ALG','million','N/A','218D','N/A',0),(11,'218E_fac',63607,'218_fac','NO_ALG','million','N/A','218E','N/A',0),(12,'218F_fac',0,'218_fac','NO_ALG','million','N/A','218F','N/A',0),(13,'218G_fac',27448,'218_fac','NO_ALG','million','N/A','218G','N/A',0),(14,'218H_fac',54566,'218_fac','NO_ALG','million','N/A','218H','N/A',0),(15,'218J_fac',94629,'218_fac','complex','million','c_218J_fac','218J','23',0),(16,'218K_fac',0,'218_fac','NO_ALG','million','N/A','218K','N/A',0),(17,'218L_fac',147944,'218_fac','NO_ALG','million','N/A','218L','N/A',0),(18,'218P_fac',0,'218_fac','NO_ALG','million','N/A','218P','N/A',0),(19,'218S_fac',23670,'218_fac','NO_ALG','million','N/A','218S','N/A',0),(20,'218T_fac',121724,'218_fac','complex','million','c_218T_fac','218T','23',0),(21,'218V_fac',0,'218_fac','NO_ALG','million','N/A','218V','N/A',0),(22,'218_fac',7154570,'21_fac','NO_ALG','million','N/A','218','N/A',0),(23,'21_fac',64195200,'2_fac','NO_ALG','million','N/A','21','N/A',0),(24,'220A.211_fac',70000000,'220A_fac','unit_weights','million','c_221.12_cs_weight, c_221.12_ss_weight','220A.211','5',0),(25,'220A.2121_fac',31780000,'220A_fac','unit_weights','million','c_zero, c_220A.2121_ss_weight','220A.2121','5',0),(26,'220A.2122_fac',31780000,'220A_fac','unit_weights','million','c_zero, c_220A.2122_ss_weight','220A.2122','5',0),(27,'220A.2131_fac',3100000,'220A_fac','unit_facility','million','no_of_cr, c_cr_per_unit_fac','220A.2131','16',0),(28,'220A.2132_fac',34900000,'220A_fac','unit_facility','million','no_of_crd, c_crd_per_unit_fac','220A.2132','16',0),(29,'220A.221_fac',125240000,'220A_fac','unit_facility','million','no_of_rcpump, c_pump_per_unit_fac','220A.221','16',0),(30,'220A.222_fac',11400000,'220A_fac','unit_weights','million','c_zero, c_220A.222_ss_weight','220A.222','5',0),(31,'220A.223_fac',149800000,'220A_fac','NO_ALG','million','N/A','220A.223','N/A',0),(32,'220A.224_fac',8300000,'220A_fac','unit_weights_plate','million','c_220A.224_cs_weight_plate, c_220A.224_ss_weight','220A.224','18',0),(33,'220A.225_fac',1850000,'220A_fac','unit_weights','million','c_zero, c_220A.225_ss_weight','220A.225','5',0),(34,'220A.2311_fac',1940000,'220A_fac','complex','million','c_220A.2311_fac','220A.2311','23',0),(35,'220A.2312_fac',6260000,'220A_fac','unit_weights_factor','million','c_220A.2312_cs_weight, c_220A.2312_ss_weight, factor_220A.2312','220A.2312','21',0),(36,'220A.2321_fac',1720000,'220A_fac','complex','million','c_220A.2321_fac','220A.2321','23',0),(37,'220A.2322_fac',15300000,'220A_fac','total_weight_prn','million','c_220A.2322_tot_weight, prn_220A.2322cs, prn_220A.2322ss, no_of_acu','220A.2322','20',0),(38,'220A.2323_fac',899999,'220A_fac','total_weight_prn','million','c_220A.2323_tot_weight, prn_220A.2323cs, prn_220A.2323ss, no_of_bit','220A.2323','20',0),(39,'220A.2324_fac',50001,'220A_fac','unit_weights','million','c_zero, c_220A.2324_ss_weight','220A.2324','5',0),(40,'220A.2325_fac',40000,'220A_fac','complex','million','c_220A.2325_fac','220A.2325','23',0),(41,'220A.251_fac',400000,'220A_fac','unit_weights_factor','million','c_220A.251_cs_weight, c_220A.251_ss_weight, factor_220A.251','220A.251','21',0),(42,'220A.254_fac',2510000,'220A_fac','esc_1978','million','escalate_1978, ref_220A.254_1978','220A.254','19',0),(43,'220A.2611_fac',2220000,'220A_fac','sum_multi_accounts','million','c_226.4111_fac, c_226.4112_fac, c_226.41131_fac, c_226.41132_fac, c_226.4114_fac, c_226.41151_fac, c_226.41152_fac','220A.2611','1',0),(44,'220A.2612_fac',2450000,'220A_fac','sum_multi_accounts','million','c_226.4121_fac, c_226.4122_fac, c_226.4123_fac, c_226.4124_fac, c_226.4125_fac, c_226.4126_fac, c_226.4127_fac, c_226.4128_fac','220A.2612','1',0),(45,'220A.2613_fac',1140000,'220A_fac','sum_multi_accounts','million','c_226.4133_fac, c_226.4134_fac, c_226.4135_fac, c_226.4131_fac','220A.2613','1',0),(46,'220A.2614_fac',2450000,'220A_fac','sum_multi_accounts','million','c_226.4141_fac, c_226.4142_fac, c_226.4143_fac, c_226.4144_fac, c_226.4145_fac','220A.2614','1',0),(47,'220A.262_fac',9190000,'220A_fac','NO_ALG','million','N/A','220A.262','N/A',0),(48,'220A.27_fac',0,'220A_fac','default_0','million','N/A','220A.27','14',0),(49,'220A_fac',514720000,'0_fac','NO_ALG','million','N/A','220A','N/A',0),(50,'221.11_fac',2317290,'221_fac','NO_ALG','million','N/A','221.11','N/A',0),(51,'221.12_fac',0,'221_fac','default_0','million','N/A','221.12','14',0),(52,'221.13_fac',0,'221_fac','default_0','million','N/A','221.13','14',0),(53,'221.14_fac',0,'221_fac','default_0','million','N/A','221.14','14',0),(54,'221.21_fac',71734,'221_fac','NO_ALG','million','N/A','221.21','N/A',0),(55,'221_fac',2389020,'22_fac','NO_ALG','million','N/A','221','N/A',0),(56,'222.11_fac',3780840,'222_fac','MWth_scale','million','c_222.11_fac, mwth, scale_1.0','222.11','8',0),(57,'222.12_fac',4394350,'222_fac','MWth_scale','million','c_222.12_fac, mwth, scale_1.0','222.12','8',0),(58,'222.13_fac',75141,'222_fac','esc_1987','million','escalate_1987, ref_222.13_fac','222.13','12',0),(59,'222.14_fac',15028,'222_fac','MWth_scale','million','c_222.14_fac, mwth, scale_1.0','222.14','8',0),(60,'222_fac',8265360,'22_fac','MWth_scale','million','c_222_fac, mwth, scale_1.0','222','8',0),(61,'223.1_fac',2969910,'223_fac','factor_sum','million','fac_223.1, prn_223.1_fac, c_220A.2311_fac, c_220A.2312_fac','223.1','22',0),(62,'223.3_fac',3743030,'223_fac','factor_sum','million','fac_223.3, prn_223.3_fac, c_220A.2321_fac, c_220A.2322_fac, c_220A.2323_fac, c_220A.2324_fac, c_220A.2325_fac','223.3','22',0),(63,'223.4_fac',8660310,'223_fac','unit_volume','million','c_223.4_unit_vol_fac, vol_223.4','223.4','9',0),(64,'223.5_fac',2459540,'223_fac','NO_ALG','million','N/A','223.5','N/A',0),(65,'223_fac',17832800,'22_fac','NO_ALG','million','N/A','223','N/A',0),(66,'224_fac',46047900,'22_fac','esc_1987','million','escalate_1987, ref_224_fac','224','12',0),(67,'225_fac',6278660,'22_fac','NO_ALG','million','N/A','225','N/A',0),(68,'226.1_fac',2058360,'226_fac','NO_ALG','million','N/A','226.1','N/A',0),(69,'226.3_fac',2274530,'226_fac','NO_ALG','million','N/A','226.3','N/A',0),(70,'226.4_fac',19443300,'226_fac','MWth_scale','million','c_226.4_fac, mwth, scale_1.0','226.4','8',0),(71,'226.6_fac',442507,'226_fac','NO_ALG','million','N/A','226.6','N/A',0),(72,'226.7_fac',28179300,'226_fac','MWth_scale','million','c_226.7_fac, mwth, scale_1.0','226.7','8',0),(73,'226.8_fac',0,'226_fac','NO_ALG','million','N/A','226.8','N/A',0),(74,'226.9_fac',1038110,'226_fac','NO_ALG','million','N/A','226.9','N/A',0),(75,'226_fac',53436100,'22_fac','NO_ALG','million','N/A','226','N/A',0),(76,'227_fac',37538400,'22_fac','esc_1987','million','escalate_1987, ref_227_fac','227','12',0),(77,'228_fac',0,'22_fac','default_0','million','N/A','228','14',0),(78,'22_fac',686508000,'2_fac','NO_ALG','million','N/A','22','N/A',0),(79,'231_fac',356031000,'23_fac','dev_factor_ref','million','c_turbine, scale_tur_231_fac, n_231','231','10',0),(80,'233_fac',56339400,'23_fac','MWth_scale','million','c_233_fac, mwth, scale_0.8','233','8',0),(81,'234_fac',44874300,'23_fac','MWth_scale','million','c_234_fac, mwth, scale_0.8','234','8',0),(82,'235_fac',31848700,'23_fac','ptn_account','million','c_231_fac, prn_235_of_231_fac','235','4',0),(83,'236_fac',5322810,'23_fac','esc_1987','million','escalate_1987, ref_236_fac','236','12',0),(84,'237_fac',0,'23_fac','default_0','million','N/A','237','14',0),(85,'23_fac',494417000,'2_fac','NO_ALG','million','N/A','23','N/A',0),(86,'241_fac',32067500,'24_fac','MWe_scale','million','c_241_fac, mwe, scale_0.4','241','17',0),(87,'242_fac',52157800,'24_fac','MWe_scale','million','c_242_fac, mwe, scale_0.4','242','17',0),(88,'243_fac',4477640,'24_fac','NO_ALG','million','N/A','243','N/A',0),(89,'244_fac',0,'24_fac','NO_ALG','million','N/A','244','N/A',0),(90,'245_fac',0,'24_fac','default_0','million','N/A','245','14',0),(91,'246_fac',4510910,'24_fac','MWe_scale','million','c_246_fac, mwe, scale_0.4','246','17',0),(92,'24_fac',93213800,'2_fac','NO_ALG','million','N/A','24','N/A',0),(93,'251_fac',14416500,'25_fac','sum_multi_accounts','million','c_251.12_fac, c_251.111_fac, c_251.112_fac, c_251.16_fac, c_251.17_fac','251','1',0),(94,'252_fac',24869600,'25_fac','esc_1987','million','escalate_1987, ref_252_fac','252','12',0),(95,'253_fac',5552920,'25_fac','esc_1987','million','escalate_1987, ref_253_fac','253','12',0),(96,'254_fac',6181990,'25_fac','NO_ALG','million','N/A','254','N/A',0),(97,'255_fac',2161480,'25_fac','NO_ALG','million','N/A','255','N/A',0),(98,'25_fac',53182400,'2_fac','NO_ALG','million','N/A','25','N/A',0),(99,'261_fac',498939,'26_fac','NO_ALG','million','N/A','261','N/A',0),(100,'262_fac',86813900,'26_fac','MWth_scale','million','c_262_fac, mwth, scale_0.8','262','8',0),(101,'26_fac',87312900,'2_fac','NO_ALG','million','N/A','26','N/A',0),(102,'2_fac',1475120000,'','NO_ALG','million','N/A','2','N/A',0),(103,'211_lab',41328800,'21_lab','esc_1987','million','escalate_1987, ref_211_lab','211','12',0),(104,'212_lab',101951276.3,'21_lab','containment','million','Tot_Labor_containment','212','7',0),(105,'213_lab',31835200,'21_lab','MWth_scale','million','c_213_lab, mwth, scale_0.8','213','8',0),(106,'214_lab',2686150,'21_lab','NO_ALG','million','N/A','214','N/A',0),(107,'215_lab',29975200,'21_lab','NO_ALG','million','N/A','215','N/A',0),(108,'216_lab',25712000,'21_lab','NO_ALG','million','N/A','216','N/A',0),(109,'217_lab',12836600,'21_lab','NO_ALG','million','N/A','217','N/A',0),(110,'218A_lab',31857800,'218_lab','NO_ALG','million','N/A','218A','N/A',0),(111,'218B_lab',9663950,'218_lab','complex','million','c_218B_lab','218B','23',0),(112,'218D_lab',682327,'218_lab','NO_ALG','million','N/A','218D','N/A',0),(113,'218E_lab',4872660,'218_lab','NO_ALG','million','N/A','218E','N/A',0),(114,'218F_lab',1535890,'218_lab','NO_ALG','million','N/A','218F','N/A',0),(115,'218G_lab',120171,'218_lab','NO_ALG','million','N/A','218G','N/A',0),(116,'218H_lab',824097,'218_lab','NO_ALG','million','N/A','218H','N/A',0),(117,'218J_lab',15059800,'218_lab','complex','million','c_218J_lab','218J','23',0),(118,'218K_lab',582777,'218_lab','NO_ALG','million','N/A','218K','N/A',0),(119,'218L_lab',1417080,'218_lab','NO_ALG','million','N/A','218L','N/A',0),(120,'218P_lab',477504,'218_lab','NO_ALG','million','N/A','218P','N/A',0),(121,'218S_lab',1378470,'218_lab','NO_ALG','million','N/A','218S','N/A',0),(122,'218T_lab',8910340,'218_lab','complex','million','c_218T_lab','218T','23',0),(123,'218V_lab',173258,'218_lab','NO_ALG','million','N/A','218V','N/A',0),(124,'218_lab',77556100,'21_lab','NO_ALG','million','N/A','218','N/A',0),(125,'21_lab',323446000,'2_lab','NO_ALG','million','N/A','21','N/A',0),(126,'220A.211_lab',0,'220A_lab','default_0','million','N/A','220A.211','14',0),(127,'220A.2121_lab',0,'220A_lab','default_0','million','N/A','220A.2121','14',0),(128,'220A.2122_lab',0,'220A_lab','default_0','million','N/A','220A.2122','14',0),(129,'220A.2131_lab',0,'220A_lab','default_0','million','N/A','220A.2131','14',0),(130,'220A.2132_lab',0,'220A_lab','default_0','million','N/A','220A.2132','14',0),(131,'220A.221_lab',0,'220A_lab','default_0','million','N/A','220A.221','14',0),(132,'220A.222_lab',0,'220A_lab','default_0','million','N/A','220A.222','14',0),(133,'220A.223_lab',0,'220A_lab','default_0','million','N/A','220A.223','14',0),(134,'220A.224_lab',0,'220A_lab','default_0','million','N/A','220A.224','14',0),(135,'220A.225_lab',0,'220A_lab','default_0','million','N/A','220A.225','14',0),(136,'220A.2311_lab',0,'220A_lab','default_0','million','N/A','220A.2311','14',0),(137,'220A.2312_lab',0,'220A_lab','default_0','million','N/A','220A.2312','14',0),(138,'220A.2321_lab',0,'220A_lab','default_0','million','N/A','220A.2321','14',0),(139,'220A.2322_lab',0,'220A_lab','default_0','million','N/A','220A.2322','14',0),(140,'220A.2323_lab',0,'220A_lab','default_0','million','N/A','220A.2323','14',0),(141,'220A.2324_lab',0,'220A_lab','default_0','million','N/A','220A.2324','14',0),(142,'220A.2325_lab',0,'220A_lab','default_0','million','N/A','220A.2325','14',0),(143,'220A.251_lab',0,'220A_lab','default_0','million','N/A','220A.251','14',0),(144,'220A.254_lab',0,'220A_lab','default_0','million','N/A','220A.254','14',0),(145,'220A.2611_lab',0,'220A_lab','default_0','million','N/A','220A.2611','14',0),(146,'220A.2612_lab',0,'220A_lab','default_0','million','N/A','220A.2612','14',0),(147,'220A.2613_lab',0,'220A_lab','default_0','million','N/A','220A.2613','14',0),(148,'220A.2614_lab',0,'220A_lab','default_0','million','N/A','220A.2614','14',0),(149,'220A.262_lab',0,'220A_lab','NO_ALG','million','N/A','220A.262','N/A',0),(150,'220A.27_lab',0,'220A_lab','default_0','million','N/A','220A.27','14',0),(151,'220A_lab',0,'0_lab','NO_ALG','million','N/A','220A','N/A',0),(152,'221.11_lab',1448070,'221_lab','NO_ALG','million','N/A','221.11','N/A',0),(153,'221.12_lab',6397710,'221_lab','cost_by_weight','million','c_221.12_tol_weight, c_rpv_lab','221.12','13',0),(154,'221.13_lab',1548920,'221_lab','NO_ALG','million','N/A','221.13','N/A',0),(155,'221.14_lab',0,'221_lab','default_0','million','N/A','221.14','14',0),(156,'221.21_lab',1329300,'221_lab','NO_ALG','million','N/A','221.21','N/A',0),(157,'221_lab',10724000,'22_lab','NO_ALG','million','N/A','221','N/A',0),(158,'222.11_lab',4374120,'222_lab','MWth_scale','million','c_222.11_lab, mwth, scale_1.0','222.11','8',0),(159,'222.12_lab',11381600,'222_lab','MWth_scale','million','c_222.12_lab, mwth, scale_1.0','222.12','8',0),(160,'222.13_lab',2106280,'222_lab','unit_facility','million','no_of_sg, c_SG_per_unit_lab','222.13','16',0),(161,'222.14_lab',281935,'222_lab','MWth_scale','million','c_222.14_lab, mwth, scale_1.0','222.14','8',0),(162,'222_lab',18143900,'22_lab','MWth_scale','million','c_222_lab, mwth, scale_1.0','222','8',0),(163,'223.1_lab',3507460,'223_lab','factor_sum','million','fac_223.1, prn_223.1_lab, c_220A.2311_fac, c_220A.2312_fac','223.1','22',0),(164,'223.3_lab',5687570,'223_lab','factor_sum','million','fac_223.3, prn_223.3_lab, c_220A.2321_fac, c_220A.2322_fac, c_220A.2323_fac, c_220A.2324_fac, c_220A.2325_fac','223.3','22',0),(165,'223.4_lab',5857020,'223_lab','unit_volume','million','c_223.4_unit_vol_lab, vol_223.4','223.4','9',0),(166,'223.5_lab',564893,'223_lab','NO_ALG','million','N/A','223.5','N/A',0),(167,'223_lab',15616900,'22_lab','NO_ALG','million','N/A','223','N/A',0),(168,'224_lab',11434300,'22_lab','esc_1987','million','escalate_1987, ref_224_lab','224','12',0),(169,'225_lab',2444480,'22_lab','NO_ALG','million','N/A','225','N/A',0),(170,'226.1_lab',1342510,'226_lab','NO_ALG','million','N/A','226.1','N/A',0),(171,'226.3_lab',1563980,'226_lab','NO_ALG','million','N/A','226.3','N/A',0),(172,'226.4_lab',18621600,'226_lab','MWth_scale','million','c_226.4_lab, mwth, scale_1.0','226.4','8',0),(173,'226.6_lab',48049,'226_lab','NO_ALG','million','N/A','226.6','N/A',0),(174,'226.7_lab',24625600,'226_lab','MWth_scale','million','c_226.7_lab, mwth, scale_1.0','226.7','8',0),(175,'226.8_lab',1519680,'226_lab','NO_ALG','million','N/A','226.8','N/A',0),(176,'226.9_lab',716141,'226_lab','NO_ALG','million','N/A','226.9','N/A',0),(177,'226_lab',47112100,'22_lab','NO_ALG','million','N/A','226','N/A',0),(178,'227_lab',21960900,'22_lab','esc_1987','million','escalate_1987, ref_227_lab','227','12',0),(179,'228_lab',12175700,'22_lab','esc_1987','million','escalate_1987, ref_228_lab','228','12',0),(180,'22_lab',139612000,'2_lab','NO_ALG','million','N/A','22','N/A',0),(181,'231_lab',21746100,'23_lab','ptn_account','million','c_231_fac, prn_fac_231_lab','231','4',0),(182,'233_lab',22964300,'23_lab','MWth_scale','million','c_233_lab, mwth, scale_0.8','233','8',0),(183,'234_lab',20317400,'23_lab','MWth_scale','million','c_234_lab, mwth, scale_0.8','234','8',0),(184,'235_lab',28326900,'23_lab','ptn_account','million','c_231_lab, prn_235_of_231_lab','235','4',0),(185,'236_lab',13083300,'23_lab','esc_1987','million','escalate_1987, ref_236_lab','236','12',0),(186,'237_lab',13130900,'23_lab','MWth_scale','million','c_237_lab, mwth, scale_0.8','237','8',0),(187,'23_lab',119569000,'2_lab','NO_ALG','million','N/A','23','N/A',0),(188,'241_lab',1720620,'24_lab','MWe_scale','million','c_241_lab, mwe, scale_0.4','241','17',0),(189,'242_lab',4446170,'24_lab','MWe_scale','million','c_242_lab, mwe, scale_0.4','242','17',0),(190,'243_lab',1005350,'24_lab','NO_ALG','million','N/A','243','N/A',0),(191,'244_lab',7102570,'24_lab','NO_ALG','million','N/A','244','N/A',0),(192,'245_lab',51236700,'24_lab','MWe_scale','million','c_245_lab, mwe, scale_0.4','245','17',0),(193,'246_lab',33434500,'24_lab','MWe_scale','million','c_246_lab, mwe, scale_0.4','246','17',0),(194,'24_lab',98945900,'2_lab','NO_ALG','million','N/A','24','N/A',0),(195,'251_lab',2420360,'25_lab','sum_multi_accounts','million','c_251.12_lab, c_251.111_lab, c_251.112_lab, c_251.16_lab, c_251.17_lab','251','1',0),(196,'252_lab',44371800,'25_lab','esc_1987','million','escalate_1987, ref_252_lab','252','12',0),(197,'253_lab',11036100,'25_lab','esc_1987','million','escalate_1987, ref_253_lab','253','12',0),(198,'254_lab',1431940,'25_lab','NO_ALG','million','N/A','254','N/A',0),(199,'255_lab',5369350,'25_lab','NO_ALG','million','N/A','255','N/A',0),(200,'25_lab',64629600,'2_lab','NO_ALG','million','N/A','25','N/A',0),(201,'261_lab',7642620,'26_lab','NO_ALG','million','N/A','261','N/A',0),(202,'262_lab',35896600,'26_lab','MWth_scale','million','c_262_lab, mwth, scale_0.8','262','8',0),(203,'26_lab',43539200,'2_lab','NO_ALG','million','N/A','26','N/A',0),(204,'2_lab',789741000,'','NO_ALG','million','N/A','2','N/A',0),(205,'211_mat',29075000,'21_mat','esc_1987','million','escalate_1987, ref_211_mat','211','12',0),(206,'212_mat',80750981,'21_mat','containment','million','Tot_Mat_containment','212','7',0),(207,'213_mat',32364600,'21_mat','MWth_scale','million','c_213_mat, mwth, scale_0.8','213','8',0),(208,'214_mat',1046670,'21_mat','NO_ALG','million','N/A','214','N/A',0),(209,'215_mat',13705900,'21_mat','NO_ALG','million','N/A','215','N/A',0),(210,'216_mat',13371100,'21_mat','NO_ALG','million','N/A','216','N/A',0),(211,'217_mat',12470500,'21_mat','NO_ALG','million','N/A','217','N/A',0),(212,'218A_mat',15541700,'218_mat','NO_ALG','million','N/A','218A','N/A',0),(213,'218B_mat',6936620,'218_mat','complex','million','c_218B_mat','218B','23',0),(214,'218D_mat',421468,'218_mat','NO_ALG','million','N/A','218D','N/A',0),(215,'218E_mat',2182870,'218_mat','NO_ALG','million','N/A','218E','N/A',0),(216,'218F_mat',635078,'218_mat','NO_ALG','million','N/A','218F','N/A',0),(217,'218G_mat',45485,'218_mat','NO_ALG','million','N/A','218G','N/A',0),(218,'218H_mat',648326,'218_mat','NO_ALG','million','N/A','218H','N/A',0),(219,'218J_mat',7262350,'218_mat','complex','million','c_218J_mat','218J','23',0),(220,'218K_mat',321342,'218_mat','NO_ALG','million','N/A','218K','N/A',0),(221,'218L_mat',684428,'218_mat','NO_ALG','million','N/A','218L','N/A',0),(222,'218P_mat',149161,'218_mat','NO_ALG','million','N/A','218P','N/A',0),(223,'218S_mat',784185,'218_mat','NO_ALG','million','N/A','218S','N/A',0),(224,'218T_mat',4065430,'218_mat','complex','million','c_218T_mat','218T','23',0),(225,'218V_mat',80718,'218_mat','NO_ALG','million','N/A','218V','N/A',0),(226,'218_mat',39759100,'21_mat','NO_ALG','million','N/A','218','N/A',0),(227,'21_mat',184361000,'2_mat','NO_ALG','million','N/A','21','N/A',0),(228,'220A.211_mat',0,'220A_mat','default_0','million','N/A','220A.211','14',0),(229,'220A.2121_mat',0,'220A_mat','default_0','million','N/A','220A.2121','14',0),(230,'220A.2122_mat',0,'220A_mat','default_0','million','N/A','220A.2122','14',0),(231,'220A.2131_mat',0,'220A_mat','default_0','million','N/A','220A.2131','14',0),(232,'220A.2132_mat',0,'220A_mat','default_0','million','N/A','220A.2132','14',0),(233,'220A.221_mat',0,'220A_mat','default_0','million','N/A','220A.221','14',0),(234,'220A.222_mat',0,'220A_mat','default_0','million','N/A','220A.222','14',0),(235,'220A.223_mat',0,'220A_mat','default_0','million','N/A','220A.223','14',0),(236,'220A.224_mat',0,'220A_mat','default_0','million','N/A','220A.224','14',0),(237,'220A.225_mat',0,'220A_mat','default_0','million','N/A','220A.225','14',0),(238,'220A.2311_mat',0,'220A_mat','default_0','million','N/A','220A.2311','14',0),(239,'220A.2312_mat',0,'220A_mat','default_0','million','N/A','220A.2312','14',0),(240,'220A.2321_mat',0,'220A_mat','default_0','million','N/A','220A.2321','14',0),(241,'220A.2322_mat',0,'220A_mat','default_0','million','N/A','220A.2322','14',0),(242,'220A.2323_mat',0,'220A_mat','default_0','million','N/A','220A.2323','14',0),(243,'220A.2324_mat',0,'220A_mat','default_0','million','N/A','220A.2324','14',0),(244,'220A.2325_mat',0,'220A_mat','default_0','million','N/A','220A.2325','14',0),(245,'220A.251_mat',0,'220A_mat','default_0','million','N/A','220A.251','14',0),(246,'220A.254_mat',0,'220A_mat','default_0','million','N/A','220A.254','14',0),(247,'220A.2611_mat',0,'220A_mat','default_0','million','N/A','220A.2611','14',0),(248,'220A.2612_mat',0,'220A_mat','default_0','million','N/A','220A.2612','14',0),(249,'220A.2613_mat',0,'220A_mat','default_0','million','N/A','220A.2613','14',0),(250,'220A.2614_mat',0,'220A_mat','default_0','million','N/A','220A.2614','14',0),(251,'220A.262_mat',0,'220A_mat','default_0','million','N/A','220A.262','14',0),(252,'220A.27_mat',0,'220A_mat','default_0','million','N/A','220A.27','14',0),(253,'220A_mat',0,'0_mat','default_0','million','N/A','220A','14',0),(254,'221.11_mat',144807,'221_mat','NO_ALG','million','N/A','221.11','N/A',0),(255,'221.12_mat',639771,'221_mat','cost_by_weight','million','c_221.12_tol_weight, c_rpv_mat','221.12','13',0),(256,'221.13_mat',154890,'221_mat','NO_ALG','million','N/A','221.13','N/A',0),(257,'221.14_mat',15781400,'221_mat','esc_1987','million','escalate_1987, ref_221.14_mat','221.14','12',0),(258,'221.21_mat',132931,'221_mat','NO_ALG','million','N/A','221.21','N/A',0),(259,'221_mat',16853800,'22_mat','NO_ALG','million','N/A','221','N/A',0),(260,'222.11_mat',437412,'222_mat','MWth_scale','million','c_222.11_mat, mwth, scale_1.0','222.11','8',0),(261,'222.12_mat',1119110,'222_mat','MWth_scale','million','c_222.12_mat, mwth, scale_1.0','222.12','8',0),(262,'222.13_mat',210628,'222_mat','unit_facility','million','no_of_sg, c_SG_per_unit_mat','222.13','16',0),(263,'222.14_mat',28193,'222_mat','MWth_scale','million','c_222.14_mat, mwth, scale_1.0','222.14','8',0),(264,'222_mat',1795340,'22_mat','MWth_scale','million','c_222_mat, mwth, scale_1.0','222','8',0),(265,'223.1_mat',332871,'223_mat','factor_sum','million','fac_223.1, prn_223.1_mat, c_220A.2311_fac, c_220A.2312_fac','223.1','22',0),(266,'223.3_mat',952591,'223_mat','factor_sum','million','fac_223.3, prn_223.3_mat, c_220A.2321_fac, c_220A.2322_fac, c_220A.2323_fac, c_220A.2324_fac, c_220A.2325_fac','223.3','22',0),(267,'223.4_mat',588220,'223_mat','unit_volume','million','c_223.4_unit_vol_mat, vol_223.4','223.4','9',0),(268,'223.5_mat',55563,'223_mat','NO_ALG','million','N/A','223.5','N/A',0),(269,'223_mat',1929240,'22_mat','NO_ALG','million','N/A','223','N/A',0),(270,'224_mat',2191180,'22_mat','esc_1987','million','escalate_1987, ref_224_mat','224','12',0),(271,'225_mat',301394,'22_mat','NO_ALG','million','N/A','225','N/A',0),(272,'226.1_mat',132534,'226_mat','NO_ALG','million','N/A','226.1','N/A',0),(273,'226.3_mat',414455,'226_mat','NO_ALG','million','N/A','226.3','N/A',0),(274,'226.4_mat',2705780,'226_mat','MWth_scale','million','c_226.4_mat, mwth, scale_1.0','226.4','8',0),(275,'226.6_mat',2402,'226_mat','NO_ALG','million','N/A','226.6','N/A',0),(276,'226.7_mat',2393290,'226_mat','MWth_scale','million','c_226.7_mat, mwth, scale_1.0','226.7','8',0),(277,'226.8_mat',0,'226_mat','default_0','million','N/A','226.8','14',0),(278,'226.9_mat',77122,'226_mat','NO_ALG','million','N/A','226.9','N/A',0),(279,'226_mat',7044000,'22_mat','NO_ALG','million','N/A','226','N/A',0),(280,'227_mat',1920500,'22_mat','esc_1987','million','escalate_1987, ref_227_mat','227','12',0),(281,'228_mat',9058820,'22_mat','esc_1987','million','escalate_1987, ref_228_mat','228','12',0),(282,'22_mat',41094300,'2_mat','NO_ALG','million','N/A','22','N/A',0),(283,'231_mat',3998110,'23_mat','ptn_account','million','c_231_fac, prn_fac_231_mat','231','4',0),(284,'233_mat',3277750,'23_mat','MWth_scale','million','c_233_mat, mwth, scale_0.8','233','8',0),(285,'234_mat',2022430,'23_mat','MWth_scale','million','c_234_mat, mwth, scale_0.8','234','8',0),(286,'235_mat',3432270,'23_mat','ptn_account','million','c_231_mat, prn_235_of_231_mat','235','4',0),(287,'236_mat',1124370,'23_mat','esc_1987','million','escalate_1987, ref_236_mat','236','12',0),(288,'237_mat',9795180,'23_mat','MWth_scale','million','c_237_mat, mwth, scale_0.8','237','8',0),(289,'23_mat',23650100,'2_mat','NO_ALG','million','N/A','23','N/A',0),(290,'241_mat',251723,'24_mat','MWe_scale','million','c_241_mat, mwe, scale_0.4','241','17',0),(291,'242_mat',849719,'24_mat','MWe_scale','million','c_242_mat, mwe, scale_0.4','242','17',0),(292,'243_mat',355156,'24_mat','NO_ALG','million','N/A','243','N/A',0),(293,'244_mat',5039850,'24_mat','NO_ALG','million','N/A','244','N/A',0),(294,'245_mat',12309900,'24_mat','MWe_scale','million','c_245_mat, mwe, scale_0.4','245','17',0),(295,'246_mat',20755500,'24_mat','MWe_scale','million','c_246_mat, mwe, scale_0.4','246','17',0),(296,'24_mat',39561800,'2_mat','NO_ALG','million','N/A','24','N/A',0),(297,'251_mat',242037,'25_mat','sum_multi_accounts','million','c_251.12_mat, c_251.111_mat, c_251.112_mat, c_251.16_mat, c_251.17_mat','251','1',0),(298,'252_mat',12609700,'25_mat','esc_1987','million','escalate_1987, ref_252_mat','252','12',0),(299,'253_mat',1690000,'25_mat','esc_1987','million','escalate_1987, ref_253_mat','253','12',0),(300,'254_mat',182008,'25_mat','NO_ALG','million','N/A','254','N/A',0),(301,'255_mat',536936,'25_mat','NO_ALG','million','N/A','255','N/A',0),(302,'25_mat',15260700,'2_mat','NO_ALG','million','N/A','25','N/A',0),(303,'261_mat',4204130,'26_mat','NO_ALG','million','N/A','261','N/A',0),(304,'262_mat',4510480,'26_mat','MWth_scale','million','c_262_mat, mwth, scale_0.8','262','8',0),(305,'26_mat',8714610,'2_mat','NO_ALG','million','N/A','26','N/A',0),(306,'2_mat',312642000,'','NO_ALG','million','N/A','2','N/A',0);
 /*!40000 ALTER TABLE `cost_element` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,6 +263,104 @@ INSERT INTO `facility` VALUES (1,'Electrical Equipment','Including switchgear, s
 UNLOCK TABLES;
 
 --
+-- Table structure for table `lfr_account`
+--
+
+DROP TABLE IF EXISTS `lfr_account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lfr_account` (
+  `ind` int DEFAULT NULL,
+  `code_of_account` varchar(20) NOT NULL,
+  `account_description` text,
+  `total_cost` double DEFAULT NULL,
+  `unit` text,
+  `level` int DEFAULT NULL,
+  `main_subaccounts` text,
+  `supaccount` text,
+  `cost_elements` text,
+  `review_status` text,
+  `lft` int DEFAULT NULL,
+  `rgt` int DEFAULT NULL,
+  `prn` double DEFAULT NULL,
+  PRIMARY KEY (`code_of_account`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lfr_account`
+--
+
+LOCK TABLES `lfr_account` WRITE;
+/*!40000 ALTER TABLE `lfr_account` DISABLE KEYS */;
+INSERT INTO `lfr_account` VALUES (37,'2','TOTAL DIRECT COST',1419783854,'dollar',0,'','0','','Unchanged',1,74,1),(1,'211','Yardwork',71213859.06,'dollar',2,'','21','211_fac,211_lab,211_mat','Unchanged',3,4,0.027628981),(2,'212','Reactor containment building',81425435.33,'dollar',2,'','21','212_fac,212_lab,212_mat','Unchanged',5,6,0.071675596),(3,'213','Turbine room and heater bay',0,'dollar',2,'','21','213_fac,213_lab,213_mat','Unchanged',7,8,0.02559467),(4,'215','Primary auxiliary building and tunnels',12470000,'dollar',2,'','21','215_fac,215_lab,215_mat','Unchanged',9,10,0.020420772),(5,'216','Waste processing building',38750000,'dollar',2,'','21','216_fac,216_lab,216_mat','Unchanged',11,12,0.015882927),(6,'217','Fuel storage building',28149583.82,'dollar',2,'','21','217_fac,217_lab,217_mat','Unchanged',13,14,0.010921249),(7,'218A','Control Room/Diesel Generator Building',16250000,'dollar',3,'','218','218A_fac,218A_lab,218A_mat','Unchanged',15,16,0.020007875),(8,'220A.211','Vessel Structure (NSSS)',137000000,'dollar',3,'','22','220A.211_fac,220A.211_lab,220A.211_mat','Unchanged',17,18,0.027158047),(9,'220A.2121','Lower Internals (NSSS)',45204200,'dollar',3,'','22','220A.2121_fac,220A.2121_lab,220A.2121_mat','Unchanged',19,20,0.012329754),(10,'220A.2122','Upper Internals (NSSS)',45204200,'dollar',3,'','22','220A.2122_fac,220A.2122_lab,220A.2122_mat','Unchanged',21,22,0.012329754),(11,'220A.2131','Control Rods (NSSS)',1320000,'dollar',3,'','22','220A.2131_fac,220A.2131_lab,220A.2131_mat','Unchanged',23,24,0.001202713),(12,'220A.2132','Control Rod Drives (NSSS)',13453440,'dollar',3,'','22','220A.2132_fac,220A.2132_lab,220A.2132_mat','Unchanged',25,26,0.013540226),(13,'220A.221','Main Coolant Pumps (NSSS)',55696873.29,'dollar',3,'','22','220A.221_fac,220A.221_lab,220A.221_mat','Unchanged',27,28,0.048589625),(14,'220A.222','Reactor Coolant Piping (NSSS)',7464800,'dollar',3,'','22','220A.222_fac,220A.222_lab,220A.222_mat','Unchanged',29,30,0.004422882),(15,'220A.223','Steam Generators (NSSS)',122087095.9,'dollar',3,'','22','220A.223_fac,220A.223_lab,220A.223_mat','Unchanged',31,32,0.058118221),(16,'220A.224','Pressurizer (NSSS)',0,'dollar',3,'','22','220A.224_fac,220A.224_lab,220A.224_mat','Unchanged',33,34,0.003220169),(21,'222','Main heat transfer transport system',8220525.704,'dollar',2,'222.12','22','222_fac,222_lab,222_mat','Unchanged',35,44,0.010942603),(17,'222.11','Fluid Circulation Drive System (Field Cost 222)',2504335.453,'dollar',3,'','222','222.11_fac,222.11_lab,222.11_mat','Unchanged',36,37,0.003333601),(18,'222.12','Reactor Coolant Piping System (Field Cost 222)',4924232.687,'dollar',3,'','222','222.12_fac,222.12_lab,222.12_mat','Unchanged',38,39,0.006554803),(19,'222.13','Steam Generator Equipment (Field Cost 222)',697187.7179,'dollar',3,'','222','222.13_fac,222.13_lab,222.13_mat','Unchanged',40,41,0.000928049),(20,'222.14','Pressurizing System (Field Cost 222)',94769.84553,'dollar',3,'','222','222.14_fac,222.14_lab,222.14_mat','Unchanged',42,43,0.000126151),(22,'224','Radwaste processing',59673441.34,'dollar',2,'','22','224_fac,224_lab,224_mat','Unchanged',45,46,0.023151622),(23,'226.4','Coolant Treatment & Recycle',34304867.39,'dollar',3,'','226','226.4_fac,226.4_lab,226.4_mat','Unchanged',47,48,0.015817883),(24,'226.7','Aux Cool Sys (Broken Down Further)',0,'dollar',3,'','226','226.7_fac,226.7_lab,226.7_mat','Unchanged',49,50,0.021415357),(25,'227','Reactor instrumentation and control',61419737.22,'dollar',2,'','22','227_fac,227_lab,227_mat','Unchanged',51,52,0.023829136),(26,'231','Turbine generator',0,'dollar',2,'','23','231_fac,231_lab,231_mat','Unchanged',53,54,0.148118277),(27,'233','Condensing systems',0,'dollar',2,'','23','233_fac,233_lab,233_mat','Unchanged',55,56,0.032039296),(28,'234','Feedwater heating system',0,'dollar',2,'','23','234_fac,234_lab,234_mat','Unchanged',57,58,0.026077184),(29,'235','Other turbine plant equipment',9563415.121,'dollar',2,'','23','235_fac,235_lab,235_mat','Unchanged',59,60,0.024678068),(30,'241','Switchgear',0,'dollar',2,'','24','241_fac,241_lab,241_mat','Unchanged',61,62,0.013206497),(31,'242','Station service equipment',0,'dollar',2,'','24','242_fac,242_lab,242_mat','Unchanged',63,64,0.022290424),(32,'245','Electric structure and wiring contnr.',0,'dollar',2,'','24','245_fac,245_lab,245_mat','Unchanged',65,66,0.024654288),(33,'246','Power and control wiring',0,'dollar',2,'','24','246_fac,246_lab,246_mat','Unchanged',67,68,0.022774295),(34,'252','Air, water and steam service systems',81851078.87,'dollar',2,'','25','252_fac,252_lab,252_mat','Unchanged',69,70,0.031755924),(35,'262','Mechanical equipment',44777444.42,'dollar',2,'','26','262_fac,262_lab,262_mat','Unchanged',71,72,0.04935819),(36,'2C','Calculated DIRECT COST',1225489991,'dollar',0,'','0','2c_fac,2c_lab,2c_mat','Unchanged',2,73,0.863152505),(38,'311','Chilled Water Facilities',0,'dollar',2,'','31','','Unchanged',72,75,0);
+/*!40000 ALTER TABLE `lfr_account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lfr_cost_element`
+--
+
+DROP TABLE IF EXISTS `lfr_cost_element`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lfr_cost_element` (
+  `ind` int NOT NULL AUTO_INCREMENT,
+  `cost_element` text,
+  `cost_2017` double DEFAULT NULL,
+  `sup_cost_ele` text,
+  `alg_name` text,
+  `fun_unit` text,
+  `variables` text,
+  `account` text,
+  `algno` text,
+  `updated` int DEFAULT NULL,
+  PRIMARY KEY (`ind`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lfr_cost_element`
+--
+
+LOCK TABLES `lfr_cost_element` WRITE;
+/*!40000 ALTER TABLE `lfr_cost_element` DISABLE KEYS */;
+INSERT INTO `lfr_cost_element` VALUES (1,'211_fac',810015.17,'21_fac','esc_1987','million','escalate_1987, ref_211_fac','211','12',0),(2,'212_fac',0,'21_fac','default_0','million','N/A','212','N/A',0),(3,'213_fac',660388.72,'21_fac','MWth_scale','million','c_213_fac, mwth, scale_0.8','213','8',0),(4,'215_fac',2121224.73,'21_fac','NO_ALG','million','N/A','215','N/A',0),(5,'216_fac',1756069.67,'21_fac','NO_ALG','million','N/A','216','N/A',0),(6,'217_fac',2842399.83,'21_fac','NO_ALG','million','N/A','217','N/A',0),(7,'218A_fac',1314294.08,'218_fac','NO_ALG','million','N/A','218A','N/A',0),(8,'220A.211_fac',127380000,'220A_fac','NO_ALG','million','N/A','220A.211','N/A',0),(9,'220A.2121_fac',45204200,'220A_fac','unit_weights','million','c_zero, c_220A.2121_ss_weight','220A.2121','5',0),(10,'220A.2122_fac',45204200,'220A_fac','unit_weights','million','c_zero, c_220A.2122_ss_weight','220A.2122','5',0),(11,'220A.2131_fac',1320000,'220A_fac','unit_facility','million','no_of_cr, c_cr_per_unit_fac','220A.2131','16',0),(12,'220A.2132_fac',13453440,'220A_fac','unit_facility','million','no_of_crd, c_crd_per_unit_fac','220A.2132','16',0),(13,'220A.221_fac',55696873.29,'220A_fac','unit_facility','million','no_of_rcpump, c_pump_per_unit_fac','220A.221','16',0),(14,'220A.222_fac',7464800,'220A_fac','unit_weights','million','c_zero, c_220A.222_ss_weight','220A.222','5',0),(15,'220A.223_fac',118647119.77,'220A_fac','Sgsum','million','N/A','220A.223','N/A',0),(16,'220A.224_fac',1379368.42,'220A_fac','MWth_lmfbrscale','million','r_78_220A224_fac, mwth, scale_1.0','220A.224','24',0),(17,'222.11_fac',1101963.79,'222_fac','MWth_scale','million','c_222.11_fac, mwth, scale_1.0','222.11','8',0),(18,'222.12_fac',1280778.06,'222_fac','MWth_scale','million','c_222.12_fac, mwth, scale_1.0','222.12','8',0),(19,'222.13_fac',21900.68,'222_fac','MWth_scale','million','c_222.13_fac, mwth, scale_1.0','222.13','8',0),(20,'222.14_fac',4380.14,'222_fac','MWth_scale','million','c_222.14_fac, mwth, scale_1.0','222.14','8',0),(21,'222_fac',2409022.68,'22_fac','MWth_scale','million','c_222_fac, mwth, scale_1.0','222','8',0),(22,'224_fac',46047915.43,'22_fac','esc_1987','million','escalate_1987, ref_224_fac','224','12',0),(23,'226.4_fac',34304867.39,'226_fac','MWth_scale','million','r_78_226.4_fac, mwth, scale_1.0','226.4','8',0),(24,'226.7_fac',0,'226_fac','default_0','million','N/A','226.7','14',0),(25,'227_fac',37538349.96,'22_fac','esc_1987','million','escalate_1987, ref_227_fac','227','12',0),(26,'231_fac',53544604.81,'23_fac','dev_factor_ref','million','c_turbine, scale_tur_231_fac, scale_1.0','231','10',0),(27,'233_fac',19829554.55,'23_fac','MWreth_scale','million','c_233_fac, mwreth, scale_0.8','233','25',0),(28,'234_fac',0,'23_fac','default_0','million','N/A','234','14',0),(29,'235_fac',4788444.35,'23_fac','ptn_account','million','c_231_fac, prn_235_of_231_fac','235','4',0),(30,'241_fac',20635161.28,'24_fac','MWe_scale','million','c_241_fac, mwe, scale_0.4','241','17',0),(31,'242_fac',33563126.13,'24_fac','MWe_scale','million','c_242_fac, mwe, scale_0.4','242','17',0),(32,'245_fac',0,'24_fac','MWe_scale','million','c_245_fac, mwe, scale_0.4','245','17',0),(33,'246_fac',2902733.98,'24_fac','MWe_scale','million','c_246_fac, mwe, scale_0.4','246','17',0),(34,'252_fac',24869567.31,'25_fac','esc_1987','million','escalate_1987, ref_252_fac','252','12',0),(35,'262_fac',30555532.85,'26_fac','MWreth_scale','million','c_262_fac, mwreth, scale_0.8','262','25',0),(36,'2c_fac',736246154.62,'','NO_ALG','million','N/A','2','N/A',0),(37,'211_lab',41328822.54,'21_lab','esc_1987','million','escalate_1987, ref_211_lab','211','12',0),(38,'212_lab',43940775.98,'21_lab','containment','million','Tot_Labor_containment','212','7',0),(39,'213_lab',11873274.12,'21_lab','MWth_scale','million','c_213_lab, mwth, scale_0.8','213','8',0),(40,'215_lab',7101615.96,'21_lab','NO_ALG','million','N/A','215','N/A',0),(41,'216_lab',24337584.5,'21_lab','NO_ALG','million','N/A','216','N/A',0),(42,'217_lab',12836637.9,'21_lab','NO_ALG','million','N/A','217','N/A',0),(43,'218A_lab',10038481.64,'218_lab','NO_ALG','million','N/A','218A','N/A',0),(44,'220A.211_lab',8750000,'220A_lab','NO_ALG','million','N/A','220A.211','N/A',0),(45,'220A.2121_lab',0,'220A_lab','default_0','million','N/A','220A.2121','14',0),(46,'220A.2122_lab',0,'220A_lab','default_0','million','N/A','220A.2122','14',0),(47,'220A.2131_lab',0,'220A_lab','default_0','million','N/A','220A.2131','14',0),(48,'220A.2132_lab',0,'220A_lab','default_0','million','N/A','220A.2132','14',0),(49,'220A.221_lab',0,'220A_lab','default_0','million','N/A','220A.221','14',0),(50,'220A.222_lab',0,'220A_lab','default_0','million','N/A','220A.222','14',0),(51,'220A.223_lab',3173085.99,'220A_lab','Sgsum','million','N/A','220A.223','N/A',0),(52,'220A.224_lab',0,'220A_lab','default_0','million','N/A','220A.224','14',0),(53,'222.11_lab',1274883.33,'222_lab','MWth_scale','million','c_222.11_lab, mwth, scale_1.0','222.11','8',0),(54,'222.12_lab',3317279.46,'222_lab','MWth_scale','million','c_222.12_lab, mwth, scale_1.0','222.12','8',0),(55,'222.13_lab',613897.3,'222_lab','MWth_scale','million','r_222.13_lab, mwth, scale_1.0','222.13','8',0),(56,'222.14_lab',82172.71,'222_lab','MWth_scale','million','c_222.14_lab, mwth, scale_1.0','222.14','8',0),(57,'222_lab',5288232.81,'22_mat','MWth_scale','million','c_222_lab, mwth, scale_1.0','222','8',0),(58,'224_lab',11434348.55,'22_lab','esc_1987','million','escalate_1987, ref_224_lab','224','12',0),(59,'226.4_lab',0,'226_lab','default_0','million','N/A','226.4','14',0),(60,'226.7_lab',0,'226_lab','default_0','million','N/A','226.7','14',0),(61,'227_lab',21960889.79,'22_lab','esc_1987','million','escalate_1987, ref_227_lab','227','12',0),(62,'231_lab',588990.65,'23_lab','ptn_account','million','c_231_fac, prn_fac_231_lab','231','4',0),(63,'233_lab',8082642.16,'23_lab','MWreth_scale','million','c_233_lab, mwreth, scale_0.8','233','25',0),(64,'234_lab',0,'23_lab','default_0','million','N/A','234','14',0),(65,'235_lab',4258930.48,'23_lab','ptn_account','million','c_231_lab, prn_235_of_231_lab','235','4',0),(66,'241_lab',1107205.12,'24_lab','MWe_scale','million','c_241_lab, mwe, scale_0.4','241','17',0),(67,'242_lab',2861071.44,'24_lab','MWe_scale','million','c_242_lab, mwe, scale_0.4','242','17',0),(68,'245_lab',32970390.22,'24_lab','MWe_scale','million','c_245_lab, mwe, scale_0.4','245','17',0),(69,'246_lab',21514837.92,'24_lab','MWe_scale','million','c_246_lab, mwe, scale_0.4','246','17',0),(70,'252_lab',44371766.01,'25_lab','esc_1987','million','escalate_1987, ref_252_lab','252','12',0),(71,'262_lab',12634376.8,'26_lab','MWreth_scale','million','c_262_lab, mwreth, scale_0.8','262','25',0),(72,'2c_lab',330450874.57,'','NO_ALG','million','N/A','2','N/A',0),(73,'211_mat',29075021.35,'21_mat','esc_1987','million','escalate_1987, ref_211_mat','211','12',0),(74,'212_mat',37484659.34,'21_mat','containment','million','Tot_Mat_containment','212','7',0),(75,'213_mat',12070727.96,'21_mat','MWth_scale','million','c_213_mat, mwth, scale_0.8','213','8',0),(76,'215_mat',3247159.31,'21_mat','NO_ALG','million','N/A','215','N/A',0),(77,'216_mat',12656345.83,'21_mat','NO_ALG','million','N/A','216','N/A',0),(78,'217_mat',12470546.09,'21_mat','NO_ALG','million','N/A','217','N/A',0),(79,'218A_mat',4897224.28,'218_mat','NO_ALG','million','N/A','218A','N/A',0),(80,'220A.211_mat',870000,'220A_mat','NO_ALG','million','N/A','220A.211','N/A',0),(81,'220A.2121_mat',0,'220A_mat','default_0','million','N/A','220A.2121','14',0),(82,'220A.2122_mat',0,'220A_mat','default_0','million','N/A','220A.2122','14',0),(83,'220A.2131_mat',0,'220A_mat','default_0','million','N/A','220A.2131','14',0),(84,'220A.2132_mat',0,'220A_mat','default_0','million','N/A','220A.2132','14',0),(85,'220A.221_mat',0,'220A_mat','default_0','million','N/A','220A.221','14',0),(86,'220A.222_mat',0,'220A_mat','default_0','million','N/A','220A.222','14',0),(87,'220A.223_mat',266890.16,'220A_mat','Sgsum','million','N/A','220A.223','N/A',0),(88,'220A.224_mat',0,'220A_mat','default_0','million','N/A','220A.224','14',0),(89,'222.11_mat',127488.33,'222_mat','MWth_scale','million','c_222.11_mat, mwth, scale_1.0','222.11','8',0),(90,'222.12_mat',326175.16,'222_mat','MWth_scale','million','c_222.12_mat, mwth, scale_1.0','222.12','8',0),(91,'222.13_mat',61389.73,'222_mat','MWth_scale','million','r_222.13_mat, mwth, scale_1.0','222.13','8',0),(92,'222.14_mat',8217,'222_mat','MWth_scale','million','c_222.14_mat, mwth, scale_1.0','222.14','8',0),(93,'222_mat',523270.22,'22_mat','MWth_scale','million','c_222_mat, mwth, scale_1.0','222','8',0),(94,'224_mat',2191177.36,'22_mat','esc_1987','million','escalate_1987, ref_224_mat','224','12',0),(95,'226.4_mat',0,'226_mat','default_0','million','N/A','226.4','14',0),(96,'226.7_mat',0,'226_mat','default_0','million','N/A','226.7','14',0),(97,'227_mat',1920497.47,'22_mat','esc_1987','million','escalate_1987, ref_227_mat','227','12',0),(98,'231_mat',3266220.89,'23_mat','ptn_account','million','c_231_fac, prn_fac_231_mat','231','4',0),(99,'233_mat',1153654.54,'23_mat','MWreth_scale','million','c_233_mat, mwreth, scale_0.8','233','25',0),(100,'234_mat',0,'23_mat','default_0','million','N/A','234','14',0),(101,'235_mat',516040.29,'23_mat','ptn_account','million','c_231_mat, prn_235_of_231_mat','235','4',0),(102,'241_mat',161981.4,'24_mat','MWe_scale','million','c_241_mat, mwe, scale_0.4','241','17',0),(103,'242_mat',546787.41,'24_mat','MWe_scale','million','c_242_mat, mwe, scale_0.4','242','17',0),(104,'245_mat',7921308.52,'24_mat','MWe_scale','million','c_245_mat, mwe, scale_0.4','245','17',0),(105,'246_mat',13355962.89,'24_mat','MWe_scale','million','c_246_mat, mwe, scale_0.4','246','17',0),(106,'252_mat',12609745.55,'25_mat','esc_1987','million','escalate_1987, ref_252_mat','252','12',0),(107,'262_mat',1587534.77,'26_mat','MWreth_scale','million','c_262_mat, mwreth, scale_0.8','262','25',0),(108,'2c_mat',158795865.48,'','NO_ALG','million','N/A','2','N/A',0);
+/*!40000 ALTER TABLE `lfr_cost_element` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lfr_variable`
+--
+
+DROP TABLE IF EXISTS `lfr_variable`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lfr_variable` (
+  `ind` int NOT NULL AUTO_INCREMENT,
+  `var_name` text,
+  `var_description` text,
+  `var_value` double DEFAULT NULL,
+  `var_unit` text,
+  `var_alg` text,
+  `var_need` text,
+  `v_linked` text,
+  `user_input` int DEFAULT NULL,
+  PRIMARY KEY (`ind`)
+) ENGINE=InnoDB AUTO_INCREMENT=389 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lfr_variable`
+--
+
+LOCK TABLES `lfr_variable` WRITE;
+/*!40000 ALTER TABLE `lfr_variable` DISABLE KEYS */;
+INSERT INTO `lfr_variable` VALUES (1,'c_213_fac','Turbine building structure factory cost',1.7706643,'million','','','',0),(2,'c_213_lab','Turbine building structure labor cost',31.835162,'million','','','',0),(3,'c_213_mat','Turbine building structure material cost',32.364585,'million','','','',0),(4,'c_220A.2121_ss_weight','weight of the stainless steel lower internals',145.82,'ton','','','',0),(5,'c_220A.2122_ss_weight','weight of the stainless steel upper internals',145.82,'ton','','','',0),(6,'c_220A.222_ss_weight','weight of the stainless steel reactor coolant piping',24.08,'ton','','','',0),(7,'c_222_fac','Main heat transfer transport system factory cost',8.265356805,'million','','','',0),(8,'c_222_lab','Main heat transfer transport system labor cost',18.14392675,'million','','','',0),(9,'c_222_mat','Main heat transfer transport system material cost',1.795340116,'million','','','',0),(10,'c_222.11_fac','Fluid Circulation Drive System (Field Cost 222) factory cost',3.780837782,'million','','','',0),(11,'c_222.11_lab','Fluid Circulation Drive System (Field Cost 222) labor cost',4.374124686,'million','','','',0),(12,'c_222.11_mat','Fluid Circulation Drive System (Field Cost 222) material cost',0.437412469,'million','','','',0),(13,'c_222.12_fac','Reactor Coolant Piping System (Field Cost 222) factory cost',4.394349539,'million','','','',0),(14,'c_222.12_lab','Reactor Coolant Piping System (Field Cost 222) labor cost',11.38158584,'million','','','',0),(15,'c_222.12_mat','Reactor Coolant Piping System (Field Cost 222) material cost',1.119106974,'million','','','',0),(16,'c_222.13_fac','Steam Generator Equipment (Field Cost 222) factory cost',0.7514124,'million','','','',0),(17,'c_222.14_fac','Pressurizing System (Field Cost 222) factory cost',0.015028247,'million','','','',0),(18,'c_222.14_lab','Pressurizing System (Field Cost 222) labor cost',0.281934576,'million','','','',0),(19,'c_222.14_mat','Pressurizing System (Field Cost 222) material cost',0.028192508,'million','','','',0),(20,'c_231_fac','Turbine factory cost',53.54460481,'million','','','',0),(21,'c_231_lab','Turbine labor cost',0.588990653,'million','','','',0),(22,'c_231_mat','Turbine material cost',3.26622089,'million','','','',0),(23,'c_233_fac','Condensing Systems factory cost',56.339442,'million','','','',0),(24,'c_233_lab','Condensing Systems labor cost',22.964285,'million','','','',0),(25,'c_233_mat','Condensing Systems material cost',3.2777465,'million','','','',0),(26,'c_241_fac','Switchgear factory cost',32.06748045,'million','','','',0),(27,'c_241_lab','Switchgear labor cost',1.720620353,'million','','','',0),(28,'c_241_mat','Switchgear material cost',0.251722551,'million','','','',0),(29,'c_242_fac','Station service equipment factory cost',52.15781338,'million','','','',0),(30,'c_242_lab','Station service equipment labor cost',4.446166005,'million','','','',0),(31,'c_242_mat','Station service equipment material cost',0.849719287,'million','','','',0),(32,'c_245_fac','Electric structure and wiring contnr.  factory cost',0,'million','','','',0),(33,'c_245_lab','Electric structure and wiring contnr. labor cost',51.23668914,'million','','','',0),(34,'c_245_mat','Electric structure and wiring contnr. material cost',12.30988227,'million','','','',0),(35,'c_246_fac','Power and control wiring factory cost',4.510910469,'million','','','',0),(36,'c_246_lab','Power and control wiring labor cost',33.4345167,'million','','','',0),(37,'c_246_mat','Power and control wiring material cost',20.75545101,'million','','','',0),(38,'c_262_fac','Heat Rejection System factory cost',86.81393498,'million','','','',0),(39,'c_262_lab','Heat Rejection System labor cost',35.89660737,'million','','','',0),(40,'c_262_mat','Heat Rejection System material cost',4.510480683,'million','','','',0),(41,'c_cr_per_unit_fac','unit cost of rod',0.06,'million','','','',0),(42,'c_crd_per_unit_fac','unit cost of rod drive',0.61152,'million','','','',0),(43,'c_pump_ap1000','AP1000 factory cost of main coolant pumps',31.25,'million','','','c_pump_per_unit_fac',0),(44,'c_pump_per_unit_fac','Reactor coolant pumps Factory Equipment Cost',13.92421832,'million','pump','c_pump_ap1000,CH_abr1000,CH_AP1000,scale_0.52','',0),(45,'c_turbine','Turbine equipment cost',52.64956225,'million','','','',0),(46,'c_zero','place holder for weight',0,'ton','','','',0),(47,'CH_abr1000','CH factor of PWR-12 BE',6072830,'gpm*feet','','','c_pump_per_unit_fac',0),(48,'CH_AP1000','CH factor of AP1000',28743750,'gpm*feet','','','c_pump_per_unit_fac',0),(49,'escalate_1987','escalator 1987 to 2017',2.849407,'1','','','',0),(50,'mwe','user_input MWE',0,'MW','','','',0),(51,'mwreth','rejected thermal power',620,'MW','','','',0),(52,'mwth','user_input mwth',0,'MW','','','',0),(53,'no_of_cr','Total control rods',22,'1','','','',0),(54,'no_of_crd','Total control rod drives',22,'1','','','',0),(55,'no_of_rcpump','total number of reactor coolant pumps',4,'1','','','',0),(56,'prn_235_of_231_fac','factory portion of cost from factory of 231',0.089454842,'1','','','',0),(57,'prn_235_of_231_lab','labor portion of cost from labor of 231',1.302615598,'1','','','',0),(58,'prn_235_of_231_mat','material portion of cost from labor of 231',0.858473379,'1','','','',0),(59,'prn_fac_231_lab','labor portion of cost from factory of 231',0.061,'1','','','',0),(60,'prn_fac_231_mat','material portion of cost from factory of 231',0.0112,'1','','','',0),(61,'r_222.13_lab','labor cost of Steam Generator Equipment (Field Cost 222)',2.10628,'million','','','',0),(62,'r_222.13_mat','material cost of Steam Generator Equipment (Field Cost 222)',0.210628,'million','','','',0),(63,'r_78_220A224_fac','factory cost of  pressurizer in ref',5.2416,'million','','','',0),(64,'r_78_226.4_fac','Coolant Treatment & Recycle factory cost',117.7,'million','','','',0),(65,'ref_211_fac','yardwork factory cost',0.284275,'million','','','',0),(66,'ref_211_lab','yardwork labor cost',14.504359,'million','','','',0),(67,'ref_211_mat','yardwork material cost',10.203885,'million','','','',0),(68,'ref_224_fac','Radwaste processing factory cost',16.16052583,'million','','','',0),(69,'ref_224_lab','Radwaste processing labor cost',4.012887083,'million','','','',0),(70,'ref_224_mat','Radwaste processing material cost',0.768994167,'million','','','',0),(71,'ref_227_fac','Reactor instrumentation and control factory cost',13.174092,'million','','','',0),(72,'ref_227_lab','Reactor instrumentation and control labor cost',7.707179,'million','','','',0),(73,'ref_227_mat','Reactor instrumentation and control material cost',0.673999,'million','','','',0),(74,'ref_252_fac','Air, water and steam service systems factory cost ',8.72798,'million','','','',0),(75,'ref_252_lab','Air, water and steam service systems labor cost ',15.572281,'million','','','',0),(76,'ref_252_mat','Air, water and steam service systems material cost ',4.425393,'million','','','',0),(77,'scale_0.4','electric scale 0.4',0.4,'1','','','',0),(78,'scale_0.52','SH scale 1.0',0.52,'1','','','c_pump_per_unit_fac',0),(79,'scale_0.8','thermal scale 0.8',0.8,'1','','','',0),(80,'scale_1.0','thermal scale 1.0',1,'1','','','',0),(81,'scale_tur_231_fac','factory scale of cost from turbine',1.017,'1','','','',0),(82,'CPI','The Consumer Price Index',2.2,'1','','','infl',0),(83,'Void_fraction','Void fraction of the inside of the containment ',0.917,'1','','','Internal_v_m3',0),(84,'liner_fraction','liner fraction of containment',1,'1','','','Liner_s_m2',0),(85,'Cont_H_tot_m','Containment total height ',50.5968,'m','','','Cont_H_wall_m',0),(86,'Cont_rad_out_m','Containment outside radius ',15.24,'m','','','Cont_H_wall_m,Cont_rad_in_m,Basemat_s_m2,Walls_s_m2,Walls_v_m3,Dome_rad_in_m,Dome_s_m2,Dome_v_m3,Surf_paint_m2',0),(87,'Cont_shell_t_m','Shell wall thickness ',1.3716,'m','','','Cont_rad_in_m',0),(88,'Cont_H_wall_m','Containment wall height ',35.3568,'m','wall_height','Cont_H_tot_m,Cont_rad_out_m','Walls_s_m2,Walls_v_m3,Intern_tot_v_m3,Inside_liner_s,Surf_paint_m2',0),(89,'Basemat_t_m','Basemat thickness ',3.048,'m','','','Basemat_v_m3',0),(90,'Dome_t_m','Dome thickness ',1.0668,'m','','','Dome_rad_in_m',0),(91,'Intern_wall_t','Internal wall average thickness ',1.2192,'m','','','Internal_s_m2',0),(92,'React_cav_A_m2','Reactor cavity area ',1021.93344,'m^2','','','Total_Labor_React_cav_liner,Total_Mat_React_cav_liner',0),(93,'Cont_rad_in_m','Containment inside radius ',13.8684,'m','inside_rad','Cont_rad_out_m,Cont_shell_t_m','Walls_s_m2,Walls_v_m3,Intern_tot_v_m3,Inside_liner_s',0),(94,'Basemat_s_m2','Basemat surface',729.6587699,'m^2','round_surface','Cont_rad_out_m','Basemat_v_m3,Total_Labor_Constr_joints_Substr,Total_Labor_Formwork_Substr,Total_Labor_Waterproofing_Substr,Total_Labor_Welded_wire_fabric_Substr,Total_Mat_Constr_joints_Substr,Total_Mat_Formwork_Substr,Total_Mat_Waterproofing_Substr,Total_Mat_Welded_wire_fabric_Substr',0),(95,'Basemat_v_m3','Basemat volume',2223.999931,'m^3','basemat_volume','Basemat_s_m2,Basemat_t_m','Struct_v_m3,Total_Labor_Cadweld_Substr,Total_Labor_Concrete_Substr,Total_Labor_Embedded_steel_Substr,Total_Labor_Reinforc_steel_Substr,Total_Mat_Cadweld_Substr,Total_Mat_Concrete_Substr,Total_Mat_Embedded_steel_Substr,Total_Mat_Reinforc_steel_Substr',0),(96,'Walls_s_m2','Walls surface',6466.527882,'m^2','walls_surface','Cont_H_wall_m,Cont_rad_out_m,Cont_rad_in_m','Total_Labor_Constr_joints_Superstr,Total_Labor_Formwork_Superstr,Total_Labor_Rubbing_surfaces_Superstr,Total_Labor_Waterproofing_Superstr,Total_Mat_Constr_joints_Superstr,Total_Mat_Formwork_Superstr,Total_Mat_Rubbing_surfaces_Superstr,Total_Mat_Waterproofing_Superstr',0),(97,'Walls_v_m3','Walls volume',4434.744822,'m^3','wall_volume','Cont_H_wall_m,Cont_rad_out_m,Cont_rad_in_m','Struct_v_m3,Total_Labor_Cadweld_Superstr,Total_Labor_Concrete_Superstr,Total_Labor_Embedded_steel_Superstr,Total_Labor_Reinforc_steel_Superstr,Total_Mat_Cadweld_Superstr,Total_Mat_Concrete_Superstr,Total_Mat_Embedded_steel_Superstr,Total_Mat_Reinforc_steel_Superstr',0),(98,'Dome_rad_in_m','Dome inside radius ',14.1732,'m','inside_rad','Cont_rad_out_m,Dome_t_m','Dome_s_m2,Dome_v_m3,Intern_tot_v_m3,Inside_liner_s',0),(99,'Dome_s_m2','Roof surface',2721.48128,'m^2','roof_surface','Cont_rad_out_m,Dome_rad_in_m','Total_Labor_Constr_joints_Dome,Total_Labor_Formwork_Dome,Total_Labor_Rubbing_surfaces_Dome,Total_Labor_Waterproofing_Dome,Total_Mat_Constr_joints_Dome,Total_Mat_Formwork_Dome,Total_Mat_Rubbing_surfaces_Dome,Total_Mat_Waterproofing_Dome',0),(100,'Dome_v_m3','Roof volume',1450.366728,'m^3','roof_volume','Cont_rad_out_m,Dome_rad_in_m','Struct_v_m3,Total_Labor_Cadweld_Dome,Total_Labor_Concrete_Dome,Total_Labor_Embedded_steel_Dome,Total_Labor_Reinforc_steel_Dome,Total_Mat_Cadweld_Dome,Total_Mat_Concrete_Dome,Total_Mat_Embedded_steel_Dome,Total_Mat_Reinforc_steel_Dome',0),(101,'Intern_tot_v_m3','Tot intenal Volume',27326.62075,'m^3','tot_internal_volume','Cont_rad_in_m,Cont_H_wall_m,Dome_rad_in_m','Internal_v_m3,Total_Labor_Lighting_Power,Total_Labor_Plumb_drains,Total_Labor_Special_HVAC,Total_Labor_other,Total_Labor_fl_grate_handrail_stairs,Total_Mat_Lighting_Power,Total_Mat_Plumb_drains,Total_Mat_Special_HVAC,Total_Mat_other,Total_Mat_fl_grate_handrail_stairs',0),(102,'Internal_v_m3','Building internal volume',2268.109522,'m^3','building_internal_volume','Intern_tot_v_m3,Void_fraction','Internal_s_m2,Struct_v_m3,Total_Labor_Cadweld_Interior,Total_Labor_Concrete_Interior,Total_Labor_Embedded_steel_Interior,Total_Labor_Maj_supp_embedments_Interior,Total_Labor_Reinforc_steel_Interior,Total_Mat_Cadweld_Interior,Total_Mat_Concrete_Interior,Total_Mat_Embedded_steel_Interior,Total_Mat_Maj_supp_embedments_Interior,Total_Mat_Reinforc_steel_Interior',0),(103,'Internal_s_m2','Building internal surface',3720.652103,'m^2','building_internal _surface','Internal_v_m3,Intern_wall_t','Surf_paint_m2,Total_Labor_Constr_joints_Interior,Total_Labor_Formwork_Interior,Total_Labor_Rubbing_surfaces_Interior,Total_Mat_Constr_joints_Interior,Total_Mat_Formwork_Interior,Total_Mat_Rubbing_surfaces_Interior',0),(104,'Struct_v_m3','volume of the structures ',10377.221,'m^3','volume_of_the_structures ','Basemat_v_m3,Walls_v_m3,Dome_v_m3,Internal_v_m3','Total_Labor_Misc_steel_frames,Total_Labor_Struct_steel,Total_Mat_Misc_steel_frames,Total_Mat_Struct_steel',0),(105,'Inside_liner_s','Inside liner surface',4947.305358,'m^2','Inside_liner_surface','Cont_rad_in_m,Cont_H_wall_m,Dome_rad_in_m','Liner_s_m2,Surf_paint_m2,',0),(106,'Liner_s_m2','Liner Surface',4947.305358,'m^2','liner_Surface','Inside_liner_s,liner_fraction','Total_Labor_cont_liner,Total_Mat_cont_liner',0),(107,'Surf_paint_m2','painted surface',13512.89169,'m^2','painted_surface','Inside_liner_s,Cont_H_wall_m,Cont_rad_out_m,Internal_s_m2','Total_Labor_painting,Total_Mat_painting',0),(108,'infl','Inflation rate',2.870501004,'1','Inflation_rate','CPI','Unit_Labor_Cadweld_Substr,Unit_Labor_Cadweld_Superstr,Unit_Labor_Cadweld_Dome,Unit_Labor_Cadweld_Interior,Unit_Labor_Concrete_Substr,Unit_Labor_Concrete_Superstr,Unit_Labor_Concrete_Dome,Unit_Labor_Concrete_Interior,Unit_Labor_Constr_joints_Substr,Unit_Labor_Constr_joints_Superstr,Unit_Labor_Constr_joints_Dome,Unit_Labor_Constr_joints_Interior,Unit_Labor_Embedded_steel_Substr,Unit_Labor_Embedded_steel_Superstr,Unit_Labor_Embedded_steel_Dome,Unit_Labor_Embedded_steel_Interior,Unit_Labor_Formwork_Substr,Unit_Labor_Formwork_Superstr,Unit_Labor_Formwork_Dome,Unit_Labor_Formwork_Interior,Unit_Labor_Maj_supp_embedments_Interior,Unit_Labor_Reinforc_steel_Substr,Unit_Labor_Reinforc_steel_Superstr,Unit_Labor_Reinforc_steel_Dome,Unit_Labor_Reinforc_steel_Interior,Unit_Labor_Rubbing_surfaces_Superstr,Unit_Labor_Rubbing_surfaces_Dome,Unit_Labor_Rubbing_surfaces_Interior,Unit_Labor_Waterproofing_Substr,Unit_Labor_Waterproofing_Superstr,Unit_Labor_Waterproofing_Dome,Unit_Labor_Welded_wire_fabric_Substr,Unit_Labor_Lighting_Power,Unit_Labor_Plumb_drains,Unit_Labor_Special_HVAC,Unit_Labor_other,Unit_Labor_Misc_steel_frames,Unit_Labor_React_cav_liner,Unit_Labor_Struct_steel,Unit_Labor_cont_liner,Unit_Labor_fl_grate_handrail_stairs,Unit_Labor_painting,Unit_Mat_Cadweld_Substr,Unit_Mat_Cadweld_Superstr,Unit_Mat_Cadweld_Dome,Unit_Mat_Cadweld_Interior,Unit_Mat_Concrete_Substr,Unit_Mat_Concrete_Superstr,Unit_Mat_Concrete_Dome,Unit_Mat_Concrete_Interior,Unit_Mat_Constr_joints_Substr,Unit_Mat_Constr_joints_Superstr,Unit_Mat_Constr_joints_Dome,Unit_Mat_Constr_joints_Interior,Unit_Mat_Embedded_steel_Substr,Unit_Mat_Embedded_steel_Superstr,Unit_Mat_Embedded_steel_Dome,Unit_Mat_Embedded_steel_Interior,Unit_Mat_Formwork_Substr,Unit_Mat_Formwork_Superstr,Unit_Mat_Formwork_Dome,Unit_Mat_Formwork_Interior,Unit_Mat_Maj_supp_embedments_Interior,Unit_Mat_Reinforc_steel_Substr,Unit_Mat_Reinforc_steel_Superstr,Unit_Mat_Reinforc_steel_Dome,Unit_Mat_Reinforc_steel_Interior,Unit_Mat_Rubbing_surfaces_Superstr,Unit_Mat_Rubbing_surfaces_Dome,Unit_Mat_Rubbing_surfaces_Interior,Unit_Mat_Waterproofing_Substr,Unit_Mat_Waterproofing_Superstr,Unit_Mat_Waterproofing_Dome,Unit_Mat_Welded_wire_fabric_Substr,Unit_Mat_Lighting_Power,Unit_Mat_Plumb_drains,Unit_Mat_Special_HVAC,Unit_Mat_other,Unit_Mat_Misc_steel_frames,Unit_Mat_React_cav_liner,Unit_Mat_Struct_steel,Unit_Mat_cont_liner,Unit_Mat_fl_grate_handrail_stairs,Unit_Mat_painting',0),(109,'Unit_EEDB_Labor_Cadweld_Substr','Unit cost of Labor Cadweld Substructure (base mat) in EEDB',85.46,'dollar/m^3','','','Unit_Labor_Cadweld_Substr',0),(110,'Unit_EEDB_Labor_Cadweld_Superstr','Unit cost of Labor Cadweld Superstructure (shell) in EEDB',114.62,'dollar/m^3','','','Unit_Labor_Cadweld_Superstr',0),(111,'Unit_EEDB_Labor_Cadweld_Dome','Unit cost of Labor Cadweld Superstructure (dome) in EEDB',231.09,'dollar/m^3','','','Unit_Labor_Cadweld_Dome',0),(112,'Unit_EEDB_Labor_Cadweld_Interior','Unit cost of Labor Cadweld Interior structure in EEDB',48.2,'dollar/m^3','','','Unit_Labor_Cadweld_Interior',0),(113,'Unit_EEDB_Labor_Concrete_Substr','Unit cost of Labor Concrete Substructure (base mat) in EEDB',72.52,'dollar/m^3','','','Unit_Labor_Concrete_Substr',0),(114,'Unit_EEDB_Labor_Concrete_Superstr','Unit cost of Labor Concrete Superstructure (shell) in EEDB',87.39,'dollar/m^3','','','Unit_Labor_Concrete_Superstr',0),(115,'Unit_EEDB_Labor_Concrete_Dome','Unit cost of Labor Concrete Superstructure (dome) in EEDB',78.02,'dollar/m^3','','','Unit_Labor_Concrete_Dome',0),(116,'Unit_EEDB_Labor_Concrete_Interior','Unit cost of Labor Concrete Interior structure in EEDB',97.57,'dollar/m^3','','','Unit_Labor_Concrete_Interior',0),(117,'Unit_EEDB_Labor_Constr_joints_Substr','Unit cost of Labor Construction joints Substructure (base mat) in EEDB',14.51,'dollar/m^2','','','Unit_Labor_Constr_joints_Substr',0),(118,'Unit_EEDB_Labor_Constr_joints_Superstr','Unit cost of Labor Construction joints Superstructure (shell) in EEDB',12.44,'dollar/m^2','','','Unit_Labor_Constr_joints_Superstr',0),(119,'Unit_EEDB_Labor_Constr_joints_Dome','Unit cost of Labor Construction joints Superstructure (dome) in EEDB',4.75,'dollar/m^2','','','Unit_Labor_Constr_joints_Dome',0),(120,'Unit_EEDB_Labor_Constr_joints_Interior','Unit cost of Labor Construction joints Interior structure in EEDB',2.05,'dollar/m^2','','','Unit_Labor_Constr_joints_Interior',0),(121,'Unit_EEDB_Labor_Embedded_steel_Substr','Unit cost of Labor Embedded steel Substructure (base mat) in EEDB',3.98,'dollar/m^3','','','Unit_Labor_Embedded_steel_Substr',0),(122,'Unit_EEDB_Labor_Embedded_steel_Superstr','Unit cost of Labor Embedded steel Superstructure (shell) in EEDB',15.98,'dollar/m^3','','','Unit_Labor_Embedded_steel_Superstr',0),(123,'Unit_EEDB_Labor_Embedded_steel_Dome','Unit cost of Labor Embedded steel Superstructure (dome) in EEDB',0,'dollar/m^3','','','Unit_Labor_Embedded_steel_Dome',0),(124,'Unit_EEDB_Labor_Embedded_steel_Interior','Unit cost of Labor Embedded steel Interior structure in EEDB',337.14,'dollar/m^3','','','Unit_Labor_Embedded_steel_Interior',0),(125,'Unit_EEDB_Labor_Formwork_Substr','Unit cost of Labor Formwork Substructure (base mat) in EEDB',93.11,'dollar/m^2','','','Unit_Labor_Formwork_Substr',0),(126,'Unit_EEDB_Labor_Formwork_Superstr','Unit cost of Labor Formwork Superstructure (shell) in EEDB',109.83,'dollar/m^2','','','Unit_Labor_Formwork_Superstr',0),(127,'Unit_EEDB_Labor_Formwork_Dome','Unit cost of Labor Formwork Superstructure (dome) in EEDB',58.66,'dollar/m^2','','','Unit_Labor_Formwork_Dome',0),(128,'Unit_EEDB_Labor_Formwork_Interior','Unit cost of Labor Formwork Interior structure in EEDB',231.52,'dollar/m^2','','','Unit_Labor_Formwork_Interior',0),(129,'Unit_EEDB_Labor_Maj_supp_embedments_Interior','Unit cost of Labor Major Support Embedments Interior structure in EEDB',153.53,'dollar/m^3','','','Unit_Labor_Maj_supp_embedments_Interior',0),(130,'Unit_EEDB_Labor_Reinforc_steel_Substr','Unit cost of Labor Reinforc steel Substructure (base mat) in EEDB',322.55,'dollar/m^3','','','Unit_Labor_Reinforc_steel_Substr',0),(131,'Unit_EEDB_Labor_Reinforc_steel_Superstr','Unit cost of Labor Reinforc steel Superstructure (shell) in EEDB',326.13,'dollar/m^3','','','Unit_Labor_Reinforc_steel_Superstr',0),(132,'Unit_EEDB_Labor_Reinforc_steel_Dome','Unit cost of Labor Reinforc steel Superstructure (dome) in EEDB',300.56,'dollar/m^3','','','Unit_Labor_Reinforc_steel_Dome',0),(133,'Unit_EEDB_Labor_Reinforc_steel_Interior','Unit cost of Labor Reinforc steel Interior structure in EEDB',306.72,'dollar/m^3','','','Unit_Labor_Reinforc_steel_Interior',0),(134,'Unit_EEDB_Labor_Rubbing_surfaces_Superstr','Unit cost of Labor Rubbing surfaces Superstructure (shell) in EEDB',8.32,'dollar/m^2','','','Unit_Labor_Rubbing_surfaces_Superstr',0),(135,'Unit_EEDB_Labor_Rubbing_surfaces_Dome','Unit cost of Labor Rubbing surfaces Superstructure (dome) in EEDB',5.74,'dollar/m^2','','','Unit_Labor_Rubbing_surfaces_Dome',0),(136,'Unit_EEDB_Labor_Rubbing_surfaces_Interior','Unit cost of Labor Rubbing surfaces Interior structure in EEDB',9.91,'dollar/m^2','','','Unit_Labor_Rubbing_surfaces_Interior',0),(137,'Unit_EEDB_Labor_Waterproofing_Substr','Unit cost of Labor Waterproofing Substructure (base mat) in EEDB',4.58,'dollar/m^2','','','Unit_Labor_Waterproofing_Substr',0),(138,'Unit_EEDB_Labor_Waterproofing_Superstr','Unit cost of Labor Waterproofing Superstructure (shell) in EEDB',0.84,'dollar/m^2','','','Unit_Labor_Waterproofing_Superstr',0),(139,'Unit_EEDB_Labor_Waterproofing_Dome','Unit cost of Labor Waterproofing Superstructure (dome) in EEDB',0,'dollar/m^2','','','Unit_Labor_Waterproofing_Dome',0),(140,'Unit_EEDB_Labor_Welded_wire_fabric_Substr','Unit cost of Labor Welded wire fabric Substructure (base mat) in EEDB',10.07,'dollar/m^2','','','Unit_Labor_Welded_wire_fabric_Substr',0),(141,'Unit_EEDB_Labor_Lighting_Power','Unit cost of Labor Lighting Power in EEDB',9.83,'dollar/m^3','','','Unit_Labor_Lighting_Power',0),(142,'Unit_EEDB_Labor_Plumb_drains','Unit cost of Labor Plumb drains in EEDB',3.02,'dollar/m^3','','','Unit_Labor_Plumb_drains',0),(143,'Unit_EEDB_Labor_Special_HVAC','Unit cost of Labor Special HVAC in EEDB',11.09,'dollar/m^3','','','Unit_Labor_Special_HVAC',0),(144,'Unit_EEDB_Labor_other','Unit cost of Labor other in EEDB',0.53,'dollar/m^3','','','Unit_Labor_other',0),(145,'Unit_EEDB_Labor_Misc_steel_frames','Unit cost of Labor miscellaneous steel frames in EEDB',9.94,'dollar/m^3','','','Unit_Labor_Misc_steel_frames',0),(146,'Unit_EEDB_Labor_React_cav_liner','Unit cost of Labor Reactor cavity liner plate in EEDB',745.94,'dollar/m^2','','','Unit_Labor_React_cav_liner',0),(147,'Unit_EEDB_Labor_Struct_steel','Unit cost of Labor Struct steel in EEDB',13.98,'dollar/m^3','','','Unit_Labor_Struct_steel',0),(148,'Unit_EEDB_Labor_cont_liner','Unit cost of Labor Containment liner in EEDB',780.33,'dollar/m^2','','','Unit_Labor_cont_liner',0),(149,'Unit_EEDB_Labor_fl_grate_handrail_stairs','Unit cost of Labor Floor grating (galvanized), Handrail, Stair treads in EEDB',1.75,'dollar/m^3','','','Unit_Labor_fl_grate_handrail_stairs',0),(150,'Unit_EEDB_Labor_painting','Unit cost of Labor painting in EEDB',86.8,'dollar/m^2','','','Unit_Labor_painting',0),(151,'Unit_EEDB_Mat_Cadweld_Substr','Unit cost of Material Cadweld Substructure (base mat) in EEDB',44.32,'dollar/m^3','','','Unit_Mat_Cadweld_Substr',0),(152,'Unit_EEDB_Mat_Cadweld_Superstr','Unit cost of Material Cadweld Superstructure (shell) in EEDB',59.44,'dollar/m^3','','','Unit_Mat_Cadweld_Superstr',0),(153,'Unit_EEDB_Mat_Cadweld_Dome','Unit cost of Material Cadweld Superstructure (dome) in EEDB',119.85,'dollar/m^3','','','Unit_Mat_Cadweld_Dome',0),(154,'Unit_EEDB_Mat_Cadweld_Interior','Unit cost of Material Cadweld Interior structure in EEDB',25,'dollar/m^3','','','Unit_Mat_Cadweld_Interior',0),(155,'Unit_EEDB_Mat_Concrete_Substr','Unit cost of Material Concrete Substructure (base mat) in EEDB',79.1,'dollar/m^3','','','Unit_Mat_Concrete_Substr',0),(156,'Unit_EEDB_Mat_Concrete_Superstr','Unit cost of Material Concrete Superstructure (shell) in EEDB',54.47,'dollar/m^3','','','Unit_Mat_Concrete_Superstr',0),(157,'Unit_EEDB_Mat_Concrete_Dome','Unit cost of Material Concrete Superstructure (dome) in EEDB',48.63,'dollar/m^3','','','Unit_Mat_Concrete_Dome',0),(158,'Unit_EEDB_Mat_Concrete_Interior','Unit cost of Material Concrete Interior structure in EEDB',53.21,'dollar/m^3','','','Unit_Mat_Concrete_Interior',0),(159,'Unit_EEDB_Mat_Constr_joints_Substr','Unit cost of Material Construction joints Substructure (base mat) in EEDB',8.9,'dollar/m^2','','','Unit_Mat_Constr_joints_Substr',0),(160,'Unit_EEDB_Mat_Constr_joints_Superstr','Unit cost of Material Construction joints Superstructure (shell) in EEDB',7.63,'dollar/m^2','','','Unit_Mat_Constr_joints_Superstr',0),(161,'Unit_EEDB_Mat_Constr_joints_Dome','Unit cost of Material Construction joints Superstructure (dome) in EEDB',2.91,'dollar/m^2','','','Unit_Mat_Constr_joints_Dome',0),(162,'Unit_EEDB_Mat_Constr_joints_Interior','Unit cost of Material Construction joints Interior structure in EEDB',1.26,'dollar/m^2','','','Unit_Mat_Constr_joints_Interior',0),(163,'Unit_EEDB_Mat_Embedded_steel_Substr','Unit cost of Material Embedded steel Substructure (base mat) in EEDB',1.88,'dollar/m^3','','','Unit_Mat_Embedded_steel_Substr',0),(164,'Unit_EEDB_Mat_Embedded_steel_Superstr','Unit cost of Material Embedded steel Superstructure (shell) in EEDB',7.57,'dollar/m^3','','','Unit_Mat_Embedded_steel_Superstr',0),(165,'Unit_EEDB_Mat_Embedded_steel_Dome','Unit cost of Material Embedded steel Superstructure (dome) in EEDB',0,'dollar/m^3','','','Unit_Mat_Embedded_steel_Dome',0),(166,'Unit_EEDB_Mat_Embedded_steel_Interior','Unit cost of Material Embedded steel Interior structure in EEDB',159.73,'dollar/m^3','','','Unit_Mat_Embedded_steel_Interior',0),(167,'Unit_EEDB_Mat_Formwork_Substr','Unit cost of Material Formwork Substructure (base mat) in EEDB',13.22,'dollar/m^2','','','Unit_Mat_Formwork_Substr',0),(168,'Unit_EEDB_Mat_Formwork_Superstr','Unit cost of Material Formwork Superstructure (shell) in EEDB',13.65,'dollar/m^2','','','Unit_Mat_Formwork_Superstr',0),(169,'Unit_EEDB_Mat_Formwork_Dome','Unit cost of Material Formwork Superstructure (dome) in EEDB',7.67,'dollar/m^2','','','Unit_Mat_Formwork_Dome',0),(170,'Unit_EEDB_Mat_Formwork_Interior','Unit cost of Material Formwork Interior structure in EEDB',21.85,'dollar/m^2','','','Unit_Mat_Formwork_Interior',0),(171,'Unit_EEDB_Mat_Maj_supp_embedments_Interior','Unit cost of Material Major Support Embedments Interior structure in EEDB',225.35,'dollar/m^3','','','Unit_Mat_Maj_supp_embedments_Interior',0),(172,'Unit_EEDB_Mat_Reinforc_steel_Substr','Unit cost of Material Reinforc steel Substructure (base mat) in EEDB',364.73,'dollar/m^3','','','Unit_Mat_Reinforc_steel_Substr',0),(173,'Unit_EEDB_Mat_Reinforc_steel_Superstr','Unit cost of Material Reinforc steel Superstructure (shell) in EEDB',258.95,'dollar/m^3','','','Unit_Mat_Reinforc_steel_Superstr',0),(174,'Unit_EEDB_Mat_Reinforc_steel_Dome','Unit cost of Material Reinforc steel Superstructure (dome) in EEDB',238.65,'dollar/m^3','','','Unit_Mat_Reinforc_steel_Dome',0),(175,'Unit_EEDB_Mat_Reinforc_steel_Interior','Unit cost of Material Reinforc steel Interior structure in EEDB',205.66,'dollar/m^3','','','Unit_Mat_Reinforc_steel_Interior',0),(176,'Unit_EEDB_Mat_Rubbing_surfaces_Superstr','Unit cost of Material Rubbing surfaces Superstructure (shell) in EEDB',0.68,'dollar/m^2','','','Unit_Mat_Rubbing_surfaces_Superstr',0),(177,'Unit_EEDB_Mat_Rubbing_surfaces_Dome','Unit cost of Material Rubbing surfaces Superstructure (dome) in EEDB',0.47,'dollar/m^2','','','Unit_Mat_Rubbing_surfaces_Dome',0),(178,'Unit_EEDB_Mat_Rubbing_surfaces_Interior','Unit cost of Material Rubbing surfaces Interior structure in EEDB',0.82,'dollar/m^2','','','Unit_Mat_Rubbing_surfaces_Interior',0),(179,'Unit_EEDB_Mat_Waterproofing_Substr','Unit cost of Material Waterproofing Substructure (base mat) in EEDB',2.43,'dollar/m^2','','','Unit_Mat_Waterproofing_Substr',0),(180,'Unit_EEDB_Mat_Waterproofing_Superstr','Unit cost of Material Waterproofing Superstructure (shell) in EEDB',0.45,'dollar/m^2','','','Unit_Mat_Waterproofing_Superstr',0),(181,'Unit_EEDB_Mat_Waterproofing_Dome','Unit cost of Material Waterproofing Superstructure (dome) in EEDB',0,'dollar/m^2','','','Unit_Mat_Waterproofing_Dome',0),(182,'Unit_EEDB_Mat_Welded_wire_fabric_Substr','Unit cost of Material Welded wire fabric Substructure (base mat) in EEDB',5.19,'dollar/m^2','','','Unit_Mat_Welded_wire_fabric_Substr',0),(183,'Unit_EEDB_Mat_Lighting_Power','Unit cost of Material Lighting Power in EEDB',4.96,'dollar/m^3','','','Unit_Mat_Lighting_Power',0),(184,'Unit_EEDB_Mat_Plumb_drains','Unit cost of Material Plumb drains in EEDB',1.54,'dollar/m^3','','','Unit_Mat_Plumb_drains',0),(185,'Unit_EEDB_Mat_Special_HVAC','Unit cost of Material Special HVAC in EEDB',8.79,'dollar/m^3','','','Unit_Mat_Special_HVAC',0),(186,'Unit_EEDB_Mat_other','Unit cost of Material other in EEDB',1.96,'dollar/m^3','','','Unit_Mat_other',0),(187,'Unit_EEDB_Mat_Misc_steel_frames','Unit cost of Material miscellaneous steel frames in EEDB',16.56,'dollar/m^3','','','Unit_Mat_Misc_steel_frames',0),(188,'Unit_EEDB_Mat_React_cav_liner','Unit cost of Material Reactor cavity liner plate in EEDB',607.96,'dollar/m^2','','','Unit_Mat_React_cav_liner',0),(189,'Unit_EEDB_Mat_Struct_steel','Unit cost of Material Struct steel in EEDB',27.41,'dollar/m^3','','','Unit_Mat_Struct_steel',0),(190,'Unit_EEDB_Mat_cont_liner','Unit cost of Material Containment liner in EEDB',1203,'dollar/m^2','','','Unit_Mat_cont_liner',0),(191,'Unit_EEDB_Mat_fl_grate_handrail_stairs','Unit cost of Material Floor grating (galvanized), Handrail, Stair treads in EEDB',1.98,'dollar/m^3','','','Unit_Mat_fl_grate_handrail_stairs',0),(192,'Unit_EEDB_Mat_painting','Unit cost of Material painting in EEDB',24.68,'dollar/m^2','','','Unit_Mat_painting',0),(193,'Unit_Labor_Cadweld_Substr','Unit cost of Labor Cadweld Substructure (base mat) in 2017',245.31,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Cadweld_Substr,infl','Total_Labor_Cadweld_Substr',0),(194,'Unit_Labor_Cadweld_Superstr','Unit cost of Labor Cadweld Superstructure (shell) in 2017',329.02,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Cadweld_Superstr,infl','Total_Labor_Cadweld_Superstr',0),(195,'Unit_Labor_Cadweld_Dome','Unit cost of Labor Cadweld Superstructure (dome) in 2017',663.34,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Cadweld_Dome,infl','Total_Labor_Cadweld_Dome',0),(196,'Unit_Labor_Cadweld_Interior','Unit cost of Labor Cadweld Interior structure in 2017',138.36,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Cadweld_Interior,infl','Total_Labor_Cadweld_Interior',0),(197,'Unit_Labor_Concrete_Substr','Unit cost of Labor Concrete Substructure (base mat) in 2017',208.17,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Concrete_Substr,infl','Total_Labor_Concrete_Substr',0),(198,'Unit_Labor_Concrete_Superstr','Unit cost of Labor Concrete Superstructure (shell) in 2017',250.85,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Concrete_Superstr,infl','Total_Labor_Concrete_Superstr',0),(199,'Unit_Labor_Concrete_Dome','Unit cost of Labor Concrete Superstructure (dome) in 2017',223.96,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Concrete_Dome,infl','Total_Labor_Concrete_Dome',0),(200,'Unit_Labor_Concrete_Interior','Unit cost of Labor Concrete Interior structure in 2017',280.07,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Concrete_Interior,infl','Total_Labor_Concrete_Interior',0),(201,'Unit_Labor_Constr_joints_Substr','Unit cost of Labor Construction joints Substructure (base mat) in 2017',41.65,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Constr_joints_Substr,infl','Total_Labor_Constr_joints_Substr',0),(202,'Unit_Labor_Constr_joints_Superstr','Unit cost of Labor Construction joints Superstructure (shell) in 2017',35.71,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Constr_joints_Superstr,infl','Total_Labor_Constr_joints_Superstr',0),(203,'Unit_Labor_Constr_joints_Dome','Unit cost of Labor Construction joints Superstructure (dome) in 2017',13.63,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Constr_joints_Dome,infl','Total_Labor_Constr_joints_Dome',0),(204,'Unit_Labor_Constr_joints_Interior','Unit cost of Labor Construction joints Interior structure in 2017',5.88,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Constr_joints_Interior,infl','Total_Labor_Constr_joints_Interior',0),(205,'Unit_Labor_Embedded_steel_Substr','Unit cost of Labor Embedded steel Substructure (base mat) in 2017',11.42,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Embedded_steel_Substr,infl','Total_Labor_Embedded_steel_Substr',0),(206,'Unit_Labor_Embedded_steel_Superstr','Unit cost of Labor Embedded steel Superstructure (shell) in 2017',45.87,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Embedded_steel_Superstr,infl','Total_Labor_Embedded_steel_Superstr',0),(207,'Unit_Labor_Embedded_steel_Dome','Unit cost of Labor Embedded steel Superstructure (dome) in 2017',0,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Embedded_steel_Dome,infl','Total_Labor_Embedded_steel_Dome',0),(208,'Unit_Labor_Embedded_steel_Interior','Unit cost of Labor Embedded steel Interior structure in 2017',967.76,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Embedded_steel_Interior,infl','Total_Labor_Embedded_steel_Interior',0),(209,'Unit_Labor_Formwork_Substr','Unit cost of Labor Formwork Substructure (base mat) in 2017',267.27,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Formwork_Substr,infl','Total_Labor_Formwork_Substr',0),(210,'Unit_Labor_Formwork_Superstr','Unit cost of Labor Formwork Superstructure (shell) in 2017',315.27,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Formwork_Superstr,infl','Total_Labor_Formwork_Superstr',0),(211,'Unit_Labor_Formwork_Dome','Unit cost of Labor Formwork Superstructure (dome) in 2017',168.38,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Formwork_Dome,infl','Total_Labor_Formwork_Dome',0),(212,'Unit_Labor_Formwork_Interior','Unit cost of Labor Formwork Interior structure in 2017',664.58,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Formwork_Interior,infl','Total_Labor_Formwork_Interior',0),(213,'Unit_Labor_Maj_supp_embedments_Interior','Unit cost of Labor Major Support Embedments Interior structure in 2017',440.71,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Maj_supp_embedments_Interior,infl','Total_Labor_Maj_supp_embedments_Interior',0),(214,'Unit_Labor_Reinforc_steel_Substr','Unit cost of Labor Reinforc steel Substructure (base mat) in 2017',925.88,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Reinforc_steel_Substr,infl','Total_Labor_Reinforc_steel_Substr',0),(215,'Unit_Labor_Reinforc_steel_Superstr','Unit cost of Labor Reinforc steel Superstructure (shell) in 2017',936.16,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Reinforc_steel_Superstr,infl','Total_Labor_Reinforc_steel_Superstr',0),(216,'Unit_Labor_Reinforc_steel_Dome','Unit cost of Labor Reinforc steel Superstructure (dome) in 2017',862.76,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Reinforc_steel_Dome,infl','Total_Labor_Reinforc_steel_Dome',0),(217,'Unit_Labor_Reinforc_steel_Interior','Unit cost of Labor Reinforc steel Interior structure in 2017',880.44,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Reinforc_steel_Interior,infl','Total_Labor_Reinforc_steel_Interior',0),(218,'Unit_Labor_Rubbing_surfaces_Superstr','Unit cost of Labor Rubbing surfaces Superstructure (shell) in 2017',23.88,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Rubbing_surfaces_Superstr,infl','Total_Labor_Rubbing_surfaces_Superstr',0),(219,'Unit_Labor_Rubbing_surfaces_Dome','Unit cost of Labor Rubbing surfaces Superstructure (dome) in 2017',16.48,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Rubbing_surfaces_Dome,infl','Total_Labor_Rubbing_surfaces_Dome',0),(220,'Unit_Labor_Rubbing_surfaces_Interior','Unit cost of Labor Rubbing surfaces Interior structure in 2017',28.45,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Rubbing_surfaces_Interior,infl','Total_Labor_Rubbing_surfaces_Interior',0),(221,'Unit_Labor_Waterproofing_Substr','Unit cost of Labor Waterproofing Substructure (base mat) in 2017',13.15,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Waterproofing_Substr,infl','Total_Labor_Waterproofing_Substr',0),(222,'Unit_Labor_Waterproofing_Superstr','Unit cost of Labor Waterproofing Superstructure (shell) in 2017',2.41,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Waterproofing_Superstr,infl','Total_Labor_Waterproofing_Superstr',0),(223,'Unit_Labor_Waterproofing_Dome','Unit cost of Labor Waterproofing Superstructure (dome) in 2017',0,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Waterproofing_Dome,infl','Total_Labor_Waterproofing_Dome',0),(224,'Unit_Labor_Welded_wire_fabric_Substr','Unit cost of Labor Welded wire fabric Substructure (base mat) in 2017',28.91,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_Welded_wire_fabric_Substr,infl','Total_Labor_Welded_wire_fabric_Substr',0),(225,'Unit_Labor_Lighting_Power','Unit cost of Labor Lighting Power in 2017',28.22,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Lighting_Power,infl','Total_Labor_Lighting_Power',0),(226,'Unit_Labor_Plumb_drains','Unit cost of Labor Plumb drains in 2017',8.67,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Plumb_drains,infl','Total_Labor_Plumb_drains',0),(227,'Unit_Labor_Special_HVAC','Unit cost of Labor Special HVAC in 2017',31.83,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Special_HVAC,infl','Total_Labor_Special_HVAC',0),(228,'Unit_Labor_other','Unit cost of Labor other in 2017',1.52,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_other,infl','Total_Labor_other',0),(229,'Unit_Labor_Misc_steel_frames','Unit cost of Labor miscellaneous steel frames in 2017',28.53,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Misc_steel_frames,infl','Total_Labor_Misc_steel_frames',0),(230,'Unit_Labor_React_cav_liner','Unit cost of Labor Reactor cavity liner plate in 2017',2141.22,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_React_cav_liner,infl','Total_Labor_React_cav_liner',0),(231,'Unit_Labor_Struct_steel','Unit cost of Labor Struct steel in 2017',40.13,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_Struct_steel,infl','Total_Labor_Struct_steel',0),(232,'Unit_Labor_cont_liner','Unit cost of Labor Containment liner in 2017',2239.94,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_cont_liner,infl','Total_Labor_cont_liner',0),(233,'Unit_Labor_fl_grate_handrail_stairs','Unit cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017',5.02,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Labor_fl_grate_handrail_stairs,infl','Total_Labor_fl_grate_handrail_stairs',0),(234,'Unit_Labor_painting','Unit cost of Labor painting in 2017',249.16,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Labor_painting,infl','Total_Labor_painting',0),(235,'Unit_Mat_Cadweld_Substr','Unit cost of Material Cadweld Substructure (base mat) in 2017',127.22,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Cadweld_Substr,infl','Total_Mat_Cadweld_Substr',0),(236,'Unit_Mat_Cadweld_Superstr','Unit cost of Material Cadweld Superstructure (shell) in 2017',170.62,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Cadweld_Superstr,infl','Total_Mat_Cadweld_Superstr',0),(237,'Unit_Mat_Cadweld_Dome','Unit cost of Material Cadweld Superstructure (dome) in 2017',344.03,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Cadweld_Dome,infl','Total_Mat_Cadweld_Dome',0),(238,'Unit_Mat_Cadweld_Interior','Unit cost of Material Cadweld Interior structure in 2017',71.76,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Cadweld_Interior,infl','Total_Mat_Cadweld_Interior',0),(239,'Unit_Mat_Concrete_Substr','Unit cost of Material Concrete Substructure (base mat) in 2017',227.06,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Concrete_Substr,infl','Total_Mat_Concrete_Substr',0),(240,'Unit_Mat_Concrete_Superstr','Unit cost of Material Concrete Superstructure (shell) in 2017',156.36,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Concrete_Superstr,infl','Total_Mat_Concrete_Superstr',0),(241,'Unit_Mat_Concrete_Dome','Unit cost of Material Concrete Superstructure (dome) in 2017',139.59,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Concrete_Dome,infl','Total_Mat_Concrete_Dome',0),(242,'Unit_Mat_Concrete_Interior','Unit cost of Material Concrete Interior structure in 2017',152.74,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Concrete_Interior,infl','Total_Mat_Concrete_Interior',0),(243,'Unit_Mat_Constr_joints_Substr','Unit cost of Material Construction joints Substructure (base mat) in 2017',25.55,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Constr_joints_Substr,infl','Total_Mat_Constr_joints_Substr',0),(244,'Unit_Mat_Constr_joints_Superstr','Unit cost of Material Construction joints Superstructure (shell) in 2017',21.9,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Constr_joints_Superstr,infl','Total_Mat_Constr_joints_Superstr',0),(245,'Unit_Mat_Constr_joints_Dome','Unit cost of Material Construction joints Superstructure (dome) in 2017',8.35,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Constr_joints_Dome,infl','Total_Mat_Constr_joints_Dome',0),(246,'Unit_Mat_Constr_joints_Interior','Unit cost of Material Construction joints Interior structure in 2017',3.62,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Constr_joints_Interior,infl','Total_Mat_Constr_joints_Interior',0),(247,'Unit_Mat_Embedded_steel_Substr','Unit cost of Material Embedded steel Substructure (base mat) in 2017',5.4,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Embedded_steel_Substr,infl','Total_Mat_Embedded_steel_Substr',0),(248,'Unit_Mat_Embedded_steel_Superstr','Unit cost of Material Embedded steel Superstructure (shell) in 2017',21.73,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Embedded_steel_Superstr,infl','Total_Mat_Embedded_steel_Superstr',0),(249,'Unit_Mat_Embedded_steel_Dome','Unit cost of Material Embedded steel Superstructure (dome) in 2017',0,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Embedded_steel_Dome,infl','Total_Mat_Embedded_steel_Dome',0),(250,'Unit_Mat_Embedded_steel_Interior','Unit cost of Material Embedded steel Interior structure in 2017',458.51,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Embedded_steel_Interior,infl','Total_Mat_Embedded_steel_Interior',0),(251,'Unit_Mat_Formwork_Substr','Unit cost of Material Formwork Substructure (base mat) in 2017',37.95,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Formwork_Substr,infl','Total_Mat_Formwork_Substr',0),(252,'Unit_Mat_Formwork_Superstr','Unit cost of Material Formwork Superstructure (shell) in 2017',39.18,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Formwork_Superstr,infl','Total_Mat_Formwork_Superstr',0),(253,'Unit_Mat_Formwork_Dome','Unit cost of Material Formwork Superstructure (dome) in 2017',22.02,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Formwork_Dome,infl','Total_Mat_Formwork_Dome',0),(254,'Unit_Mat_Formwork_Interior','Unit cost of Material Formwork Interior structure in 2017',62.72,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Formwork_Interior,infl','Total_Mat_Formwork_Interior',0),(255,'Unit_Mat_Maj_supp_embedments_Interior','Unit cost of Material Major Support Embedments Interior structure in 2017',646.87,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Maj_supp_embedments_Interior,infl','Total_Mat_Maj_supp_embedments_Interior',0),(256,'Unit_Mat_Reinforc_steel_Substr','Unit cost of Material Reinforc steel Substructure (base mat) in 2017',1046.96,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Reinforc_steel_Substr,infl','Total_Mat_Reinforc_steel_Substr',0),(257,'Unit_Mat_Reinforc_steel_Superstr','Unit cost of Material Reinforc steel Superstructure (shell) in 2017',743.32,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Reinforc_steel_Superstr,infl','Total_Mat_Reinforc_steel_Superstr',0),(258,'Unit_Mat_Reinforc_steel_Dome','Unit cost of Material Reinforc steel Superstructure (dome) in 2017',685.05,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Reinforc_steel_Dome,infl','Total_Mat_Reinforc_steel_Dome',0),(259,'Unit_Mat_Reinforc_steel_Interior','Unit cost of Material Reinforc steel Interior structure in 2017',590.35,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Reinforc_steel_Interior,infl','Total_Mat_Reinforc_steel_Interior',0),(260,'Unit_Mat_Rubbing_surfaces_Superstr','Unit cost of Material Rubbing surfaces Superstructure (shell) in 2017',1.95,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Rubbing_surfaces_Superstr,infl','Total_Mat_Rubbing_surfaces_Superstr',0),(261,'Unit_Mat_Rubbing_surfaces_Dome','Unit cost of Material Rubbing surfaces Superstructure (dome) in 2017',1.35,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Rubbing_surfaces_Dome,infl','Total_Mat_Rubbing_surfaces_Dome',0),(262,'Unit_Mat_Rubbing_surfaces_Interior','Unit cost of Material Rubbing surfaces Interior structure in 2017',2.35,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Rubbing_surfaces_Interior,infl','Total_Mat_Rubbing_surfaces_Interior',0),(263,'Unit_Mat_Waterproofing_Substr','Unit cost of Material Waterproofing Substructure (base mat) in 2017',6.98,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Waterproofing_Substr,infl','Total_Mat_Waterproofing_Substr',0),(264,'Unit_Mat_Waterproofing_Superstr','Unit cost of Material Waterproofing Superstructure (shell) in 2017',1.29,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Waterproofing_Superstr,infl','Total_Mat_Waterproofing_Superstr',0),(265,'Unit_Mat_Waterproofing_Dome','Unit cost of Material Waterproofing Superstructure (dome) in 2017',0,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Waterproofing_Dome,infl','Total_Mat_Waterproofing_Dome',0),(266,'Unit_Mat_Welded_wire_fabric_Substr','Unit cost of Material Welded wire fabric Substructure (base mat) in 2017',14.9,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_Welded_wire_fabric_Substr,infl','Total_Mat_Welded_wire_fabric_Substr',0),(267,'Unit_Mat_Lighting_Power','Unit cost of Material Lighting Power in 2017',14.24,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Lighting_Power,infl','Total_Mat_Lighting_Power',0),(268,'Unit_Mat_Plumb_drains','Unit cost of Material Plumb drains in 2017',4.42,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Plumb_drains,infl','Total_Mat_Plumb_drains',0),(269,'Unit_Mat_Special_HVAC','Unit cost of Material Special HVAC in 2017',25.23,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Special_HVAC,infl','Total_Mat_Special_HVAC',0),(270,'Unit_Mat_other','Unit cost of Material other in 2017',5.63,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_other,infl','Total_Mat_other',0),(271,'Unit_Mat_Misc_steel_frames','Unit cost of Material miscellaneous steel frames in 2017',47.54,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Misc_steel_frames,infl','Total_Mat_Misc_steel_frames',0),(272,'Unit_Mat_React_cav_liner','Unit cost of Material Reactor cavity liner plate in 2017',1745.15,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_React_cav_liner,infl','Total_Mat_React_cav_liner',0),(273,'Unit_Mat_Struct_steel','Unit cost of Material Struct steel in 2017',78.68,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_Struct_steel,infl','Total_Mat_Struct_steel',0),(274,'Unit_Mat_cont_liner','Unit cost of Material Containment liner in 2017',3453.21,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_cont_liner,infl','Total_Mat_cont_liner',0),(275,'Unit_Mat_fl_grate_handrail_stairs','Unit cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017',5.68,'dollar/m^3','unitcost_v_eedb_to_accert','Unit_EEDB_Mat_fl_grate_handrail_stairs,infl','Total_Mat_fl_grate_handrail_stairs',0),(276,'Unit_Mat_painting','Unit cost of Material painting in 2017',70.84,'dollar/m^2','unitcost_s_eedb_to_accert','Unit_EEDB_Mat_painting,infl','Total_Mat_painting',0),(277,'Total_Labor_Cadweld_Substr','Total cost of Labor Cadweld Substructure (base mat) in 2017',545576.13,'dollar','tol_contaiment_ce_cost','Unit_Labor_Cadweld_Substr,Basemat_v_m3','Sum_Labor_Cadweld',0),(278,'Total_Labor_Cadweld_Superstr','Total cost of Labor Cadweld Superstructure (shell) in 2017',1459105.66,'dollar','tol_contaiment_ce_cost','Unit_Labor_Cadweld_Superstr,Walls_v_m3','Sum_Labor_Cadweld',0),(279,'Total_Labor_Cadweld_Dome','Total cost of Labor Cadweld Superstructure (dome) in 2017',962092.18,'dollar','tol_contaiment_ce_cost','Unit_Labor_Cadweld_Dome,Dome_v_m3','Sum_Labor_Cadweld',0),(280,'Total_Labor_Cadweld_Interior','Total cost of Labor Cadweld Interior structure in 2017',313811.43,'dollar','tol_contaiment_ce_cost','Unit_Labor_Cadweld_Interior,Internal_v_m3','Sum_Labor_Cadweld',0),(281,'Total_Labor_Concrete_Substr','Total cost of Labor Concrete Substructure (base mat) in 2017',462967.25,'dollar','tol_contaiment_ce_cost','Unit_Labor_Concrete_Substr,Basemat_v_m3','Sum_Labor_Concrete',0),(282,'Total_Labor_Concrete_Superstr','Total cost of Labor Concrete Superstructure (shell) in 2017',1112469.41,'dollar','tol_contaiment_ce_cost','Unit_Labor_Concrete_Superstr,Walls_v_m3','Sum_Labor_Concrete',0),(283,'Total_Labor_Concrete_Dome','Total cost of Labor Concrete Superstructure (dome) in 2017',324819.04,'dollar','tol_contaiment_ce_cost','Unit_Labor_Concrete_Dome,Dome_v_m3','Sum_Labor_Concrete',0),(284,'Total_Labor_Concrete_Interior','Total cost of Labor Concrete Interior structure in 2017',635240.28,'dollar','tol_contaiment_ce_cost','Unit_Labor_Concrete_Interior,Internal_v_m3','Sum_Labor_Concrete',0),(285,'Total_Labor_Constr_joints_Substr','Total cost of Labor Construction joints Substructure (base mat) in 2017',30391,'dollar','tol_contaiment_ce_cost','Unit_Labor_Constr_joints_Substr,Basemat_s_m2','Sum_Labor_Constr_joints',0),(286,'Total_Labor_Constr_joints_Superstr','Total cost of Labor Construction joints Superstructure (shell) in 2017',230913.45,'dollar','tol_contaiment_ce_cost','Unit_Labor_Constr_joints_Superstr,Walls_s_m2','Sum_Labor_Constr_joints',0),(287,'Total_Labor_Constr_joints_Dome','Total cost of Labor Construction joints Superstructure (dome) in 2017',37107.07,'dollar','tol_contaiment_ce_cost','Unit_Labor_Constr_joints_Dome,Dome_s_m2','Sum_Labor_Constr_joints',0),(288,'Total_Labor_Constr_joints_Interior','Total cost of Labor Construction joints Interior structure in 2017',21894.28,'dollar','tol_contaiment_ce_cost','Unit_Labor_Constr_joints_Interior,Internal_s_m2','Sum_Labor_Constr_joints',0),(289,'Total_Labor_Embedded_steel_Substr','Total cost of Labor Embedded steel Substructure (base mat) in 2017',25408.3,'dollar','tol_contaiment_ce_cost','Unit_Labor_Embedded_steel_Substr,Basemat_v_m3','Sum_Labor_Embedded_steel',0),(290,'Total_Labor_Embedded_steel_Superstr','Total cost of Labor Embedded steel Superstructure (shell) in 2017',203424.43,'dollar','tol_contaiment_ce_cost','Unit_Labor_Embedded_steel_Superstr,Walls_v_m3','Sum_Labor_Embedded_steel',0),(291,'Total_Labor_Embedded_steel_Dome','Total cost of Labor Embedded steel Superstructure (dome) in 2017',0,'dollar','tol_contaiment_ce_cost','Unit_Labor_Embedded_steel_Dome,Dome_v_m3','Sum_Labor_Embedded_steel',0),(292,'Total_Labor_Embedded_steel_Interior','Total cost of Labor Embedded steel Interior structure in 2017',2194987.28,'dollar','tol_contaiment_ce_cost','Unit_Labor_Embedded_steel_Interior,Internal_v_m3','Sum_Labor_Embedded_steel',0),(293,'Total_Labor_Formwork_Substr','Total cost of Labor Formwork Substructure (base mat) in 2017',195017.61,'dollar','tol_contaiment_ce_cost','Unit_Labor_Formwork_Substr,Basemat_s_m2','Sum_Labor_Formwork',0),(294,'Total_Labor_Formwork_Superstr','Total cost of Labor Formwork Superstructure (shell) in 2017',2038683.66,'dollar','tol_contaiment_ce_cost','Unit_Labor_Formwork_Superstr,Walls_s_m2','Sum_Labor_Formwork',0),(295,'Total_Labor_Formwork_Dome','Total cost of Labor Formwork Superstructure (dome) in 2017',458252.79,'dollar','tol_contaiment_ce_cost','Unit_Labor_Formwork_Dome,Dome_s_m2','Sum_Labor_Formwork',0),(296,'Total_Labor_Formwork_Interior','Total cost of Labor Formwork Interior structure in 2017',2472664.99,'dollar','tol_contaiment_ce_cost','Unit_Labor_Formwork_Interior,Internal_s_m2','Sum_Labor_Formwork',0),(297,'Total_Labor_Maj_supp_embedments_Interior','Total cost of Labor Major Support Embedments Interior structure in 2017',999574.05,'dollar','tol_contaiment_ce_cost','Unit_Labor_Maj_supp_embedments_Interior,Internal_v_m3','Sum_Labor_Maj_supp_embedments',0),(298,'Total_Labor_Reinforc_steel_Substr','Total cost of Labor Reinforc steel Substructure (base mat) in 2017',2059157.28,'dollar','tol_contaiment_ce_cost','Unit_Labor_Reinforc_steel_Substr,Basemat_v_m3','Sum_Labor_Reinforc_steel',0),(299,'Total_Labor_Reinforc_steel_Superstr','Total cost of Labor Reinforc steel Superstructure (shell) in 2017',4151615.16,'dollar','tol_contaiment_ce_cost','Unit_Labor_Reinforc_steel_Superstr,Walls_v_m3','Sum_Labor_Reinforc_steel',0),(300,'Total_Labor_Reinforc_steel_Dome','Total cost of Labor Reinforc steel Superstructure (dome) in 2017',1251315.18,'dollar','tol_contaiment_ce_cost','Unit_Labor_Reinforc_steel_Dome,Dome_v_m3','Sum_Labor_Reinforc_steel',0),(301,'Total_Labor_Reinforc_steel_Interior','Total cost of Labor Reinforc steel Interior structure in 2017',1996934.5,'dollar','tol_contaiment_ce_cost','Unit_Labor_Reinforc_steel_Interior,Internal_v_m3','Sum_Labor_Reinforc_steel',0),(302,'Total_Labor_Rubbing_surfaces_Superstr','Total cost of Labor Rubbing surfaces Superstructure (shell) in 2017',154437.29,'dollar','tol_contaiment_ce_cost','Unit_Labor_Rubbing_surfaces_Superstr,Walls_s_m2','Sum_Labor_Rubbing_surfaces',0),(303,'Total_Labor_Rubbing_surfaces_Dome','Total cost of Labor Rubbing surfaces Superstructure (dome) in 2017',44840.96,'dollar','tol_contaiment_ce_cost','Unit_Labor_Rubbing_surfaces_Dome,Dome_s_m2','Sum_Labor_Rubbing_surfaces',0),(304,'Total_Labor_Rubbing_surfaces_Interior','Total cost of Labor Rubbing surfaces Interior structure in 2017',105840.14,'dollar','tol_contaiment_ce_cost','Unit_Labor_Rubbing_surfaces_Interior,Internal_s_m2','Sum_Labor_Rubbing_surfaces',0),(305,'Total_Labor_Waterproofing_Substr','Total cost of Labor Waterproofing Substructure (base mat) in 2017',9592.75,'dollar','tol_contaiment_ce_cost','Unit_Labor_Waterproofing_Substr,Basemat_s_m2','Sum_Labor_Waterproofing',0),(306,'Total_Labor_Waterproofing_Superstr','Total cost of Labor Waterproofing Superstructure (shell) in 2017',15592.23,'dollar','tol_contaiment_ce_cost','Unit_Labor_Waterproofing_Superstr,Walls_s_m2','Sum_Labor_Waterproofing',0),(307,'Total_Labor_Waterproofing_Dome','Total cost of Labor Waterproofing Superstructure (dome) in 2017',0,'dollar','tol_contaiment_ce_cost','Unit_Labor_Waterproofing_Dome,Dome_s_m2','Sum_Labor_Waterproofing',0),(308,'Total_Labor_Welded_wire_fabric_Substr','Total cost of Labor Welded wire fabric Substructure (base mat) in 2017',21091.48,'dollar','tol_contaiment_ce_cost','Unit_Labor_Welded_wire_fabric_Substr,Basemat_s_m2','Sum_Labor_Welded_wire_fabric',0),(309,'Total_Labor_Lighting_Power','Total cost of Labor Lighting Power in 2017',771075.94,'dollar','tol_contaiment_ce_cost','Unit_Labor_Lighting_Power,Intern_tot_v_m3','Tot_Labor_equipment',0),(310,'Total_Labor_Plumb_drains','Total cost of Labor Plumb drains in 2017',236892.1,'dollar','tol_contaiment_ce_cost','Unit_Labor_Plumb_drains,Intern_tot_v_m3','Tot_Labor_equipment',0),(311,'Total_Labor_Special_HVAC','Total cost of Labor Special HVAC in 2017',869911.71,'dollar','tol_contaiment_ce_cost','Unit_Labor_Special_HVAC,Intern_tot_v_m3','Tot_Labor_equipment',0),(312,'Total_Labor_other','Total cost of Labor other in 2017',41573.78,'dollar','tol_contaiment_ce_cost','Unit_Labor_other,Intern_tot_v_m3','Tot_Labor_equipment',0),(313,'Total_Labor_Misc_steel_frames','Total cost of Labor miscellaneous steel frames in 2017',296090.96,'dollar','tol_contaiment_ce_cost','Unit_Labor_Misc_steel_frames,Struct_v_m3','Tot_Labor_others',0),(314,'Total_Labor_React_cav_liner','Total cost of Labor Reactor cavity liner plate in 2017',2188185.87,'dollar','tol_contaiment_ce_cost','Unit_Labor_React_cav_liner,React_cav_A_m2','Tot_Labor_others',0),(315,'Total_Labor_Struct_steel','Total cost of Labor Struct steel in 2017',416433.77,'dollar','tol_contaiment_ce_cost','Unit_Labor_Struct_steel,Struct_v_m3','Tot_Labor_others',0),(316,'Total_Labor_cont_liner','Total cost of Labor Containment liner in 2017',11081657.51,'dollar','tol_contaiment_ce_cost','Unit_Labor_cont_liner,Liner_s_m2','Tot_Labor_others',0),(317,'Total_Labor_fl_grate_handrail_stairs','Total cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017',137271.91,'dollar','tol_contaiment_ce_cost','Unit_Labor_fl_grate_handrail_stairs,Intern_tot_v_m3','Tot_Labor_others',0),(318,'Total_Labor_painting','Total cost of Labor painting in 2017',3366865.17,'dollar','tol_contaiment_ce_cost','Unit_Labor_painting,Surf_paint_m2','Tot_Labor_others',0),(319,'Total_Mat_Cadweld_Substr','Total cost of Material Cadweld Substructure (base mat) in 2017',282938.62,'dollar','tol_contaiment_ce_cost','Unit_Mat_Cadweld_Substr,Basemat_v_m3','Sum_Mat_Cadweld',0),(320,'Total_Mat_Cadweld_Superstr','Total cost of Material Cadweld Superstructure (shell) in 2017',756667.6,'dollar','tol_contaiment_ce_cost','Unit_Mat_Cadweld_Superstr,Walls_v_m3','Sum_Mat_Cadweld',0),(321,'Total_Mat_Cadweld_Dome','Total cost of Material Cadweld Superstructure (dome) in 2017',498969.01,'dollar','tol_contaiment_ce_cost','Unit_Mat_Cadweld_Dome,Dome_v_m3','Sum_Mat_Cadweld',0),(322,'Total_Mat_Cadweld_Interior','Total cost of Material Cadweld Interior structure in 2017',162765.27,'dollar','tol_contaiment_ce_cost','Unit_Mat_Cadweld_Interior,Internal_v_m3','Sum_Mat_Cadweld',0),(323,'Total_Mat_Concrete_Substr','Total cost of Material Concrete Substructure (base mat) in 2017',504973.93,'dollar','tol_contaiment_ce_cost','Unit_Mat_Concrete_Substr,Basemat_v_m3','Sum_Mat_Concrete',0),(324,'Total_Mat_Concrete_Superstr','Total cost of Material Concrete Superstructure (shell) in 2017',693399.8,'dollar','tol_contaiment_ce_cost','Unit_Mat_Concrete_Superstr,Walls_v_m3','Sum_Mat_Concrete',0),(325,'Total_Mat_Concrete_Dome','Total cost of Material Concrete Superstructure (dome) in 2017',202460.27,'dollar','tol_contaiment_ce_cost','Unit_Mat_Concrete_Dome,Dome_v_m3','Sum_Mat_Concrete',0),(326,'Total_Mat_Concrete_Interior','Total cost of Material Concrete Interior structure in 2017',346429.59,'dollar','tol_contaiment_ce_cost','Unit_Mat_Concrete_Interior,Internal_v_m3','Sum_Mat_Concrete',0),(327,'Total_Mat_Constr_joints_Substr','Total cost of Material Construction joints Substructure (base mat) in 2017',18640.93,'dollar','tol_contaiment_ce_cost','Unit_Mat_Constr_joints_Substr,Basemat_s_m2','Sum_Mat_Constr_joints',0),(328,'Total_Mat_Constr_joints_Superstr','Total cost of Material Construction joints Superstructure (shell) in 2017',141629.39,'dollar','tol_contaiment_ce_cost','Unit_Mat_Constr_joints_Superstr,Walls_s_m2','Sum_Mat_Constr_joints',0),(329,'Total_Mat_Constr_joints_Dome','Total cost of Material Construction joints Superstructure (dome) in 2017',22732.96,'dollar','tol_contaiment_ce_cost','Unit_Mat_Constr_joints_Dome,Dome_s_m2','Sum_Mat_Constr_joints',0),(330,'Total_Mat_Constr_joints_Interior','Total cost of Material Construction joints Interior structure in 2017',13456.97,'dollar','tol_contaiment_ce_cost','Unit_Mat_Constr_joints_Interior,Internal_s_m2','Sum_Mat_Constr_joints',0),(331,'Total_Mat_Embedded_steel_Substr','Total cost of Material Embedded steel Substructure (base mat) in 2017',12001.91,'dollar','tol_contaiment_ce_cost','Unit_Mat_Embedded_steel_Substr,Basemat_v_m3','Sum_Mat_Embedded_steel',0),(332,'Total_Mat_Embedded_steel_Superstr','Total cost of Material Embedded steel Superstructure (shell) in 2017',96365.64,'dollar','tol_contaiment_ce_cost','Unit_Mat_Embedded_steel_Superstr,Walls_v_m3','Sum_Mat_Embedded_steel',0),(333,'Total_Mat_Embedded_steel_Dome','Total cost of Material Embedded steel Superstructure (dome) in 2017',0,'dollar','tol_contaiment_ce_cost','Unit_Mat_Embedded_steel_Dome,Dome_v_m3','Sum_Mat_Embedded_steel',0),(334,'Total_Mat_Embedded_steel_Interior','Total cost of Material Embedded steel Interior structure in 2017',1039939.84,'dollar','tol_contaiment_ce_cost','Unit_Mat_Embedded_steel_Interior,Internal_v_m3','Sum_Mat_Embedded_steel',0),(335,'Total_Mat_Formwork_Substr','Total cost of Material Formwork Substructure (base mat) in 2017',27689.11,'dollar','tol_contaiment_ce_cost','Unit_Mat_Formwork_Substr,Basemat_s_m2','Sum_Mat_Formwork',0),(336,'Total_Mat_Formwork_Superstr','Total cost of Material Formwork Superstructure (shell) in 2017',253373.69,'dollar','tol_contaiment_ce_cost','Unit_Mat_Formwork_Superstr,Walls_s_m2','Sum_Mat_Formwork',0),(337,'Total_Mat_Formwork_Dome','Total cost of Material Formwork Superstructure (dome) in 2017',59918.15,'dollar','tol_contaiment_ce_cost','Unit_Mat_Formwork_Dome,Dome_s_m2','Sum_Mat_Formwork',0),(338,'Total_Mat_Formwork_Interior','Total cost of Material Formwork Interior structure in 2017',233360.96,'dollar','tol_contaiment_ce_cost','Unit_Mat_Formwork_Interior,Internal_s_m2','Sum_Mat_Formwork',0),(339,'Total_Mat_Maj_supp_embedments_Interior','Total cost of Material Major Support Embedments Interior structure in 2017',1467166.11,'dollar','tol_contaiment_ce_cost','Unit_Mat_Maj_supp_embedments_Interior,Internal_v_m3','Sum_Mat_Maj_supp_embedments',0),(340,'Total_Mat_Reinforc_steel_Substr','Total cost of Material Reinforc steel Substructure (base mat) in 2017',2328434.14,'dollar','tol_contaiment_ce_cost','Unit_Mat_Reinforc_steel_Substr,Basemat_v_m3','Sum_Mat_Reinforc_steel',0),(341,'Total_Mat_Reinforc_steel_Superstr','Total cost of Material Reinforc steel Superstructure (shell) in 2017',3296417.82,'dollar','tol_contaiment_ce_cost','Unit_Mat_Reinforc_steel_Superstr,Walls_v_m3','Sum_Mat_Reinforc_steel',0),(342,'Total_Mat_Reinforc_steel_Dome','Total cost of Material Reinforc steel Superstructure (dome) in 2017',993566.57,'dollar','tol_contaiment_ce_cost','Unit_Mat_Reinforc_steel_Dome,Dome_v_m3','Sum_Mat_Reinforc_steel',0),(343,'Total_Mat_Reinforc_steel_Interior','Total cost of Material Reinforc steel Interior structure in 2017',1338972.19,'dollar','tol_contaiment_ce_cost','Unit_Mat_Reinforc_steel_Interior,Internal_v_m3','Sum_Mat_Reinforc_steel',0),(344,'Total_Mat_Rubbing_surfaces_Superstr','Total cost of Material Rubbing surfaces Superstructure (shell) in 2017',12622.28,'dollar','tol_contaiment_ce_cost','Unit_Mat_Rubbing_surfaces_Superstr,Walls_s_m2','Sum_Mat_Rubbing_surfaces',0),(345,'Total_Mat_Rubbing_surfaces_Dome','Total cost of Material Rubbing surfaces Superstructure (dome) in 2017',3671.65,'dollar','tol_contaiment_ce_cost','Unit_Mat_Rubbing_surfaces_Dome,Dome_s_m2','Sum_Mat_Rubbing_surfaces',0),(346,'Total_Mat_Rubbing_surfaces_Interior','Total cost of Material Rubbing surfaces Interior structure in 2017',8757.71,'dollar','tol_contaiment_ce_cost','Unit_Mat_Rubbing_surfaces_Interior,Internal_s_m2','Sum_Mat_Rubbing_surfaces',0),(347,'Total_Mat_Waterproofing_Substr','Total cost of Material Waterproofing Substructure (base mat) in 2017',5089.6,'dollar','tol_contaiment_ce_cost','Unit_Mat_Waterproofing_Substr,Basemat_s_m2','Sum_Mat_Waterproofing',0),(348,'Total_Mat_Waterproofing_Superstr','Total cost of Material Waterproofing Superstructure (shell) in 2017',8352.98,'dollar','tol_contaiment_ce_cost','Unit_Mat_Waterproofing_Superstr,Walls_s_m2','Sum_Mat_Waterproofing',0),(349,'Total_Mat_Waterproofing_Dome','Total cost of Material Waterproofing Superstructure (dome) in 2017',0,'dollar','tol_contaiment_ce_cost','Unit_Mat_Waterproofing_Dome,Dome_s_m2','Sum_Mat_Waterproofing',0),(350,'Total_Mat_Welded_wire_fabric_Substr','Total cost of Material Welded wire fabric Substructure (base mat) in 2017',10870.38,'dollar','tol_contaiment_ce_cost','Unit_Mat_Welded_wire_fabric_Substr,Basemat_s_m2','Sum_Mat_Welded_wire_fabric',0),(351,'Total_Mat_Lighting_Power','Total cost of Material Lighting Power in 2017',389067.82,'dollar','tol_contaiment_ce_cost','Unit_Mat_Lighting_Power,Intern_tot_v_m3','Tot_Mat_equipment',0),(352,'Total_Mat_Plumb_drains','Total cost of Material Plumb drains in 2017',120799.28,'dollar','tol_contaiment_ce_cost','Unit_Mat_Plumb_drains,Intern_tot_v_m3','Tot_Mat_equipment',0),(353,'Total_Mat_Special_HVAC','Total cost of Material Special HVAC in 2017',689497.2,'dollar','tol_contaiment_ce_cost','Unit_Mat_Special_HVAC,Intern_tot_v_m3','Tot_Mat_equipment',0),(354,'Total_Mat_other','Total cost of Material other in 2017',153744.54,'dollar','tol_contaiment_ce_cost','Unit_Mat_other,Intern_tot_v_m3','Tot_Mat_equipment',0),(355,'Total_Mat_Misc_steel_frames','Total cost of Material miscellaneous steel frames in 2017',493286.35,'dollar','tol_contaiment_ce_cost','Unit_Mat_Misc_steel_frames,Struct_v_m3','Tot_Mat_others',0),(356,'Total_Mat_React_cav_liner','Total cost of Material Reactor cavity liner plate in 2017',1783426.93,'dollar','tol_contaiment_ce_cost','Unit_Mat_React_cav_liner,React_cav_A_m2','Tot_Mat_others',0),(357,'Total_Mat_Struct_steel','Total cost of Material Struct steel in 2017',816484.24,'dollar','tol_contaiment_ce_cost','Unit_Mat_Struct_steel,Struct_v_m3','Tot_Mat_others',0),(358,'Total_Mat_cont_liner','Total cost of Material Containment liner in 2017',17084097.73,'dollar','tol_contaiment_ce_cost','Unit_Mat_cont_liner,Liner_s_m2','Tot_Mat_others',0),(359,'Total_Mat_fl_grate_handrail_stairs','Total cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017',155313.36,'dollar','tol_contaiment_ce_cost','Unit_Mat_fl_grate_handrail_stairs,Intern_tot_v_m3','Tot_Mat_others',0),(360,'Total_Mat_painting','Total cost of Material painting in 2017',957306.82,'dollar','tol_contaiment_ce_cost','Unit_Mat_painting,Surf_paint_m2','Tot_Mat_others',0),(361,'Sum_Labor_Cadweld','Total cost of Labor Cadweld',3280585.404,'dollar','sum_ce','Total_Labor_Cadweld_Substr,Total_Labor_Cadweld_Superstr,Total_Labor_Cadweld_Dome,Total_Labor_Cadweld_Interior','Tot_Labor_concr',0),(362,'Sum_Labor_Concrete','Total cost of Labor Concrete',2535495.979,'dollar','sum_ce','Total_Labor_Concrete_Substr,Total_Labor_Concrete_Superstr,Total_Labor_Concrete_Dome,Total_Labor_Concrete_Interior','Tot_Labor_concr',0),(363,'Sum_Labor_Constr_joints','Total cost of Labor Constr joints',320305.7975,'dollar','sum_ce','Total_Labor_Constr_joints_Substr,Total_Labor_Constr_joints_Superstr,Total_Labor_Constr_joints_Dome,Total_Labor_Constr_joints_Interior','Tot_Labor_concr',0),(364,'Sum_Labor_Embedded_steel','Total cost of Labor Embedded steel',2423820.007,'dollar','sum_ce','Total_Labor_Embedded_steel_Substr,Total_Labor_Embedded_steel_Superstr,Total_Labor_Embedded_steel_Dome,Total_Labor_Embedded_steel_Interior','Tot_Labor_concr',0),(365,'Sum_Labor_Formwork','Total cost of Labor Formwork',5164619.048,'dollar','sum_ce','Total_Labor_Formwork_Substr,Total_Labor_Formwork_Superstr,Total_Labor_Formwork_Dome,Total_Labor_Formwork_Interior','Tot_Labor_concr',0),(366,'Sum_Labor_Maj_supp_embedments','Total cost of Labor Maj supp embedments',999574.0548,'dollar','sum_ce','Total_Labor_Maj_supp_embedments_Interior','Tot_Labor_concr',0),(367,'Sum_Labor_Reinforc_steel','Total cost of Labor Reinforc steel',9459022.117,'dollar','sum_ce','Total_Labor_Reinforc_steel_Substr,Total_Labor_Reinforc_steel_Superstr,Total_Labor_Reinforc_steel_Dome,Total_Labor_Reinforc_steel_Interior','Tot_Labor_concr',0),(368,'Sum_Labor_Rubbing_surfaces','Total cost of Labor Rubbing surfaces',305118.4026,'dollar','sum_ce','Total_Labor_Rubbing_surfaces_Superstr,Total_Labor_Rubbing_surfaces_Dome,Total_Labor_Rubbing_surfaces_Interior','Tot_Labor_concr',0),(369,'Sum_Labor_Waterproofing','Total cost of Labor Waterproofing',25184.97376,'dollar','sum_ce','Total_Labor_Waterproofing_Substr,Total_Labor_Waterproofing_Superstr,Total_Labor_Waterproofing_Dome','Tot_Labor_concr',0),(370,'Sum_Labor_Welded_wire_fabric','Total cost of Labor Welded wire fabric',21091.47636,'dollar','sum_ce','Total_Labor_Welded_wire_fabric_Substr','Tot_Labor_concr',0),(371,'Sum_Mat_Cadweld','Total cost of Material Cadweld',1701340.49,'dollar','sum_ce','Total_Mat_Cadweld_Substr,Total_Mat_Cadweld_Superstr,Total_Mat_Cadweld_Dome,Total_Mat_Cadweld_Interior','Tot_Mat_concr',0),(372,'Sum_Mat_Concrete','Total cost of Material Concrete',1747263.589,'dollar','sum_ce','Total_Mat_Concrete_Substr,Total_Mat_Concrete_Superstr,Total_Mat_Concrete_Dome,Total_Mat_Concrete_Interior','Tot_Mat_concr',0),(373,'Sum_Mat_Constr_joints','Total cost of Material Constr joints',196460.25,'dollar','sum_ce','Total_Mat_Constr_joints_Substr,Total_Mat_Constr_joints_Superstr,Total_Mat_Constr_joints_Dome,Total_Mat_Constr_joints_Interior','Tot_Mat_concr',0),(374,'Sum_Mat_Embedded_steel','Total cost of Material Embedded steel',1148307.391,'dollar','sum_ce','Total_Mat_Embedded_steel_Substr,Total_Mat_Embedded_steel_Superstr,Total_Mat_Embedded_steel_Dome,Total_Mat_Embedded_steel_Interior','Tot_Mat_concr',0),(375,'Sum_Mat_Formwork','Total cost of Material Formwork',574341.9097,'dollar','sum_ce','Total_Mat_Formwork_Substr,Total_Mat_Formwork_Superstr,Total_Mat_Formwork_Dome,Total_Mat_Formwork_Interior','Tot_Mat_concr',0),(376,'Sum_Mat_Maj_supp_embedments','Total cost of Material Maj supp embedments',1467166.11,'dollar','sum_ce','Total_Mat_Maj_supp_embedments_Interior','Tot_Mat_concr',0),(377,'Sum_Mat_Reinforc_steel','Total cost of Material Reinforc steel',7957390.727,'dollar','sum_ce','Total_Mat_Reinforc_steel_Substr,Total_Mat_Reinforc_steel_Superstr,Total_Mat_Reinforc_steel_Dome,Total_Mat_Reinforc_steel_Interior','Tot_Mat_concr',0),(378,'Sum_Mat_Rubbing_surfaces','Total cost of Material Rubbing surfaces',25051.63697,'dollar','sum_ce','Total_Mat_Rubbing_surfaces_Superstr,Total_Mat_Rubbing_surfaces_Dome,Total_Mat_Rubbing_surfaces_Interior','Tot_Mat_concr',0),(379,'Sum_Mat_Waterproofing','Total cost of Material Waterproofing',13442.5802,'dollar','sum_ce','Total_Mat_Waterproofing_Substr,Total_Mat_Waterproofing_Superstr,Total_Mat_Waterproofing_Dome','Tot_Mat_concr',0),(380,'Sum_Mat_Welded_wire_fabric','Total cost of Material Welded wire fabric',10870.38,'dollar','sum_ce','Total_Mat_Welded_wire_fabric_Substr','Tot_Mat_concr',0),(381,'Tot_Labor_concr','Total cost of labor of containment construction',24534817.26,'dollar','sum_ce','Sum_Labor_Cadweld,Sum_Labor_Concrete,Sum_Labor_Constr_joints,Sum_Labor_Embedded_steel,Sum_Labor_Formwork,Sum_Labor_Maj_supp_embedments,Sum_Labor_Reinforc_steel,Sum_Labor_Rubbing_surfaces,Sum_Labor_Waterproofing,Sum_Labor_Welded_wire_fabric','Tot_Labor_containment',0),(382,'Tot_Labor_equipment','Total cost of labor of containment equipments',1919453.529,'dollar','sum_ce','Total_Labor_Lighting_Power,Total_Labor_Plumb_drains,Total_Labor_Special_HVAC,Total_Labor_other','Tot_Labor_containment',0),(383,'Tot_Labor_others','Total cost of labor of other non-concrete related items ',17486505.19,'dollar','sum_ce','Total_Labor_Misc_steel_frames,Total_Labor_React_cav_liner,Total_Labor_Struct_steel,Total_Labor_cont_liner,Total_Labor_fl_grate_handrail_stairs,Total_Labor_painting','Tot_Labor_containment',0),(384,'Tot_Mat_concr','Total cost of material of containment construction',14841635.07,'dollar','sum_ce','Sum_Mat_Cadweld,Sum_Mat_Concrete,Sum_Mat_Constr_joints,Sum_Mat_Embedded_steel,Sum_Mat_Formwork,Sum_Mat_Maj_supp_embedments,Sum_Mat_Reinforc_steel,Sum_Mat_Rubbing_surfaces,Sum_Mat_Waterproofing,Sum_Mat_Welded_wire_fabric','Tot_Mat_containment',0),(385,'Tot_Mat_equipment','Total cost of material of containment equipments',1353108.842,'dollar','sum_ce','Total_Mat_Lighting_Power,Total_Mat_Plumb_drains,Total_Mat_Special_HVAC,Total_Mat_other','Tot_Mat_containment',0),(386,'Tot_Mat_others','Total cost of material of other non-concrete related items ',21289915.44,'dollar','sum_ce','Total_Mat_Misc_steel_frames,Total_Mat_React_cav_liner,Total_Mat_Struct_steel,Total_Mat_cont_liner,Total_Mat_fl_grate_handrail_stairs,Total_Mat_painting','Tot_Mat_containment',0),(387,'Tot_Labor_containment','Total cost of labor of containment',43940775.98,'dollar','sum_ce','Tot_Labor_concr,Tot_Labor_equipment,Tot_Labor_others','',0),(388,'Tot_Mat_containment','Total cost of material of containment',37484659.35,'dollar','sum_ce','Tot_Mat_concr,Tot_Mat_equipment,Tot_Mat_others','',0);
+/*!40000 ALTER TABLE `lfr_variable` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `variable`
 --
 
@@ -333,35 +392,212 @@ INSERT INTO `variable` VALUES (1,'c_turbine','Turbine equipment cost',362.62,'mi
 UNLOCK TABLES;
 
 --
--- Table structure for table `variable_links`
+-- Dumping events for database 'accert_db'
 --
-
-DROP TABLE IF EXISTS `variable_links`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `variable_links` (
-  `ind` int NOT NULL,
-  `variable` text,
-  `var_ind` int DEFAULT NULL,
-  `ce_ind` int DEFAULT NULL,
-  `ce` text,
-  PRIMARY KEY (`ind`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `variable_links`
---
-
-LOCK TABLES `variable_links` WRITE;
-/*!40000 ALTER TABLE `variable_links` DISABLE KEYS */;
-INSERT INTO `variable_links` VALUES (1,'c_turbine',1,79,'231_fac'),(2,'n_231',2,79,'231_fac'),(3,'scale_tur_231_fac',4,79,'231_fac'),(4,'c_231_fac',5,82,'235_fac'),(5,'c_231_fac',5,181,'231_lab'),(6,'c_231_fac',5,283,'231_mat'),(7,'prn_fac_231_lab',6,181,'231_lab'),(8,'prn_fac_231_mat',7,283,'231_mat'),(9,'c_262_fac',8,100,'262_fac'),(10,'c_262_lab',9,202,'262_lab'),(11,'c_262_mat',10,304,'262_mat'),(12,'mwth',11,3,'213_fac'),(13,'mwth',11,56,'222.11_fac'),(14,'mwth',11,57,'222.12_fac'),(15,'mwth',11,59,'222.14_fac'),(16,'mwth',11,60,'222_fac'),(17,'mwth',11,70,'226.4_fac'),(18,'mwth',11,72,'226.7_fac'),(19,'mwth',11,80,'233_fac'),(20,'mwth',11,81,'234_fac'),(21,'mwth',11,100,'262_fac'),(22,'mwth',11,105,'213_lab'),(23,'mwth',11,158,'222.11_lab'),(24,'mwth',11,159,'222.12_lab'),(25,'mwth',11,161,'222.14_lab'),(26,'mwth',11,162,'222_lab'),(27,'mwth',11,172,'226.4_lab'),(28,'mwth',11,174,'226.7_lab'),(29,'mwth',11,182,'233_lab'),(30,'mwth',11,183,'234_lab'),(31,'mwth',11,186,'237_lab'),(32,'mwth',11,202,'262_lab'),(33,'mwth',11,207,'213_mat'),(34,'mwth',11,260,'222.11_mat'),(35,'mwth',11,261,'222.12_mat'),(36,'mwth',11,263,'222.14_mat'),(37,'mwth',11,264,'222_mat'),(38,'mwth',11,274,'226.4_mat'),(39,'mwth',11,276,'226.7_mat'),(40,'mwth',11,284,'233_mat'),(41,'mwth',11,285,'234_mat'),(42,'mwth',11,288,'237_mat'),(43,'mwth',11,304,'262_mat'),(44,'scale_0.8',12,3,'213_fac'),(45,'scale_0.8',12,80,'233_fac'),(46,'scale_0.8',12,81,'234_fac'),(47,'scale_0.8',12,100,'262_fac'),(48,'scale_0.8',12,105,'213_lab'),(49,'scale_0.8',12,182,'233_lab'),(50,'scale_0.8',12,183,'234_lab'),(51,'scale_0.8',12,186,'237_lab'),(52,'scale_0.8',12,202,'262_lab'),(53,'scale_0.8',12,207,'213_mat'),(54,'scale_0.8',12,284,'233_mat'),(55,'scale_0.8',12,285,'234_mat'),(56,'scale_0.8',12,288,'237_mat'),(57,'scale_0.8',12,304,'262_mat'),(58,'c_233_fac',13,80,'233_fac'),(59,'c_233_lab',14,182,'233_lab'),(60,'c_233_mat',15,284,'233_mat'),(61,'escalate_1987',16,1,'211_fac'),(62,'escalate_1987',16,58,'222.13_fac'),(63,'escalate_1987',16,66,'224_fac'),(64,'escalate_1987',16,76,'227_fac'),(65,'escalate_1987',16,83,'236_fac'),(66,'escalate_1987',16,94,'252_fac'),(67,'escalate_1987',16,95,'253_fac'),(68,'escalate_1987',16,103,'211_lab'),(69,'escalate_1987',16,168,'224_lab'),(70,'escalate_1987',16,178,'227_lab'),(71,'escalate_1987',16,179,'228_lab'),(72,'escalate_1987',16,185,'236_lab'),(73,'escalate_1987',16,196,'252_lab'),(74,'escalate_1987',16,197,'253_lab'),(75,'escalate_1987',16,205,'211_mat'),(76,'escalate_1987',16,257,'221.14_mat'),(77,'escalate_1987',16,270,'224_mat'),(78,'escalate_1987',16,280,'227_mat'),(79,'escalate_1987',16,281,'228_mat'),(80,'escalate_1987',16,287,'236_mat'),(81,'escalate_1987',16,298,'252_mat'),(82,'escalate_1987',16,299,'253_mat'),(83,'ref_252_fac',17,94,'252_fac'),(84,'ref_252_lab',18,196,'252_lab'),(85,'ref_252_mat',19,298,'252_mat'),(86,'c_221.12_cs_weight',20,24,'220A.211_fac'),(87,'c_221.12_ss_weight',21,24,'220A.211_fac'),(88,'c_221.12_tol_weight',22,153,'221.12_lab'),(89,'c_221.12_tol_weight',22,255,'221.12_mat'),(90,'c_rpv_lab',23,153,'221.12_lab'),(91,'c_rpv_mat',24,255,'221.12_mat'),(92,'ref_211_fac',25,1,'211_fac'),(93,'ref_211_lab',26,103,'211_lab'),(94,'ref_211_mat',27,205,'211_mat'),(95,'ref_222.13_fac',28,58,'222.13_fac'),(96,'no_of_sg',29,160,'222.13_lab'),(97,'no_of_sg',29,262,'222.13_mat'),(98,'c_SG_per_unit_lab',30,160,'222.13_lab'),(99,'c_SG_per_unit_mat',31,262,'222.13_mat'),(100,'c_234_fac',32,81,'234_fac'),(101,'c_234_lab',33,183,'234_lab'),(102,'c_234_mat',34,285,'234_mat'),(103,'c_213_fac',35,3,'213_fac'),(104,'c_213_lab',36,105,'213_lab'),(105,'c_213_mat',37,207,'213_mat'),(106,'c_231_lab',38,184,'235_lab'),(107,'c_231_mat',39,286,'235_mat'),(108,'prn_235_of_231_fac',40,82,'235_fac'),(109,'prn_235_of_231_lab',41,184,'235_lab'),(110,'prn_235_of_231_mat',42,286,'235_mat'),(111,'mwe',43,86,'241_fac'),(112,'mwe',43,87,'242_fac'),(113,'mwe',43,91,'246_fac'),(114,'mwe',43,188,'241_lab'),(115,'mwe',43,189,'242_lab'),(116,'mwe',43,192,'245_lab'),(117,'mwe',43,193,'246_lab'),(118,'mwe',43,290,'241_mat'),(119,'mwe',43,291,'242_mat'),(120,'mwe',43,294,'245_mat'),(121,'mwe',43,295,'246_mat'),(122,'scale_0.4',44,86,'241_fac'),(123,'scale_0.4',44,87,'242_fac'),(124,'scale_0.4',44,91,'246_fac'),(125,'scale_0.4',44,188,'241_lab'),(126,'scale_0.4',44,189,'242_lab'),(127,'scale_0.4',44,192,'245_lab'),(128,'scale_0.4',44,193,'246_lab'),(129,'scale_0.4',44,290,'241_mat'),(130,'scale_0.4',44,291,'242_mat'),(131,'scale_0.4',44,294,'245_mat'),(132,'scale_0.4',44,295,'246_mat'),(133,'c_241_fac',45,86,'241_fac'),(134,'c_241_lab',46,188,'241_lab'),(135,'c_241_mat',47,290,'241_mat'),(136,'c_242_fac',48,87,'242_fac'),(137,'c_242_lab',49,189,'242_lab'),(138,'c_242_mat',50,291,'242_mat'),(139,'c_245_lab',52,192,'245_lab'),(140,'c_245_mat',53,294,'245_mat'),(141,'c_246_fac',54,91,'246_fac'),(142,'c_246_lab',55,193,'246_lab'),(143,'c_246_mat',56,295,'246_mat'),(144,'ref_227_fac',57,76,'227_fac'),(145,'ref_227_lab',58,178,'227_lab'),(146,'ref_227_mat',59,280,'227_mat'),(147,'ref_224_fac',60,66,'224_fac'),(148,'ref_224_lab',61,168,'224_lab'),(149,'ref_224_mat',62,270,'224_mat'),(150,'scale_1.0',63,56,'222.11_fac'),(151,'scale_1.0',63,57,'222.12_fac'),(152,'scale_1.0',63,59,'222.14_fac'),(153,'scale_1.0',63,60,'222_fac'),(154,'scale_1.0',63,70,'226.4_fac'),(155,'scale_1.0',63,72,'226.7_fac'),(156,'scale_1.0',63,158,'222.11_lab'),(157,'scale_1.0',63,159,'222.12_lab'),(158,'scale_1.0',63,161,'222.14_lab'),(159,'scale_1.0',63,162,'222_lab'),(160,'scale_1.0',63,172,'226.4_lab'),(161,'scale_1.0',63,174,'226.7_lab'),(162,'scale_1.0',63,260,'222.11_mat'),(163,'scale_1.0',63,261,'222.12_mat'),(164,'scale_1.0',63,263,'222.14_mat'),(165,'scale_1.0',63,264,'222_mat'),(166,'scale_1.0',63,274,'226.4_mat'),(167,'scale_1.0',63,276,'226.7_mat'),(168,'c_226.7_fac',64,72,'226.7_fac'),(169,'c_226.7_lab',65,174,'226.7_lab'),(170,'c_226.7_mat',66,276,'226.7_mat'),(171,'no_of_rcpump',67,29,'220A.221_fac'),(172,'c_pump_per_unit_fac',68,29,'220A.221_fac'),(173,'c_226.4_fac',73,70,'226.4_fac'),(174,'c_226.4_lab',74,172,'226.4_lab'),(175,'c_226.4_mat',75,274,'226.4_mat'),(176,'c_222.11_fac',76,56,'222.11_fac'),(177,'c_222.11_lab',77,158,'222.11_lab'),(178,'c_222.11_mat',78,260,'222.11_mat'),(179,'c_222.12_fac',79,57,'222.12_fac'),(180,'c_222.12_lab',80,159,'222.12_lab'),(181,'c_222.12_mat',81,261,'222.12_mat'),(182,'c_222.14_fac',85,59,'222.14_fac'),(183,'c_222.14_lab',86,161,'222.14_lab'),(184,'c_222.14_mat',87,263,'222.14_mat'),(185,'c_222_fac',88,60,'222_fac'),(186,'c_222_lab',89,162,'222_lab'),(187,'c_222_mat',90,264,'222_mat'),(188,'c_zero',91,25,'220A.2121_fac'),(189,'c_zero',91,26,'220A.2122_fac'),(190,'c_zero',91,30,'220A.222_fac'),(191,'c_zero',91,33,'220A.225_fac'),(192,'c_zero',91,39,'220A.2324_fac'),(193,'c_220A.222_ss_weight',92,30,'220A.222_fac'),(194,'c_220A.2121_ss_weight',93,25,'220A.2121_fac'),(195,'c_220A.2122_ss_weight',94,26,'220A.2122_fac'),(196,'no_of_cr',95,27,'220A.2131_fac'),(197,'no_of_crd',96,28,'220A.2132_fac'),(198,'c_cr_per_unit_fac',97,27,'220A.2131_fac'),(199,'c_crd_per_unit_fac',98,28,'220A.2132_fac'),(200,'c_220A.224_cs_weight_plate',99,32,'220A.224_fac'),(201,'c_220A.224_ss_weight',100,32,'220A.224_fac'),(202,'c_237_lab',101,186,'237_lab'),(203,'c_237_mat',102,288,'237_mat'),(204,'ref_228_lab',103,179,'228_lab'),(205,'ref_228_mat',104,281,'228_mat'),(206,'ref_236_fac',105,83,'236_fac'),(207,'ref_236_lab',106,185,'236_lab'),(208,'ref_236_mat',107,287,'236_mat'),(209,'ref_253_fac',108,95,'253_fac'),(210,'ref_253_lab',109,197,'253_lab'),(211,'ref_253_mat',110,299,'253_mat'),(212,'ref_221.14_mat',111,257,'221.14_mat'),(213,'c_220A.225_ss_weight',113,33,'220A.225_fac'),(214,'c_220A.2324_ss_weight',114,39,'220A.2324_fac'),(215,'c_220A.2322_tot_weight',115,37,'220A.2322_fac'),(216,'prn_220A.2322cs',116,37,'220A.2322_fac'),(217,'prn_220A.2322ss',117,37,'220A.2322_fac'),(218,'no_of_acu',118,37,'220A.2322_fac'),(219,'c_220A.2323_tot_weight',119,38,'220A.2323_fac'),(220,'prn_220A.2323cs',120,38,'220A.2323_fac'),(221,'prn_220A.2323ss',121,38,'220A.2323_fac'),(222,'no_of_bit',122,38,'220A.2323_fac'),(223,'c_220A.251_cs_weight',123,41,'220A.251_fac'),(224,'c_220A.251_ss_weight',124,41,'220A.251_fac'),(225,'factor_220A.251',125,41,'220A.251_fac'),(226,'c_220A.2312_cs_weight',126,35,'220A.2312_fac'),(227,'c_220A.2312_ss_weight',127,35,'220A.2312_fac'),(228,'factor_220A.2312',128,35,'220A.2312_fac'),(229,'vol_223.4',129,63,'223.4_fac'),(230,'vol_223.4',129,165,'223.4_lab'),(231,'vol_223.4',129,267,'223.4_mat'),(232,'c_223.4_unit_vol_fac',130,63,'223.4_fac'),(233,'c_223.4_unit_vol_lab',131,165,'223.4_lab'),(234,'c_223.4_unit_vol_mat',132,267,'223.4_mat'),(235,'escalate_1978',133,42,'220A.254_fac'),(236,'ref_220A.254_1978',134,42,'220A.254_fac'),(237,'c_226.4111_fac',135,43,'220A.2611_fac'),(238,'c_226.4112_fac',136,43,'220A.2611_fac'),(239,'c_226.41131_fac',137,43,'220A.2611_fac'),(240,'c_226.41132_fac',138,43,'220A.2611_fac'),(241,'c_226.4114_fac',139,43,'220A.2611_fac'),(242,'c_226.41151_fac',140,43,'220A.2611_fac'),(243,'c_226.41152_fac',141,43,'220A.2611_fac'),(244,'c_226.4121_fac',142,44,'220A.2612_fac'),(245,'c_226.4122_fac',143,44,'220A.2612_fac'),(246,'c_226.4123_fac',144,44,'220A.2612_fac'),(247,'c_226.4124_fac',145,44,'220A.2612_fac'),(248,'c_226.4125_fac',146,44,'220A.2612_fac'),(249,'c_226.4126_fac',147,44,'220A.2612_fac'),(250,'c_226.4127_fac',148,44,'220A.2612_fac'),(251,'c_226.4128_fac',149,44,'220A.2612_fac'),(252,'c_226.4133_fac',150,45,'220A.2613_fac'),(253,'c_226.4134_fac',151,45,'220A.2613_fac'),(254,'c_226.4135_fac',152,45,'220A.2613_fac'),(255,'c_226.4131_fac',153,45,'220A.2613_fac'),(256,'c_226.4141_fac',154,46,'220A.2614_fac'),(257,'c_226.4142_fac',155,46,'220A.2614_fac'),(258,'c_226.4143_fac',156,46,'220A.2614_fac'),(259,'c_226.4144_fac',157,46,'220A.2614_fac'),(260,'c_226.4145_fac',158,46,'220A.2614_fac'),(261,'c_251.12_fac',159,93,'251_fac'),(262,'c_251.111_fac',160,93,'251_fac'),(263,'c_251.112_fac',161,93,'251_fac'),(264,'c_251.16_fac',162,93,'251_fac'),(265,'c_251.17_fac',163,93,'251_fac'),(266,'c_251.12_lab',164,195,'251_lab'),(267,'c_251.111_lab',165,195,'251_lab'),(268,'c_251.112_lab',166,195,'251_lab'),(269,'c_251.16_lab',167,195,'251_lab'),(270,'c_251.17_lab',168,195,'251_lab'),(271,'c_251.12_mat',169,297,'251_mat'),(272,'c_251.111_mat',170,297,'251_mat'),(273,'c_251.112_mat',171,297,'251_mat'),(274,'c_251.16_mat',172,297,'251_mat'),(275,'c_251.17_mat',173,297,'251_mat'),(276,'fac_223.1',174,61,'223.1_fac'),(277,'fac_223.1',174,163,'223.1_lab'),(278,'fac_223.1',174,265,'223.1_mat'),(279,'prn_223.1_fac',175,61,'223.1_fac'),(280,'prn_223.1_lab',176,163,'223.1_lab'),(281,'prn_223.1_mat',177,265,'223.1_mat'),(282,'c_220A.2311_fac',178,34,'220A.2311_fac'),(283,'c_220A.2311_fac',178,61,'223.1_fac'),(284,'c_220A.2311_fac',178,163,'223.1_lab'),(285,'c_220A.2311_fac',178,265,'223.1_mat'),(286,'c_220A.2312_fac',179,61,'223.1_fac'),(287,'c_220A.2312_fac',179,163,'223.1_lab'),(288,'c_220A.2312_fac',179,265,'223.1_mat'),(289,'fac_223.3',180,62,'223.3_fac'),(290,'fac_223.3',180,164,'223.3_lab'),(291,'fac_223.3',180,266,'223.3_mat'),(292,'prn_223.3_fac',181,62,'223.3_fac'),(293,'prn_223.3_lab',182,164,'223.3_lab'),(294,'prn_223.3_mat',183,266,'223.3_mat'),(295,'c_220A.2321_fac',184,36,'220A.2321_fac'),(296,'c_220A.2321_fac',184,62,'223.3_fac'),(297,'c_220A.2321_fac',184,164,'223.3_lab'),(298,'c_220A.2321_fac',184,266,'223.3_mat'),(299,'c_220A.2322_fac',185,62,'223.3_fac'),(300,'c_220A.2322_fac',185,164,'223.3_lab'),(301,'c_220A.2322_fac',185,266,'223.3_mat'),(302,'c_220A.2323_fac',186,62,'223.3_fac'),(303,'c_220A.2323_fac',186,164,'223.3_lab'),(304,'c_220A.2323_fac',186,266,'223.3_mat'),(305,'c_220A.2324_fac',187,62,'223.3_fac'),(306,'c_220A.2324_fac',187,164,'223.3_lab'),(307,'c_220A.2324_fac',187,266,'223.3_mat'),(308,'c_220A.2325_fac',188,40,'220A.2325_fac'),(309,'c_220A.2325_fac',188,62,'223.3_fac'),(310,'c_220A.2325_fac',188,164,'223.3_lab'),(311,'c_220A.2325_fac',188,266,'223.3_mat'),(312,'c_218B_fac',189,9,'218B_fac'),(313,'c_218J_fac',190,15,'218J_fac'),(314,'c_218T_fac',191,20,'218T_fac'),(315,'c_218B_lab',195,111,'218B_lab'),(316,'c_218J_lab',196,117,'218J_lab'),(317,'c_218T_lab',197,122,'218T_lab'),(318,'c_218B_mat',198,213,'218B_mat'),(319,'c_218J_mat',199,219,'218J_mat'),(320,'c_218T_mat',200,224,'218T_mat'),(321,'Tot_Labor_containment',506,104,'212_lab'),(322,'Tot_Mat_containment',507,206,'212_mat');
-/*!40000 ALTER TABLE `variable_links` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'accert_db'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `cal_tol_dce_fac` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_fac`(IN cel_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+                        where account=\'2\'
+                        and cost_element=\'2c_fac\' ');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `cal_tol_dce_lab` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_lab`(IN cel_tabl_name varchar(50))
+BEGIN
+     SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+                         where account=\'2\'
+                         and cost_element=\'2c_lab\' ');
+     PREPARE stmt FROM @stmt;
+     EXECUTE stmt;
+     DEALLOCATE PREPARE stmt;
+ END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `cal_tol_dce_mat` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tol_dce_mat`(IN cel_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT cost_2017 FROM ', cel_tabl_name, '
+                        where account=\'2\'
+                        and cost_element=\'2c_mat\' ');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `cal_tprn` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cal_tprn`(acc_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT  sum(t1.prn) as tprn FROM
+                        ', acc_tabl_name, ' AS t1 LEFT JOIN ', acc_tabl_name, ' as t2
+                        ON t1.code_of_account = t2.supaccount
+                        WHERE t2.code_of_account IS NULL
+                        and t1.code_of_account!=\'2\'
+                        and t1.code_of_account!=\'2C\'');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `category_hier` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `category_hier`(
+in p_cat_id varchar(45)
+)
+begin
+
+declare v_done tinyint unsigned default 0;
+declare v_depth smallint unsigned default 0;
+
+create temporary table hier(
+ supaccount varchar(45) NOT NULL, 
+ code_of_account varchar(45) NOT NULL,
+ depth smallint unsigned default 0
+)engine = memory;
+
+insert into hier select supaccount, code_of_account, v_depth from account where code_of_account = p_cat_id;
+
+/* http://dev.mysql.com/doc/refman/5.0/en/temporary-table-problems.html */
+
+create temporary table tmp engine=memory select * from hier;
+
+while not v_done do
+
+    if exists( select 1 from account p inner join hier on p.supaccount = hier.code_of_account and hier.depth = v_depth) then
+
+        insert into hier 
+            select p.supaccount, p.code_of_account, v_depth + 1 from account p 
+            inner join tmp on p.supaccount = tmp.code_of_account and tmp.depth = v_depth;
+
+        set v_depth = v_depth + 1;          
+
+        truncate table tmp;
+        insert into tmp select * from hier where depth = v_depth;
+
+    else
+        set v_done = 1;
+    end if;
+
+end while;
+
+select 
+ p.code_of_account,
+ b.code_of_account as supaccount,
+ hier.depth
+from 
+ hier
+inner join account p on hier.code_of_account = p.code_of_account
+left outer join account b on hier.supaccount = b.code_of_account
+order by
+ hier.depth, hier.code_of_account;
+
+drop temporary table if exists hier;
+drop temporary table if exists tmp;
+
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_affected_accounts` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_accounts`(IN acc_table VARCHAR(50),
+																		IN var_table VARCHAR(50))
+BEGIN
+	SET @stmt = CONCAT("SELECT va.var_name, (SELECT GROUP_CONCAT(ac.code_of_account SEPARATOR ', ')
+        FROM ", acc_table, " ac
+        WHERE FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0) AS ac_affected
+                        FROM
+                        (SELECT * FROM ",var_table,"
+                        WHERE user_input = 1) as va
+                        WHERE (SELECT GROUP_CONCAT(ac.code_of_account SEPARATOR ', ')
+								FROM ", acc_table, " ac
+						WHERE FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0) IS NOT NULL
+                        ");
+	PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `extract_affected_cost_elements` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -372,16 +608,51 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_cost_elements`(IN vlk_table varchar(50),
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_cost_elements`(IN cel_table varchar(50),
                                                                               IN var_table varchar(50))
 BEGIN
-    SET @stmt = CONCAT('SELECT vl.variable, group_concat(vl.ce)
+    SET @stmt = CONCAT("SELECT va.var_name, (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
+        FROM ", cel_table, " ce
+        WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) AS ce_affected
                         FROM
-                        (SELECT * FROM ',var_table,'
+                        (SELECT * FROM ",var_table,"
                         WHERE user_input = 1) as va
-                        JOIN ',vlk_table,' as vl
-                        on va.var_name = vl.variable
-                        GROUP BY vl.variable');
+                        WHERE (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
+								FROM ", cel_table, " ce
+						WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) IS NOT NULL
+                        ");
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_affected_cost_elements_w_dis` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_cost_elements_w_dis`(IN cel_table varchar(50),
+                                                                              IN var_table varchar(50))
+BEGIN
+    SET @stmt = CONCAT("SELECT va.var_name,va.var_description, (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
+        FROM ", cel_table, " ce
+        WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) AS ce_affected
+                        FROM
+                        (SELECT * FROM ",var_table,"
+                        WHERE user_input = 1) as va
+                        WHERE (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
+								FROM cost_element ce
+						WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) IS NOT NULL
+                        ");
     PREPARE stmt FROM @stmt;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -397,7 +668,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -416,45 +687,13 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `extract_original_cost_elements` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_original_cost_elements`(IN cel_table VARCHAR(50),
-                                                                             IN var_table VARCHAR(50),
-                                                                             IN vlk_table VARCHAR(50))
-BEGIN
-    SET @stmt = CONCAT('SELECT ce.cost_element,	ce.cost_2017 as orignal_cost
-                        FROM ',cel_table,' as ce JOIN
-                        (SELECT vl.ce
-                        FROM
-                        (SELECT * FROM ',var_table,'
-                        WHERE user_input = 1) as va
-                        JOIN ',vlk_table,' as vl
-                        on va.var_name = vl.variable) as ce_affected
-                        on ce.cost_element = ce_affected.ce');
-    PREPARE stmt FROM @stmt;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `extract_super_val` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -472,13 +711,38 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `extract_user_changed_variables` */;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_total_cost_on_name` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_total_cost_on_name`(IN table_name VARCHAR(50),
+                                          IN tc_name VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT code_of_account, account_description, total_cost
+                        FROM ', table_name, ' WHERE code_of_account = ?');
+PREPARE stmt FROM @stmt;
+SET @tc_name = tc_name;
+EXECUTE stmt USING @tc_name;
+DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `extract_user_changed_variables` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -501,7 +765,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -519,13 +783,38 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `get_var_value_by_name` */;
+/*!50003 DROP PROCEDURE IF EXISTS `get_current_COAs` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_current_COAs`(IN table_name VARCHAR(50), 
+                                  IN inp_id VARCHAR(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT code_of_account, 
+                       ind FROM ', table_name, ' WHERE supaccount = ?');
+    PREPARE stmt FROM @stmt;
+    SET @inp_id = inp_id;
+    EXECUTE stmt USING @inp_id;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_var_value_by_name` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -557,37 +846,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_COA`(IN table_name VARCH
 											IN ind INT,
 											IN supaccount VARCHAR(50),
 											IN level INT,
-											IN lft INT,
-											IN rgt INT,
 											IN code_of_account VARCHAR(50),
 											IN account_description VARCHAR(50),
 											IN total_cost INT,
-											IN unit VARCHAR(50),
-											IN main_subaccounts VARCHAR(100),
-											IN cost_elements VARCHAR(50),
 											IN review_status VARCHAR(50),
 											IN prn VARCHAR(50))
 BEGIN
 	SET @stmt = CONCAT('INSERT INTO ', table_name,
-						' (ind, supaccount, level, lft, rgt, code_of_account, account_description, 
-							total_cost, unit, main_subaccounts, cost_elements, review_status, prn) 
-							VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+						' (ind, supaccount, level, code_of_account, account_description, 
+							total_cost, review_status, prn) 
+							VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
 PREPARE stmt FROM @stmt;
 SET @ind = ind;
 SET @supaccount = supaccount;
 SET @level = level;
-SET @lft = lft;
-SET @rgt = rgt;
 SET @code_of_account = code_of_account;
 SET @account_description = account_description;
 SET @total_cost = total_cost;
-SET @unit = unit;
-SET @main_subaccounts = main_subaccounts;
-SET @cost_elements = cost_elements;
 SET @review_status = review_status;
 SET @prn = prn;
-EXECUTE stmt USING @ind, @supaccount, @level, @lft, @rgt, @code_of_account, @account_description,
-@total_cost, @unit, @main_subaccounts, @cost_elements, @review_status, @prn;
+EXECUTE stmt USING @ind, @supaccount, @level, @code_of_account, @account_description,
+@total_cost, @review_status, @prn;
 DEALLOCATE PREPARE stmt;
 END ;;
 DELIMITER ;
@@ -601,7 +880,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -636,7 +915,6 @@ BEGIN
                             code_of_account,
                             account_description,
                             total_cost,
-                            unit,
                             level,
                             review_status
                             FROM ',table_name,' WHERE level <= ?');
@@ -671,7 +949,6 @@ BEGIN
                             sorted_ce.lab_cost,
                             sorted_ce.mat_cost,
                             acc.total_cost,
-                            acc.unit,
                             acc.review_status
                             FROM ',acc_table,' as acc
                             JOIN
@@ -700,7 +977,7 @@ BEGIN
                                     ON cem.cost_element= splt_act.mat_name) as sorted_ce
                                     ON sorted_ce.code_of_account=acc.code_of_account
                                     WHERE acc.level <= ?
-                                    ORDER BY acc.lft;');
+                                    ORDER BY acc.ind;');
     PREPARE stmt FROM @stmt;
     SET @level=level;
     EXECUTE stmt USING @level;
@@ -726,6 +1003,100 @@ BEGIN
     SET @stmt = CONCAT('SELECT rankedcoa.code_of_account,
                     acc.account_description,
                     acc.total_cost,
+                    acc.level,
+                    acc.review_status
+                    FROM ',acc_table,' as acc
+                    JOIN
+                    (SELECT node.code_of_account AS COA , 
+                    CONCAT( REPEAT(" ", node.level), node.code_of_account) AS code_of_account
+                    FROM ',acc_table,' AS node
+                    ORDER BY node.ind) as rankedcoa
+                    ON acc.code_of_account=rankedcoa.COA
+                    WHERE acc.level <= ?
+                    ORDER BY acc.ind;');
+    PREPARE stmt FROM @stmt;
+    SET @level=level;
+    EXECUTE stmt USING @level;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_lmt_accounts_all` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_lmt_accounts_all`(IN acc_table VARCHAR(255),   
+                                                                            IN cel_table VARCHAR(255))
+BEGIN
+    SET @stmt = CONCAT('SELECT', acc_table,'.level,
+                                rankedcoa.COA as code_of_account,
+                                ',acc_table,'.account_description,
+                                sorted_ce.fac_cost,
+                                sorted_ce.lab_cost,
+                                sorted_ce.mat_cost,
+                                ',acc_table,'.total_cost,
+                                ',acc_table,'.unit,
+                                ',acc_table,'.review_status
+                        FROM ',acc_table,' JOIN
+                        (SELECT node.code_of_account,
+                                CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
+                            FROM ',acc_table,' AS node,
+                                ',acc_table,' AS parent
+                            WHERE node.lft BETWEEN parent.lft AND parent.rgt
+                            GROUP BY node.code_of_account) as rankedcoa
+                            ON ',acc_table,'.code_of_account=rankedcoa.code_of_account
+                            JOIN (SELECT splt_act.code_of_account,
+                                    cef.cost_2017 as fac_cost,
+                                    cel.cost_2017 as lab_cost,
+                                    cem.cost_2017 as mat_cost
+                                    FROM
+                                    (SELECT code_of_account,total_cost,supaccount,
+                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 1), ",", -1) as fac_name,
+                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 2), ",", -1) as lab_name,
+                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 3), ",", -1) as mat_name
+                                    FROM ',acc_table,') as splt_act
+                                    LEFT JOIN ',cel_table,' as cef
+                                    ON cef.cost_element= splt_act.fac_name
+                                    LEFT JOIN ',cel_table,' as cel
+                                    ON cel.cost_element= splt_act.lab_name
+                                    LEFT JOIN ',cel_table,' as cem
+                                    ON cem.cost_element= splt_act.mat_name) as sorted_ce
+                                    ON sorted_ce.code_of_account=',acc_table,'.code_of_account
+                                    WHERE ',acc_table,'.level <= 3
+                                    ORDER BY ',acc_table,'.lft;');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_lmt_accounts_simple` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_lmt_accounts_simple`(IN acc_table VARCHAR(255), IN level INT)
+BEGIN
+    SET @stmt = CONCAT('SELECT rankedcoa.code_of_account,
+                    acc.account_description,
+                    acc.total_cost,
                     acc.unit,
                     acc.level,
                     acc.review_status
@@ -737,7 +1108,8 @@ BEGIN
                     WHERE node.lft BETWEEN parent.lft AND parent.rgt
                     GROUP BY node.code_of_account) as rankedcoa
                     ON acc.code_of_account=rankedcoa.COA
-                    WHERE acc.level <= ?');
+                    WHERE acc.level <= ?
+                    ORDER BY acc.lft;');
     PREPARE stmt FROM @stmt;
     SET @level=level;
     EXECUTE stmt USING @level;
@@ -754,7 +1126,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -776,7 +1148,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -811,23 +1183,62 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `print_user_request_parameter`(IN all_col BOOLEAN,
                                                                            IN var_table VARCHAR(50), 
-                                                                           IN vlk_table VARCHAR(50))
+                                                                           IN cel_table VARCHAR(50))
 BEGIN
     IF all_col THEN
-		SET @stmt = CONCAT('SELECT va.ind, va.var_name, affectv.ce_affected FROM ',var_table,' as va JOIN 
-								(SELECT variable, group_concat(ce) as ce_affected
-								FROM ',vlk_table,' as vlk 
-								group by variable) as affectv on va.var_name = affectv.variable
-								where va.var_value IS NULL
-								order by va.ind');
+		SET @stmt = CONCAT("SELECT va.ind, va.var_name, 
+       (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
+        FROM ", cel_table, " ce
+        WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) AS ce_affected
+		FROM ",var_table," as va
+		WHERE va.var_value IS NULL
+		ORDER BY va.ind;");
     ELSE
-        SET @stmt = CONCAT('SELECT va.var_name, affectv.ce_affected FROM ',var_table,' as va JOIN
-                            (SELECT variable, group_concat(ce) as ce_affected
-                            FROM ',vlk_table,' as vlk
-                            group by variable) as affectv on va.var_name = affectv.variable
-                            where va.var_value IS NULL
-                            order by va.ind;');
+        SET @stmt = CONCAT("SELECT va.var_name, 
+       (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
+        FROM ", cel_table, " ce
+        WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) AS ce_affected
+		FROM ",var_table," as va
+		WHERE va.var_value IS NULL
+		ORDER BY va.ind;");
     END IF;
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `roll_up_account_table_by_level` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_account_table_by_level`(IN table_name varchar(50),
+                                                                        IN from_level int, IN to_level int)
+BEGIN
+	SET SQL_SAFE_UPDATES = 0;
+    SET @stmt = CONCAT('UPDATE ', table_name, ',',
+                    '(SELECT a',to_level,'.code_of_account as ac',to_level,'_coa, ',
+                            'sum(ua',from_level,'.total_cost) as a',to_level,'_cal_total_cost ',
+                    'FROM ', table_name, ' as ua',from_level,
+                    ' JOIN ', table_name, ' as a',to_level,
+                    ' on ua',from_level,'.supaccount=a',to_level,'.code_of_account ',
+                    'where ua',from_level,'.level=',from_level,
+                    ' and a',to_level,'.level=',to_level,
+                    ' group by a',to_level,'.code_of_account) as updated_ac',to_level,
+                    ' SET ',
+                    table_name,'.total_cost = updated_ac',to_level,'.a',to_level,'_cal_total_cost,',
+                    table_name,'.review_status = \'Updated\' ',
+                    'WHERE ',
+                    table_name,'.code_of_account = updated_ac',to_level,'.ac',to_level,'_coa');
     PREPARE stmt FROM @stmt;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -843,7 +1254,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -874,13 +1285,177 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sup_coa_level` */;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_cost_elements_2C_fac` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_fac`(IN cel_tabl_name varchar(50),
+                                                                    IN acc_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+                        (SELECT t1.code_of_account,
+                        CONCAT(t1.code_of_account,\'_fac\') as fac_name
+                        FROM ', acc_tabl_name, ' AS t1
+                        LEFT JOIN ', acc_tabl_name, ' as t2
+                        ON t1.code_of_account = t2.supaccount
+                        WHERE t2.code_of_account IS NULL
+                        and t1.code_of_account!=\'2\'
+                        and t1.code_of_account!=\'2C\' )as ac
+                        join ', cel_tabl_name, ' as cef
+                                on cef.cost_element = ac.fac_name
+                                where ac.code_of_account!=\'2C\'');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_cost_elements_2C_lab` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_lab`(IN cel_tabl_name varchar(50),  
+                                                                    IN acc_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+                        (SELECT t1.code_of_account,
+                        CONCAT(t1.code_of_account,\'_lab\') as lab_name
+                        FROM ', acc_tabl_name, ' AS t1
+                        LEFT JOIN ', acc_tabl_name, ' as t2
+                        ON t1.code_of_account = t2.supaccount
+                        WHERE t2.code_of_account IS NULL
+                        and t1.code_of_account!=\'2\'
+                        and t1.code_of_account!=\'2C\' )as ac
+                        join ', cel_tabl_name, ' as cef
+                                on cef.cost_element = ac.lab_name
+                                where ac.code_of_account!=\'2C\'');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_cost_elements_2C_mat` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_cost_elements_2C_mat`(IN cel_tabl_name varchar(50),
+                                                                    IN acc_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('SELECT sum(cef.cost_2017) from
+                        (SELECT t1.code_of_account,
+                        CONCAT(t1.code_of_account,\'_mat\') as mat_name
+                        FROM ', acc_tabl_name, ' AS t1
+                        LEFT JOIN ', acc_tabl_name, ' as t2
+                        ON t1.code_of_account = t2.supaccount
+                        WHERE t2.code_of_account IS NULL
+                        and t1.code_of_account!=\'2\'
+                        and t1.code_of_account!=\'2C\' )as ac
+                        join ', cel_tabl_name, ' as cef
+                                on cef.cost_element = ac.mat_name
+                                where ac.code_of_account!=\'2C\'');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_up_lmt_account_2C` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_up_lmt_account_2C`(IN acc_tabl_name varchar(50),
+                                                                IN cel_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
+                        '(SELECT sum(t1.total_cost) as tc, sum(t1.prn) as tprn FROM
+                            ', acc_tabl_name, ' AS t1 LEFT JOIN ', acc_tabl_name, ' as t2
+                            ON t1.code_of_account = t2.supaccount
+                            WHERE t2.code_of_account IS NULL
+                            and t1.code_of_account!=\'2\'
+                            and t1.code_of_account!=\'2C\') as dircost
+                        SET ', acc_tabl_name, '.total_cost = dircost.tc,
+                        ', acc_tabl_name, '.prn=dircost.tprn,
+                        review_status = \'Ready for Review\'
+                        WHERE ', acc_tabl_name, '.code_of_account = \'2C\';');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sum_up_lmt_direct_cost` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sum_up_lmt_direct_cost`(IN acc_tabl_name varchar(50),
+                                                                    IN cel_tabl_name varchar(50))
+BEGIN
+    SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
+                        '(SELECT  (total_cost/prn) as talcost
+                            FROM ', acc_tabl_name, ' as pre_acc
+                            WHERE pre_acc.code_of_account =\'2C\') as calcost
+                        SET ', acc_tabl_name, '.total_cost = calcost.talcost,
+                        review_status = \'Ready for Review\'
+                        WHERE ', acc_tabl_name, '.code_of_account = \'2\';');
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sup_coa_level` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -909,27 +1484,15 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_before_insert`(IN table_name VARCHAR(50),
-                                              IN max_ind INT,
-                                              IN max_rgt INT)
+                                              IN min_ind INT)
 BEGIN
+	SET SQL_SAFE_UPDATES = 0;
     SET @stmt = CONCAT('UPDATE ', table_name,
-                       ' SET ind = ind + 1 WHERE ind > ?');
+                       ' SET ind = ind + 1 WHERE ind >?');
     PREPARE stmt FROM @stmt;
-    SET @max_ind = max_ind;
-    EXECUTE stmt USING @max_ind;
+    SET @min_ind = min_ind;
+    EXECUTE stmt USING @min_ind;
     DEALLOCATE PREPARE stmt;  
-    SET @stmt = CONCAT('UPDATE ', table_name,
-                       ' SET lft = lft + 2 WHERE lft > ?');
-    PREPARE stmt FROM @stmt;
-    SET @max_rgt = max_rgt;
-    EXECUTE stmt USING @max_rgt;
-    DEALLOCATE PREPARE stmt;
-    SET @stmt = CONCAT('UPDATE ', table_name,
-                       ' SET rgt = rgt + 2 WHERE rgt > ?');
-    PREPARE stmt FROM @stmt;
-    SET @max_rgt = max_rgt;
-    EXECUTE stmt USING @max_rgt;
-    DEALLOCATE PREPARE stmt;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -949,11 +1512,11 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_table_by_cost_elements`(IN acc_tabl_name varchar(50),
 																					IN cel_tabl_name varchar(50))
 BEGIN
+	SET SQL_SAFE_UPDATES = 0;
 	SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
 						'(SELECT ', acc_tabl_name, '.code_of_account,
 								ce.total_cost as cost,
-								ce.updated as updated,
-								', acc_tabl_name, '.unit
+								ce.updated as updated
 						FROM ', acc_tabl_name, '
 						JOIN (SELECT account,
 									sum(cost_2017) as total_cost,
@@ -975,6 +1538,87 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_fac` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_fac`(IN cel_tabl_name varchar(50),
+                                                                        IN sum_2c_fac float)
+BEGIN
+	SET SQL_SAFE_UPDATES = 0;
+    SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+                        SET cost_2017 = ?, updated = 1
+                        WHERE cost_element = \'2C_fac\'');
+    PREPARE stmt FROM @stmt; 
+    SET @sum_2c_fac = sum_2c_fac;
+    EXECUTE stmt USING @sum_2c_fac;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_lab` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_lab`(IN cel_tabl_name varchar(50),
+                                                                        IN sum_2c_lab float)
+BEGIN
+	SET SQL_SAFE_UPDATES = 0;
+    SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+                        SET cost_2017 = ?, updated = 1
+                        WHERE cost_element = \'2C_lab\'');
+    PREPARE stmt FROM @stmt;
+    SET @sum_2c_lab = sum_2c_lab;
+    EXECUTE stmt USING @sum_2c_lab;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_mat` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_mat`(IN cel_tabl_name varchar(50),
+                                                                         IN sum_2c_mat float)
+BEGIN
+	 SET SQL_SAFE_UPDATES = 0;
+     SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
+                         SET cost_2017 = ?, updated = 1
+                         WHERE cost_element = \'2C_mat\'');
+     PREPARE stmt FROM @stmt;
+     SET @sum_2c_mat = sum_2c_mat;
+     EXECUTE stmt USING @sum_2c_mat;
+     DEALLOCATE PREPARE stmt;
+ END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_on_name` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -989,11 +1633,47 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_on_name`(IN tab
                                                                           IN `ce_name` VARCHAR(50),
                                                                           IN `alg_value` FLOAT)
 BEGIN
+	SET SQL_SAFE_UPDATES = 0;
     SET @stmt = CONCAT('UPDATE ', table_name, ' SET cost_2017 = ?, updated = 1 WHERE cost_element = ?');
     PREPARE stmt FROM @stmt;
     SET @alg_value = alg_value;
     SET @ce_name = ce_name;
     EXECUTE stmt USING @alg_value, @ce_name;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_new_accounts` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_accounts`(IN acc_tabl_name VARCHAR(50),
+                                                                        IN var_tabl_name VARCHAR(50),
+                                                                        IN alg_tabl_name VARCHAR(50))
+BEGIN
+	SET SQL_SAFE_UPDATES = 0;
+    SET @stmt = CONCAT("SELECT ac.ind, ac.code_of_account,
+       ac.total_cost, ac.alg_name,
+       ac.variables, 
+       alg.alg_python, alg.alg_formulation, alg.alg_units 
+		FROM ", acc_tabl_name, " AS ac 
+		JOIN ", alg_tabl_name, " AS alg ON ac.alg_name = alg.alg_name
+		WHERE EXISTS (
+			SELECT 1
+			FROM ", var_tabl_name, " AS va
+			WHERE va.user_input = 1
+			AND FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0);");
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END ;;
 DELIMITER ;
@@ -1013,25 +1693,20 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_cost_elements`(IN cel_tabl_name VARCHAR(50),
                                                                         IN var_tabl_name VARCHAR(50),
-                                                                        IN vlk_tabl_name VARCHAR(50),
                                                                         IN alg_tabl_name VARCHAR(50))
 BEGIN
-    SET @stmt = CONCAT('SELECT ce_org.ind, ce_org.cost_element,
-                        ce_org.cost_2017, ce_org.alg_name,
-                        ce_org.variables, ce_org.algno,
-                        alg.alg_python, alg.alg_formulation, alg.alg_units FROM
-                        (SELECT ind, cost_element,
-                        cost_2017, alg_name,
-                        variables, algno
-                        FROM ', cel_tabl_name, ' AS ce JOIN
-                        (SELECT vl.ce
-                            FROM (SELECT * FROM ', var_tabl_name, '
-                                WHERE user_input = 1) AS va
-                            JOIN ', vlk_tabl_name, ' AS vl
-                            ON va.var_name = vl.variable) AS ce_affected
-                        ON ce.cost_element = ce_affected.ce) AS ce_org
-                        JOIN ', alg_tabl_name, ' AS alg
-                        ON ce_org.alg_name = alg.alg_name;');
+	SET SQL_SAFE_UPDATES = 0;
+    SET @stmt = CONCAT("SELECT ce.ind, ce.cost_element,
+       ce.cost_2017, ce.alg_name,
+       ce.variables, ce.algno,
+       alg.alg_python, alg.alg_formulation, alg.alg_units 
+		FROM ", cel_tabl_name, " AS ce 
+		JOIN ", alg_tabl_name, " AS alg ON ce.alg_name = alg.alg_name
+		WHERE EXISTS (
+			SELECT 1
+			FROM ", var_tabl_name, " AS va
+			WHERE va.user_input = 1
+			AND FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0);");
     PREPARE stmt FROM @stmt;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -1047,7 +1722,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -1082,16 +1757,15 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_total_cost_on_name`(IN table_name VARCHAR(50),
                                                                         IN `tc_id` VARCHAR(50), 
-                                                                        IN `u_i_tc_value` FLOAT, 
-                                                                        IN `u_i_tc_unit` VARCHAR(50))
+                                                                        IN `u_i_tc_value` FLOAT)
 BEGIN
-    SET @stmt = CONCAT('UPDATE ', table_name, ' SET total_cost = ?, unit = ?, 
+	SET SQL_SAFE_UPDATES = 0;
+    SET @stmt = CONCAT('UPDATE ', table_name, ' SET total_cost = ?, 
                                               review_status = "User Input" WHERE code_of_account = ?');
     PREPARE stmt FROM @stmt;
     SET @tc_id = tc_id;
     SET @u_i_tc_value = u_i_tc_value;
-    SET @u_i_tc_unit = u_i_tc_unit;
-    EXECUTE stmt USING @u_i_tc_value, @u_i_tc_unit, @tc_id;
+    EXECUTE stmt USING @u_i_tc_value, @tc_id;
     DEALLOCATE PREPARE stmt;
 END ;;
 DELIMITER ;
@@ -1117,6 +1791,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable`(
     IN revised INT
 )
 BEGIN
+	SET SQL_SAFE_UPDATES = 0;
     SET @sql = CONCAT('UPDATE ', tbl_name, ' SET var_value = ?, var_unit = ?, user_input = ? WHERE var_name = ?');
     PREPARE stmt FROM @sql;
     SET @param1 = var_value,
@@ -1144,6 +1819,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable_info_on_name`(IN table_name VARCHAR(50),
                             IN `u_i_var_name` VARCHAR(50), IN `value` FLOAT, IN `unit` VARCHAR(50))
 BEGIN
+	SET SQL_SAFE_UPDATES = 0;
     SET @stmt = CONCAT('UPDATE ', table_name, ' SET var_value = ?,
                         var_unit = ?,
                         user_input = ? WHERE var_name = ?');
@@ -1170,4 +1846,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-31 14:26:01
+-- Dump completed on 2024-07-22 16:56:47

@@ -11,8 +11,7 @@ accert{
         InputTmpl = "ref_model"
         ValType = String
         ValEnums = [ "PWR12-BE" "ABR1000" "LFR", "heatpipe"]
-        }        
-    
+        }            
 
     power{
         Description = "[required] User input power"
@@ -118,7 +117,6 @@ accert{
                     MaxOccurs = 1
                     ValType = String
                     ValEnums = ['211' '212' '213' '214' '215' '216' '217' '218' '220A' '221' '222' '223' '224' '225' '226' '227' '228' '231' '233' '234' '235' '236' '237' '241' '242' '243' '244' '245' '246' '251' '252' '253' '254' '255' '261' '262' 'new' '23and24and25'] 
-
                 }
                 total_cost{
                     Description = "total cost value"
@@ -328,7 +326,22 @@ accert{
                         }
                     }
                 }
-                
+                newCOA{
+                    Description = "new code of account"
+                    MinOccurs = 0
+                    MaxOccurs = NoLimit
+                    InputTmpl = "newCOA" % TODO: add template
+                    id{
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        ValType = String
+                    }
+                    descr{
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        ValType = String
+                    }
+                }
             }
         }
 

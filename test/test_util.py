@@ -11,7 +11,6 @@ ut = Utility_methods()
 ut.acc_tabl = 'account'
 ut.cel_tabl = 'cost_element'
 ut.var_tabl = 'variable'
-ut.vlk_tabl = 'variable_links'
 ut.alg_tabl = 'algorithm'
 ut.esc_tabl = 'escalation'
 ut.fac_tabl = 'facility'
@@ -22,7 +21,6 @@ def test_util_methods(cursor):
     the tables. if using pytest -s, the output will be printed."""
     assert ut.extract_affected_cost_elements(cursor)==None
     assert ut.extract_changed_cost_elements(cursor)==None
-    assert ut.extract_original_cost_elements(cursor)==None
     assert ut.extract_user_changed_variables(cursor)==None
     assert ut.print_account(cursor)==None
     assert ut.print_algorithm(cursor)==None
