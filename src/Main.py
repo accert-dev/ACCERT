@@ -4,7 +4,9 @@ from prettytable import PrettyTable
 import configparser
 import xml2obj
 from utility_accert import Utility_methods
+# import the Algorithm class
 from Algorithm import Algorithm
+import importlib
 import numpy as np
 import sys
 import pandas.io.sql as sql
@@ -871,6 +873,41 @@ class Accert:
         # print('Value: {}'.format(alg_value))
         return alg_value
 
+    def update_account_value(self, alg_py, alg_name, variables):
+        """
+        Calls the specified algorithm with the given variables.
+        
+        Parameters:
+        alg_py (str): The name of the Python file (without .py) containing the algorithm class.
+        alg_name (str): The name of the algorithm function to call.
+        variables (dict): A dictionary of variables required by the algorithm.
+
+        Returns:
+        float: The result of the algorithm computation.
+        """
+        # Dynamically import the module
+        module = importlib.import_module(f'Algorithm.{alg_py}')
+        
+        # Get the class from the module
+        class_ = getattr(module, alg_py)
+        
+        # Create an instance of the class
+        algorithm_instance = class_(
+            ind=1,  # Dummy value, replace as needed
+            alg_name=alg_name,
+            alg_for='test',  # Dummy value, replace as needed
+            alg_description=f'Description of {alg_name}',  # Dummy value, replace as needed
+            alg_formulation=f'Formulation of {alg_name}',  # Dummy value, replace as needed
+            alg_units='units',  # Dummy value, replace as needed
+            variables=','.join(variables.keys()),  # Convert variable names to a comma-separated string
+            constants=''  # Dummy value, replace as needed
+        )
+        
+        # Run the algorithm and get the result
+        result = algorithm_instance.run(variables)
+        
+        return result
+
     def update_cost_element_on_name(self, c, ce_name, alg_value):
         """
         Updates the cost element based on cost element name. (Turn off safe update mode)
@@ -1010,59 +1047,33 @@ class Accert:
         c.callproc('update_new_accounts',(self.acc_tabl,self.var_tabl,self.alg_tabl))
         for row in c.stored_results():
             results = row.fetchall()
-        # result [(27, '220A.211', 70000000.0, 'fusion_ac211', 'csi, lsa, cland', 'ac211_python', 'ac211_for', 'million')]
-
         for row in results:
-            print('row0 ',row[0])
-            print('row1 ',row[1])
-            print('row2 ',row[2])
-            print('row3 ',row[3])
-            print('row4 ',row[4])
-            print('row5 ',row[5])
-            print('row6 ',row[6])
-            print('row7 ',row[7])
-            cccc
             acc_name = row[1]
             org_acc_value = row[2]
             alg_name = row[3]
             var_name_lst = [x.strip() for x in row[4].split(',')]
-            alg_no = row[5]
-            alg = row[6]
+            alg_py = row[5]
+            alg_form = row[6]
             alg_unit = row[7]
             # # create a value list for debugging
             # var_value_lst = []
-            variables = {}    
+            variables = {}
+
             for var_ind, var_name in enumerate(var_name_lst):
                 # var_value_lst.append(get_var_value_by_name(c, var_name))
-                variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
+                variables[var_name] = self.get_var_value_by_name(c, var_name)
             print('[Updating] Account [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(acc_name, alg_name, alg_form))
-            alg_value = self.run_pre_alg(alg, **variables)
+
+            # alg_py is the algorithm python file name in Algorithm folder
+            # alg_name is the function name in the alg_py file
+            # now pass the variables and run the algorithm
+            alg_value = self.update_account_value(alg_py, alg_name, variables)
             unit_convert = self.check_unit_conversion('dollar',alg_unit)
             if unit_convert:
                 alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
             print('[Updated]  Reference value is : ${:<11,.0f}, calculated value is: ${:<11,.0f} '.format(org_acc_value,alg_value))
-            self.update_account_on_name(c,acc_name,alg_value) 
+            self.update_total_cost(c, acc_name, alg_value, 'dollar')
             print(' ')
-
-        # # add user-defined options if alg started with 'user_defined' or 'fusion'
-        #     if alg_name.startswith('fusion'):
-        #         cccc
-        #         # if it is alg.fusion, then it is a fusion algorithm
-        #         for var_ind, var_name in enumerate(var_name_lst):
-        #             variables[var_name] = self.get_var_value_by_name(c, var_name)
-        #         # funcname is the name after 'alg|fusion|'
-        #         func_name = alg_name.split('_')[1].strip()
-        #         # import fusion function module from Algorithm/fusion_func.py
-        #         fusion_module = importlib.import_module('fusion_func')
-        #         user_func = getattr(user_func_module, func_name)
-        #         alg_value = user_func(**variables)
-        #     elif alg_name.startswith('alg|user_defined'):
-        #         # if it is alg.user_defined, then it is a user-defined algorithm
-        #         # edit it later
-        #         ccccc
-
-
-
 
     def update_account_table_by_cost_elements(self, c):
         """
@@ -1833,7 +1844,6 @@ class Accert:
                 if next_level:
                     self.process_level_accounts(c, next_level, accert, account.id)                
 
-
     def process_ce(self, c, account):
         if account.ce:
             for ce in account.ce:
@@ -2004,7 +2014,6 @@ class Accert:
         ut.print_leveled_accounts(c, all=False, cost_unit='million', level=3)
 
     def generate_fusion_results(self, c, ut, accert):
-        self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c)
         print(' Generating results table for review '.center(100, '='))
