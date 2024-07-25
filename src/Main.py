@@ -82,10 +82,10 @@ class Accert:
             self.fac_tabl = 'facility'
         elif "fusion" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'fusion'
-            self.acc_tabl = 'fusion_account'
+            self.acc_tabl = 'fusion_acco'
             self.cel_tabl = 'fusion_cost_element'
-            self.var_tabl = 'fusion_variable'
-            self.alg_tabl = 'fusion_algorithm'
+            self.var_tabl = 'fusion_varv'
+            self.alg_tabl = 'fusion_alg'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
         return None
@@ -563,7 +563,6 @@ class Accert:
         for var_ind, var_name in enumerate(var_name_lst):
             # var_value_lst.append(get_var_value_by_name(c, var_name))
             variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
-        # print('variables',variables)
         print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
         alg_value = self.run_pre_alg(alg, **variables)
         self.update_input_variable(c,sup_var_name,alg_value,sup_var_unit,quite = True)
@@ -810,6 +809,7 @@ class Accert:
         #     DEALLOCATE PREPARE stmt;
         # END$$
         # DELIMITER ;
+        u_i_tc_value= float(u_i_tc_value)
         c.callproc('update_total_cost_on_name',(self.acc_tabl,tc_id,u_i_tc_value))
         # c.execute("""UPDATE `account
         #             SET `total_cost` = {},
@@ -870,7 +870,6 @@ class Accert:
         # report back the user algorithm
         # evaluate the algorithm
         alg_value = eval(alg)
-        # print('Value: {}'.format(alg_value))
         return alg_value
 
     def update_account_value(self, alg_py, alg_name, variables):
@@ -1063,7 +1062,6 @@ class Accert:
                 # var_value_lst.append(get_var_value_by_name(c, var_name))
                 variables[var_name] = self.get_var_value_by_name(c, var_name)
             print('[Updating] Account [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(acc_name, alg_name, alg_form))
-
             # alg_py is the algorithm python file name in Algorithm folder
             # alg_name is the function name in the alg_py file
             # now pass the variables and run the algorithm
@@ -1071,7 +1069,6 @@ class Accert:
             unit_convert = self.check_unit_conversion('dollar',alg_unit)
             if unit_convert:
                 alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
-            print('[Updated]  Reference value is : ${:<11,.0f}, calculated value is: ${:<11,.0f} '.format(org_acc_value,alg_value))
             self.update_total_cost(c, acc_name, alg_value, 'dollar')
             print(' ')
 
@@ -1210,7 +1207,7 @@ class Accert:
         #                             'to': to_level})  # print_accounts(c)
         return None
 
-    def roll_up_account_table(self, c):
+    def roll_up_account_table(self, c, from_level=3, to_level=0):
         """
         Rolls up the account table from level 3 to 0.
         
@@ -1221,10 +1218,8 @@ class Accert:
         """
         print(' Rolling up account table '.center(100,'='))
         print('\n')
-        self.roll_up_account_table_by_level(c,from_level=3,to_level=2)
-        self.roll_up_account_table_by_level(c,from_level=2,to_level=1)
-        self.roll_up_account_table_by_level(c,from_level=1,to_level=0)
-
+        for i in range(from_level, to_level, -1):
+            self.roll_up_account_table_by_level(c,i,i-1)
         print('[Updated]  Account table rolled up\n')
 
         return None
@@ -1260,64 +1255,6 @@ class Accert:
         #         WHERE
         #             account.code_of_account = updated_ac%(to)s.ac%(to)s_coa 
         #     """,{'from':from_level,'to':to_level})
-        return None
-
-    def roll_up_abr_account(self, c):
-        """
-        Rolls up the account table for ABR from level 3 to 2.
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        """
-        print('Only rolling up level 3 to 2')
-        ##NOTE inner join only update 222
-        print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
-        c.callproc('roll_up_account_table_by_level',(self.acc_tabl,3,2))
-        # c.execute("""
-        #         UPDATE abr_account,
-        #         (SELECT a2.code_of_account as ac2_coa, 
-        #                 sum(ua3.total_cost) as a2_cal_total_cost
-        #         FROM abr_account as ua3
-        #         JOIN abr_account as a2 on ua3.supaccount=a2.code_of_account
-        #         where ua3.level=3 and a2.level=2
-        #         group by a2.code_of_account) as updated_ac2
-        #         SET
-        #             abr_account.total_cost = updated_ac2.a2_cal_total_cost,
-        #             abr_account.review_status = 'Updated'
-        #         WHERE
-        #             abr_account.code_of_account = updated_ac2.ac2_coa 
-        #     """)
-        return None
-    
-    def roll_up_heatpipe_account(self, c):
-        """
-        Rolls up the account table for Heatpipe reactor from level 3 to 2.
-
-        Parameters
-        ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        """
-        print('Only rolling up level 3 to 2')
-        ##NOTE inner join only update 222
-        print('[Updating] Rolling up account table from level {} to level {} '.format(3,2))
-        c.callproc('roll_up_account_table_by_level',(self.acc_tabl,3,2))
-        # c.execute("""
-        #         UPDATE heatpipe_account,
-        #         (SELECT a2.code_of_account as ac2_coa, 
-        #                 sum(ua3.total_cost) as a2_cal_total_cost
-        #         FROM heatpipe_account as ua3
-        #         JOIN heatpipe_account as a2 on ua3.supaccount=a2.code_of_account
-        #         where ua3.level=3 and a2.level=2
-        #         group by a2.code_of_account) as updated_ac2
-        #         SET
-        #             heatpipe_account.total_cost = updated_ac2.a2_cal_total_cost,
-        #             heatpipe_account.review_status = 'Updated'
-        #         WHERE
-        #             heatpipe_account.code_of_account = updated_ac2.ac2_coa 
-        #     """)
         return None
 
     def sum_cost_elements_2C(self, c):
@@ -1641,8 +1578,8 @@ class Accert:
         print(' Rolling up account table '.center(100,'='))
         print('\n')
         ### only update account 222 and account 2C
-        self.roll_up_abr_account(c)
-        print('[Updated]  Account table rolled up\n')
+        self.roll_up_account_table(c, from_level=3, to_level=2)
+        # print('[Updated]  Account table rolled up\n')
         self.sum_up_abr_account_2C(c)
         self.sum_up_abr_direct_cost(c)
         return None
@@ -1659,7 +1596,7 @@ class Accert:
         print(' Rolling up account table '.center(100,'='))
         print('\n')
         ### only update account 222 and account 2C
-        self.roll_up_heatpipe_account(c)
+        self.roll_up_account_table(c, from_level=3, to_level=2)
         print('[Updated]  Account table rolled up\n')
         self.sum_up_heatpipe_account_2C(c)
         self.sum_up_heatpipe_direct_cost(c)
@@ -1948,7 +1885,6 @@ class Accert:
     def finalize_process(self, c, ut, accert):
 
         ut.extract_user_changed_variables(c)
-
         # if the model is not fusion or user assigned then process the cost elements
         # NOTE: Accert is the instance of the Accert class use Capital A
         if Accert.ref_model!="fusion" and Accert.ref_model!="user_assigned":
@@ -1959,9 +1895,7 @@ class Accert:
         else:
             ut.extract_affected_accounts(c)
             self.update_new_accounts(c)
-
- 
-
+    
     def generate_results(self, c, ut, accert):
         if Accert.ref_model == "abr1000":
             self.generate_abr1000_results(c, ut, accert)
@@ -2008,14 +1942,14 @@ class Accert:
     def generate_pwr12be_results(self, c, ut, accert):
         self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
-        self.roll_up_account_table(c)
+        self.roll_up_account_table(c, from_level=3, to_level=0)
         print(' Generating results table for review '.center(100, '='))
         print('\n')
         ut.print_leveled_accounts(c, all=False, cost_unit='million', level=3)
 
     def generate_fusion_results(self, c, ut, accert):
         self.check_and_process_total_cost(c, accert)
-        self.roll_up_account_table(c)
+        self.roll_up_account_table(c,from_level=4, to_level=0)
         print(' Generating results table for review '.center(100, '='))
         print('\n')
         ut.print_leveled_accounts(c, all=False, cost_unit='million', level=3)
