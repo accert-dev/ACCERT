@@ -1,0 +1,91 @@
+ind,code_of_account,account_description,total_cost,level,supaccount,review_status,prn,alg_name,fun_unit,variables
+1,2,Plant_direct_cost_(M$),5523932823,0,,Unchanged,1,acc2,million,
+2,21,Total_account_21_cost_(M$),778648283.5,1,2,Unchanged,0.140959043,acc21,million,
+3,211,"Site_improvements,_facilities,_land_(M$)",35200000,2,21,Unchanged,0.006372272,acc211,million,"csi, lsa, cland"
+4,212,Reactor_building_cost_(M$),452161853.1,2,21,Unchanged,0.08185506,acc212,million,"ucrb, rbvol, exprb, lsa"
+5,213,Turbine_building_cost_(M$),38000000,2,21,Unchanged,0.006879157,acc213,million,"ireactor, cturbb, lsa"
+6,214,Reactor_maintenance_and_warm_shop_buildings_cost_(M$),160708943.7,2,21,Unchanged,0.029093211,acc214,million,
+7,2141,Reactor_maintenance_building_cost_(M$),103067666.8,3,214,Unchanged,0.018658385,acc2141,million,"ucmb, rmbvol, exprb, lsa"
+8,2142,Warm_shop_cost_(M$),57641276.92,3,214,Unchanged,0.010434826,acc2142,million,"ucws, wsvol, exprb, lsa"
+9,215,Tritium_building_cost_(M$),14800000,2,21,Unchanged,0.002679251,acc215,million,"uctr, triv, exprb, lsa"
+10,216,Electrical_equipment_building_cost_(M$),19706763.56,2,21,Unchanged,0.003567524,acc216,million,"ucel, elevol, exprb, lsa"
+11,217,Other_buildings_cost_(M$),58070723.2,2,21,Unchanged,0.010512569,acc217,million,
+12,2171,Additional_buildings_cost_(M$),18000000,3,217,Unchanged,0.003258548,acc2171,million,"ucad, admvol, exprb, lsa"
+13,2172,Control_room_buildings_cost_(M$),21000000,3,217,Unchanged,0.003801639,acc2172,million,"ucco, convol, exprb, lsa"
+14,2173,Shop_and_warehouses_cost_(M$),11500000,3,217,Unchanged,0.00208185,acc2173,million,"ucsh, shovol, exprb, lsa"
+15,2174,Cryogenic_building_cost_(M$),7570723.2,3,217,Unchanged,0.001370531,acc2174,million,"uccr, cryvol, exprb, lsa"
+16,22,Total_account_22_cost_(M$),4450975680,1,2,Unchanged,0.805762094,acc22,million,
+17,221,Total_account_221_cost_(M$),1413062555,2,22,Unchanged,0.255807339,acc221,million,
+18,2211,First_wall_cost_(M$),191300792.1,3,221,Unchanged,0.034631267,acc2211,million,"ife, ucfwa, ucfws, fwarea, ucfwps, ucblss, fwmatm, uccarb, ucblli2o, ucconc, ifueltyp, fwallcst"
+19,2212,Blanket_total_cost_(M$),981664978.6,3,221,Unchanged,0.177711245,acc2212,million,
+20,22121,Blanket_beryllium_cost_(M$),261092739.8,4,2212,Unchanged,0.047265734,acc22121,million,"ife, wtbllipb, ucbllipb, whtblbe, ucblbe, iblanket, lsa"
+21,22122,Blanket_breeder_material_cost_(M$),639846060.7,4,2212,Unchanged,0.115831615,acc22122,million,"whtblli, ucblli, whtblbreed, ucblbreed, wtblli2o, ucblli2o, iblanket, lsa, ife"
+22,22123,Blanket_stainless_steel_cost_(M$),80726178.24,4,2212,Unchanged,0.014613896,acc22123,million,"whtblss, ucblss, lsa"
+23,22124,Blanket_vanadium_cost_(M$),0,4,2212,Unchanged,0,acc22124,million,"whtblvd, ucblvd, ife, lsa"
+24,2213,Total_shield_cost_(M$),156788405.4,3,221,Unchanged,0.028383474,acc2213,million,
+25,22131,Bulk_shield_cost_(M$),78394202.68,4,2213,Unchanged,0.014191737,acc22131,million,"ife, whtshld, ucshld, lsa, shmatm, uccarb, ucblli2o, ucconc"
+26,22132,Penetration_shielding_cost_(M$),78394202.68,4,2213,Unchanged,0.014191737,acc22132,million,"ife, wpenshld, ucpens, lsa"
+27,2214,Total_support_structure_cost_(M$),41648347.22,3,221,Unchanged,0.007539619,acc2214,million,"gsmass, ucgss, lsa"
+28,2215,Divertor_cost_(M$),41660031.86,3,221,Unchanged,0.007541734,acc2215,million,"ife, divsur, ucdiv, ifueltyp, divcst"
+29,222,Total_account_222_cost_(M$),1755392733,2,22,Unchanged,0.317779522,acc222,million,
+30,2221,TF_magnet_assemblies_cost_(M$),820550431.9,3,222,Unchanged,0.148544607,acc2221,million,
+31,22211,TF_coil_conductor_cost_(M$),130258092.5,4,2221,Unchanged,0.02358068,acc22211,million,"whtcp, uccpcl1, itart, ifueltyp, cpstcst, ucsc_4, whtconsc, tfleng, n_tf_turn, uccu, whtconcu, cconshtf, cconfix, n_tf, lsa, i_tf_sup"
+32,22212,TF_coil_winding_cost_(M$),55700223.23,4,2221,Unchanged,0.010083436,acc22212,million,"whttflgs, uccpclb, lsa, ucwindtf, n_tf, tfleng, n_tf_turn, i_tf_sup"
+33,22213,TF_coil_case_cost_(M$),439106666.3,4,2221,Unchanged,0.079491674,acc22213,million,"whtcas, uccase, n_tf, lsa, i_tf_sup"
+34,22214,TF_intercoil_structure_cost_(M$),150045051.6,4,2221,Unchanged,0.027162722,acc22214,million,"aintmass, ucint, lsa, i_tf_sup"
+35,22215,TF_coil_gravity_support_structure_(M$),45440398.23,4,2221,Unchanged,0.008226095,acc22215,million,"clgsmass, ucgss, lsa, i_tf_sup"
+36,2222,PF_magnet_assemblies_cost_(M$),680800177,3,222,Unchanged,0.123245557,acc2222,million,
+37,22221,PF_coil_conductor_cost_(M$),466068431.2,4,2222,Unchanged,0.084372574,acc22221,million,"ipfres, cconshpf, iohcl, nohc, ucsc_0, ucsc_1, ucsc_2, ucsc_3, ucsc_4, ucsc_5, ucsc_6, ucsc_7, ucsc_8, isumatpf, fcupfsu, vf, ric_0, ric_1, ric_2, ric_3, ric_4, ric_5, ric_6, turns_0, turns_1, turns_2, turns_3, turns_4, turns_5, turns_6, rjconpf_0, rjconpf_1, rjconpf_2, rjconpf_3, rjconpf_4, rjconpf_5, rjconpf_6, rjconpf_7, dcond_0, dcond_1, dcond_2, dcond_3, dcond_4, dcond_5, dcond_6, dcond_7, dcond_8, uccu, dcopper, cconfix, twopi, rpf_0, rpf_1, rpf_2, rpf_3, rpf_4, rpf_5, rpf_6, lsa, isumatoh, awpoh, vfohc, fcuohsu"
+38,22222,PF_coil_winding_cost_(M$),77130237.29,4,2222,Unchanged,0.013962921,acc22222,million,"ucwindpf, lsa, twopi, rpf_0, rpf_1, rpf_2, rpf_3, rpf_4, rpf_5, rpf_6, turns_0, turns_1, turns_2, turns_3, turns_4, turns_5, turns_6, nohc"
+39,22223,PF_coil_case_cost_(M$),129551313.8,4,2222,Unchanged,0.023452732,acc22223,million,"uccase, whtpfs, lsa"
+40,22224,PF_coil_support_structure_cost_(M$),8050194.63,4,2222,Unchanged,0.00145733,acc22224,million,"ucfnc, fncmass, lsa"
+41,2223,Vacuum_vessel_assembly_cost_(M$),254042123.8,3,222,Unchanged,0.045989358,acc2223,million,"vvmass, uccryo, lsa"
+42,223,Total_account_223_cost_(M$),241046837.7,2,22,Unchanged,0.043636816,acc223,million,
+43,2231,ECH_system_cost_(M$),241046837.7,3,223,Unchanged,0.043636816,acc2231,million,"ucech, echpwr, exprf, ifedrv, dcdrv1, dcdrv2, cdriv1, mcdriv, edrive, etadrv, dcdrv0, cdriv0 ,cdriv3, fcdfuel"
+44,2232,Lower_hybrid_system_cost_(M$),0,3,223,Unchanged,0,acc2232,million,"iefrf, uclh, plhybd, exprf, ucich"
+45,2233,Neutral_beam_system_cost_(M$),0,3,223,Unchanged,0,acc2233,million,"ucnbi, exprf, fcdfuel"
+46,224,Total_account_224_cost_(M$),26934799.04,2,22,Unchanged,0.004876019,acc224,million,
+47,2241,High_vacuum_pumps_cost_(M$),12480000,3,224,Unchanged,0.00225926,acc2241,million,"vpumpn, uccpmp, uctpmp, ntype"
+48,2242,Backing_pumps_cost_(M$),4680000,3,224,Unchanged,0.000847222,acc2242,million,"nvduct, ucbpmp"
+49,2243,Vacuum_duct_cost_(M$),2590254.5,3,224,Unchanged,0.000468915,acc2243,million,"nvduct, dlscal, ucduct"
+50,2244,Valves_cost_(M$),5884544.54,3,224,Unchanged,0.001065282,acc2244,million,"nvduct, vcdimax, ucvalv"
+51,2245,Duct_shielding_cost_(M$),0,3,224,Unchanged,0,acc2245,million,"nvduct, vacdshm, ucvdsh"
+52,2246,Instrumentation_cost_(M$),1300000,3,224,Unchanged,0.00023534,acc2246,million,ucviac
+53,225,Total_account_225_cost_(M$),154876266,2,22,Unchanged,0.028037319,acc225,million,
+54,2251,"Total,_TF_coil_power_costs_(M$)",98208291.45,3,225,Unchanged,0.01777869,acc2251,million,
+55,22511,TF_coil_power_supplies_cost_(M$),3967323.07,4,2251,Unchanged,0.000718206,acc22511,million,"uctfps, tfckw, tfcmw, expel"
+56,22512,TF_coil_breakers_cost_(M$),34112697.55,4,2251,Unchanged,0.006175437,acc22512,million,"uctfbr, n_tf, cpttf, vtfskv, expel, uctfsw"
+57,22513,TF_coil_dump_resistors_cost_(M$),21125590.34,4,2251,Unchanged,0.003824375,acc22513,million,"uctfdr, estotftgj, uctfgr, n_tf"
+58,22514,TF_coil_instrumentation_and_control_(M$),4800000,4,2251,Unchanged,0.000868946,acc22514,million,"uctfic, n_tf, "
+59,22515,TF_coil_bussing_cost_(M$),34202680.49,4,2251,Unchanged,0.006191726,acc22515,million,"uctfbus, tfbusmas, ucbus, cpttf, tfbusl"
+60,2252,"Total,_PF_coil_power_costs_(M$)",39768511.04,3,225,Unchanged,0.007199311,acc2252,million,
+61,22521,PF_coil_power_supplies_cost_(M$),2932371.33,4,2252,Unchanged,0.000530848,acc22521,million,"ucpfps, peakmva"
+62,22522,PF_coil_instrumentation_and_control_(M$),3600000,4,2252,Unchanged,0.00065171,acc22522,million,"ucpfic, pfckts"
+63,22523,PF_coil_bussing_cost_(M$),11995200,4,2252,Unchanged,0.002171496,acc22523,million,"ucpfb, spfbusl, acptmax"
+64,22524,PF_coil_burn_power_supplies_cost_(M$),1267929.14,4,2252,Unchanged,0.000229534,acc22524,million,"ucpfbs, pfckts, srcktpm"
+65,22525,PF_coil_breakers_cost_(M$),14709370.28,4,2252,Unchanged,0.002662844,acc22525,million,"ucpfbk, pfckts, acptmax, vpfskv"
+66,22526,PF_coil_dump_resistors_cost_(M$),4363640.29,4,2252,Unchanged,0.000789952,acc22526,million,"ucpfdr1, ensxpfm"
+67,22527,PF_coil_ac_breakers_cost_(M$),900000,4,2252,Unchanged,0.000162927,acc22527,million,"ucpfcb, pfckts"
+68,2253,"Total,_energy_storage_cost_(M$)",16899463.51,3,225,Unchanged,0.003059317,acc2253,million,"lpulse, istore, ucblss, pthermmw, tdown, dtstor, pnetelmw"
+69,226,Total_account_226_cost_(M$),332122997.5,2,22,Unchanged,0.060124373,acc226,million,"cal_acc2261, cal_acc2262, cal_acc2263"
+70,2261,"Total,_reactor_cooling_system_cost_(M$)",109472365.6,3,226,Unchanged,0.019817831,acc2261,million,
+71,22611,Pumps_and_piping_system_cost_(M$),37134735.98,4,2261,Unchanged,0.006722518,acc22611,million,"uchts, coolwh, pfwdiv, exphts, pnucblkt, pnucshld, lsa"
+72,22612,Primary_heat_exchanger_cost_(M$),72337629.6,4,2261,Unchanged,0.013095313,acc22612,million,"ucphx, nphx, pthermmw, exphts, lsa"
+73,2262,"Pumps,_piping_cost_(M$)",29300032.53,3,226,Unchanged,0.005304198,acc2262,million,"ucahts, pinjht, exphts, crypmw, vachtmw, trithtmw, fachtmw, ife, tdspmw, tfacmw, lsa"
+74,2263,"Total,_cryogenic_system_cost_(M$)",193350599.4,3,226,Unchanged,0.035002344,acc2263,million,"uccry, tmpcry, helpow, lsa, expcry"
+75,227,Total_account_227_cost_(M$),252539491.6,2,22,Unchanged,0.045717336,acc227,million,
+76,2271,Fuelling_system_cost_(M$),22300000,3,227,Unchanged,0.004036979,acc2271,million,ucf1
+77,2272,Fuel_processing_and_purification_cost_(M$),103001575.3,3,227,Unchanged,0.018646421,acc2272,million,"ife, rndfuel, afuel, umass, gain, edrive, fburn, reprat, ucfpr"
+78,2273,Atmospheric_recovery_systems_cost_(M$),58061674.55,3,227,Unchanged,0.010510931,acc2273,million,"ftrit, ucdtc, volrci, wsvol"
+79,2274,Nuclear_building_ventilation_cost_(M$),69176241.77,3,227,Unchanged,0.012523006,acc2274,million,"ucnbv, volrci, wsvol"
+80,228,Instrumentation_and_control_cost_(M$),150000000,2,22,Unchanged,0.027154566,acc228,million,uciac
+81,229,Maintenance_equipment_cost_(M$),125000000,2,22,Unchanged,0.022628805,acc229,million,ucme
+82,23,Turbine_plant_equipment_cost_(M$),178012556.3,1,2,Unchanged,0.032225692,acc23,million,"ireactor, ucturb, coolwh, pgrossmw, exptpe"
+83,24,Total_account_24_cost_(M$),40776153.7,1,2,Unchanged,0.007381725,acc24,million,
+84,241,Switchyard_equipment_cost_(M$),18400000,2,24,Unchanged,0.00333096,acc241,million,"ucswyd, lsa"
+85,242,Transformers_cost_(M$),7502814.23,2,24,Unchanged,0.001358238,acc242,million,"ucpp, pacpmw, expepe, ucap, fcsht, lsa"
+86,243,Low_voltage_equipment_cost_(M$),6573339.47,2,24,Unchanged,0.001189975,acc243,million,"uclv, tlvpmw, lsa"
+87,244,Diesel_backup_equipment_cost_(M$),6800000,2,24,Unchanged,0.001231007,acc244,million,"ucdgen, lsa"
+88,245,Auxiliary_facilities_cost_(M$),1500000,2,24,Unchanged,0.000271546,acc245,million,"ucaf, lsa"
+89,25,Miscellaneous_plant_equipment_cost_(M$),25000000,1,2,Unchanged,0.004525761,acc25,million,"ucmisc, lsa"
+90,26,Heat_rejection_system_cost_(M$),50520149.78,1,2,Unchanged,0.009145685,acc26,million,"ireactor, powfmw, pinjwp, tfcmw, pthermmw, pgrossmw, uchrs, lsa"

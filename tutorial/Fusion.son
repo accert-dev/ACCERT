@@ -1,0 +1,23 @@
+% ACCERT Test input file
+% Author: J. Zhou (jia.zhou@anl.gov)
+% Last updated: 06/08/2022
+
+
+accert{
+    ref_model = "fusion"
+    l0COA(2){
+  
+        l1COA(22){
+            l2COA("214"){
+                l3COA("220A.211"){
+                    ce("220A.211_fac"){
+                        alg("fusion_acc211"){
+                            var("csi"){value = 16 unit = million} 
+                            var("lsa"){value = 4 unit = 1}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
