@@ -1,0 +1,346 @@
+ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_input
+1,a,"plasma minor radius ",2.666666667,m,,,fncmass,0
+2,acptmax,"average of currents in PF circuits",23.33333333,kA,,,,0
+3,admvol,"volume of administration buildings",100000,m3,,,,0
+4,afuel,"average mass of fuel portion of ions",2.5,amu,,,,0
+5,ai,,16658822.35,,,,aintmass,0
+6,aintmass,"intercoil structure mass",4287001.474519037,kg,calaintmass,"ai, tf_h_width, b0",aintmass,0
+7,akappa,"plasma elongation",1.85,N/A,,,fncmass,0
+8,areaoh,"Central solenoid vertical cross-sectional area",9.067197218,m2,,,awpoh,0
+9,awpoh,"central solenoid conductor+void area with area of steel subtracted",4.416007689219207,m2,calawpoh,"oh_steel_frac, areaoh",awpoh,0
+10,b0,"aixal B-field ",5.271296905,T,,,aintmass,0
+11,blmass,"blanket mass",2967570.482,kg,,,gsmass,0
+12,cconfix,"fixed cost of superconducting cable",80,$/m,,,,0
+13,cconshpf,"cost of PF coil steel conduit/sheath",70,$/m,,,,0
+14,cconshtf,"cost of TF coil steel conduit/sheath",75,$/m,,,,0
+15,cdirt,"total plant direct cost",5520,M$,,,,0
+16,cdriv0,"IFE generic/laser driver cost at edrive=0",154.3,M$,,,,0
+17,cdriv1,"IFE low energy heavy ion beam driver cost extrapolated to `edrive=0`",163.2,M$,,,,0
+18,cdriv2,"IFE high energy heavy ion beam driver cost extrapolated to `edrive=0`",244.9,M$,,,,0
+19,cdriv3,"IFE driver cost (`ifedrv==3`)",1.463,"($/J wall plug)",,,,0
+20,cfind_0,"indirect cost factor ",0.244,N/A,,,,0
+21,cfind_1,"indirect cost factor ",0.244,N/A,,,,0
+22,cfind_2,"indirect cost factor ",0.244,N/A,,,,0
+23,cfind_3,"indirect cost factor ",0.29,N/A,,,,0
+24,cland,"cost of land",19.2,M$,,,,0
+25,clgsmass,"gravity support structure for TF coil, PF coil and intercoil support systems",1298297.09223369,kg,calclgsmass,"coilmass, r0, dens, sigal",clgsmass,0
+26,coilmass,"total mass of coils plus support pluss vaccum vessel and cryostat ",34970608.25,kg,,,clgsmass,0
+27,convol,"volume of control, protection and i&c building",60000,m3,,,,0
+28,coolmass,"total water coolant mass ",1180.194346,kg,,,gsmass,0
+29,coolwh,"Switch for blanket coolant",1,N/A,,,,0
+30,cowner,"owner cost factor",0.15,N/A,,,,0
+31,cpstcst,"ST centrepost direct cost",0,M$,,,,0
+32,cpttf,"TF coil current per turn",87100,A,,,,0
+33,crypmw,"cryogenic plant power",44.2,MW,,,,0
+34,cryvol,"volume of cryoplant building",16458.0939026203,m3,,,,0
+35,csi,"allowance for site costs",16,million,,,,0
+36,cturbb,"cost of turbine building",38,M$,,,,0
+37,d_0,"vacuum duct diameter",0.101,m,,,dlscal,0
+38,d_1,"vacuum duct diameter",0.201,m,,,dlscal,0
+39,d_2,"vacuum duct diameter",0.487,m,,,dlscal,0
+40,d_3,"vacuum duct diameter",0.000001,m,,,dlscal,0
+41,dcdrv0,"IFE generic/laser driver cost gradient",111.4,M$/MJ,,,,0
+42,dcdrv1,"HIB driver cost gradient at low energy",78,M$/MJ,,,,0
+43,dcdrv2,"HIB driver cost gradient at high energy",59.9,M$/MJ,,,,0
+44,dcond_0,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",6080,kg/m3,,,,0
+45,dcond_1,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",6080,kg/m4,,,,0
+46,dcond_2,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",6070,kg/m5,,,,0
+47,dcond_3,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",6080,kg/m6,,,,0
+48,dcond_4,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",6080,kg/m7,,,,0
+49,dcond_5,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",8500,kg/m8,,,,0
+50,dcond_6,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",6070,kg/m9,,,,0
+51,dcond_7,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",8500,kg/m10,,,,0
+52,dcond_8,"density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf",8500,kg/m11,,,,0
+53,dcopper,"density of copper",8900,kg/m3,,,,0
+54,dens,"density of coil gravity support mass",7800,kg/m3,,,clgsmass,0
+55,divcst,"divertor direct cost",0,M$,,,,0
+56,divsur,"divertor surface area",149,m2,,,,0
+57,dlscal,"vacuum system duct length scaling",3.831737433,N/A,caldlscal,"l1, ltot, d, imax",dlscal,0
+58,drbi,"length to allow laydown",107.4482843,m,,,"rbvol, volrci",0
+59,dtstor,"maximum allowable temperature change in stainless steel thermal storage block",300,K,,,,0
+60,dvrtmass,"total mass of divertor and associated structure",36452.52788,kg,,,gsmass,0
+61,ealphadt,"alpha birth energy in D-T reaction ",3520,keV,,,rndfuel,0
+62,echarge,"electron charge",1.6e-19,C,,,rndfuel,0
+63,echpwr,"ECH power ",80.34894588680848,MW,calechpwr,"faccd, faccdfix, plascur, effrfss, pheat",echpwr,0
+64,edrive,"IFE driver energy",5000000,J,,,,0
+65,effrfss,"lower hybrid current drive efficienty",0.046410516,A/W,,,echpwr,0
+66,elevol,"volume of electrical equipment building",51859.90411732225,m3,calelevol,"tfcbv, pfbldgm3, esbldgm3, pibv",elevol,0
+67,ensxpfm,"maximum stored energy in the PF circuits",29100,MJ,,,,0
+68,esbldgm3,"volume of energy storage equipment building (not used if `lpulse=0`)",1000,m3,,,elevol,0
+69,estotftgj,"total stored energy in the toroidal field",120,GJ,,,,0
+70,etadrv,"IFE driver wall plug to target efficiency",0,N/A,,,,0
+71,expel,,0.7,N/A,,,,0
+72,expepe,,0.9,N/A,,,,0
+73,exphts,,0.7,N/A,,,,0
+74,exprb,,1,N/A,,,,0
+75,exprf,,1,N/A,,,,0
+76,exptpe,,0.83,N/A,,,,0
+77,faccd,"fraction of plasma current produced by auxiliary current drive",0.014901854,N/A,,,echpwr,0
+78,faccdfix,"fixed auxiliary current",0,A,,,echpwr,0
+79,fachtmw,"facility heat removal",55.5,MW,,,,0
+80,fburn,"IFE burn fraction",0.3333,"fraction of tritium fused/target",,,,0
+81,fcap0,"average cost of money for construction of plant assuming design/construction time of six years",1.165,N/A,,,,0
+82,fcdfuel,"fraction of current drive cost treated as fuel (if `ifueltyp = 1`)",0.1,N/A,,,,0
+83,fcontng,"project contingency factor",0.195,N/A,,,,0
+84,fcsht,"total baseline power required at all times",55.5,MW,,,,0
+85,fcuohsu,"copper fraction of strand in central solenoid",0.7,N/A,,,,0
+86,fcupfsu,"copper fraction of cable conductor (PF coils)",0.69,N/A,,,,0
+87,fkind,"multiplier for Nth of a kind costs",1,N/A,,,,0
+88,fncmass,"PF coil outer support fence mass",230005.56097662932,kg,calfncmass,"a, ai, akappa, r0",,0
+89,fndt,"foundation thickness",2,m,,,"rbvol, wsvol",0
+90,ftrit,"tritium fuel fraction",0.5,N/A,,,,0
+91,fusionrate,"fusion reaction rate",3.1e17,reactions/m3/sec,,,rndfuel,0
+92,fwallcst,"first wall cost",0,M$,,,,0
+93,fwarea,"first wall total surface area",1600,m2,,,,0
+94,fwmass,"first wall mass",154494.0086,kg,,,gsmass,0
+95,fwmatm,"IFE first wall material masses",0,kg,,,,0
+96,gain,"IFE target gain",0,N/A,,,,0
+97,gsmass,"reactor core gravity support mass ",1189952.778,kg,"calaintmass, calgsmass","coolmass, fwmass, blmass, shldmass, dvrtmass, tfmass, pfmass, tfhmax, dens, sigal, aintmass, clgsmass",,0
+98,hccl,"clearance around components in hot cell ",5,m,,,"volrci, wsvol",0
+99,hcwt,"hot cell wall thickness ",1.5,m,,,"volrci, wsvol",0
+100,helpow,"Heat removal at cryogenic temperature tmpcry",89543.42311,W,,,,0
+101,hrbi,"tfh allows TF coil to be lifted right out",73.33248108,m,,,"volrci, wsvol",0
+102,i_tf_sc_mat,"Switch for superconductor material in TF coils",5,N/A,,,,0
+103,i_tf_sup,"Switch for TF coil conductor model",1,,,,,0
+104,iblanket,"switch for blanket model",1,1,,,,0
+105,iefrf,"Switch for current drive efficiency model",10,N/A,,,,0
+106,ife,"switch for the IFE option",0,N/A,,,,0
+107,ifedrv,"Switch for type of IFE driver",2,N/A," B > 6 T)",,,0
+108,ifueltyp,"switch for fuel type",1,N/A,,,,0
+109,imax,"d[imax] = diameter of passage from divertor to pumping ducts",2,N/A,,,dlscal,0
+110,iohcl,"Switch for existence of central solenoid",1,N/A,,,,0
+111,ipfres,"switch for PF & CS coil conductor type",0,N/A,,,,0
+112,ireactor,"Switch for net electric power and cost of electricity calculations",1,N/A,,,,0
+113,istore,"Switch for thermal storage method",1,N/A,,,,0
+114,isumatoh,"switch for superconductor material in central solenoid",1,N/A,,,,0
+115,isumatpf,"switch for superconductor material in PF coils",3,N/A,,,,0
+116,itart,"switch for spherical tokamak (ST) models",0,N/A,,,,0
+117,l1,"length of passage from divertor to ducts",1.712079117,m,,,dlscal,0
+118,lpulse,"Switch for reactor model",1,N/A,,,,0
+119,lsa,"Level of safety assurance switch (generally use 3 or 4)",4,1,,,,0
+120,ltot,"total passage length",8.512079117,m,,,dlscal,0
+121,mbvfac,"maintenance building volume multiplication factor",2.8,N/A,,,rmbvol,0
+122,mcdriv,"IFE driver cost multiplier",1,N/A,,,,0
+123,n_tf,"Number of TF coils (default = 50 for stellarators). Number of TF coils outer legs for ST",16,N/A,,,,0
+124,n_tf_turn,"number of turns per TF coil",151.324691446133,N/A,,,,0
+125,nohc,"number of PF coils (excluding the central solenoid) + 1",7,N/A,,,,0
+126,nphx,"number of primary heat exchangers",3,N/A,,,,0
+127,ntype,"switch for vacuum pump type",1,N/A,,,,0
+128,nvduct,"number of ducts (torus to pumps)",16,N/A,,,,0
+129,oh_steel_frac,"central solenoid steel fraction ",0.512968828,N/A,,,awpoh,0
+130,pacpmw,"total pulsed power system load",508,MW,,,,0
+131,palpnb,"alpha power from hot neutral beam ions",0,MW,,,rndfuel,0
+132,peakmva,"peak MVA requirement",83.78203801,MW,,,,0
+133,pfbldgm3,"volume of PF coil power supply building",20000,m3,,,elevol,0
+134,pfckts,"number of PF coil circuits",12,N/A,,,,0
+135,pfmass,"total mass of PF coils plus cases",5063259.412,kg,,,gsmass,0
+136,pfwdiv,"heat removal from first wall/divertor",0,MW,,,,0
+137,pfwndl,,0,,,,,0
+138,pgrossmw,"gross electric power",881,MW,,,,0
+139,pheat,"heating power not used for current drive ",75,MW,,,echpwr,0
+140,pibv,"power injection building volume ",20000,m3,,,elevol,0
+141,pinjht,"power dissipated in heating and current drive system",80.3,MW,,,,0
+142,pinjwp,"injector wall plug power",160.6978918,MW,,,,0
+143,plascur,"plasma current ",16658822.35,A,,,echpwr,0
+144,plhybd,"lower hybrid injection power",0,MW,,,,0
+145,pnbitot,"neutral beam power entering vacuum vessel",0,N/A,,,,0
+146,pnetelmw,"net electric power",401,MW,,,,0
+147,pnucblkt,"nuclear heating in the blanket",1310,MW,,,,0
+148,pnucshld,"nuclear heating in the shield",1.43,MW,,,,0
+149,powfmw,"fusion power",1640,MW,,,,0
+150,pthermmw,"High-grade heat useful for electric production",2203,MW,,,,0
+151,r0,"plasma major radius",8,m,,,"clgsmass, fncmass",0
+152,rbrt,"reactor building roof thickness",1,m,,,rbvol,0
+153,rbvfac,"reactor building volume multiplication factor",1.6,N/A,,,"rbvol, volrci",0
+154,rbvol,"reactor building volume",1130404.632700673,m3,calrbvol,"wrbi, rbwt, drbi, hrbi, rbrt, fndt, rbvfac",rbvol,0
+155,rbwt,"reactor building wall thickness",2,m,,,rbvol,0
+156,reprat,"IFE driver repetition rate",0,Hz,,,,0
+157,ric_0,"peak current in coil i ",17.94655535,MA-turns,,,,0
+158,ric_1,"peak current in coil i ",20.66898692,MA-turns,,,,0
+159,ric_2,"peak current in coil i ",-7.72260112,MA-turns,,,,0
+160,ric_3,"peak current in coil i ",-7.72260112,MA-turns,,,,0
+161,ric_4,"peak current in coil i ",-5.23767674,MA-turns,,,,0
+162,ric_5,"peak current in coil i ",-5.23767674,MA-turns,,,,0
+163,ric_6,"peak current in coil i ",-185.68940608,MA-turns,,,,0
+164,rjconpf_0,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",11000000,A/m2,,,,0
+165,rjconpf_1,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",11000000,A/m2,,,,0
+166,rjconpf_2,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",6000000,A/m2,,,,0
+167,rjconpf_3,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",6000000,A/m2,,,,0
+168,rjconpf_4,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",8000000,A/m2,,,,0
+169,rjconpf_5,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",8000000,A/m2,,,,0
+170,rjconpf_6,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",8000000,A/m2,,,,0
+171,rjconpf_7,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",8000000,A/m2,,,,0
+172,rjconpf_8,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+173,rjconpf_9,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+174,rjconpf_10,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+175,rjconpf_11,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+176,rjconpf_12,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+177,rjconpf_13,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+178,rjconpf_14,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+179,rjconpf_15,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+180,rjconpf_16,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+181,rjconpf_17,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+182,rjconpf_18,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+183,rjconpf_19,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+184,rjconpf_20,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+185,rjconpf_21,"average winding pack current density of PF coil i at  time of peak current in that coil (calculated for `ipfloc=1` coils)",30000000,A/m2,,,,0
+186,rpf_0,"radius of PF coil in i",5.56666667,m,,,,0
+187,rpf_1,"radius of PF coil in i",5.56666667,m,,,,0
+188,rpf_2,"radius of PF coil in i",16.72949722,m,,,,0
+189,rpf_3,"radius of PF coil in i",16.72949722,m,,,,0
+190,rpf_4,"radius of PF coil in i",15.20644854,m,,,,0
+191,rpf_5,"radius of PF coil in i",15.20644854,m,,,,0
+192,rpf_6,"radius of PF coil in i",2.27976055,m,,,,0
+193,shmatm,"IFE shield material masses ",0,kg,,,,0
+194,spfbusl,"total PF coil circuit bus length",2450,m,,,,0
+195,srcktpm,"sum of resistive PF coil power",964,kW,,,,0
+196,stcl,"clearance above crane to roof",3,m,,,"volrci, wsvol",0
+197,tdown,"down time",2633.176447,s,,,,0
+198,tdspmw,"IFE target delivery system power",0.01,MW,,,,0
+199,"tf_h_width ","TF coil horizontal bore",13.63952112,m,,,aintmass,0
+200,tfacmw,"IFE target factory power",0,MW,,,,0
+201,tfbusl,"TF coil bus length",3190,m,,,,0
+202,tfbusmas,"TF coil bus mass ",0,kg,,,,0
+203,tfcbv,"volume of TF coil power supply building (calculated if TF coils are superconducting)",10859.90412,m3,,,elevol,0
+204,tfckw,"available DC power for charging the TF coils",28500,kW,,,,0
+205,tfcmw,"Peak power per TF power supply",0,MW,,,,0
+206,tfhmax,"TF coil max height",8.818217164,m,,,gsmass,0
+207,tfleng,"TF coil circumference",47.9276261124614,m,,,,0
+208,tfmass,"total mass of TF coils plus cases",11340223.07,kg,,,gsmass,0
+209,tlvpmw,"estimate of total low voltage power",329,MW,,,,0
+210,tmpcry,"coil temperature for cryogenic plant power calculation",4.5,K,,,,0
+211,trcl,"transportation clearance between components ",1,m,,,"volrci, wsvol",0
+212,trithtmw,"power required for tritium processing",15,MW,,,,0
+213,triv,"volume of tritium  fuel handling and health physics buildings",40000,m3,,,,0
+214,turns_0,"number of turns in PF coil i",448.663884,N/A,,,,0
+215,turns_1,"number of turns in PF coil i",516.724673,N/A,,,,0
+216,turns_2,"number of turns in PF coil i",193.065028,N/A,,,,0
+217,turns_3,"number of turns in PF coil i",193.065028,N/A,,,,0
+218,turns_4,"number of turns in PF coil i",130.941918,N/A,,,,0
+219,turns_5,"number of turns in PF coil i",130.941918,N/A,,,,0
+220,turns_6,"number of turns in PF coil i",4642.23515,N/A,,,,0
+221,twopi,"2 pi",6.28318530717958,N/A,,,,0
+222,ucad,"unit cost for administration buildings",180,M$/m3,,,,0
+223,ucaf,"unit cost for aux facility power equipment",1500000,$,,,,0
+224,ucahts,"unit cost for aux heat transport equipment",31,$/W,,,,0
+225,ucap,"unit cost of auxiliary transformer",17,$/kVA,,,,0
+226,ucblbe,"unit cost for blanket beryllium",260,$/kg,,,,0
+227,ucblbreed,"unit cost for breeder material",875,$/kg,,,,0
+228,ucblli,"unit cost for blanket lithium",875,$/kg,,,,0
+229,ucblli2o,"unit cost for blanket Li_2O",600,$/kg,,,,0
+230,ucbllipb,"unit cost for blanket Li-Pb (30% Li6)",10.3,$/kg,,,,0
+231,ucblss,"unit cost for blanket stainless steel ",90,$/kg,,,,0
+232,ucblvd,"unit cost for blanket vanadium ",200,$/kg,,,,0
+233,ucbpmp,"vacuum system backing pump cost",293000,$,,,,0
+234,ucbus,"cost of aluminium bus for TF coil",0.123,$/A-m,,,,0
+235,uccarb,"cost of carbon cloth",50,$/kg,,,,0
+236,uccase,"cost of superconductor case",50,$/kg,,,,0
+237,ucco,"unit cost for control buildings",350,M$/m3,,,,0
+238,ucconc,"cost of concrete",0.1,M$/m3,,,,0
+239,uccpcl1,"cost of high strength tapered copper",250,$/kg,,,,0
+240,uccpclb,"cost of TF outboard leg plate coils",150,$/kg,,,,0
+241,uccpmp,"vacuum system cryopump cost ",390000,$,,,,0
+242,uccr,"unit cost for cryogenic building",460,M$/vol,,,,0
+243,uccry," heat transport system cryoplant costs",93000,$/W,,,,0
+244,uccryo,"unit cost for vacuum vessel",32,$/kg,,,,0
+245,uccu,"unit cost for copper in superconducting cable",75,$/kg,,,,0
+246,ucdgen,"cost per 8 MW diesel generator",1700000,$,,,,0
+247,ucdiv,"cost of divertor blade",280000,$,,,,0
+248,ucdtc,"detritiation, air cleanup cost",13,$/10000m3/hr,,,,0
+249,ucduct,"vacuum system duct cost",42300,$/m,,,,0
+250,ucech,"ECH system cost",3,$/w,,,,0
+251,ucel,"unit cost for electrical equipment building",380,M$/m3,,,,0
+252,ucf1,"unit cost for electrical equipment building",380,M$/m3,NULL,NULL,NULL,0
+253,ucfnc,"outer PF coil fence support cost",35,$/kg,,,,0
+254,ucfpr,"cost of 60g/day tritium processing unit ",44000000,$,,,,0
+255,ucfwa,"first wall armour cost",60000,$/m2,,,,0
+256,ucfwps,"first wall passive stabiliser cost",10000000,$,,,,0
+257,ucfws,"first wall structure cost",53000,$/m2,,,,0
+258,ucgss,"cost of reactor structure",35,$/kg,,,,0
+259,uchrs,"cost pf heat rejection system ",87900000,$,,,,0
+260,uchts_0,"cost of heat transport system equipment per loop; dependent on coolant type (coolwh)",15.3,($/W),,,,0
+261,uchts_1,"cost of heat transport system equipment per loop; dependent on coolant type (coolwh)",19.1,($/W),,,,0
+262,uciac,"cost of instrumentation,  control & diagnostics ",150000000,$,,,,0
+263,ucich,"ICH system cost",3,$/W,,,,0
+264,ucint,"superconductor intercoil structure cost",35,$/kg,,,,0
+265,uclh,"lower hybrid system cost ",3.3,$/W,,,,0
+266,uclv,"low voltage system cost",16,$/kVA,,,,0
+267,ucmb,"unit cost for reactor maintenance building",260,M$/m3,,,,0
+268,ucme,"cost of maintenance equipment",125000000,$,,,,0
+269,ucmisc,"miscellaneous plant allowance",25000000,$,,,,0
+270,ucnbi,"NBI system cost",3.3,$/W,,,,0
+271,ucnbv,"cost of nuclear building ventilation",1000,$/m3,,,,0
+272,ucpens,"penetration shield cost",32,$/kg,,,,0
+273,ucpfb,"cost of PF coil buses",210,$/kA-m,,,,0
+274,ucpfbk,"cost of PF coil DC breakers",16600,$/MVA,,,,0
+275,ucpfbs,"cost of PF burn power supplies",4900,$/kW,,,,0
+276,ucpfcb,"cost of PF coil AC breakers",75000,$/circuit,,,,0
+277,ucpfdr1,"cost factor for dump resistors",150,$/MJ,,,,0
+278,ucpfic,"cost of PF instrumentation and control",10000,$/channel,,,,0
+279,ucpfps,"cost of PF coil pulsed power supplies",35000,$/MVA,,,,0
+280,ucphx,"primary heat transport cost",15,$/W,,,,0
+281,ucpp,"cost of primary power transformers",48,$/kVA,,,,0
+282,ucrb,"cost of reactor building",400,M$/m3,,,,0
+283,ucsc_0,"cost of superconductor",600,$/kg,,,,0
+284,ucsc_1,"cost of superconductor",600,$/kg,,,,0
+285,ucsc_2,"cost of superconductor",300,$/kg,,,,0
+286,ucsc_3,"cost of superconductor",600,$/kg,,,,0
+287,ucsc_4,"cost of superconductor",600,$/kg,,,,0
+288,ucsc_5,"cost of superconductor",600,$/kg,,,,0
+289,ucsc_6,"cost of superconductor",300,$/kg,,,,0
+290,ucsc_7,"cost of superconductor",1200,$/kg,,,,0
+291,ucsc_8,"cost of superconductor",1200,$/kg,,,,0
+292,ucsh,"cost of shops and warehouses",115,M$/m3,,,,0
+293,ucshld,"cost of shield structural steel",32,$/kg,,,,0
+294,ucswyd,"switchyard equipment costs",18400000,$,,,,0
+295,uctfbr,"cost of TF coil breakers",1.22,$/W,,,,0
+296,uctfbus,"cost of TF coil bus",100,$/kg,,,,0
+297,uctfdr,"cost of TF coil dump resistors",0.000175,$/J,,,,0
+298,uctfgr,"additional cost of TF coil dump resistors",5000,$/coil,,,,0
+299,uctfic,"cost of TF coil instrumentation and control",10000,$/coil,,,,0
+300,uctfps," cost of TF coil power supplies",24,$/W,,,,0
+301,uctfsw,"cost of TF coil slow dump switches",1,$/A,,,,0
+302,uctpmp,"cost of turbomolecular pump",111000,$,,,,0
+303,uctr,"cost of tritium building",370,$/m3,,,,0
+304,ucturb_0,"cost of turbine plant equipment (dependent on coolant type coolwh)",230000000,$,,,,0
+305,ucturb_1,"cost of turbine plant equipment (dependent on coolant type coolwh)",245000000,$,,,,0
+306,ucvalv,"vacuum system valve cost",390000,$,,,,0
+307,ucvdsh,"vacuum duct shield cost",26,$/kg,,,,0
+308,ucviac,"vacuum system instrumentation and control cost ",1300000,$,,,,0
+309,ucwindpf,"cost of PF coil superconductor windings",465,$/m,,,,0
+310,ucwindtf,"cost of TF coil superconductor windings",480,$/m3,,,,0
+311,umass,"unified atomic mass unit",1.660538921e-27,kg,NULL,NULL,NULL,0
+312,vacdshm,"mass of vacuum duct shield ",0,kg,,,,0
+313,vachtmw,"vacuum pump power",0.5,MW,,,,0
+314,vcdimax,"diameter of duct passage",0.487,m,,,,0
+315,vf,"winding pack void fraction of PF coil i for coolant",0.3,N/A,,,,0
+316,vfohc,"void fraction of central solenoid conductor for coolant",0.3,N/A,,,,0
+317,vol,"plasma volume",1888.171154,m3,,,rndfuel,0
+318,volrci,"internal volume of reactor building",996572.3569887693,m3,calvolrci,"rbvfac, wrbi, drbi, hrbi",volrci,0
+319,vpfskv,"PF coil voltage",20,kV,,,,0
+320,vpumpn,"number of high vacuum pumps",32,N/A,,,,0
+321,vtfskv,"voltage across a TF coil during quench",9.47,kV,,,,0
+322,vvmass,"vacuum vessel mass",7938816.3689348,kg,,,,0
+323,wgt2,"hot cell crane capacity (calculated if 0 is input)",100000,kg,,,"volrci, wsvol",0
+324,whtblbe,"mass of blanket - beryllium part",1004202.8451802,kg,,,,0
+325,whtblbreed,"mass of blanket - breeder part",0,kg,,,,0
+326,whtblli,"mass of blanket - lithium part ",0,kg,,,,0
+327,whtblss,"mass of blanket - steel part",896957.5360153,kg,,,,0
+328,whtblvd,"mass of blanket - vanadium part",0,kg,,,,0
+329,whtcas,"mass per coil of external case",548883.332884771,kg,,,,0
+330,whtconcu,"copper mass in TF coil conductor",57523.1575900077,kg/coil,,,,0
+331,whtconsc,"superconductor mass in TF coil cable",4504.55968573484,kg/coil,,,,0
+332,whtcp,"mass of TF coil inboard legs",0,kg,,,,0
+333,whtpfs,"total mass of the PF coil structure",2591026.276,kg,,,,0
+334,whtshld,"mass of shield",2449818.83384921,kg,,,,0
+335,whttflgs,"mass of the TF coil legs",0,kg,,,,0
+336,wpenshld,"mass of the penetration shield",2449818.83384921,kg,,,,0
+337,wrbi,"distance from centre of machine to building wall ",39.52419142,m,,,"rbvol, volrci",0
+338,wsvfac,"warm shop building volume multiplication factor",1.9,N/A,,,wsvol,0
+339,wsvol,"volume of warm shop building",125307.1237284889,m3,calwsvol,"shro, shri, trcl, hcwt, hccl, wgt2, shmf, shm, n_tf, shh, stcl, fndt, wsvfac",wsvol,0
+340,wtblli2o,"mass of blanket - Li_2O part",1066410.10107632,kg,,,,0
+341,wtbllipb,"mass of blanket - Li-Pb part",0,kg,,,,0
+342,rmbvol,add,396414.103,m3,NULL,NULL,NULL,0
+343,ucws,add,460,$/m3,NULL,NULL,NULL,0
+344,shovol,"volume of shops and buildings for plant auxiliaries",100000,m3,NULL,NULL,NULL,0
+345,expcry,NULL,0.67,1,NULL,NULL,NULL,0

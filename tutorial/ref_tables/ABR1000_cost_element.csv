@@ -1,109 +1,109 @@
-ind,cost_element,cost_2017,sup_cost_ele,alg_name,fun_unit,variables,account,algno
-1,211_fac,810015.17,21_fac,esc_1987,million,"escalate_1987, ref_211_fac",211,12
-2,212_fac,0,21_fac,default_0,million,N/A,212,N/A
-3,213_fac,660388.72,21_fac,MWth_scale,million,"c_213_fac, mwth, scale_0.8",213,8
-4,215_fac,2121224.73,21_fac,NO_ALG,million,N/A,215,N/A
-5,216_fac,1756069.67,21_fac,NO_ALG,million,N/A,216,N/A
-6,217_fac,2842399.83,21_fac,NO_ALG,million,N/A,217,N/A
-7,218A_fac,1314294.08,218_fac,NO_ALG,million,N/A,218A,N/A
-8,220A.211_fac,127380000,220A_fac,NO_ALG,million,N/A,220A.211,N/A
-9,220A.2121_fac,45204200,220A_fac,unit_weights,million,"c_zero, c_220A.2121_ss_weight",220A.2121,5
-10,220A.2122_fac,45204200,220A_fac,unit_weights,million,"c_zero, c_220A.2122_ss_weight",220A.2122,5
-11,220A.2131_fac,1320000,220A_fac,unit_facility,million,"no_of_cr, c_cr_per_unit_fac",220A.2131,16
-12,220A.2132_fac,13453440,220A_fac,unit_facility,million,"no_of_crd, c_crd_per_unit_fac",220A.2132,16
-13,220A.221_fac,55696873.29,220A_fac,unit_facility,million,"no_of_rcpump, c_pump_per_unit_fac",220A.221,16
-14,220A.222_fac,7464800,220A_fac,unit_weights,million,"c_zero, c_220A.222_ss_weight",220A.222,5
-15,220A.223_fac,118647119.8,220A_fac,Sgsum,million,N/A,220A.223,N/A
-16,220A.224_fac,1379368.42,220A_fac,MWth_lmfbrscale,million,"r_78_220A224_fac, mwth, scale_1.0",220A.224,24
-17,222.11_fac,1101963.79,222_fac,MWth_scale,million,"c_222.11_fac, mwth, scale_1.0",222.11,8
-18,222.12_fac,1280778.06,222_fac,MWth_scale,million,"c_222.12_fac, mwth, scale_1.0",222.12,8
-19,222.13_fac,21900.68,222_fac,MWth_scale,million,"c_222.13_fac, mwth, scale_1.0",222.13,8
-20,222.14_fac,4380.14,222_fac,MWth_scale,million,"c_222.14_fac, mwth, scale_1.0",222.14,8
-21,222_fac,2409022.68,22_fac,MWth_scale,million,"c_222_fac, mwth, scale_1.0",222,8
-22,224_fac,46047915.43,22_fac,esc_1987,million,"escalate_1987, ref_224_fac",224,12
-23,226.4_fac,34304867.39,226_fac,MWth_scale,million,"r_78_226.4_fac, mwth, scale_1.0",226.4,8
-24,226.7_fac,0,226_fac,default_0,million,N/A,226.7,14
-25,227_fac,37538349.96,22_fac,esc_1987,million,"escalate_1987, ref_227_fac",227,12
-26,231_fac,53544604.81,23_fac,dev_factor_ref,million,"c_turbine, scale_tur_231_fac, scale_1.0",231,10
-27,233_fac,19829554.55,23_fac,MWreth_scale,million,"c_233_fac, mwreth, scale_0.8",233,25
-28,234_fac,0,23_fac,default_0,million,N/A,234,14
-29,235_fac,4788444.35,23_fac,ptn_account,million,"c_231_fac, prn_235_of_231_fac",235,4
-30,241_fac,20635161.28,24_fac,MWe_scale,million,"c_241_fac, mwe, scale_0.4",241,17
-31,242_fac,33563126.13,24_fac,MWe_scale,million,"c_242_fac, mwe, scale_0.4",242,17
-32,245_fac,0,24_fac,MWe_scale,million,"c_245_fac, mwe, scale_0.4",245,17
-33,246_fac,2902733.98,24_fac,MWe_scale,million,"c_246_fac, mwe, scale_0.4",246,17
-34,252_fac,24869567.31,25_fac,esc_1987,million,"escalate_1987, ref_252_fac",252,12
-35,262_fac,30555532.85,26_fac,MWreth_scale,million,"c_262_fac, mwreth, scale_0.8",262,25
-36,2c_fac,736246154.6,,NO_ALG,million,N/A,2,N/A
-37,211_lab,41328822.54,21_lab,esc_1987,million,"escalate_1987, ref_211_lab",211,12
-38,212_lab,43940775.98,21_lab,containment,million,Tot_Labor_containment,212,7
-39,213_lab,11873274.12,21_lab,MWth_scale,million,"c_213_lab, mwth, scale_0.8",213,8
-40,215_lab,7101615.96,21_lab,NO_ALG,million,N/A,215,N/A
-41,216_lab,24337584.5,21_lab,NO_ALG,million,N/A,216,N/A
-42,217_lab,12836637.9,21_lab,NO_ALG,million,N/A,217,N/A
-43,218A_lab,10038481.64,218_lab,NO_ALG,million,N/A,218A,N/A
-44,220A.211_lab,8750000,220A_lab,NO_ALG,million,N/A,220A.211,N/A
-45,220A.2121_lab,0,220A_lab,default_0,million,N/A,220A.2121,14
-46,220A.2122_lab,0,220A_lab,default_0,million,N/A,220A.2122,14
-47,220A.2131_lab,0,220A_lab,default_0,million,N/A,220A.2131,14
-48,220A.2132_lab,0,220A_lab,default_0,million,N/A,220A.2132,14
-49,220A.221_lab,0,220A_lab,default_0,million,N/A,220A.221,14
-50,220A.222_lab,0,220A_lab,default_0,million,N/A,220A.222,14
-51,220A.223_lab,3173085.99,220A_lab,Sgsum,million,N/A,220A.223,N/A
-52,220A.224_lab,0,220A_lab,default_0,million,N/A,220A.224,14
-53,222.11_lab,1274883.33,222_lab,MWth_scale,million,"c_222.11_lab, mwth, scale_1.0",222.11,8
-54,222.12_lab,3317279.46,222_lab,MWth_scale,million,"c_222.12_lab, mwth, scale_1.0",222.12,8
-55,222.13_lab,613897.3,222_lab,MWth_scale,million,"r_222.13_lab, mwth, scale_1.0",222.13,8
-56,222.14_lab,82172.71,222_lab,MWth_scale,million,"c_222.14_lab, mwth, scale_1.0",222.14,8
-57,222_lab,5288232.81,22_mat,MWth_scale,million,"c_222_lab, mwth, scale_1.0",222,8
-58,224_lab,11434348.55,22_lab,esc_1987,million,"escalate_1987, ref_224_lab",224,12
-59,226.4_lab,0,226_lab,default_0,million,N/A,226.4,14
-60,226.7_lab,0,226_lab,default_0,million,N/A,226.7,14
-61,227_lab,21960889.79,22_lab,esc_1987,million,"escalate_1987, ref_227_lab",227,12
-62,231_lab,588990.65,23_lab,ptn_account,million,"c_231_fac, prn_fac_231_lab",231,4
-63,233_lab,8082642.16,23_lab,MWreth_scale,million,"c_233_lab, mwreth, scale_0.8",233,25
-64,234_lab,0,23_lab,default_0,million,N/A,234,14
-65,235_lab,4258930.48,23_lab,ptn_account,million,"c_231_lab, prn_235_of_231_lab",235,4
-66,241_lab,1107205.12,24_lab,MWe_scale,million,"c_241_lab, mwe, scale_0.4",241,17
-67,242_lab,2861071.44,24_lab,MWe_scale,million,"c_242_lab, mwe, scale_0.4",242,17
-68,245_lab,32970390.22,24_lab,MWe_scale,million,"c_245_lab, mwe, scale_0.4",245,17
-69,246_lab,21514837.92,24_lab,MWe_scale,million,"c_246_lab, mwe, scale_0.4",246,17
-70,252_lab,44371766.01,25_lab,esc_1987,million,"escalate_1987, ref_252_lab",252,12
-71,262_lab,12634376.8,26_lab,MWreth_scale,million,"c_262_lab, mwreth, scale_0.8",262,25
-72,2c_lab,330450874.6,,NO_ALG,million,N/A,2,N/A
-73,211_mat,29075021.35,21_mat,esc_1987,million,"escalate_1987, ref_211_mat",211,12
-74,212_mat,37484659.34,21_mat,containment,million,Tot_Mat_containment,212,7
-75,213_mat,12070727.96,21_mat,MWth_scale,million,"c_213_mat, mwth, scale_0.8",213,8
-76,215_mat,3247159.31,21_mat,NO_ALG,million,N/A,215,N/A
-77,216_mat,12656345.83,21_mat,NO_ALG,million,N/A,216,N/A
-78,217_mat,12470546.09,21_mat,NO_ALG,million,N/A,217,N/A
-79,218A_mat,4897224.28,218_mat,NO_ALG,million,N/A,218A,N/A
-80,220A.211_mat,870000,220A_mat,NO_ALG,million,N/A,220A.211,N/A
-81,220A.2121_mat,0,220A_mat,default_0,million,N/A,220A.2121,14
-82,220A.2122_mat,0,220A_mat,default_0,million,N/A,220A.2122,14
-83,220A.2131_mat,0,220A_mat,default_0,million,N/A,220A.2131,14
-84,220A.2132_mat,0,220A_mat,default_0,million,N/A,220A.2132,14
-85,220A.221_mat,0,220A_mat,default_0,million,N/A,220A.221,14
-86,220A.222_mat,0,220A_mat,default_0,million,N/A,220A.222,14
-87,220A.223_mat,266890.16,220A_mat,Sgsum,million,N/A,220A.223,N/A
-88,220A.224_mat,0,220A_mat,default_0,million,N/A,220A.224,14
-89,222.11_mat,127488.33,222_mat,MWth_scale,million,"c_222.11_mat, mwth, scale_1.0",222.11,8
-90,222.12_mat,326175.16,222_mat,MWth_scale,million,"c_222.12_mat, mwth, scale_1.0",222.12,8
-91,222.13_mat,61389.73,222_mat,MWth_scale,million,"r_222.13_mat, mwth, scale_1.0",222.13,8
-92,222.14_mat,8217,222_mat,MWth_scale,million,"c_222.14_mat, mwth, scale_1.0",222.14,8
-93,222_mat,523270.22,22_mat,MWth_scale,million,"c_222_mat, mwth, scale_1.0",222,8
-94,224_mat,2191177.36,22_mat,esc_1987,million,"escalate_1987, ref_224_mat",224,12
-95,226.4_mat,0,226_mat,default_0,million,N/A,226.4,14
-96,226.7_mat,0,226_mat,default_0,million,N/A,226.7,14
-97,227_mat,1920497.47,22_mat,esc_1987,million,"escalate_1987, ref_227_mat",227,12
-98,231_mat,3266220.89,23_mat,ptn_account,million,"c_231_fac, prn_fac_231_mat",231,4
-99,233_mat,1153654.54,23_mat,MWreth_scale,million,"c_233_mat, mwreth, scale_0.8",233,25
-100,234_mat,0,23_mat,default_0,million,N/A,234,14
-101,235_mat,516040.29,23_mat,ptn_account,million,"c_231_mat, prn_235_of_231_mat",235,4
-102,241_mat,161981.4,24_mat,MWe_scale,million,"c_241_mat, mwe, scale_0.4",241,17
-103,242_mat,546787.41,24_mat,MWe_scale,million,"c_242_mat, mwe, scale_0.4",242,17
-104,245_mat,7921308.52,24_mat,MWe_scale,million,"c_245_mat, mwe, scale_0.4",245,17
-105,246_mat,13355962.89,24_mat,MWe_scale,million,"c_246_mat, mwe, scale_0.4",246,17
-106,252_mat,12609745.55,25_mat,esc_1987,million,"escalate_1987, ref_252_mat",252,12
-107,262_mat,1587534.77,26_mat,MWreth_scale,million,"c_262_mat, mwreth, scale_0.8",262,25
-108,2c_mat,158795865.5,,NO_ALG,million,N/A,2,N/A
+ind,cost_element,cost_2017,sup_cost_ele,alg_name,fun_unit,variables,account,algno,updated
+1,211_fac,810015.17,21_fac,esc_1987,million,"escalate_1987, ref_211_fac",211,12,0
+2,212_fac,0,21_fac,default_0,million,N/A,212,N/A,0
+3,213_fac,660388.72,21_fac,MWth_scale,million,"c_213_fac, mwth, scale_0.8",213,8,0
+4,215_fac,2121224.73,21_fac,NO_ALG,million,N/A,215,N/A,0
+5,216_fac,1756069.67,21_fac,NO_ALG,million,N/A,216,N/A,0
+6,217_fac,2842399.83,21_fac,NO_ALG,million,N/A,217,N/A,0
+7,218A_fac,1314294.08,218_fac,NO_ALG,million,N/A,218A,N/A,0
+8,220A.211_fac,127380000,220A_fac,NO_ALG,million,N/A,220A.211,N/A,0
+9,220A.2121_fac,45204200,220A_fac,unit_weights,million,"c_zero, c_220A.2121_ss_weight",220A.2121,5,0
+10,220A.2122_fac,45204200,220A_fac,unit_weights,million,"c_zero, c_220A.2122_ss_weight",220A.2122,5,0
+11,220A.2131_fac,1320000,220A_fac,unit_facility,million,"no_of_cr, c_cr_per_unit_fac",220A.2131,16,0
+12,220A.2132_fac,13453440,220A_fac,unit_facility,million,"no_of_crd, c_crd_per_unit_fac",220A.2132,16,0
+13,220A.221_fac,55696873.29,220A_fac,unit_facility,million,"no_of_rcpump, c_pump_per_unit_fac",220A.221,16,0
+14,220A.222_fac,7464800,220A_fac,unit_weights,million,"c_zero, c_220A.222_ss_weight",220A.222,5,0
+15,220A.223_fac,118647119.77,220A_fac,Sgsum,million,N/A,220A.223,N/A,0
+16,220A.224_fac,1379368.42,220A_fac,MWth_lmfbrscale,million,"r_78_220A224_fac, mwth, scale_1.0",220A.224,24,0
+17,222.11_fac,1101963.79,222_fac,MWth_scale,million,"c_222.11_fac, mwth, scale_1.0",222.11,8,0
+18,222.12_fac,1280778.06,222_fac,MWth_scale,million,"c_222.12_fac, mwth, scale_1.0",222.12,8,0
+19,222.13_fac,21900.68,222_fac,MWth_scale,million,"c_222.13_fac, mwth, scale_1.0",222.13,8,0
+20,222.14_fac,4380.14,222_fac,MWth_scale,million,"c_222.14_fac, mwth, scale_1.0",222.14,8,0
+21,222_fac,2409022.68,22_fac,MWth_scale,million,"c_222_fac, mwth, scale_1.0",222,8,0
+22,224_fac,46047915.43,22_fac,esc_1987,million,"escalate_1987, ref_224_fac",224,12,0
+23,226.4_fac,34304867.39,226_fac,MWth_scale,million,"r_78_226.4_fac, mwth, scale_1.0",226.4,8,0
+24,226.7_fac,0,226_fac,default_0,million,N/A,226.7,14,0
+25,227_fac,37538349.96,22_fac,esc_1987,million,"escalate_1987, ref_227_fac",227,12,0
+26,231_fac,53544604.81,23_fac,dev_factor_ref,million,"c_turbine, scale_tur_231_fac, scale_1.0",231,10,0
+27,233_fac,19829554.55,23_fac,MWreth_scale,million,"c_233_fac, mwreth, scale_0.8",233,25,0
+28,234_fac,0,23_fac,default_0,million,N/A,234,14,0
+29,235_fac,4788444.35,23_fac,ptn_account,million,"c_231_fac, prn_235_of_231_fac",235,4,0
+30,241_fac,20635161.28,24_fac,MWe_scale,million,"c_241_fac, mwe, scale_0.4",241,17,0
+31,242_fac,33563126.13,24_fac,MWe_scale,million,"c_242_fac, mwe, scale_0.4",242,17,0
+32,245_fac,0,24_fac,MWe_scale,million,"c_245_fac, mwe, scale_0.4",245,17,0
+33,246_fac,2902733.98,24_fac,MWe_scale,million,"c_246_fac, mwe, scale_0.4",246,17,0
+34,252_fac,24869567.31,25_fac,esc_1987,million,"escalate_1987, ref_252_fac",252,12,0
+35,262_fac,30555532.85,26_fac,MWreth_scale,million,"c_262_fac, mwreth, scale_0.8",262,25,0
+36,2c_fac,736246154.62,,NO_ALG,million,N/A,2,N/A,0
+37,211_lab,41328822.54,21_lab,esc_1987,million,"escalate_1987, ref_211_lab",211,12,0
+38,212_lab,43940775.98,21_lab,containment,million,Tot_Labor_containment,212,7,0
+39,213_lab,11873274.12,21_lab,MWth_scale,million,"c_213_lab, mwth, scale_0.8",213,8,0
+40,215_lab,7101615.96,21_lab,NO_ALG,million,N/A,215,N/A,0
+41,216_lab,24337584.5,21_lab,NO_ALG,million,N/A,216,N/A,0
+42,217_lab,12836637.9,21_lab,NO_ALG,million,N/A,217,N/A,0
+43,218A_lab,10038481.64,218_lab,NO_ALG,million,N/A,218A,N/A,0
+44,220A.211_lab,8750000,220A_lab,NO_ALG,million,N/A,220A.211,N/A,0
+45,220A.2121_lab,0,220A_lab,default_0,million,N/A,220A.2121,14,0
+46,220A.2122_lab,0,220A_lab,default_0,million,N/A,220A.2122,14,0
+47,220A.2131_lab,0,220A_lab,default_0,million,N/A,220A.2131,14,0
+48,220A.2132_lab,0,220A_lab,default_0,million,N/A,220A.2132,14,0
+49,220A.221_lab,0,220A_lab,default_0,million,N/A,220A.221,14,0
+50,220A.222_lab,0,220A_lab,default_0,million,N/A,220A.222,14,0
+51,220A.223_lab,3173085.99,220A_lab,Sgsum,million,N/A,220A.223,N/A,0
+52,220A.224_lab,0,220A_lab,default_0,million,N/A,220A.224,14,0
+53,222.11_lab,1274883.33,222_lab,MWth_scale,million,"c_222.11_lab, mwth, scale_1.0",222.11,8,0
+54,222.12_lab,3317279.46,222_lab,MWth_scale,million,"c_222.12_lab, mwth, scale_1.0",222.12,8,0
+55,222.13_lab,613897.3,222_lab,MWth_scale,million,"r_222.13_lab, mwth, scale_1.0",222.13,8,0
+56,222.14_lab,82172.71,222_lab,MWth_scale,million,"c_222.14_lab, mwth, scale_1.0",222.14,8,0
+57,222_lab,5288232.81,22_mat,MWth_scale,million,"c_222_lab, mwth, scale_1.0",222,8,0
+58,224_lab,11434348.55,22_lab,esc_1987,million,"escalate_1987, ref_224_lab",224,12,0
+59,226.4_lab,0,226_lab,default_0,million,N/A,226.4,14,0
+60,226.7_lab,0,226_lab,default_0,million,N/A,226.7,14,0
+61,227_lab,21960889.79,22_lab,esc_1987,million,"escalate_1987, ref_227_lab",227,12,0
+62,231_lab,588990.65,23_lab,ptn_account,million,"c_231_fac, prn_fac_231_lab",231,4,0
+63,233_lab,8082642.16,23_lab,MWreth_scale,million,"c_233_lab, mwreth, scale_0.8",233,25,0
+64,234_lab,0,23_lab,default_0,million,N/A,234,14,0
+65,235_lab,4258930.48,23_lab,ptn_account,million,"c_231_lab, prn_235_of_231_lab",235,4,0
+66,241_lab,1107205.12,24_lab,MWe_scale,million,"c_241_lab, mwe, scale_0.4",241,17,0
+67,242_lab,2861071.44,24_lab,MWe_scale,million,"c_242_lab, mwe, scale_0.4",242,17,0
+68,245_lab,32970390.22,24_lab,MWe_scale,million,"c_245_lab, mwe, scale_0.4",245,17,0
+69,246_lab,21514837.92,24_lab,MWe_scale,million,"c_246_lab, mwe, scale_0.4",246,17,0
+70,252_lab,44371766.01,25_lab,esc_1987,million,"escalate_1987, ref_252_lab",252,12,0
+71,262_lab,12634376.8,26_lab,MWreth_scale,million,"c_262_lab, mwreth, scale_0.8",262,25,0
+72,2c_lab,330450874.57,,NO_ALG,million,N/A,2,N/A,0
+73,211_mat,29075021.35,21_mat,esc_1987,million,"escalate_1987, ref_211_mat",211,12,0
+74,212_mat,37484659.34,21_mat,containment,million,Tot_Mat_containment,212,7,0
+75,213_mat,12070727.96,21_mat,MWth_scale,million,"c_213_mat, mwth, scale_0.8",213,8,0
+76,215_mat,3247159.31,21_mat,NO_ALG,million,N/A,215,N/A,0
+77,216_mat,12656345.83,21_mat,NO_ALG,million,N/A,216,N/A,0
+78,217_mat,12470546.09,21_mat,NO_ALG,million,N/A,217,N/A,0
+79,218A_mat,4897224.28,218_mat,NO_ALG,million,N/A,218A,N/A,0
+80,220A.211_mat,870000,220A_mat,NO_ALG,million,N/A,220A.211,N/A,0
+81,220A.2121_mat,0,220A_mat,default_0,million,N/A,220A.2121,14,0
+82,220A.2122_mat,0,220A_mat,default_0,million,N/A,220A.2122,14,0
+83,220A.2131_mat,0,220A_mat,default_0,million,N/A,220A.2131,14,0
+84,220A.2132_mat,0,220A_mat,default_0,million,N/A,220A.2132,14,0
+85,220A.221_mat,0,220A_mat,default_0,million,N/A,220A.221,14,0
+86,220A.222_mat,0,220A_mat,default_0,million,N/A,220A.222,14,0
+87,220A.223_mat,266890.16,220A_mat,Sgsum,million,N/A,220A.223,N/A,0
+88,220A.224_mat,0,220A_mat,default_0,million,N/A,220A.224,14,0
+89,222.11_mat,127488.33,222_mat,MWth_scale,million,"c_222.11_mat, mwth, scale_1.0",222.11,8,0
+90,222.12_mat,326175.16,222_mat,MWth_scale,million,"c_222.12_mat, mwth, scale_1.0",222.12,8,0
+91,222.13_mat,61389.73,222_mat,MWth_scale,million,"r_222.13_mat, mwth, scale_1.0",222.13,8,0
+92,222.14_mat,8217,222_mat,MWth_scale,million,"c_222.14_mat, mwth, scale_1.0",222.14,8,0
+93,222_mat,523270.22,22_mat,MWth_scale,million,"c_222_mat, mwth, scale_1.0",222,8,0
+94,224_mat,2191177.36,22_mat,esc_1987,million,"escalate_1987, ref_224_mat",224,12,0
+95,226.4_mat,0,226_mat,default_0,million,N/A,226.4,14,0
+96,226.7_mat,0,226_mat,default_0,million,N/A,226.7,14,0
+97,227_mat,1920497.47,22_mat,esc_1987,million,"escalate_1987, ref_227_mat",227,12,0
+98,231_mat,3266220.89,23_mat,ptn_account,million,"c_231_fac, prn_fac_231_mat",231,4,0
+99,233_mat,1153654.54,23_mat,MWreth_scale,million,"c_233_mat, mwreth, scale_0.8",233,25,0
+100,234_mat,0,23_mat,default_0,million,N/A,234,14,0
+101,235_mat,516040.29,23_mat,ptn_account,million,"c_231_mat, prn_235_of_231_mat",235,4,0
+102,241_mat,161981.4,24_mat,MWe_scale,million,"c_241_mat, mwe, scale_0.4",241,17,0
+103,242_mat,546787.41,24_mat,MWe_scale,million,"c_242_mat, mwe, scale_0.4",242,17,0
+104,245_mat,7921308.52,24_mat,MWe_scale,million,"c_245_mat, mwe, scale_0.4",245,17,0
+105,246_mat,13355962.89,24_mat,MWe_scale,million,"c_246_mat, mwe, scale_0.4",246,17,0
+106,252_mat,12609745.55,25_mat,esc_1987,million,"escalate_1987, ref_252_mat",252,12,0
+107,262_mat,1587534.77,26_mat,MWreth_scale,million,"c_262_mat, mwreth, scale_0.8",262,25,0
+108,2c_mat,158795865.48,,NO_ALG,million,N/A,2,N/A,0
