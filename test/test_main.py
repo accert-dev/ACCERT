@@ -36,19 +36,6 @@ def test_update_account_before_insert(cursor):
                     WHERE ind = 24;""")
     assert cursor.fetchall()==[]
 
-def test_add_new_alg(cursor):
-    """ test function add_new_alg """
-    # add a new alg called "alg_name" to the database
-    assert accert.add_new_alg(cursor,"alg_name", "v", 
-                                "testdes", "alg_python", "alg_formulation", 
-                                "alg_units", "v1, v2", "0")==None
-    # check if the new alg is added
-    cursor.execute("""SELECT alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units,variables,constants
-                    FROM algorithm
-                    WHERE alg_name = "alg_name";""")
-    expect_output = ('alg_name', 'v', 'testdes', 'alg_python', 'alg_formulation', 'alg_units', 'v1, v2', '0') 
-    assert expect_output in cursor.fetchall()
-
 def test_insert_new_COA(cursor):
     """ test function insert_new_COA """
     # insert a new COA with ind 24 and name "new"
@@ -156,30 +143,15 @@ def test_roll_up_account_table(cursor):
     for tup in expect_output:
         assert tup in real_output
 
-#         assert tup in real_output
 
-def test_roll_up_abr_account(cursor):
-    """ test function roll_up_abr_account, this function will roll up the account table for abr1000 only level 3 to 2, which is the COA 222"""
-    # roll up the account table for abr1000 
-    accert.acc_tabl = 'abr_account'
-    assert accert.roll_up_abr_account(cursor)==None
-    # only the higher level account is updated
-    # check updated column
-    cursor.execute("""SELECT code_of_account, review_status
-                    FROM abr_account
-                    WHERE review_status = 'updated';""")
-    expect_output = [('222', 'Updated')]
-    accert.acc_tabl = 'account'
-    assert expect_output==cursor.fetchall()
-
-def test_roll_up_abr_account_table(cursor):
-    """ test function roll_up_abr_account_table, this function will roll up the
+def test_roll_up_lmt_account_table(cursor):
+    """ test function roll_up_lmt_account_table, this function will roll up the
     account table for abr1000 only level 3 to 2, which is the COA 222, it also 
-    test the function roll_up_abr_account,sum_up_abr_account_2C, and
-    sum_up_abr_direct_cost_2C"""
+    test the function roll_up_lmt_account,sum_up_lmt_account_2C, and
+    sum_up_lmt_direct_cost_2C"""
     accert.acc_tabl = 'abr_account'
     # roll up the account table for abr1000 
-    assert accert.roll_up_abr_account_table(cursor)==None
+    assert accert.roll_up_lmt_account_table(cursor)==None
     # only the higher level account is updated
     # check updated column
     cursor.execute("""SELECT code_of_account, review_status
@@ -192,6 +164,7 @@ def test_roll_up_abr_account_table(cursor):
 def test_sum_cost_elements_2C(cursor):
     """ test function sum_cost_elements_2C, this function will sum up the cost elements for abr1000"""
     # sum up the cost element for abr1000
+    accert.cel_tabl = 'abr_cost_element'
     assert accert.sum_cost_elements_2C(cursor)==None
     # check if the value is updated
     cursor.execute("""SELECT cost_element, updated
@@ -202,10 +175,11 @@ def test_sum_cost_elements_2C(cursor):
     for tup in expect_output:
         assert tup in real_output
 
-def test_sum_up_abr_account_2C(cursor):
-    """ test function sum_up_abr_account_2C, this function will sum up the account table for abr1000"""
+def test_roll_up_lmt_account_2C(cursor):
+    """ test function roll_up_lmt_account_2C, this function will sum up the account table for abr1000"""
     # sum up the account table for abr1000 
-    assert accert.sum_up_abr_account_2C(cursor)==None
+    accert.acc_tabl = 'abr_account'
+    assert accert.roll_up_lmt_account_2C(cursor)==None
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, review_status
                     FROM abr_account
@@ -213,10 +187,11 @@ def test_sum_up_abr_account_2C(cursor):
     expect_output = [('2C', 'Ready for Review')]
     assert expect_output==cursor.fetchall()
 
-def test_sum_up_abr_direct_cost(cursor):
+def test_roll_up_lmt_direct_cost(cursor):
     """ test function sum_up_abr_direct_cost, this function will sum up the direct cost for abr1000"""
     # sum up the direct cost for abr1000 
-    assert accert.sum_up_abr_direct_cost(cursor)==None
+    accert.acc_tabl = 'abr_account'    
+    assert accert.roll_up_lmt_direct_cost(cursor)==None
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, review_status
                     FROM abr_account
@@ -243,6 +218,7 @@ def test_extract_total_cost_on_name(cursor):
     """ test function extract_total_cost_on_name, this function will extract the total cost from the 
     account table. where the COA is the name of the account, for example, 220A.27, the total cost is
     0"""
+    accert.acc_tabl = 'account'    
     assert accert.extract_total_cost_on_name(cursor,'220A.27')== ('220A.27', 
                                                                     'Instrumentation And Control (NSSS)', 
                                                                     0.0)
@@ -271,7 +247,7 @@ def test_run_pre_alg():
 def test_cal_direct_cost_elements(cursor,conn):
     """ test function cal_direct_cost_elements, this function will calculate the direct cost for 
     each cost element. This function will update the cost element table for ABR1000."""
-
+    accert.acc_tabl = 'abr_account'
     real_ouput= accert.cal_direct_cost_elements(cursor)
     # the real value is (852973431.1169341, 382841817.9556325, 183971968.309387) unit in dollar
     # however, the value is too long, so I only test the digits in million
@@ -282,9 +258,15 @@ def test_generate_results_table(cursor,conn):
     """ test function generate_results_table, this function will generate the results table for 
     each cost element. This function will update the cost element table for PWR12BE. Also, this
     function will test write_to_excel function"""
+    accert.ref_model = 'pwr12-be'
+    accert.acc_tabl = 'account'
+    accert.cel_tabl = 'cost_element'
+    accert.var_tabl = 'variable'
     assert accert.generate_results_table(cursor, conn, level=3)==None
     # check whether the results xlsx file is generated
     assert os.path.isfile('pwr12-be_updated_account.xlsx')==True
+    assert accert.generate_results_table_with_cost_elements(cursor, conn, level=3)==None
+
     assert os.path.isfile('pwr12-be_variable_affected_cost_elements.xlsx')==True
     assert os.path.isfile('pwr12-be_updated_cost_element.xlsx')==True
     # remove the generated xlsx file

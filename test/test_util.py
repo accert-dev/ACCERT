@@ -27,7 +27,6 @@ def test_util_methods(cursor):
     assert ut.print_cost_element(cursor)==None
     assert ut.print_escalation(cursor)==None
     assert ut.print_facility(cursor)==None
-    assert ut.print_leveled_abr_accounts(cursor,8000000,3000000,2000000)==None
     assert ut.print_leveled_accounts(cursor)==None
     assert ut.print_updated_cost_elements(cursor)==None
     assert ut.print_user_request_parameter(cursor)==None

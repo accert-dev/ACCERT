@@ -605,6 +605,10 @@ INSERT INTO `variable` VALUES (1,'c_turbine','Turbine equipment cost',362.62,'mi
 UNLOCK TABLES;
 
 --
+-- Dumping events for database 'accert_db'
+--
+
+--
 -- Dumping routines for database 'accert_db'
 --
 /*!50003 DROP PROCEDURE IF EXISTS `cal_direct_cost_elements` */;
@@ -1126,102 +1130,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_lmt_accounts_all` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_lmt_accounts_all`(IN acc_table VARCHAR(255),   
-                                                                            IN cel_table VARCHAR(255))
-BEGIN
-    SET @stmt = CONCAT('SELECT', acc_table,'.level,
-                                rankedcoa.COA as code_of_account,
-                                ',acc_table,'.account_description,
-                                sorted_ce.fac_cost,
-                                sorted_ce.lab_cost,
-                                sorted_ce.mat_cost,
-                                ',acc_table,'.total_cost,
-                                ',acc_table,'.unit,
-                                ',acc_table,'.review_status
-                        FROM ',acc_table,' JOIN
-                        (SELECT node.code_of_account,
-                                CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
-                            FROM ',acc_table,' AS node,
-                                ',acc_table,' AS parent
-                            WHERE node.lft BETWEEN parent.lft AND parent.rgt
-                            GROUP BY node.code_of_account) as rankedcoa
-                            ON ',acc_table,'.code_of_account=rankedcoa.code_of_account
-                            JOIN (SELECT splt_act.code_of_account,
-                                    cef.cost_2017 as fac_cost,
-                                    cel.cost_2017 as lab_cost,
-                                    cem.cost_2017 as mat_cost
-                                    FROM
-                                    (SELECT code_of_account,total_cost,supaccount,
-                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 1), ",", -1) as fac_name,
-                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 2), ",", -1) as lab_name,
-                                    SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 3), ",", -1) as mat_name
-                                    FROM ',acc_table,') as splt_act
-                                    LEFT JOIN ',cel_table,' as cef
-                                    ON cef.cost_element= splt_act.fac_name
-                                    LEFT JOIN ',cel_table,' as cel
-                                    ON cel.cost_element= splt_act.lab_name
-                                    LEFT JOIN ',cel_table,' as cem
-                                    ON cem.cost_element= splt_act.mat_name) as sorted_ce
-                                    ON sorted_ce.code_of_account=',acc_table,'.code_of_account
-                                    WHERE ',acc_table,'.level <= 3
-                                    ORDER BY ',acc_table,'.lft;');
-    PREPARE stmt FROM @stmt;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_lmt_accounts_simple` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_lmt_accounts_simple`(IN acc_table VARCHAR(255), IN level INT)
-BEGIN
-    SET @stmt = CONCAT('SELECT rankedcoa.code_of_account,
-                    acc.account_description,
-                    acc.total_cost,
-                    acc.unit,
-                    acc.level,
-                    acc.review_status
-                    FROM ',acc_table,' as acc
-                    JOIN
-                    (SELECT node.code_of_account AS COA , CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
-                    FROM ',acc_table,' AS node,
-                                    ',acc_table,' AS parent
-                    WHERE node.lft BETWEEN parent.lft AND parent.rgt
-                    GROUP BY node.code_of_account) as rankedcoa
-                    ON acc.code_of_account=rankedcoa.COA
-                    WHERE acc.level <= ?
-                    ORDER BY acc.lft;');
-    PREPARE stmt FROM @stmt;
-    SET @level=level;
-    EXECUTE stmt USING @level;
-    DEALLOCATE PREPARE stmt;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `print_table` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1698,87 +1606,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_fac` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_fac`(IN cel_tabl_name varchar(50),
-                                                                        IN sum_2c_fac DECIMAL(20,10)  )
-BEGIN
-	SET SQL_SAFE_UPDATES = 0;
-    SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
-                        SET cost_2017 = ?, updated = 1
-                        WHERE cost_element = \'2C_fac\'');
-    PREPARE stmt FROM @stmt; 
-    SET @sum_2c_fac = sum_2c_fac;
-    EXECUTE stmt USING @sum_2c_fac;
-    DEALLOCATE PREPARE stmt;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_lab` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_lab`(IN cel_tabl_name varchar(50),
-                                                                        IN sum_2c_lab DECIMAL(20,10)  )
-BEGIN
-	SET SQL_SAFE_UPDATES = 0;
-    SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
-                        SET cost_2017 = ?, updated = 1
-                        WHERE cost_element = \'2C_lab\'');
-    PREPARE stmt FROM @stmt;
-    SET @sum_2c_lab = sum_2c_lab;
-    EXECUTE stmt USING @sum_2c_lab;
-    DEALLOCATE PREPARE stmt;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_2C_mat` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_2C_mat`(IN cel_tabl_name varchar(50),
-                                                                         IN sum_2c_mat DECIMAL(20,10)  )
-BEGIN
-	 SET SQL_SAFE_UPDATES = 0;
-     SET @stmt = CONCAT('UPDATE ', cel_tabl_name, '
-                         SET cost_2017 = ?, updated = 1
-                         WHERE cost_element = \'2C_mat\'');
-     PREPARE stmt FROM @stmt;
-     SET @sum_2c_mat = sum_2c_mat;
-     EXECUTE stmt USING @sum_2c_mat;
-     DEALLOCATE PREPARE stmt;
- END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `update_cost_element_on_name` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1934,39 +1761,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `update_variable` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable`(
-    IN tbl_name VARCHAR(255), 
-    IN var_id VARCHAR(255), 
-    IN var_value DECIMAL(20,10), 
-    IN var_unit VARCHAR(255), 
-    IN revised INT
-)
-BEGIN
-	SET SQL_SAFE_UPDATES = 0;
-    SET @sql = CONCAT('UPDATE ', tbl_name, ' SET var_value = ?, var_unit = ?, user_input = ? WHERE var_name = ?');
-    PREPARE stmt FROM @sql;
-    SET @param1 = var_value,
-		@param2 = var_unit,
-        @param3 = revised,
-        @param4 = var_id;
-    EXECUTE stmt USING @param1, @param2, @param3, @param4;
-    DEALLOCATE PREPARE stmt;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `update_variable_info_on_name` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2007,4 +1801,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-12 11:47:24
+-- Dump completed on 2024-09-12 12:24:10

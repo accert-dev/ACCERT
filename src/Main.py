@@ -559,7 +559,6 @@ class Accert:
         # c.execute("""SELECT code_of_account, account_description, total_cost
         #             FROM account
         #             WHERE code_of_account = %u_i_tc_name;""",{'u_i_tc_name': str(tc_id).replace("'","").replace('"','')})
-
         c.callproc('extract_total_cost_on_name',(self.acc_tabl, tc_id))
         for row in c.stored_results():
             results = row.fetchall()
@@ -1175,7 +1174,7 @@ class Accert:
 
     def sum_cost_elements_2C(self, c):
         """
-        Sums the cost elements for ABR COA 2C (Calculated cost).
+        Sums the cost elements for COA 2C (Calculated cost).
 
         Parameters
         ----------
