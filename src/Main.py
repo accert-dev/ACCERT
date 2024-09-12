@@ -827,7 +827,7 @@ class Accert:
         alg_py : str
             Algorithm in python.
         alg_name : str
-            Algorithm name.
+            Algorithm name.my
         variables : dict
             Variables to be passed to the algorithm.
 
@@ -884,7 +884,7 @@ class Accert:
         # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_on_name`(
         #     IN table_name VARCHAR(50),
         #     IN ce_name VARCHAR(50),
-        #     IN alg_value DECIMAL(20,10)  
+        #     IN alg_value DECIMAL(20,5)  
         # )
         # BEGIN
         #     -- Disable safe updates for this operation
@@ -904,8 +904,11 @@ class Accert:
 
         # END;$$
         # DELIMITER ;
-        print(self.cel_tabl,ce_name,float(alg_value))
 
+        # NOTE, float is used for alg_value, but it can be changed to DECIMAL(20,15) in the 
+        # stored procedure, since float in python is equivalent to double in MySQL, tested 
+        # for several values but using float in stored procedure is not recommended since 
+        # the rolled up value may not be accurate.
         c.callproc('update_cost_element_on_name',(self.cel_tabl,ce_name,float(alg_value)))
 
         return None
@@ -1789,6 +1792,7 @@ class Accert:
         """
         print(' Generating results table for review '.center(100, '='))
         print('\n')
+        
         ut.print_leveled_accounts(c, all=all_flag, tol_fac=fac, tol_lab=lab, tol_mat=mat, cost_unit='million', level=3)
 
     def _pwr12be_processing(self, c, ut, accert):
@@ -1807,7 +1811,8 @@ class Accert:
         self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c, from_level=3, to_level=0)
-        print(' Generating results table for review '.center(100, '='))    
+        print(' Generating results table for review '.center(100, '='))   
+        print('\n') 
         ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
 
     def _fusion_processing(self, c, ut, accert):
@@ -1826,6 +1831,7 @@ class Accert:
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c, from_level=4, to_level=0)
         print(' Generating results table for review '.center(100, '='))
+        print('\n')
         ut.print_leveled_accounts(c, all=False, cost_unit='million', level=4)
 
     def generate_results_table_with_cost_elements(self, c, conn, level=3):
