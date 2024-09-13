@@ -81,7 +81,7 @@ def test_table_columns(cursor):
     
     cursor.execute("SHOW COLUMNS FROM algorithm")
     columns = cursor.fetchall()
-    assert ('ind', b'int', 'NO', 'PRI', None, '') in columns
+    assert ('ind', b'int', 'NO', 'PRI', None, 'auto_increment') in columns
     assert ('alg_name', b'text', 'YES', '', None, '') in columns
     assert ('alg_for', b'text', 'YES', '', None, '') in columns
     assert ('alg_description', b'text', 'YES', '', None, '') in columns

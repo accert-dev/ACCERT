@@ -1,103 +1,103 @@
-ind,code_of_account,account_description,total_cost,level,supaccount,review_status,prn
-1,2,"TOTAL DIRECT COST",2579172917,0,,Unchanged,1
-2,21,"Structures and improvements subtotal",569959917,1,2,Unchanged,0.221920381
-3,211,Yardwork,71213900,2,21,Unchanged,0.027628952
-4,212,"Reactor containment building",182702257,2,21,Unchanged,0.071675377
-5,213,"Turbine room and heater bay",65970400,2,21,Unchanged,0.025594624
-6,214,"Security building",3880760,2,21,Unchanged,0.001505624
-7,215,"Primary auxiliary building and tunnels",52634700,2,21,Unchanged,0.020420755
-8,216,"Waste processing building",40938300,2,21,Unchanged,0.015882887
-9,217,"Fuel storage building",28149600,2,21,Unchanged,0.010921238
-10,218,"Other structures",124470000,2,21,Unchanged,0.048290792
-11,218A,"Control Room/Diesel Generator Building",51570400,3,218,Unchanged,0.020007837
-12,218B,"Administration + Services Building",18938200,3,218,Unchanged,0.007347479
-13,218D,"Fire Pump House, Including Foundations",1216200,3,218,Unchanged,0.000471851
-14,218E,"Emergency Feed Pump Building",7119140,3,218,Unchanged,0.002762022
-15,218F,"Manway Tnls. (Radiological Ctrl Access Tunnels)",2170960,3,218,Unchanged,0.00084227
-16,218G,"Elec. Tunnels",193104,3,218,Unchanged,0.0000749188
-17,218H,"Non- Essen. Switchgear Bldg.",1526990,3,218,Unchanged,0.000592428
-18,218J,"Main Steam + Feedwater Pipe Enc.",22416800,3,218,Unchanged,0.008697076
-19,218K,"Pipe Tunnels",904119,3,218,Unchanged,0.000350772
-20,218L,"Technical Support Center",2249450,3,218,Unchanged,0.000872722
-21,218P,"Containment Equipment Hatch Missile Shield",626665,3,218,Unchanged,0.000243128
-22,218S,"Waste Water Treatment",2186330,3,218,Unchanged,0.000848233
-23,218T,"Ultimate Heat Sink Structures",13097500,3,218,Unchanged,0.005081455
-24,218V,"Control Rm Emergency Air Intake Building",253976,3,218,Unchanged,0.0000985354
-25,22,"Reactor plant equipment",867215000,1,2,Unchanged,0.336454563
-26,220A,"Nuclear steam supply (NSSS)",514720000,2,22,Unchanged,0.199696606
-27,220A.211,"Vessel Structure (NSSS)",70000000,3,220A,Unchanged,0.027157994
-28,220A.2121,"Lower Internals (NSSS)",31780000,3,220A,Unchanged,0.012329729
-29,220A.2122,"Upper Internals (NSSS)",31780000,3,220A,Unchanged,0.012329729
-30,220A.2131,"Control Rods (NSSS)",3100000,3,220A,Unchanged,0.001202711
-31,220A.2132,"Control Rod Drives (NSSS)",34900000,3,220A,Unchanged,0.0135402
-32,220A.221,"Main Coolant Pumps (NSSS)",125240000,3,220A,Unchanged,0.04858953
-33,220A.222,"Reactor Coolant Piping (NSSS)",11400000,3,220A,Unchanged,0.004422873
-34,220A.223,"Steam Generators (NSSS)",149800000,3,220A,Unchanged,0.058118106
-35,220A.224,"Pressurizer (NSSS)",8300000,3,220A,Unchanged,0.003220162
-36,220A.225,"Pressurizer Relief Tank (NSSS)",1850000,3,220A,Unchanged,0.000717747
-37,220A.2311,"Residual Heat Removal Pumps & Drives (NSSS)",1940000,3,220A,Unchanged,0.000752664
-38,220A.2312,"Residual Heat Removal Heat Exchanger (NSSS)",6260000,3,220A,Unchanged,0.002428701
-39,220A.2321,"Safety Injection Pumps And Drives (NSSS)",1720000,3,220A,Unchanged,0.000667311
-40,220A.2322,"Accumulator Tank (NSSS)",15300000,3,220A,Unchanged,0.005935961
-41,220A.2323,"Boron Injection Tank (NSSS)",899999,3,220A,Unchanged,0.000349174
-42,220A.2324,"Boron Injection Surge Tank (NSSS)",50001,3,220A,Unchanged,0.000019399
-43,220A.2325,"Boron Injection Recirc. Pump & Drives (NSSS)",40000,3,220A,Unchanged,0.0000155189
-44,220A.251,"Fuel Handling Tools (NSSS)",400000,3,220A,Unchanged,0.000155189
-45,220A.254,"Fuel Storage Racks (NSSS)",2510000,3,220A,Unchanged,0.000973808
-46,220A.2611,"Rotating Machinery (Pumps And Motors) (NSSS)",2220000,3,220A,Unchanged,0.000861296
-47,220A.2612,"Heat Transfer Equipment (NSSS)",2450000,3,220A,Unchanged,0.00095053
-48,220A.2613,"Tanks And Pressure Vessels (NSSS)",1140000,3,220A,Unchanged,0.000442287
-49,220A.2614,"Purification And Filtration Equipment (NSSS)",2450000,3,220A,Unchanged,0.00095053
-50,220A.262,"Maintenance Equipment (NSSS)",9190000,3,220A,Unchanged,0.003565457
-51,220A.27,"Instrumentation And Control (NSSS)",0,3,220A,Unchanged,0
-52,221,"Reactor equipment",29966900,2,22,Unchanged,0.011626298
-53,221.11,"Reactor Support (Field Cost 221)",3910160,3,221,Unchanged,0.00151703
-54,221.12,"Vessel Structure (Field Cost 221)",7037480,3,221,Unchanged,0.002730341
-55,221.13,"Vessel Internals (Field Cost 221)",1703810,3,221,Unchanged,0.000661029
-56,221.14,"Transport To Site (Field Cost 221)",15781400,3,221,Unchanged,0.006122731
-57,221.21,"Control Rod System (Field Cost 221)",1533970,3,221,Unchanged,0.000595136
-58,222,"Main heat transfer transport system",28204600,2,22,Unchanged,0.010942576
-59,222.11,"Fluid Circulation Drive System (Field Cost 222)",8592380,3,222,Unchanged,0.003333597
-60,222.12,"Reactor Coolant Piping System (Field Cost 222)",16895000,3,222,Unchanged,0.006554776
-61,222.13,"Steam Generator Equipment (Field Cost 222)",2392050,3,222,Unchanged,0.000928047
-62,222.14,"Pressurizing System (Field Cost 222)",325156,3,222,Unchanged,0.000126151
-63,223,"Safeguards system",35379000,2,22,Unchanged,0.013726038
-64,223.1,"Residual Heat Removal Sys (Field Cost 223)",6810250,3,223,Unchanged,0.002642182
-65,223.3,"Safety Injection System (Field Cost 223)",10383200,3,223,Unchanged,0.004028384
-66,223.4,"Containment Spray System (Field Cost 223)",15105600,3,223,Unchanged,0.00586054
-67,223.5,"Combustible Gas Control System (Field Cost 223)",3079990,3,223,Unchanged,0.001194948
-68,224,"Radwaste processing",59673400,2,22,Unchanged,0.023151569
-69,225,"Fuel handling and storage",9024530,2,22,Unchanged,0.003501259
-70,226,"Other reactor plant equipment",107592000,2,22,Unchanged,0.041742612
-71,226.1,"Inert Gas Sys",3533410,3,226,Unchanged,0.001370862
-72,226.3,"Reactor Makeup Water Sys",4252970,3,226,Unchanged,0.00165003
-73,226.4,"Coolant Treatment & Recycle",40770700,3,226,Unchanged,0.015817863
-74,226.6,"Fluid Leak Detection Sys",492958,3,226,Unchanged,0.000191254
-75,226.7,"Aux Cool Sys (Broken Down Further)",55198200,3,226,Unchanged,0.021415319
-76,226.8,"Maintenance Equipment",1519680,3,226,Unchanged,0.000589592
-77,226.9,"Sampling Equip",1831380,3,226,Unchanged,0.000710523
-78,227,"Reactor instrumentation and control",61419700,2,22,Unchanged,0.023829083
-79,228,"Reactor plant miscellaneous items",21234600,2,22,Unchanged,0.008238416
-80,23,"Turbine plant equipment",637636000,1,2,Unchanged,0.247384491
-81,231,"Turbine generator",381776000,2,23,Unchanged,0.148118145
-82,233,"Condensing systems",82581500,2,23,Unchanged,0.032039255
-83,234,"Feedwater heating system",67214100,2,23,Unchanged,0.026077144
-84,235,"Other turbine plant equipment",63607900,2,23,Unchanged,0.024678042
-85,236,"Instrumentation and control",19530400,2,23,Unchanged,0.007577235
-86,237,"Turbine plant miscellaneous items",22926000,2,23,Unchanged,0.008894631
-87,24,"Electric plant equipment",231722000,1,2,Unchanged,0.089901494
-88,241,Switchgear,34039800,2,24,Unchanged,0.013206467
-89,242,"Station service equipment",57453700,2,24,Unchanged,0.022290389
-90,243,Switchboards,5838140,2,24,Unchanged,0.002265031
-91,244,"Protective equipment",12142400,2,24,Unchanged,0.004710903
-92,245,"Electric structure and wiring contnr.",63546600,2,24,Unchanged,0.024654259
-93,246,"Power and control wiring",58700900,2,24,Unchanged,0.022774267
-94,25,"Miscellaneous plant equipment subtotal",133073000,1,2,Unchanged,0.05162851
-95,251,"Transportation and lifting equipment",17078900,2,25,Unchanged,0.006626124
-96,252,"Air, water and steam service systems",81851100,2,25,Unchanged,0.031755881
-97,253,"Communications equipment",18279100,2,25,Unchanged,0.007091767
-98,254,"Furnishings and fixtures",7795930,2,25,Unchanged,0.003024597
-99,255,"Waste water treatment equipment",8067760,2,25,Unchanged,0.00313006
-100,26,"Main condenser heat rejection system",139567000,1,2,Unchanged,0.054147996
-101,261,Structures,12345700,2,26,Unchanged,0.004789778
-102,262,"Mechanical equipment",127221000,2,26,Unchanged,0.049358101
+ind,code_of_account,account_description,total_cost,level,main_subaccounts,supaccount,cost_elements,prn
+1,211,Yardwork,71213900,2,NULL,21,"211_fac,211_lab,211_mat",0.027628952
+2,212,Reactor containment building,182702257.3,2,NULL,21,"212_fac,212_lab,212_mat",0.071675377
+3,213,Turbine room and heater bay,65970400,2,NULL,21,"213_fac,213_lab,213_mat",0.025594624
+4,214,Security building,3880760,2,NULL,21,"214_fac,214_lab,214_mat",0.001505624
+5,215,Primary auxiliary building and tunnels,52634700,2,NULL,21,"215_fac,215_lab,215_mat",0.020420755
+6,216,Waste processing building,40938300,2,NULL,21,"216_fac,216_lab,216_mat",0.015882887
+7,217,Fuel storage building,28149600,2,NULL,21,"217_fac,217_lab,217_mat",0.010921238
+8,218A,Control Room/Diesel Generator Building,51570400,3,NULL,218,"218A_fac,218A_lab,218A_mat",0.020007837
+9,218B,Administration + Services Building,18938200,3,NULL,218,"218B_fac,218B_lab,218B_mat",0.007347479
+10,218D,"Fire Pump House, Including Foundations",1216200,3,NULL,218,"218D_fac,218D_lab,218D_mat",0.000471851
+11,218E,Emergency Feed Pump Building,7119140,3,NULL,218,"218E_fac,218E_lab,218E_mat",0.002762022
+12,218F,Manway Tnls. (Radiological Ctrl Access Tunnels),2170960,3,NULL,218,"218F_fac,218F_lab,218F_mat",0.00084227
+13,218G,Elec. Tunnels,193104,3,NULL,218,"218G_fac,218G_lab,218G_mat",7.49E-05
+14,218H,Non- Essen. Switchgear Bldg.,1526990,3,NULL,218,"218H_fac,218H_lab,218H_mat",0.000592428
+15,218J,Main Steam + Feedwater Pipe Enc.,22416800,3,NULL,218,"218J_fac,218J_lab,218J_mat",0.008697076
+16,218K,Pipe Tunnels,904119,3,NULL,218,"218K_fac,218K_lab,218K_mat",0.000350772
+17,218L,Technical Support Center,2249450,3,NULL,218,"218L_fac,218L_lab,218L_mat",0.000872722
+18,218P,Containment Equipment Hatch Missile Shield,626665,3,NULL,218,"218P_fac,218P_lab,218P_mat",0.000243128
+19,218S,Waste Water Treatment,2186330,3,NULL,218,"218S_fac,218S_lab,218S_mat",0.000848233
+20,218T,Ultimate Heat Sink Structures,13097500,3,NULL,218,"218T_fac,218T_lab,218T_mat",0.005081455
+21,218V,Control Rm Emergency Air Intake Building,253976,3,NULL,218,"218V_fac,218V_lab,218V_mat",9.85E-05
+22,218,Other structures,124470000,2,"218A, 218B, 218J, 218T",21,"218_fac,218_lab,218_mat",0.048290792
+23,21,Structures and improvements subtotal,569959917.3,1,"211, 212, 213, 215, 216, 217, 218",2,"21_fac,21_lab,21_mat",0.221920381
+24,220A.211,Vessel Structure (NSSS),70000000,3,NULL,220A,"220A.211_fac,220A.211_lab,220A.211_mat",0.027157994
+25,220A.2121,Lower Internals (NSSS),31780000,3,NULL,220A,"220A.2121_fac,220A.2121_lab,220A.2121_mat",0.012329729
+26,220A.2122,Upper Internals (NSSS),31780000,3,NULL,220A,"220A.2122_fac,220A.2122_lab,220A.2122_mat",0.012329729
+27,220A.2131,Control Rods (NSSS),3100000,3,NULL,220A,"220A.2131_fac,220A.2131_lab,220A.2131_mat",0.001202711
+28,220A.2132,Control Rod Drives (NSSS),34900000,3,NULL,220A,"220A.2132_fac,220A.2132_lab,220A.2132_mat",0.0135402
+29,220A.221,Main Coolant Pumps (NSSS),125240000,3,NULL,220A,"220A.221_fac,220A.221_lab,220A.221_mat",0.04858953
+30,220A.222,Reactor Coolant Piping (NSSS),11400000,3,NULL,220A,"220A.222_fac,220A.222_lab,220A.222_mat",0.004422873
+31,220A.223,Steam Generators (NSSS),149800000,3,NULL,220A,"220A.223_fac,220A.223_lab,220A.223_mat",0.058118106
+32,220A.224,Pressurizer (NSSS),8300000,3,NULL,220A,"220A.224_fac,220A.224_lab,220A.224_mat",0.003220162
+33,220A.225,Pressurizer Relief Tank (NSSS),1850000,3,NULL,220A,"220A.225_fac,220A.225_lab,220A.225_mat",0.000717747
+34,220A.2311,Residual Heat Removal Pumps & Drives (NSSS),1940000,3,NULL,220A,"220A.2311_fac,220A.2311_lab,220A.2311_mat",0.000752664
+35,220A.2312,Residual Heat Removal Heat Exchanger (NSSS),6260000,3,NULL,220A,"220A.2312_fac,220A.2312_lab,220A.2312_mat",0.002428701
+36,220A.2321,Safety Injection Pumps And Drives (NSSS),1720000,3,NULL,220A,"220A.2321_fac,220A.2321_lab,220A.2321_mat",0.000667311
+37,220A.2322,Accumulator Tank (NSSS),15300000,3,NULL,220A,"220A.2322_fac,220A.2322_lab,220A.2322_mat",0.005935961
+38,220A.2323,Boron Injection Tank (NSSS),899999,3,NULL,220A,"220A.2323_fac,220A.2323_lab,220A.2323_mat",0.000349174
+39,220A.2324,Boron Injection Surge Tank (NSSS),50001,3,NULL,220A,"220A.2324_fac,220A.2324_lab,220A.2324_mat",0.000019399
+40,220A.2325,Boron Injection Recirc. Pump & Drives (NSSS),40000,3,NULL,220A,"220A.2325_fac,220A.2325_lab,220A.2325_mat",1.55E-05
+41,220A.251,Fuel Handling Tools (NSSS),400000,3,NULL,220A,"220A.251_fac,220A.251_lab,220A.251_mat",0.000155189
+42,220A.254,Fuel Storage Racks (NSSS),2510000,3,NULL,220A,"220A.254_fac,220A.254_lab,220A.254_mat",0.000973808
+43,220A.2611,Rotating Machinery (Pumps And Motors) (NSSS),2220000,3,NULL,220A,"220A.2611_fac,220A.2611_lab,220A.2611_mat",0.000861296
+44,220A.2612,Heat Transfer Equipment (NSSS),2450000,3,NULL,220A,"220A.2612_fac,220A.2612_lab,220A.2612_mat",0.00095053
+45,220A.2613,Tanks And Pressure Vessels (NSSS),1140000,3,NULL,220A,"220A.2613_fac,220A.2613_lab,220A.2613_mat",0.000442287
+46,220A.2614,Purification And Filtration Equipment (NSSS),2450000,3,NULL,220A,"220A.2614_fac,220A.2614_lab,220A.2614_mat",0.00095053
+47,220A.262,Maintenance Equipment (NSSS),9190000,3,NULL,220A,"220A.262_fac,220A.262_lab,220A.262_mat",0.003565457
+48,220A.27,Instrumentation And Control (NSSS),0,3,NULL,220A,"220A.27_fac,220A.27_lab,220A.27_mat",0
+49,220A,Nuclear steam supply (NSSS),514720000,2,"220A.211, 220A.2121, 220A.2122, 220A.2131, 220A.2132, 220A.221, 220A.222, 220A.223, 220A.224, 220A.225, 220A.2311, 220A.2312, 220A.2321, 220A.2322, 220A.2323, 220A.2324, 220A.2325, 220A.251, 220A.254, 220A.2611, 220A.2612, 220A.2613, 220A.2614, 220A.262, 220A.27, 220A.28",22,"220A_fac,220A_lab,220A_mat",0.199696606
+50,221.11,Reactor Support (Field Cost 221),3910160,3,NULL,221,"221.11_fac,221.11_lab,221.11_mat",0.00151703
+51,221.12,Vessel Structure (Field Cost 221),7037480,3,NULL,221,"221.12_fac,221.12_lab,221.12_mat",0.002730341
+52,221.13,Vessel Internals (Field Cost 221),1703810,3,NULL,221,"221.13_fac,221.13_lab,221.13_mat",0.000661029
+53,221.14,Transport To Site (Field Cost 221),15781400,3,NULL,221,"221.14_fac,221.14_lab,221.14_mat",0.006122731
+54,221.21,Control Rod System (Field Cost 221),1533970,3,NULL,221,"221.21_fac,221.21_lab,221.21_mat",0.000595136
+55,221,Reactor equipment,29966900,2,221.14,22,"221_fac,221_lab,221_mat",0.011626298
+56,222.11,Fluid Circulation Drive System (Field Cost 222),8592380,3,NULL,222,"222.11_fac,222.11_lab,222.11_mat",0.003333597
+57,222.12,Reactor Coolant Piping System (Field Cost 222),16895000,3,NULL,222,"222.12_fac,222.12_lab,222.12_mat",0.006554776
+58,222.13,Steam Generator Equipment (Field Cost 222),2392050,3,NULL,222,"222.13_fac,222.13_lab,222.13_mat",0.000928047
+59,222.14,Pressurizing System (Field Cost 222),325156,3,NULL,222,"222.14_fac,222.14_lab,222.14_mat",0.000126151
+60,222,Main heat transfer transport system,28204600,2,222.12,22,"222_fac,222_lab,222_mat",0.010942576
+61,223.1,Residual Heat Removal Sys (Field Cost 223),6810250,3,NULL,223,"223.1_fac,223.1_lab,223.1_mat",0.002642182
+62,223.3,Safety Injection System (Field Cost 223),10383200,3,NULL,223,"223.3_fac,223.3_lab,223.3_mat",0.004028384
+63,223.4,Containment Spray System (Field Cost 223),15105600,3,NULL,223,"223.4_fac,223.4_lab,223.4_mat",0.00586054
+64,223.5,Combustible Gas Control System (Field Cost 223),3079990,3,NULL,223,"223.5_fac,223.5_lab,223.5_mat",0.001194948
+65,223,Safeguards system,35379000,2,"223.1, 223.3, 223.4",22,"223_fac,223_lab,223_mat",0.013726038
+66,224,Radwaste processing,59673400,2,NULL,22,"224_fac,224_lab,224_mat",0.023151569
+67,225,Fuel handling and storage,9024530,2,NULL,22,"225_fac,225_lab,225_mat",0.003501259
+68,226.1,Inert Gas Sys,3533410,3,NULL,226,"226.1_fac,226.1_lab,226.1_mat",0.001370862
+69,226.3,Reactor Makeup Water Sys,4252970,3,NULL,226,"226.3_fac,226.3_lab,226.3_mat",0.00165003
+70,226.4,Coolant Treatment & Recycle,40770700,3,NULL,226,"226.4_fac,226.4_lab,226.4_mat",0.015817863
+71,226.6,Fluid Leak Detection Sys,492958,3,NULL,226,"226.6_fac,226.6_lab,226.6_mat",0.000191254
+72,226.7,Aux Cool Sys (Broken Down Further),55198200,3,NULL,226,"226.7_fac,226.7_lab,226.7_mat",0.021415319
+73,226.8,Maintenance Equipment,1519680,3,NULL,226,"226.8_fac,226.8_lab,226.8_mat",0.000589592
+74,226.9,Sampling Equip,1831380,3,NULL,226,"226.9_fac,226.9_lab,226.9_mat",0.000710523
+75,226,Other reactor plant equipment,107592000,2,"226.4,226.7",22,"226_fac,226_lab,226_mat",0.041742612
+76,227,Reactor instrumentation and control,61419700,2,NULL,22,"227_fac,227_lab,227_mat",0.023829083
+77,228,Reactor plant miscellaneous items,21234600,2,NULL,22,"228_fac,228_lab,228_mat",0.008238416
+78,22,Reactor plant equipment,867215000,1,"220A, 221, 222, 223, 224, 226, 227, 228",2,"22_fac,22_lab,22_mat",0.336454563
+79,231,Turbine generator,381776000,2,NULL,23,"231_fac,231_lab,231_mat",0.148118145
+80,233,Condensing systems,82581500,2,NULL,23,"233_fac,233_lab,233_mat",0.032039255
+81,234,Feedwater heating system,67214100,2,NULL,23,"234_fac,234_lab,234_mat",0.026077144
+82,235,Other turbine plant equipment,63607900,2,NULL,23,"235_fac,235_lab,235_mat",0.024678042
+83,236,Instrumentation and control,19530400,2,NULL,23,"236_fac,236_lab,236_mat",0.007577235
+84,237,Turbine plant miscellaneous items,22926000,2,NULL,23,"237_fac,237_lab,237_mat",0.008894631
+85,23,Turbine plant equipment,637636000,1,"231, 233, 234, 235, 236, 237",2,"23_fac,23_lab,23_mat",0.247384491
+86,241,Switchgear,34039800,2,NULL,24,"241_fac,241_lab,241_mat",0.013206467
+87,242,Station service equipment,57453700,2,NULL,24,"242_fac,242_lab,242_mat",0.022290389
+88,243,Switchboards,5838140,2,NULL,24,"243_fac,243_lab,243_mat",0.002265031
+89,244,Protective equipment,12142400,2,NULL,24,"244_fac,244_lab,244_mat",0.004710903
+90,245,Electric structure and wiring contnr.,63546600,2,NULL,24,"245_fac,245_lab,245_mat",0.024654259
+91,246,Power and control wiring,58700900,2,NULL,24,"246_fac,246_lab,246_mat",0.022774267
+92,24,Electric plant equipment,231722000,1,"241, 242, 245, 246",2,"24_fac,24_lab,24_mat",0.089901494
+93,251,Transportation and lifting equipment,17078900,2,NULL,25,"251_fac,251_lab,251_mat",0.006626124
+94,252,"Air, water and steam service systems",81851100,2,NULL,25,"252_fac,252_lab,252_mat",0.031755881
+95,253,Communications equipment,18279100,2,NULL,25,"253_fac,253_lab,253_mat",0.007091767
+96,254,Furnishings and fixtures,7795930,2,NULL,25,"254_fac,254_lab,254_mat",0.003024597
+97,255,Waste water treatment equipment,8067760,2,NULL,25,"255_fac,255_lab,255_mat",0.00313006
+98,25,Miscellaneous plant equipment subtotal,133073000,1,"251, 252, 253",2,"25_fac,25_lab,25_mat",0.05162851
+99,261,Structures,12345700,2,NULL,26,"261_fac,261_lab,261_mat",0.004789778
+100,262,Mechanical equipment,127221000,2,NULL,26,"262_fac,262_lab,262_mat",0.049358101
+101,26,Main condenser heat rejection system,139567000,1,262,2,"26_fac,26_lab,26_mat",0.054147996
+102,2,TOTAL DIRECT COST,2579172917,0,NULL,,"2_fac,2_lab,2_mat",1
