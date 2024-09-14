@@ -1,0 +1,39 @@
+ind,code_of_account,account_description,total_cost,level,supaccount,review_status,prn
+37,2,TOTAL DIRECT COST,1419783854,0,,Unchanged,1
+1,211,Yardwork,71213859.06,2,21,Unchanged,0.02762898
+2,212,Reactor containment building,81425435.33,2,21,Unchanged,0.0716756
+3,213,Turbine room and heater bay,24604390.8,2,21,Unchanged,0.02559467
+4,215,Primary auxiliary building and tunnels,12470000,2,21,Unchanged,0.02042077
+5,216,Waste processing building,38750000,2,21,Unchanged,0.01588293
+6,217,Fuel storage building,28149583.82,2,21,Unchanged,0.01092125
+7,218A,Control Room/Diesel Generator Building,16250000,3,218,Unchanged,0.02000788
+8,220A.211,Vessel Structure (NSSS),137000000,3,220A,Unchanged,0.02715805
+9,220A.2121,Lower Internals (NSSS),45204200,3,220A,Unchanged,0.01232975
+10,220A.2122,Upper Internals (NSSS),45204200,3,220A,Unchanged,0.01232975
+11,220A.2131,Control Rods (NSSS),1320000,3,220A,Unchanged,0.00120271
+12,220A.2132,Control Rod Drives (NSSS),13453440,3,220A,Unchanged,0.01354023
+13,220A.221,Main Coolant Pumps (NSSS),55696873.29,3,220A,Unchanged,0.04858963
+14,220A.222,Reactor Coolant Piping (NSSS),7464800,3,220A,Unchanged,0.00442288
+15,220A.223,Steam Generators (NSSS),122087095.9,3,220A,Unchanged,0.05811822
+16,220A.224,Pressurizer (NSSS),1379368.421,3,220A,Unchanged,0.00322017
+21,222,Main heat transfer transport system,8220525.704,2,22,Unchanged,0.0109426
+17,222.11,Fluid Circulation Drive System (Field Cost 222),2504335.453,3,222,Unchanged,0.0033336
+18,222.12,Reactor Coolant Piping System (Field Cost 222),4924232.687,3,222,Unchanged,0.0065548
+19,222.13,Steam Generator Equipment (Field Cost 222),697187.7179,3,222,Unchanged,0.00092805
+20,222.14,Pressurizing System (Field Cost 222),94769.84553,3,222,Unchanged,0.00012615
+22,224,Radwaste processing,59673441.34,2,22,Unchanged,0.02315162
+23,226.4,Coolant Treatment & Recycle,34304867.39,3,226,Unchanged,0.01581788
+24,226.7,Aux Cool Sys (Broken Down Further),0,3,226,Unchanged,0.02141536
+25,227,Reactor instrumentation and control,61419737.22,2,22,Unchanged,0.02382914
+26,231,Turbine generator,57399816.35,2,23,Unchanged,0.14811828
+27,233,Condensing systems,29065851.25,2,23,Unchanged,0.0320393
+28,234,Feedwater heating system,0,2,23,Unchanged,0.02607718
+29,235,Other turbine plant equipment,9563415.121,2,23,Unchanged,0.02467807
+30,241,Switchgear,21904347.8,2,24,Unchanged,0.0132065
+31,242,Station service equipment,36970984.98,2,24,Unchanged,0.02229042
+32,245,Electric structure and wiring contnr.,40891698.73,2,24,Unchanged,0.02465429
+33,246,Power and control wiring,37773534.79,2,24,Unchanged,0.0227743
+34,252,"Air, water and steam service systems",81851078.87,2,25,Unchanged,0.03175592
+35,262,Mechanical equipment,44777444.42,2,26,Unchanged,0.04935819
+36,2C,Calculated DIRECT COST,1225489991,0,,Unchanged,0.86315251
+38,311,Chilled Water Facilities,0,2,31,Unchanged,0

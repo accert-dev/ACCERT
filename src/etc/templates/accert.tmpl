@@ -1,0 +1,28 @@
+accert {
+    ref_model = REF_MODEL
+
+    % Power entries
+    % For each power in POWERS
+    power ( Thermal/Electric ) {
+        value = VALUE
+        unit = UNIT
+    }
+    % End of power entries
+
+    % Variable entries
+    % For each var in VARS
+    var ( ID ) {
+        value = VALUE
+        unit = UNIT
+    }
+    % End of variable entries
+
+    % Level 0 COA entries
+    % For each l0coa in L0COAS
+    l0COA( ID ) {
+        % Include Level 1 COAs
+        % For each l1coa in l0coa.L1COAS
+        % Include L1COA template
+    }
+    % End of Level 0 COA entries
+}
