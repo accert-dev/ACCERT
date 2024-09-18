@@ -55,7 +55,7 @@ class Accert:
         """
         if "abr1000" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'abr1000'
-            self.acc_tabl = 'abr1000_account'
+            self.acc_tabl = 'abr_account'
             self.cel_tabl = 'abr_cost_element'
             self.var_tabl = 'abr_variable'
             # self.vlk_tabl = 'abr_variable_links'   
@@ -73,8 +73,7 @@ class Accert:
             self.fac_tabl =  'facility'         
         elif "pwr12-be" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'pwr12-be'
-            # self.acc_tabl = 'account'
-            self.acc_tabl = 'gn_pwr12'
+            self.acc_tabl = 'account'
             self.cel_tabl = 'cost_element'
             self.var_tabl = 'variable'
             # self.vlk_tabl = 'variable_links'
@@ -318,8 +317,10 @@ class Accert:
         # and the new COA will be inserted at 2
         self.update_account_before_insert(c, min_ind)
         # insert new COA
-        ## NOTE need to fix this for passing supaccount
-        self.insert_new_COA(c, ind=min_ind, supaccount=sup_coa, level = coa_level, code_of_account=user_added_coa, account_description=user_added_coa_desc,total_cost= user_added_coa_total_cost)
+        self.insert_new_COA(c, ind=min_ind, supaccount=sup_coa, 
+                            level = coa_level, code_of_account=user_added_coa, 
+                            account_description=user_added_coa_desc,
+                            total_cost= user_added_coa_total_cost)
         return None
 
     def extract_variable_info_on_name(self, c,var_id):
@@ -1809,9 +1810,7 @@ class Accert:
             Flag to print all accounts.
         """
         print(' Generating results table for review '.center(100, '='))
-        print('\n')
-        
-        ut.print_leveled_accounts(c, all=all_flag, tol_fac=fac, tol_lab=lab, tol_mat=mat, cost_unit='million', level=3)
+        print('\n')        
         if self.use_gncoa:
             ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
         else:

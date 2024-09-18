@@ -45,7 +45,7 @@ def test_insert_new_COA(cursor):
                     FROM account
                     WHERE ind = 24;""")
     #NOTE if ind=24 might get 2 rows, one for the new COA and one for the original COA? might need to check
-    expect_output = (24, 'new_coa', 'new des', 20, 3, '218', 'Added', 0.0)
+    expect_output = (24, 'new_coa', 'new des', 20.0, 3, '218', 'Added', 0.0, None, None, None, None)
     assert expect_output in cursor.fetchall()
 
 def test_update_input_variable(cursor):
