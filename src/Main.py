@@ -39,6 +39,7 @@ class Accert:
         self.alg_tabl = None
         self.esc_tabl = None
         self.fac_tabl = None
+        self.use_gncoa = False
     
     def setup_table_names(self,xml2obj):
         """Setup different table names in the database.
@@ -54,7 +55,7 @@ class Accert:
         """
         if "abr1000" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'abr1000'
-            self.acc_tabl = 'abr_account'
+            self.acc_tabl = 'abr1000_account'
             self.cel_tabl = 'abr_cost_element'
             self.var_tabl = 'abr_variable'
             # self.vlk_tabl = 'abr_variable_links'   
@@ -72,7 +73,8 @@ class Accert:
             self.fac_tabl =  'facility'         
         elif "pwr12-be" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'pwr12-be'
-            self.acc_tabl = 'account'
+            # self.acc_tabl = 'account'
+            self.acc_tabl = 'gn_pwr12'
             self.cel_tabl = 'cost_element'
             self.var_tabl = 'variable'
             # self.vlk_tabl = 'variable_links'
@@ -1137,7 +1139,7 @@ class Accert:
         print('[Updating] Roll up cost elements from level {} to level {}'.format(from_level,to_level))
         return None
 
-    def roll_up_account_table(self, c, from_level=3, to_level=0):
+    def roll_up_account_table(self, c, from_level=3, to_level=0, gncoa=False):
         """
         Rolls up the account table from level 3 to 0.
         
@@ -1149,12 +1151,11 @@ class Accert:
         print(' Rolling up account table '.center(100,'='))
         print('\n')
         for i in range(from_level, to_level, -1):
-            self.roll_up_account_table_by_level(c,i,i-1)
+            self.roll_up_account_table_by_level(c,i,i-1,gncoa=gncoa)
         print('[Updated]  Account table rolled up\n')
-
         return None
 
-    def roll_up_account_table_by_level(self, c, from_level, to_level):
+    def roll_up_account_table_by_level(self, c, from_level, to_level, gncoa=False):
         """
         Rolls up the account table from an input lower level to a higher level.
 
@@ -1169,9 +1170,28 @@ class Accert:
         """
 
         print('[Updating] Rolling up account table from level {} to level {} '.format(from_level,to_level))
-        c.callproc('roll_up_account_table_by_level',(self.acc_tabl,from_level,to_level))
+        if gncoa:
+            c.callproc('roll_up_account_table_by_gn_level',(self.acc_tabl,from_level,to_level))
+        else:
+            c.callproc('roll_up_account_table_by_level',(self.acc_tabl,from_level,to_level))
         return None
+    
+    def roll_up_account_table_GNCOA(self, c):
+        """
+        Rolls up the account table for the reactor model that only has limited accounts.
 
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+        print(' Rolling up account table by GNCOA '.center(100,'='))
+        # remove 220A first
+        c.callproc('remove_specific_row',(self.acc_tabl,'220A'))
+        self.roll_up_account_table(c, from_level=3, to_level=0, gncoa=True)
+        # print('[Updated]  Account table rolled up\n')
+        return None
+    
     def sum_cost_elements_2C(self, c):
         """
         Sums the cost elements for COA 2C (Calculated cost).
@@ -1792,6 +1812,11 @@ class Accert:
         print('\n')
         
         ut.print_leveled_accounts(c, all=all_flag, tol_fac=fac, tol_lab=lab, tol_mat=mat, cost_unit='million', level=3)
+        if self.use_gncoa:
+            ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
+        else:
+            ut.print_leveled_accounts(c, all=all_flag, tol_fac=fac, tol_lab=lab, tol_mat=mat, cost_unit='million', level=3)
+
 
     def _pwr12be_processing(self, c, ut, accert):
         """
@@ -1808,10 +1833,17 @@ class Accert:
         """
         self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
-        self.roll_up_account_table(c, from_level=3, to_level=0)
-        print(' Generating results table for review '.center(100, '='))   
-        print('\n') 
-        ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
+        if self.use_gncoa:
+            self.roll_up_account_table_GNCOA(c)
+            print(' Generating results table for review '.center(100, '='))   
+            print('\n')
+            ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
+        else:
+            self.roll_up_account_table(c, from_level=3, to_level=0)
+            print(' Generating results table for review '.center(100, '='))   
+            print('\n') 
+            ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
+            print('\n')
 
     def _fusion_processing(self, c, ut, accert):
         """
