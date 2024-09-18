@@ -13,16 +13,6 @@ accert{
         ValEnums = [REF:ref_models]
         }            
 
-    use_gncoa{
-        Description = "[optional] use generic code of account"
-        MinOccurs = 0
-        MaxOccurs = 1
-        InputType=String
-        InputTmpl="flagtypes"
-        ValEnums=[true false]
-        InputDefault=false
-    }
-
     power{
         Description = "[required] User input power"
         MinOccurs = 0

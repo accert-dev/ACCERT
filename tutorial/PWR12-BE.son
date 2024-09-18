@@ -5,7 +5,6 @@
 
 accert{
     ref_model = "PWR12-BE"
-    use_gncoa = False
     % Define the required parameters
     % The required parameters are thermal power and electrical power.
     power(Thermal){ value = 3000   unit = MW }  % Reference value for PWR-12BE is 3431 MW
