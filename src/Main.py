@@ -53,12 +53,13 @@ class Accert:
         -------
         None
         """
+
+        self.use_gncoa = str(xml2obj.use_gncoa.value).lower() == 'true'
         if "abr1000" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'abr1000'
             self.acc_tabl = 'abr_account'
             self.cel_tabl = 'abr_cost_element'
             self.var_tabl = 'abr_variable'
-            # self.vlk_tabl = 'abr_variable_links'   
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'    
@@ -67,7 +68,6 @@ class Accert:
             self.acc_tabl =  'heatpipe_account'
             self.cel_tabl =  'heatpipe_cost_element'
             self.var_tabl =  'heatpipe_variable'
-            # self.vlk_tabl =  'heatpipe_variable_links'   
             self.alg_tabl =  'algorithm'
             self.esc_tabl =  'escalation'
             self.fac_tabl =  'facility'         
@@ -76,7 +76,6 @@ class Accert:
             self.acc_tabl = 'account'
             self.cel_tabl = 'cost_element'
             self.var_tabl = 'variable'
-            # self.vlk_tabl = 'variable_links'
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
@@ -1810,7 +1809,7 @@ class Accert:
             Flag to print all accounts.
         """
         print(' Generating results table for review '.center(100, '='))
-        print('\n')        
+        print('\n')    
         if self.use_gncoa:
             ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
         else:
