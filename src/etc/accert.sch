@@ -225,6 +225,73 @@ accert{
                         }
                     }
                 }
+                alg{
+                    id{
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        ValType = String
+                        ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                    }
+                    var{
+                        Description = "changed variable value"
+                        MinOccurs = 1
+                        MaxOccurs = NoLimit
+                        id{
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = String
+                            ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                        }
+                        value{
+                            MinOccurs = 0
+                            MaxOccurs = 1
+                            ValType = Real
+                            MinValInc = 0
+                            MaxValExc = NoLimit
+                        }
+                        unit{
+                            MinOccurs = 0
+                            MaxOccurs = 1
+                            ValType = String
+                            ValEnums = [REF:unit_names]
+                        }
+                        alg{
+                            Description = "valriable algorithm"
+                            MinOccurs = 0
+                            MaxOccurs = 1
+                            id{
+                                MinOccurs = 1
+                                MaxOccurs = 1
+                                ValType = String
+                                ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                            }
+                            var{
+                                Description = "changed variable value"
+                                MinOccurs = 1
+                                MaxOccurs = NoLimit
+                                id{
+                                    MinOccurs = 1
+                                    MaxOccurs = 1
+                                    ValType = String
+                                    ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                                }
+                                value{
+                                    MinOccurs = 1
+                                    MaxOccurs = 1
+                                    ValType = Real
+                                    MinValInc = 0
+                                    MaxValExc = NoLimit
+                                }
+                                unit{
+                                    MinOccurs = 1
+                                    MaxOccurs = 1
+                                    ValType = String
+                                    ValEnums = [REF:unit_names]
+                                }
+                            }
+                        }
+                    }
+                }
                 l3COA{
                 	% same as abobe - definition - min - max + template
                     id{
@@ -251,8 +318,75 @@ accert{
                             ValEnums = [ million  dollar]
                         }                            
                     }
+                    alg{
+                        id{
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = String
+                            ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                        }
+                        var{
+                            Description = "changed variable value"
+                            MinOccurs = 1
+                            MaxOccurs = NoLimit
+                            id{
+                                MinOccurs = 1
+                                MaxOccurs = 1
+                                ValType = String
+                                ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                            }
+                            value{
+                                MinOccurs = 0
+                                MaxOccurs = 1
+                                ValType = Real
+                                MinValInc = 0
+                                MaxValExc = NoLimit
+                            }
+                            unit{
+                                MinOccurs = 0
+                                MaxOccurs = 1
+                                ValType = String
+                                ValEnums = [REF:unit_names]
+                            }
+                            alg{
+                                Description = "valriable algorithm"
+                                MinOccurs = 0
+                                MaxOccurs = 1
+                                id{
+                                    MinOccurs = 1
+                                    MaxOccurs = 1
+                                    ValType = String
+                                    ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                                }
+                                var{
+                                    Description = "changed variable value"
+                                    MinOccurs = 1
+                                    MaxOccurs = NoLimit
+                                    id{
+                                        MinOccurs = 1
+                                        MaxOccurs = 1
+                                        ValType = String
+                                        ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                                    }
+                                    value{
+                                        MinOccurs = 1
+                                        MaxOccurs = 1
+                                        ValType = Real
+                                        MinValInc = 0
+                                        MaxValExc = NoLimit
+                                    }
+                                    unit{
+                                        MinOccurs = 1
+                                        MaxOccurs = 1
+                                        ValType = String
+                                        ValEnums = [REF:unit_names]
+                                    }
+                                }
+                            }
+                        }
+                    }
                     ce{
-                                    	% same as abobe - definition - min - max + template
+                        % same as abobe - definition - min - max + template
                         id{
                             MinOccurs = 0
                             MaxOccurs = 1
