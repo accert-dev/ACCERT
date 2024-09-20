@@ -1,0 +1,21 @@
+#if <InputType=="flag">
+<InputName>
+#elseif <InputType=="flagvalue">
+<InputName>=<InputValue>
+#elseif <InputType=="flagarray">
+<InputName>=<InputValue> end
+#elseif <InputType=="flagcountarray">
+<InputName>=3 <InputValue:i=1,3>
+#elseif <InputType=="flagfuncvalue">
+<InputName>(1)=<InputValue>
+#elseif <InputType=="flagfuncarray">
+<InputName>(1)=3 <InputValue:i=1,3>
+#elseif <InputType=="flagvaluequoted">
+<InputName>="<InputValue>"
+#elseif <InputType=="flagidvalue">
+<InputName>( lumped_element_id ) = <InputValue>
+#elseif <InputType=="flagid2value">
+<InputName>( sub_assembly_id ) = <InputValue:i=1>
+#elseif <InputType=="flagidvaluequoted">
+<InputName>( four_digit_id ) = "<InputValue>"
+#endif

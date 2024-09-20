@@ -297,7 +297,64 @@ class Utility_methods:
         else:
             self.print_table(c, align_key, align)
         return None
-                                        
+
+    def print_leveled_accounts_gncoa(self, c, all=False, cost_unit='dollar',level=3):
+        """Prints the output account table with GNCOA line up as a nested list.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        all : bool, optional
+            If True, print all the accounts columns. (By default False)
+        cost_unit : str, optional
+            Unit of the total cost. (By default 'dollar')
+        level : int, optional
+            Level of account. (By default 3)
+        """
+        # place holder for printing the GNCOA cost elements in a nested list
+        # this needs to be implemented in the future since the GNCOA cost elements
+        # are not rolled up in the current database
+        # c.callproc('print_leveled_accounts_gn_all', (self.acc_tabl,self.cel_tabl,level))
+        # all=True
+        # tol_fac=None
+        # tol_lab=None
+        # tol_mat=None
+
+        c.callproc('print_leveled_accounts_gn', (self.acc_tabl,level))
+        align_key=["gncoa", "account_description", "total_cost"]
+        align=[ "l", "l", "r"]
+        if cost_unit=='million':
+            for row in c.stored_results():
+                results = row.fetchall()
+                field_names = [i[0] for i in row.description]
+            x = PrettyTable(field_names)
+            for idx, row in enumerate(results):
+                row = list(row)
+                if all:
+                    # if index is 0, and tol_fac, tol_lab, tol_mat are not None, format the values
+                    if idx == 0 and tol_fac and tol_lab and tol_mat:
+                        # First row special formatting
+                        row[3] = "{:,.2f}".format(tol_fac / 1000000)
+                        row[4] = "{:,.2f}".format(tol_lab / 1000000)
+                        row[5] = "{:,.2f}".format(tol_mat / 1000000)
+                        row[6] = "{:,.2f}".format(row[6] / 1000000)
+                    else:
+                        # Format other rows or print 0 if value is None
+                        row[3:7] = ['{:,.2f}'.format(x / 1000000) if x else '0' for x in row[3:7]]
+                else:
+                    # Format only the third column for other cases
+                    row[2] = '{:,.2f}'.format(row[2] / 1000000)
+
+                x.add_row(row)
+            if align_key:
+                for i,k in enumerate(align_key):
+                    x.align[k] = align[i]
+            print(x)
+        else:
+            self.print_table(c)
+        return None
+                                      
     def print_algorithm(self, c):
         """Prints the output algorithm table.
 
