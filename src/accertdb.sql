@@ -1,6 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `accert_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `accert_db`;
--- MySQL dump 10.13  Distrib 8.0.27, for macos11 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for macos14 (arm64)
 --
 -- Host: 127.0.0.1    Database: accert_db
 -- ------------------------------------------------------
@@ -33,6 +33,10 @@ CREATE TABLE `abr_account` (
   `supaccount` text,
   `review_status` text,
   `prn` double DEFAULT NULL,
+  `gncoa` text,
+  `gn_level` int DEFAULT NULL,
+  `gn_supaccount` text,
+  `gn_ind` int DEFAULT NULL,
   PRIMARY KEY (`code_of_account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -43,7 +47,7 @@ CREATE TABLE `abr_account` (
 
 LOCK TABLES `abr_account` WRITE;
 /*!40000 ALTER TABLE `abr_account` DISABLE KEYS */;
-INSERT INTO `abr_account` VALUES (1,'2','TOTAL DIRECT COST',1419783854,0,'','Unchanged',1),(3,'211','Yardwork',71213859.06,2,'21','Unchanged',0.027628981),(4,'212','Reactor containment building',81425435.33,2,'21','Unchanged',0.071675596),(5,'213','Turbine room and heater bay',24604390.8,2,'21','Unchanged',0.02559467),(6,'215','Primary auxiliary building and tunnels',12470000,2,'21','Unchanged',0.020420772),(7,'216','Waste processing building',38750000,2,'21','Unchanged',0.015882927),(8,'217','Fuel storage building',28149583.82,2,'21','Unchanged',0.010921249),(9,'218A','Control Room/Diesel Generator Building',16250000,3,'218','Unchanged',0.020007875),(10,'220A.211','Vessel Structure (NSSS)',137000000,3,'220A','Unchanged',0.027158047),(11,'220A.2121','Lower Internals (NSSS)',45204200,3,'220A','Unchanged',0.012329754),(12,'220A.2122','Upper Internals (NSSS)',45204200,3,'220A','Unchanged',0.012329754),(13,'220A.2131','Control Rods (NSSS)',1320000,3,'220A','Unchanged',0.001202713),(14,'220A.2132','Control Rod Drives (NSSS)',13453440,3,'220A','Unchanged',0.013540226),(15,'220A.221','Main Coolant Pumps (NSSS)',55696873.29,3,'220A','Unchanged',0.048589625),(16,'220A.222','Reactor Coolant Piping (NSSS)',7464800,3,'220A','Unchanged',0.004422882),(17,'220A.223','Steam Generators (NSSS)',122087095.9,3,'220A','Unchanged',0.058118221),(18,'220A.224','Pressurizer (NSSS)',1379368.421,3,'220A','Unchanged',0.003220169),(19,'222','Main heat transfer transport system',8220525.704,2,'22','Unchanged',0.010942603),(20,'222.11','Fluid Circulation Drive System (Field Cost 222)',2504335.453,3,'222','Unchanged',0.003333601),(21,'222.12','Reactor Coolant Piping System (Field Cost 222)',4924232.687,3,'222','Unchanged',0.006554803),(22,'222.13','Steam Generator Equipment (Field Cost 222)',697187.7179,3,'222','Unchanged',0.000928049),(23,'222.14','Pressurizing System (Field Cost 222)',94769.84553,3,'222','Unchanged',0.000126151),(24,'224','Radwaste processing',59673441.34,2,'22','Unchanged',0.023151622),(25,'226.4','Coolant Treatment & Recycle',34304867.39,3,'226','Unchanged',0.015817883),(26,'226.7','Aux Cool Sys (Broken Down Further)',0,3,'226','Unchanged',0.021415357),(27,'227','Reactor instrumentation and control',61419737.22,2,'22','Unchanged',0.023829136),(28,'231','Turbine generator',57399816.35,2,'23','Unchanged',0.148118277),(29,'233','Condensing systems',29065851.25,2,'23','Unchanged',0.032039296),(30,'234','Feedwater heating system',0,2,'23','Unchanged',0.026077184),(31,'235','Other turbine plant equipment',9563415.121,2,'23','Unchanged',0.024678068),(32,'241','Switchgear',21904347.8,2,'24','Unchanged',0.013206497),(33,'242','Station service equipment',36970984.98,2,'24','Unchanged',0.022290424),(34,'245','Electric structure and wiring contnr.',40891698.73,2,'24','Unchanged',0.024654288),(35,'246','Power and control wiring',37773534.79,2,'24','Unchanged',0.022774295),(36,'252','Air, water and steam service systems',81851078.87,2,'25','Unchanged',0.031755924),(37,'262','Mechanical equipment',44777444.42,2,'26','Unchanged',0.04935819),(2,'2C','Calculated DIRECT COST',1225489991,0,'','Unchanged',0.863152505);
+INSERT INTO `abr_account` VALUES (1,'2','TOTAL DIRECT COST',1419783854,0,'','Unchanged',1,'20',0,'',1),(3,'211','Yardwork',71213859.06,2,'21','Unchanged',0.027628981,'211',2,'21',3),(4,'212','Reactor containment building',81425435.33,2,'21','Unchanged',0.071675596,'212.1',3,'212',4),(5,'213','Turbine room and heater bay',24604390.8,2,'21','Unchanged',0.02559467,'213.1',3,'213',5),(6,'215','Primary auxiliary building and tunnels',12470000,2,'21','Unchanged',0.020420772,'214.2',3,'214',8),(7,'216','Waste processing building',38750000,2,'21','Unchanged',0.015882927,'215',2,'213',9),(8,'217','Fuel storage building',28149583.82,2,'21','Unchanged',0.010921249,'214.1',3,'21',7),(9,'218A','Control Room/Diesel Generator Building',16250000,3,'218','Unchanged',0.020007875,'213.21',3,'214',6),(10,'220A.211','Vessel Structure (NSSS)',137000000,3,'220A','Unchanged',0.027158047,'221.121',3,'221',10),(11,'220A.2121','Lower Internals (NSSS)',45204200,3,'220A','Unchanged',0.012329754,'221.131',3,'221',11),(12,'220A.2122','Upper Internals (NSSS)',45204200,3,'220A','Unchanged',0.012329754,'221.132',3,'221',12),(13,'220A.2131','Control Rods (NSSS)',1320000,3,'220A','Unchanged',0.001202713,'221.211',3,'221',13),(14,'220A.2132','Control Rod Drives (NSSS)',13453440,3,'220A','Unchanged',0.013540226,'221.212',3,'221',14),(15,'220A.221','Main Coolant Pumps (NSSS)',55696873.29,3,'220A','Unchanged',0.048589625,'222.11',3,'222',16),(16,'220A.222','Reactor Coolant Piping (NSSS)',7464800,3,'220A','Unchanged',0.004422882,'222.21',3,'222',18),(17,'220A.223','Steam Generators (NSSS)',122087095.9,3,'220A','Unchanged',0.058118221,'222.31',3,'222',20),(18,'220A.224','Pressurizer (NSSS)',1379368.421,3,'220A','Unchanged',0.003220169,'222.41',3,'222',22),(19,'222','Main heat transfer transport system',8220525.704,2,'22','Unchanged',0.010942603,'222',2,'222',15),(20,'222.11','Fluid Circulation Drive System (Field Cost 222)',2504335.453,3,'222','Unchanged',0.003333601,'222.12',3,'222',17),(21,'222.12','Reactor Coolant Piping System (Field Cost 222)',4924232.687,3,'222','Unchanged',0.006554803,'222.22',3,'22',19),(22,'222.13','Steam Generator Equipment (Field Cost 222)',697187.7179,3,'222','Unchanged',0.000928049,'222.32',3,'222',21),(23,'222.14','Pressurizing System (Field Cost 222)',94769.84553,3,'222','Unchanged',0.000126151,'222.43',3,'222',23),(24,'224','Radwaste processing',59673441.34,2,'22','Unchanged',0.023151622,'224',2,'22',24),(25,'226.4','Coolant Treatment & Recycle',34304867.39,3,'226','Unchanged',0.015817883,'226.35',3,'226',25),(26,'226.7','Aux Cool Sys (Broken Down Further)',0,3,'226','Unchanged',0.021415357,'226.7',3,'226',26),(27,'227','Reactor instrumentation and control',61419737.22,2,'22','Unchanged',0.023829136,'227.2',3,'227',27),(28,'231','Turbine generator',57399816.35,2,'23','Unchanged',0.148118277,'232.1',3,'232',28),(29,'233','Condensing systems',29065851.25,2,'23','Unchanged',0.032039296,'233.21',3,'23',30),(30,'234','Feedwater heating system',0,2,'23','Unchanged',0.026077184,'234',2,'24',32),(31,'235','Other turbine plant equipment',9563415.121,2,'23','Unchanged',0.024678068,'232.2',3,'233',29),(32,'241','Switchgear',21904347.8,2,'24','Unchanged',0.013206497,'241',2,'24',33),(33,'242','Station service equipment',36970984.98,2,'24','Unchanged',0.022290424,'242',2,'24',34),(34,'245','Electric structure and wiring contnr.',40891698.73,2,'24','Unchanged',0.024654288,'245',2,'24',35),(35,'246','Power and control wiring',37773534.79,2,'24','Unchanged',0.022774295,'246',2,'26',36),(36,'252','Air, water and steam service systems',81851078.87,2,'25','Unchanged',0.031755924,'262',2,'233',37),(37,'262','Mechanical equipment',44777444.42,2,'26','Unchanged',0.04935819,'233.22',3,'232',31),(2,'2C','Calculated DIRECT COST',1225489991,0,'','Unchanged',0.863152505,'2C',0,'',2);
 /*!40000 ALTER TABLE `abr_account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -126,6 +130,10 @@ CREATE TABLE `account` (
   `supaccount` text,
   `review_status` text,
   `prn` double DEFAULT NULL,
+  `gncoa` text,
+  `gn_level` int DEFAULT NULL,
+  `gn_supaccount` text,
+  `gn_ind` int DEFAULT NULL,
   PRIMARY KEY (`code_of_account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -136,7 +144,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'2','TOTAL DIRECT COST',2579172917,0,'','Unchanged',1),(2,'21','Structures and improvements subtotal',569959917,1,'2','Unchanged',0.221920381),(3,'211','Yardwork',71213900,2,'21','Unchanged',0.027628952),(4,'212','Reactor containment building',182702257,2,'21','Unchanged',0.071675377),(5,'213','Turbine room and heater bay',65970400,2,'21','Unchanged',0.025594624),(6,'214','Security building',3880760,2,'21','Unchanged',0.001505624),(7,'215','Primary auxiliary building and tunnels',52634700,2,'21','Unchanged',0.020420755),(8,'216','Waste processing building',40938300,2,'21','Unchanged',0.015882887),(9,'217','Fuel storage building',28149600,2,'21','Unchanged',0.010921238),(10,'218','Other structures',124470000,2,'21','Unchanged',0.048290792),(11,'218A','Control Room/Diesel Generator Building',51570400,3,'218','Unchanged',0.020007837),(12,'218B','Administration + Services Building',18938200,3,'218','Unchanged',0.007347479),(13,'218D','Fire Pump House, Including Foundations',1216200,3,'218','Unchanged',0.000471851),(14,'218E','Emergency Feed Pump Building',7119140,3,'218','Unchanged',0.002762022),(15,'218F','Manway Tnls. (Radiological Ctrl Access Tunnels)',2170960,3,'218','Unchanged',0.00084227),(16,'218G','Elec. Tunnels',193104,3,'218','Unchanged',0.0000749188),(17,'218H','Non- Essen. Switchgear Bldg.',1526990,3,'218','Unchanged',0.000592428),(18,'218J','Main Steam + Feedwater Pipe Enc.',22416800,3,'218','Unchanged',0.008697076),(19,'218K','Pipe Tunnels',904119,3,'218','Unchanged',0.000350772),(20,'218L','Technical Support Center',2249450,3,'218','Unchanged',0.000872722),(21,'218P','Containment Equipment Hatch Missile Shield',626665,3,'218','Unchanged',0.000243128),(22,'218S','Waste Water Treatment',2186330,3,'218','Unchanged',0.000848233),(23,'218T','Ultimate Heat Sink Structures',13097500,3,'218','Unchanged',0.005081455),(24,'218V','Control Rm Emergency Air Intake Building',253976,3,'218','Unchanged',0.0000985354),(25,'22','Reactor plant equipment',867215000,1,'2','Unchanged',0.336454563),(26,'220A','Nuclear steam supply (NSSS)',514720000,2,'22','Unchanged',0.199696606),(27,'220A.211','Vessel Structure (NSSS)',70000000,3,'220A','Unchanged',0.027157994),(28,'220A.2121','Lower Internals (NSSS)',31780000,3,'220A','Unchanged',0.012329729),(29,'220A.2122','Upper Internals (NSSS)',31780000,3,'220A','Unchanged',0.012329729),(30,'220A.2131','Control Rods (NSSS)',3100000,3,'220A','Unchanged',0.001202711),(31,'220A.2132','Control Rod Drives (NSSS)',34900000,3,'220A','Unchanged',0.0135402),(32,'220A.221','Main Coolant Pumps (NSSS)',125240000,3,'220A','Unchanged',0.04858953),(33,'220A.222','Reactor Coolant Piping (NSSS)',11400000,3,'220A','Unchanged',0.004422873),(34,'220A.223','Steam Generators (NSSS)',149800000,3,'220A','Unchanged',0.058118106),(35,'220A.224','Pressurizer (NSSS)',8300000,3,'220A','Unchanged',0.003220162),(36,'220A.225','Pressurizer Relief Tank (NSSS)',1850000,3,'220A','Unchanged',0.000717747),(37,'220A.2311','Residual Heat Removal Pumps & Drives (NSSS)',1940000,3,'220A','Unchanged',0.000752664),(38,'220A.2312','Residual Heat Removal Heat Exchanger (NSSS)',6260000,3,'220A','Unchanged',0.002428701),(39,'220A.2321','Safety Injection Pumps And Drives (NSSS)',1720000,3,'220A','Unchanged',0.000667311),(40,'220A.2322','Accumulator Tank (NSSS)',15300000,3,'220A','Unchanged',0.005935961),(41,'220A.2323','Boron Injection Tank (NSSS)',899999,3,'220A','Unchanged',0.000349174),(42,'220A.2324','Boron Injection Surge Tank (NSSS)',50001,3,'220A','Unchanged',0.000019399),(43,'220A.2325','Boron Injection Recirc. Pump & Drives (NSSS)',40000,3,'220A','Unchanged',0.0000155189),(44,'220A.251','Fuel Handling Tools (NSSS)',400000,3,'220A','Unchanged',0.000155189),(45,'220A.254','Fuel Storage Racks (NSSS)',2510000,3,'220A','Unchanged',0.000973808),(46,'220A.2611','Rotating Machinery (Pumps And Motors) (NSSS)',2220000,3,'220A','Unchanged',0.000861296),(47,'220A.2612','Heat Transfer Equipment (NSSS)',2450000,3,'220A','Unchanged',0.00095053),(48,'220A.2613','Tanks And Pressure Vessels (NSSS)',1140000,3,'220A','Unchanged',0.000442287),(49,'220A.2614','Purification And Filtration Equipment (NSSS)',2450000,3,'220A','Unchanged',0.00095053),(50,'220A.262','Maintenance Equipment (NSSS)',9190000,3,'220A','Unchanged',0.003565457),(51,'220A.27','Instrumentation And Control (NSSS)',0,3,'220A','Unchanged',0),(52,'221','Reactor equipment',29966900,2,'22','Unchanged',0.011626298),(53,'221.11','Reactor Support (Field Cost 221)',3910160,3,'221','Unchanged',0.00151703),(54,'221.12','Vessel Structure (Field Cost 221)',7037480,3,'221','Unchanged',0.002730341),(55,'221.13','Vessel Internals (Field Cost 221)',1703810,3,'221','Unchanged',0.000661029),(56,'221.14','Transport To Site (Field Cost 221)',15781400,3,'221','Unchanged',0.006122731),(57,'221.21','Control Rod System (Field Cost 221)',1533970,3,'221','Unchanged',0.000595136),(58,'222','Main heat transfer transport system',28204600,2,'22','Unchanged',0.010942576),(59,'222.11','Fluid Circulation Drive System (Field Cost 222)',8592380,3,'222','Unchanged',0.003333597),(60,'222.12','Reactor Coolant Piping System (Field Cost 222)',16895000,3,'222','Unchanged',0.006554776),(61,'222.13','Steam Generator Equipment (Field Cost 222)',2392050,3,'222','Unchanged',0.000928047),(62,'222.14','Pressurizing System (Field Cost 222)',325156,3,'222','Unchanged',0.000126151),(63,'223','Safeguards system',35379000,2,'22','Unchanged',0.013726038),(64,'223.1','Residual Heat Removal Sys (Field Cost 223)',6810250,3,'223','Unchanged',0.002642182),(65,'223.3','Safety Injection System (Field Cost 223)',10383200,3,'223','Unchanged',0.004028384),(66,'223.4','Containment Spray System (Field Cost 223)',15105600,3,'223','Unchanged',0.00586054),(67,'223.5','Combustible Gas Control System (Field Cost 223)',3079990,3,'223','Unchanged',0.001194948),(68,'224','Radwaste processing',59673400,2,'22','Unchanged',0.023151569),(69,'225','Fuel handling and storage',9024530,2,'22','Unchanged',0.003501259),(70,'226','Other reactor plant equipment',107592000,2,'22','Unchanged',0.041742612),(71,'226.1','Inert Gas Sys',3533410,3,'226','Unchanged',0.001370862),(72,'226.3','Reactor Makeup Water Sys',4252970,3,'226','Unchanged',0.00165003),(73,'226.4','Coolant Treatment & Recycle',40770700,3,'226','Unchanged',0.015817863),(74,'226.6','Fluid Leak Detection Sys',492958,3,'226','Unchanged',0.000191254),(75,'226.7','Aux Cool Sys (Broken Down Further)',55198200,3,'226','Unchanged',0.021415319),(76,'226.8','Maintenance Equipment',1519680,3,'226','Unchanged',0.000589592),(77,'226.9','Sampling Equip',1831380,3,'226','Unchanged',0.000710523),(78,'227','Reactor instrumentation and control',61419700,2,'22','Unchanged',0.023829083),(79,'228','Reactor plant miscellaneous items',21234600,2,'22','Unchanged',0.008238416),(80,'23','Turbine plant equipment',637636000,1,'2','Unchanged',0.247384491),(81,'231','Turbine generator',381776000,2,'23','Unchanged',0.148118145),(82,'233','Condensing systems',82581500,2,'23','Unchanged',0.032039255),(83,'234','Feedwater heating system',67214100,2,'23','Unchanged',0.026077144),(84,'235','Other turbine plant equipment',63607900,2,'23','Unchanged',0.024678042),(85,'236','Instrumentation and control',19530400,2,'23','Unchanged',0.007577235),(86,'237','Turbine plant miscellaneous items',22926000,2,'23','Unchanged',0.008894631),(87,'24','Electric plant equipment',231722000,1,'2','Unchanged',0.089901494),(88,'241','Switchgear',34039800,2,'24','Unchanged',0.013206467),(89,'242','Station service equipment',57453700,2,'24','Unchanged',0.022290389),(90,'243','Switchboards',5838140,2,'24','Unchanged',0.002265031),(91,'244','Protective equipment',12142400,2,'24','Unchanged',0.004710903),(92,'245','Electric structure and wiring contnr.',63546600,2,'24','Unchanged',0.024654259),(93,'246','Power and control wiring',58700900,2,'24','Unchanged',0.022774267),(94,'25','Miscellaneous plant equipment subtotal',133073000,1,'2','Unchanged',0.05162851),(95,'251','Transportation and lifting equipment',17078900,2,'25','Unchanged',0.006626124),(96,'252','Air, water and steam service systems',81851100,2,'25','Unchanged',0.031755881),(97,'253','Communications equipment',18279100,2,'25','Unchanged',0.007091767),(98,'254','Furnishings and fixtures',7795930,2,'25','Unchanged',0.003024597),(99,'255','Waste water treatment equipment',8067760,2,'25','Unchanged',0.00313006),(100,'26','Main condenser heat rejection system',139567000,1,'2','Unchanged',0.054147996),(101,'261','Structures',12345700,2,'26','Unchanged',0.004789778),(102,'262','Mechanical equipment',127221000,2,'26','Unchanged',0.049358101);
+INSERT INTO `account` VALUES (1,'2','TOTAL DIRECT COST',2579172917,0,'','Unchanged',1,'20',0,'',1),(2,'21','Structures and improvements subtotal',569959917,1,'2','Unchanged',0.221920381,'21',1,'20',2),(3,'211','Yardwork',71213900,2,'21','Unchanged',0.027628952,'211',2,'21',3),(4,'212','Reactor containment building',182702257,2,'21','Unchanged',0.071675377,'212.1',3,'212',5),(5,'213','Turbine room and heater bay',65970400,2,'21','Unchanged',0.025594624,'213.1',3,'213',9),(6,'214','Security building',3880760,2,'21','Unchanged',0.001505624,'216.2',3,'216',25),(7,'215','Primary auxiliary building and tunnels',52634700,2,'21','Unchanged',0.020420755,'214.2',3,'214',17),(8,'216','Waste processing building',40938300,2,'21','Unchanged',0.015882887,'215',2,'21',22),(9,'217','Fuel storage building',28149600,2,'21','Unchanged',0.010921238,'214.1',3,'214',16),(10,'218','Other structures',124470000,2,'21','Unchanged',0.048290792,'216',2,'22',23),(11,'218A','Control Room/Diesel Generator Building',51570400,3,'218','Unchanged',0.020007837,'213.21',3,'213',10),(12,'218B','Administration + Services Building',18938200,3,'218','Unchanged',0.007347479,'216.1',3,'216',24),(13,'218D','Fire Pump House, Including Foundations',1216200,3,'218','Unchanged',0.000471851,'214.5',3,'214',19),(14,'218E','Emergency Feed Pump Building',7119140,3,'218','Unchanged',0.002762022,'214.7',3,'214',21),(15,'218F','Manway Tnls. (Radiological Ctrl Access Tunnels)',2170960,3,'218','Unchanged',0.00084227,'212.2',3,'212',6),(16,'218G','Elec. Tunnels',193104,3,'218','Unchanged',0.0000749,'213.4',3,'213',14),(17,'218H','Non- Essen. Switchgear Bldg.',1526990,3,'218','Unchanged',0.000592428,'214.6',3,'214',20),(18,'218J','Main Steam + Feedwater Pipe Enc.',22416800,3,'218','Unchanged',0.008697076,'213.31',3,'213',12),(19,'218K','Pipe Tunnels',904119,3,'218','Unchanged',0.000350772,'213.32',3,'213',13),(20,'218L','Technical Support Center',2249450,3,'218','Unchanged',0.000872722,'216.4',3,'216',26),(21,'218P','Containment Equipment Hatch Missile Shield',626665,3,'218','Unchanged',0.000243128,'212.3',3,'212',7),(22,'218S','Waste Water Treatment',2186330,3,'218','Unchanged',0.000848233,'214.3',3,'214',18),(23,'218T','Ultimate Heat Sink Structures',13097500,3,'218','Unchanged',0.005081455,'233.11',3,'233',87),(24,'218V','Control Rm Emergency Air Intake Building',253976,3,'218','Unchanged',0.0000985,'213.22',3,'213',11),(25,'22','Reactor plant equipment',867215000,1,'2','Unchanged',0.336454563,'22',1,'20',27),(26,'220A','Nuclear steam supply (NSSS)',514720000,2,'22','Unchanged',0.199696606,'221.3',3,'221',110),(27,'220A.211','Vessel Structure (NSSS)',70000000,3,'220A','Unchanged',0.027157994,'221.121',3,'221',30),(28,'220A.2121','Lower Internals (NSSS)',31780000,3,'220A','Unchanged',0.012329729,'221.131',3,'221',32),(29,'220A.2122','Upper Internals (NSSS)',31780000,3,'220A','Unchanged',0.012329729,'221.132',3,'221',33),(30,'220A.2131','Control Rods (NSSS)',3100000,3,'220A','Unchanged',0.001202711,'221.211',3,'221',35),(31,'220A.2132','Control Rod Drives (NSSS)',34900000,3,'220A','Unchanged',0.0135402,'221.212',3,'221',36),(32,'220A.221','Main Coolant Pumps (NSSS)',125240000,3,'220A','Unchanged',0.04858953,'222.11',3,'222',39),(33,'220A.222','Reactor Coolant Piping (NSSS)',11400000,3,'220A','Unchanged',0.004422873,'222.21',3,'222',41),(34,'220A.223','Steam Generators (NSSS)',149800000,3,'220A','Unchanged',0.058118106,'222.31',3,'222',43),(35,'220A.224','Pressurizer (NSSS)',8300000,3,'220A','Unchanged',0.003220162,'222.41',3,'222',45),(36,'220A.225','Pressurizer Relief Tank (NSSS)',1850000,3,'220A','Unchanged',0.000717747,'222.42',3,'222',46),(37,'220A.2311','Residual Heat Removal Pumps & Drives (NSSS)',1940000,3,'220A','Unchanged',0.000752664,'223.11',3,'223',49),(38,'220A.2312','Residual Heat Removal Heat Exchanger (NSSS)',6260000,3,'220A','Unchanged',0.002428701,'223.12',3,'223',50),(39,'220A.2321','Safety Injection Pumps And Drives (NSSS)',1720000,3,'220A','Unchanged',0.000667311,'223.31',3,'223',52),(40,'220A.2322','Accumulator Tank (NSSS)',15300000,3,'220A','Unchanged',0.005935961,'223.32',3,'223',53),(41,'220A.2323','Boron Injection Tank (NSSS)',899999,3,'220A','Unchanged',0.000349174,'223.33',3,'223',54),(42,'220A.2324','Boron Injection Surge Tank (NSSS)',50001,3,'220A','Unchanged',0.000019399,'223.34',3,'223',55),(43,'220A.2325','Boron Injection Recirc. Pump & Drives (NSSS)',40000,3,'220A','Unchanged',0.0000155,'223.35',3,'223',56),(44,'220A.251','Fuel Handling Tools (NSSS)',400000,3,'220A','Unchanged',0.000155189,'225.1',3,'225',62),(45,'220A.254','Fuel Storage Racks (NSSS)',2510000,3,'220A','Unchanged',0.000973808,'225.3',3,'225',64),(46,'220A.2611','Rotating Machinery (Pumps And Motors) (NSSS)',2220000,3,'220A','Unchanged',0.000861296,'226.31',3,'226',68),(47,'220A.2612','Heat Transfer Equipment (NSSS)',2450000,3,'220A','Unchanged',0.00095053,'226.32',3,'226',69),(48,'220A.2613','Tanks And Pressure Vessels (NSSS)',1140000,3,'220A','Unchanged',0.000442287,'226.33',3,'226',70),(49,'220A.2614','Purification And Filtration Equipment (NSSS)',2450000,3,'220A','Unchanged',0.00095053,'226.34',3,'226',71),(50,'220A.262','Maintenance Equipment (NSSS)',9190000,3,'220A','Unchanged',0.003565457,'226.81',3,'226',75),(51,'220A.27','Instrumentation And Control (NSSS)',0,3,'220A','Unchanged',0,'227.1',3,'227',79),(52,'221','Reactor equipment',29966900,2,'22','Unchanged',0.011626298,'221',2,'22',28),(53,'221.11','Reactor Support (Field Cost 221)',3910160,3,'221','Unchanged',0.00151703,'221.11',3,'221',29),(54,'221.12','Vessel Structure (Field Cost 221)',7037480,3,'221','Unchanged',0.002730341,'221.122',3,'221',31),(55,'221.13','Vessel Internals (Field Cost 221)',1703810,3,'221','Unchanged',0.000661029,'221.133',3,'221',34),(56,'221.14','Transport To Site (Field Cost 221)',15781400,3,'221','Unchanged',0.006122731,'342',2,'34',109),(57,'221.21','Control Rod System (Field Cost 221)',1533970,3,'221','Unchanged',0.000595136,'221.213',3,'221',37),(58,'222','Main heat transfer transport system',28204600,2,'22','Unchanged',0.010942576,'222',2,'22',38),(59,'222.11','Fluid Circulation Drive System (Field Cost 222)',8592380,3,'222','Unchanged',0.003333597,'222.12',3,'222',40),(60,'222.12','Reactor Coolant Piping System (Field Cost 222)',16895000,3,'222','Unchanged',0.006554776,'222.22',3,'222',42),(61,'222.13','Steam Generator Equipment (Field Cost 222)',2392050,3,'222','Unchanged',0.000928047,'222.32',3,'222',44),(62,'222.14','Pressurizing System (Field Cost 222)',325156,3,'222','Unchanged',0.000126151,'222.43',3,'222',47),(63,'223','Safeguards system',35379000,2,'22','Unchanged',0.013726038,'223',2,'22',48),(64,'223.1','Residual Heat Removal Sys (Field Cost 223)',6810250,3,'223','Unchanged',0.002642182,'223.13',3,'223',51),(65,'223.3','Safety Injection System (Field Cost 223)',10383200,3,'223','Unchanged',0.004028384,'223.36',3,'223',57),(66,'223.4','Containment Spray System (Field Cost 223)',15105600,3,'223','Unchanged',0.00586054,'223.4',3,'223',58),(67,'223.5','Combustible Gas Control System (Field Cost 223)',3079990,3,'223','Unchanged',0.001194948,'223.5',3,'223',59),(68,'224','Radwaste processing',59673400,2,'22','Unchanged',0.023151569,'224',2,'22',60),(69,'225','Fuel handling and storage',9024530,2,'22','Unchanged',0.003501259,'225.2',3,'225',63),(70,'226','Other reactor plant equipment',107592000,2,'22','Unchanged',0.041742612,'226',2,'22',65),(71,'226.1','Inert Gas Sys',3533410,3,'226','Unchanged',0.001370862,'226.1',3,'226',66),(72,'226.3','Reactor Makeup Water Sys',4252970,3,'226','Unchanged',0.00165003,'226.2',3,'226',67),(73,'226.4','Coolant Treatment & Recycle',40770700,3,'226','Unchanged',0.015817863,'226.35',3,'226',72),(74,'226.6','Fluid Leak Detection Sys',492958,3,'226','Unchanged',0.000191254,'226.6',3,'226',73),(75,'226.7','Aux Cool Sys (Broken Down Further)',55198200,3,'226','Unchanged',0.021415319,'226.7',3,'226',74),(76,'226.8','Maintenance Equipment',1519680,3,'226','Unchanged',0.000589592,'226.82',3,'226',76),(77,'226.9','Sampling Equip',1831380,3,'226','Unchanged',0.000710523,'226.9',3,'226',77),(78,'227','Reactor instrumentation and control',61419700,2,'22','Unchanged',0.023829083,'227.2',3,'227',80),(79,'228','Reactor plant miscellaneous items',21234600,2,'22','Unchanged',0.008238416,'228',2,'22',81),(80,'23','Turbine plant equipment',637636000,1,'2','Unchanged',0.247384491,'23',1,'20',82),(81,'231','Turbine generator',381776000,2,'23','Unchanged',0.148118145,'232.1',3,'232',84),(82,'233','Condensing systems',82581500,2,'23','Unchanged',0.032039255,'233.21',3,'233',89),(83,'234','Feedwater heating system',67214100,2,'23','Unchanged',0.026077144,'234',2,'23',91),(84,'235','Other turbine plant equipment',63607900,2,'23','Unchanged',0.024678042,'232.2',3,'232',85),(85,'236','Instrumentation and control',19530400,2,'23','Unchanged',0.007577235,'236',2,'23',92),(86,'237','Turbine plant miscellaneous items',22926000,2,'23','Unchanged',0.008894631,'237',2,'23',93),(87,'24','Electric plant equipment',231722000,1,'2','Unchanged',0.089901494,'24',1,'20',94),(88,'241','Switchgear',34039800,2,'24','Unchanged',0.013206467,'241',2,'24',95),(89,'242','Station service equipment',57453700,2,'24','Unchanged',0.022290389,'242',2,'24',96),(90,'243','Switchboards',5838140,2,'24','Unchanged',0.002265031,'243',2,'24',97),(91,'244','Protective equipment',12142400,2,'24','Unchanged',0.004710903,'244',2,'24',98),(92,'245','Electric structure and wiring contnr.',63546600,2,'24','Unchanged',0.024654259,'245',2,'24',99),(93,'246','Power and control wiring',58700900,2,'24','Unchanged',0.022774267,'246',2,'24',100),(94,'25','Miscellaneous plant equipment subtotal',133073000,1,'2','Unchanged',0.05162851,'26',1,'20',101),(95,'251','Transportation and lifting equipment',17078900,2,'25','Unchanged',0.006626124,'261',2,'26',102),(96,'252','Air, water and steam service systems',81851100,2,'25','Unchanged',0.031755881,'262',2,'26',103),(97,'253','Communications equipment',18279100,2,'25','Unchanged',0.007091767,'263',2,'26',105),(98,'254','Furnishings and fixtures',7795930,2,'25','Unchanged',0.003024597,'264',2,'26',106),(99,'255','Waste water treatment equipment',8067760,2,'25','Unchanged',0.00313006,'262',2,'26',104),(100,'26','Main condenser heat rejection system',139567000,1,'2','Unchanged',0.054147996,'233',2,'23',86),(101,'261','Structures',12345700,2,'26','Unchanged',0.004789778,'233.11',3,'233',88),(102,'262','Mechanical equipment',127221000,2,'26','Unchanged',0.049358101,'233.22',3,'233',90),(103,'DUMMY212','Reactor Island Civil Structures',NULL,NULL,NULL,'Unchanged',0,'212',2,'21',4),(104,'DUMMY213','Main Function Buildings',NULL,NULL,NULL,'Unchanged',0,'213',2,'21',8),(105,'DUMMY214','Buildings to Support Main Function ',NULL,NULL,NULL,'Unchanged',0,'214',2,'21',15),(106,'DUMMY225','Fuel Handling Systems',NULL,NULL,NULL,'Unchanged',0,'225',2,'22',61),(107,'DUMMY227','Reactor Instrumentation and Control (I&C)',NULL,NULL,NULL,'Unchanged',0,'227',2,'22',78),(108,'DUMMY232','Energy Applications',NULL,NULL,NULL,'Unchanged',0,'232',2,'23',83),(109,'DUMMY30','Capitalized Indirect Services Cost',NULL,NULL,NULL,'Unchanged',0,'30',0,NULL,107),(110,'DUMMY34','Shipping and Transportation Costs',NULL,NULL,NULL,'Unchanged',0,'34',1,'30',108);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,37 +177,6 @@ LOCK TABLES `algorithm` WRITE;
 /*!40000 ALTER TABLE `algorithm` DISABLE KEYS */;
 INSERT INTO `algorithm` VALUES (1,'sum_multi_accounts','c','sum of multiple accounts','sum(kwargs.values())','sum(account_1,account_2...account_n)','million','account1, account2.accountn',NULL),(2,'sum_multi_weights','v','sum of multiple weights ','sum(kwargs.values())','sum(Weight_1+Weight_2...Weight_n)','ton','weight1,weight2weight3,weit4,weight5',NULL),(3,'sum_multi_pumps','c','sum cost of multiple pumps','sum(kwargs.values())','sum(Pump_1+Pump_2+Pump_n)','million','pump1,pump2,pump3,pump4,pump5',NULL),(4,'ptn_account','c','portion of account cost','v_1*v_2','account_cost*portion','million','c_ref,prn_fac',NULL),(5,'unit_weights','c','unit cost of weight','v_1*0.14+v_2*0.31','weight_of_carbon_steel*0.14+weight_of_stainless_steel*0.31','million','Csweight, Ssweight','0.140000, 0.310000'),(6,'pump','v','cost per pump based on ref','v_1*np.power((v_2/v_3),v_4)','ref_cost_of_pump*(CH_of_pump/CH_of_ref)^scale_of_power','million','c_pump_ref,CH,CH_ref,scale',NULL),(7,'containment','c','containment calculation','v_1/1000000','containment structure + equipment + others','million','NOT YET',NULL),(8,'MWth_scale','c','thermal power scale from pwr12be','v_1*np.power((v_2/3431),v_3)','cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale','million','c_ref,mwth,scale','3431'),(9,'unit_volume','c','cost by unit volume','v_1*v_2/1000000','dollar_cost_per_unit_vol*vol/1000000','million','V1_unit_vol, V2_vol',NULL),(10,'dev_factor_ref','c','factor of the reference','v_1*v_2/v_3','cost_of_ref*scale/factor','million','c_ref,scale,n',NULL),(11,'tur_exp_n','v','scaling exponent law ','(-0.0032) *v_1+ 1.2497','(-0.0032) *v_1+ 1.2497','1','p_in',''),(12,'esc_1987','c','escalate from 1987','v_1*v_2','escalator*cost_in_1987','million','escalate_1987,refCost',NULL),(13,'cost_by_weight','c','per-unit mass costs','v_1*v_2','tol_weight*coat_per_unit','million','tolweight, unitcost',NULL),(14,'default_0','c','default as 0','0','set the total cost to 0','million',NULL,'0'),(15,'rpv_mass','v','mass of RPV','v_1+v_2','weight_of_carbon_steel+weight_of_stainless_steel','ton','c_221.12_cs_weight,c_221.12_ss_weight',NULL),(16,'unit_facility','c','per-unit facility costs','v_1*v_2','no_of_facility*cost_per_facility','million','no_of_unit, unitcost',NULL),(17,'MWe_scale','c','electric power scale from pwr12be','v_1*np.power((v_2/1144),v_3)','cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale','million','c_ref,mwe,scale','1144'),(18,'unit_weights_plate','c','unit cost of weight with plate installation','v_1*0.075+v_2*0.31','weight_of_carbon_steel_plate_install*0.075+weight_of_stainless_steel*0.31','million','Csweight_plate, Ssweight','0.075000, 0.310000'),(19,'esc_1978','c','escalate from 1978','v_1*v_2','escalator*cost_in_1978','million','escalate_1978,refCost',NULL),(20,'total_weight_prn','c','unit cost of total weight by portion','v_1*(v_2*0.075+v_3*0.31)*v_4','tol_weight*(portion_of_carbon_steel*0.075+portion_of_stainless_steel*0.31)*no_of_facility','million','V1_totweight, V2_csprn,V3_ssprn,V4_no_of_facility','0.075000, 0.310000'),(21,'unit_weights_factor','c','unit cost of weight with factor','(v_1*0.075+v_2*0.31)*v_3','(weight_of_carbon_steel_plate_install*0.075+weight_of_stainless_steel*0.31)*factor','million','Csweight, Ssweight,factor','0.075000, 0.310000'),(22,'factor_sum','c','sum of multiple accounts with factor','v_1*v_2*sum(v_3,v_4)','factor*prn*sum(account_2..account_n)','million','factor1, portion,account2.accountn',NULL),(23,'complex','c','complex algorithm','v_1','simple cost','million','cost',NULL),(24,'MWth_lmfbrscale','c','thermal power scale from lmfbr','v_1*np.power((v_2/2287),v_3)','cost_of_ref*(thermal_power/thermal_power_of_LMFBR)^thermal_power_scale','million','c_ref,mwth,scale','2287'),(25,'MWreth_scale','c','rejected thermal power scale from pwr12be','v_1*np.power((v_2/3800),v_3)','cost_of_ref*(rejected_hermal_power/rejected_thermal_power_of_LMFBR)^thermal_power_scale','million','c_ref,mwreth,scale','3800'),(26,'Sgsum','c','NOT YET','NOT YET','NOT implemented YET','million','NOT YET',NULL),(27,'containmentsum','c','NOT YET','NOT YET','NOT implemented YET','million','NOT YET',NULL),(28,'inside_rad','v','calculate inside radius','v_1-v_2','radius_out-thickness','m','r_out, t',NULL),(29,'round_surface','v','calculate surface base on radius','np.pi*np.power(v_1,2)','radius','m^2','r','PI'),(30,'basemat_volume','v','calculate basemat volume base on surface','v_1*v_2','basemat_surface*thickness','m^3','S,t',NULL),(31,'wall_height','v','calculate wall height base on total height','v_1-v_2','total_height-roof_rad','m',NULL,NULL),(32,'walls_surface','v','calculate Walls surface','v_1*2*np.pi*(v_2+v_3)','Cont_H_wall_m*2*PI()*(Cont_rad_out_m+Cont_rad_in_m)','m^2',NULL,NULL),(33,'wall_volume','v','calculate Walls volume','v_1*np.pi*(np.power(v_2,2)-np.power(v_3,2))','Cont_H_wall_m*PI()*(Cont_rad_out_m^2-Cont_rad_in_m^2)','m^3',NULL,NULL),(34,'dome_inside_diameter ','v','calculate Dome inside diameter ','v_1-v_2','Cont_rad_out_m-B10','m',NULL,NULL),(35,'roof_surface','v','calculate Roof surface','0.5*4*np.pi*(np.power(v_1,2)+np.power(v_2,2))','0.5*4*PI()*(Cont_rad_out_m^2+Dome_rad_in_m^2)','m^2',NULL,NULL),(36,'roof_volume','v','calculate Roof volume','0.5*4/3*np.pi*(np.power(v_1,3)-np.power(v_2,3))','0.5*4/3*PI()*(Cont_rad_out_m^3-Dome_rad_in_m^3)','m^3',NULL,NULL),(37,'tot_internal_volume','v','calculate Tot internal Volume','(np.pi*np.power(v_1,2)*v_2)+(0.5*(4/3)*np.pi*np.power(v_3,3))','(PI()*Cont_rad_in_m^2*Cont_H_wall_m)+(0.5*(4/3)*PI()*Dome_rad_in_m^3)','m^3',NULL,NULL),(38,'building_internal_volume','v','calculate Building internal volume','v_1*(1-v_2)','Intern_tot_v_m3*(1-Void_fraction)','m^3',NULL,NULL),(39,'building_internal _surface','v','calculate Building internal surface','2*v_1/v_2','2*Internal_v_m3/B11','m^2',NULL,NULL),(40,'volume_of_the_structures ','v','calculate volume of the structures ','v_1+v_2+v_3+v_4','Basemat_v_m3+Walls_v_m3+Dome_v_m3+Internal_v_m3','m^3',NULL,NULL),(41,'Inside_liner_surface','v','calculate Inside liner surface','(np.power(v_1,2)*np.pi)+(v_2*2*np.pi*v_1)+(0.5*4*np.pi*np.power(v_3,2))','(Cont_rad_in_m^2*PI())+(Cont_H_wall_m*2*PI()*Cont_rad_in_m)+(0.5*4*PI()*Dome_rad_in_m^2)','m^2',NULL,NULL),(42,'liner_Surface','v','calculate Liner Surface','v_1*v_2','Inside_liner_s*liner_fraction','m^2',NULL,NULL),(43,'painted_surface','v','calculate painted surface','v_1+(v_2*2*np.pi*v_3)+(0.5*4*np.pi*np.power(v_3,2))+v_4','Inside_liner_s+(Cont_H_wall_m*2*PI()*Cont_rad_out_m)+(0.5*4*PI()*Cont_rad_out_m^2)+Internal_s_m2','m^2',NULL,NULL),(44,'Inflation_rate','v','calculate Inflation rate','1.03^(1996-1987)*v_1','1.03^(1996-1987)*CPI','1',NULL,NULL),(45,'unitcost_v_eedb_to_accert','v','unit cost volume from EEDB with inflation','v_1*v_2','unitcost_EEDB_v*infl','dollar/m^3',NULL,NULL),(46,'unitcost_s_eedb_to_accert','v','unit cost surface from EEDB with inflation','v_1*v_2','unitcost_EEDB_s*infl','dollar/m^2',NULL,NULL),(47,'tol_contaiment_ce_cost','v','total cost for each part of cotiament','v_1*v_2','unitcost*number_of stucture_unit','dollar',NULL,NULL),(48,'sum_ce','v','sum of multiple costelement','sum(kwargs.values())','sum(cost_element_1,cost_element2,cost_element_n)','dollar',NULL,NULL),(49,'Yardwork_cost','c','the cost of the land 2017','81.5*v_1','81.5*land_surface_area','dollar','land_surface_area','81.5'),(50,'Reactor_containment_mat_cost','c','Reactor_containment_mat_cost','130.8*v_1','130.8*containment_subVolume','dollar','containment_subVolume','130.8'),(51,'Reactor_containment_lab_cost','c','Reactor_containment_lab_cost','915.6*v_1','915.6*Containment_hole_volume','dollar','Containment_hole_volume','915.6'),(52,'Building_and_utilities_mat_cost','c','Building_and_utilities_mat_cost','6458.3*v_1','6458.3*Turbine_building_surface_area','dollar','Turbine_building_surface_area','6458.3'),(53,'Building_and_utilities_lab_cost','c','Building_and_utilities_lab_cost','9843*v_1+10000*v_2','9843*Distance_to_utilities+10000*Number_of_shipping_containers','dollar','Distance_to_utilities, Number_of_shipping_containers','9843, 10000'),(54,'Reactor_startup_facility_cost','c','Reactor_startup_facility_cost','7600*v_1+1100','7600*Battery_capacity_required+1100','dollar','Battery_capacity_required','7600, 1100'),(55,'Outer_vessel_mat_cost','c','Outer_vessel_mat_cost','310000*v_1','310000*primary_outer_vessel_SS_mass','dollar','primary_outer_vessel_SS_mass','310000'),(56,'Outer_vessel_lab_cost','c','Outer_vessel_lab_cost','14080*v_1','14080*primary_outer_vessel_SS_mass','dollar','primary_outer_vessel_SS_mass','14080'),(57,'Inner_vessel_cost','c','Inner_vessel_cost','310000*v_1','310000*primary_inner_vessel_SS_mass','dollar','primary_inner_vessel_SS_mass','310000'),(58,'Reactivity_control_system_cost','c','Reactivity_control_system_cost','950*v_1+610000*(v_2+v_3)','950*B4C_total_neutron_poison_mass_Kg+610000*(Number_of_control_rod_drums+number_of_emergency_control_rods)','dollar','B4C_total_neutron_poison_mass_Kg, Number_of_control_rod_drums, number_of_emergency_control_rods','950, 610000'),(59,'Reflector_cost','c','Reflector_cost','310000*v_1+120000*v_2+1000000*v_3','310000*stainless_steel_316_reflector_mass+120000*Al2O3_reflector_mass+1000000*BeO_reflector_mass','dollar','stainless_steel_316_reflector_mass, Al2O3_reflector_mass, BeO_reflector_mass','310000, 120000, 1000000'),(60,'Shield_cost','c','Shield_cost','949.9*v_1','949.9*shield_B4C_mass','dollar','shield_B4C_mass','949.9'),(61,'Moderator_cost','c','Moderator_cost','310000*v_1','310000*moderator_ZrH_mass','dollar','moderator_ZrH_mass','310000'),(62,'cooling_heat_pipes_cost','c','cooling_heat_pipes_cost','10000*v_1*(1-v_2)','10000*number_of_core_cooling_heat_pipes*(1-mass_production_cost_reduction_factor)','dollar','number_of_core_cooling_heat_pipes, mass_production_cost_reduction_factor','10000'),(63,'heat_exchangers_mat_cost','c','heat_exchangers_mat_cost','50000*v_1','50000*number_of_heat_exchangers','dollar','number_of_heat_exchangers','50000'),(64,'heat_exchangers_lab_cost','c','heat_exchangers_lab_cost','530000*v_1','530000*number_of_heat_exchangers','dollar','number_of_heat_exchangers','530000'),(65,'heat_exchangers_fac_cost','c','heat_exchangers_fac_cost','120000*v_1*v_2','120000*number_of_heat_exchangers*heat_exchangers_mass','dollar','number_of_heat_exchangers, heat_exchangers_mass','120000'),(66,'instrumentation_contorl_cost','c','instrumentation_contorl_cost','2000*v_1+6500000','2000*number_of_IO_sensors+6500000','dollar','number_of_IO_sensors','2000'),(67,'turb_and_elec_sys_cost','c','turb_and_elec_sys_cost','282553*v_1+213800000*(pow(v_2/1144, 0.4) + pow(v_1/3431, 0.8))','282553*mwth+ 213800000*(pow(mwe/1144, 0.4) + pow(mwth/3431, 0.8))','dollar','mwth, mwe','282553, 1144, 0.4, 3431, 0.8');
 /*!40000 ALTER TABLE `algorithm` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `algorithmorg`
---
-
-DROP TABLE IF EXISTS `algorithmorg`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `algorithmorg` (
-  `ind` int NOT NULL AUTO_INCREMENT,
-  `alg_name` text,
-  `alg_for` text,
-  `alg_description` text,
-  `alg_python` text,
-  `alg_formulation` text,
-  `alg_units` text,
-  `variables` text,
-  `constants` text,
-  PRIMARY KEY (`ind`)
-) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `algorithmorg`
---
-
-LOCK TABLES `algorithmorg` WRITE;
-/*!40000 ALTER TABLE `algorithmorg` DISABLE KEYS */;
-INSERT INTO `algorithmorg` VALUES (1,'sum_multi_accounts','c','sum of multiple accounts','sum(kwargs.values())','sum(account_1,account_2...account_n)','million','account1, account2.accountn',NULL),(2,'sum_multi_weights','v','sum of multiple weights ','sum(kwargs.values())','sum(Weight_1+Weight_2...Weight_n)','ton','weight1,weight2weight3,weit4,weight5',NULL),(3,'sum_multi_pumps','c','sum cost of multiple pumps','sum(kwargs.values())','sum(Pump_1+Pump_2+Pump_n)','million','pump1,pump2,pump3,pump4,pump5',NULL),(4,'ptn_account','c','portion of account cost','v_1*v_2','account_cost*portion','million','c_ref,prn_fac',NULL),(5,'unit_weights','c','unit cost of weight','v_1*0.14+v_2*0.31','weight_of_carbon_steel*0.14+weight_of_stainless_steel*0.31','million','Csweight, Ssweight','0.140000, 0.310000'),(6,'pump','v','cost per pump based on ref','v_1*np.power((v_2/v_3),v_4)','ref_cost_of_pump*(CH_of_pump/CH_of_ref)^scale_of_power','million','c_pump_ref,CH,CH_ref,scale',NULL),(7,'containment','c','containment calculation','v_1/1000000','containment structure + equipment + others','million','NOT YET',NULL),(8,'MWth_scale','c','thermal power scale from pwr12be','v_1*np.power((v_2/3431),v_3)','cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale','million','c_ref,mwth,scale','3431'),(9,'unit_volume','c','cost by unit volume','v_1*v_2/1000000','dollar_cost_per_unit_vol*vol/1000000','million','V1_unit_vol, V2_vol',NULL),(10,'dev_factor_ref','c','factor of the reference','v_1*v_2/v_3','cost_of_ref*scale/factor','million','c_ref,scale,n',NULL),(11,'tur_exp_n','v','scaling exponent law ','(-0.0032) *v_1+ 1.2497','(-0.0032) *v_1+ 1.2497','1','p_in',''),(12,'esc_1987','c','escalate from 1987','v_1*v_2','escalator*cost_in_1987','million','escalate_1987,refCost',NULL),(13,'cost_by_weight','c','per-unit mass costs','v_1*v_2','tol_weight*coat_per_unit','million','tolweight, unitcost',NULL),(14,'default_0','c','default as 0','0','set the total cost to 0','million',NULL,'0'),(15,'rpv_mass','v','mass of RPV','v_1+v_2','weight_of_carbon_steel+weight_of_stainless_steel','ton','c_221.12_cs_weight,c_221.12_ss_weight',NULL),(16,'unit_facility','c','per-unit facility costs','v_1*v_2','no_of_facility*cost_per_facility','million','no_of_unit, unitcost',NULL),(17,'MWe_scale','c','electric power scale from pwr12be','v_1*np.power((v_2/1144),v_3)','cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale','million','c_ref,mwe,scale','1144'),(18,'unit_weights_plate','c','unit cost of weight with plate installation','v_1*0.075+v_2*0.31','weight_of_carbon_steel_plate_install*0.075+weight_of_stainless_steel*0.31','million','Csweight_plate, Ssweight','0.075000, 0.310000'),(19,'esc_1978','c','escalate from 1978','v_1*v_2','escalator*cost_in_1978','million','escalate_1978,refCost',NULL),(20,'total_weight_prn','c','unit cost of total weight by portion','v_1*(v_2*0.075+v_3*0.31)*v_4','tol_weight*(portion_of_carbon_steel*0.075+portion_of_stainless_steel*0.31)*no_of_facility','million','V1_totweight, V2_csprn,V3_ssprn,V4_no_of_facility','0.075000, 0.310000'),(21,'unit_weights_factor','c','unit cost of weight with factor','(v_1*0.075+v_2*0.31)*v_3','(weight_of_carbon_steel_plate_install*0.075+weight_of_stainless_steel*0.31)*factor','million','Csweight, Ssweight,factor','0.075000, 0.310000'),(22,'factor_sum','c','sum of multiple accounts with factor','v_1*v_2*sum(v_3,v_4)','factor*prn*sum(account_2..account_n)','million','factor1, portion,account2.accountn',NULL),(23,'complex','c','complex algorithm','v_1','simple cost','million','cost',NULL),(24,'MWth_lmfbrscale','c','thermal power scale from lmfbr','v_1*np.power((v_2/2287),v_3)','cost_of_ref*(thermal_power/thermal_power_of_LMFBR)^thermal_power_scale','million','c_ref,mwth,scale','2287'),(25,'MWreth_scale','c','rejected thermal power scale from pwr12be','v_1*np.power((v_2/3800),v_3)','cost_of_ref*(rejected_hermal_power/rejected_thermal_power_of_LMFBR)^thermal_power_scale','million','c_ref,mwreth,scale','3800'),(26,'Sgsum','c','NOT YET','NOT YET','NOT implemented YET','million','NOT YET',NULL),(27,'containmentsum','c','NOT YET','NOT YET','NOT implemented YET','million','NOT YET',NULL),(28,'inside_rad','v','calculate inside radius','v_1-v_2','radius_out-thickness','m','r_out, t',NULL),(29,'round_surface','v','calculate surface base on radius','np.pi*np.power(v_1,2)','radius','m^2','r','PI'),(30,'basemat_volume','v','calculate basemat volume base on surface','v_1*v_2','basemat_surface*thickness','m^3','S,t',NULL),(31,'wall_height','v','calculate wall height base on total height','v_1-v_2','total_height-roof_rad','m',NULL,NULL),(32,'walls_surface','v','calculate Walls surface','v_1*2*np.pi*(v_2+v_3)','Cont_H_wall_m*2*PI()*(Cont_rad_out_m+Cont_rad_in_m)','m^2',NULL,NULL),(33,'wall_volume','v','calculate Walls volume','v_1*np.pi*(np.power(v_2,2)-np.power(v_3,2))','Cont_H_wall_m*PI()*(Cont_rad_out_m^2-Cont_rad_in_m^2)','m^3',NULL,NULL),(34,'dome_inside_diameter ','v','calculate Dome inside diameter ','v_1-v_2','Cont_rad_out_m-B10','m',NULL,NULL),(35,'roof_surface','v','calculate Roof surface','0.5*4*np.pi*(np.power(v_1,2)+np.power(v_2,2))','0.5*4*PI()*(Cont_rad_out_m^2+Dome_rad_in_m^2)','m^2',NULL,NULL),(36,'roof_volume','v','calculate Roof volume','0.5*4/3*np.pi*(np.power(v_1,3)-np.power(v_2,3))','0.5*4/3*PI()*(Cont_rad_out_m^3-Dome_rad_in_m^3)','m^3',NULL,NULL),(37,'tot_internal_volume','v','calculate Tot internal Volume','(np.pi*np.power(v_1,2)*v_2)+(0.5*(4/3)*np.pi*np.power(v_3,3))','(PI()*Cont_rad_in_m^2*Cont_H_wall_m)+(0.5*(4/3)*PI()*Dome_rad_in_m^3)','m^3',NULL,NULL),(38,'building_internal_volume','v','calculate Building internal volume','v_1*(1-v_2)','Intern_tot_v_m3*(1-Void_fraction)','m^3',NULL,NULL),(39,'building_internal _surface','v','calculate Building internal surface','2*v_1/v_2','2*Internal_v_m3/B11','m^2',NULL,NULL),(40,'volume_of_the_structures ','v','calculate volume of the structures ','v_1+v_2+v_3+v_4','Basemat_v_m3+Walls_v_m3+Dome_v_m3+Internal_v_m3','m^3',NULL,NULL),(41,'Inside_liner_surface','v','calculate Inside liner surface','(np.power(v_1,2)*np.pi)+(v_2*2*np.pi*v_1)+(0.5*4*np.pi*np.power(v_3,2))','(Cont_rad_in_m^2*PI())+(Cont_H_wall_m*2*PI()*Cont_rad_in_m)+(0.5*4*PI()*Dome_rad_in_m^2)','m^2',NULL,NULL),(42,'liner_Surface','v','calculate Liner Surface','v_1*v_2','Inside_liner_s*liner_fraction','m^2',NULL,NULL),(43,'painted_surface','v','calculate painted surface','v_1+(v_2*2*np.pi*v_3)+(0.5*4*np.pi*np.power(v_3,2))+v_4','Inside_liner_s+(Cont_H_wall_m*2*PI()*Cont_rad_out_m)+(0.5*4*PI()*Cont_rad_out_m^2)+Internal_s_m2','m^2',NULL,NULL),(44,'Inflation_rate','v','calculate Inflation rate','1.03^(1996-1987)*v_1','1.03^(1996-1987)*CPI','1',NULL,NULL),(45,'unitcost_v_eedb_to_accert','v','unit cost volume from EEDB with inflation','v_1*v_2','unitcost_EEDB_v*infl','dollar/m^3',NULL,NULL),(46,'unitcost_s_eedb_to_accert','v','unit cost surface from EEDB with inflation','v_1*v_2','unitcost_EEDB_s*infl','dollar/m^2',NULL,NULL),(47,'tol_contaiment_ce_cost','v','total cost for each part of cotiament','v_1*v_2','unitcost*number_of stucture_unit','dollar',NULL,NULL),(48,'sum_ce','v','sum of multiple costelement','sum(kwargs.values())','sum(cost_element_1,cost_element2,cost_element_n)','dollar',NULL,NULL);
-/*!40000 ALTER TABLE `algorithmorg` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -982,6 +959,58 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `insert_new_COA_gncoa` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_COA_gncoa`(IN table_name VARCHAR(50),
+											IN ind INT,
+											IN supaccount VARCHAR(50),
+											IN level INT,
+											IN code_of_account VARCHAR(50),
+											IN account_description VARCHAR(50),
+											IN total_cost INT,
+											IN review_status VARCHAR(50),
+											IN prn VARCHAR(50),
+                                            IN gncoa VARCHAR(50), 
+                                            IN gn_level INT, 
+                                            IN gn_supaccount VARCHAR(50), 
+											IN gn_ind INT)
+BEGIN
+	SET @stmt = CONCAT('INSERT INTO ', table_name,
+						' (ind, supaccount, level, code_of_account, account_description, 
+							total_cost, review_status, prn, 
+                            gncoa, gn_level, gn_supaccount, gn_ind) 
+							VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+PREPARE stmt FROM @stmt;
+SET @ind = ind;
+SET @supaccount = supaccount;
+SET @level = level;
+SET @code_of_account = code_of_account;
+SET @account_description = account_description;
+SET @total_cost = total_cost;
+SET @review_status = review_status;
+SET @prn = prn;
+SET @gncoa = gncoa; 
+SET @gn_level = gn_level; 
+SET @gn_supaccount = gn_supaccount;
+SET @gn_ind = gn_ind;
+
+EXECUTE stmt USING @ind, @supaccount, @level, @code_of_account, @account_description,
+@total_cost, @review_status, @prn, @gncoa, @gn_level, @gn_supaccount, @gn_ind;
+DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `print_account_all` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1084,6 +1113,108 @@ BEGIN
                                     ON sorted_ce.code_of_account=acc.code_of_account
                                     WHERE acc.level <= ?
                                     ORDER BY acc.ind;');
+    PREPARE stmt FROM @stmt;
+    SET @level=level;
+    EXECUTE stmt USING @level;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_accounts_gn` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_accounts_gn`(
+    IN acc_table VARCHAR(255),
+    IN level INT
+)
+BEGIN
+    SET @stmt = CONCAT(
+        'SELECT rankedcoa.gncoa,
+                acc.account_description,
+                acc.total_cost,
+                acc.gn_level,
+                acc.review_status
+         FROM ', acc_table, ' AS acc
+         JOIN
+         (
+             SELECT node.gncoa AS COA, 
+                    CONCAT(REPEAT(" ", node.gn_level), node.gncoa) AS gncoa
+             FROM ', acc_table, ' AS node
+             ORDER BY node.gn_ind
+         ) AS rankedcoa
+         ON acc.gncoa = rankedcoa.COA
+         WHERE acc.gn_level <= ?
+         ORDER BY acc.gn_ind;'
+    );
+    
+    PREPARE stmt FROM @stmt;
+    SET @level = level;
+    EXECUTE stmt USING @level;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `print_leveled_accounts_gn_all` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_accounts_gn_all`(IN acc_table varchar(50),
+                                                                        IN  cel_table varchar(50),
+                                                                        IN  level int)
+BEGIN
+    SET @stmt=CONCAT('SELECT acc.gn_level,
+                            rankedcoa.gncoa as gncoa,
+                            acc.account_description,
+                            sorted_ce.fac_cost,
+                            sorted_ce.lab_cost,
+                            sorted_ce.mat_cost,
+                            acc.total_cost,
+                            acc.review_status
+                            FROM ',acc_table,' as acc
+                            JOIN
+							 (SELECT node.gncoa AS COA, 
+										CONCAT(REPEAT(" ", node.gn_level), node.gncoa) AS gncoa
+								 FROM ', acc_table, ' AS node
+								 ORDER BY node.gn_ind) AS rankedcoa
+                                ON acc.gncoa=rankedcoa.COA
+                                JOIN (SELECT splt_act.code_of_account,
+											   cef.cost_2017 AS fac_cost,
+											   cel.cost_2017 AS lab_cost,
+											   cem.cost_2017 AS mat_cost
+										FROM 
+											(SELECT code_of_account, 
+													CONCAT(code_of_account, "_fac") AS fac_name,
+													CONCAT(code_of_account, "_lab") AS lab_name,
+													CONCAT(code_of_account, "_mat") AS mat_name
+											 FROM ',acc_table,') AS splt_act
+										LEFT JOIN ',cel_table,' AS cef
+											ON cef.cost_element = splt_act.fac_name
+										LEFT JOIN ',cel_table,' AS cel
+											ON cel.cost_element = splt_act.lab_name
+										LEFT JOIN ',cel_table,' AS cem
+											ON cem.cost_element = splt_act.mat_name) as sorted_ce
+                                    ON sorted_ce.code_of_account=acc.code_of_account
+                                    WHERE acc.gn_level <= ?
+                                    ORDER BY acc.gn_ind;');
     PREPARE stmt FROM @stmt;
     SET @level=level;
     EXECUTE stmt USING @level;
@@ -1212,6 +1343,87 @@ BEGIN
 		WHERE va.var_value IS NULL
 		ORDER BY va.ind;");
     END IF;
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `remove_specific_row` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `remove_specific_row`(
+    IN table_name VARCHAR(50),
+    IN target_code VARCHAR(50)
+)
+BEGIN
+    SET SQL_SAFE_UPDATES = 0;
+    
+    SET @stmt = CONCAT(
+        'DELETE FROM ', table_name,
+        ' WHERE code_of_account = \'', target_code, '\''
+    );
+
+    -- Debug: Print the constructed SQL statement
+    SELECT @stmt;
+    
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `roll_up_account_table_by_gn_level` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_account_table_by_gn_level`(
+    IN table_name VARCHAR(50),
+    IN from_level INT,
+    IN to_level INT
+)
+BEGIN
+    SET SQL_SAFE_UPDATES = 0;
+
+    SET @stmt = CONCAT(
+        'UPDATE ', table_name, ',',
+        '(SELECT a', to_level, '.gncoa AS ac', to_level, '_coa, ',
+                'SUM(ua', from_level, '.total_cost) AS a', to_level, '_cal_total_cost ',
+        'FROM ', table_name, ' AS ua', from_level,
+        ' JOIN ', table_name, ' AS a', to_level,
+        ' ON ua', from_level, '.gn_supaccount = a', to_level, '.gncoa ',
+        'WHERE ua', from_level, '.gn_level = ', from_level,
+        ' AND a', to_level, '.gn_level = ', to_level,
+        ' GROUP BY a', to_level, '.gncoa) AS updated_ac', to_level,
+        ' SET ',
+        table_name, '.total_cost = updated_ac', to_level, '.a', to_level, '_cal_total_cost, ',
+        table_name, '.review_status = \'Updated\' ',
+        'WHERE ',
+        table_name, '.gncoa = updated_ac', to_level, '.ac', to_level, '_coa'
+    );
+
+    -- Debug: Print the constructed SQL statement
+    SELECT @stmt;
+
     PREPARE stmt FROM @stmt;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -1801,4 +2013,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-13 10:52:31
+-- Dump completed on 2024-09-20 14:44:18
