@@ -35,7 +35,6 @@ class Accert:
         self.acc_tabl = None
         self.cel_tabl = None
         self.var_tabl = None
-        # self.vlk_tabl = None
         self.alg_tabl = None
         self.esc_tabl = None
         self.fac_tabl = None
@@ -53,8 +52,8 @@ class Accert:
         -------
         None
         """
-
-        self.use_gncoa = str(xml2obj.use_gncoa.value).lower() == 'true'
+        if xml2obj.use_gncoa is not None:
+            self.use_gncoa = str(xml2obj.use_gncoa.value).lower() == 'true'
         if "abr1000" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'abr1000'
             self.acc_tabl = 'abr_account'
@@ -1318,22 +1317,22 @@ class Accert:
         print("..:::::..:::.......::::......::........::..:::::..:::::..:::::")
         print('\n')
 
-    def write_to_excel(self, statement, filename,conn):
-        """
-        Writes the results to an excel file.
+    # def write_to_excel(self, statement, filename,conn):
+    #     """
+    #     Writes the results to an excel file.
 
-        Parameters
-        ----------
-        statement : str
-            SQL statement.
-        filename : str
-            Filename of the excel file.
-        conn : MySQLConnection
-            MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
-        """
-        df=sql.read_sql(statement,conn)
-        df.to_excel(filename,index=False)       
-        print("Successfully created excel file {}".format(filename))
+    #     Parameters
+    #     ----------
+    #     statement : str
+    #         SQL statement.
+    #     filename : str
+    #         Filename of the excel file.
+    #     conn : MySQLConnection
+    #         MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
+    #     """
+    #     df=sql.read_sql(statement,conn)
+    #     df.to_excel(filename,index=False)       
+    #     print("Successfully created excel file {}".format(filename))
 
     def execute_accert(self, c, ut):
         """
@@ -1856,7 +1855,7 @@ class Accert:
             print(' Generating results table for review '.center(100, '='))   
             print('\n') 
             ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
-            print('\n')
+ 
 
     def _fusion_processing(self, c, ut, accert):
         """
