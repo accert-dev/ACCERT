@@ -20,6 +20,19 @@ def run_accert_and_check_output(input_file, expected_output_file):
         output_content = output_file.read()
     with open(expected_output_file, "r") as expected_output:
         expected_output_content = expected_output.read()
+
+    # compare the content of the output.out file with the expected output
+    # compare each line of the output.out file with the expected output
+    # if the content of the output.out file print the line that does not match the expected output
+    if output_content != expected_output_content:
+        output_lines = output_content.splitlines()
+        expected_output_lines = expected_output_content.splitlines()
+        for i in range(len(output_lines)):
+            if output_lines[i] != expected_output_lines[i]:
+                print(f"Line {i+1} does not match:")
+                print(f"Output: {output_lines[i]}")
+                print(f"Expected: {expected_output_lines[i]}")
+          
     assert output_content == expected_output_content, "output.out content does not match expected output"
 
 def check_excel_files(excel_patterns):
