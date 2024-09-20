@@ -1,38 +1,38 @@
-ind,code_of_account,account_description,total_cost,unit,level,main_subaccounts,supaccount,cost_elements,prn
-1,211,Yardwork,71213859.06,dollar,2,,21,"211_fac,211_lab,211_mat",2.76%
-2,212,Reactor containment building,81425435.33,dollar,2,,21,"212_fac,212_lab,212_mat",7.17%
-3,213,Turbine room and heater bay,24604390.8,dollar,2,,21,"213_fac,213_lab,213_mat",2.56%
-4,215,Primary auxiliary building and tunnels,12470000,dollar,2,,21,"215_fac,215_lab,215_mat",2.04%
-5,216,Waste processing building,38750000,dollar,2,,21,"216_fac,216_lab,216_mat",1.59%
-6,217,Fuel storage building,28149583.82,dollar,2,,21,"217_fac,217_lab,217_mat",1.09%
-7,218A,Control Room/Diesel Generator Building,16250000,dollar,3,,218,"218A_fac,218A_lab,218A_mat",2.00%
-8,220A.211,Vessel Structure (NSSS),137000000,dollar,3,,220A,"220A.211_fac,220A.211_lab,220A.211_mat",2.72%
-9,220A.2121,Lower Internals (NSSS),45204200,dollar,3,,220A,"220A.2121_fac,220A.2121_lab,220A.2121_mat",1.23%
-10,220A.2122,Upper Internals (NSSS),45204200,dollar,3,,220A,"220A.2122_fac,220A.2122_lab,220A.2122_mat",1.23%
-11,220A.2131,Control Rods (NSSS),1320000,dollar,3,,220A,"220A.2131_fac,220A.2131_lab,220A.2131_mat",0.12%
-12,220A.2132,Control Rod Drives (NSSS),13453440,dollar,3,,220A,"220A.2132_fac,220A.2132_lab,220A.2132_mat",1.35%
-13,220A.221,Main Coolant Pumps (NSSS),55696873.29,dollar,3,,220A,"220A.221_fac,220A.221_lab,220A.221_mat",4.86%
-14,220A.222,Reactor Coolant Piping (NSSS),7464800,dollar,3,,220A,"220A.222_fac,220A.222_lab,220A.222_mat",0.44%
-15,220A.223,Steam Generators (NSSS),122087095.9,dollar,3,,220A,"220A.223_fac,220A.223_lab,220A.223_mat",5.81%
-16,220A.224,Pressurizer (NSSS),1379368.421,dollar,3,,220A,"220A.224_fac,220A.224_lab,220A.224_mat",0.32%
-17,222.11,Fluid Circulation Drive System (Field Cost 222),2504335.453,dollar,3,,222,"222.11_fac,222.11_lab,222.11_mat",0.33%
-18,222.12,Reactor Coolant Piping System (Field Cost 222),4924232.687,dollar,3,,222,"222.12_fac,222.12_lab,222.12_mat",0.66%
-19,222.13,Steam Generator Equipment (Field Cost 222),697187.7179,dollar,3,,222,"222.13_fac,222.13_lab,222.13_mat",0.09%
-20,222.14,Pressurizing System (Field Cost 222),94769.84553,dollar,3,,222,"222.14_fac,222.14_lab,222.14_mat",0.01%
-21,222,Main heat transfer transport system,8220525.704,dollar,2,222.12,22,"222_fac,222_lab,222_mat",1.09%
-22,224,Radwaste processing,59673441.34,dollar,2,,22,"224_fac,224_lab,224_mat",2.32%
-23,226.4,Coolant Treatment & Recycle,34304867.39,dollar,3,,226,"226.4_fac,226.4_lab,226.4_mat",1.58%
-24,226.7,Aux Cool Sys (Broken Down Further),0,dollar,3,,226,"226.7_fac,226.7_lab,226.7_mat",2.14%
-25,227,Reactor instrumentation and control,61419737.22,dollar,2,,22,"227_fac,227_lab,227_mat",2.38%
-26,231,Turbine generator,57399816.35,dollar,2,,23,"231_fac,231_lab,231_mat",14.81%
-27,233,Condensing systems,29065851.25,dollar,2,,23,"233_fac,233_lab,233_mat",3.20%
-28,234,Feedwater heating system,0,dollar,2,,23,"234_fac,234_lab,234_mat",2.61%
-29,235,Other turbine plant equipment,9563415.121,dollar,2,,23,"235_fac,235_lab,235_mat",2.47%
-30,241,Switchgear,21904347.8,dollar,2,,24,"241_fac,241_lab,241_mat",1.32%
-31,242,Station service equipment,36970984.98,dollar,2,,24,"242_fac,242_lab,242_mat",2.23%
-32,245,Electric structure and wiring contnr.,40891698.73,dollar,2,,24,"245_fac,245_lab,245_mat",2.47%
-33,246,Power and control wiring,37773534.79,dollar,2,,24,"246_fac,246_lab,246_mat",2.28%
-34,252,"Air, water and steam service systems",81851078.87,dollar,2,,25,"252_fac,252_lab,252_mat",3.18%
-35,262,Mechanical equipment,44777444.42,dollar,2,,26,"262_fac,262_lab,262_mat",4.94%
-36,2C,Calculated DIRECT COST,1225489991,dollar,0,,,"2c_fac,2c_lab,2c_mat",86.32%
-37,2,TOTAL DIRECT COST,1419783854,dollar,0,,,,100.00%
+ind,code_of_account,account_description,total_cost,level,supaccount,review_status,prn
+1,2,TOTAL DIRECT COST,1419783854,0,,Unchanged,1
+2,2C,Calculated DIRECT COST,1225489991,0,,Unchanged,0.863152505
+3,211,Yardwork,71213859.06,2,21,Unchanged,0.027628981
+4,212,Reactor containment building,81425435.33,2,21,Unchanged,0.071675596
+5,213,Turbine room and heater bay,24604390.8,2,21,Unchanged,0.02559467
+6,215,Primary auxiliary building and tunnels,12470000,2,21,Unchanged,0.020420772
+7,216,Waste processing building,38750000,2,21,Unchanged,0.015882927
+8,217,Fuel storage building,28149583.82,2,21,Unchanged,0.010921249
+9,218A,Control Room/Diesel Generator Building,16250000,3,218,Unchanged,0.020007875
+10,220A.211,Vessel Structure (NSSS),137000000,3,220A,Unchanged,0.027158047
+11,220A.2121,Lower Internals (NSSS),45204200,3,220A,Unchanged,0.012329754
+12,220A.2122,Upper Internals (NSSS),45204200,3,220A,Unchanged,0.012329754
+13,220A.2131,Control Rods (NSSS),1320000,3,220A,Unchanged,0.001202713
+14,220A.2132,Control Rod Drives (NSSS),13453440,3,220A,Unchanged,0.013540226
+15,220A.221,Main Coolant Pumps (NSSS),55696873.29,3,220A,Unchanged,0.048589625
+16,220A.222,Reactor Coolant Piping (NSSS),7464800,3,220A,Unchanged,0.004422882
+17,220A.223,Steam Generators (NSSS),122087095.9,3,220A,Unchanged,0.058118221
+18,220A.224,Pressurizer (NSSS),1379368.421,3,220A,Unchanged,0.003220169
+19,222,Main heat transfer transport system,8220525.704,2,22,Unchanged,0.010942603
+20,222.11,Fluid Circulation Drive System (Field Cost 222),2504335.453,3,222,Unchanged,0.003333601
+21,222.12,Reactor Coolant Piping System (Field Cost 222),4924232.687,3,222,Unchanged,0.006554803
+22,222.13,Steam Generator Equipment (Field Cost 222),697187.7179,3,222,Unchanged,0.000928049
+23,222.14,Pressurizing System (Field Cost 222),94769.84553,3,222,Unchanged,0.000126151
+24,224,Radwaste processing,59673441.34,2,22,Unchanged,0.023151622
+25,226.4,Coolant Treatment & Recycle,34304867.39,3,226,Unchanged,0.015817883
+26,226.7,Aux Cool Sys (Broken Down Further),0,3,226,Unchanged,0.021415357
+27,227,Reactor instrumentation and control,61419737.22,2,22,Unchanged,0.023829136
+28,231,Turbine generator,57399816.35,2,23,Unchanged,0.148118277
+29,233,Condensing systems,29065851.25,2,23,Unchanged,0.032039296
+30,234,Feedwater heating system,0,2,23,Unchanged,0.026077184
+31,235,Other turbine plant equipment,9563415.121,2,23,Unchanged,0.024678068
+32,241,Switchgear,21904347.8,2,24,Unchanged,0.013206497
+33,242,Station service equipment,36970984.98,2,24,Unchanged,0.022290424
+34,245,Electric structure and wiring contnr.,40891698.73,2,24,Unchanged,0.024654288
+35,246,Power and control wiring,37773534.79,2,24,Unchanged,0.022774295
+36,252,"Air, water and steam service systems",81851078.87,2,25,Unchanged,0.031755924
+37,262,Mechanical equipment,44777444.42,2,26,Unchanged,0.04935819

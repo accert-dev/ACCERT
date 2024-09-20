@@ -1,0 +1,31 @@
+l2COA ( ID ) {
+    % Include total_cost if present
+    % If TOTAL_COST_VALUE and TOTAL_COST_UNIT are provided
+    total_cost {
+        value = TOTAL_COST_VALUE
+        unit = TOTAL_COST_UNIT
+    }
+    % Cost elements (ce)
+    % For each ce in CES
+    ce ( ID ) {
+        % Include algorithm
+        alg ( ID ) {
+            % Variables
+            % For each var in VARS
+            var ( ID ) {
+                value = VALUE
+                unit = UNIT
+                % If nested algorithm is present
+                % Include nested alg_var_alg template
+            }
+        }
+    }
+    % Level 3 COA entries
+    % For each l3coa in L3COAS
+    % Include L3COA template
+    % New COA entries
+    % For each newcoa in NEWCOAS
+    newCOA ( ID ) {
+        descr = "DESCR"
+    }
+}

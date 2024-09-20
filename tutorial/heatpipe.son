@@ -19,7 +19,7 @@ accert{
     var(Number_of_shipping_containers){ value = 2  unit = 1 }
     var(Battery_capacity_required){ value = 150  unit = kW }
 
-    var(primary_outer_vessel_SS_mass){ value = 100000 unit = ton }
+    var(primary_outer_vessel_SS_mass){ value = 100000 unit = kg }
     var(primary_inner_vessel_SS_mass){ value = 0.5  unit = ton }
     var(B4C_total_neutron_poison_mass_Kg){ value = 600  unit = kg }
     var(Number_of_control_rod_drums){ value = 15  unit = 1 }

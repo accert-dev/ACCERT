@@ -1,0 +1,360 @@
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::'###:::::'######:::'######::'########:'########::'########:
+::'## ##:::'##... ##:'##... ##: ##.....:: ##.... ##:... ##..::
+:'##:. ##:: ##:::..:: ##:::..:: ##::::::: ##:::: ##:::: ##::::
+'##:::. ##: ##::::::: ##::::::: ######::: ########::::: ##::::
+ #########: ##::::::: ##::::::: ##...:::: ##.. ##:::::: ##::::
+ ##.... ##: ##::: ##: ##::: ##: ##::::::: ##::. ##::::: ##::::
+ ##:::: ##:. ######::. ######:: ########: ##:::. ##:::: ##::::
+..:::::..:::.......::::......::........::..:::::..:::::..:::::
+
+
+======================================== Reading user input ========================================
+
+
+[USER_INPUT] Reference model is "heatpipe" 
+
+[USER_INPUT] Thermal power is 6 MW 
+
+[USER_INPUT] Electric power is 2 MW 
+
+[Updating] Variable land_surface_area
+[Updated]  Changed from 32000.0 squareMeter to 40000.0 squareMeter
+
+[Updating] Variable containment_subVolume
+[Updated]  Changed from 76.8 cubeMeter to 94.8 cubeMeter
+
+[Updating] Variable Containment_hole_volume
+[Updated]  Changed from 446.3 cubeMeter to 480.4 cubeMeter
+
+[Updating] Variable Turbine_building_surface_area
+[Updated]  Changed from 1000.0 squareMeter to 2000.0 squareMeter
+
+[Updating] Variable Distance_to_utilities
+[Updated]  Changed from 1000.0 m to 20000.0 m
+
+[Updating] Variable Number_of_shipping_containers
+[Updated]  Changed from 0.0 1 to 2.0 1
+
+[Updating] Variable Battery_capacity_required
+[Updated]  Changed from 135.0 kW to 150.0 kW
+
+[Updating] Variable primary_outer_vessel_SS_mass
+[Unit Changed] Converted input from 100000.0 kg to 100.0 ton
+[Updated]  Changed from 0.3 ton to 100.0 ton
+
+[Updating] Variable primary_inner_vessel_SS_mass
+[Updated]  Changed from 1.0 ton to 0.5 ton
+
+[Updating] Variable B4C_total_neutron_poison_mass_Kg
+[Updated]  Changed from 529.9 kg to 600.0 kg
+
+[Updating] Variable Number_of_control_rod_drums
+[Updated]  Changed from 12.0 1 to 15.0 1
+
+[Updating] Variable number_of_emergency_control_rods
+[Updated]  Changed from 2.0 1 to 4.0 1
+
+[Updating] Variable stainless_steel_316_reflector_mass
+[Updated]  Changed from 2.0 ton to 4.0 ton
+
+[Updating] Variable Al2O3_reflector_mass
+[Updated]  Changed from 7.9 ton to 4.0 ton
+
+[Updating] Variable BeO_reflector_mass
+[Updated]  Changed from 1.7 ton to 4.0 ton
+
+[Updating] Variable shield_B4C_mass
+[Updated]  Changed from 4108.5 kg to 7000.0 kg
+
+[Updating] Variable moderator_ZrH_mass
+[Updated]  Changed from 0.0 ton to 0.2 ton
+
+[Updating] Variable mass_production_cost_reduction_factor
+[Updated]  Changed from 0.0 1 to 0.5 1
+
+[Updating] Variable number_of_core_cooling_heat_pipes
+[Updated]  Changed from 1134.0 1 to 1500.0 1
+
+[Updating] Variable number_of_heat_exchangers
+[Updated]  Changed from 2.0 1 to 4.0 1
+
+[Updating] Variable heat_exchangers_mass
+[Updated]  Changed from 0.4 ton to 0.6 ton
+
+[Updating] Variable number_of_IO_sensors
+[Updated]  Changed from 1000.0 1 to 800.0 1
+
+=================================Extracting user changed variables==================================
+
+
++---------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+-------------+
+|                var_name               |                                                                                      var_description                                                                                      | var_value |   var_unit  |
++---------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+-------------+
+|          Al2O3_reflector_mass         |                                                                                    Al2O3 reflector mass                                                                                   |    4.00   |     ton     |
+|    B4C_total_neutron_poison_mass_Kg   |                                                                             B4C total neutron poison mass (Kg)                                                                            |   600.00  |      kg     |
+|       Battery_capacity_required       |                                                                                 Battery capacity required                                                                                 |   150.00  |      kW     |
+|           BeO_reflector_mass          |                                                                                     BeO reflector mass                                                                                    |    4.00   |     ton     |
+|        Containment_hole_volume        | Containment hole volume  = (2 concrete thickness * ISO width) *  (2 concrete thickness * ISO length) *  (2 concrete thickness * ISO sub_height) - ISO width *ISO length* ISO subheight    |   480.40  |  cubeMeter  |
+|         containment_subVolume         |                                                               containment  subVolume = ISO width* ISO length *ISO subheight                                                               |   94.80   |  cubeMeter  |
+|         Distance_to_utilities         |                                                                                   Distance to utilities                                                                                   | 20,000.00 |      m      |
+|          heat_exchangers_mass         |                                                                                    heat exchangers mass                                                                                   |    0.60   |     ton     |
+|           land_surface_area           |                                                                                     land surface area                                                                                     | 40,000.00 | squareMeter |
+| mass_production_cost_reduction_factor |                                                                           mass production cost reduction factor                                                                           |    0.50   |      1      |
+|           moderator_ZrH_mass          |                                                                                     moderator ZrH mass                                                                                    |    0.20   |     ton     |
+|                  mwe                  |                                                                                       user_input MWE                                                                                      |    2.00   |      MW     |
+|                  mwth                 |                                                                                      user_input mwth                                                                                      |    6.00   |      MW     |
+|      Number_of_control_rod_drums      |                                                                                Number of control rod drums                                                                                |   15.00   |      1      |
+|   number_of_core_cooling_heat_pipes   |                                                                             number of core cooling heat pipes                                                                             |  1,500.00 |      1      |
+|    number_of_emergency_control_rods   |                                                                              number of emergency control rods                                                                             |    4.00   |      1      |
+|       number_of_heat_exchangers       |                                                                                 number of heat exchangers                                                                                 |    4.00   |      1      |
+|          number_of_IO_sensors         |                                                                                    number of IO sensors                                                                                   |   800.00  |      1      |
+|     Number_of_shipping_containers     |                                                                               Number of shipping containers                                                                               |    2.00   |      1      |
+|      primary_inner_vessel_SS_mass     |                                                                                primary inner vessel SS mass                                                                               |    0.50   |     ton     |
+|      primary_outer_vessel_SS_mass     |                                                                                primary outer vessel SS mass                                                                               |   100.00  |     ton     |
+|            shield_B4C_mass            |                                                                                      shield B4C mass                                                                                      |  7,000.00 |      kg     |
+|   stainless_steel_316_reflector_mass  |                                                                             stainless steel 316 reflector mass                                                                            |    4.00   |     ton     |
+|     Turbine_building_surface_area     |                                                                               Turbine building surface area                                                                               |  2,000.00 | squareMeter |
++---------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+-------------+
+
+
+================================ Extracting affected cost elements =================================
+
+
+variable "land_surface_area" affects cost element(s):
+211_lab
+
+variable "containment_subVolume" affects cost element(s):
+212_mat
+
+variable "Containment_hole_volume" affects cost element(s):
+212_lab
+
+variable "Turbine_building_surface_area" affects cost element(s):
+213_mat
+
+variable "Distance_to_utilities" affects cost element(s):
+213_lab
+
+variable "Number_of_shipping_containers" affects cost element(s):
+213_lab
+
+variable "Battery_capacity_required" affects cost element(s):
+218T_fac
+
+variable "primary_outer_vessel_SS_mass" affects cost element(s):
+221.12_mat, 221.12_lab
+
+variable "primary_inner_vessel_SS_mass" affects cost element(s):
+221.13_mat
+
+variable "B4C_total_neutron_poison_mass_Kg" affects cost element(s):
+221.21_mat
+
+variable "Number_of_control_rod_drums" affects cost element(s):
+221.21_mat
+
+variable "number_of_emergency_control_rods" affects cost element(s):
+221.21_mat
+
+variable "stainless_steel_316_reflector_mass" affects cost element(s):
+221.22_mat
+
+variable "Al2O3_reflector_mass" affects cost element(s):
+221.22_mat
+
+variable "BeO_reflector_mass" affects cost element(s):
+221.22_mat
+
+variable "shield_B4C_mass" affects cost element(s):
+221.23_mat
+
+variable "moderator_ZrH_mass" affects cost element(s):
+221.24_mat
+
+variable "mass_production_cost_reduction_factor" affects cost element(s):
+222.12_mat
+
+variable "number_of_core_cooling_heat_pipes" affects cost element(s):
+222.12_mat
+
+variable "number_of_heat_exchangers" affects cost element(s):
+222.13_mat, 222.13_lab, 222.13_fac
+
+variable "heat_exchangers_mass" affects cost element(s):
+222.13_fac
+
+variable "number_of_IO_sensors" affects cost element(s):
+227_fac
+
+variable "mwth" affects cost element(s):
+231_fac
+
+variable "mwe" affects cost element(s):
+231_fac
+
+====================================== Updating cost elements ======================================
+
+
+[Updating] Cost element [211_lab], running algorithm: [Yardwork_cost], 
+[Updating] with formulation: 81.5*land_surface_area
+[Updated]  Reference value is : $2,609,431  , calculated value is: $3,260,000   
+ 
+[Updating] Cost element [212_mat], running algorithm: [Reactor_containment_mat_cost], 
+[Updating] with formulation: 130.8*containment_subVolume
+[Updated]  Reference value is : $10,043     , calculated value is: $12,400      
+ 
+[Updating] Cost element [212_lab], running algorithm: [Reactor_containment_lab_cost], 
+[Updating] with formulation: 915.6*Containment_hole_volume
+[Updated]  Reference value is : $408,651    , calculated value is: $439,854     
+ 
+[Updating] Cost element [213_mat], running algorithm: [Building_and_utilities_mat_cost], 
+[Updating] with formulation: 6458.3*Turbine_building_surface_area
+[Updated]  Reference value is : $6,458,349  , calculated value is: $12,916,600  
+ 
+[Updating] Cost element [213_lab], running algorithm: [Building_and_utilities_lab_cost], 
+[Updating] with formulation: 9843*Distance_to_utilities+10000*Number_of_shipping_containers
+[Updated]  Reference value is : $9,843,000  , calculated value is: $196,880,000 
+ 
+[Updating] Cost element [218T_fac], running algorithm: [Reactor_startup_facility_cost], 
+[Updating] with formulation: 7600*Battery_capacity_required+1100
+[Updated]  Reference value is : $1,027,100  , calculated value is: $1,141,100   
+ 
+[Updating] Cost element [221.12_mat], running algorithm: [Outer_vessel_mat_cost], 
+[Updating] with formulation: 310000*primary_outer_vessel_SS_mass
+[Updated]  Reference value is : $99,430     , calculated value is: $31,000,000  
+ 
+[Updating] Cost element [221.12_lab], running algorithm: [Outer_vessel_lab_cost], 
+[Updating] with formulation: 14080*primary_outer_vessel_SS_mass
+[Updated]  Reference value is : $4,516      , calculated value is: $1,408,000   
+ 
+[Updating] Cost element [221.13_mat], running algorithm: [Inner_vessel_cost], 
+[Updating] with formulation: 310000*primary_inner_vessel_SS_mass
+[Updated]  Reference value is : $318,739    , calculated value is: $155,000     
+ 
+[Updating] Cost element [221.21_mat], running algorithm: [Reactivity_control_system_cost], 
+[Updating] with formulation: 950*B4C_total_neutron_poison_mass_Kg+610000*(Number_of_control_rod_drums+number_of_emergency_control_rods)
+[Updated]  Reference value is : $9,043,404  , calculated value is: $12,160,000  
+ 
+[Updating] Cost element [221.22_mat], running algorithm: [Reflector_cost], 
+[Updating] with formulation: 310000*stainless_steel_316_reflector_mass+120000*Al2O3_reflector_mass+1000000*BeO_reflector_mass
+[Updated]  Reference value is : $3,277,300  , calculated value is: $5,720,000   
+ 
+[Updating] Cost element [221.23_mat], running algorithm: [Shield_cost], 
+[Updating] with formulation: 949.9*shield_B4C_mass
+[Updated]  Reference value is : $3,902,600  , calculated value is: $6,649,300   
+ 
+[Updating] Cost element [221.24_mat], running algorithm: [Moderator_cost], 
+[Updating] with formulation: 310000*moderator_ZrH_mass
+[Updated]  Reference value is : $0          , calculated value is: $62,000      
+ 
+[Updating] Cost element [222.12_mat], running algorithm: [cooling_heat_pipes_cost], 
+[Updating] with formulation: 10000*number_of_core_cooling_heat_pipes*(1-mass_production_cost_reduction_factor)
+[Updated]  Reference value is : $11,340,000 , calculated value is: $7,500,000   
+ 
+[Updating] Cost element [222.13_mat], running algorithm: [heat_exchangers_mat_cost], 
+[Updating] with formulation: 50000*number_of_heat_exchangers
+[Updated]  Reference value is : $100,000    , calculated value is: $200,000     
+ 
+[Updating] Cost element [222.13_lab], running algorithm: [heat_exchangers_lab_cost], 
+[Updating] with formulation: 530000*number_of_heat_exchangers
+[Updated]  Reference value is : $1,060,000  , calculated value is: $2,120,000   
+ 
+[Updating] Cost element [222.13_fac], running algorithm: [heat_exchangers_fac_cost], 
+[Updating] with formulation: 120000*number_of_heat_exchangers*heat_exchangers_mass
+[Updated]  Reference value is : $94,784     , calculated value is: $288,000     
+ 
+[Updating] Cost element [227_fac], running algorithm: [instrumentation_contorl_cost], 
+[Updating] with formulation: 2000*number_of_IO_sensors+6500000
+[Updated]  Reference value is : $8,500,000  , calculated value is: $8,100,000   
+ 
+[Updating] Cost element [231_fac], running algorithm: [turb_and_elec_sys_cost], 
+[Updating] with formulation: 282553*mwth+ 213800000*(pow(mwe/1144, 0.4) + pow(mwth/3431, 0.8))
+[Updated]  Reference value is : $18,734,511 , calculated value is: $19,893,806  
+ 
+
+
++-----+--------------+----------------+--------------+---------+---------+
+| ind | cost_element |   cost_2017    | sup_cost_ele | account | updated |
++-----+--------------+----------------+--------------+---------+---------+
+|  1  |   211_lab    |   3260000.0    |    21_lab    |   211   |    1    |
+|  2  |   212_mat    |    12399.84    |    21_mat    |   212   |    1    |
+|  3  |   212_lab    |   439854.24    |    21_lab    |   212   |    1    |
+|  4  |   213_mat    |   12916600.0   |    21_mat    |   213   |    1    |
+|  5  |   213_lab    |  196880000.0   |    21_lab    |   213   |    1    |
+|  6  |   218T_fac   |   1141100.0    |    21_fac    |   218T  |    1    |
+|  7  |  221.12_mat  |   31000000.0   |    22_mat    |  221.12 |    1    |
+|  8  |  221.12_lab  |   1408000.0    |    22_lab    |  221.12 |    1    |
+|  9  |  221.13_mat  |    155000.0    |    22_mat    |  221.13 |    1    |
+|  10 |  221.21_mat  |   12160000.0   |    22_mat    |  221.21 |    1    |
+|  11 |  221.22_mat  |   5720000.0    |    22_mat    |  221.22 |    1    |
+|  12 |  221.23_mat  |   6649300.0    |    22_mat    |  221.23 |    1    |
+|  13 |  221.24_mat  |    62000.0     |    22_mat    |  221.24 |    1    |
+|  14 |  222.12_mat  |   7500000.0    |    22_mat    |  222.12 |    1    |
+|  15 |  222.13_mat  |    200000.0    |    22_mat    |  222.13 |    1    |
+|  16 |  222.13_lab  |   2120000.0    |    22_lab    |  222.13 |    1    |
+|  17 |  222.13_fac  |    288000.0    |    22_fac    |  222.13 |    1    |
+|  18 |   227_fac    |   8100000.0    |    22_fac    |   227   |    1    |
+|  19 |   231_fac    | 19893805.60651 |    23_fac    |   231   |    1    |
++-----+--------------+----------------+--------------+---------+---------+
+
+
+====================================== Roll up cost elements =======================================
+
+
+[Updating] Roll up cost elements from level 3 to level 2
+[Updated] Cost elements rolled up
+
+============================== Summing cost elements for direct cost ===============================
+[Updating] Summing cost element for 2c_fac
+[Updating] Summing cost element for 2c_lab
+[Updating] Summing cost element for 2c_mat
+[Updated] Cost elements 2c_fac, 2c_lab, 2c_mat are: $29,422,906 , $204,107,854, $76,375,300 
+[Updated] Cost elements summed
+
+====================================== Updating account table ======================================
+
+
+[Updating] Updating account table by cost elements
+[Updated]  Account table updated from cost elements
+
+===================================== Rolling up account table =====================================
+
+
+[Updating] Rolling up account table from level 3 to level 2 
+[Updated]  Account table rolled up
+
+===================================== Rolling up account table =====================================
+
+
+[Updated]  Account table summed up for calculated direct cost.
+[Updated]  Account table rolled up for direct cost.
+
+=============================== Generating results table for review ================================
+
+
++-------+-----------------+-------------------------------------+----------+----------+----------+------------+------------------+
+| level | code_of_account |         account_description         | fac_cost | lab_cost | mat_cost | total_cost |  review_status   |
++-------+-----------------+-------------------------------------+----------+----------+----------+------------+------------------+
+|   0   | 2               | TOTAL DIRECT COST                   |    29.42 |   204.11 |    76.38 |     309.91 | Ready for Review |
+|   0   | 2C              | Calculated DIRECT COST              |    29.42 |   204.11 |    76.38 |     309.91 | Ready for Review |
+|   2   |   211           | Yardwork                            |        0 |     3.26 |        0 |       3.26 | Ready for Review |
+|   2   |   212           | Reactor containment                 |        0 |     0.44 |     0.01 |       0.45 | Ready for Review |
+|   2   |   213           | Building and utilities              |        0 |   196.88 |    12.92 |     209.80 | Ready for Review |
+|   3   |    218T         | Reactor startup facility            |     1.14 |        0 |        0 |       1.14 | Ready for Review |
+|   3   |    221.12       | Outer vessel                        |        0 |     1.41 |    31.00 |      32.41 | Ready for Review |
+|   3   |    221.13       | Inner vessel                        |        0 |        0 |     0.15 |       0.15 | Ready for Review |
+|   3   |    221.21       | Reactivity control system           |        0 |        0 |    12.16 |      12.16 | Ready for Review |
+|   3   |    221.22       | Reflector                           |        0 |        0 |     5.72 |       5.72 | Ready for Review |
+|   3   |    221.23       | Shield                              |        0 |        0 |     6.65 |       6.65 | Ready for Review |
+|   3   |    221.24       | Moderator                           |        0 |        0 |     0.06 |       0.06 | Ready for Review |
+|   3   |    222.12       | Reactor coolant system (heat pipes) |        0 |        0 |     7.50 |       7.50 | Ready for Review |
+|   3   |    222.13       | Heat exchangers                     |     0.29 |     2.12 |     0.20 |       2.61 | Ready for Review |
+|   2   |   227           | Instrumentation & control           |     8.10 |        0 |        0 |       8.10 | Ready for Review |
+|   2   |   231           | Turbine and electric systems        |    19.89 |        0 |        0 |      19.89 | Ready for Review |
++-------+-----------------+-------------------------------------+----------+----------+----------+------------+------------------+
+Successfully created excel file heatpipe_variable_affected_cost_elements.xlsx
+Successfully created excel file heatpipe_updated_cost_element.xlsx
+Successfully created excel file heatpipe_updated_account.xlsx
