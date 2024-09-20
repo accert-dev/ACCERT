@@ -1,0 +1,1214 @@
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::'###:::::'######:::'######::'########:'########::'########:
+::'## ##:::'##... ##:'##... ##: ##.....:: ##.... ##:... ##..::
+:'##:. ##:: ##:::..:: ##:::..:: ##::::::: ##:::: ##:::: ##::::
+'##:::. ##: ##::::::: ##::::::: ######::: ########::::: ##::::
+ #########: ##::::::: ##::::::: ##...:::: ##.. ##:::::: ##::::
+ ##.... ##: ##::: ##: ##::: ##: ##::::::: ##::. ##::::: ##::::
+ ##:::: ##:. ######::. ######:: ########: ##:::. ##:::: ##::::
+..:::::..:::.......::::......::........::..:::::..:::::..:::::
+
+
+======================================== Reading user input ========================================
+
+
+[USER_INPUT] Reference model is "ABR1000" 
+
+Parameter "mwe" is required for cost elements:
+241_fac, 242_fac, 245_fac, 246_fac, 241_lab, 242_lab, 245_lab, 246_lab, 241_mat, 242_mat, 245_mat,
+246_mat
+
+Parameter "mwth" is required for cost elements:
+213_fac, 220A.224_fac, 222.11_fac, 222.12_fac, 222.13_fac, 222.14_fac, 222_fac, 226.4_fac, 213_lab,
+222.11_lab, 222.12_lab, 222.13_lab, 222.14_lab, 222_lab, 213_mat, 222.11_mat, 222.12_mat,
+222.13_mat, 222.14_mat, 222_mat
+
+[USER_INPUT] Thermal power is 1000 MW 
+
+[Updating] Variable Cont_H_wall_m
+[Updated]  Changed from 35.3568 m to 20.0 m
+
+[Updating] Sup Variable Walls_s_m2, running algorithm: [walls_surface], 
+[Updating] with formulation: Cont_H_wall_m*2*PI()*(Cont_rad_out_m+Cont_rad_in_m)
+[Updated]  Reference value is : 6.47e+03 m^2, calculated value is: 3.66e+03 m^2
+ 
+[Updating] Sup Variable Walls_v_m3, running algorithm: [wall_volume], 
+[Updating] with formulation: Cont_H_wall_m*PI()*(Cont_rad_out_m^2-Cont_rad_in_m^2)
+[Updated]  Reference value is : 4.43e+03 m^3, calculated value is: 2.51e+03 m^3
+ 
+[Updating] Sup Variable Intern_tot_v_m3, running algorithm: [tot_internal_volume], 
+[Updating] with formulation: (PI()*Cont_rad_in_m^2*Cont_H_wall_m)+(0.5*(4/3)*PI()*Dome_rad_in_m^3)
+[Updated]  Reference value is : 2.73e+04 m^3, calculated value is: 1.80e+04 m^3
+ 
+[Updating] Sup Variable Inside_liner_s, running algorithm: [Inside_liner_surface], 
+[Updating] with formulation: (Cont_rad_in_m^2*PI())+(Cont_H_wall_m*2*PI()*Cont_rad_in_m)+(0.5*4*PI()*Dome_rad_in_m^2)
+[Updated]  Reference value is : 4.95e+03 m^2, calculated value is: 3.61e+03 m^2
+ 
+[Updating] Sup Variable Surf_paint_m2, running algorithm: [painted_surface], 
+[Updating] with formulation: Inside_liner_s+(Cont_H_wall_m*2*PI()*Cont_rad_out_m)+(0.5*4*PI()*Cont_rad_out_m^2)+Internal_s_m2
+[Updated]  Reference value is : 1.35e+04 m^2, calculated value is: 1.07e+04 m^2
+ 
+[Updating] Sup Variable Total_Labor_Constr_joints_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.31e+05 dollar, calculated value is: 1.31e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Formwork_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.04e+06 dollar, calculated value is: 1.15e+06 dollar
+ 
+[Updating] Sup Variable Total_Labor_Rubbing_surfaces_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.54e+05 dollar, calculated value is: 8.73e+04 dollar
+ 
+[Updating] Sup Variable Total_Labor_Waterproofing_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.56e+04 dollar, calculated value is: 8.82e+03 dollar
+ 
+[Updating] Sup Variable Total_Mat_Constr_joints_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.42e+05 dollar, calculated value is: 8.01e+04 dollar
+ 
+[Updating] Sup Variable Total_Mat_Formwork_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.53e+05 dollar, calculated value is: 1.43e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Rubbing_surfaces_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.26e+04 dollar, calculated value is: 7.13e+03 dollar
+ 
+[Updating] Sup Variable Total_Mat_Waterproofing_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 8.35e+03 dollar, calculated value is: 4.72e+03 dollar
+ 
+[Updating] Sup Variable Struct_v_m3, running algorithm: [volume_of_the_structures ], 
+[Updating] with formulation: Basemat_v_m3+Walls_v_m3+Dome_v_m3+Internal_v_m3
+[Updated]  Reference value is : 1.04e+04 m^3, calculated value is: 8.45e+03 m^3
+ 
+[Updating] Sup Variable Total_Labor_Cadweld_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.46e+06 dollar, calculated value is: 8.25e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Concrete_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.11e+06 dollar, calculated value is: 6.29e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Embedded_steel_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.03e+05 dollar, calculated value is: 1.15e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Reinforc_steel_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 4.15e+06 dollar, calculated value is: 2.35e+06 dollar
+ 
+[Updating] Sup Variable Total_Mat_Cadweld_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 7.57e+05 dollar, calculated value is: 4.28e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Concrete_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 6.93e+05 dollar, calculated value is: 3.92e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Embedded_steel_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 9.64e+04 dollar, calculated value is: 5.45e+04 dollar
+ 
+[Updating] Sup Variable Total_Mat_Reinforc_steel_Superstr, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 3.30e+06 dollar, calculated value is: 1.86e+06 dollar
+ 
+[Updating] Sup Variable Internal_v_m3, running algorithm: [building_internal_volume], 
+[Updating] with formulation: Intern_tot_v_m3*(1-Void_fraction)
+[Updated]  Reference value is : 2.27e+03 m^3, calculated value is: 1.50e+03 m^3
+ 
+[Updating] Sup Variable Total_Labor_Lighting_Power, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 7.71e+05 dollar, calculated value is: 5.09e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Plumb_drains, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.37e+05 dollar, calculated value is: 1.56e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Special_HVAC, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 8.70e+05 dollar, calculated value is: 5.74e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_other, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 4.16e+04 dollar, calculated value is: 2.74e+04 dollar
+ 
+[Updating] Sup Variable Total_Labor_fl_grate_handrail_stairs, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.37e+05 dollar, calculated value is: 9.06e+04 dollar
+ 
+[Updating] Sup Variable Total_Mat_Lighting_Power, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 3.89e+05 dollar, calculated value is: 2.57e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Plumb_drains, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.21e+05 dollar, calculated value is: 7.98e+04 dollar
+ 
+[Updating] Sup Variable Total_Mat_Special_HVAC, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 6.89e+05 dollar, calculated value is: 4.55e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_other, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.54e+05 dollar, calculated value is: 1.02e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_fl_grate_handrail_stairs, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.55e+05 dollar, calculated value is: 1.03e+05 dollar
+ 
+[Updating] Sup Variable Liner_s_m2, running algorithm: [liner_Surface], 
+[Updating] with formulation: Inside_liner_s*liner_fraction
+[Updated]  Reference value is : 4.95e+03 m^2, calculated value is: 3.61e+03 m^2
+ 
+[Updating] Sup Variable Surf_paint_m2, running algorithm: [painted_surface], 
+[Updating] with formulation: Inside_liner_s+(Cont_H_wall_m*2*PI()*Cont_rad_out_m)+(0.5*4*PI()*Cont_rad_out_m^2)+Internal_s_m2
+[Updated]  Reference value is : 1.07e+04 m^2, calculated value is: 1.07e+04 m^2
+ 
+[Updating] Sup Variable Total_Labor_painting, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 3.37e+06 dollar, calculated value is: 2.67e+06 dollar
+ 
+[Updating] Sup Variable Total_Mat_painting, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 9.57e+05 dollar, calculated value is: 7.58e+05 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Constr_joints, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+05 dollar, calculated value is: 2.20e+05 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Formwork, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 5.16e+06 dollar, calculated value is: 4.28e+06 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Rubbing_surfaces, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.05e+05 dollar, calculated value is: 2.38e+05 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Waterproofing, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.52e+04 dollar, calculated value is: 1.84e+04 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Constr_joints, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.96e+05 dollar, calculated value is: 1.35e+05 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Formwork, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 5.74e+05 dollar, calculated value is: 4.64e+05 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Rubbing_surfaces, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.51e+04 dollar, calculated value is: 1.96e+04 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Waterproofing, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.34e+04 dollar, calculated value is: 9.81e+03 dollar
+ 
+[Updating] Sup Variable Total_Labor_Misc_steel_frames, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.96e+05 dollar, calculated value is: 2.41e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Struct_steel, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 4.16e+05 dollar, calculated value is: 3.39e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Misc_steel_frames, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 4.93e+05 dollar, calculated value is: 4.02e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Struct_steel, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 8.16e+05 dollar, calculated value is: 6.65e+05 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Cadweld, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.28e+06 dollar, calculated value is: 2.65e+06 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Concrete, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.54e+06 dollar, calculated value is: 2.05e+06 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Embedded_steel, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.42e+06 dollar, calculated value is: 2.34e+06 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Reinforc_steel, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 9.46e+06 dollar, calculated value is: 7.66e+06 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Cadweld, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.70e+06 dollar, calculated value is: 1.37e+06 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Concrete, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+06 dollar, calculated value is: 1.45e+06 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Embedded_steel, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.15e+06 dollar, calculated value is: 1.11e+06 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Reinforc_steel, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 7.96e+06 dollar, calculated value is: 6.53e+06 dollar
+ 
+[Updating] Sup Variable Internal_s_m2, running algorithm: [building_internal _surface], 
+[Updating] with formulation: 2*Internal_v_m3/B11
+[Updated]  Reference value is : 3.72e+03 m^2, calculated value is: 2.46e+03 m^2
+ 
+[Updating] Sup Variable Struct_v_m3, running algorithm: [volume_of_the_structures ], 
+[Updating] with formulation: Basemat_v_m3+Walls_v_m3+Dome_v_m3+Internal_v_m3
+[Updated]  Reference value is : 8.45e+03 m^3, calculated value is: 7.68e+03 m^3
+ 
+[Updating] Sup Variable Total_Labor_Cadweld_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 3.14e+05 dollar, calculated value is: 2.07e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Concrete_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 6.35e+05 dollar, calculated value is: 4.20e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Embedded_steel_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.19e+06 dollar, calculated value is: 1.45e+06 dollar
+ 
+[Updating] Sup Variable Total_Labor_Maj_supp_embedments_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.00e+06 dollar, calculated value is: 6.60e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Reinforc_steel_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.00e+06 dollar, calculated value is: 1.32e+06 dollar
+ 
+[Updating] Sup Variable Total_Mat_Cadweld_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.63e+05 dollar, calculated value is: 1.07e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Concrete_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 3.46e+05 dollar, calculated value is: 2.29e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Embedded_steel_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.04e+06 dollar, calculated value is: 6.87e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Maj_supp_embedments_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.47e+06 dollar, calculated value is: 9.69e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Reinforc_steel_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.34e+06 dollar, calculated value is: 8.84e+05 dollar
+ 
+[Updating] Sup Variable Tot_Labor_equipment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.92e+06 dollar, calculated value is: 1.27e+06 dollar
+ 
+[Updating] Sup Variable Tot_Labor_equipment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.27e+06 dollar, calculated value is: 1.27e+06 dollar
+ 
+[Updating] Sup Variable Tot_Labor_equipment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.27e+06 dollar, calculated value is: 1.27e+06 dollar
+ 
+[Updating] Sup Variable Tot_Labor_equipment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.27e+06 dollar, calculated value is: 1.27e+06 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+07 dollar, calculated value is: 1.66e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_equipment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.35e+06 dollar, calculated value is: 8.94e+05 dollar
+ 
+[Updating] Sup Variable Tot_Mat_equipment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 8.94e+05 dollar, calculated value is: 8.94e+05 dollar
+ 
+[Updating] Sup Variable Tot_Mat_equipment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 8.94e+05 dollar, calculated value is: 8.94e+05 dollar
+ 
+[Updating] Sup Variable Tot_Mat_equipment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 8.94e+05 dollar, calculated value is: 8.94e+05 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.13e+07 dollar, calculated value is: 2.08e+07 dollar
+ 
+[Updating] Sup Variable Total_Labor_cont_liner, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.11e+07 dollar, calculated value is: 8.08e+06 dollar
+ 
+[Updating] Sup Variable Total_Mat_cont_liner, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.71e+07 dollar, calculated value is: 1.25e+07 dollar
+ 
+[Updating] Sup Variable Total_Labor_painting, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.67e+06 dollar, calculated value is: 2.67e+06 dollar
+ 
+[Updating] Sup Variable Total_Mat_painting, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 7.58e+05 dollar, calculated value is: 7.58e+05 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.66e+07 dollar, calculated value is: 1.36e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.08e+07 dollar, calculated value is: 1.62e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.45e+07 dollar, calculated value is: 2.05e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+07 dollar, calculated value is: 2.05e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+07 dollar, calculated value is: 2.05e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+07 dollar, calculated value is: 2.05e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.48e+07 dollar, calculated value is: 1.26e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.26e+07 dollar, calculated value is: 1.26e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.26e+07 dollar, calculated value is: 1.26e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.26e+07 dollar, calculated value is: 1.26e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.36e+07 dollar, calculated value is: 1.36e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.36e+07 dollar, calculated value is: 1.36e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.62e+07 dollar, calculated value is: 1.62e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.62e+07 dollar, calculated value is: 1.62e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+07 dollar, calculated value is: 2.05e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+07 dollar, calculated value is: 2.05e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+07 dollar, calculated value is: 2.05e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+07 dollar, calculated value is: 2.05e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.26e+07 dollar, calculated value is: 1.26e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.26e+07 dollar, calculated value is: 1.26e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.26e+07 dollar, calculated value is: 1.26e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.26e+07 dollar, calculated value is: 1.26e+07 dollar
+ 
+[Updating] Sup Variable Surf_paint_m2, running algorithm: [painted_surface], 
+[Updating] with formulation: Inside_liner_s+(Cont_H_wall_m*2*PI()*Cont_rad_out_m)+(0.5*4*PI()*Cont_rad_out_m^2)+Internal_s_m2
+[Updated]  Reference value is : 1.07e+04 m^2, calculated value is: 9.44e+03 m^2
+ 
+[Updating] Sup Variable Total_Labor_Constr_joints_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.19e+04 dollar, calculated value is: 1.44e+04 dollar
+ 
+[Updating] Sup Variable Total_Labor_Formwork_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.47e+06 dollar, calculated value is: 1.63e+06 dollar
+ 
+[Updating] Sup Variable Total_Labor_Rubbing_surfaces_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.06e+05 dollar, calculated value is: 6.99e+04 dollar
+ 
+[Updating] Sup Variable Total_Mat_Constr_joints_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 1.35e+04 dollar, calculated value is: 8.90e+03 dollar
+ 
+[Updating] Sup Variable Total_Mat_Formwork_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.33e+05 dollar, calculated value is: 1.54e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Rubbing_surfaces_Interior, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 8.76e+03 dollar, calculated value is: 5.77e+03 dollar
+ 
+[Updating] Sup Variable Total_Labor_Misc_steel_frames, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.41e+05 dollar, calculated value is: 2.19e+05 dollar
+ 
+[Updating] Sup Variable Total_Labor_Struct_steel, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 3.39e+05 dollar, calculated value is: 3.08e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Misc_steel_frames, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 4.02e+05 dollar, calculated value is: 3.65e+05 dollar
+ 
+[Updating] Sup Variable Total_Mat_Struct_steel, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 6.65e+05 dollar, calculated value is: 6.04e+05 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Cadweld, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.65e+06 dollar, calculated value is: 2.54e+06 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Concrete, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+06 dollar, calculated value is: 1.84e+06 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Embedded_steel, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.34e+06 dollar, calculated value is: 1.59e+06 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Maj_supp_embedments, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.00e+06 dollar, calculated value is: 6.60e+05 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Reinforc_steel, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 7.66e+06 dollar, calculated value is: 6.98e+06 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Cadweld, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.37e+06 dollar, calculated value is: 1.32e+06 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Concrete, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.45e+06 dollar, calculated value is: 1.33e+06 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Embedded_steel, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.11e+06 dollar, calculated value is: 7.53e+05 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Maj_supp_embedments, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.47e+06 dollar, calculated value is: 9.69e+05 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Reinforc_steel, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 6.53e+06 dollar, calculated value is: 6.07e+06 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 4.39e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.75e+07 dollar, calculated value is: 2.96e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.96e+07 dollar, calculated value is: 2.96e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.96e+07 dollar, calculated value is: 2.96e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.96e+07 dollar, calculated value is: 2.96e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.96e+07 dollar, calculated value is: 2.96e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.36e+07 dollar, calculated value is: 1.36e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.62e+07 dollar, calculated value is: 1.61e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.36e+07 dollar, calculated value is: 1.36e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.61e+07 dollar, calculated value is: 1.61e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.96e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.53e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.95e+07 dollar
+ 
+[Updating] Sup Variable Total_Labor_painting, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 2.67e+06 dollar, calculated value is: 2.35e+06 dollar
+ 
+[Updating] Sup Variable Total_Mat_painting, running algorithm: [tol_contaiment_ce_cost], 
+[Updating] with formulation: unitcost*number_of stucture_unit
+[Updated]  Reference value is : 7.58e+05 dollar, calculated value is: 6.69e+05 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Constr_joints, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.20e+05 dollar, calculated value is: 2.13e+05 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Formwork, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 4.28e+06 dollar, calculated value is: 3.44e+06 dollar
+ 
+[Updating] Sup Variable Sum_Labor_Rubbing_surfaces, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.38e+05 dollar, calculated value is: 2.02e+05 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Constr_joints, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.35e+05 dollar, calculated value is: 1.30e+05 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Formwork, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 4.64e+05 dollar, calculated value is: 3.85e+05 dollar
+ 
+[Updating] Sup Variable Sum_Mat_Rubbing_surfaces, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.96e+04 dollar, calculated value is: 1.66e+04 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.36e+07 dollar, calculated value is: 1.32e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.32e+07 dollar, calculated value is: 1.32e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.61e+07 dollar, calculated value is: 1.60e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.60e+07 dollar, calculated value is: 1.60e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.05e+07 dollar, calculated value is: 1.75e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+07 dollar, calculated value is: 1.75e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+07 dollar, calculated value is: 1.75e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+07 dollar, calculated value is: 1.75e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+07 dollar, calculated value is: 1.75e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.26e+07 dollar, calculated value is: 1.10e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.10e+07 dollar, calculated value is: 1.10e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.10e+07 dollar, calculated value is: 1.10e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.10e+07 dollar, calculated value is: 1.10e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.10e+07 dollar, calculated value is: 1.10e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.53e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.95e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.32e+07 dollar, calculated value is: 1.32e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_others, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.60e+07 dollar, calculated value is: 1.60e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+07 dollar, calculated value is: 1.75e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+07 dollar, calculated value is: 1.75e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.75e+07 dollar, calculated value is: 1.75e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.10e+07 dollar, calculated value is: 1.10e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.10e+07 dollar, calculated value is: 1.10e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_concr, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 1.10e+07 dollar, calculated value is: 1.10e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Labor_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 3.20e+07 dollar, calculated value is: 3.20e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+[Updating] Sup Variable Tot_Mat_containment, running algorithm: [sum_ce], 
+[Updating] with formulation: sum(cost_element_1,cost_element2,cost_element_n)
+[Updated]  Reference value is : 2.79e+07 dollar, calculated value is: 2.79e+07 dollar
+ 
+=================================Extracting user changed variables==================================
+abr_variable
+
+
++------------------------------------------+-----------------------------------------------------------------------------------+---------------+----------+
+|                 var_name                 |                                  var_description                                  |   var_value   | var_unit |
++------------------------------------------+-----------------------------------------------------------------------------------+---------------+----------+
+|              Cont_H_wall_m               |                              Containment wall height                              |     20.00     |    m     |
+|              Inside_liner_s              |                                Inside liner surface                               |    3,609.15   |   m^2    |
+|             Intern_tot_v_m3              |                                 Tot intenal Volume                                |   18,047.57   |   m^3    |
+|              Internal_s_m2               |                             Building internal surface                             |    2,457.26   |   m^2    |
+|              Internal_v_m3               |                              Building internal volume                             |    1,497.95   |   m^3    |
+|                Liner_s_m2                |                                   Liner Surface                                   |    3,609.15   |   m^2    |
+|                   mwth                   |                                  user_input mwth                                  |    1,000.00   |    MW    |
+|               Struct_v_m3                |                             volume of the structures                              |    7,680.88   |   m^3    |
+|            Sum_Labor_Cadweld             |                            Total cost of Labor Cadweld                            |  2,540,293.16 |  dollar  |
+|            Sum_Labor_Concrete            |                            Total cost of Labor Concrete                           |  1,836,590.78 |  dollar  |
+|         Sum_Labor_Constr_joints          |                         Total cost of Labor Constr joints                         |   212,569.30  |  dollar  |
+|         Sum_Labor_Embedded_steel         |                         Total cost of Labor Embedded steel                        |  1,590,131.11 |  dollar  |
+|            Sum_Labor_Formwork            |                            Total cost of Labor Formwork                           |  3,439,536.04 |  dollar  |
+|      Sum_Labor_Maj_supp_embedments       |                      Total cost of Labor Maj supp embedments                      |   660,160.98  |  dollar  |
+|         Sum_Labor_Reinforc_steel         |                         Total cost of Labor Reinforc steel                        |  6,977,746.37 |  dollar  |
+|        Sum_Labor_Rubbing_surfaces        |                        Total cost of Labor Rubbing surfaces                       |   202,100.07  |  dollar  |
+|         Sum_Labor_Waterproofing          |                         Total cost of Labor Waterproofing                         |   18,408.22   |  dollar  |
+|             Sum_Mat_Cadweld              |                           Total cost of Material Cadweld                          |  1,317,412.11 |  dollar  |
+|             Sum_Mat_Concrete             |                          Total cost of Material Concrete                          |  1,328,470.40 |  dollar  |
+|          Sum_Mat_Constr_joints           |                        Total cost of Material Constr joints                       |   130,376.53  |  dollar  |
+|          Sum_Mat_Embedded_steel          |                       Total cost of Material Embedded steel                       |   753,337.54  |  dollar  |
+|             Sum_Mat_Formwork             |                          Total cost of Material Formwork                          |   385,042.24  |  dollar  |
+|       Sum_Mat_Maj_supp_embedments        |                     Total cost of Material Maj supp embedments                    |   968,978.09  |  dollar  |
+|          Sum_Mat_Reinforc_steel          |                       Total cost of Material Reinforc steel                       |  6,070,982.65 |  dollar  |
+|         Sum_Mat_Rubbing_surfaces         |                      Total cost of Material Rubbing surfaces                      |   16,579.07   |  dollar  |
+|          Sum_Mat_Waterproofing           |                        Total cost of Material Waterproofing                       |    9,808.25   |  dollar  |
+|              Surf_paint_m2               |                                  painted surface                                  |    9,440.85   |   m^2    |
+|             Tot_Labor_concr              |                  Total cost of labor of containment construction                  | 17,498,627.52 |  dollar  |
+|          Tot_Labor_containment           |                         Total cost of labor of containment                        | 32,009,001.02 |  dollar  |
+|           Tot_Labor_equipment            |                   Total cost of labor of containment equipments                   |  1,267,661.66 |  dollar  |
+|             Tot_Labor_others             |              Total cost of labor of other non-concrete related items              | 13,242,711.84 |  dollar  |
+|              Tot_Mat_concr               |                 Total cost of material of containment construction                | 10,991,857.25 |  dollar  |
+|           Tot_Mat_containment            |                       Total cost of material of containment                       | 27,872,929.22 |  dollar  |
+|            Tot_Mat_equipment             |                  Total cost of material of containment equipments                 |   893,715.91  |  dollar  |
+|              Tot_Mat_others              |            Total cost of material of other non-concrete related items             | 15,987,356.06 |  dollar  |
+|       Total_Labor_Cadweld_Interior       |               Total cost of Labor Cadweld Interior structure in 2017              |   207,256.18  |  dollar  |
+|       Total_Labor_Cadweld_Superstr       |             Total cost of Labor Cadweld Superstructure (shell) in 2017            |   825,368.66  |  dollar  |
+|      Total_Labor_Concrete_Interior       |              Total cost of Labor Concrete Interior structure in 2017              |   419,530.50  |  dollar  |
+|      Total_Labor_Concrete_Superstr       |            Total cost of Labor Concrete Superstructure (shell) in 2017            |   629,273.99  |  dollar  |
+|    Total_Labor_Constr_joints_Interior    |         Total cost of Labor Construction joints Interior structure in 2017        |   14,448.72   |  dollar  |
+|    Total_Labor_Constr_joints_Superstr    |       Total cost of Labor Construction joints Superstructure (shell) in 2017      |   130,622.52  |  dollar  |
+|          Total_Labor_cont_liner          |                   Total cost of Labor Containment liner in 2017                   |  8,084,276.56 |  dollar  |
+|   Total_Labor_Embedded_steel_Interior    |           Total cost of Labor Embedded steel Interior structure in 2017           |  1,449,654.85 |  dollar  |
+|   Total_Labor_Embedded_steel_Superstr    |         Total cost of Labor Embedded steel Superstructure (shell) in 2017         |   115,067.96  |  dollar  |
+|   Total_Labor_fl_grate_handrail_stairs   |   Total cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017  |   90,598.83   |  dollar  |
+|      Total_Labor_Formwork_Interior       |              Total cost of Labor Formwork Interior structure in 2017              |  1,633,049.15 |  dollar  |
+|      Total_Labor_Formwork_Superstr       |            Total cost of Labor Formwork Superstructure (shell) in 2017            |  1,153,216.49 |  dollar  |
+|        Total_Labor_Lighting_Power        |                     Total cost of Labor Lighting Power in 2017                    |   509,302.56  |  dollar  |
+| Total_Labor_Maj_supp_embedments_Interior |      Total cost of Labor Major Support Embedments Interior structure in 2017      |   660,160.98  |  dollar  |
+|      Total_Labor_Misc_steel_frames       |               Total cost of Labor miscellaneous steel frames in 2017              |   219,135.57  |  dollar  |
+|            Total_Labor_other             |                         Total cost of Labor other in 2017                         |   27,432.31   |  dollar  |
+|           Total_Labor_painting           |                        Total cost of Labor painting in 2017                       |  2,352,281.21 |  dollar  |
+|         Total_Labor_Plumb_drains         |                      Total cost of Labor Plumb drains in 2017                     |   156,472.47  |  dollar  |
+|   Total_Labor_Reinforc_steel_Interior    |           Total cost of Labor Reinforc steel Interior structure in 2017           |  1,318,853.97 |  dollar  |
+|   Total_Labor_Reinforc_steel_Superstr    |         Total cost of Labor Reinforc steel Superstructure (shell) in 2017         |  2,348,419.94 |  dollar  |
+|  Total_Labor_Rubbing_surfaces_Interior   |          Total cost of Labor Rubbing surfaces Interior structure in 2017          |   69,909.19   |  dollar  |
+|  Total_Labor_Rubbing_surfaces_Superstr   |        Total cost of Labor Rubbing surfaces Superstructure (shell) in 2017        |   87,349.92   |  dollar  |
+|         Total_Labor_Special_HVAC         |                      Total cost of Labor Special HVAC in 2017                     |   574,454.31  |  dollar  |
+|         Total_Labor_Struct_steel         |                      Total cost of Labor Struct steel in 2017                     |   308,233.80  |  dollar  |
+|    Total_Labor_Waterproofing_Superstr    |          Total cost of Labor Waterproofing Superstructure (shell) in 2017         |    8,815.47   |  dollar  |
+|        Total_Mat_Cadweld_Interior        |             Total cost of Material Cadweld Interior structure in 2017             |   107,492.80  |  dollar  |
+|        Total_Mat_Cadweld_Superstr        |           Total cost of Material Cadweld Superstructure (shell) in 2017           |   428,011.68  |  dollar  |
+|       Total_Mat_Concrete_Interior        |             Total cost of Material Concrete Interior structure in 2017            |   228,796.69  |  dollar  |
+|       Total_Mat_Concrete_Superstr        |           Total cost of Material Concrete Superstructure (shell) in 2017          |   392,239.51  |  dollar  |
+|     Total_Mat_Constr_joints_Interior     |       Total cost of Material Construction joints Interior structure in 2017       |    8,895.30   |  dollar  |
+|     Total_Mat_Constr_joints_Superstr     |     Total cost of Material Construction joints Superstructure (shell) in 2017     |   80,107.34   |  dollar  |
+|           Total_Mat_cont_liner           |                  Total cost of Material Containment liner in 2017                 | 12,463,148.42 |  dollar  |
+|    Total_Mat_Embedded_steel_Interior     |          Total cost of Material Embedded steel Interior structure in 2017         |   686,824.47  |  dollar  |
+|    Total_Mat_Embedded_steel_Superstr     |        Total cost of Material Embedded steel Superstructure (shell) in 2017       |   54,511.16   |  dollar  |
+|    Total_Mat_fl_grate_handrail_stairs    | Total cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017 |   102,510.23  |  dollar  |
+|       Total_Mat_Formwork_Interior        |             Total cost of Material Formwork Interior structure in 2017            |   154,119.66  |  dollar  |
+|       Total_Mat_Formwork_Superstr        |           Total cost of Material Formwork Superstructure (shell) in 2017          |   143,315.32  |  dollar  |
+|         Total_Mat_Lighting_Power         |                   Total cost of Material Lighting Power in 2017                   |   256,997.47  |  dollar  |
+|  Total_Mat_Maj_supp_embedments_Interior  |     Total cost of Material Major Support Embedments Interior structure in 2017    |   968,978.09  |  dollar  |
+|       Total_Mat_Misc_steel_frames        |             Total cost of Material miscellaneous steel frames in 2017             |   365,149.14  |  dollar  |
+|             Total_Mat_other              |                        Total cost of Material other in 2017                       |   101,607.85  |  dollar  |
+|            Total_Mat_painting            |                      Total cost of Material painting in 2017                      |   668,789.54  |  dollar  |
+|          Total_Mat_Plumb_drains          |                    Total cost of Material Plumb drains in 2017                    |   79,770.28   |  dollar  |
+|    Total_Mat_Reinforc_steel_Interior     |          Total cost of Material Reinforc steel Interior structure in 2017         |   884,314.03  |  dollar  |
+|    Total_Mat_Reinforc_steel_Superstr     |        Total cost of Material Reinforc steel Superstructure (shell) in 2017       |  1,864,667.91 |  dollar  |
+|   Total_Mat_Rubbing_surfaces_Interior    |         Total cost of Material Rubbing surfaces Interior structure in 2017        |    5,774.57   |  dollar  |
+|   Total_Mat_Rubbing_surfaces_Superstr    |       Total cost of Material Rubbing surfaces Superstructure (shell) in 2017      |    7,132.85   |  dollar  |
+|          Total_Mat_Special_HVAC          |                    Total cost of Material Special HVAC in 2017                    |   455,340.32  |  dollar  |
+|          Total_Mat_Struct_steel          |                    Total cost of Material Struct steel in 2017                    |   604,331.81  |  dollar  |
+|     Total_Mat_Waterproofing_Superstr     |        Total cost of Material Waterproofing Superstructure (shell) in 2017        |    4,718.65   |  dollar  |
+|                Walls_s_m2                |                                   Walls surface                                   |    3,657.87   |   m^2    |
+|                Walls_v_m3                |                                    Walls volume                                   |    2,508.57   |   m^3    |
++------------------------------------------+-----------------------------------------------------------------------------------+---------------+----------+
+
+
+================================ Extracting affected cost elements =================================
+
+
+variable "mwth" affects cost element(s):
+213_fac, 220A.224_fac, 222.11_fac, 222.12_fac, 222.13_fac, 222.14_fac, 222_fac, 226.4_fac, 213_lab,
+222.11_lab, 222.12_lab, 222.13_lab, 222.14_lab, 222_lab, 213_mat, 222.11_mat, 222.12_mat,
+222.13_mat, 222.14_mat, 222_mat
+
+variable "Tot_Labor_containment" affects cost element(s):
+212_lab
+
+variable "Tot_Mat_containment" affects cost element(s):
+212_mat
+
+====================================== Updating cost elements ======================================
+
+
+[Updating] Cost element [212_mat], running algorithm: [containment], 
+[Updating] with formulation: containment structure + equipment + others
+[Updated]  Reference value is : $37,484,659 , calculated value is: $27,872,929  
+ 
+[Updating] Cost element [212_lab], running algorithm: [containment], 
+[Updating] with formulation: containment structure + equipment + others
+[Updated]  Reference value is : $43,940,776 , calculated value is: $32,009,001  
+ 
+[Updating] Cost element [222_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $523,270    , calculated value is: $523,270     
+ 
+[Updating] Cost element [222.14_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $8,217      , calculated value is: $8,217       
+ 
+[Updating] Cost element [222.13_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $61,390     , calculated value is: $61,390      
+ 
+[Updating] Cost element [222.12_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $326,175    , calculated value is: $326,175     
+ 
+[Updating] Cost element [222.11_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $127,488    , calculated value is: $127,488     
+ 
+[Updating] Cost element [213_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $12,070,728 , calculated value is: $12,070,728  
+ 
+[Updating] Cost element [222_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $5,288,233  , calculated value is: $5,288,233   
+ 
+[Updating] Cost element [222.14_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $82,173     , calculated value is: $82,173      
+ 
+[Updating] Cost element [222.13_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $613,897    , calculated value is: $613,897     
+ 
+[Updating] Cost element [222.12_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $3,317,279  , calculated value is: $3,317,279   
+ 
+[Updating] Cost element [222.11_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,274,883  , calculated value is: $1,274,883   
+ 
+[Updating] Cost element [213_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $11,873,274 , calculated value is: $11,873,274  
+ 
+[Updating] Cost element [226.4_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $34,304,867 , calculated value is: $34,304,867  
+ 
+[Updating] Cost element [222_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $2,409,023  , calculated value is: $2,409,023   
+ 
+[Updating] Cost element [222.14_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $4,380      , calculated value is: $4,380       
+ 
+[Updating] Cost element [222.13_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $21,901     , calculated value is: $219,007     
+ 
+[Updating] Cost element [222.12_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,280,778  , calculated value is: $1,280,778   
+ 
+[Updating] Cost element [222.11_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,101,964  , calculated value is: $1,101,964   
+ 
+[Updating] Cost element [213_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $660,389    , calculated value is: $660,389     
+ 
+[Updating] Cost element [220A.224_fac], running algorithm: [MWth_lmfbrscale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_LMFBR)^thermal_power_scale
+[Updated]  Reference value is : $1,379,368  , calculated value is: $2,291,911   
+ 
+
+
++-----+--------------+----------------+--------------+----------+---------+
+| ind | cost_element |   cost_2017    | sup_cost_ele | account  | updated |
++-----+--------------+----------------+--------------+----------+---------+
+|  3  |   213_fac    |  660388.73548  |    21_fac    |   213    |    1    |
+|  16 | 220A.224_fac | 2291910.80017  |   220A_fac   | 220A.224 |    1    |
+|  17 |  222.11_fac  | 1101963.79539  |   222_fac    |  222.11  |    1    |
+|  18 |  222.12_fac  | 1280778.06441  |   222_fac    |  222.12  |    1    |
+|  19 |  222.13_fac  |  219006.82017  |   222_fac    |  222.13  |    1    |
+|  20 |  222.14_fac  |   4380.13611   |   222_fac    |  222.14  |    1    |
+|  21 |   222_fac    | 2409022.67706  |    22_fac    |   222    |    1    |
+|  23 |  226.4_fac   | 34304867.3856  |   226_fac    |  226.4   |    1    |
+|  38 |   212_lab    | 32009001.02191 |    21_lab    |   212    |    1    |
+|  39 |   213_lab    | 11873273.98938 |    21_lab    |   213    |    1    |
+|  53 |  222.11_lab  |  1274883.3244  |   222_lab    |  222.11  |    1    |
+|  54 |  222.12_lab  | 3317279.46371  |   222_lab    |  222.12  |    1    |
+|  55 |  222.13_lab  |  613896.82308  |   222_lab    |  222.13  |    1    |
+|  56 |  222.14_lab  |  82172.71233   |   222_lab    |  222.14  |    1    |
+|  57 |   222_lab    | 5288232.80385  |    22_mat    |   222    |    1    |
+|  74 |   212_mat    | 27872929.22357 |    21_mat    |   212    |    1    |
+|  75 |   213_mat    | 12070728.12312 |    21_mat    |   213    |    1    |
+|  89 |  222.11_mat  |  127488.33256  |   222_mat    |  222.11  |    1    |
+|  90 |  222.12_mat  |  326175.16001  |   222_mat    |  222.12  |    1    |
+|  91 |  222.13_mat  |  61389.68231   |   222_mat    |  222.13  |    1    |
+|  92 |  222.14_mat  |   8216.99446   |   222_mat    |  222.14  |    1    |
+|  93 |   222_mat    |  523270.21743  |    22_mat    |   222    |    1    |
++-----+--------------+----------------+--------------+----------+---------+
+
+
+====================================== Roll up cost elements =======================================
+
+
+[Updating] Roll up cost elements from level 3 to level 2
+[Updated] Cost elements rolled up
+
+============================== Summing cost elements for direct cost ===============================
+[Updating] Summing cost element for 2c_fac
+[Updating] Summing cost element for 2c_lab
+[Updating] Summing cost element for 2c_mat
+[Updated] Cost elements 2c_fac, 2c_lab, 2c_mat are: $737,352,923, $318,522,185, $149,181,026
+[Updated] Cost elements summed
+
+====================================== Updating account table ======================================
+
+
+[Updating] Updating account table by cost elements
+[Updated]  Account table updated from cost elements
+
+===================================== Rolling up account table =====================================
+
+
+[Updating] Rolling up account table from level 3 to level 2 
+[Updated]  Account table rolled up
+
+===================================== Rolling up account table =====================================
+
+
+[Updated]  Account table summed up for calculated direct cost.
+[Updated]  Account table rolled up for direct cost.
+
+=============================== Generating results table for review ================================
+
+
++-------+-----------------+-------------------------------------------------+----------+----------+----------+------------+------------------+
+| level | code_of_account |               account_description               | fac_cost | lab_cost | mat_cost | total_cost |  review_status   |
++-------+-----------------+-------------------------------------------------+----------+----------+----------+------------+------------------+
+|   0   | 2               | TOTAL DIRECT COST                               |   854.26 |   369.02 |   172.83 |   1,396.11 | Ready for Review |
+|   0   | 2C              | Calculated DIRECT COST                          |   737.35 |   318.52 |   149.18 |   1,205.06 | Ready for Review |
+|   2   |   211           | Yardwork                                        |     0.81 |    41.33 |    29.08 |      71.21 |    Unchanged     |
+|   2   |   212           | Reactor containment building                    |        0 |    32.01 |    27.87 |      59.88 | Ready for Review |
+|   2   |   213           | Turbine room and heater bay                     |     0.66 |    11.87 |    12.07 |      24.60 | Ready for Review |
+|   2   |   215           | Primary auxiliary building and tunnels          |     2.12 |     7.10 |     3.25 |      12.47 |    Unchanged     |
+|   2   |   216           | Waste processing building                       |     1.76 |    24.34 |    12.66 |      38.75 |    Unchanged     |
+|   2   |   217           | Fuel storage building                           |     2.84 |    12.84 |    12.47 |      28.15 |    Unchanged     |
+|   3   |    218A         | Control Room/Diesel Generator Building          |     1.31 |    10.04 |     4.90 |      16.25 |    Unchanged     |
+|   3   |    220A.211     | Vessel Structure (NSSS)                         |   127.38 |     8.75 |     0.87 |     137.00 |    Unchanged     |
+|   3   |    220A.2121    | Lower Internals (NSSS)                          |    45.20 |        0 |        0 |      45.20 |    Unchanged     |
+|   3   |    220A.2122    | Upper Internals (NSSS)                          |    45.20 |        0 |        0 |      45.20 |    Unchanged     |
+|   3   |    220A.2131    | Control Rods (NSSS)                             |     1.32 |        0 |        0 |       1.32 |    Unchanged     |
+|   3   |    220A.2132    | Control Rod Drives (NSSS)                       |    13.45 |        0 |        0 |      13.45 |    Unchanged     |
+|   3   |    220A.221     | Main Coolant Pumps (NSSS)                       |    55.70 |        0 |        0 |      55.70 |    Unchanged     |
+|   3   |    220A.222     | Reactor Coolant Piping (NSSS)                   |     7.46 |        0 |        0 |       7.46 |    Unchanged     |
+|   3   |    220A.223     | Steam Generators (NSSS)                         |   118.65 |     3.17 |     0.27 |     122.09 |    Unchanged     |
+|   3   |    220A.224     | Pressurizer (NSSS)                              |     2.29 |        0 |        0 |       2.29 | Ready for Review |
+|   2   |   222           | Main heat transfer transport system             |     2.61 |     5.29 |     0.52 |       8.42 |     Updated      |
+|   3   |    222.11       | Fluid Circulation Drive System (Field Cost 222) |     1.10 |     1.27 |     0.13 |       2.50 | Ready for Review |
+|   3   |    222.12       | Reactor Coolant Piping System (Field Cost 222)  |     1.28 |     3.32 |     0.33 |       4.92 | Ready for Review |
+|   3   |    222.13       | Steam Generator Equipment (Field Cost 222)      |     0.22 |     0.61 |     0.06 |       0.89 | Ready for Review |
+|   3   |    222.14       | Pressurizing System (Field Cost 222)            |     0.00 |     0.08 |     0.01 |       0.09 | Ready for Review |
+|   2   |   224           | Radwaste processing                             |    46.05 |    11.43 |     2.19 |      59.67 |    Unchanged     |
+|   3   |    226.4        | Coolant Treatment & Recycle                     |    34.30 |        0 |        0 |      34.30 | Ready for Review |
+|   3   |    226.7        | Aux Cool Sys (Broken Down Further)              |        0 |        0 |        0 |          0 |    Unchanged     |
+|   2   |   227           | Reactor instrumentation and control             |    37.54 |    21.96 |     1.92 |      61.42 |    Unchanged     |
+|   2   |   231           | Turbine generator                               |    53.54 |     0.59 |     3.27 |      57.40 |    Unchanged     |
+|   2   |   233           | Condensing systems                              |    19.83 |     8.08 |     1.15 |      29.07 |    Unchanged     |
+|   2   |   234           | Feedwater heating system                        |        0 |        0 |        0 |          0 |    Unchanged     |
+|   2   |   235           | Other turbine plant equipment                   |     4.79 |     4.26 |     0.52 |       9.56 |    Unchanged     |
+|   2   |   241           | Switchgear                                      |    20.64 |     1.11 |     0.16 |      21.90 |    Unchanged     |
+|   2   |   242           | Station service equipment                       |    33.56 |     2.86 |     0.55 |      36.97 |    Unchanged     |
+|   2   |   245           | Electric structure and wiring contnr.           |        0 |    32.97 |     7.92 |      40.89 |    Unchanged     |
+|   2   |   246           | Power and control wiring                        |     2.90 |    21.51 |    13.36 |      37.77 |    Unchanged     |
+|   2   |   252           | Air, water and steam service systems            |    24.87 |    44.37 |    12.61 |      81.85 |    Unchanged     |
+|   2   |   262           | Mechanical equipment                            |    30.56 |    12.63 |     1.59 |      44.78 |    Unchanged     |
++-------+-----------------+-------------------------------------------------+----------+----------+----------+------------+------------------+
+Successfully created excel file abr1000_variable_affected_cost_elements.xlsx
+Successfully created excel file abr1000_updated_cost_element.xlsx
+Successfully created excel file abr1000_updated_account.xlsx

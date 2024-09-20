@@ -1483,8 +1483,20 @@ class Accert:
                 print('[USER_INPUT]', 'New account', user_added_coa, user_added_coa_desc, user_added_coa_total_cost, '\n')
                 self.insert_COA(c, str(parent_id),user_added_coa,user_added_coa_desc,user_added_coa_total_cost)
             # if ref.model is not fusion then process cost elements:
-            if accert.ref_model!="fusion":
+            if self.ref_model!="fusion":
                 self.process_ce(c, account)
+            else:
+                if account.alg:
+                    for alg in account.alg:
+                        if alg.var:
+                            for var in alg.var:
+                                if var.alg is None:
+                                    self.process_var(c, var)
+                                else:
+                                    self.process_alg(c, var)
+                elif accout.var:
+                    for var in account.var:
+                        self.process_var(c, var)
             for i in range(3, 7):
                 next_level = getattr(account, f'l{i}COA', None)
                 if next_level:
@@ -1511,6 +1523,9 @@ class Accert:
                                     self.process_var(c, var)
                                 else:
                                     self.process_alg(c, var)
+                elif ce.var:
+                    for var in ce.var:
+                        self.process_var(c, var)
 
     def process_var(self, c, var_inp):
         """
