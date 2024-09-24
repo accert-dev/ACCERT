@@ -39,6 +39,7 @@ class Accert:
         self.esc_tabl = None
         self.fac_tabl = None
         self.use_gncoa = False
+        self.gncoa_map = 'gncoamapping'
     
     def setup_table_names(self,xml2obj):
         """Setup different table names in the database.

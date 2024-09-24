@@ -23,6 +23,7 @@ class Utility_methods:
         self.alg_tabl = Accert.alg_tabl
         self.esc_tabl = Accert.esc_tabl
         self.fac_tabl = Accert.fac_tabl
+        self.gncoa_map = Accert.gncoa_map
 
         return None
 
@@ -321,9 +322,9 @@ class Utility_methods:
         # tol_lab=None
         # tol_mat=None
 
-        c.callproc('print_leveled_accounts_gn', (self.acc_tabl,level))
-        align_key=["gncoa", "total_cost"]
-        align=[ "l", "r"]
+        c.callproc('print_leveled_accounts_gn', (self.acc_tabl,self.gncoa_map,level))
+        align_key=["gncoa","gncoa_description", "total_cost"]
+        align=[ "l","l", "r"]
         if cost_unit=='million':
             for row in c.stored_results():
                 results = row.fetchall()
@@ -335,16 +336,19 @@ class Utility_methods:
                     # if index is 0, and tol_fac, tol_lab, tol_mat are not None, format the values
                     if idx == 0 and tol_fac and tol_lab and tol_mat:
                         # First row special formatting
-                        row[2] = "{:,.2f}".format(tol_fac / 1000000)
-                        row[3] = "{:,.2f}".format(tol_lab / 1000000)
-                        row[4] = "{:,.2f}".format(tol_mat / 1000000)
-                        row[5] = "{:,.2f}".format(row[5] / 1000000)
+                        row[3] = "{:,.2f}".format(tol_fac / 1000000)
+                        row[4] = "{:,.2f}".format(tol_lab / 1000000)
+                        row[5] = "{:,.2f}".format(tol_mat / 1000000)
+                        row[6] = "{:,.2f}".format(row[6] / 1000000)
                     else:
                         # Format other rows or print 0 if value is None
-                        row[2:6] = ['{:,.2f}'.format(x / 1000000) if x else '0' for x in row[2:6]]
+                        row[3:7] = ['{:,.2f}'.format(x / 1000000) if x else '0' for x in row[3:7]]
                 else:
                     # Format only the third column for other cases
-                    row[1] = '{:,.2f}'.format(row[1] / 1000000)
+                    if row[2]:
+                        row[2] = '{:,.2f}'.format(row[2] / 1000000)
+                    else:
+                        row[2] = 0
 
                 x.add_row(row)
             if align_key:
