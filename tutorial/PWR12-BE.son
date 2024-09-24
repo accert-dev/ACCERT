@@ -64,9 +64,9 @@ accert{
             }
         }   
         l1COA(22){
-            l2COA("220A"){
+            l2COA(211){
                 l3COA("221.12"){
-                    ce("221.12_fac"){
+                    ce("221.12_lab"){
                         alg("unit_weights"){
                             var("c_221.12_cs_weight"){value = 538 unit = ton} 
                             var("c_221.12_ss_weight"){value = 40340 unit = lbs}
