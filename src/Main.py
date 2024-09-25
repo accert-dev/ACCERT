@@ -1188,7 +1188,7 @@ class Accert:
         print(' Rolling up account table by GNCOA '.center(100,'='))
         # remove 220A first
         c.callproc('remove_specific_row',(self.acc_tabl,'220A'))
-        self.roll_up_account_table(c, from_level=3, to_level=0, gncoa=True)
+        self.roll_up_account_table(c, from_level=4, to_level=0, gncoa=True)
         # print('[Updated]  Account table rolled up\n')
         return None
     
