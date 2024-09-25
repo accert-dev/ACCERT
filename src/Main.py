@@ -35,10 +35,11 @@ class Accert:
         self.acc_tabl = None
         self.cel_tabl = None
         self.var_tabl = None
-        # self.vlk_tabl = None
         self.alg_tabl = None
         self.esc_tabl = None
         self.fac_tabl = None
+        self.use_gncoa = False
+        self.gncoa_map = 'gncoamapping'
     
     def setup_table_names(self,xml2obj):
         """Setup different table names in the database.
@@ -52,12 +53,13 @@ class Accert:
         -------
         None
         """
+        if xml2obj.use_gncoa is not None:
+            self.use_gncoa = str(xml2obj.use_gncoa.value).lower() == 'true'
         if "abr1000" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'abr1000'
             self.acc_tabl = 'abr_account'
             self.cel_tabl = 'abr_cost_element'
             self.var_tabl = 'abr_variable'
-            # self.vlk_tabl = 'abr_variable_links'   
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'    
@@ -66,7 +68,6 @@ class Accert:
             self.acc_tabl =  'heatpipe_account'
             self.cel_tabl =  'heatpipe_cost_element'
             self.var_tabl =  'heatpipe_variable'
-            # self.vlk_tabl =  'heatpipe_variable_links'   
             self.alg_tabl =  'algorithm'
             self.esc_tabl =  'escalation'
             self.fac_tabl =  'facility'         
@@ -75,7 +76,6 @@ class Accert:
             self.acc_tabl = 'account'
             self.cel_tabl = 'cost_element'
             self.var_tabl = 'variable'
-            # self.vlk_tabl = 'variable_links'
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
@@ -316,8 +316,10 @@ class Accert:
         # and the new COA will be inserted at 2
         self.update_account_before_insert(c, min_ind)
         # insert new COA
-        ## NOTE need to fix this for passing supaccount
-        self.insert_new_COA(c, ind=min_ind, supaccount=sup_coa, level = coa_level, code_of_account=user_added_coa, account_description=user_added_coa_desc,total_cost= user_added_coa_total_cost)
+        self.insert_new_COA(c, ind=min_ind, supaccount=sup_coa, 
+                            level = coa_level, code_of_account=user_added_coa, 
+                            account_description=user_added_coa_desc,
+                            total_cost= user_added_coa_total_cost)
         return None
 
     def extract_variable_info_on_name(self, c,var_id):
@@ -1137,7 +1139,7 @@ class Accert:
         print('[Updating] Roll up cost elements from level {} to level {}'.format(from_level,to_level))
         return None
 
-    def roll_up_account_table(self, c, from_level=3, to_level=0):
+    def roll_up_account_table(self, c, from_level=3, to_level=0, gncoa=False):
         """
         Rolls up the account table from level 3 to 0.
         
@@ -1149,12 +1151,11 @@ class Accert:
         print(' Rolling up account table '.center(100,'='))
         print('\n')
         for i in range(from_level, to_level, -1):
-            self.roll_up_account_table_by_level(c,i,i-1)
+            self.roll_up_account_table_by_level(c,i,i-1,gncoa=gncoa)
         print('[Updated]  Account table rolled up\n')
-
         return None
 
-    def roll_up_account_table_by_level(self, c, from_level, to_level):
+    def roll_up_account_table_by_level(self, c, from_level, to_level, gncoa=False):
         """
         Rolls up the account table from an input lower level to a higher level.
 
@@ -1169,9 +1170,28 @@ class Accert:
         """
 
         print('[Updating] Rolling up account table from level {} to level {} '.format(from_level,to_level))
-        c.callproc('roll_up_account_table_by_level',(self.acc_tabl,from_level,to_level))
+        if gncoa:
+            c.callproc('roll_up_account_table_by_gn_level',(self.acc_tabl,from_level,to_level))
+        else:
+            c.callproc('roll_up_account_table_by_level',(self.acc_tabl,from_level,to_level))
         return None
+    
+    def roll_up_account_table_GNCOA(self, c):
+        """
+        Rolls up the account table for the reactor model that only has limited accounts.
 
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        """
+        print(' Rolling up account table by GNCOA '.center(100,'='))
+        # remove 220A first
+        c.callproc('remove_specific_row',(self.acc_tabl,'220A'))
+        self.roll_up_account_table(c, from_level=4, to_level=0, gncoa=True)
+        # print('[Updated]  Account table rolled up\n')
+        return None
+    
     def sum_cost_elements_2C(self, c):
         """
         Sums the cost elements for COA 2C (Calculated cost).
@@ -1298,22 +1318,22 @@ class Accert:
         print("..:::::..:::.......::::......::........::..:::::..:::::..:::::")
         print('\n')
 
-    def write_to_excel(self, statement, filename,conn):
-        """
-        Writes the results to an excel file.
+    # def write_to_excel(self, statement, filename,conn):
+    #     """
+    #     Writes the results to an excel file.
 
-        Parameters
-        ----------
-        statement : str
-            SQL statement.
-        filename : str
-            Filename of the excel file.
-        conn : MySQLConnection
-            MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
-        """
-        df=sql.read_sql(statement,conn)
-        df.to_excel(filename,index=False)       
-        print("Successfully created excel file {}".format(filename))
+    #     Parameters
+    #     ----------
+    #     statement : str
+    #         SQL statement.
+    #     filename : str
+    #         Filename of the excel file.
+    #     conn : MySQLConnection
+    #         MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
+    #     """
+    #     df=sql.read_sql(statement,conn)
+    #     df.to_excel(filename,index=False)       
+    #     print("Successfully created excel file {}".format(filename))
 
     def execute_accert(self, c, ut):
         """
@@ -1804,9 +1824,12 @@ class Accert:
             Flag to print all accounts.
         """
         print(' Generating results table for review '.center(100, '='))
-        print('\n')
-        
-        ut.print_leveled_accounts(c, all=all_flag, tol_fac=fac, tol_lab=lab, tol_mat=mat, cost_unit='million', level=3)
+        print('\n')    
+        if self.use_gncoa:
+            ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
+        else:
+            ut.print_leveled_accounts(c, all=all_flag, tol_fac=fac, tol_lab=lab, tol_mat=mat, cost_unit='million', level=3)
+
 
     def _pwr12be_processing(self, c, ut, accert):
         """
@@ -1823,10 +1846,17 @@ class Accert:
         """
         self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
-        self.roll_up_account_table(c, from_level=3, to_level=0)
-        print(' Generating results table for review '.center(100, '='))   
-        print('\n') 
-        ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
+        if self.use_gncoa:
+            self.roll_up_account_table_GNCOA(c)
+            print(' Generating results table for review '.center(100, '='))   
+            print('\n')
+            ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
+        else:
+            self.roll_up_account_table(c, from_level=3, to_level=0)
+            print(' Generating results table for review '.center(100, '='))   
+            print('\n') 
+            ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
+ 
 
     def _fusion_processing(self, c, ut, accert):
         """

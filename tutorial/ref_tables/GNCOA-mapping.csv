@@ -1,0 +1,124 @@
+gncoa,gncoa_description
+20,Capitalized Direct Costs
+21,Structures and Improvements
+211,Site Preparation/Yard Work
+212,Reactor Island Civil Structures
+212.1,Reactor containment building
+212.2,Manway Tnls. (Radiological Ctrl Access Tunnels)
+212.3,Containment Equipment Hatch Missile Shield
+213,Main Function Buildings
+213.1,Energy Conversion Building
+213.21,Control Room/Diesel Generator Building
+213.22,Control Rm Emergency Air Intake Building
+213.31,Main Steam + Feedwater Pipe Enc.
+213.32,Pipe Tunnels
+213.4,Electrical Tunnels
+214,Buildings to Support Main Function 
+214.1,Spent Fuel Management Building
+214.2,Balance of Plant Service Building
+214.3,Wastewater Treatment Building
+214.5,Fire Protection Building
+214.6,Non-essential Switchgear Building
+214.7,Emergency and Start-up Power Systems
+215,Supply Chain Buildings
+216,Human Resources Buildings
+216.1,Administration Building
+216.2,Security Building and Gatehouse
+216.4,Operation and Maintenance (O&M) Center 
+22,Structures and Improvements
+221,Reactor Components
+221.11,Reactor support
+221.12,Outer vessel structure
+221.121,Outer vessel structure equip
+221.122,Outer vessel structure field
+221.13,Inner vessel structure
+221.131,Inner vessel structure lower
+221.132,Inner vessel structure uppper
+221.133,Inner vessel structure field
+221.2,Reactivity control system
+221.211,Reactivity control system control rods
+221.212,Reactivity control system control drivers
+221.213,Reactivity control system field
+222,Main heat transfer system
+222.1,Fluid circulation drive system
+222.11,Fluid circulation drive system Equip
+222.12,Fluid circulation drive system Field
+222.2,Reactor heat transfer piping system
+222.21,Reactor heat transfer piping system Equip
+222.22,Reactor heat transfer piping system  Field
+222.3,Heat exchangers
+222.31,Heat exchangers Equip
+222.32,Heat exchangers  Field
+222.4,Pressurizer system
+222.41,Pressurizer system Equip
+222.42,Pressurizer system Relief Tank Equip
+222.43,Pressurizer system Field
+223,Safety Systems
+223.1,Internal Residual Heat Removal System
+223.11,Internal Residual Heat Removal System Pumps & Drives
+223.12,Internal Residual Heat Removal System Heat Exchanger
+223.13,Internal Residual Heat Removal System Others
+223.3,Reactivity Safety Injection System
+223.31,Reactivity Safety Injection System Pumps And Drives
+223.32,Reactivity Safety Injection System Accumulator Tank
+223.33,Reactivity Safety Injection System Boron Injection Tank
+223.34,Reactivity Safety Injection System Boron Injection Surge Tank 
+223.35,"Reactivity Safety Injection System Boron Injection Recirc. Pump, Drives"
+223.36,Reactivity Safety Injection System Others
+223.4,Containment Spray System
+223.5,Combustible Gas Control System
+224,Radioactive Byproduct Processing Systems
+225,Fuel Handling Systems
+225.1,Core Refueling Equipment
+225.2,Ex-Core Operational Fuel Handling Equipment
+225.3,Fuel Handling Systems Other
+226,Other Reactor Plant Equipment
+226.1,Other Reactor Plant Equipment Inert Gas Sys
+226.2,Other Reactor Plant Equipment Reactor Makeup Water Sys
+226.3,Other Reactor Plant Equipment Coolant treatment systems 
+226.31,Other Reactor Plant Equipment Rotating Machinery (Pumps And Motors
+226.32,Other Reactor Plant Equipment Heat Transfer Equipment
+226.33,Other Reactor Plant Equipment Tanks And Pressure Vessels 
+226.34,Other Reactor Plant Equipment Purification And Filtration Equipment
+226.35,Other Reactor Plant Equipment Coolant Treatment & Recycle
+226.6,Other Reactor Plant Equipment Fluid Leak Detection Sys
+226.7,Other Reactor Plant Equipment Aux Cool Sys
+226.8,Other Reactor Plant Equipment Maintenance
+226.81,Other Reactor Plant Equipment Maintenance Equipment
+226.82,Other Reactor Plant Equipment Maintenance Equipment labor
+226.9,Other Reactor Plant Equipment Sampling Equip
+227,Reactor Instrumentation and Control (I&C)
+227.11,Instrumentation 
+227.12,Reactor Control 
+228,Reactor Plant Miscellaneous Items
+23,Energy Conversion System
+232,Energy Applications
+232.1,Electricity Generation Systems
+232.2,Process Heat Export Equipment
+233,Ultimate Heat Sink
+233.1,Water Condensing Systems
+233.11,Water Condensing Systems Structures
+233.12,Water Condensing Systems Structures
+233.21,Air-based Cooling Systems
+233.22,Air-based Cooling Systems
+234,Feed Heating Systems
+236,Common Instrumentation & Controls
+237,Miscellaneous Energy System Equipment
+24,Electrical Equipment
+241,Switchgear
+242,Station Service Equipment
+243,Switchboards
+244,Protective Systems Equipment
+245,Electrical Raceway Systems
+246,Power and Control Cables and Wiring
+26,Miscellaneous Equipment
+261,Transportation and Lift Equipment
+262,"Air, Water, Plant Fuel Oil, and Steam Systems"
+262.1,"Air, water and steam service systems"
+262.2,Waste water treatment 
+263,Furnishing and Fixtures
+264,Miscellaneous Equipment
+30,Capitalized Indirect Services Cost
+34,Shipping and Transportation Costs
+342,Reactor System Modules Shipping and Transportation
+221.3,Non-fuel core internals
