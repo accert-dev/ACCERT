@@ -61,8 +61,8 @@ def main():
     print(f"SQL file path: {sql_file_path}")
     # current folder is the folder where this script is located
     current_folder = os.path.dirname(os.path.abspath(__file__))
-    code_folder = os.path.dirname(current_folder)
-    initfile = os.path.join(code_folder, 'install.conf')
+    code_src_folder = os.path.dirname(current_folder)
+    initfile = os.path.join(code_src_folder, 'install.conf')
     ins = configparser.ConfigParser()
     ins.read(initfile)
     passwd = ins.get("INSTALL","PASSWD")

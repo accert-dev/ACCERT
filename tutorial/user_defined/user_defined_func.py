@@ -1,7 +1,7 @@
 import numpy as np
 from .Algorithm import Algorithm
 
-class UserFunc_WO_CE(Algorithm):
+class user_defined_func(Algorithm):
     def __init__(self, ind, alg_name, alg_for, alg_description, alg_formulation, alg_units, variables, constants):
         super().__init__(ind, alg_name, alg_for, alg_description, alg_formulation, alg_units, variables, constants)
     
