@@ -1,0 +1,9 @@
+ind,code_of_account,account_description,total_cost,level,supaccount,alg_name,fun_unit,variables
+1,2,User defined direct cost,1000000000,0,,,,
+2,21,User defined total cost 21,700000000,1,2,,,
+3,211,User defined total cost 211,100000000,2,21,ud211,million,"v1, v2, v3"
+4,212,User defined total cost 212,200000000,2,21,ud212,dollar,"v5, v8, v7"
+5,213,User defined total cost 213,400000000,2,21,,,
+7,2131,User defined total cost 2131,150000000,3,213,ud2131,million,"v3, v2, v5"
+8,2132,User defined total cost 27,250000000,3,213,ud2132,million,"v8, v4, v6"
+9,22,example account without algorithm,300000000,2,22,,,
