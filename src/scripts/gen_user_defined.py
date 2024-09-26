@@ -725,7 +725,7 @@ def generate_user_defined_sql(user_defined_algorithm_path,
         print(f"Error writing to '{output_sql_path}': {e}")
         sys.exit(1)
 
-def choose_process():
+def main():
     '''
     prompt user to choose the process to run
     '''
@@ -796,13 +796,6 @@ def choose_process():
                                   'user_defined.sql')
     else:
         print("user_defined.sql is present")
-
-
-
-
-def main():
-    choose_process()
-
 
 
 if __name__ == "__main__":
