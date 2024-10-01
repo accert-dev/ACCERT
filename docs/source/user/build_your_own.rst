@@ -1,7 +1,7 @@
-Build Your Own Model
+Build Your Own Reference Model
 =====================
 
-ACCERT now accept user-defined models with hierarchy accounting structure. 
+ACCERT now accept user-defined model with user defined code of account structure. 
 
 Build your own account table
 -----------------------------
@@ -134,21 +134,21 @@ You can also run mysql command and source the `user_defined_algorithm.sql` file 
 Prepare the input file
 ----------------------
 
-After the database table is created, you can start preparing the input file for your user-defined model. The input file should be in the son format.  Run the following command to make changes to ACCERT schema to accept the user-defined model.
+After the database table is created, you can start preparing the input file for your user-defined reference model. The input file should be in the son format.  Run the following command to make changes to ACCERT schema to accept the user-defined reference model.
 
 .. code-block:: bash
 
     python ACCERT/src/scripts/prepared_input.py
 
-The script will generate a list of accepted values for the user-defined model. The user can fill in the input file with the accepted values. The input file should be in the son format. Here is an example of the input file.
+The script will generate a list of accepted values for the user-defined reference model. The user can fill in the input file with the accepted values. The input file should be in the son format. Here is an example of the input file.
 
 .. include:: ../../../tutorial/user_defined/user_defined_input.son
    :literal:
 
-Run your own model
+Run your own reference model
 ---------------------------
 
-After the input file is prepared, you can run the model with the following command.
+After the input file is prepared, you can run the reference model with the following command.
 
 .. code-block:: bash
 
