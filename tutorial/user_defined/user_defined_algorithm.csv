@@ -1,0 +1,6 @@
+ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
+1,ud211,c,description of  ud211 optional,user_defined_func,formulation of  ud211 optional,million
+2,ud212,c,description of  ud212 optional,user_defined_func,formulation of  ud212 optional,dollar
+3,ud2131,c,description of  ud2131 optional,user_defined_func,formulation of  ud2131 optional,million
+4,ud2132,c,description of  ud2132 optional,user_defined_func,formulation of  ud2132 optional,million
+5,ud_cal_v6,v,description of  ud_cal_v6 optional,user_defined_func,formulation of  ud_cal_v6 optional,million

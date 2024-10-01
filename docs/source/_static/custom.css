@@ -1,3 +1,121 @@
-figure img {
-    pointer-events: none;
+/* custom.css */
+
+/* Styles for wide tables with specific column wrapping */
+.wide-table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.wide-table table {
+    width: 100%;
+    table-layout: auto; /* Allows flexible column widths */
+    border-collapse: collapse; /* Collapses borders for a cleaner look */
+}
+
+.wide-table th:nth-child(3),
+.wide-table td:nth-child(3),
+.wide-table th:nth-child(6),
+.wide-table td:nth-child(6),
+.wide-table th:nth-child(7),
+.wide-table td:nth-child(7),
+.wide-table th:nth-child(8),
+.wide-table td:nth-child(8),
+.wide-table th:nth-child(11),
+.wide-table td:nth-child(11) {
+    white-space: normal;        /* Allow text to wrap */
+    word-wrap: break-word;      /* Break long words */
+    overflow-wrap: anywhere;    /* Break at any point if necessary */
+    width: 25%;                  /* Assign 25% width */
+    min-width: 200px;           /* Ensure columns aren't too narrow */
+    max-width: 600px;           /* Optional: further control maximum width */
+}
+
+.wide-table th,
+.wide-table td {
+    white-space: nowrap;        /* Prevent wrapping in other columns */
+}
+
+.wide-table th, .wide-table td {
+    padding: 8px 12px;           /* Better spacing */
+    font-size: 0.9em;            /* Slightly smaller font */
+}
+
+.wide-table th {
+    background-color: #f2f2f2; /* Light background for header cells */
+    position: sticky;          /* Enables sticky positioning */
+    top: 0;                    /* Positions the header at the top */
+    z-index: 2;                /* Places the header above other rows */
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); /* Adds a shadow to separate header */
+}
+
+.wide-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light gray background for even rows */
+}   
+
+.wide-table tr:nth-child(odd) {
+    background-color: #ffffff; /* White background for odd rows */
+}
+
+.wide-table tr:hover {
+    background-color: #e6f7ff; /* Light blue background on hover */
+}
+/* Styles for standard tables without column wrapping */
+.normal-table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.normal-table table {
+    width: 100%;
+    table-layout: auto; /* Allows flexible column widths */
+    border-collapse: collapse; /* Collapses borders for a cleaner look */
+}
+
+.normal-table th,
+.normal-table td {
+    white-space: nowrap;        /* Prevent text wrapping */
+    padding: 8px 12px;           /* Better spacing */
+    font-size: 0.9em;            /* Slightly smaller font */
+    border: 1px solid #ddd;       /* Adds subtle borders to cells */
+}
+
+.normal-table th {
+    background-color: #f2f2f2;    /* Light gray background for headers */
+    position: sticky;             /* Enables sticky positioning */
+    top: 0;                       /* Positions the header at the top */
+    z-index: 2;                   /* Places the header above other rows */
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); /* Adds a shadow to separate header */
+}
+
+.normal-table tr:nth-child(even) {
+    background-color: #f9f9f9;    /* Light gray background for even rows */
+}
+
+.normal-table tr:nth-child(odd) {
+    background-color: #ffffff;    /* White background for odd rows */
+}
+
+.normal-table tr:hover {
+    background-color: #e6f7ff;    /* Light blue background on hover */
+}
+
+/* Responsive adjustments for wide-table */
+@media (max-width: 768px) {
+    .wide-table th:nth-child(7),
+    .wide-table td:nth-child(7),
+    .wide-table th:nth-child(8),
+    .wide-table td:nth-child(8) {
+        min-width: 200px;   /* Reduce min-width on smaller screens */
+        max-width: 400px;   /* Reduce max-width on smaller screens */
+    }
+}
+
+/* Responsive adjustments for normal-table */
+@media (max-width: 768px) {
+    .normal-table th, .normal-table td {
+        padding: 6px 8px;    /* Reduce padding on smaller screens */
+        font-size: 0.9em;    /* Slightly smaller font */
+    }
 }

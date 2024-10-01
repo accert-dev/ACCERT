@@ -1,0 +1,17 @@
+% ACCERT Test input file
+% Author: J. Zhou (jia.zhou@anl.gov)
+% Last updated: 08/08/2024
+
+
+accert{
+    ref_model = "user_defined"
+    % variables can be assigned at top level
+    var( v3 ){ value = 29  unit = million }
+    l0COA(2){
+        l1COA(21){
+            l2COA(212){
+                total_cost{value = 201 unit = million} 
+            }
+        }
+    }
+}
