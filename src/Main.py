@@ -113,8 +113,8 @@ class Accert:
         """    
 
         import subprocess
-        sonvalidxml = accert_path + "/bin/sonvalidxml"
-        schema = accert_path + "/src/etc/accert.sch"
+        sonvalidxml = os.path.join(accert_path, "bin", "sonvalidxml")
+        schema = os.path.join(accert_path, "src", "etc", "accert.sch")
         cmd = ' '.join([sonvalidxml, schema, input_path])
         xmlresult = subprocess.check_output(cmd, shell=True)
         ### obtain pieces of input by name for convenience
