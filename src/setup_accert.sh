@@ -80,7 +80,6 @@ fi
 mkdir "$ACCERT_DIR/../bin"
 
 ln -sf "${workbench_path}/bin/sonvalidxml" "$ACCERT_DIR/../bin/sonvalidxml"
-ln -sf "${workbench_path}/bin/docprint" "$ACCERT_DIR/../bin/docprint"
 
 
 # 10) Confirm installation is finished

@@ -1,0 +1,9 @@
+ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_input
+1,v1,description of  v1 optional,20,million,,,v6,0
+2,v2,description of  v2 optional,50,million,,,,0
+3,v3,description of  v3 optional,30,million,,,v6,0
+4,v4,description of  v4 optional,2.5,km,,,,0
+5,v5,description of  v5 optional,1500,m,,,,0
+6,v6,description of  v6 optional,50,million,ud_cal_v6,"v1, v3",,0
+7,v7,description of  v7 optional,50000000,dollar,,,,0
+8,v8,description of  v8 optional,100000,$/m,,,,0
