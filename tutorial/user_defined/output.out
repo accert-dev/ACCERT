@@ -1,0 +1,95 @@
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::'###:::::'######:::'######::'########:'########::'########:
+::'## ##:::'##... ##:'##... ##: ##.....:: ##.... ##:... ##..::
+:'##:. ##:: ##:::..:: ##:::..:: ##::::::: ##:::: ##:::: ##::::
+'##:::. ##: ##::::::: ##::::::: ######::: ########::::: ##::::
+ #########: ##::::::: ##::::::: ##...:::: ##.. ##:::::: ##::::
+ ##.... ##: ##::: ##: ##::: ##: ##::::::: ##::. ##::::: ##::::
+ ##:::: ##:. ######::. ######:: ########: ##:::. ##:::: ##::::
+..:::::..:::.......::::......::........::..:::::..:::::..:::::
+
+
+======================================== Reading user input ========================================
+
+
+[USER_INPUT] Reference model is "user_defined" 
+
+WARNING: No power input found in the user input file
+
+[Updating] Variable v3
+[Updated]  Changed from 30.0 million to 29.0 million
+
+[Updating] Sup Variable v6, running algorithm: [ud_cal_v6], 
+[Updating] with formulation: formulation of  ud_cal_v6 optional
+[Updated]  Reference value is : 5.00e+01 million, calculated value is: 4.90e+01 million
+ 
+=================================Extracting user changed variables==================================
+
+
++----------+-----------------------------+-----------+----------+
+| var_name |       var_description       | var_value | var_unit |
++----------+-----------------------------+-----------+----------+
+|    v3    | description of  v3 optional |   29.00   | million  |
+|    v6    | description of  v6 optional |   49.00   | million  |
++----------+-----------------------------+-----------+----------+
+
+
+====================================Extracting affected accounts====================================
+variable "v3" affects account(s):
+211, 2131
+
+variable "v6" affects account(s):
+2132
+
+======================================== Updating accounts =========================================
+[Updating] Account [211], running algorithm: [ud211], 
+[Updating] with formulation: formulation of  ud211 optional
+[Updating] Total cost of account 211
+[Updated]  Changed from 100,000,000.00 dollar to 99,000,000.00 dollar
+
+ 
+[Updating] Account [2131], running algorithm: [ud2131], 
+[Updating] with formulation: formulation of  ud2131 optional
+[Updating] Total cost of account 2131
+[Updated]  Changed from 150,000,000.00 dollar to 157,500,000.00 dollar
+
+ 
+[Updating] Account [2132], running algorithm: [ud2132], 
+[Updating] with formulation: formulation of  ud2132 optional
+[Updating] Total cost of account 2132
+[Updated]  Changed from 250,000,000.00 dollar to 250,000,000.00 dollar
+
+ 
+========================================== IMPORTANT NOTE ==========================================
+Some cost have changed by user inputs and may not be reflected correctly in the cost elements table.
+
+[Updating] Total cost of account 212
+[Updated]  Changed from 200,000,000.00 dollar to 201,000,000.00 dollar
+
+===================================== Rolling up account table =====================================
+
+
+[Updating] Rolling up account table from level 4 to level 3 
+[Updating] Rolling up account table from level 3 to level 2 
+[Updating] Rolling up account table from level 2 to level 1 
+[Updating] Rolling up account table from level 1 to level 0 
+[Updated]  Account table rolled up
+
+=============================== Generating results table for review ================================
+
+
++-----------------+-----------------------------------+------------+-------+---------------+
+| code_of_account |        account_description        | total_cost | level | review_status |
++-----------------+-----------------------------------+------------+-------+---------------+
+| 2               | User defined direct cost          |   1,007.50 |   0   |    Updated    |
+|  21             | User defined total cost 21        |     707.50 |   1   |    Updated    |
+|   211           | User defined total cost 211       |      99.00 |   2   |   User Input  |
+|   212           | User defined total cost 212       |     201.00 |   2   |   User Input  |
+|   213           | User defined total cost 213       |     407.50 |   2   |    Updated    |
+|    2131         | User defined total cost 2131      |     157.50 |   3   |   User Input  |
+|    2132         | User defined total cost 27        |     250.00 |   3   |   User Input  |
+|  22             | example account without algorithm |     300.00 |   1   |   Unchanged   |
++-----------------+-----------------------------------+------------+-------+---------------+
+Successfully created excel file user_defined_updated_account.xlsx
