@@ -1,0 +1,240 @@
+necost {
+    construction_interest_rate = 12.3
+    operations_interest_rate = 18.9
+
+    fuel_cycles {
+        % We also want to compute the delta between different fuel cycles
+        cycle(initial_cycle) {
+            % Aggregating islands computes a fuel cycle
+            reactor(north) { fleet_capacity=0.5 fleet_energy=0.8 }
+            reactor(south) { fleet_capacity=0.5 fleet_energy=0.2 }
+        }
+        cycle(subsequent) {
+            reactor(south) { fleet_capacity=1 fleet_energy=1 }
+        }
+    }
+
+    reactors {
+        reactor(north) {
+            capacity_factor = 1
+            cycle_length = 1
+            lifetime_years = 1
+            power_level {
+                reference_net_electrical = 1
+                net_thermal_efficiency = 1
+            }
+            capital_costs {
+                scaling_factor(A) = 1
+                scaling_factor(B) = 3
+            }
+            om_costs {
+                scaling_factor(A) = 1
+                scaling_factor(B) = 3
+            }
+            fuel_reloads {
+                quantity(A) { heavy_metal_mass = 22.1 }
+            }
+        }
+        reactor(south) {
+            capacity_factor = 1
+            cycle_length = 1
+            lifetime_years = 1
+            power_level {
+                reference_thermal = 1
+                net_thermal_efficiency = 1
+            }
+            capital_costs {
+            }
+            om_costs {
+            }
+            fuel_reloads {
+            }
+        }
+
+    }
+
+    capital_costs {
+        item(A) {
+            cost_type = s_curve
+            cost_value = 1
+            expenditure_time = 22
+            distribution {
+                type = triangular
+                low = 0
+                high = 10
+                mean = 5
+            }
+        }
+        item(B) {
+            cost_type = single
+            cost_value = 1
+            expenditure_time = 22
+            distribution {
+                type = uniform
+                low = 0
+                high = 8
+                mean = 4
+            }
+        }
+        item(C) {
+            cost_type = s_curve
+            cost_value = 1
+            expenditure_time = 22
+            nominal_value=13
+        }
+    }
+
+    om_costs {
+        item(A) {
+            cost_type=periodic
+            expenditure_time=1
+            distribution {
+                type = triangular
+                low = 0
+                high = 10
+                mean = 5
+            }
+        }
+        item(B) {
+            cost_type=single
+            expenditure_time=1
+            nominal_value=12
+        }
+    }
+
+    fuel_costs {
+        item(fcost1) {
+            cost_value=1.2
+            distribution {
+                type = triangular
+                low = 1
+                high = 2.3
+                mean = 1.2
+            }
+        }
+        item(fcost2) {
+            cost_value=212
+        }
+        item(fcost3) {
+            cost_value=212
+        }
+    }
+
+    fuels {
+        fuel(A) {
+            avg_discharge_burnup = 1
+            avg_specific_power = 1
+
+            fresh_fuel_composition {
+                depleted_uranium {
+                    fuel_fraction = 0.9
+                    lead_time = 1
+                    costs = [fcost1, fcost2]
+                    avoided_costs = [fcost1]
+                }
+                natural_uranium {
+                    fuel_fraction = 0.9
+                    lead_time = 1
+                    costs = [fcost1]
+                }
+                enriched_uranium {
+                    type = two_stage
+                    product = 1
+                    tails = 1
+                    two_stage_params {
+                        stage_1_enrichment = 1
+                        stage_1_tails = 1
+                    }
+                    NU_costs {
+                        lead_time = 1
+                        costs = [fcost1]
+                    }
+                    DU_costs {
+                        lead_time = 1
+                        costs = [fcost1]
+                    }
+                    conversion {
+                        loss_fraction = 0.9
+                        lead_time = 1
+                        costs = [fcost1]
+                    }
+                    stage_1_enrichment_costs {
+                        loss_fraction = 0.9
+                        lead_time = 1
+                        costs = [fcost1]
+                    }
+                    stage_2_enrichment_costs {
+                        loss_fraction = 0.9
+                        lead_time = 1
+                        costs = [fcost1]
+                    }
+                }
+                thorium_fraction {
+                    loss_fraction = 0.9
+                    lead_time = 1
+                    costs = [fcost1]
+                }
+                recovered_th_fraction_costs = [fcost1]
+                recovered_uranium_fraction {
+                    is_reenrichment = yes
+                    product = 1
+                    tails = 1
+                    losses = 1
+                    loss_fraction = 0.1
+                    costs = [fcost1]
+                }
+                recovered_tru_fraction {
+                    np = 0.1
+                    pu = 0.1
+                    am_cm = 0.1
+                    costs = [fcost1]
+                }
+            }
+
+            fabrication {
+                loss_fraction = 0.9
+                lead_time = 1
+                costs = [fcost1]
+            }
+
+            reprocessing {
+                fuel_id = A
+                time_after_discharge = 1
+                sep_leadtime = 1
+                sep_losses = 1
+                waste_management_costs {
+                    th {
+                        fraction_disposed = 0.1
+                        costs = [fcost1]
+                    }
+                    ru {
+                        fraction_disposed = 0.1
+                        costs = [fcost1]
+                    }
+                    np {
+                        fraction_disposed = 0.1
+                        costs = [fcost1]
+                    }
+                    pu {
+                        fraction_disposed = 0.1
+                        costs = [fcost1]
+                    }
+                    am_cm {
+                        fraction_disposed = 0.1
+                        costs = [fcost1]
+                    }
+                    fp {
+                        fraction_disposed = 0.1
+                        costs = [fcost1]
+                    }
+                }
+                avoided_costs = [fcost1]
+            }
+
+            discharge_fuel_composition {
+                year(5) { th=0.4, u=0.1, u235=0.1, np=0.1, pu=0.1, am_cm=0.1, fp=0.1 }
+                year(6) { th=0.4, u=0.1, u235=0.1, np=0.1, pu=0.1, am_cm=0.1, fp=0.1 }
+            }
+        }
+    }
+}
