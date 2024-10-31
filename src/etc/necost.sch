@@ -389,7 +389,7 @@ necost {
 
             expenditure_time {
                 Description = "" % TODO
-                MinOccurs = 1
+                MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
                 InputTmpl="flagtypes"
@@ -553,6 +553,15 @@ necost {
                 % TODO: What are min-max values for this?
             }
 
+            num_batches{
+                Description= "" % TODO
+                MinOccurs = 0
+                MaxOccurs = 1
+                ValType = Real
+                InputTmpl="flagtypes"
+                % TODO: What are min-max values for this?
+            }
+
             avg_specific_power {
                 Description = "" % TODO
                 MinOccurs = 1
@@ -680,7 +689,7 @@ necost {
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_enriched_uranium"
                     ChildCountEqual(EvenNone)=[two_stage_params type=two_stage]
-
+                    ChildCountEqual(EvenNone)=[stage_2_enrichment_costs type=two_stage]
                     type {
                         Description = "" % TODO
                         MinOccurs = 1
@@ -688,6 +697,15 @@ necost {
                         ValType = String
                         ValEnums = [one_stage two_stage]
                         InputTmpl="flagtypes"
+                    }
+
+                    feed {
+                        Description = "" % TODO
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
                     }
 
                     product {
@@ -879,7 +897,7 @@ necost {
 
                     stage_1_enrichment_costs {
                         Description = "" % TODO
-                        MinOccurs = 1
+                        MinOccurs = 0
                         MaxOccurs = 1
                         % TODO: Template
 
@@ -920,7 +938,7 @@ necost {
 
                     stage_2_enrichment_costs {
                         Description = "" % TODO
-                        MinOccurs = 1
+                        MinOccurs = 0
                         MaxOccurs = 1
                         % TODO: Template
 
@@ -962,7 +980,7 @@ necost {
 
                 thorium_fraction {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_thorium_fraction"
 
@@ -1003,7 +1021,7 @@ necost {
 
                 recovered_th_fraction_costs {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
 
                     value {
@@ -1036,6 +1054,15 @@ necost {
                     }
 
                     product {
+                        Description = "" % TODO
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
+                    }
+
+                    feed {
                         Description = "" % TODO
                         MinOccurs = 0
                         MaxOccurs = 1
@@ -1090,7 +1117,7 @@ necost {
 
                 recovered_tru_fraction {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_recovered_tru_fraction"
 
@@ -1184,7 +1211,7 @@ necost {
 
             reprocessing {
                 Description = "" % TODO
-                MinOccurs = 1
+                MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="fuels/reprocessing"
 
@@ -1440,7 +1467,7 @@ necost {
 
             discharge_fuel_composition {
                 Description = "" % TODO
-                MinOccurs = 1
+                MinOccurs = 0
                 MaxOccurs = 1
                 ChildUniqueness = ["year/id"]
                 InputTmpl="fuels/discharge_fuel_composition"

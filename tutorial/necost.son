@@ -1,128 +1,236 @@
 necost {
-    construction_interest_rate = 12.3
-    operations_interest_rate = 18.9
+    construction_interest_rate = 0.05
+    operations_interest_rate = 0.05
 
     fuel_cycles {
-        % We also want to compute the delta between different fuel cycles
         cycle(initial_cycle) {
             % Aggregating islands computes a fuel cycle
-            reactor(north) { fleet_capacity=0.5 fleet_energy=0.8 }
-            reactor(south) { fleet_capacity=0.5 fleet_energy=0.2 }
-        }
-        cycle(subsequent) {
-            reactor(south) { fleet_capacity=1 fleet_energy=1 }
+            reactor(north) { fleet_capacity=1 fleet_energy=1 }
         }
     }
 
     reactors {
         reactor(north) {
-            capacity_factor = 1
+            capacity_factor = 0.9
             cycle_length = 1
             lifetime_years = 1
             power_level {
-                reference_net_electrical = 1
-                net_thermal_efficiency = 1
+                reference_net_electrical = 3E9
+                net_thermal_efficiency = 33
             }
             capital_costs {
                 scaling_factor(A) = 1
-                scaling_factor(B) = 3
             }
             om_costs {
                 scaling_factor(A) = 1
-                scaling_factor(B) = 3
             }
             fuel_reloads {
-                quantity(A) { heavy_metal_mass = 22.1 }
+                quantity(A) { heavy_metal_mass = 88.23 }
             }
         }
-        reactor(south) {
-            capacity_factor = 1
-            cycle_length = 1
-            lifetime_years = 1
-            power_level {
-                reference_thermal = 1
-                net_thermal_efficiency = 1
-            }
-            capital_costs {
-            }
-            om_costs {
-            }
-            fuel_reloads {
-            }
-        }
-
     }
 
     capital_costs {
         item(A) {
             cost_type = s_curve
             cost_value = 1
-            expenditure_time = 22
+            expenditure_time = 5
             distribution {
                 type = triangular
-                low = 0
-                high = 10
-                mean = 5
+                low = 2300
+                high = 5800
+                mean = 4000
             }
-        }
-        item(B) {
-            cost_type = single
-            cost_value = 1
-            expenditure_time = 22
-            distribution {
-                type = uniform
-                low = 0
-                high = 8
-                mean = 4
-            }
-        }
-        item(C) {
-            cost_type = s_curve
-            cost_value = 1
-            expenditure_time = 22
-            nominal_value=13
         }
     }
 
     om_costs {
         item(A) {
-            cost_type=periodic
-            expenditure_time=1
+            cost_type=variable
             distribution {
                 type = triangular
-                low = 0
-                high = 10
-                mean = 5
+                low = 58
+                high = 84
+                mean = 70
             }
         }
         item(B) {
-            cost_type=single
-            expenditure_time=1
-            nominal_value=12
+            cost_type=fixed
+            distribution {
+                type = triangular
+                low = 0.84
+                high = 2.6
+                mean = 1.9
+            }
         }
     }
 
     fuel_costs {
-        item(fcost1) {
-            cost_value=1.2
-            distribution {
+        item(fcost1){
+            cost_value= 1
+        }
+        item(fcost2){
+            cost_value = 2
+        }
+        item(cost_U){
+            cost_value = 110
+            distribution{
                 type = triangular
-                low = 1
-                high = 2.3
-                mean = 1.2
+                low = 65
+                high = 230
+                mean = 110
             }
         }
-        item(fcost2) {
-            cost_value=212
+        item(cost_SWU){
+            cost_value = 100
+            distribution{
+                type = triangular
+                low = 70
+                high = 120
+                mean = 100
+            }
         }
-        item(fcost3) {
-            cost_value=212
+        item(cost_fuel_fab){
+            cost_value=  350
+            distribution{
+                type = triangular
+                low = 200
+                high = 500
+                mean = 350
+            }
+        }
+        item(cost_conv){
+            cost_value=  12
+            distribution{
+                type = triangular
+                low = 6
+                high = 18
+                mean = 12
+            }
+        }
+        item(cost_deconv){
+            cost_value=  6
+            distribution{
+                type = triangular
+                low = 4
+                high = 8
+                mean = 6
+            }
+        }
+        item(cost_offsite_storage){
+            cost_value=  0
+            distribution{
+                type = triangular
+                low = 0
+                high = 0
+                mean = 0
+            }
+        }
+        item(cost_SNF_cond){
+            cost_value=  100
+            distribution{
+                type = triangular
+                low = 50
+                high = 130
+                mean = 100
+            }
+        }
+        item(cost_rprocsng){
+            cost_value=  1850
+            distribution{
+                type = triangular
+                low = 1494
+                high = 2214
+                mean = 1850
+            }
+        }
+        item(cost_MOX_fab){
+            cost_value=  3200
+            distribution{
+                type = triangular
+                low = 3000
+                high = 5000
+                mean = 3200
+            }
+        }
+        item(cost_FP_cond){
+            cost_value=  5000
+            distribution{
+                type = triangular
+                low = 2200
+                high = 6600
+                mean = 5000
+            }
+        }
+        item(cost_FP_geologic){
+            cost_value=  6500
+            distribution{
+                type = triangular
+                low = 1625
+                high = 8125
+                mean = 6500
+            }
+        }
+        item(cost_conv_rec){
+            cost_value=  11
+            distribution{
+                type = triangular
+                low = 6
+                high = 50
+                mean = 11
+            }
+        }
+        item(cost_nrchmt_rec){
+            cost_value=  110
+            distribution{
+                type = triangular
+                low = 85
+                high = 135
+                mean = 110
+            }
+        }
+        item(cost_dry_storage){
+            cost_value=  0
+            distribution{
+                type = triangular
+                low = 0
+                high = 0
+                mean = 0
+            }
+        }
+        item(cost_geologic_disposal){
+            cost_value=  550
+            distribution{
+                type = triangular
+                low = 265
+                high = 801
+                mean = 550
+            }
+        }
+        item(cost_RU_disposal){
+            cost_value=  9999
+            distribution{
+                type = triangular
+                low = 9999
+                high = 9999
+                mean = 9999
+            }
+        }
+        item(cost_DU_disposal){
+            cost_value=  2
+            distribution{
+                type = triangular
+                low = 1
+                high = 3
+                mean = 2
+            }
         }
     }
 
     fuels {
         fuel(A) {
-            avg_discharge_burnup = 1
+            avg_discharge_burnup = 50
+            num_batches = 3
             avg_specific_power = 1
 
             fresh_fuel_composition {
@@ -130,7 +238,6 @@ necost {
                     fuel_fraction = 0.9
                     lead_time = 1
                     costs = [fcost1, fcost2]
-                    avoided_costs = [fcost1]
                 }
                 natural_uranium {
                     fuel_fraction = 0.9
@@ -138,15 +245,12 @@ necost {
                     costs = [fcost1]
                 }
                 enriched_uranium {
-                    type = two_stage
-                    product = 1
-                    tails = 1
-                    two_stage_params {
-                        stage_1_enrichment = 1
-                        stage_1_tails = 1
-                    }
+                    type = one_stage
+                    feed = 0.711
+                    product = 4.2
+                    tails = 0.25
                     NU_costs {
-                        lead_time = 1
+                        lead_time = 2
                         costs = [fcost1]
                     }
                     DU_costs {
@@ -155,52 +259,37 @@ necost {
                     }
                     conversion {
                         loss_fraction = 0.9
-                        lead_time = 1
+                        lead_time = 2
                         costs = [fcost1]
                     }
                     stage_1_enrichment_costs {
                         loss_fraction = 0.9
-                        lead_time = 1
+                        lead_time = 2
                         costs = [fcost1]
                     }
-                    stage_2_enrichment_costs {
-                        loss_fraction = 0.9
-                        lead_time = 1
-                        costs = [fcost1]
-                    }
+
                 }
-                thorium_fraction {
-                    loss_fraction = 0.9
-                    lead_time = 1
-                    costs = [fcost1]
-                }
-                recovered_th_fraction_costs = [fcost1]
                 recovered_uranium_fraction {
                     is_reenrichment = yes
-                    product = 1
-                    tails = 1
+                    product = 4.95
+                    feed = 1.5
+                    tails = 0.3
                     losses = 1
                     loss_fraction = 0.1
-                    costs = [fcost1]
-                }
-                recovered_tru_fraction {
-                    np = 0.1
-                    pu = 0.1
-                    am_cm = 0.1
                     costs = [fcost1]
                 }
             }
 
             fabrication {
                 loss_fraction = 0.9
-                lead_time = 1
-                costs = [fcost1]
+                lead_time = 0.5
+                costs = [cost_fuel_fab]
             }
 
             reprocessing {
                 fuel_id = A
                 time_after_discharge = 1
-                sep_leadtime = 1
+                sep_leadtime = 2
                 sep_losses = 1
                 waste_management_costs {
                     th {
@@ -230,7 +319,6 @@ necost {
                 }
                 avoided_costs = [fcost1]
             }
-
             discharge_fuel_composition {
                 year(5) { th=0.4, u=0.1, u235=0.1, np=0.1, pu=0.1, am_cm=0.1, fp=0.1 }
                 year(6) { th=0.4, u=0.1, u235=0.1, np=0.1, pu=0.1, am_cm=0.1, fp=0.1 }
