@@ -12,3 +12,4 @@ User's Guide
    input_structure
    output_structure
    build_your_own
+   using_necost
