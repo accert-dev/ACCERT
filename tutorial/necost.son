@@ -225,6 +225,8 @@ necost {
                 mean = 2
             }
         }
+
+
     }
 
     fuels {
@@ -237,12 +239,12 @@ necost {
                 depleted_uranium {
                     fuel_fraction = 0.9
                     lead_time = 1
-                    costs = [fcost1, fcost2]
+                    costs = [cost_DU_disposal]
                 }
                 natural_uranium {
                     fuel_fraction = 0.9
                     lead_time = 1
-                    costs = [fcost1]
+                    costs = [cost_U]
                 }
                 enriched_uranium {
                     type = one_stage
@@ -251,23 +253,28 @@ necost {
                     tails = 0.25
                     NU_costs {
                         lead_time = 2
-                        costs = [fcost1]
+                        costs = [cost_U]
                     }
                     DU_costs {
                         lead_time = 1
-                        costs = [fcost1]
+                        costs = [cost_DU_disposal]
                     }
                     conversion {
                         loss_fraction = 0.9
                         lead_time = 2
-                        costs = [fcost1]
+                        costs = [cost_conv]
                     }
                     stage_1_enrichment_costs {
                         loss_fraction = 0.9
                         lead_time = 2
-                        costs = [fcost1]
+                        costs = [cost_SWU]
                     }
 
+                }
+                thorium_fraction {
+                    loss_fraction = 0.9
+                    lead_time = 1
+                    costs = [cost_DU_disposal]
                 }
                 recovered_uranium_fraction {
                     is_reenrichment = yes
@@ -276,7 +283,7 @@ necost {
                     tails = 0.3
                     losses = 1
                     loss_fraction = 0.1
-                    costs = [fcost1]
+                    costs = [cost_U]
                 }
             }
 
@@ -286,43 +293,6 @@ necost {
                 costs = [cost_fuel_fab]
             }
 
-            reprocessing {
-                fuel_id = A
-                time_after_discharge = 1
-                sep_leadtime = 2
-                sep_losses = 1
-                waste_management_costs {
-                    th {
-                        fraction_disposed = 0.1
-                        costs = [fcost1]
-                    }
-                    ru {
-                        fraction_disposed = 0.1
-                        costs = [fcost1]
-                    }
-                    np {
-                        fraction_disposed = 0.1
-                        costs = [fcost1]
-                    }
-                    pu {
-                        fraction_disposed = 0.1
-                        costs = [fcost1]
-                    }
-                    am_cm {
-                        fraction_disposed = 0.1
-                        costs = [fcost1]
-                    }
-                    fp {
-                        fraction_disposed = 0.1
-                        costs = [fcost1]
-                    }
-                }
-                avoided_costs = [fcost1]
-            }
-            discharge_fuel_composition {
-                year(5) { th=0.4, u=0.1, u235=0.1, np=0.1, pu=0.1, am_cm=0.1, fp=0.1 }
-                year(6) { th=0.4, u=0.1, u235=0.1, np=0.1, pu=0.1, am_cm=0.1, fp=0.1 }
-            }
         }
     }
 }
