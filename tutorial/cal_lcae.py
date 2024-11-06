@@ -56,7 +56,10 @@ necost_r5 = NECost(data=monte_carlo_data_r5, **default_params)
 # result_r3 = necost_r3.run()
 result_r5 = necost_r5.run()
 # result_r10 = necost_r10.run()
-print(result_r5)
+# transpose result data
+result_t = result_r5.transpose()
+print(result_t)
+
 
 
 

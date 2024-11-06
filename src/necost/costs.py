@@ -30,24 +30,20 @@ def levelized_om_cost(
     pv_om = np.where(
         data["OM_fixed_cost"] <= 0,
         cf_ro + cf_fo + cf_pers,
-        data["OM_direct_spec"] * (core_power / 1000) * data["therm_efficiency"]
+        data["OM_direct_spec"] * (core_power / 1000) * data["therm_efficiency"]/100
     )
-
     # PV of O&M costs at t = 1 year ($).
     # TODO: Should the `np.arange(...)` start at 1?
-    q, _ = np.meshgrid(np.arange(t_plant - 1), range(len(data)))
+    q, _ = np.meshgrid(np.arange(1, t_plant ), range(len(data)))
     epsilon = np.exp((data["escalation_rate_OM"] - data["discount_rate"]).values.reshape(-1, 1) * q)
     pv_om = pv_om * (1 + epsilon.sum(axis=1))
-
     # Total PV of O & M costs at t = 0 year ($)
     pv_om = pv_om * np.exp(-data["discount_rate"] * 1)
-
     # levelized O & M cost over life of plant ($/year)
     levelized_om_total = pv_om * lev_factor
 
     # levelized O & M unit cost over life of plant (mills/kW-hre)
     levelized_hydride_om = levelized_om_total * 1000 / e_year + o_m_fixed
-
     return levelized_hydride_om
 
 
@@ -71,15 +67,15 @@ def compute_pv_cap(
         constrct_years = data["constrct_years"].values
         capital_cost_vals = data["capital_cost"].values
         ref_therm_pwr = data["ref_therm_pwr"].values
-        therm_efficiency = data["therm_efficiency"].values
+        therm_efficiency = data["therm_efficiency"].values/100
         escalation_cost_pwr = data["escalation_cost_pwr"].values
         apr_r_constr = (1 + interest_rate_constrct / 4) ** 4 - 1
 
         # To compute the `q_cost_no_interest` outside the loop, we must use this masking
         # technique since `constrct_years` may have different values, leading to different
         # lengths for the `q_cost_no_interest` matrix.
-        indices = np.arange(0, np.max(constrct_years), 0.25)  # Generate an array of indices
-        m = np.where(indices < constrct_years[:, np.newaxis], indices, np.nan)  # Apply the mask to fill the matrix
+        indices = np.arange(0, np.max(constrct_years+0.25), 0.25)  # Generate an array of indices
+        m = np.where(indices < constrct_years[:, np.newaxis]+0.25, indices, np.nan)  # Apply the mask to fill the matrix
         x_constr = -np.pi / 2 + np.pi * (m / constrct_years.reshape(-1, 1))
         s_curve_cum = 0.5 * (np.sin(x_constr) + 1)
         s_curve_diff = np.diff(s_curve_cum)
@@ -90,11 +86,10 @@ def compute_pv_cap(
         tot_capital_cost = np.empty(len(data))  # --> populated by the loop
         for idx in range(len(interest_rate_constrct)):
             # Select the correct values for the current computation. Values outside the slice are NaN.
-            current_q_cost_no_interest = q_cost_no_interest[idx, :(int(constrct_years[idx] / 0.25) - 1)]
+            current_q_cost_no_interest = q_cost_no_interest[idx, :(int(constrct_years[idx] / 0.25) )]
 
             tot_capital_cost[idx] = current_q_cost_no_interest @ np.full(len(current_q_cost_no_interest), (
-                1 + apr_r_constr[idx] / 4)) ** (np.arange(constrct_years[idx] * 4, 1, -1) - 0.5)
-
+                1 + apr_r_constr[idx] / 4)) ** (np.arange(constrct_years[idx] * 4, 0, -1) - 0.5)
         # If cap cost exp is 1 ==> ref_therm_pwr cancels out and only core_power is used
         pv_cap = tot_capital_cost * ref_therm_pwr / 1000 * therm_efficiency * (
             core_power / ref_therm_pwr) ** escalation_cost_pwr

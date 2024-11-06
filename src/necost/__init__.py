@@ -51,7 +51,7 @@ class NECost:
         self.pv_internals_ref = pv_internals_ref
         self.pv_turb_ref = pv_turb_ref
         self.m_turb = m_turb
-        self.number_rods_ref = assembly_ref * 264,
+        self.number_rods_ref = assembly_ref * 264
 
         # Modifications to the values in the Monte Carlo samples
         self.core_power = self.data["core_pwr_func_ref"] * self.data["ref_therm_pwr"]
@@ -83,21 +83,19 @@ class NECost:
                 self.data["fuel_density"] * self.data["HM_weight_percent"]),
             inplace=True
         )
-
         # reference core specific power W/gHM.
-        q_sp_ref = self.data["ref_therm_pwr"] / self.number_rods_ref * self.l_h_ref * np.pi * (
+        mass_hm_core_ref = self.number_rods_ref * self.l_h_ref * np.pi * (
             self.fuel_diam_ref / 2) ** 2 * (self.fuel_density_ref * self.weight_hm_ref)
-
+        q_sp_ref = self.data["ref_therm_pwr"] / mass_hm_core_ref
         q_sp = self.core_power / self.data["HM_mass_direct_spec"]  # based on whole core -  W/gHM.
         efpy_ref = (self.ref_burnup * (1000 / 365.25)) / q_sp_ref  # for reference core [y]
         efpy = (self.data["max_burnup"] * (1000 / 365.25)) / q_sp  # EFPY at total discharge burnup [years]
 
         # --------------------------------  Interest rate-related parameters
         lev_factor = self.data["discount_rate"] / (1 - np.exp(-self.data["discount_rate"] * self.t_plant))
-        e_year = self.core_power * self.data["therm_efficiency"] * (self.data["L_direct_spec"] / 1000) * 8766
+        e_year = self.core_power * self.data["therm_efficiency"]/100 * (self.data["L_direct_spec"] / 1000) * 8766
 
         l_inp, n_cycl, t_cyc, planned_outage = function_1(self.data, self.batches_ref, self.t_plant, efpy, efpy_ref)
-
         m_fabrication, m_enrichment, pv_front_end_u_1 = front_end_1(self.data)
         pv_front_end_r_1 = front_end_2(self.data)
         levelized_front_end = scale_up(
@@ -110,10 +108,8 @@ class NECost:
             n_cycl,
             t_cyc
         )
-
         levelized_back_end = backend(self.data, self.t_plant, lev_factor, e_year, n_cycl, t_cyc)
         levelized_fcc = levelized_front_end + levelized_back_end
-
         levelized_hydride_om = levelized_om_cost(
             self.data,
             self.t_plant,
@@ -124,7 +120,6 @@ class NECost:
             t_cyc,
             planned_outage
         )
-
         # --------------------------------  capital costs
         levelized_hydride_cap, levelized_hydride_cost = capital_cost(
             self.data,

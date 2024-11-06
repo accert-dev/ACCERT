@@ -166,22 +166,19 @@ def scale_up(
     pv_front_end_tot = pv_front_end_u_1 * data["frac_core_loaded_nat"] + pv_front_end_r_1 * data[
         "frac_core_loaded_reprcsd"]
     pv_front_end = pv_front_end_tot * (data["HM_mass_direct_spec"] / 1000 / data["num_batches"])
-
     #  present value of the entire front end fuel cycle costs for all batches throughout the core lifetime
     pv_front_end_o = pv_front_end.copy(deep=True)
 
     # TODO: Should the `np.arange(...)` start at 1?
-    k = n_cycl - 1
-    indices = np.arange(np.max(k))  # Generate an array of indices from 0 to N-1
-    m = np.where(indices < k[:, np.newaxis], indices, 0)  # Apply the mask to fill the matrix
-
+    # k = n_cycl - 1
+    indices = np.arange(1,np.max(n_cycl))  # Generate an array of indices from 0 to N-1
+    m = np.where(indices < n_cycl[:, np.newaxis], indices, 0)  # Apply the mask to fill the matrix
     # We used -np.inf to define `matrix` above so that those values become zero after exponentiating,
     # and so the sum will not be affected by those values. If we used 0 instead of -inf, those values
     # would become 1 after exponentiation, which would be added in the sum.
     pv_front_end *= (1 + np.exp(
         (data["escalation_rate_front"] - data["discount_rate"]).values.reshape(-1, 1) * m * t_cyc.reshape(-1, 1)
     ).sum(axis=1))
-
     # as above, but this is the residual of the last cycle, in percent over the cycle (~ 15 #)
     # Not realistic because of transportation costs (James of Exelon): only the fraction of t_cyc
     # utilized is a cost, while the rest is sold.

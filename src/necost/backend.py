@@ -51,26 +51,22 @@ def backend(data: pd.DataFrame, t_plant, lev_factor, e_year, n_cycl: np.ndarray,
 
     # Most create a copy of the values. Otherwise, `pv_back_end_o` will also be updated below.
     pv_back_end_o = pv_back_end.copy(deep=True)
-
     # TODO: Should the `np.arange(...)` start at 1?
-    k = n_cycl - 1
-    indices = np.arange(np.max(k))  # Generate an array of indices from 0 to MAX(n_cycl - 2)
-    m = np.where(indices < k[:, np.newaxis], indices, -np.inf)  # Apply the mask to fill the matrix.
-
+    # k = n_cycl - 1
+    indices = np.arange(1, np.max(n_cycl))  # Generate an array of indices from 0 to MAX(n_cycl - 2)
+    m = np.where(indices < n_cycl[:, np.newaxis], indices, -np.inf)  # Apply the mask to fill the matrix.
     # We used -np.inf to define `matrix` above so that those values become zero after exponentiating,
     # and so the sum will not be affected by those values. If we used 0 instead of -inf, those values
     # would become 1 after exponentiation, which would be added in the sum.
     pv_back_end *= 1 + np.exp(
         (data["escalation_rate_back"] - data["discount_rate"]).values.reshape(-1, 1) * m * t_cyc.reshape(-1, 1)
     ).sum(axis=1)
-
     # as above, but this is the residual of the last cycle, in percent over the cycle (~ 15 #) # Not realistic
     # because of transportation costs (James of Exelon): only the fraction of t_cyc utilized is a cost,
     # while the rest is sold.
     pv_back_end += (pv_back_end_o * np.exp(
         (data["escalation_rate_back"] - data["discount_rate"]) * n_cycl * t_cyc
     )) * (t_plant - (n_cycl * t_cyc)) / t_cyc
-
     # adds the 1 mills/kWh or not depending if it has been requested
     # (on what fraction??, in this case total electricity produced, not core discharged)
     levelized_back_end = np.where(
