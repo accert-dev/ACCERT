@@ -225,8 +225,6 @@ necost {
                 mean = 2
             }
         }
-
-
     }
 
     fuels {
@@ -269,7 +267,6 @@ necost {
                         lead_time = 2
                         costs = [cost_SWU]
                     }
-
                 }
                 thorium_fraction {
                     loss_fraction = 0.9

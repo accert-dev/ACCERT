@@ -44,15 +44,13 @@ def generate_monte_carlo_samples(
         # Triangular distribution.
         # https://en.wikipedia.org/wiki/Triangular_distribution#Generating_triangular-distributed_random_variates
         elif values["distribution"] == 1:
-            low, nominal, high = values["low"], values["nominal"], values["high"]
+            low, mode, high = values["low"], values["nominal"], values["high"]
             u = np.random.rand(sampling_amount)
-
             # The left area of the triangular distribution
-            area1 = low + np.sqrt(u * (high - low) * (nominal - low))
+            area1 = low + np.sqrt(u * (high - low) * (mode - low))
             # The right area of the triangular distribution
-            area2 = high - np.sqrt((1 - u) * (high - low) * (high - nominal))
-
-            monte_carlo_results[idx, :] = np.where(u < (nominal - low) / (high - low), area1, area2)
+            area2 = high - np.sqrt((1 - u) * (high - low) * (high - mode))
+            monte_carlo_results[idx, :] = np.where(u < (mode - low) / (high - low), area1, area2)
 
         # Uniform distribution.
         elif values["distribution"] == 2:

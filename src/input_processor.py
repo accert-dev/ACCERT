@@ -130,10 +130,10 @@ def parse_son_input(input_path: str, necost_path: str) -> Dict:
     xml_str = son_input_to_str(input_path, necost_path)
     xml_dict = xml_tree_to_dict(ElementTree.fromstring(xml_str))
     result = xml_dict["document"]["necost"]
-
     return {
         "construction_interest_rate": float(getval(result["construction_interest_rate"])),
         "operations_interest_rate": float(getval(result["operations_interest_rate"])),
+        "sample_size": int(getval(result["sample_size"])),
         "fuel_cycles": parse_list_of_items(result["fuel_cycles"]["cycle"], parse_fuel_cycles),
         "reactors": parse_list_of_items(result["reactors"]["reactor"], parse_reactor),
         "capital_costs": parse_list_of_items(result["capital_costs"]["item"], parse_capital_cost_items),
@@ -209,7 +209,7 @@ def parse_fuel_cycles(cycle: Dict):
             cycle["reactor"], lambda x: {
                 "reactor": x["id"]["#text"],
                 "fleet_capacity": float(getval(x["fleet_capacity"])),
-                "fleet_energy": float(getval(x["fleet_energy"]))
+                "fleet_energy": None if "fleet_energy" not in x else float(getval(x["fleet_energy"]))
             }
         )
     }
@@ -253,8 +253,8 @@ def parse_reactor(reactor: Dict):
         callback=lambda x: {"id": x["id"]["#text"], "scaling_factor": float(getval(x))}
     )
 
-    fuel_reloads = None if "quantity" not in reactor["fuel_reloads"] else parse_list_of_items(
-        inp=reactor["fuel_reloads"]["quantity"],
+    fuel_type = None if "quantity" not in reactor["fuel_type"] else parse_list_of_items(
+        inp=reactor["fuel_type"]["quantity"],
         callback=lambda x: {
             "id": x["id"]["#text"],
             "heavy_metal_mass": float(getval(x["heavy_metal_mass"])) if "heavy_metal_mass" in x else None,
@@ -276,7 +276,7 @@ def parse_reactor(reactor: Dict):
         "lifetime_years": float(getval(reactor["capacity_factor"])),
         "capital_costs": capital_costs,
         "om_costs": om_costs,
-        "fuel_reloads": fuel_reloads
+        "fuel_type": fuel_type
     }
 
 
@@ -299,7 +299,7 @@ def parse_capital_cost_items(item: Dict):
     """
     return {
         "id": item["id"]["#text"],
-        "cost_value": float(getval(item["cost_value"])),
+        "cost_value": None if "cost_value" not in item else float(getval(item["cost_value"])),
         "cost_type": getval(item["cost_type"]),
         "expenditure_time": float(getval(item["expenditure_time"])),
         **get_cost_distributions(item)
@@ -370,10 +370,12 @@ def parse_fuel_cost_items(item: Dict):
 
     cost_id = item["id"]["#text"]
     cost_value = float(getval(item["cost_value"]))
+    lead_time = 0 if "lead_time" not in item else float(getval(item["lead_time"]))
 
     return {
         "id": cost_id,
         "cost_value": cost_value,
+        "lead_time": lead_time,
         **get_cost_distributions(item, cost_value)
     }
 
@@ -401,20 +403,20 @@ def get_cost_distributions(inp: Dict, default: float = None):
     distribution = None
 
     if "nominal_value" in inp.keys():
-        nominal = float(getval(inp["nominal_value"]))
-        min_val = max_val = nominal
+        nominal_val = float(getval(inp["nominal_value"]))
+        min_val = max_val = nominal_val
     elif "distribution" in inp.keys():
         distribution = getval(inp["distribution"]["type"])
         min_val = getval(inp["distribution"]["low"])
-        nominal = getval(inp["distribution"]["mean"])
+        nominal_val = getval(inp["distribution"]["nominal"])
         max_val = getval(inp["distribution"]["high"])
     else:
-        min_val = nominal = max_val = default
+        min_val = nominal_val = max_val = default
 
     return {
         "distribution": distribution,
         "min": min_val,
-        "nominal": nominal,
+        "nominal": nominal_val,
         "max": max_val,
     }
 
@@ -437,30 +439,36 @@ def parse_fuels(fuel: Dict):
     dict
         A dictionary containing parsed fuel information.
     """
-    ffc = fuel["fresh_fuel_composition"]
+    ffc = fuel["fresh_fuel"]
 
     avg_discharge_burnup = None
     if "avg_discharge_burnup" in fuel.keys():
         avg_discharge_burnup = float(getval(fuel["avg_discharge_burnup"]))
+    
+    num_batches = None
+    if "num_batches" in fuel.keys():
+        num_batches = float(getval(fuel["num_batches"]))
 
     avg_fuel_residence_time = None
     if "avg_fuel_residence_time" in fuel.keys():
         avg_fuel_residence_time = float(getval(fuel["avg_fuel_residence_time"]))
 
     two_stage_params = None
-    if "two_stage_params" in ffc["enriched_uranium"]:
+    if "two_stage_params" in ffc["EU"]:
         two_stage_params = {
-            "stage_1_enrichment": float(getval(ffc["enriched_uranium"]["two_stage_params"]["stage_1_enrichment"])),
-            "stage_1_tails": float(getval(ffc["enriched_uranium"]["two_stage_params"]["stage_1_tails"])),
+            "stage_1_enrichment": float(getval(ffc["EU"]["two_stage_params"]["stage_1_enrichment"])),
+            "stage_1_tails": float(getval(ffc["EU"]["two_stage_params"]["stage_1_tails"])),
         }
 
     def get_array(obj: dict):
         return parse_list_of_items(obj, lambda x: x["#text"])
 
-    def get_lead_time_and_costs(obj, kind: int = 1):
-        type1 = {} if kind == 3 else {"lead_time": float(getval(obj["lead_time"]))}
-        type2 = {} if kind != 2 else {"loss_fraction": float(getval(obj["loss_fraction"]))}
-        type3 = {} if kind != 3 else {"fraction_disposed": float(getval(obj["fraction_disposed"]))}
+    def get_costs_and_others(obj, kind: int = 1):
+        cost_ids = get_array(obj["costs"]["value"])
+
+        type1 = {} #if kind == 1
+        type2 = {} #if kind == 2 else {"fraction_disposed": float(getval(obj["fraction_disposed"]))}
+        type3 = {"loss_fraction": float(getval(obj["loss_fraction"]))} if kind == 3 else {} 
 
         return {
             **type1, **type2, **type3,
@@ -468,89 +476,91 @@ def parse_fuels(fuel: Dict):
         }
 
     rec_u_frac_params = {"product": None, "tails": None, "losses": None, 'feed': None}
-    ruf_is_reenrichment = getval(ffc["recovered_uranium_fraction"]["is_reenrichment"]) == "yes"
-    if ruf_is_reenrichment:
-        rec_u_frac_params["product"] = float(getval(ffc["recovered_uranium_fraction"]["product"]))
-        rec_u_frac_params["tails"] = float(getval(ffc["recovered_uranium_fraction"]["tails"]))
-        rec_u_frac_params["losses"] = float(getval(ffc["recovered_uranium_fraction"]["losses"]))
-        rec_u_frac_params["feed"] = float(getval(ffc["recovered_uranium_fraction"]["feed"]))
 
     return {
         "id": fuel["id"]["#text"],
-        "avg_specific_power": float(getval(fuel["avg_specific_power"])),
+        "avg_specific_power": None if "avg_specific_power" not in fuel else float(getval(fuel["avg_specific_power"])),
         "avg_discharge_burnup": avg_discharge_burnup,
+        "num_batches": num_batches,
         "avg_fuel_residence_time": avg_fuel_residence_time,
-        "fresh_fuel_composition": {
-            "depleted_uranium": {
-                "fuel_fraction": float(getval(ffc["depleted_uranium"]["fuel_fraction"])),
-                "lead_time": float(getval(ffc["depleted_uranium"]["lead_time"])),
-                "costs": get_array(ffc["depleted_uranium"]["costs"]["value"]),
-                "avoided_costs": None if "avoided_costs" not in ffc["depleted_uranium"] else
-                get_array(ffc["depleted_uranium"]["avoided_costs"]["value"])
+        "fresh_fuel": {
+            "fabrication": {
+                "loss": float(getval(ffc["fabrication"]["loss"])),
+                'costs': get_array(ffc["fabrication"]["costs"]["value"])
             },
-            "natural_uranium": {
-                "fuel_fraction": float(getval(ffc["natural_uranium"]["fuel_fraction"])),
-                "lead_time": float(getval(ffc["natural_uranium"]["lead_time"])),
-                "costs": get_array(ffc["natural_uranium"]["costs"]["value"]),
+            "DU": None if "DU" not in ffc else {
+                "fuel_fraction": float(getval(ffc["DU"]["fuel_fraction"])),
+                "costs": get_array(ffc["DU"]["costs"]["value"]),
+                "avoided_costs": None if "avoided_costs" not in ffc["DU"] else
+                get_array(ffc["DU"]["avoided_costs"]["value"])
             },
-            "thorium_fraction": {} if "thorium_fraction" not in ffc else {
-                "fuel_fraction": float(getval(ffc["thorium_fraction"]["loss_fraction"])),
-                "lead_time": float(getval(ffc["thorium_fraction"]["lead_time"])),
-                "costs": get_array(ffc["thorium_fraction"]["costs"]["value"]),
+            "NU": None if "NU" not in ffc else {
+                "fuel_fraction": float(getval(ffc["NU"]["fuel_fraction"])),
+                "costs": get_array(ffc["NU"]["costs"]["value"]),
             },
-            "recovered_th_fraction_costs": None if "recovered_th_fraction_costs" not in ffc else get_array(ffc["recovered_th_fraction_costs"]["value"]),
-            "enriched_uranium": {
-                "type": getval(ffc["enriched_uranium"]["type"]),
-                "product": float(getval(ffc["enriched_uranium"]["product"])),
-                "feed": float(getval(ffc["enriched_uranium"]["feed"])),
-                "tails": float(getval(ffc["enriched_uranium"]["tails"])),
-                "two_stage_params": two_stage_params,
-                "NU_costs": get_lead_time_and_costs(ffc["enriched_uranium"]["NU_costs"]),
-                "DU_costs": get_lead_time_and_costs(ffc["enriched_uranium"]["DU_costs"]),
-                "conversion": get_lead_time_and_costs(ffc["enriched_uranium"]["conversion"], kind=2),
-                "stage_1_enrichment_costs": { # if two_stage_params is None, this is not present
-                    **get_lead_time_and_costs(ffc["enriched_uranium"]["stage_1_enrichment_costs"], kind=2)
-                },
-                # stage_2_enrichment_costs may not be in ffc["enriched_uranium"]
-                # so if ffc["enriched_uranium"] do not have key "stage_2_enrichment_costs"
-                # then it will return an empty dictionary
-                # if it has the key, then it will return the dictionary
-                # with the values of the key "stage_2_enrichment_costs"
-                # and the key "lead_time" with the value of the key "lead_time"
-                # and the key "costs" with the value of the key "costs"
-                # and the key "loss_fraction" with the value of the key "loss_fraction"
-                "stage_2_enrichment_costs": { None: {} } if "stage_2_enrichment_costs" not in ffc["enriched_uranium"] else {
-                    **get_lead_time_and_costs(ffc["enriched_uranium"]["stage_2_enrichment_costs"], kind=2)
-                },
+            "EU": None if "EU" not in ffc else {
+                "fuel_fraction": float(getval(ffc["EU"]["fuel_fraction"])),
             },
-            "recovered_uranium_fraction": {
-                "is_reenrichment": ruf_is_reenrichment,
-                **rec_u_frac_params,
-                "loss_fraction": float(getval(ffc["recovered_uranium_fraction"]["loss_fraction"])),
-                "costs": get_array(ffc["recovered_uranium_fraction"]["costs"]["value"]),
+            "RU": None if "RU" not in ffc else {
+                "fuel_fraction": float(getval(ffc["RU"]["fuel_fraction"])),
             },
-            "recovered_tru_fraction": None if "recovered_tru_fraction" not in ffc else {
-                "np": float(getval(ffc["recovered_tru_fraction"]["np"])),
-                "pu": float(getval(ffc["recovered_tru_fraction"]["pu"])),
-                "am_cm": float(getval(ffc["recovered_tru_fraction"]["am_cm"])),
-                "costs": get_array(ffc["recovered_tru_fraction"]["costs"]["value"])
-            }
+            "Th": None if "Th" not in ffc else {
+                "fuel_fraction": float(getval(ffc["Th"]["fuel_fraction"])),
+                "costs": get_array(ffc["Th"]["costs"]["value"]),
+            },
+            "TRU": None if "TRU" not in ffc else {
+                "fuel_fraction": float(getval(ffc["TRU"]["fuel_fraction"])),
+                "np": None if "np" not in ffc["TRU"] else float(getval(ffc["TRU"]["np"])),
+                "pu": None if "pu" not in ffc["TRU"] else float(getval(ffc["TRU"]["pu"])),
+                "am_cm": None if "am_cm" not in ffc["TRU"] else float(getval(ffc["TRU"]["am_cm"])),
+                "costs": get_array(ffc["TRU"]["costs"]["value"])
+            },
+            "FP": None if "FP" not in ffc else {
+                "fuel_fraction": float(getval(ffc["FP"]["fuel_fraction"])),
+                "costs": get_array(ffc["FP"]["costs"]["value"]),
+            }           
         },
-        "fabrication": get_lead_time_and_costs(fuel["fabrication"], kind=2),
-        "reprocessing": None if "reprocessing" not in fuel else {
-            "fuel_id": getval(fuel["reprocessing"]["fuel_id"]),
-            "time_after_discharge": float(getval(fuel["reprocessing"]["time_after_discharge"])),
-            "sep_leadtime": float(getval(fuel["reprocessing"]["sep_leadtime"])),
-            "sep_losses": float(getval(fuel["reprocessing"]["sep_losses"])),
-            "waste_management_costs": {
-                "th": get_lead_time_and_costs(fuel["reprocessing"]["waste_management_costs"]["th"], kind=3),
-                "ru": get_lead_time_and_costs(fuel["reprocessing"]["waste_management_costs"]["ru"], kind=3),
-                "np": get_lead_time_and_costs(fuel["reprocessing"]["waste_management_costs"]["np"], kind=3),
-                "pu": get_lead_time_and_costs(fuel["reprocessing"]["waste_management_costs"]["pu"], kind=3),
-                "am_cm": get_lead_time_and_costs(fuel["reprocessing"]["waste_management_costs"]["am_cm"], kind=3),
-                "fp": get_lead_time_and_costs(fuel["reprocessing"]["waste_management_costs"]["fp"], kind=3),
-            },
-            "avoided_costs": get_array(fuel["reprocessing"]["avoided_costs"]["value"])
+        "spent_fuel": None if "spent_fuel" not in fuel else {
+            "costs": get_array(fuel["spent_fuel"]["costs"]["value"]),
+            "FP": None if "FP" not in fuel["spent_fuel"] else {
+                "fuel_fraction": float(getval(fuel["spent_fuel"]["FP"]["fuel_fraction"])),
+                "costs": get_array(fuel["spent_fuel"]["FP"]["costs"]["value"]),
+            }},
+        "EU": None if "EU" not in fuel else {
+            "conversion": get_costs_and_others(fuel["EU"]["conversion"], kind=3),
+            "enrichment": {
+                "type": getval(fuel["EU"]["enrichment"]["type"]),
+                "loss_fraction": float(getval(fuel["EU"]["enrichment"]["loss_fraction"])),
+                "stage_1": {
+                    "feed": float(getval(fuel["EU"]["enrichment"]["stage_1"]["feed"])),
+                    "product": float(getval(fuel["EU"]["enrichment"]["stage_1"]["product"])),
+                    "tails": float(getval(fuel["EU"]["enrichment"]["stage_1"]["tails"])),
+                },
+                "stage_2": None if "stage_2" not in fuel["EU"]["enrichment"] else {
+                    "feed": float(getval(fuel["EU"]["enrichment"]["stage_2"]["feed"])),
+                    "product": float(getval(fuel["EU"]["enrichment"]["stage_2"]["product"])),
+                    "tails": float(getval(fuel["EU"]["enrichment"]["stage_2"]["tails"])),
+                },
+                "SWU_costs":{
+                    "costs": get_array(fuel["EU"]["enrichment"]["SWU_costs"]["value"]),
+                },
+                "NU_costs": {"costs": get_array(fuel["EU"]["enrichment"]["NU_costs"]["value"]),},
+                "DU_costs": {"costs": get_array(fuel["EU"]["enrichment"]["DU_costs"]["value"]),},
+            },  
+        },
+        "RU": None if "RU" not in fuel else {
+            "reprocessing": None if "reprocessing" not in fuel["RU"] else get_costs_and_others(fuel["RU"]["reprocessing"], kind=2),
+            "conversion": get_costs_and_others(fuel["RU"]["conversion"], kind=2),
+            "reenrichment": None if "reenrichment" not in fuel["RU"] else {
+                "loss_fraction": float(getval(fuel["RU"]["reenrichment"]["loss_fraction"])),
+                "stage_1": {
+                    "feed": float(getval(fuel["RU"]["reenrichment"]["stage_1"]["feed"])),
+                    "product": float(getval(fuel["RU"]["reenrichment"]["stage_1"]["product"])),
+                    "tails": float(getval(fuel["RU"]["reenrichment"]["stage_1"]["tails"])),
+                },
+                "SWU_costs": {"costs": get_array(fuel["RU"]["reenrichment"]["SWU_costs"]["value"]),},
+                "DU_costs": {"costs": get_array(fuel["RU"]["reenrichment"]["DU_costs"]["value"]),},
+        },
         },
         "discharge_fuel_composition": None if "discharge_fuel_composition" not in fuel else parse_list_of_items(
             inp=fuel["discharge_fuel_composition"]["year"],
