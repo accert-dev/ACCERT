@@ -50,6 +50,7 @@ def generate_monte_carlo_samples(
             area1 = low + np.sqrt(u * (high - low) * (mode - low))
             # The right area of the triangular distribution
             area2 = high - np.sqrt((1 - u) * (high - low) * (high - mode))
+            print(idx, values)
             monte_carlo_results[idx, :] = np.where(u < (mode - low) / (high - low), area1, area2)
 
         # Uniform distribution.

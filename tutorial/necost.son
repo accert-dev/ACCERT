@@ -1,7 +1,7 @@
 necost {
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05
-
+    sample_size = 50000
     fuel_cycles {
         cycle(initial_cycle) {
             % Aggregating islands computes a fuel cycle
@@ -39,7 +39,7 @@ necost {
                 type = triangular
                 low = 2300
                 high = 5800
-                mean = 4000
+                nominal = 4000
             }
         }
     }
@@ -51,7 +51,7 @@ necost {
                 type = triangular
                 low = 58
                 high = 84
-                mean = 70
+                nominal = 70
             }
         }
         item(B) {
@@ -60,7 +60,7 @@ necost {
                 type = triangular
                 low = 0.84
                 high = 2.6
-                mean = 1.9
+                nominal = 1.9
             }
         }
     }
@@ -78,7 +78,7 @@ necost {
                 type = triangular
                 low = 65
                 high = 230
-                mean = 110
+                nominal = 110
             }
         }
         item(cost_SWU){
@@ -87,7 +87,7 @@ necost {
                 type = triangular
                 low = 70
                 high = 120
-                mean = 100
+                nominal = 100
             }
         }
         item(cost_fuel_fab){
@@ -96,7 +96,7 @@ necost {
                 type = triangular
                 low = 200
                 high = 500
-                mean = 350
+                nominal = 350
             }
         }
         item(cost_conv){
@@ -105,7 +105,7 @@ necost {
                 type = triangular
                 low = 6
                 high = 18
-                mean = 12
+                nominal = 12
             }
         }
         item(cost_deconv){
@@ -114,17 +114,11 @@ necost {
                 type = triangular
                 low = 4
                 high = 8
-                mean = 6
+                nominal = 6
             }
         }
         item(cost_offsite_storage){
             cost_value=  0
-            distribution{
-                type = triangular
-                low = 0
-                high = 0
-                mean = 0
-            }
         }
         item(cost_SNF_cond){
             cost_value=  100
@@ -132,7 +126,7 @@ necost {
                 type = triangular
                 low = 50
                 high = 130
-                mean = 100
+                nominal = 100
             }
         }
         item(cost_rprocsng){
@@ -141,7 +135,7 @@ necost {
                 type = triangular
                 low = 1494
                 high = 2214
-                mean = 1850
+                nominal = 1850
             }
         }
         item(cost_MOX_fab){
@@ -150,7 +144,7 @@ necost {
                 type = triangular
                 low = 3000
                 high = 5000
-                mean = 3200
+                nominal = 3200
             }
         }
         item(cost_FP_cond){
@@ -159,7 +153,7 @@ necost {
                 type = triangular
                 low = 2200
                 high = 6600
-                mean = 5000
+                nominal = 5000
             }
         }
         item(cost_FP_geologic){
@@ -168,7 +162,7 @@ necost {
                 type = triangular
                 low = 1625
                 high = 8125
-                mean = 6500
+                nominal = 6500
             }
         }
         item(cost_conv_rec){
@@ -177,7 +171,7 @@ necost {
                 type = triangular
                 low = 6
                 high = 50
-                mean = 11
+                nominal = 11
             }
         }
         item(cost_nrchmt_rec){
@@ -186,17 +180,11 @@ necost {
                 type = triangular
                 low = 85
                 high = 135
-                mean = 110
+                nominal = 110
             }
         }
         item(cost_dry_storage){
             cost_value=  0
-            distribution{
-                type = triangular
-                low = 0
-                high = 0
-                mean = 0
-            }
         }
         item(cost_geologic_disposal){
             cost_value=  550
@@ -204,17 +192,11 @@ necost {
                 type = triangular
                 low = 265
                 high = 801
-                mean = 550
+                nominal = 550
             }
         }
         item(cost_RU_disposal){
-            cost_value=  9999
-            distribution{
-                type = triangular
-                low = 9999
-                high = 9999
-                mean = 9999
-            }
+            cost_value=  9
         }
         item(cost_DU_disposal){
             cost_value=  2
@@ -222,7 +204,7 @@ necost {
                 type = triangular
                 low = 1
                 high = 3
-                mean = 2
+                nominal = 2
             }
         }
     }

@@ -223,7 +223,7 @@ necost {
                 }
             }
 
-            fuel_type {
+            fuel_reloads {
                 Description = "" % TODO
                 MinOccurs = 0
                 MaxOccurs = 1
@@ -609,62 +609,46 @@ necost {
                 % TODO: What are min-max values for this?
             }
 
-            fresh_fuel {
+            fresh_fuel_composition {
                 Description = "" % TODO
-                MinOccurs = 0
+                MinOccurs = 1
                 MaxOccurs = 1
                 InputTmpl="fuels/fresh_fuel_composition"
-                fabrication{                        
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1                        
-                    loss {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        % TODO: What are min-max values for this?
-                        }
-                    costs {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-                }
-                DU {
+
+                depleted_uranium {
                     Description = "" % TODO
-                    MinOccurs = 0
+                    MinOccurs = 1
                     MaxOccurs = 1
                     InputTmpl="fuels/fcc_depleted_uranium"
 
                     fuel_fraction {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
                         InputTmpl="flagtypes"
-                        MinValInc = 0
+                        MinValExc = 0
                         MaxValInc = 1
+                    }
+
+                    lead_time {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
                     }
 
                     costs {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
                             Description = "" % TODO
-                            MinOccurs = 0
+                            MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
                             ExistsIn = [ "/necost/fuel_costs/item/id" ]
@@ -687,31 +671,40 @@ necost {
                     }
                 }
 
-                NU {
+                natural_uranium {
                     Description = "" % TODO
-                    MinOccurs = 0
+                    MinOccurs = 1
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_natural_uranium"
 
                     fuel_fraction {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
                         InputTmpl="flagtypes"
-                        MinValInc = 0
+                        MinValExc = 0
                         MaxValInc = 1
+                    }
+
+                    lead_time {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
                     }
 
                     costs {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
                             Description = "" % TODO
-                            MinOccurs = 0
+                            MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
                             ExistsIn = [ "/necost/fuel_costs/item/id" ]
@@ -719,95 +712,335 @@ necost {
                     }
                 }
 
-                EU {
+                enriched_uranium {
                     Description = "" % TODO
-                    MinOccurs = 0
+                    MinOccurs = 1
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_natural_uranium"
+                    InputTmpl="fuels/ffc_enriched_uranium"
+                    ChildCountEqual(EvenNone)=[two_stage_params type=two_stage]
+                    ChildCountEqual(EvenNone)=[stage_2_enrichment_costs type=two_stage]
+                    type {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        ValType = String
+                        ValEnums = [one_stage two_stage]
+                        InputTmpl="flagtypes"
+                    }
 
-                    fuel_fraction {
+                    feed {
                         Description = "" % TODO
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
                         InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
+                        % TODO: What are min-max values for this?
                     }
 
-                    costs {
+                    product {
                         Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-                }
-
-                RU {
-                    Description = "" % TODO
-                    MinOccurs = 0
-                    MaxOccurs = 1
-                    InputTmpl="fuels/ffc_natural_uranium"
-
-                    fuel_fraction {
-                        Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
                         InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
+                        % TODO: What are min-max values for this?
                     }
 
-                    costs {
+                    tails {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
+                    }
+
+                    two_stage_params {
                         Description = "" % TODO
                         MinOccurs = 0
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl="om_costs/ffc_enriched_uranium_two_stage_params"
 
-                        value {
+                        stage_1_enrichment {
                             Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            % TODO: What are min-max values for this?
+                        }
+
+                        stage_1_tails {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            % TODO: What are min-max values for this?
+                        }
+                    }
+
+                    NU_costs {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        % TODO: Template
+
+                        lead_time {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            % TODO: What are min-max values for this?
+                        }
+
+                        costs {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            InputTmpl="sonarray"
+
+                            value {
+                                Description = "" % TODO
+                                MinOccurs = 1
+                                MaxOccurs = NoLimit
+                                ValType = String
+                                ExistsIn = [ "/necost/fuel_costs/item/id" ]
+                            }
+                        }
+                    }
+
+                    DU_costs {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        % TODO: Template
+
+                        lead_time {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            % TODO: What are min-max values for this?
+                        }
+
+                        costs {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            InputTmpl="sonarray"
+
+                            value {
+                                Description = "" % TODO
+                                MinOccurs = 1
+                                MaxOccurs = NoLimit
+                                ValType = String
+                                ExistsIn = [ "/necost/fuel_costs/item/id" ]
+                            }
+                        }
+                    }
+
+                    conversion {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        % TODO: Template
+
+                        lead_time {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            % TODO: What are min-max values for this?
+                        }
+
+                        loss_fraction {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            MinValExc = 0
+                            MaxValInc = 1
+                        }
+
+                        costs {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            InputTmpl="sonarray"
+
+                            value {
+                                Description = "" % TODO
+                                MinOccurs = 1
+                                MaxOccurs = NoLimit
+                                ValType = String
+                                ExistsIn = [ "/necost/fuel_costs/item/id" ]
+                            }
+                        }
+                    }
+
+                    conversion {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        % TODO: Template
+
+                        lead_time {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            % TODO: What are min-max values for this?
+                        }
+
+                        loss_fraction {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            MinValExc = 0
+                            MaxValInc = 1
+                        }
+
+                        costs {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            InputTmpl="sonarray"
+
+                            value {
+                                Description = "" % TODO
+                                MinOccurs = 1
+                                MaxOccurs = NoLimit
+                                ValType = String
+                                ExistsIn = [ "/necost/fuel_costs/item/id" ]
+                            }
+                        }
+                    }
+
+                    stage_1_enrichment_costs {
+                        Description = "" % TODO
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        % TODO: Template
+
+                        lead_time {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            % TODO: What are min-max values for this?
+                        }
+
+                        loss_fraction {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            MinValExc = 0
+                            MaxValInc = 1
+                        }
+
+                        costs {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            InputTmpl="sonarray"
+
+                            value {
+                                Description = "" % TODO
+                                MinOccurs = 1
+                                MaxOccurs = NoLimit
+                                ValType = String
+                                ExistsIn = [ "/necost/fuel_costs/item/id" ]
+                            }
+                        }
+                    }
+
+                    stage_2_enrichment_costs {
+                        Description = "" % TODO
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        % TODO: Template
+
+                        lead_time {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            % TODO: What are min-max values for this?
+                        }
+
+                        loss_fraction {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            ValType = Real
+                            InputTmpl="flagtypes"
+                            MinValExc = 0
+                            MaxValInc = 1
+                        }
+
+                        costs {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = 1
+                            InputTmpl="sonarray"
+
+                            value {
+                                Description = "" % TODO
+                                MinOccurs = 1
+                                MaxOccurs = NoLimit
+                                ValType = String
+                                ExistsIn = [ "/necost/fuel_costs/item/id" ]
+                            }
                         }
                     }
                 }
 
-                Th {
+                thorium_fraction {
                     Description = "" % TODO
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_thorium_fraction"
 
-                    fuel_fraction {
+                    lead_time {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
                         InputTmpl="flagtypes"
-                        MinValInc = 0
+                        % TODO: What are min-max values for this?
+                    }
+
+                    loss_fraction {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        MinValExc = 0
                         MaxValInc = 1
                     }
 
                     costs {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
                             Description = "" % TODO
-                            MinOccurs = 0
+                            MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
                             ExistsIn = [ "/necost/fuel_costs/item/id" ]
@@ -815,14 +1048,14 @@ necost {
                     }
                 }
 
-                RTh {
+                recovered_th_fraction_costs {
                     Description = "" % TODO
                     MinOccurs = 0
                     MaxOccurs = 1
 
                     value {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = NoLimit
                         ValType = String
                         InputTmpl="sonarray"
@@ -830,93 +1063,132 @@ necost {
                     }
                 }
 
-                TRU {
+                recovered_uranium_fraction {
+                    Description = "" % TODO
+                    MinOccurs = 1
+                    MaxOccurs = 1
+                    ChildCountEqual(EvenNone)=[product is_reenrichment=yes]
+                    ChildCountEqual(EvenNone)=[tails is_reenrichment=yes]
+                    ChildCountEqual(EvenNone)=[loss_fraction is_reenrichment=yes]
+                    ChildCountEqual(EvenNone)=[losses is_reenrichment=yes]
+                    InputTmpl="fuels/ffc_recovered_uranium_fraction"
+
+                    is_reenrichment {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        ValType = String
+                        ValEnums = [yes no]
+                        InputTmpl="flagtypes"
+                    }
+
+                    product {
+                        Description = "" % TODO
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
+                    }
+
+                    feed {
+                        Description = "" % TODO
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
+                    }
+
+                    tails {
+                        Description = "" % TODO
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
+                    }
+
+                    losses {
+                        Description = "" % TODO
+                        MinOccurs = 0
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        % TODO: What are min-max values for this?
+                    }
+
+                    loss_fraction {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        ValType = Real
+                        InputTmpl="flagtypes"
+                        MinValExc = 0
+                        MaxValInc = 1
+                    }
+
+                    costs {
+                        Description = "" % TODO
+                        MinOccurs = 1
+                        MaxOccurs = 1
+                        InputTmpl="sonarray"
+
+                        value {
+                            Description = "" % TODO
+                            MinOccurs = 1
+                            MaxOccurs = NoLimit
+                            ValType = String
+                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
+                        }
+                    }
+                }
+
+                recovered_tru_fraction {
                     Description = "" % TODO
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_recovered_tru_fraction"
 
-                    fuel_fraction {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
-                    }
-
                     np {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
                         InputTmpl="flagtypes"
-                        MinValInc = 0
+                        MinValExc = 0
                         MaxValInc = 1
                     }
 
                     pu {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
                         InputTmpl="flagtypes"
-                        MinValInc = 0
+                        MinValExc = 0
                         MaxValInc = 1
                     }
 
                     am_cm {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
                         InputTmpl="flagtypes"
-                        MinValInc = 0
+                        MinValExc = 0
                         MaxValInc = 1
                     }
 
                     costs {
                         Description = "" % TODO
-                        MinOccurs = 0
+                        MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
                             Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-                }
-
-                FP {
-                    Description = "" % TODO
-                    MinOccurs = 0
-                    MaxOccurs = 1
-                    InputTmpl="fuels/ffc_thorium_fraction"
-
-                    fuel_fraction {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
-                    }
-
-                    costs {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
+                            MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
                             ExistsIn = [ "/necost/fuel_costs/item/id" ]
@@ -925,388 +1197,46 @@ necost {
                 }
             }
 
-            spent_fuel {
+            fabrication {
+                Description = "" % TODO
+                MinOccurs = 1
+                MaxOccurs = 1
+                InputTmpl="fuels/fabrication"
+
+                lead_time {
+                    Description = "" % TODO
+                    MinOccurs = 1
+                    MaxOccurs = 1
+                    ValType = Real
+                    InputTmpl="flagtypes"
+                    % TODO: What are min-max values for this?
+                }
+
+                loss_fraction {
+                    Description = "" % TODO
+                    MinOccurs = 1
+                    MaxOccurs = 1
+                    ValType = Real
+                    InputTmpl="flagtypes"
+                    MinValExc = 0
+                    MaxValInc = 1
+                }
+
                 costs {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-
-                    FP {
                     Description = "" % TODO
-                    MinOccurs = 0
+                    MinOccurs = 1
                     MaxOccurs = 1
-                    InputTmpl="fuels/fcc_depleted_uranium"
+                    InputTmpl="sonarray"
 
-                    fuel_fraction {
+                    value {
                         Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
-                    }
-
-                    costs {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ExistsIn =  [ "/necost/fuel_costs/item/id"]
-                        }
-                    }
-
-                    avoided_costs {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            InputTmpl="sonarray"
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-                }
-            }
-
-            EU {
-                Description = "" % TODO
-                MinOccurs = 0
-                MaxOccurs = 1
-                InputTmpl="fuels/ffc_enriched_uranium"
-                conversion {
-                    Description = "" % TODO
-                    MinOccurs = 0
-                    MaxOccurs = 1
-
-                    loss_fraction {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
-                    }
-
-                    costs {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-                }
-
-                enrichment{
-                    Description = "" % TODO
-                    MinOccurs = 0
-                    MaxOccurs = 1
-                    ChildCountEqual(EvenNone)=[stage_2 type=two_stage]
-
-                    type {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
+                        MinOccurs = 1
+                        MaxOccurs = NoLimit
                         ValType = String
-                        ValEnums = [one_stage two_stage]
-                        InputTmpl="flagtypes"
-                    }
-
-                    loss_fraction {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
-                    }
-
-                    stage_1{
-                        Description = "" % TODO
-                        MinOccurs = 1
-                        MaxOccurs = 1
-                        feed {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-
-                        product {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-
-                        tails {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-                    }
-
-                    stage_2{
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        feed {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-
-                        product {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-
-                        tails {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-                    }    
-
-                    SWU_costs{
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-
-                    NU_costs{
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }                    
-
-                    DU_costs{
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
+                        ExistsIn = [ "/necost/fuel_costs/item/id" ]
                     }
                 }
             }
-
-            RU {
-                Description = "" % TODO
-                MinOccurs = 0
-                MaxOccurs = 1
-                InputTmpl="fuels/ffc_enriched_uranium"
-                
-                reprocess {
-                    Description = "" % TODO
-                    MinOccurs = 0
-                    MaxOccurs = 1
-
-                    loss_fraction {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
-                    }
-
-                    costs {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-                }  
-
-                conversion {
-                    Description = "" % TODO
-                    MinOccurs = 0
-                    MaxOccurs = 1
-
-                    loss_fraction {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
-                    }
-
-                    costs {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-                }
-
-                reenrichment{
-                    Description = "" % TODO
-                    MinOccurs = 0
-                    MaxOccurs = 1
-
-                    loss_fraction {
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        ValType = Real
-                        InputTmpl="flagtypes"
-                        MinValInc = 0
-                        MaxValInc = 1
-                    }
-
-                    stage_1{
-                        Description = "" % TODO
-                        MinOccurs = 1
-                        MaxOccurs = 1
-                        feed {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-
-                        product {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-
-                        tails {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = 1
-                            ValType = Real
-                            InputTmpl="flagtypes"
-                            % TODO: What are min-max values for this?
-                        }
-                    }
-
-                    SWU_costs{
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }                 
-
-                    DU_costs{
-                        Description = "" % TODO
-                        MinOccurs = 0
-                        MaxOccurs = 1
-                        InputTmpl="sonarray"
-
-                        value {
-                            Description = "" % TODO
-                            MinOccurs = 0
-                            MaxOccurs = NoLimit
-                            ValType = String
-                            ExistsIn = [ "/necost/fuel_costs/item/id" ]
-                        }
-                    }
-                }
-            }
-
 
             reprocessing {
                 Description = "" % TODO
