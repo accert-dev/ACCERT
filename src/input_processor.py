@@ -370,7 +370,6 @@ def parse_fuel_cost_items(item: Dict):
 
     cost_id = item["id"]["#text"]
     cost_value = float(getval(item["cost_value"]))
-    print(cost_id, cost_value)
     return {
         "id": cost_id,
         "cost_value": cost_value,
