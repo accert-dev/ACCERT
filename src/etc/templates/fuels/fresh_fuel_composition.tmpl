@@ -1,21 +1,10 @@
-fresh_fuel_composition {
-    depleted_uranium {
-        % Add depleted uranium parameters
-    }
-    natural_uranium {
-        % Add natural uranium parameters
-    }
-    enriched_uranium {
-        % Add enriched uranium parameters
-    }
-    thorium_fraction {
-        % Add thorium fraction parameters
-    }
-    recovered_th_fraction_costs = []
-    recovered_uranium_fraction {
-        % Add recovered uranium fraction parameters
-    }
-    recovered_tru_fraction {
-        % Add recovered tru fraction parameters
-    }
+fresh_fuel{
+    fabrication{ loss_fraction = VALUE costs = [fuel_cost_item_id]}
+    DU{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
+    NU{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
+    EU{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
+    RU{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
+    Th{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
+    TRU{fuel_fraction = VALUE costs = [fuel_cost_item_id]}
+    FP{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
 }

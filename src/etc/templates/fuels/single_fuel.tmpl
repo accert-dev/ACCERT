@@ -1,16 +1,18 @@
-fuel( fuel_id ) {
-    avg_discharge_burnup = 1
-    avg_specific_power = 1
-    fresh_fuel_composition {
+fuel(fuel_id) {
+    avg_discharge_burnup = VALUE
+    num_batches = VALUE
+    avg_specific_power = VALUE
+
+    fresh_fuel{
         % Add fresh fuel composition parameters
     }
-    fabrication {
-        % Add fabrication parameters
+    spent_fuel{
+        % Add spent fuel composition parameters
     }
-    reprocessing {
-        % Add reprocessing parameters
+    EU{
+        % Add enrichment and conversion parameters
     }
-    discharge_fuel_composition {
-        % Add discharge fuel composition parameters
+    RU{
+        % Add reprocessing and conversion and reenrichment parameters
     }
 }

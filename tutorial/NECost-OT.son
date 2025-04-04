@@ -2,6 +2,7 @@ necost {
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05
     sample_size = 500
+    
     fuel_cycles {
         cycle(initial_cycle) {reactor(PWR) { fleet_capacity=1000 }}
     }

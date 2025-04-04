@@ -323,15 +323,6 @@ necost {
                 % TODO: What are min-max values for this?
             }
 
-            nominal_value {
-                Description = "" % TODO
-                MinOccurs = 0
-                MaxOccurs = 1
-                ValType = Real
-                InputTmpl="flagtypes"
-                % TODO: What are min-max values for this?
-            }
-
             distribution {
                 Description = "" % TODO
                 MinOccurs = 0
