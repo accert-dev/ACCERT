@@ -203,7 +203,7 @@ if __name__ == "__main__":
     results = results.drop(columns=['HM_mass_direct_spec','t_cyc','L_direct_spec'])
     import matplotlib.pyplot as plt
     # plot is like a KDE plot fill in the gaps
-    bin_num = int(sample_size/20)
+    bin_num = int(sample_size/10)
     
     results.plot(kind='hist', bins=bin_num, alpha=0.5)
     plt.title("NECOST Results")

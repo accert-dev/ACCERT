@@ -1,12 +1,9 @@
 necost {
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05
-
+    sample_size = 500
     fuel_cycles {
-        cycle(initial_cycle) {
-            % Aggregating islands computes a fuel cycle
-            reactor(PWR) { fleet_capacity=1000 }
-        }
+        cycle(initial_cycle) {reactor(PWR) { fleet_capacity=1000 }}
     }
 
     reactors {
@@ -14,31 +11,25 @@ necost {
             capacity_factor = 0.9
             cycle_length = 1.5
             lifetime_years = 60
-            power_level {
-                reference_thermal = 3E9
-                net_thermal_efficiency = 33
-            }
-            capital_costs {
-                scaling_factor(CapA) = 1
-            }
-            om_costs {
-                scaling_factor(OMA) = 1
-                scaling_factor(OMB) = 1
-            }
-            fuel_reloads {
-                quantity(A) { heavy_metal_mass = 88.23 fuel_fraction = 1 }
-            }
+            power_level { reference_thermal = 3E9 net_thermal_efficiency = 33 }
+            capital_costs { scaling_factor(CapA) = 1}
+            om_costs {scaling_factor(OMA) = 1 scaling_factor(OMB) = 1}
+            fuel_reloads {quantity(A) { heavy_metal_mass = 88.23 fuel_fraction = 1 } }
         }
     }
 
     capital_costs {
-        item(CapA){cost_type = s_curve  expenditure_time = 5 
-                   cost_value = 1 distribution{ type = triangular low = 2300 high = 5800 nominal = 4000 } }
+        item(CapA){cost_type = s_curve  
+                expenditure_time = 5 
+                cost_value = 1 
+                distribution{ type = triangular low = 2300 high = 5800 nominal = 4000 } }
     }
 
     om_costs {
-        item(OMA){cost_type = fixed       distribution{ type = triangular low = 58   high = 84  nominal = 70 } }
-        item(OMB){cost_type = variable    distribution{ type = triangular low = 0.84 high = 2.6 nominal = 1.9 } }
+        item(OMA){cost_type = fixed       
+                distribution{ type = triangular low = 58   high = 84  nominal = 70 } }
+        item(OMB){cost_type = variable    
+                distribution{ type = triangular low = 0.84 high = 2.6 nominal = 1.9 } }
     }
 
     fuel_costs {
@@ -47,7 +38,7 @@ necost {
         item(cost_fuel_fab){          cost_value=  350  lead_time = 0.5 distribution{ type = triangular low = 200  high = 500  nominal = 350 } }
         item(cost_conv){              cost_value=  12   lead_time = 2   distribution{ type = triangular low = 6    high = 18   nominal = 12 } }
         item(cost_deconv){            cost_value=  6    lead_time = 2   distribution{ type = triangular low = 4    high = 8    nominal = 6 } }
-        item(cost_offsite_storage){   cost_value=  0    lead_time = 1.5 distribution{ type = triangular low = 0    high = 0    nominal = 0 } }
+        item(cost_offsite_storage){   cost_value=  0    lead_time = 1.5 }
         item(cost_SNF_cond){          cost_value=  100  lead_time = 1.5 distribution{ type = triangular low = 50   high = 130  nominal = 100 } }
         item(cost_rprocsng){          cost_value=  1850 lead_time = 2   distribution{ type = triangular low = 1494 high = 2214 nominal = 1850 } }
         item(cost_MOX_fab){           cost_value=  3200 lead_time = 2   distribution{ type = triangular low = 3000 high = 5000 nominal = 3200 } }
@@ -55,9 +46,9 @@ necost {
         item(cost_FP_geologic){       cost_value=  6500 lead_time = 0   distribution{ type = triangular low = 1625 high = 8125 nominal = 6500 } }
         item(cost_conv_rec){          cost_value=  11   lead_time = 2   distribution{ type = triangular low = 6    high = 50   nominal = 11 } }
         item(cost_nrchmt_rec){        cost_value=  110  lead_time = 2   distribution{ type = triangular low = 85   high = 135  nominal = 110 } }
-        item(cost_dry_storage){       cost_value=  0    lead_time = 0   distribution{ type = triangular low = 0    high = 0    nominal = 0 } }
+        item(cost_dry_storage){       cost_value=  0    }
         item(cost_geologic_disposal){ cost_value=  550  lead_time = 0   distribution{ type = triangular low = 265  high = 801  nominal = 550 } }
-        item(cost_RU_disposal){       cost_value=  9999 lead_time = 0   distribution{ type = triangular low = 9999 high = 9999 nominal = 9999 } }
+        item(cost_RU_disposal){       cost_value=  9999 }
         item(cost_DU_disposal){       cost_value=  2    lead_time = 2   distribution{ type = triangular low = 1    high = 3    nominal = 2 } }
     }
 
@@ -68,7 +59,7 @@ necost {
             avg_specific_power = 1
 
             fresh_fuel{
-                fabrication{ loss = 0.01 costs = [cost_fuel_fab]}
+                fabrication{ loss_fraction = 0.01 costs = [cost_fuel_fab]}
                 DU{ fuel_fraction = 0.9 costs = [cost_DU_disposal]}
                 NU{ fuel_fraction = 0.9 costs = [cost_U]}
                 EU{ fuel_fraction = 0.9 costs = [cost_U]}
@@ -95,7 +86,6 @@ necost {
                     DU_costs=[cost_DU_disposal]
                 }
             }
-
             RU{
                 reprocess {loss_fraction = 0.01 costs = [cost_conv cost_deconv]}
                 conversion{ loss_fraction = 0.01 costs = [cost_conv cost_deconv]}
@@ -106,9 +96,6 @@ necost {
                     DU_costs= [cost_DU_disposal]
                 }
             }
-
         }
     }
-
-
 }

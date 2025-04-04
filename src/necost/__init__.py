@@ -146,10 +146,10 @@ class NECost:
 
         return pd.DataFrame(
             {
-                "Levelized Hydride Cap": levelized_hydride_cap,
-                "Levelized Hydride Cost": levelized_hydride_cost,
-                "Levelized Hydride OM": levelized_hydride_om,
-                "Levelized FCC": levelized_fcc,
+                "Capital": levelized_hydride_cap,
+                "LCOE": levelized_hydride_cost,
+                "O&M": levelized_hydride_om,
+                "FCC": levelized_fcc,
                 "HM_mass_direct_spec": self.data['HM_mass_direct_spec'] / 1e6,
                 "t_cyc": t_cyc * 365.25 / 30.48,
                 "L_direct_spec": self.data['L_direct_spec'] * 100

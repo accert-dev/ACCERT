@@ -1,0 +1,11 @@
+EU{ 
+    conversion{ loss_fraction = VALUE costs = [FUEL_COST/ITEM/ID]}
+    enrichment{ type = two_stage/one_stage 
+        loss_fraction = VALUE
+        stage_1{feed = VALUE product = VALUE tails = VALUE }
+        stage_2{feed = VALUE product = VALUE tails = VALUE }
+        SWU_costs = [FUEL_COST/ITEM/ID]
+        NU_costs = [FUEL_COST/ITEM/ID]
+        DU_costs=[FUEL_COST/ITEM/ID]
+    }
+}
