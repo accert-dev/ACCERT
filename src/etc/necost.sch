@@ -379,7 +379,6 @@ necost {
             Description = "" % TODO
             MinOccurs = 0
             MaxOccurs = NoLimit
-            ChildExactlyOne=[nominal_value distribution]
             ChildAtMostOne=[expenditure_time cost_type=variable cost_type=fixed]
             InputTmpl="om_costs/cost_item"
 
@@ -649,7 +648,7 @@ necost {
 
                 DU {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/fcc_depleted_uranium"
 
@@ -705,7 +704,7 @@ necost {
 
                 NU {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_natural_uranium"
 
@@ -746,7 +745,7 @@ necost {
 
                 EU {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_enriched_uranium"
 
@@ -869,7 +868,7 @@ necost {
 
                 RU {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
                     ChildCountEqual(EvenNone)=[product is_reenrichment=yes]
                     ChildCountEqual(EvenNone)=[tails is_reenrichment=yes]
@@ -951,7 +950,7 @@ necost {
                 
                 FP {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_natural_uranium"
 
@@ -1013,7 +1012,7 @@ necost {
                 }
                 FP {
                     Description = "" % TODO
-                    MinOccurs = 1
+                    MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_natural_uranium"
 
@@ -1055,7 +1054,7 @@ necost {
 
             EU{
                 Description = "" % TODO
-                MinOccurs = 1
+                MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="fuels/EU"
 
