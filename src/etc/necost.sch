@@ -7,7 +7,7 @@ necost {
     InputTmpl = "necost"
 
     construction_interest_rate {
-        Description = "" % TODO
+        Description = "Construction interest rate for the project" 
         MinOccurs = 0
         MaxOccurs = 1
         MinValInc = 0
@@ -17,7 +17,7 @@ necost {
     }
 
     operations_interest_rate {
-        Description = "" % TODO
+        Description = "Operations interest rate for the plant after construction"
         MinOccurs = 0
         MaxOccurs = 1
         MinValInc = 0
@@ -27,7 +27,7 @@ necost {
     }
 
     sample_size {
-        Description = "" % TODO
+        Description = "Sample size for the Monte Carlo simulation"
         MinOccurs = 0
         MaxOccurs = 1
         MinValExc = 0
@@ -37,14 +37,14 @@ necost {
     }
 
     fuel_cycles {
-        Description = "" % TODO
+        Description = "Fuel cycle parameters for the reactors"
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["cycle/id"]
         InputTmpl = "fuel_cycles/fuel_cycles"
 
         cycle {
-            Description = "" % TODO
+            Description = "Fuel cycle parameters for the reactors"
             MinOccurs = 0
             MaxOccurs = NoLimit
             ChildUniqueness = ["reactor/id"]
@@ -57,7 +57,7 @@ necost {
             }
 
             reactor {
-                Description = "" % TODO
+                Description = "Reactor parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = NoLimit
                 InputTmpl="fuel_cycles/cycle_reactor"
@@ -70,7 +70,7 @@ necost {
                 }
 
                 fleet_capacity {
-                    Description = "" % TODO
+                    Description = "Fleet capacity of the reactors unit in MWe"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -81,7 +81,7 @@ necost {
                 }
 
                 fleet_energy {
-                    Description = "" % TODO
+                    Description = "Fleet energy of the reactors unit in MWh"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -95,14 +95,14 @@ necost {
     }
 
     reactors {
-        Description = "" % TODO
+        Description = "Reactor parameters and characteristics"
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["reactor/id"]
         InputTmpl="reactors/reactors"
 
         reactor {
-            Description = "" % TODO
+            Description = "Reactor parameters and characteristics"
             MinOccurs = 0
             MaxOccurs = NoLimit
             InputTmpl="reactors/single_reactor"
@@ -114,14 +114,14 @@ necost {
             }
 
             power_level {
-                Description = "" % TODO
+                Description = "Power level of the reactor"
                 MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="reactors/power_level"
                 ChildExactlyOne=[reference_net_electrical reference_thermal]
 
                 reference_net_electrical {
-                    Description = "" % TODO
+                    Description = "Reference net electrical power level of the reactor in W electrical" % TODO change the unit in future PR
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -130,7 +130,7 @@ necost {
                 }
 
                 reference_thermal {
-                    Description = "" % TODO
+                    Description = "Reference thermal power level of the reactor in W thermal" % TODO change the unit in future PR
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -139,7 +139,7 @@ necost {
                 }
 
                 net_thermal_efficiency {
-                    Description = "" % TODO
+                    Description = "Net thermal efficiency of the reactor unit in % (0-100)" % TODO change the unit in future PR
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -149,7 +149,7 @@ necost {
             }
 
             capacity_factor {
-                Description = "" % TODO
+                Description = "Capacity factor of the reactor unit in 1"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -158,7 +158,7 @@ necost {
             }
 
             cycle_length {
-                Description = "" % TODO
+                Description = "Cycle length of the reactor unit in years"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -167,7 +167,7 @@ necost {
             }
 
             lifetime_years {
-                Description = "" % TODO
+                Description = "Lifetime of the reactor unit in years"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -176,14 +176,14 @@ necost {
             }
 
             capital_costs {
-                Description = "" % TODO
+                Description = "Capital costs for the reactors, will select the cost item from the capital_costs section"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ChildUniqueness = ["scaling_factor/id"]
                 InputTmpl="reactors/capital_costs"
 
                 scaling_factor {
-                    Description = "" % TODO
+                    Description = "Simple scaling factor for the capital costs item"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
                     ValType = Real
@@ -200,14 +200,14 @@ necost {
             }
 
             om_costs {
-                Description = "" % TODO
+                Description = "Operating and maintenance costs for the reactors, will select the cost item from the om_costs section"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ChildUniqueness = ["scaling_factor/id"]
                 InputTmpl="reactors/om_costs"
 
                 scaling_factor {
-                    Description = "" % TODO
+                    Description = "Simple scaling factor for the operating and maintenance costs item"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
                     ValType = Real
@@ -224,14 +224,14 @@ necost {
             }
 
             fuel_reloads {
-                Description = "" % TODO
+                Description = "Fuel reloads cost for the reactors, will select the fuel from fuels section"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ChildUniqueness = ["quantity_of_fuel/id"]
                 InputTmpl="reactors/fuel_reloads"
 
                 quantity {
-                    Description = "" % TODO
+                    Description = "Quantity of fuel reloads for the reactors, will select the fuel from fuels section"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
                     ChildExactlyOne=[heavy_metal_mass thermal_power_fraction]
@@ -245,7 +245,7 @@ necost {
                     }
 
                     heavy_metal_mass {
-                        Description = "" % TODO
+                        Description = "Heavy metal mass of the fuel reloads for the reactor unit in MTiHM / Cycle"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -254,7 +254,7 @@ necost {
                     }
 
                     thermal_power_fraction {
-                        Description = "" % TODO
+                        Description = "Fraction of Fuel Reloaded in the reactor unit in 1"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -263,7 +263,7 @@ necost {
                     }
 
                     fuel_fraction{
-                        Description = "" % TODO
+                        Description = " Fuel fraction of the fuel reloads for the reactor unit in 1"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -277,14 +277,14 @@ necost {
     }
 
     capital_costs {
-        Description = "" % TODO
+        Description = "Capital costs for the reactors"
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["item/id"]
         InputTmpl="capital_costs/capital_costs"
 
         item {
-            Description = "" % TODO
+            Description = "Capital costs items for the reactors"
             MinOccurs = 0
             MaxOccurs = NoLimit
             ChildExactlyOne=[nominal_value distribution]
@@ -297,7 +297,7 @@ necost {
             }
 
             cost_value {
-                Description = "" % TODO
+                Description = "Overnight capital cost value for the reactor unit in $/kWe" 
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -306,7 +306,7 @@ necost {
             }
 
             cost_type {
-                Description = "" % TODO
+                Description = "Cost type for the capital costs, can be S curve with expenditure or single point cost"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = String
@@ -315,7 +315,7 @@ necost {
             }
 
             expenditure_time {
-                Description = "" % TODO
+                Description = "Expenditure time for the capital costs in years"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -324,13 +324,13 @@ necost {
             }
 
             distribution {
-                Description = "" % TODO
+                Description = "Distribution for the capital costs"
                 MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="cost_distribution"
 
                 type {
-                    Description = "" % TODO
+                    Description = "Choose the type of distribution for the capital costs"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = String
@@ -339,7 +339,7 @@ necost {
                 }
 
                 low {
-                    Description = "" % TODO
+                    Description = "Lower bound for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -348,7 +348,7 @@ necost {
                 }
 
                 high {
-                    Description = "" % TODO
+                    Description = "Upper bound for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -357,7 +357,7 @@ necost {
                 }
 
                 nominal {
-                    Description = "" % TODO
+                    Description = "Nominal value for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -369,14 +369,14 @@ necost {
     }
 
     om_costs {
-        Description = "" % TODO
+        Description = "Operating and maintenance costs for the reactors"
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["item/id"]
         InputTmpl="om_costs/om_costs"
 
         item {
-            Description = "" % TODO
+            Description = "Operating and maintenance costs items for the reactors"
             MinOccurs = 0
             MaxOccurs = NoLimit
             ChildAtMostOne=[expenditure_time cost_type=variable cost_type=fixed]
@@ -389,7 +389,7 @@ necost {
             }
 
             cost_type {
-                Description = "" % TODO
+                Description = "Cost type for the operating and maintenance costs, can be variable, fixed, single or periodic" 
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = String
@@ -398,7 +398,7 @@ necost {
             }
 
             expenditure_time {
-                Description = "" % TODO
+                Description = "Expenditure time for the operating and maintenance costs in years"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -407,7 +407,7 @@ necost {
             }
 
             nominal_value {
-                Description = "" % TODO
+                Description = "Operating and maintenance cost value for the reactor unit in $/kWe"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -416,13 +416,13 @@ necost {
             }
 
             distribution {
-                Description = "" % TODO
+                Description = "Distribution for the operating and maintenance costs"
                 MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="cost_distribution"
 
                 type {
-                    Description = "" % TODO
+                    Description = "Choose the type of distribution for the operating and maintenance costs"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = String
@@ -431,7 +431,7 @@ necost {
                 }
 
                 low {
-                    Description = "" % TODO
+                    Description = "Lower bound for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -440,7 +440,7 @@ necost {
                 }
 
                 high {
-                    Description = "" % TODO
+                    Description = "Upper bound for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -449,7 +449,7 @@ necost {
                 }
 
                 nominal {
-                    Description = "" % TODO
+                    Description = "Nominal value for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -461,14 +461,14 @@ necost {
     }
 
     fuel_costs {
-        Description = "" % TODO
+        Description = "Fuel costs"
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["item/id"]
         InputTmpl="fuels/fuel_costs"
 
         item {
-            Description = "" % TODO
+            Description = "Fuel costs items"
             MinOccurs = 0
             MaxOccurs = NoLimit
             InputTmpl="fuels/cost_item"
@@ -480,7 +480,7 @@ necost {
             }
 
             cost_value {
-                Description = "" % TODO
+                Description = "Fuel cost value for the reactor unit in $/kg"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -489,7 +489,7 @@ necost {
             }
 
             lead_time {
-                Description = "" % TODO
+                Description = "Lead time for the fuel cost item in years"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -498,13 +498,13 @@ necost {
             }
 
             distribution {
-                Description = "" % TODO
+                Description = "Distribution for the fuel costs"
                 MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="cost_distribution"
 
                 type {
-                    Description = "" % TODO
+                    Description = "Choose the type of distribution for the fuel costs"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = String
@@ -513,7 +513,7 @@ necost {
                 }
 
                 low {
-                    Description = "" % TODO
+                    Description = "Lower bound for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -522,7 +522,7 @@ necost {
                 }
 
                 high {
-                    Description = "" % TODO
+                    Description = "Upper bound for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -531,7 +531,7 @@ necost {
                 }
 
                 nominal {
-                    Description = "" % TODO
+                    Description = "Nominal value for the distribution"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
@@ -543,14 +543,14 @@ necost {
     }
 
     fuels {
-        Description = "" % TODO
+        Description = "Fuel parameters and characteristics"
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["fuel/id"]
         InputTmpl="fuels/fuels"
 
         fuel {
-            Description = "" % TODO
+            Description = "Fuel parameters and characteristics"
             MinOccurs = 0
             MaxOccurs = NoLimit
             % ChildUniqueness = ["backend_system_parameters/fuel_id"]
@@ -564,7 +564,7 @@ necost {
             }
 
             avg_discharge_burnup {
-                Description = "" % TODO
+                Description = "Average discharge burnup of the fuel in GWt-d/MTiHM"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -582,7 +582,7 @@ necost {
             }
 
             avg_specific_power {
-                Description = "" % TODO
+                Description = "Average specific power of the fuel in Wt/g"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -591,7 +591,7 @@ necost {
             }
 
             avg_fuel_residence_time {
-                Description = "" % TODO
+                Description = "Average fuel residence time of the fuel in EFPY"
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
@@ -600,19 +600,19 @@ necost {
             }
 
             fresh_fuel{
-                Description = "" % TODO
+                Description = "Fresh fuel parameters and characteristics"
                 MinOccurs = 1
                 MaxOccurs = 1
                 InputTmpl="fuels/fresh_fuel_composition"
 
                 fabrication {
-                    Description = "" % TODO
+                    Description = "fabrication parameters and characteristics"
                     MinOccurs = 1
                     MaxOccurs = 1
                     InputTmpl="fuels/fabrication"
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the fresh fuel fabrication in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -621,7 +621,7 @@ necost {
                     }
 
                     loss_fraction {
-                        Description = "loss_fraction of the fresh fuel during fabrication" 
+                        Description = "Loss fraction of the fresh fuel during fabrication" 
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -631,13 +631,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the fresh fuel fabrication"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the fresh fuel fabrication, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -647,13 +647,13 @@ necost {
                 }
 
                 DU {
-                    Description = "" % TODO
+                    Description = "Depleted uranium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/fcc_depleted_uranium"
 
                     fuel_fraction {
-                        Description = "" % TODO
+                        Description = "Fuel fraction of the depleted uranium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -663,7 +663,7 @@ necost {
                     }
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the depleted uranium in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -672,13 +672,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the depleted uranium"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the depleted uranium, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -687,12 +687,12 @@ necost {
                     }
 
                     avoided_costs {
-                        Description = "" % TODO
+                        Description = "Avoided costs for the depleted uranium"
                         MinOccurs = 0
                         MaxOccurs = 1
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the depleted uranium, choose the cost item from the fuel_costs section"
                             MinOccurs = 0
                             MaxOccurs = NoLimit
                             ValType = String
@@ -703,13 +703,13 @@ necost {
                 }
 
                 NU {
-                    Description = "" % TODO
+                    Description = "Natural uranium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_natural_uranium"
 
                     fuel_fraction {
-                        Description = "" % TODO
+                        Description = "Fuel fraction of the natural uranium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -719,7 +719,7 @@ necost {
                     }
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the natural uranium in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -728,13 +728,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the natural uranium"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the natural uranium, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -744,13 +744,13 @@ necost {
                 }
 
                 EU {
-                    Description = "" % TODO
+                    Description = "Enriched uranium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_enriched_uranium"
 
                     fuel_fraction {
-                        Description = "" % TODO
+                        Description = "Fuel fraction of the enriched uranium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -760,7 +760,7 @@ necost {
                     }
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the enriched uranium in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -769,13 +769,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the enriched uranium"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the enriched uranium, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -785,13 +785,13 @@ necost {
                 }
 
                 Th {
-                    Description = "" % TODO
+                    Description = "Thorium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_thorium_fraction"
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the thorium in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -800,7 +800,7 @@ necost {
                     }
 
                     fuel_fraction {
-                        Description = "" % TODO
+                        Description = "Fuel fraction of the thorium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -810,13 +810,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the thorium"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the thorium, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -826,13 +826,13 @@ necost {
                 }
 
                 RTh {
-                    Description = "" % TODO
+                    Description = "Recovered thorium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_thorium_fraction"
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the recovered thorium in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -841,7 +841,7 @@ necost {
                     }
 
                     loss_fraction {
-                        Description = "" % TODO
+                        Description = "Loss fraction of the recovered thorium during fabrication"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -851,13 +851,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the recovered thorium"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the recovered thorium, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -867,7 +867,7 @@ necost {
                 }
 
                 RU {
-                    Description = "" % TODO
+                    Description = "Recovered uranium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     ChildCountEqual(EvenNone)=[product is_reenrichment=yes]
@@ -877,7 +877,7 @@ necost {
                     InputTmpl="fuels/ffc_recovered_uranium_fraction"
 
                     fuel_fraction {
-                        Description = "" % TODO
+                        Description = "Fuel fraction of the recovered uranium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -894,13 +894,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the recovered uranium"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
                         
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the recovered uranium, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -910,13 +910,13 @@ necost {
                 }
 
                 TRU {
-                    Description = "" % TODO
+                    Description = "Transuranic parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_recovered_tru_fraction"
 
                     fuel_fraction {
-                        Description = "" % TODO
+                        Description = "Fuel fraction of the transuranic unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -924,7 +924,7 @@ necost {
                     }
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the transuranic in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -933,13 +933,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the transuranic"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
                         
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the transuranic, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -949,13 +949,13 @@ necost {
                 }
                 
                 FP {
-                    Description = "" % TODO
+                    Description = "Fission products parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_natural_uranium"
 
                     fuel_fraction {
-                        Description = "" % TODO
+                        Description = "Fuel fraction of the fission products unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -965,7 +965,7 @@ necost {
                     }
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the fission products in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -974,13 +974,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the fission products"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the fission products, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -991,19 +991,19 @@ necost {
             }
 
             spent_fuel{
-                Description = "" % TODO
+                Description = "Spent fuel parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="fuels/spent_fuel_composition"
 
                 costs {
-                    Description = "" % TODO
+                    Description = "Costs for the spent fuel"
                     MinOccurs = 1
                     MaxOccurs = 1
                     InputTmpl="sonarray"
 
                     value {
-                        Description = "" % TODO
+                        Description = 'Costs for the spent fuel, choose the cost item from the fuel_costs section"
                         MinOccurs = 1
                         MaxOccurs = NoLimit
                         ValType = String
@@ -1011,13 +1011,13 @@ necost {
                     }
                 }
                 FP {
-                    Description = "" % TODO
+                    Description = "Fission products parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_natural_uranium"
 
                     fuel_fraction {
-                        Description = "" % TODO
+                        Description = "Fuel fraction of the fission products unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -1027,7 +1027,7 @@ necost {
                     }
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the fission products in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -1036,13 +1036,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the fission products"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the fission products, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -1053,19 +1053,19 @@ necost {
             }
 
             EU{
-                Description = "" % TODO
+                Description = "Enriched uranium parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="fuels/EU"
 
                 conversion {
-                    Description = "" % TODO
+                    Description = "Conversion parameters and characteristics"
                     MinOccurs = 1
                     MaxOccurs = 1
                     % TODO: Template
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the conversion in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -1074,7 +1074,7 @@ necost {
                     }
 
                     loss_fraction {
-                        Description = "" % TODO
+                        Description = "Loss fraction of the enriched uranium during conversion"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -1084,13 +1084,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the conversion"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the conversion, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -1099,14 +1099,14 @@ necost {
                     }
                 }
                 enrichment{
-                    Description = "" % TODO
+                    Description = "Enrichment parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="fuels/ffc_enriched_uranium"
                     ChildCountEqual(EvenNone)=[stage_2 type=two_stage]
 
                     type {
-                        Description = "" % TODO
+                        Description = "Enrichment type, can be one stage or two stage"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = String
@@ -1115,7 +1115,7 @@ necost {
                     }
                     
                     loss_fraction {
-                        Description = "" % TODO
+                        Description = "Loss fraction of the enriched uranium during enrichment"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -1125,12 +1125,12 @@ necost {
                     }
 
                     stage_1{
-                        Description = "" % TODO
+                        Description = "Stage 1 parameters and characteristics"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="fuels/ffc_enriched_uranium_two_stage_params"
                         feed {
-                            Description = "" % TODO
+                            Description = "Feed enrichment"
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = Real
@@ -1139,7 +1139,7 @@ necost {
                         }
 
                         product {
-                            Description = "" % TODO
+                            Description = "Product enrichment"
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
@@ -1148,7 +1148,7 @@ necost {
                         }
 
                         tails {
-                            Description = "" % TODO
+                            Description = "Tails enrichment"
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
@@ -1158,12 +1158,12 @@ necost {
                     }
 
                     stage_2{
-                        Description = "" % TODO
+                        Description = "Stage 2 parameters and characteristics"
                         MinOccurs = 0
                         MaxOccurs = 1
                         InputTmpl="fuels/ffc_enriched_uranium_two_stage_params"
                         feed {
-                            Description = "" % TODO
+                            Description = "Feed enrichment"
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = Real
@@ -1172,7 +1172,7 @@ necost {
                         }
 
                         product {
-                            Description = "" % TODO
+                            Description = "Product enrichment"
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
@@ -1181,7 +1181,7 @@ necost {
                         }
 
                         tails {
-                            Description = "" % TODO
+                            Description = "Tails enrichment"
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
@@ -1191,13 +1191,13 @@ necost {
                     }
 
                     SWU_costs{
-                        Description = "" % TODO
+                        Description = "Enrichment costs"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Enrichment costs, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -1206,13 +1206,13 @@ necost {
                     }
 
                     NU_costs{
-                        Description = "" % TODO
+                        Description = "Natural uranium costs"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Natural uranium costs, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -1221,13 +1221,13 @@ necost {
                     }
 
                     DU_costs{
-                        Description = "" % TODO
+                        Description = "Depleted uranium costs"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Depleted uranium costs, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -1238,18 +1238,18 @@ necost {
             }
             
             RU{
-                Description = "" % TODO
+                Description = "Recovered uranium parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = 1
                 InputTmpl="fuels/RU"
 
                 reprocess{
-                    Description = "" % TODO
+                    Description = "Reprocessing parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
 
                     loss_fraction {
-                        Description = "" % TODO
+                        Description = "Loss fraction of the recovered uranium during reprocessing"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -1258,13 +1258,13 @@ necost {
                         MaxValInc = 1
                     }
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the reprocessing"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the reprocessing, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -1273,13 +1273,13 @@ necost {
                     }
                 }
                 conversion{
-                    Description = "" % TODO
+                    Description = "Conversion parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="sonarray"
 
                     loss_fraction {
-                        Description = "" % TODO
+                        Description = "Loss fraction of the recovered uranium during conversion"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -1287,7 +1287,7 @@ necost {
                     }
 
                     lead_time {
-                        Description = "" % TODO
+                        Description = "Lead time for the conversion in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
@@ -1296,13 +1296,13 @@ necost {
                     }
 
                     costs {
-                        Description = "" % TODO
+                        Description = "Costs for the conversion"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
                         
                         value {
-                            Description = "" % TODO
+                            Description = "Costs for the conversion, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -1312,13 +1312,13 @@ necost {
                 }
 
                 reenrichment{
-                    Description = "" % TODO
+                    Description = "Reenrichment parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
                     InputTmpl="sonarray"
 
                     loss_fraction {
-                        Description = "" % TODO
+                        Description = "Loss fraction of the recovered uranium during reenrichment"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
@@ -1328,13 +1328,13 @@ necost {
                     }
 
                     stage_1{
-                        Description = "" % TODO
+                        Description = "Stage 1 parameters and characteristics"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="fuels/ffc_enriched_uranium_two_stage_params"
 
                         feed {
-                            Description = "" % TODO
+                            Description = "Feed enrichment"
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = Real
@@ -1343,7 +1343,7 @@ necost {
                         }
 
                         product {
-                            Description = "" % TODO
+                            Description = "Product enrichment"
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
@@ -1352,7 +1352,7 @@ necost {
                         }
 
                         tails {
-                            Description = "" % TODO
+                            Description = "Tails enrichment"
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
@@ -1362,13 +1362,13 @@ necost {
                     }
 
                     SWU_costs{
-                        Description = "" % TODO
+                        Description = "Enrichment costs"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Enrichment costs, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String
@@ -1377,13 +1377,13 @@ necost {
                     }
 
                     DU_costs{
-                        Description = "" % TODO
+                        Description = "Depleted uranium costs"
                         MinOccurs = 1
                         MaxOccurs = 1
                         InputTmpl="sonarray"
 
                         value {
-                            Description = "" % TODO
+                            Description = "Depleted uranium costs, choose the cost item from the fuel_costs section"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
                             ValType = String

@@ -22,7 +22,6 @@ necost {
     capital_costs {
         item(CapA){cost_type = s_curve  
                 expenditure_time = 5 
-                cost_value = 4000
                 distribution{ type = triangular low = 2300 high = 5800 nominal = 4000 } 
                 }
     }
