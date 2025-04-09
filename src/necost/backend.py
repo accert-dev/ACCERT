@@ -3,6 +3,33 @@ import pandas as pd
 
 
 def backend(data: pd.DataFrame, t_plant, lev_factor, e_year, n_cycl: np.ndarray, t_cyc: np.ndarray):
+    """
+    Calculate the levelized back-end cost of the nuclear power plant.
+    The back-end cost includes the costs associated with spent nuclear fuel (SNF) management,
+    including storage, conditioning, and disposal.
+    The function takes into account the number of cycles, cycle time, and other parameters
+    related to the nuclear power plant's operation.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DataFrame containing the parameters related to the nuclear power plant.
+    t_plant : float
+        The total operational time of the plant in years.
+    lev_factor : float
+        The leveling factor for the discount rate.
+    e_year : float
+        The total energy produced by the plant in a year.
+    n_cycl : np.ndarray
+        Array containing the number of cycles for each batch.
+    t_cyc : np.ndarray
+        Array containing the cycle time for each batch.
+    Returns
+    -------
+    levelized_back_end: pd.DataFrame
+        DataFrame containing the levelized back-end cost of the nuclear power plant.
+    """
+
     # Always 1 kg of product
     pv_sf_storage = data["cost_offsite_storage"] * 1 / np.exp(data["discount_rate"] * t_cyc)
     # Conditioning always necessary before off-site transportation

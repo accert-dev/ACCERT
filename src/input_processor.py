@@ -1,4 +1,3 @@
-import subprocess
 from collections import defaultdict
 from typing import Callable, Dict, List, Union
 from xml.etree import ElementTree
@@ -32,8 +31,10 @@ def son_input_to_str(input_path: str, necost_path: str):
     """
     son_valid_xml = necost_path + "/bin/sonvalidxml"
     schema = necost_path + "/src/etc/necost.sch"
+
     cmd = ' '.join([son_valid_xml, schema, input_path])
 
+    import subprocess
     try:
         xml_result = subprocess.check_output(cmd, shell=True)
     except subprocess.CalledProcessError as e:

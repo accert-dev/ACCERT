@@ -12,6 +12,34 @@ def levelized_om_cost(
     t_cyc: np.ndarray,
     planned_outage: np.ndarray
 ):
+    """Calculate the levelized O&M cost of the nuclear power plant.
+    The O&M cost includes the costs associated with the operation and maintenance of the plant,
+    including fixed and variable costs, personnel costs, and other related expenses.
+    The function takes into account the number of cycles, cycle time, and other parameters
+    related to the nuclear power plant's operation.
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DataFrame containing the parameters related to the nuclear power plant.
+    t_plant : float
+        The total operational time of the plant in years.
+    core_power : pd.Series
+        The core power of the plant in MW.
+    lev_factor : float
+        The leveling factor for the discount rate.
+    e_year : float
+        The total energy produced by the plant in a year.
+    l_inp : np.ndarray
+        Array containing the number of cycles for each batch.
+    t_cyc : np.ndarray
+        Array containing the cycle time for each batch.
+    planned_outage : np.ndarray
+        Array containing the planned outage time for each batch.
+    Returns
+    -------
+    levelized_hydride_om: pd.DataFrame
+        DataFrame containing the levelized O&M cost of the nuclear power plant.
+    """
     o_m_fixed = data["OM_fixed_cost"].mask(data["OM_fixed_cost"] <= 0, 0)
 
     if ((data["OM_fixed_cost"] <= 0) & (l_inp == 1)).any():
@@ -60,8 +88,40 @@ def compute_pv_cap(
     pv_internals_ref,
     core_power: pd.Series,
 ):
+    """Compute the present value of capital costs for a nuclear power plant.
+    The function takes into account the type of plant (new or existing), the type of fuel,
+    and the type of turbine used in the plant. It calculates the present value of capital costs
+    based on the reference values provided in the data DataFrame.
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DataFrame containing the parameters related to the nuclear power plant.
+    is_new_plant : bool
+        Indicates whether the plant is new or an upgrade of an existing plant.
+    is_new_fuel : bool
+        Indicates whether the fuel is new or existing.
+    add_turb : bool
+        Indicates whether to add a turbine or not.
+    pv_turb_ref : float
+        Reference value for the turbine present value.
+    m_turb : float
+        Turbine scaling factor.
+    m_sg : float
+        Steam generator scaling factor.
+    pv_sg_ref : float
+        Reference value for the steam generator present value.
+    pv_head_ref : float
+        Reference value for the head present value.
+    pv_internals_ref : float
+        Reference value for the internals present value.
+    core_power : pd.Series
+        The core power of the plant in MW.
+    Returns
+    -------
+    pv_cap : pd.Series 
+        Present value of capital costs for the nuclear power plant.
+    """
     # NOTE: This function is partially vectorized.
-
     if is_new_plant:
         interest_rate_constrct = data["interest_rate_constrct"].values
         constrct_years = data["constrct_years"].values
@@ -135,6 +195,61 @@ def capital_cost(
     m_fabrication: pd.Series,
     t_cyc: np.ndarray
 ):
+    """Calculate the levelized capital cost of the nuclear power plant.
+    The capital cost includes the costs associated with the construction and commissioning
+    of the plant, including the costs of the reactor, turbine, and other components.
+    The function takes into account the type of plant (new or existing), the type of fuel,
+    and the type of turbine used in the plant. It calculates the levelized capital cost
+    based on the reference values provided in the data DataFrame.
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DataFrame containing the parameters related to the nuclear power plant.
+    is_new_plant : bool
+        Indicates whether the plant is new or an upgrade of an existing plant.
+    is_new_fuel : bool
+        Indicates whether the fuel is new or existing.
+    add_turb : bool
+        Indicates whether to add a turbine or not.
+    pv_turb_ref : float
+        Reference value for the turbine present value.
+    m_turb : float
+        Turbine scaling factor.
+    m_sg : float
+        Steam generator scaling factor.
+    pv_sg_ref : float
+        Reference value for the steam generator present value.
+    pv_head_ref : float
+        Reference value for the head present value.
+    pv_internals_ref : float
+        Reference value for the internals present value.
+    assembly_ref : float
+        Reference value for the assembly present value.
+    core_power : pd.Series
+        The core power of the plant in MW.
+    nrods_core : pd.Series
+        The number of rods in the core.
+    lev_factor : pd.Series
+        The leveling factor for the discount rate.
+    e_year : pd.Series
+        The total energy produced by the plant in a year.
+    levelized_fcc : pd.Series
+        The levelized front-end cost of the nuclear power plant.
+    levelized_hydride_om : pd.Series
+        The levelized O&M cost of the nuclear power plant.
+    m_enrichment : pd.Series
+        The mass of enrichment used in the plant.
+    m_fabrication : pd.Series
+        The mass of fabrication used in the plant.
+    t_cyc : np.ndarray
+        Array containing the cycle time for each batch.
+    Returns
+    -------
+    levelized_hydride_cap: pd.Series
+        The levelized capital cost of the nuclear power plant.
+    levelized_hydride_cost: pd.Series
+        The total levelized cost of the nuclear power plant.
+    """
     # NOTE: This function call is not vectorized
     pv_cap = compute_pv_cap(
         data,

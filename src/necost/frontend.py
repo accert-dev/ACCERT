@@ -3,6 +3,22 @@ import pandas as pd
 
 
 def front_end_1(data: pd.DataFrame):
+    """Calculate the front-end costs for the first route (natural uranium) of the nuclear fuel cycle.
+    This function computes the mass of uranium and the present value of the front-end costs
+    based on the input data.
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DataFrame containing the parameters related to the nuclear fuel cycle.
+    Returns
+    -------
+    m_fabrication : float
+        Mass of uranium fabricated (kg-HM).
+    m_enrichment : float
+        Mass of uranium enriched (kg-HM).
+    pv_front_end_u_1 : float
+        Present value of the front-end costs (in $/kg-HM).
+    """
     m_fabrication = (1 / (1 - data["fab_loss_percent"]))
     m_enrichment = m_fabrication * ((data["nrchmt_fresh"] - data["tails_nrchmt_fresh"]) / (
         data["feed_nrchmt_fresh"] - data["tails_nrchmt_fresh"]))
@@ -41,6 +57,19 @@ def front_end_1(data: pd.DataFrame):
 
 
 def front_end_2(data: pd.DataFrame):
+    """Calculate the front-end costs for the second route (reprocessed uranium) of the nuclear fuel cycle.
+    This function computes the mass of uranium and the present value of the front-end costs
+    based on the input data.
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DataFrame containing the parameters related to the nuclear fuel cycle.
+    Returns
+    -------
+    pv_front_end_r_1 : float
+        Present value of the front-end costs (in $/kg-HM).
+    """
+
     fab_loss_percent = data["fab_loss_percent"]
 
     # ----------   Front end 2: Reprocessing route (for 1 kg of fabricated fuel) from previous island
@@ -161,6 +190,32 @@ def scale_up(
     data: pd.DataFrame, t_plant, lev_factor, e_year, pv_front_end_u_1: pd.Series,
     pv_front_end_r_1: pd.Series, n_cycl: np.ndarray, t_cyc: np.ndarray
 ):
+    """Scale up the front-end costs of the nuclear fuel cycle to the total operational time of the plant.
+    This function computes the levelized front-end costs based on the input data and parameters.
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DataFrame containing the parameters related to the nuclear fuel cycle.
+    t_plant : float
+        The total operational time of the plant in years.
+    lev_factor : float
+        The leveling factor for the discount rate.
+    e_year : float
+        The total energy produced by the plant in a year.
+    pv_front_end_u_1 : pd.Series
+        Present value of the front-end costs for the first route (natural uranium).
+    pv_front_end_r_1 : pd.Series
+        Present value of the front-end costs for the second route (reprocessed uranium).
+    n_cycl : np.ndarray
+        Array containing the number of cycles for each batch.
+    t_cyc : np.ndarray
+        Array containing the cycle time for each batch.
+    Returns
+    -------
+    levelized_front_end : pd.Series
+        Series containing the levelized front-end costs (in $/kg-HM).
+    """
+    
     # ----------------- Scale up from 1 kg to total dollars per batch (mass_hm_core in gHM, so /1000 to get kgHM)
     # only front-end route 1 and 2 - route 3 (same island recycling is counted in the back-end
     pv_front_end_tot = pv_front_end_u_1 * data["frac_core_loaded_nat"] + pv_front_end_r_1 * data[
