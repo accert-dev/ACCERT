@@ -17,7 +17,7 @@ def front_end_1(data: pd.DataFrame):
     m_enrichment : float
         Mass of uranium enriched (kg-HM).
     pv_front_end_u_1 : float
-        Present value of the front-end costs (in $/kg-HM).
+        Present value of the front-end costs.
     """
     m_fabrication = (1 / (1 - data["fab_loss_percent"]))
     m_enrichment = m_fabrication * ((data["nrchmt_fresh"] - data["tails_nrchmt_fresh"]) / (
@@ -67,7 +67,7 @@ def front_end_2(data: pd.DataFrame):
     Returns
     -------
     pv_front_end_r_1 : float
-        Present value of the front-end costs (in $/kg-HM).
+        Present value of the front-end costs.
     """
 
     fab_loss_percent = data["fab_loss_percent"]
@@ -213,9 +213,9 @@ def scale_up(
     Returns
     -------
     levelized_front_end : pd.Series
-        Series containing the levelized front-end costs (in $/kg-HM).
+        Series containing the levelized front-end costs.
     """
-    
+
     # ----------------- Scale up from 1 kg to total dollars per batch (mass_hm_core in gHM, so /1000 to get kgHM)
     # only front-end route 1 and 2 - route 3 (same island recycling is counted in the back-end
     pv_front_end_tot = pv_front_end_u_1 * data["frac_core_loaded_nat"] + pv_front_end_r_1 * data[
