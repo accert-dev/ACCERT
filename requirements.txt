@@ -5,3 +5,5 @@ openpyxl
 pandoc
 pytest
 pandas
+numpy==1.24.3
+matplotlib
