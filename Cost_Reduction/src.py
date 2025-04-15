@@ -157,3 +157,61 @@ def ITC_reduction_factor(itc_level):
     itc_values = [0, 0.06, 0.3, 0.4, 0.5]
     ITC_reduction_factor = [1, 0.95,	0.73,	0.63,	0.53 ]
     return np.interp(itc_level, itc_values, ITC_reduction_factor)
+
+
+
+
+# A function to update the construction duration when the labor hours change
+def update_cons_duration(db0, db1, ref_duration):
+    # sum old hours
+    #sum of labor hours for Account 20 in the initial estimation (well exectued scenario)
+    sum_old_lab_hrs = (db0.loc[db0.Account == 21, 'Site Labor Hours']).values +\
+    (db0.loc[db0.Account == 22, 'Site Labor Hours']).values +\
+    (db0.loc[db0.Account == 23, 'Site Labor Hours']).values+\
+    (db0.loc[db0.Account == 24, 'Site Labor Hours']).values+\
+    (db0.loc[db0.Account == 26, 'Site Labor Hours']).values
+    
+    
+    sum_new_lab_hrs = (db1.loc[db1.Account == 21, 'Site Labor Hours']).values +\
+    (db1.loc[db1.Account == 22, 'Site Labor Hours']).values +\
+    (db1.loc[db1.Account == 23, 'Site Labor Hours']).values+\
+    (db1.loc[db1.Account == 24, 'Site Labor Hours']).values+\
+    (db1.loc[db1.Account == 26, 'Site Labor Hours']).values
+    
+    lab_hrs_delta = (sum_new_lab_hrs - sum_old_lab_hrs) / sum_old_lab_hrs
+    new_duration = 0.3 * lab_hrs_delta* ref_duration + ref_duration
+    return new_duration
+
+
+def sum_lab_hrs(db0):
+    # sum old hours
+    #sum of labor hours for Account 20 in the initial estimation (well exectued scenario)
+    sum_lab_hrs = (db0.loc[db0.Account == 21, 'Site Labor Hours']).values +\
+    (db0.loc[db0.Account == 22, 'Site Labor Hours']).values +\
+    (db0.loc[db0.Account == 23, 'Site Labor Hours']).values+\
+    (db0.loc[db0.Account == 24, 'Site Labor Hours']).values+\
+    (db0.loc[db0.Account == 26, 'Site Labor Hours']).values
+    
+    
+    return sum_lab_hrs
+
+def update_cons_duration_2(db0, db1, ref_duration, prev_cons_duration, baseline_lab_hours):
+    
+    # sum old hours
+    #sum of labor hours for Account 20 in the initial estimation (well exectued scenario)
+    sum_old_lab_hrs = (db0.loc[db0.Account == 21, 'Site Labor Hours']).values +\
+    (db0.loc[db0.Account == 22, 'Site Labor Hours']).values +\
+    (db0.loc[db0.Account == 23, 'Site Labor Hours']).values+\
+    (db0.loc[db0.Account == 24, 'Site Labor Hours']).values+\
+    (db0.loc[db0.Account == 26, 'Site Labor Hours']).values
+    
+    sum_new_lab_hrs = (db1.loc[db1.Account == 21, 'Site Labor Hours']).values +\
+    (db1.loc[db1.Account == 22, 'Site Labor Hours']).values +\
+    (db1.loc[db1.Account == 23, 'Site Labor Hours']).values+\
+    (db1.loc[db1.Account == 24, 'Site Labor Hours']).values+\
+    (db1.loc[db1.Account == 26, 'Site Labor Hours']).values
+    
+    lab_hrs_delta = (sum_new_lab_hrs -sum_old_lab_hrs ) / baseline_lab_hours
+    
+    return 0.3*lab_hrs_delta *ref_duration + prev_cons_duration
+    
