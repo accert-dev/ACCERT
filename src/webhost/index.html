@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    Author: Daeho Chang
+    Organization: Argonne National Laboratory
+    Created: July 30, 2025
+    Description: Data Analysis Portal - Main Entry Point
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';">
+    <title>ACCERT-Plus</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f9;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #eee;
+        }
+        
+        .top-header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .top-header-logo {
+            height: 60px;
+            width: auto;
+        }
+        
+        .top-header-text {
+            flex: 1;
+        }
+        
+        .top-header-title {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .top-header-subtitle {
+            color: #7f8c8d;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        .main-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: calc(100vh - 120px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .main-header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+        
+        .main-header h1 {
+            font-size: 3rem;
+            margin: 0 0 10px 0;
+            font-weight: 300;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .main-header p {
+            font-size: 1.2rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .tool-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .tool-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .tool-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 25px;
+        }
+        
+        .tool-features li {
+            padding: 5px 0;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .tool-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .tool-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .tool-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .tool-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-coming-soon {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            color: white;
+            opacity: 0.8;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .top-header-title {
+                font-size: 1.5rem;
+            }
+            
+            .main-header h1 {
+                font-size: 2rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-container">
+            <img src="argonne logo.png" alt="Argonne National Laboratory" class="top-header-logo">
+            <div class="top-header-text">
+                <h1 class="top-header-title">ACCERT-Plus: Cost Evaluation and Data Analysis Portal</h1>
+                <p class="top-header-subtitle">Developed by Daeho Chang, Argonne National Laboratory</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="container">
+            <div class="main-header">
+                <h1>ACCERT-Plus</h1>
+                <p>Web-based application modules for Cost Evaluation and Data Analysis</p>
+            </div>
+            
+        <div class="tools-grid">
+            <!-- MSBR Cost Analysis Tool -->
+            <div class="tool-card">
+                <div class="tool-status status-active">Active</div>
+                <div class="tool-icon">🏗️</div>
+                <h2 class="tool-title">MSBR Cost Analysis</h2>
+                <p class="tool-description">
+                    Comprehensive cost analysis tool for Molten Salt Breeder Reactor projects. 
+                    Analyze materials, labor, and total costs with interactive visualizations.
+                </p>
+                <ul class="tool-features">
+                    <li>Interactive data tables with sorting & filtering</li>
+                    <li>Hierarchical cost breakdown analysis</li>
+                    <li>Multiple chart types (Pie, Bar, Doughnut)</li>
+                    <li>CSV import/export functionality</li>
+                    <li>PDF report generation</li>
+                    <li>Real-time cost metrics dashboard</li>
+                </ul>
+                <a href="msbr_table_display.html" class="tool-button">Launch MSBR Analysis</a>
+            </div>
+            
+            <!-- AHTR Cost Analysis Tool -->
+            <div class="tool-card">
+                <div class="tool-status status-active">Active</div>
+                <div class="tool-icon">🔥</div>
+                <h2 class="tool-title">AHTR Cost Analysis</h2>
+                <p class="tool-description">
+                    Comprehensive cost analysis tool for Advanced High Temperature Reactor projects. 
+                    Analyze materials, labor, and total costs with interactive visualizations.
+                </p>
+                <ul class="tool-features">
+                    <li>Interactive data tables with sorting & filtering</li>
+                    <li>Hierarchical cost breakdown analysis</li>
+                    <li>Multiple chart types (Pie, Bar, Doughnut)</li>
+                    <li>CSV import/export functionality</li>
+                    <li>PDF report generation</li>
+                    <li>Real-time cost metrics dashboard</li>
+                </ul>
+                <a href="AHTR_table_display.html" class="tool-button">Launch AHTR Analysis</a>
+            </div>
+            
+            <!-- ACCERT Output Analyzer Tool -->
+            <div class="tool-card">
+                <div class="tool-status status-active">Active</div>
+                <div class="tool-icon">📊</div>
+                <h2 class="tool-title">ACCERT Output Analyzer</h2>
+                <p class="tool-description">
+                    Integrated platform for uploading, processing, and analyzing ACCERT output files. 
+                    Extract cost data tables and visualize results with advanced analytics.
+                </p>
+                <ul class="tool-features">
+                    <li>Drag & drop file upload interface</li>
+                    <li>Automatic table extraction from ACCERT outputs</li>
+                    <li>Multi-level hierarchical cost analysis</li>
+                    <li>Interactive charts and visualizations</li>
+                    <li>Advanced filtering and search capabilities</li>
+                    <li>Real-time metrics and summary statistics</li>
+                </ul>
+                <a href="integrated_accert_analyzer.html" class="tool-button">Launch ACCERT Analyzer</a>
+            </div>
+
+        </div>
+        
+        <div class="footer">
+            <p>
+                Developed by <strong>Daeho Chang</strong> | 
+                <a href="https://www.anl.gov" target="_blank">Argonne National Laboratory</a> | 
+                2025
+            </p>
+        </div>
+            </div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.tool-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // Add animation delay to cards
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html> 

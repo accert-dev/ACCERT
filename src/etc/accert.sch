@@ -495,7 +495,7 @@ accert{
 }
 
 EndOfSchema{}
-ref_models = [ "PWR12-BE" "ABR1000" "LFR", "heatpipe","fusion"]
+ref_models = [ "PWR12-BE" "ABR1000" "LFR", "heatpipe","fusion" "msr"]
 power_type = ["Thermal" "Electric"] 
 power_unit = ["W" "kWW" "MW"]
 total_cost_unit = ["million" "dollar"]

@@ -95,6 +95,14 @@ class Accert:
             self.alg_tabl = 'fusion_alg'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
+        elif "msr" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'msr'
+            self.acc_tabl = 'msr_acco'
+            self.cel_tabl = None
+            self.var_tabl = 'msr_varv'
+            self.alg_tabl = 'msr_alg'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
         elif "user_defined" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'user_defined'
             self.acc_tabl = 'user_defined_account'
@@ -1377,7 +1385,7 @@ class Accert:
 
         print('[USER_INPUT]', 'Reference model is', str(accert.ref_model.value), '\n')
         self.setup_table_names(accert)
-        ut.setup_table_names(c, Accert)
+        ut.setup_table_names(c, self)
         # if ref.model is not fusion or user defined then process cost elements:
         if self.cel_tabl:
             ut.print_user_request_parameter(c)
@@ -1748,7 +1756,7 @@ class Accert:
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
-        model = Accert.ref_model
+        model = self.ref_model
         if model:
             # generate results for the models in the future we can add more models
             self._generate_common_results(c, ut, accert, model)
@@ -1936,24 +1944,43 @@ if __name__ == "__main__":
     ins.read(initfile)
     passwd = ins.get("INSTALL","PASSWD")
 
-    conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password=passwd,
-    database="accert_db",
-    auth_plugin="mysql_native_password"
-    )
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password=passwd,
+            database="accert_db",
+            use_pure=True,
+            autocommit=True
+        )
+    except mysql.connector.Error as err:
+        print(f"MySQL connection failed: {err}")
+        print("Trying alternative connection method...")
+        try:
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password=passwd,
+                database="accert_db",
+                auth_plugin="caching_sha2_password",
+                use_pure=True,
+                autocommit=True
+            )
+        except mysql.connector.Error as err2:
+            print(f"Alternative connection also failed: {err2}")
+            print("Please check your MySQL installation and credentials.")
+            sys.exit(1)
     # conn.commit()
     # NOTE: cursor is a class that instantiates objects that can execute MySQL statements
     # only commit when you are sure that the transaction is complete
     c = conn.cursor()
     ut = Utility_methods()
     accert_path = os.path.abspath(os.path.join(code_folder, os.pardir))
-    user_input = sys.argv[2]  
+    user_input = sys.argv[1]  
     if os.path.exists(user_input):
         input_path = os.path.abspath(user_input)
     else:
         print('ACCERT did not find the input file {}'.format(user_input))
         raise SystemExit
-    Accert = Accert(input_path,accert_path)
-    Accert.execute_accert(c,ut)
+    accert_instance = Accert(input_path,accert_path)
+    accert_instance.execute_accert(c,ut)

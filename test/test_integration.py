@@ -6,7 +6,11 @@ import pytest
 def run_accert_and_check_output(input_file, expected_output_file):
     """Helper function to run ACCERT, check output file, and compare with expected result."""
     # Define the command to run the ACCERT script
-    command = ["python", "../src/Main.py", "-i", input_file]
+    main_py_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'Main.py')
+    input_file_path = os.path.join(os.path.dirname(__file__), '..', 'tutorial', os.path.basename(input_file))
+    expected_output_file_path = os.path.join(os.path.dirname(__file__), expected_output_file)
+
+    command = ["python", main_py_path, input_file_path]
     
     # Run the command
     result = subprocess.run(command, capture_output=True, text=True)
@@ -18,7 +22,7 @@ def run_accert_and_check_output(input_file, expected_output_file):
     # Compare output.out content with expected output
     with open("output.out", "r") as output_file:
         output_content = output_file.read()
-    with open(expected_output_file, "r") as expected_output:
+    with open(expected_output_file_path, "r") as expected_output:
         expected_output_content = expected_output.read()
 
     # compare the content of the output.out file with the expected output

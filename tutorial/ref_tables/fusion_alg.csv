@@ -1,17 +1,17 @@
 ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
-1,acc211,c,"Site_improvements,_facilities,_land_(M$)",FusionFunc,"acc211= csi*cmlsa[lsa-1] + cland",million
-2,acc212,c,Reactor_building_cost_(M$),FusionFunc,"acc212= (1.0e-6*ucrb*rbvol)**exprb* cmlsa[lsa - 1]",million
+1,acc211,c,"Site_improvements,_facilities,_land_(M$)",FusionFunc,acc211= csi*cmlsa[lsa-1] + cland,million
+2,acc212,c,Reactor_building_cost_(M$),FusionFunc,acc212= (1.0e-6*ucrb*rbvol)**exprb* cmlsa[lsa - 1],million
 3,acc213,c,Turbine_building_cost_(M$),FusionFunc," if ireactor == 1:
         acc213 = cturbb * cmlsa[lsa - 1]
     else: acc213 = 0.0e0",million
-4,acc2141,c,Reactor_maintenance_building_cost_(M$),FusionFunc,"acc2142 = 1.0e-6*ucmb*rmbvol**exprb*cmlsa[lsa - 1]",million
-5,acc2142,c,Warm_shop_cost_(M$),FusionFunc,"acc2142 = (1.0e-6*ucws*wsvol)**exprb*cmlsa[lsa - 1]",million
-6,acc215,c,Tritium_building_cost_(M$),FusionFunc,"acc215 = ((1.0e-6*uctr*triv)*exprb)*cmlsa[lsa - 1]",million
-7,acc216,c,Electrical_equipment_building_cost_(M$),FusionFunc,"acc216 = 1.0e-6*ucel*elevol**exprb*cmlsa[lsa - 1]",million
-8,acc2171,c,Additional_buildings_cost_(M$),FusionFunc,"acc2171 = 1.0e-6*ucad*admvol**exprb* cmlsa[lsa - 1]",million
-9,acc2172,c,Control_room_buildings_cost_(M$),FusionFunc,"acc2172 = 1.0e-6*ucconc*convol**exprb* cmlsa[lsa - 1]",million
-10,acc2173,c,Shop_and_warehouses_cost_(M$),FusionFunc,"acc2173 = 1.0e-6*ucsh*shovol**exprb*cmlsa[lsa - 1]",million
-11,acc2174,c,Cryogenic_building_cost_(M$),FusionFunc,"acc2174 = 1.0e-6*uccr*cryvol**exprb*cmlsa[lsa - 1]",million
+4,acc2141,c,Reactor_maintenance_building_cost_(M$),FusionFunc,acc2142 = 1.0e-6*ucmb*rmbvol**exprb*cmlsa[lsa - 1],million
+5,acc2142,c,Warm_shop_cost_(M$),FusionFunc,acc2142 = (1.0e-6*ucws*wsvol)**exprb*cmlsa[lsa - 1],million
+6,acc215,c,Tritium_building_cost_(M$),FusionFunc,acc215 = ((1.0e-6*uctr*triv)*exprb)*cmlsa[lsa - 1],million
+7,acc216,c,Electrical_equipment_building_cost_(M$),FusionFunc,acc216 = 1.0e-6*ucel*elevol**exprb*cmlsa[lsa - 1],million
+8,acc2171,c,Additional_buildings_cost_(M$),FusionFunc,acc2171 = 1.0e-6*ucad*admvol**exprb* cmlsa[lsa - 1],million
+9,acc2172,c,Control_room_buildings_cost_(M$),FusionFunc,acc2172 = 1.0e-6*ucconc*convol**exprb* cmlsa[lsa - 1],million
+10,acc2173,c,Shop_and_warehouses_cost_(M$),FusionFunc,acc2173 = 1.0e-6*ucsh*shovol**exprb*cmlsa[lsa - 1],million
+11,acc2174,c,Cryogenic_building_cost_(M$),FusionFunc,acc2174 = 1.0e-6*uccr*cryvol**exprb*cmlsa[lsa - 1],million
 12,acc2211,c,First_wall_cost_(M$),FusionFunc,"if ife == 1:
         acc2211 = (1.0e-6*cmlsa[lsa - 1]
             *  (ucblss*(fwmatm(1, 1)+ fwmatm(2, 1)+ fwmatm(3, 1))
@@ -230,7 +230,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
         acccppa = acccppa+1.0e-6*ucahts*((1.0e6*tdspmw)**exphts
                 + (1.0e6*tfacmw)**exphts)
     acccppa =fkind*acccppa*cmlsa[lsa - 1]",million
-56,acc2262,c,"Total,_auxiliary_cooling_system_cost_(M$)",FusionFunc,"cal_acc2262 = cal_accppa",million
+56,acc2262,c,"Total,_auxiliary_cooling_system_cost_(M$)",FusionFunc,cal_acc2262 = cal_accppa,million
 57,acc2263,c,"Total,_cryogenic_system_cost_(M$)",FusionFunc,,million
 58,acc2271,c,Fuelling_system_cost_(M$),FusionFunc,"acc2271 = 1.0e-6*ucf1
     acc2271 = fkind*acc2271",million
@@ -254,13 +254,13 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
     acc229 = fkind*acc229",million
 64,acc23,c,Turbine_plant_equipment_cost_(M$),FusionFunc,"if ireactor == 1:
         acc23 = (1.0e-6*ucturb[coolwh - 1]*(pgrossmw / 1200.0e0)**exptpe)",million
-65,acc241,c,Switchyard_equipment_cost_(M$),FusionFunc,"acc241 = 1.0e-6*ucswyd*cmlsa[lsa - 1]",million
+65,acc241,c,Switchyard_equipment_cost_(M$),FusionFunc,acc241 = 1.0e-6*ucswyd*cmlsa[lsa - 1],million
 66,acc242,c,Transformers_cost_(M$),FusionFunc,"acc242 = 1.0e-6*((ucpp*(pacpmw* 1.0e3)**expepe)+ucap*(fcsht * 1.0e3))
     acc242 = acc242 * cmlsa[lsa - 1]",million
 67,acc243,c,Low_voltage_equipment_cost_(M$),FusionFunc,,million
-68,acc244,c,Diesel_backup_equipment_cost_(M$),FusionFunc,"acc244 = 1.0e-6*ucdgen*4.0e0*cmlsa[lsa - 1]",million
-69,acc245,c,Auxiliary_facilities_cost_(M$),FusionFunc,"acc245 = 1.0e-6*ucaf*cmlsa[lsa - 1]",million
-70,acc25,c,Miscellaneous_plant_equipment_cost_(M$),FusionFunc,"acc25 = 1.0e-6*ucmisc*cmlsa[lsa - 1]",million
+68,acc244,c,Diesel_backup_equipment_cost_(M$),FusionFunc,acc244 = 1.0e-6*ucdgen*4.0e0*cmlsa[lsa - 1],million
+69,acc245,c,Auxiliary_facilities_cost_(M$),FusionFunc,acc245 = 1.0e-6*ucaf*cmlsa[lsa - 1],million
+70,acc25,c,Miscellaneous_plant_equipment_cost_(M$),FusionFunc,acc25 = 1.0e-6*ucmisc*cmlsa[lsa - 1],million
 71,acc26,c,Heat_rejection_system_cost_(M$),FusionFunc,"if ireactor == 0:
         pwrrej = powfmw+pinjwp+tfcmw
     else:

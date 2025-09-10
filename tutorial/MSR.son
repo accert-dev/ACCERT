@@ -1,0 +1,20 @@
+% ACCERT Test input file for MSR
+% Author: Daeho Chang (daeho.chang@anl.gov)
+% Last updated: 06/19/2024
+
+
+accert{
+    ref_model = "msr"
+    power( Thermal ){ value = 2000   unit = MW } 
+    power( Electric ){ value = 800   unit = MW } 
+    l0COA(2){  
+        l1COA(21){
+            l2COA("211"){
+                alg("acc211"){
+                    var("csi"){value = 16 unit = million} 
+                    var("lsa"){value = 4 unit = 1}
+                }
+            }
+        }
+    }
+} 

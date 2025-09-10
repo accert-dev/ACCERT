@@ -9,8 +9,8 @@ import pytest
 
 
 ut = Utility_methods()
-accert_path = os.path.dirname(os.getcwd())
-input_path = os.path.join(os.getcwd(), 'accert_unit_test_input.son')
+accert_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+input_path = os.path.join(os.path.dirname(__file__), 'accert_unit_test_input.son')
 accert = Accert(input_path, accert_path)
 accert.ref_model = 'pwr12-be'
 accert.acc_tabl = 'account'

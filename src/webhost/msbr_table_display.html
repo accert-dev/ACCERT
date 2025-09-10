@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    Author: Daeho Chang
+    Organization: Argonne National Laboratory
+    Created: July 30, 2025
+    Description: MSBR Cost Analysis - Interactive Table & Charts
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';">
+    <title>ACCERT-Plus: MSBR Cost Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js" 
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            gap: 20px;
+        }
+        .header-logo {
+            height: 60px;
+            width: auto;
+        }
+        .header-text {
+            flex: 1;
+        }
+        .header-title {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header-credit {
+            color: #7f8c8d;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            font-style: italic;
+        }
+        .navigation-links {
+            display: flex;
+            align-items: center;
+        }
+        .error-log {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #fff;
+            border: 1px solid #dc3545;
+            border-radius: 5px;
+            padding: 10px;
+            max-width: 300px;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+        }
+        .error-log.show {
+            display: block;
+        }
+        .error-log-header {
+            color: #dc3545;
+            font-weight: bold;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #dc3545;
+            padding-bottom: 5px;
+        }
+        .error-log-content {
+            font-size: 12px;
+            color: #333;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .nav-link {
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #3498db;
+        }
+        .nav-link:hover {
+            background: white;
+            color: #3498db;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5em;
+        }
+        #controls-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        #search-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+        #searchInput {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+        #downloadBtn, #groupBtn, #hierarchicalGroupBtn, #chartBtn, #loadDataBtn, #printPdfBtn, #leafToggleBtn {
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 18px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 12px;
+            transition: background 0.2s;
+        }
+        #downloadBtn:hover, #groupBtn:hover, #hierarchicalGroupBtn:hover, #chartBtn:hover, #loadDataBtn:hover, #printPdfBtn:hover, #leafToggleBtn:hover {
+            background: #34495e;
+        }
+        
+        /* Print-specific styles */
+        @media print {
+            body {
+                background-color: white !important;
+                color: black !important;
+                font-size: 12px;
+            }
+            .file-input-container, 
+            #controls-container, 
+            .chart-container {
+                display: none !important;
+            }
+            .header-container {
+                background: white !important;
+                box-shadow: none !important;
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            table {
+                width: 100% !important;
+                font-size: 10px !important;
+                page-break-inside: auto;
+            }
+            th, td {
+                padding: 6px 8px !important;
+                border: 1px solid #333 !important;
+                font-size: 10px !important;
+            }
+            thead th {
+                background-color: #f0f0f0 !important;
+                color: black !important;
+            }
+            .group-row {
+                background-color: #f8f8f8 !important;
+                font-weight: bold !important;
+            }
+            .subgroup-row {
+                background-color: white !important;
+            }
+            .metrics-summary {
+                display: flex !important;
+                justify-content: space-around;
+                margin-bottom: 20px;
+                page-break-inside: avoid;
+            }
+            .metric-card {
+                background: white !important;
+                border: 1px solid #333 !important;
+                box-shadow: none !important;
+            }
+        }
+        #groupBtn.active {
+            background: #27ae60;
+        }
+        #hierarchicalGroupBtn.active {
+            background: #27ae60;
+        }
+        #chartBtn.active {
+            background: #e74c3c;
+        }
+        #leafToggleBtn.active {
+            background: #27ae60;
+        }
+        .level-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .level-0 { background: #e74c3c; color: white; }
+        .level-1 { background: #f39c12; color: white; }
+        .level-2 { background: #f1c40f; color: #2c3e50; }
+        .level-3 { background: #2ecc71; color: white; }
+        .level-4 { background: #3498db; color: white; }
+        
+        .group-header {
+            background: #ecf0f1;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 12px 15px;
+            border-bottom: 2px solid #bdc3c7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .group-header:hover {
+            background: #d5dbdb;
+        }
+        .group-content {
+            display: none;
+        }
+        .group-content.expanded {
+            display: block;
+        }
+        .group-summary {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .chart-container.active {
+            display: block;
+        }
+        .chart-controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .chart-type-selector {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .category-selector {
+            max-width: 300px;
+            min-width: 200px;
+        }
+        .category-selector option {
+            padding: 5px;
+        }
+        .chart-options {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .select-all-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .select-all-btn:hover {
+            background: #229954;
+        }
+        .clear-selection-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .clear-selection-btn:hover {
+            background: #c0392b;
+        }
+        .chart-info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f4fd;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            max-height: 60vh;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            table-layout: auto;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e8e9ea;
+            white-space: normal;
+            overflow-wrap: break-word;
+            max-width: 220px;
+            vertical-align: middle;
+        }
+        th:first-child, td:first-child {
+            width: 50px;
+            text-align: center;
+        }
+        
+        /* Improved column-specific styling */
+        .account-column {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+            min-width: 100px;
+        }
+        .item-column {
+            max-width: 300px;
+            color: #34495e;
+            line-height: 1.4;
+        }
+        .cost-column {
+            text-align: right;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-weight: 600;
+            color: #27ae60;
+            min-width: 100px;
+        }
+        .percentage-column {
+            text-align: right;
+            font-weight: 600;
+            color: #8e44ad;
+            min-width: 80px;
+        }
+        .category-column {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            max-width: 180px;
+        }
+        thead th {
+            background-color: #34495e;
+            color: #ffffff;
+            cursor: pointer;
+            position: relative;
+        }
+        thead th:after {
+            content: '\2195';
+            position: absolute;
+            right: 15px;
+            color: #bdc3c7;
+        }
+        thead th.sort-asc:after {
+            content: '\2191';
+            color: #ffffff;
+        }
+        thead th.sort-desc:after {
+            content: '\2193';
+            color: #ffffff;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tbody tr:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.001);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .group-row {
+            background-color: #ecf0f1 !important;
+            font-weight: bold;
+            border-left: 4px solid #3498db;
+        }
+        .subgroup-row {
+            background-color: #f8f9fa !important;
+            border-left: 2px solid #bdc3c7;
+        }
+        
+        /* Enhanced alternating row colors */
+        tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+        
+        /* Improved number formatting */
+        .formatted-number {
+            font-feature-settings: 'tnum' 1;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Visual separators for better grouping */
+        .major-account-row {
+            border-top: 2px solid #3498db;
+            background: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
+        }
+        .file-input-container {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+        .file-input-container input[type="file"] {
+            margin-right: 10px;
+            padding: 8px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+        .file-input-container input[type="file"]:hover {
+            border-color: #3498db;
+            background: #e3f2fd;
+        }
+        
+        /* Loading indicator */
+        .loading-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-left: 15px;
+            color: #3498db;
+        }
+        .loading-indicator.active {
+            display: flex;
+        }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e3f2fd;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .metrics-summary {
+            display: grid;
+            grid-template-columns: 600px 1fr 1fr 1fr; /* Wider fixed width for total cost, flexible for others */
+            grid-template-rows: auto auto;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: stretch;
+        }
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        /* Total Cost Card - spans 2 rows, square-ish, with border */
+        .total-cost-card {
+            grid-row: 1 / 3 !important; /* Spans two rows */
+            grid-column: 1 / 2 !important; /* Takes first column */
+            border: 3px solid #3498db !important;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2) !important;
+            padding: 40px 30px !important;
+            min-height: 250px !important; /* Make it more square-ish */
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+        }
+        
+        /* Make total cost card value larger */
+        .total-cost-card .metric-value {
+            font-size: 3.5em !important;
+            color: #2980b9 !important;
+            margin-bottom: 20px !important;
+            line-height: 1 !important;
+        }
+        
+        /* Make total cost card label larger */
+        .total-cost-card .metric-label {
+            font-size: 1.2em !important;
+            color: #34495e !important;
+            font-weight: 700 !important;
+        }
+        
+        /* First row right side: Materials, Labor, Items */
+        .metrics-summary .metric-card:nth-child(2) {
+            grid-row: 1 / 2;
+            grid-column: 2 / 3;
+        }
+        .metrics-summary .metric-card:nth-child(3) {
+            grid-row: 1 / 2;
+            grid-column: 3 / 4;
+        }
+        .metrics-summary .metric-card:nth-child(4) {
+            grid-row: 1 / 2;
+            grid-column: 4 / 5;
+        }
+        
+        /* Second row right side: Electrical, Thermal, Cost per kW */
+        .metrics-summary .metric-card:nth-child(5) {
+            grid-row: 2 / 3;
+            grid-column: 2 / 3;
+        }
+        .metrics-summary .metric-card:nth-child(6) {
+            grid-row: 2 / 3;
+            grid-column: 3 / 4;
+        }
+        .metrics-summary .metric-card:nth-child(7) {
+            grid-row: 2 / 3;
+            grid-column: 4 / 5;
+        }
+        
+        /* Responsive layout for smaller screens */
+        @media (max-width: 1200px) {
+            .metrics-summary {
+                grid-template-columns: 300px 1fr 1fr; /* Smaller but still wider total cost card */
+                grid-template-rows: auto auto auto;
+            }
+            
+            .total-cost-card {
+                grid-row: 1 / 3 !important;
+                grid-column: 1 / 2 !important;
+                min-height: 200px !important;
+            }
+            
+            /* Rearrange other cards in a 2x3 grid */
+            .metrics-summary .metric-card:nth-child(2) { grid-row: 1; grid-column: 2; }
+            .metrics-summary .metric-card:nth-child(3) { grid-row: 1; grid-column: 3; }
+            .metrics-summary .metric-card:nth-child(4) { grid-row: 2; grid-column: 2; }
+            .metrics-summary .metric-card:nth-child(5) { grid-row: 2; grid-column: 3; }
+            .metrics-summary .metric-card:nth-child(6) { grid-row: 3; grid-column: 2; }
+            .metrics-summary .metric-card:nth-child(7) { grid-row: 3; grid-column: 3; }
+        }
+        
+        @media (max-width: 768px) {
+            .metrics-summary {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(7, auto);
+                gap: 10px;
+            }
+            
+            .total-cost-card,
+            .metrics-summary .metric-card:nth-child(2),
+            .metrics-summary .metric-card:nth-child(3),
+            .metrics-summary .metric-card:nth-child(4),
+            .metrics-summary .metric-card:nth-child(5),
+            .metrics-summary .metric-card:nth-child(6),
+            .metrics-summary .metric-card:nth-child(7) {
+                grid-row: auto !important;
+                grid-column: 1 !important;
+            }
+            
+            .total-cost-card {
+                min-height: 150px !important;
+            }
+            
+            .total-cost-card .metric-value {
+                font-size: 2.8em !important;
+            }
+        }
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-feature-settings: 'tnum' 1;
+            letter-spacing: -0.5px;
+        }
+        .metric-label {
+            color: #7f8c8d;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Add icons to metric cards */
+        .metrics-summary .metric-card:nth-child(1) .metric-value::before { content: "💰 "; } /* Total Cost */
+        .metrics-summary .metric-card:nth-child(2) .metric-value::before { content: "🏗️ "; } /* Materials */
+        .metrics-summary .metric-card:nth-child(3) .metric-value::before { content: "👷 "; } /* Labor */
+        .metrics-summary .metric-card:nth-child(4) .metric-value::before { content: "📊 "; } /* Items */
+        .metrics-summary .metric-card:nth-child(5) .metric-value::before { content: "⚡ "; } /* Electrical */
+        .metrics-summary .metric-card:nth-child(6) .metric-value::before { content: "🔥 "; } /* Thermal */
+        .metrics-summary .metric-card:nth-child(7) .metric-value::before { content: "💲 "; } /* Cost per kW */
+        
+
+        
+        /* Tooltip styling for cost breakdowns */
+        .cost-tooltip {
+            position: relative;
+            cursor: help;
+        }
+        
+        .cost-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            border: 1px solid #555;
+        }
+        
+        .cost-tooltip:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 95%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <img src="argonne logo.png" alt="Argonne National Laboratory" class="header-logo">
+        <div class="header-text">
+            <h1 class="header-title">MSBR Cost Analysis - ACCERT-Plus</h1>
+            <p class="header-credit">Developed by Daeho Chang, Argonne National Laboratory</p>
+        </div>
+        <div class="navigation-links">
+            <a href="index.html" class="nav-link">← Back to Portal</a>
+        </div>
+    </div>
+    
+    <div class="file-input-container">
+        <input type="file" id="fileInput" accept=".csv" />
+        <button id="loadDataBtn">Load CSV Data</button>
+        <span id="fileStatus">Please select input.csv to load data</span>
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="spinner"></div>
+            <span>Processing data...</span>
+        </div>
+    </div>
+
+    <!-- All Metrics in One Grid -->
+    <div class="metrics-summary" id="metricsSummary" style="display: none;">
+        <!-- Total Cost Card - Takes up 2 rows on the left -->
+        <div class="metric-card total-cost-card">
+            <div class="metric-value" id="totalCost">$0</div>
+            <div class="metric-label">Total Cost</div>
+        </div>
+        
+        <!-- First Row Right Side -->
+        <div class="metric-card">
+            <div class="metric-value" id="totalMaterials">$0</div>
+            <div class="metric-label">Total Materials</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="totalLabor">$0</div>
+            <div class="metric-label">Total Labor</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="itemCount">0</div>
+            <div class="metric-label">Number of Items</div>
+        </div>
+        
+        <!-- Second Row Right Side -->
+        <div class="metric-card">
+            <div class="metric-value" id="electricalOutput">1000 MW</div>
+            <div class="metric-label">Electrical Output</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="thermalOutput">2250 MW</div>
+            <div class="metric-label">Thermal Output</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="costPerKW">$0/kW</div>
+            <div class="metric-label">Cost per kW</div>
+        </div>
+    </div>
+
+    <div id="controls-container">
+        <div id="search-container">
+            <input type="text" id="searchInput" placeholder="Search table...">
+        </div>
+        <div>
+            <button id="groupBtn">Group by Category</button>
+            <button id="hierarchicalGroupBtn">Hierarchical Group</button>
+            <button id="chartBtn">Show Charts</button>
+            <button id="leafToggleBtn">Use Leaf Accounts Only</button>
+            <button id="downloadBtn">Download as CSV</button>
+            <button id="printPdfBtn">Print to PDF</button>
+        </div>
+    </div>
+
+    <div class="chart-container" id="chartContainer">
+        <div class="chart-controls">
+            <label for="chartType">Chart Type:</label>
+            <select id="chartType" class="chart-type-selector">
+                <option value="pie">Pie Chart</option>
+                <option value="bar">Bar Chart</option>
+                <option value="doughnut">Doughnut Chart</option>
+            </select>
+            <label for="costType">Cost Type:</label>
+            <select id="costType" class="chart-type-selector">
+                <option value="total">Total Cost</option>
+                <option value="materials">Materials</option>
+                <option value="labor">Labor</option>
+            </select>
+            <label for="chartBy">Group By:</label>
+            <select id="chartBy" class="chart-type-selector">
+                <option value="category">Category</option>
+                <option value="account">Account</option>
+                <option value="subcategory">Subcategory</option>
+            </select>
+            <label for="accountSelector">Account:</label>
+            <select id="accountSelector" class="chart-type-selector">
+                <option value="all">All Accounts</option>
+            </select>
+            <label for="categoryFilter">Filter Categories:</label>
+            <input type="text" id="categoryFilter" class="chart-type-selector" placeholder="Filter by category...">
+            <label for="categorySelector">Categories:</label>
+            <select id="categorySelector" class="chart-type-selector category-selector" multiple>
+                <option value="all">All Categories</option>
+            </select>
+        </div>
+        <div class="chart-options">
+            <button id="selectAllBtn" class="select-all-btn">Select All</button>
+            <button id="clearSelectionBtn" class="clear-selection-btn">Clear Selection</button>
+            <button id="clearFilterBtn" class="select-all-btn" style="background: #8e44ad;">Clear Filter</button>
+            <button id="refreshChartBtn" class="select-all-btn" style="background: #16a085;">Refresh Chart</button>
+            <span id="selectionInfo">No categories selected</span>
+        </div>
+        <div class="chart-info" id="chartInfo">
+            Select categories to generate a chart showing cost distribution.
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="chartCanvas" width="400" height="300"></canvas>
+        </div>
+        <div class="chart-wrapper" id="totalChartWrapper" style="display: none;">
+            <canvas id="totalChartCanvas" width="400" height="300"></canvas>
+        </div>
+    </div>
+
+    <table id="dataTable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+    
+    <!-- Error Log Display -->
+    <div id="errorLog" class="error-log">
+        <div class="error-log-header">⚠️ Error Log</div>
+        <div class="error-log-content" id="errorLogContent"></div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const loadDataBtn = document.getElementById('loadDataBtn');
+            const fileStatus = document.getElementById('fileStatus');
+            const searchInput = document.getElementById('searchInput');
+            const dataTable = document.getElementById('dataTable');
+            const tableHead = dataTable.querySelector('thead');
+            const tableBody = dataTable.querySelector('tbody');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const printPdfBtn = document.getElementById('printPdfBtn');
+            const groupBtn = document.getElementById('groupBtn');
+            const hierarchicalGroupBtn = document.getElementById('hierarchicalGroupBtn');
+            const chartBtn = document.getElementById('chartBtn');
+            const chartContainer = document.getElementById('chartContainer');
+            const chartType = document.getElementById('chartType');
+            const costType = document.getElementById('costType');
+            const chartBy = document.getElementById('chartBy');
+            const accountSelector = document.getElementById('accountSelector');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const categorySelector = document.getElementById('categorySelector');
+            const selectAllBtn = document.getElementById('selectAllBtn');
+            const clearSelectionBtn = document.getElementById('clearSelectionBtn');
+            const clearFilterBtn = document.getElementById('clearFilterBtn');
+            const refreshChartBtn = document.getElementById('refreshChartBtn');
+            const selectionInfo = document.getElementById('selectionInfo');
+            const chartInfo = document.getElementById('chartInfo');
+            const metricsSummary = document.getElementById('metricsSummary');
+
+            let tableData = [];
+            let filteredData = [];
+            let groupedData = {};
+            let hierarchicalData = {};
+            let sortColumn = -1;
+            let errorLogEntries = [];
+
+            // Error Logging System
+            function logError(errorType, details = {}) {
+                const timestamp = new Date().toISOString();
+                const errorEntry = {
+                    timestamp,
+                    type: errorType,
+                    details,
+                    userAgent: navigator.userAgent,
+                    url: window.location.href
+                };
+                
+                errorLogEntries.push(errorEntry);
+                updateErrorLogDisplay();
+                console.error('Application Error:', errorEntry);
+            }
+            
+            function updateErrorLogDisplay() {
+                const errorLogContent = document.getElementById('errorLogContent');
+                const errorLog = document.getElementById('errorLog');
+                
+                if (errorLogEntries.length === 0) {
+                    errorLog.classList.remove('show');
+                    return;
+                }
+                
+                errorLogContent.innerHTML = '';
+                const recentErrors = errorLogEntries.slice(-5);
+                
+                recentErrors.forEach(entry => {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.style.marginBottom = '8px';
+                    errorDiv.style.paddingBottom = '5px';
+                    errorDiv.style.borderBottom = '1px solid #f0f0f0';
+                    
+                    const timeStr = new Date(entry.timestamp).toLocaleTimeString();
+                    const errorText = document.createElement('div');
+                    
+                    const timeEl = document.createElement('strong');
+                    timeEl.textContent = timeStr;
+                    
+                    const typeEl = document.createElement('span');
+                    typeEl.style.color = '#dc3545';
+                    typeEl.textContent = entry.type;
+                    
+                    const detailsEl = document.createElement('small');
+                    detailsEl.textContent = JSON.stringify(entry.details, null, 2);
+                    
+                    errorText.appendChild(timeEl);
+                    errorText.appendChild(document.createElement('br'));
+                    errorText.appendChild(typeEl);
+                    errorText.appendChild(document.createElement('br'));
+                    errorText.appendChild(detailsEl);
+                    
+                    errorDiv.appendChild(errorText);
+                    errorLogContent.appendChild(errorDiv);
+                });
+                
+                errorLog.classList.add('show');
+                setTimeout(() => errorLog.classList.remove('show'), 10000);
+            }
+            
+            // File Upload Validation for CSV
+            function validateCSVUpload(file) {
+                const validationResult = {
+                    isValid: false,
+                    message: '',
+                    reason: ''
+                };
+                
+                // File size validation
+                const maxFileSize = 10 * 1024 * 1024; // 10MB limit for CSV
+                if (file.size > maxFileSize) {
+                    validationResult.message = `File too large: ${formatFileSize(file.size)}. Maximum size is 10MB.`;
+                    validationResult.reason = 'FILE_TOO_LARGE';
+                    return validationResult;
+                }
+                
+                if (file.size === 0) {
+                    validationResult.message = 'File appears to be empty (0 bytes).';
+                    validationResult.reason = 'EMPTY_FILE';
+                    return validationResult;
+                }
+                
+                // File extension validation
+                const fileName = file.name.toLowerCase();
+                if (!fileName.endsWith('.csv')) {
+                    validationResult.message = 'Invalid file extension. Only .csv files are allowed.';
+                    validationResult.reason = 'INVALID_EXTENSION';
+                    return validationResult;
+                }
+                
+                // File type validation
+                const allowedTypes = ['text/csv', 'application/vnd.ms-excel', 'text/plain', ''];
+                if (!allowedTypes.includes(file.type) && file.type !== '') {
+                    validationResult.message = `Invalid file type: ${file.type}. Expected CSV file.`;
+                    validationResult.reason = 'INVALID_MIME_TYPE';
+                    return validationResult;
+                }
+                
+                validationResult.isValid = true;
+                validationResult.message = 'File validation passed';
+                return validationResult;
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Global error handler
+            window.addEventListener('error', function(event) {
+                logError('JavaScript Error', {
+                    message: event.error?.message || event.message,
+                    filename: event.filename,
+                    lineno: event.lineno,
+                    colno: event.colno,
+                    stack: event.error?.stack
+                });
+            });
+            
+            window.addEventListener('unhandledrejection', function(event) {
+                logError('Unhandled Promise Rejection', {
+                    reason: event.reason,
+                    promise: event.promise.toString()
+                });
+            });
+            let sortAsc = true;
+            let isGrouped = false;
+            let isHierarchical = false;
+            let useLeafAccountsOnly = true; // Default to true to avoid double-counting
+            let chartInstance = null;
+            let totalChartInstance = null;
+            let selectedCategories = new Set();
+
+            // Dynamic value formatting function
+            function formatValue(value, includeSymbol = true) {
+                if (value === 0 || isNaN(value)) {
+                    return includeSymbol ? '$0' : '0';
+                }
+                
+                const absValue = Math.abs(value);
+                let formattedValue, unit, suffix;
+                
+                if (absValue >= 1000000000) {
+                    // Billions
+                    formattedValue = (value / 1000000000).toFixed(2);
+                    unit = 'billion';
+                    suffix = 'B';
+                } else if (absValue >= 1000000) {
+                    // Millions
+                    formattedValue = (value / 1000000).toFixed(2);
+                    unit = 'million';
+                    suffix = 'M';
+                } else if (absValue >= 1000) {
+                    // Thousands
+                    formattedValue = (value / 1000).toFixed(2);
+                    unit = 'thousand';
+                    suffix = 'K';
+                } else {
+                    // Less than thousands - show as actual dollars
+                    formattedValue = value.toFixed(2);
+                    unit = 'dollar';
+                    suffix = '';
+                }
+                
+                // Remove unnecessary trailing zeros and decimal point
+                formattedValue = parseFloat(formattedValue).toString();
+                
+                if (includeSymbol) {
+                    return `$${formattedValue}${suffix}`;
+                } else {
+                    return `${formattedValue}${suffix}`;
+                }
+            }
+
+            // Get appropriate unit for display purposes
+            function getDisplayUnit(values) {
+                if (!Array.isArray(values) || values.length === 0) return 'dollars';
+                
+                const maxValue = Math.max(...values.map(v => Math.abs(v)));
+                
+                if (maxValue >= 1000000000) {
+                    return 'billions';
+                } else if (maxValue >= 1000000) {
+                    return 'millions';
+                } else if (maxValue >= 1000) {
+                    return 'thousands';
+                } else {
+                    return 'dollars';
+                }
+            }
+
+            function processCSVData(csvText) {
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                
+                const processedData = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    // Handle CSV parsing with proper comma handling
+                    const values = parseCSVLine(line);
+                    
+                    if (values.length >= 5) {
+                        const accountNo = values[0];
+                        const item = values[1];
+                        const materials = parseFloat(values[2].replace(/[^\d.-]/g, '')) || 0;
+                        const labor = parseFloat(values[3].replace(/[^\d.-]/g, '')) || 0;
+                        const total = parseFloat(values[4].replace(/[^\d.-]/g, '')) || 0;
+                        
+                        // Skip rows with missing account number
+                        if (!accountNo) continue;
+                        
+                        // Use placeholder for empty item descriptions
+                        const itemDescription = item || '[No description]';
+                        
+                        // Values are in thousands of dollars, multiply by 1000 to get actual dollars
+                        const scaledData = {
+                            'Account No.': accountNo,
+                            'Item': itemDescription,
+                            'Materials': materials * 1000,
+                            'Labor': labor * 1000,
+                            'Total': total * 1000,
+                            'Category': categorizeAccount(accountNo),
+                            'Subcategory': createSubcategory(accountNo, item),
+                            'Level': getAccountLevel(accountNo),
+                            'Parent': getParentAccount(accountNo)
+                        };
+                        
+                        processedData.push(scaledData);
+                    }
+                }
+                
+                return processedData;
+            }
+
+            function parseCSVLine(line) {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                
+                result.push(current.trim());
+                return result;
+            }
+
+            function categorizeAccount(accountNo) {
+                if (!accountNo) return 'Other';
+                
+                const accountStr = accountNo.toString();
+                
+                if (accountStr.startsWith('20')) return 'Land and Structures';
+                if (accountStr.startsWith('21')) return 'Structures and Site Facilities';
+                if (accountStr.startsWith('22')) return 'Reactor Plant Equipment';
+                if (accountStr.startsWith('23')) return 'Turbine Plant Equipment';
+                if (accountStr.startsWith('24')) return 'Electrical Plant Equipment';
+                if (accountStr.startsWith('25')) return 'Miscellaneous Plant Equipment';
+                if (accountStr.startsWith('26')) return 'Special Materials';
+                if (accountStr.startsWith('91')) return 'Indirect Costs';
+                if (accountStr.startsWith('92')) return 'Engineering and Home Office';
+                if (accountStr.startsWith('93')) return 'Insurance and Taxes';
+                if (accountStr.startsWith('94')) return 'Interest During Construction';
+                
+                return 'Other';
+            }
+
+            function createSubcategory(accountNo, item) {
+                if (!accountNo) return 'Other';
+                
+                const accountStr = accountNo.toString();
+                
+                if (accountStr.startsWith('211')) return 'Site Improvement';
+                if (accountStr.startsWith('212')) return 'Reactor Building';
+                if (accountStr.startsWith('213')) return 'Turbine Building';
+                if (accountStr.startsWith('214')) return 'Intake and Discharge';
+                if (accountStr.startsWith('218')) return 'Auxiliary Buildings';
+                if (accountStr.startsWith('219')) return 'Heat Rejection Stack';
+                if (accountStr.startsWith('221')) return 'Reactor Equipment';
+                if (accountStr.startsWith('222')) return 'Main Heat Transfer';
+                if (accountStr.startsWith('224')) return 'Radioactive Waste';
+                if (accountStr.startsWith('225')) return 'Nuclear Fuel Storage';
+                if (accountStr.startsWith('226')) return 'Other Reactor Equipment';
+                if (accountStr.startsWith('227')) return 'Instruments and Controls';
+                if (accountStr.startsWith('231')) return 'Turbine Plant';
+                if (accountStr.startsWith('232')) return 'Condensing Water';
+                if (accountStr.startsWith('233')) return 'Condensers';
+                if (accountStr.startsWith('234')) return 'Feedwater Heating';
+                if (accountStr.startsWith('235')) return 'Other Turbine Equipment';
+                if (accountStr.startsWith('236')) return 'Turbine Instruments';
+                if (accountStr.startsWith('241')) return 'Switchgear';
+                if (accountStr.startsWith('242')) return 'Station Service';
+                if (accountStr.startsWith('243')) return 'Switchboards';
+                if (accountStr.startsWith('244')) return 'Protective Equipment';
+                if (accountStr.startsWith('245')) return 'Electric Structures';
+                if (accountStr.startsWith('246')) return 'Wiring';
+                if (accountStr.startsWith('251')) return 'Turbine Plant Hoists';
+                if (accountStr.startsWith('252')) return 'Air and Water Services';
+                if (accountStr.startsWith('253')) return 'Communications';
+                if (accountStr.startsWith('254')) return 'Furnishing and Fixtures';
+                if (accountStr.startsWith('264')) return 'Coolant Salt Inventory';
+                if (accountStr.startsWith('265')) return 'Miscellaneous Materials';
+                
+                return 'General';
+            }
+
+            function getAccountLevel(accountNo) {
+                if (!accountNo) return 0;
+                const accountStr = accountNo.toString().trim();
+                if (accountStr.length === 0) return 0;
+                return accountStr.length;
+            }
+
+            function getParentAccount(accountNo) {
+                if (!accountNo) return null;
+                const accountStr = accountNo.toString().trim();
+                if (accountStr.length <= 2) return null;
+                return accountStr.substring(0, accountStr.length - 1);
+            }
+
+            function calculateAccountPercentages(accountNo, itemData, allData) {
+                // Find all items that belong to the same parent account (first 2 digits)
+                const parentAccount = getParentAccountCode(accountNo);
+                if (!parentAccount) return null;
+                
+                // Get all items under the same parent account
+                const siblingItems = allData.filter(row => {
+                    const rowParent = getParentAccountCode(row['Account No.']);
+                    return rowParent === parentAccount;
+                });
+                
+                if (siblingItems.length <= 1) return null;
+                
+                // Calculate totals for the parent account
+                const totalMaterials = siblingItems.reduce((sum, row) => sum + (row['Materials'] || 0), 0);
+                const totalLabor = siblingItems.reduce((sum, row) => sum + (row['Labor'] || 0), 0);
+                
+                if (totalMaterials === 0 && totalLabor === 0) return null;
+                
+                // Calculate percentages for this item
+                const materialPercent = totalMaterials > 0 ? ((itemData['Materials'] || 0) / totalMaterials * 100).toFixed(1) : '0.0';
+                const laborPercent = totalLabor > 0 ? ((itemData['Labor'] || 0) / totalLabor * 100).toFixed(1) : '0.0';
+                
+                return {
+                    parentAccount: parentAccount,
+                    materialPercent: materialPercent,
+                    laborPercent: laborPercent,
+                    parentMaterialTotal: formatValue(totalMaterials, false),
+                    parentLaborTotal: formatValue(totalLabor, false)
+                };
+            }
+
+            function getParentAccountCode(accountNo) {
+                if (!accountNo) return null;
+                const accountStr = accountNo.toString();
+                if (accountStr.length <= 2) return accountStr;
+                return accountStr.substring(0, 2);
+            }
+
+            function buildHierarchicalStructure(data) {
+                const hierarchy = {};
+                const accountMap = {};
+                
+                // First, create a map of all accounts
+                data.forEach(row => {
+                    accountMap[row['Account No.']] = row;
+                });
+                
+                // Build the hierarchy - only direct parent-child relationships
+                data.forEach(row => {
+                    const accountNo = row['Account No.'];
+                    const level = row['Level'];
+                    const parent = row['Parent'];
+                    
+                    if (level === 2) {
+                        // Top level accounts
+                        hierarchy[accountNo] = {
+                            data: row,
+                            children: {},
+                            expanded: false,
+                            level: level
+                        };
+                    } else if (level > 2 && parent) {
+                        // Find the immediate parent (not the top-level parent)
+                        const immediateParent = parent;
+                        
+                        // Add to the immediate parent if it exists
+                        if (accountMap[immediateParent]) {
+                            // First, ensure the immediate parent exists in the hierarchy
+                            if (!hierarchy[immediateParent]) {
+                                // Find the top-level parent for the immediate parent
+                                let topParent = immediateParent;
+                                while (topParent && topParent.length > 2) {
+                                    topParent = getParentAccount(topParent);
+                                }
+                                
+                                if (topParent && hierarchy[topParent]) {
+                                    // Add the immediate parent to the hierarchy
+                                    hierarchy[immediateParent] = {
+                                        data: accountMap[immediateParent],
+                                        children: {},
+                                        expanded: false,
+                                        level: immediateParent.length
+                                    };
+                                    
+                                    // Add it to its parent's children
+                                    let currentParent = topParent;
+                                    let currentLevel = hierarchy[topParent];
+                                    
+                                    // Navigate to the correct level
+                                    for (let i = 2; i < immediateParent.length - 1; i++) {
+                                        const intermediateParent = immediateParent.substring(0, i + 1);
+                                        if (accountMap[intermediateParent]) {
+                                            if (!currentLevel.children[intermediateParent]) {
+                                                currentLevel.children[intermediateParent] = {
+                                                    data: accountMap[intermediateParent],
+                                                    children: {},
+                                                    expanded: false,
+                                                    level: i + 1
+                                                };
+                                            }
+                                            currentLevel = currentLevel.children[intermediateParent];
+                                        }
+                                    }
+                                    
+                                    currentLevel.children[immediateParent] = hierarchy[immediateParent];
+                                }
+                            }
+                            
+                            // Now add the current item to its immediate parent
+                            hierarchy[immediateParent].children[accountNo] = {
+                                data: row,
+                                children: {},
+                                expanded: false,
+                                level: level
+                            };
+                        }
+                    }
+                });
+                
+                return hierarchy;
+            }
+
+            function renderHierarchicalTable(hierarchy) {
+                tableBody.innerHTML = '';
+                
+                // Only show top-level accounts initially
+                Object.keys(hierarchy).forEach(accountNo => {
+                    const node = hierarchy[accountNo];
+                    if (node.level === 2) { // Only show top-level accounts
+                        renderHierarchicalNode(node, accountNo, 0);
+                    }
+                });
+            }
+
+            function renderHierarchicalNode(node, accountNo, depth) {
+                const row = document.createElement('tr');
+                row.className = 'group-row';
+                row.dataset.account = accountNo;
+                row.dataset.level = depth;
+                
+                // Calculate totals for percentage calculations using only leaf accounts
+                const leafAccounts = getLeafAccounts(tableData);
+                const totalMaterials = leafAccounts.reduce((sum, row) => sum + row['Materials'], 0);
+                const totalLabor = leafAccounts.reduce((sum, row) => sum + row['Labor'], 0);
+                const totalCost = leafAccounts.reduce((sum, row) => sum + row['Total'], 0);
+                
+                // Level indicator
+                const levelIndicator = document.createElement('td');
+                // Create safe level indicator to prevent XSS
+                const levelSpan = document.createElement('span');
+                levelSpan.className = `level-indicator level-${depth}`;
+                levelSpan.textContent = depth; // Safe text content
+                levelIndicator.appendChild(levelSpan);
+                row.appendChild(levelIndicator);
+                
+                // Account and item
+                const accountCell = document.createElement('td');
+                const hasChildren = node.children && Object.keys(node.children).length > 0;
+                const expandIcon = hasChildren ? 
+                    (node.expanded ? '▼' : '▶') : '&nbsp;&nbsp;';
+                
+                accountCell.innerHTML = `
+                    <div class="group-header" onclick="toggleHierarchicalNode('${accountNo}')" style="padding-left: ${depth * 20}px;">
+                        <span style="font-family: monospace; margin-right: 8px;">${expandIcon}</span>
+                        <span>${node.data['Account No.']} - ${node.data['Item']}</span>
+                        <span class="group-summary">${formatValue(node.data['Total'])}</span>
+                    </div>
+                `;
+                row.appendChild(accountCell);
+                
+                // Materials
+                const materialsCell = document.createElement('td');
+                materialsCell.textContent = formatValue(node.data['Materials']);
+                
+                // Add tooltip for materials if percentage data is available
+                const hierarchicalPercentages = calculateAccountPercentages(node.data['Account No.'], node.data, tableData);
+                if (hierarchicalPercentages) {
+                    materialsCell.className = 'cost-tooltip';
+                    materialsCell.setAttribute('data-tooltip', 
+                        `Account ${hierarchicalPercentages.parentAccount} Materials: ${hierarchicalPercentages.materialPercent}% of $${hierarchicalPercentages.parentMaterialTotal}`);
+                }
+                row.appendChild(materialsCell);
+                
+                // Labor
+                const laborCell = document.createElement('td');
+                laborCell.textContent = formatValue(node.data['Labor']);
+                
+                // Add tooltip for labor if percentage data is available
+                if (hierarchicalPercentages) {
+                    laborCell.className = 'cost-tooltip';
+                    laborCell.setAttribute('data-tooltip', 
+                        `Account ${hierarchicalPercentages.parentAccount} Labor: ${hierarchicalPercentages.laborPercent}% of $${hierarchicalPercentages.parentLaborTotal}`);
+                }
+                row.appendChild(laborCell);
+                
+                // Total
+                const totalCell = document.createElement('td');
+                totalCell.textContent = formatValue(node.data['Total']);
+                row.appendChild(totalCell);
+                
+                // Materials %
+                const materialsPercentCell = document.createElement('td');
+                const materialsPercent = totalMaterials > 0 ? (node.data['Materials'] / totalMaterials * 100) : 0;
+                materialsPercentCell.textContent = `${materialsPercent.toFixed(2)}%`;
+                row.appendChild(materialsPercentCell);
+                
+                // Labor %
+                const laborPercentCell = document.createElement('td');
+                const laborPercent = totalLabor > 0 ? (node.data['Labor'] / totalLabor * 100) : 0;
+                laborPercentCell.textContent = `${laborPercent.toFixed(2)}%`;
+                row.appendChild(laborPercentCell);
+                
+                // Total %
+                const totalPercentCell = document.createElement('td');
+                const totalPercent = totalCost > 0 ? (node.data['Total'] / totalCost * 100) : 0;
+                totalPercentCell.textContent = `${totalPercent.toFixed(2)}%`;
+                row.appendChild(totalPercentCell);
+                
+                // Confidence Level (1 * Total %)
+                const confidenceCell = document.createElement('td');
+                const confidenceLevel = totalPercent * 1.0; // 1 * total%
+                confidenceCell.textContent = `${confidenceLevel.toFixed(2)}%`;
+                confidenceCell.style.color = '#2ecc71';
+                confidenceCell.style.fontWeight = '600';
+                row.appendChild(confidenceCell);
+                
+                // Category
+                const categoryCell = document.createElement('td');
+                categoryCell.textContent = node.data['Category'];
+                row.appendChild(categoryCell);
+                
+                // Subcategory
+                const subcategoryCell = document.createElement('td');
+                subcategoryCell.textContent = node.data['Subcategory'];
+                row.appendChild(subcategoryCell);
+                
+                tableBody.appendChild(row);
+                
+                // Render children if expanded
+                if (node.expanded && node.children) {
+                    Object.keys(node.children).forEach(childAccountNo => {
+                        const childNode = node.children[childAccountNo];
+                        renderHierarchicalNode(childNode, childAccountNo, depth + 1);
+                    });
+                }
+            }
+
+            // Function to check if an account is a leaf node (has no children in the dataset)
+            function isLeafAccount(accountNo, data) {
+                const accountStr = accountNo.toString();
+                
+                // Check if any other account starts with this account number (indicating it's a child)
+                return !data.some(row => {
+                    const otherAccountStr = row['Account No.'].toString();
+                    return otherAccountStr !== accountStr && otherAccountStr.startsWith(accountStr);
+                });
+            }
+
+            // Function to get only leaf accounts (most detailed level) to avoid double-counting
+            function getLeafAccounts(data) {
+                return data.filter(row => isLeafAccount(row['Account No.'], data));
+            }
+
+            function updateMetrics() {
+                // Choose which accounts to use based on toggle
+                const accountsToUse = useLeafAccountsOnly ? getLeafAccounts(tableData) : tableData;
+                const leafAccounts = getLeafAccounts(tableData);
+                
+                const totalCost = accountsToUse.reduce((sum, row) => sum + row['Total'], 0);
+                const totalMaterials = accountsToUse.reduce((sum, row) => sum + row['Materials'], 0);
+                const totalLabor = accountsToUse.reduce((sum, row) => sum + row['Labor'], 0);
+                const itemCount = tableData.length; // Keep total count of all items for reference
+                const accountsUsedCount = accountsToUse.length; // Count of accounts being used
+                
+                // For debugging - calculate totals with all accounts to compare
+                const allAccountsTotalCost = tableData.reduce((sum, row) => sum + row['Total'], 0);
+                const leafAccountsTotalCost = leafAccounts.reduce((sum, row) => sum + row['Total'], 0);
+                
+                console.log(`Debug: Current total (${useLeafAccountsOnly ? 'leaf only' : 'all accounts'}): ${formatValue(totalCost)}`);
+                console.log(`Debug: Leaf accounts total: ${formatValue(leafAccountsTotalCost)}, All accounts total: ${formatValue(allAccountsTotalCost)}`);
+                console.log(`Debug: Using ${accountsUsedCount} accounts out of ${itemCount} total accounts`);
+                
+                // Add debug info to help understand the filtering
+                if (useLeafAccountsOnly && leafAccounts.length < itemCount) {
+                    const filteredOut = itemCount - leafAccounts.length;
+                    console.log(`Debug: Filtered out ${filteredOut} parent accounts to avoid double-counting`);
+                    
+                    // Show some examples of what was filtered out
+                    const parentAccounts = tableData.filter(row => !isLeafAccount(row['Account No.'], tableData));
+                    console.log('Debug: Parent accounts filtered out:', parentAccounts.slice(0, 5).map(row => ({
+                        account: row['Account No.'],
+                        item: row['Item'],
+                        total: formatValue(row['Total'])
+                    })));
+                }
+                
+                document.getElementById('totalCost').textContent = formatValue(totalCost);
+                document.getElementById('totalMaterials').textContent = formatValue(totalMaterials);
+                document.getElementById('totalLabor').textContent = formatValue(totalLabor);
+                document.getElementById('itemCount').textContent = useLeafAccountsOnly ? 
+                    `${accountsUsedCount} cost items (${itemCount} total)` : 
+                    `${itemCount} accounts (including parents)`;
+                
+                // Calculate cost per kW (electrical output is 1000 MW)
+                // totalCost is in actual dollars, electricalOutputKW is in kW
+                const electricalOutputKW = 1000 * 1000; // 1000 MW = 1,000,000 kW
+                const costPerKW = totalCost / electricalOutputKW; // dollars / kW = $/kW
+                
+                console.log(`Debug: Total cost: ${formatValue(totalCost)}, Output: ${electricalOutputKW.toLocaleString()} kW, Cost per kW: $${costPerKW.toFixed(2)}/kW`);
+                
+                // Always format as $/kW but with appropriate scaling for large numbers
+                let costPerKWText;
+                if (costPerKW >= 1000) {
+                    // For very high costs, show with K, M, B scaling but keep /kW unit
+                    costPerKWText = `${formatValue(costPerKW, false)}/kW`;
+                } else {
+                    // For costs under $1000/kW, show standard format
+                    costPerKWText = `$${costPerKW.toFixed(2)}/kW`;
+                }
+                
+                document.getElementById('costPerKW').textContent = costPerKWText;
+                
+                metricsSummary.style.display = 'grid';
+            }
+
+            function groupDataByCategory(data) {
+                const grouped = {};
+                
+                // Only group leaf accounts to avoid double-counting
+                const leafAccounts = getLeafAccounts(data);
+                
+                leafAccounts.forEach(row => {
+                    const category = row['Category'];
+                    if (!grouped[category]) {
+                        grouped[category] = {
+                            header: row,
+                            children: [],
+                            totalMaterials: 0,
+                            totalLabor: 0,
+                            totalCost: 0
+                        };
+                    }
+                    
+                    grouped[category].children.push(row);
+                    grouped[category].totalMaterials += row['Materials'];
+                    grouped[category].totalLabor += row['Labor'];
+                    grouped[category].totalCost += row['Total'];
+                });
+                
+                // Also include any parent accounts that don't have children to show in the grouped view
+                data.forEach(row => {
+                    const category = row['Category'];
+                    const isLeaf = isLeafAccount(row['Account No.'], data);
+                    
+                    if (!isLeaf && (!grouped[category] || !grouped[category].children.some(child => child['Account No.'] === row['Account No.']))) {
+                        if (!grouped[category]) {
+                            grouped[category] = {
+                                header: row,
+                                children: [],
+                                totalMaterials: 0,
+                                totalLabor: 0,
+                                totalCost: 0
+                            };
+                        }
+                        // Only add parent accounts to the children list for display, but don't include in totals
+                        if (!grouped[category].children.some(child => child['Account No.'] === row['Account No.'])) {
+                            grouped[category].children.push({...row, isParent: true});
+                        }
+                    }
+                });
+                
+                return grouped;
+            }
+
+            function renderGroupedTable(data) {
+                tableBody.innerHTML = '';
+
+                // Calculate totals for percentage calculations using only leaf accounts
+                const leafAccounts = getLeafAccounts(tableData);
+                const totalMaterials = leafAccounts.reduce((sum, row) => sum + row['Materials'], 0);
+                const totalLabor = leafAccounts.reduce((sum, row) => sum + row['Labor'], 0);
+                const totalCost = leafAccounts.reduce((sum, row) => sum + row['Total'], 0);
+
+                Object.keys(data).forEach(category => {
+                    const group = data[category];
+                    
+                    // Group header
+                    const headerRow = document.createElement('tr');
+                    headerRow.className = 'group-row';
+                    
+                    const levelIndicator = document.createElement('td');
+                    // Create safe level indicator to prevent XSS
+                    const levelSpan = document.createElement('span');
+                    levelSpan.className = 'level-indicator level-0';
+                    levelSpan.textContent = '0'; // Safe text content
+                    levelIndicator.appendChild(levelSpan);
+                    headerRow.appendChild(levelIndicator);
+                    
+                    const categoryCell = document.createElement('td');
+                    categoryCell.innerHTML = `
+                        <div class="group-header" onclick="toggleGroup('${category}')">
+                            <span>${category}</span>
+                            <span class="group-summary">${formatValue(group.totalCost)}</span>
+                        </div>
+                    `;
+                    headerRow.appendChild(categoryCell);
+                    
+                    // Materials
+                    const materialsCell = document.createElement('td');
+                    materialsCell.textContent = formatValue(group.totalMaterials);
+                    headerRow.appendChild(materialsCell);
+                    
+                    // Labor
+                    const laborCell = document.createElement('td');
+                    laborCell.textContent = formatValue(group.totalLabor);
+                    headerRow.appendChild(laborCell);
+                    
+                    // Total
+                    const totalCell = document.createElement('td');
+                    totalCell.textContent = formatValue(group.totalCost);
+                    headerRow.appendChild(totalCell);
+                    
+                    // Materials %
+                    const materialsPercentCell = document.createElement('td');
+                    const materialsPercent = totalMaterials > 0 ? (group.totalMaterials / totalMaterials * 100) : 0;
+                    materialsPercentCell.textContent = `${materialsPercent.toFixed(2)}%`;
+                    headerRow.appendChild(materialsPercentCell);
+                    
+                    // Labor %
+                    const laborPercentCell = document.createElement('td');
+                    const laborPercent = totalLabor > 0 ? (group.totalLabor / totalLabor * 100) : 0;
+                    laborPercentCell.textContent = `${laborPercent.toFixed(2)}%`;
+                    headerRow.appendChild(laborPercentCell);
+                    
+                    // Total %
+                    const totalPercentCell = document.createElement('td');
+                    const totalPercent = totalCost > 0 ? (group.totalCost / totalCost * 100) : 0;
+                    totalPercentCell.textContent = `${totalPercent.toFixed(2)}%`;
+                    headerRow.appendChild(totalPercentCell);
+                    
+                    // Confidence Level (1 * Total %)
+                    const confidenceCell = document.createElement('td');
+                    const confidenceLevel = totalPercent * 1.0; // 1 * total%
+                    confidenceCell.textContent = `${confidenceLevel.toFixed(2)}%`;
+                    confidenceCell.style.color = '#2ecc71';
+                    confidenceCell.style.fontWeight = '600';
+                    headerRow.appendChild(confidenceCell);
+                    
+                    tableBody.appendChild(headerRow);
+                    
+                    // Children rows
+                    group.children.forEach(child => {
+                        const childRow = document.createElement('tr');
+                        childRow.className = 'subgroup-row';
+                        childRow.style.display = 'none';
+                        childRow.dataset.parent = category;
+                        
+                        const childLevelIndicator = document.createElement('td');
+                        // Create safe level indicator to prevent XSS
+                        const childLevelSpan = document.createElement('span');
+                        childLevelSpan.className = 'level-indicator level-1';
+                        childLevelSpan.textContent = '1'; // Safe text content
+                        childLevelIndicator.appendChild(childLevelSpan);
+                        childRow.appendChild(childLevelIndicator);
+                        
+                        // Account No.
+                        const accountCell = document.createElement('td');
+                        accountCell.textContent = child['Account No.'];
+                        childRow.appendChild(accountCell);
+                        
+                        // Item
+                        const itemCell = document.createElement('td');
+                        itemCell.textContent = child['Item'];
+                        childRow.appendChild(itemCell);
+                        
+                        // Materials
+                        const childMaterialsCell = document.createElement('td');
+                        if (child.isParent) {
+                            childMaterialsCell.textContent = `${formatValue(child['Materials'])} (parent)`;
+                            childMaterialsCell.style.color = '#888';
+                            childMaterialsCell.style.fontStyle = 'italic';
+                        } else {
+                            childMaterialsCell.textContent = formatValue(child['Materials']);
+                        }
+                        
+                        // Add tooltip for materials if percentage data is available
+                        const childPercentages = calculateAccountPercentages(child['Account No.'], child, group.children);
+                        if (childPercentages && !child.isParent) {
+                            childMaterialsCell.className = 'cost-tooltip';
+                            childMaterialsCell.setAttribute('data-tooltip', 
+                                `Account ${childPercentages.parentAccount} Materials: ${childPercentages.materialPercent}% of $${childPercentages.parentMaterialTotal}`);
+                        }
+                        childRow.appendChild(childMaterialsCell);
+                        
+                        // Labor
+                        const childLaborCell = document.createElement('td');
+                        if (child.isParent) {
+                            childLaborCell.textContent = `${formatValue(child['Labor'])} (parent)`;
+                            childLaborCell.style.color = '#888';
+                            childLaborCell.style.fontStyle = 'italic';
+                        } else {
+                            childLaborCell.textContent = formatValue(child['Labor']);
+                        }
+                        
+                        // Add tooltip for labor if percentage data is available
+                        if (childPercentages && !child.isParent) {
+                            childLaborCell.className = 'cost-tooltip';
+                            childLaborCell.setAttribute('data-tooltip', 
+                                `Account ${childPercentages.parentAccount} Labor: ${childPercentages.laborPercent}% of $${childPercentages.parentLaborTotal}`);
+                        }
+                        childRow.appendChild(childLaborCell);
+                        
+                        // Total
+                        const childTotalCell = document.createElement('td');
+                        if (child.isParent) {
+                            childTotalCell.textContent = `${formatValue(child['Total'])} (parent)`;
+                            childTotalCell.style.color = '#888';
+                            childTotalCell.style.fontStyle = 'italic';
+                        } else {
+                            childTotalCell.textContent = formatValue(child['Total']);
+                        }
+                        childRow.appendChild(childTotalCell);
+                        
+                        // Materials %
+                        const childMaterialsPercentCell = document.createElement('td');
+                        if (child.isParent) {
+                            childMaterialsPercentCell.textContent = '-';
+                            childMaterialsPercentCell.style.color = '#888';
+                        } else {
+                            const childMaterialsPercent = totalMaterials > 0 ? (child['Materials'] / totalMaterials * 100) : 0;
+                            childMaterialsPercentCell.textContent = `${childMaterialsPercent.toFixed(2)}%`;
+                        }
+                        childRow.appendChild(childMaterialsPercentCell);
+                        
+                        // Labor %
+                        const childLaborPercentCell = document.createElement('td');
+                        if (child.isParent) {
+                            childLaborPercentCell.textContent = '-';
+                            childLaborPercentCell.style.color = '#888';
+                        } else {
+                            const childLaborPercent = totalLabor > 0 ? (child['Labor'] / totalLabor * 100) : 0;
+                            childLaborPercentCell.textContent = `${childLaborPercent.toFixed(2)}%`;
+                        }
+                        childRow.appendChild(childLaborPercentCell);
+                        
+                        // Total %
+                        const childTotalPercentCell = document.createElement('td');
+                        if (child.isParent) {
+                            childTotalPercentCell.textContent = '-';
+                            childTotalPercentCell.style.color = '#888';
+                        } else {
+                            const childTotalPercent = totalCost > 0 ? (child['Total'] / totalCost * 100) : 0;
+                            childTotalPercentCell.textContent = `${childTotalPercent.toFixed(2)}%`;
+                        }
+                        childRow.appendChild(childTotalPercentCell);
+                        
+                        // Confidence Level (1 * Total %)
+                        const childConfidenceCell = document.createElement('td');
+                        if (child.isParent) {
+                            childConfidenceCell.textContent = '-';
+                            childConfidenceCell.style.color = '#888';
+                        } else {
+                            const childTotalPercent = totalCost > 0 ? (child['Total'] / totalCost * 100) : 0;
+                            const childConfidenceLevel = childTotalPercent * 1.0; // 1 * total%
+                            childConfidenceCell.textContent = `${childConfidenceLevel.toFixed(2)}%`;
+                            childConfidenceCell.style.color = '#2ecc71';
+                            childConfidenceCell.style.fontWeight = '600';
+                        }
+                        childRow.appendChild(childConfidenceCell);
+                        
+                        // Category
+                        const childCategoryCell = document.createElement('td');
+                        childCategoryCell.textContent = child['Category'];
+                        childRow.appendChild(childCategoryCell);
+                        
+                        // Subcategory
+                        const childSubcategoryCell = document.createElement('td');
+                        childSubcategoryCell.textContent = child['Subcategory'];
+                        childRow.appendChild(childSubcategoryCell);
+                        
+                        tableBody.appendChild(childRow);
+                    });
+                });
+            }
+
+            function renderTable(data) {
+                tableBody.innerHTML = '';
+                
+                // Calculate totals for percentage calculations using only leaf accounts
+                const leafAccounts = getLeafAccounts(tableData);
+                const totalMaterials = leafAccounts.reduce((sum, row) => sum + row['Materials'], 0);
+                const totalLabor = leafAccounts.reduce((sum, row) => sum + row['Labor'], 0);
+                const totalCost = leafAccounts.reduce((sum, row) => sum + row['Total'], 0);
+                
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    
+                    // Level
+                    const levelCell = document.createElement('td');
+                    levelCell.textContent = row['Level'] || '';
+                    tr.appendChild(levelCell);
+                    
+                    // Account No.
+                    const accountCell = document.createElement('td');
+                    accountCell.className = 'account-column';
+                    accountCell.textContent = row['Account No.'];
+                    tr.appendChild(accountCell);
+                    
+                    // Item
+                    const itemCell = document.createElement('td');
+                    itemCell.className = 'item-column';
+                    itemCell.textContent = row['Item'];
+                    tr.appendChild(itemCell);
+                    
+                    // Materials
+                    const materialsCell = document.createElement('td');
+                    materialsCell.className = 'cost-column formatted-number';
+                    materialsCell.textContent = formatValue(row['Materials']);
+                    
+                    // Add tooltip for materials if percentage data is available
+                    const percentages = calculateAccountPercentages(row['Account No.'], row, data);
+                    if (percentages) {
+                        materialsCell.classList.add('cost-tooltip');
+                        materialsCell.setAttribute('data-tooltip', 
+                            `Account ${percentages.parentAccount} Materials: ${percentages.materialPercent}% of $${percentages.parentMaterialTotal}`);
+                    }
+                    tr.appendChild(materialsCell);
+                    
+                    // Labor
+                    const laborCell = document.createElement('td');
+                    laborCell.className = 'cost-column formatted-number';
+                    laborCell.textContent = formatValue(row['Labor']);
+                    
+                    // Add tooltip for labor if percentage data is available
+                    if (percentages) {
+                        laborCell.classList.add('cost-tooltip');
+                        laborCell.setAttribute('data-tooltip', 
+                            `Account ${percentages.parentAccount} Labor: ${percentages.laborPercent}% of $${percentages.parentLaborTotal}`);
+                    }
+                    tr.appendChild(laborCell);
+                    
+                    // Total
+                    const totalCell = document.createElement('td');
+                    totalCell.className = 'cost-column formatted-number';
+                    totalCell.textContent = formatValue(row['Total']);
+                    tr.appendChild(totalCell);
+                    
+                    // Materials %
+                    const materialsPercentCell = document.createElement('td');
+                    materialsPercentCell.className = 'percentage-column formatted-number';
+                    const materialsPercent = totalMaterials > 0 ? (row['Materials'] / totalMaterials * 100) : 0;
+                    materialsPercentCell.textContent = `${materialsPercent.toFixed(1)}%`;
+                    tr.appendChild(materialsPercentCell);
+                    
+                    // Labor %
+                    const laborPercentCell = document.createElement('td');
+                    laborPercentCell.className = 'percentage-column formatted-number';
+                    const laborPercent = totalLabor > 0 ? (row['Labor'] / totalLabor * 100) : 0;
+                    laborPercentCell.textContent = `${laborPercent.toFixed(1)}%`;
+                    tr.appendChild(laborPercentCell);
+                    
+                    // Total %
+                    const totalPercentCell = document.createElement('td');
+                    totalPercentCell.className = 'percentage-column formatted-number';
+                    const totalPercent = totalCost > 0 ? (row['Total'] / totalCost * 100) : 0;
+                    totalPercentCell.textContent = `${totalPercent.toFixed(1)}%`;
+                    tr.appendChild(totalPercentCell);
+                    
+                    // Confidence Level (1 * Total %)
+                    const confidenceCell = document.createElement('td');
+                    confidenceCell.className = 'percentage-column formatted-number';
+                    const confidenceLevel = totalPercent * 1.0; // 1 * total%
+                    confidenceCell.textContent = `${confidenceLevel.toFixed(1)}%`;
+                    confidenceCell.style.color = '#2ecc71';
+                    confidenceCell.style.fontWeight = '600';
+                    tr.appendChild(confidenceCell);
+                    
+                    // Category
+                    const categoryCell = document.createElement('td');
+                    categoryCell.className = 'category-column';
+                    categoryCell.textContent = row['Category'];
+                    tr.appendChild(categoryCell);
+                    
+                    // Subcategory
+                    const subcategoryCell = document.createElement('td');
+                    subcategoryCell.className = 'category-column';
+                    subcategoryCell.textContent = row['Subcategory'];
+                    tr.appendChild(subcategoryCell);
+                    
+                    tableBody.appendChild(tr);
+                });
+            }
+
+            function renderTableHeaders() {
+                tableHead.innerHTML = '';
+                const headerRow = document.createElement('tr');
+                
+                const headers = ['Level', 'Account No.', 'Item', 'Materials', 'Labor', 'Total', 'Materials %', 'Labor %', 'Total %', 'Confidence Level', 'Category', 'Subcategory'];
+                
+                headers.forEach((header, index) => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    th.onclick = () => sortTable(index);
+                    headerRow.appendChild(th);
+                });
+                
+                tableHead.appendChild(headerRow);
+            }
+
+            function sortTable(columnIndex) {
+                if (sortColumn === columnIndex) {
+                    sortAsc = !sortAsc;
+                } else {
+                    sortColumn = columnIndex;
+                    sortAsc = true;
+                }
+                
+                const headers = tableHead.querySelectorAll('th');
+                headers.forEach((header, index) => {
+                    header.classList.remove('sort-asc', 'sort-desc');
+                    if (index === columnIndex) {
+                        header.classList.add(sortAsc ? 'sort-asc' : 'sort-desc');
+                    }
+                });
+                
+                const dataToSort = isGrouped ? Object.values(groupedData).flatMap(group => group.children) : 
+                                  isHierarchical ? Object.values(hierarchicalData).flatMap(group => group.children) : 
+                                  filteredData;
+                
+                dataToSort.sort((a, b) => {
+                    const aVal = Object.values(a)[columnIndex];
+                    const bVal = Object.values(b)[columnIndex];
+                    
+                    if (typeof aVal === 'number' && typeof bVal === 'number') {
+                        return sortAsc ? aVal - bVal : bVal - aVal;
+                    } else {
+                        const aStr = String(aVal).toLowerCase();
+                        const bStr = String(bVal).toLowerCase();
+                        return sortAsc ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
+                    }
+                });
+                
+                if (isGrouped) {
+                    renderGroupedTable(groupedData);
+                } else if (isHierarchical) {
+                    renderHierarchicalTable(hierarchicalData);
+                } else {
+                    renderTable(filteredData);
+                }
+            }
+
+            function filterData() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                filteredData = tableData.filter(row => {
+                    return Object.values(row).some(value => 
+                        String(value).toLowerCase().includes(searchTerm)
+                    );
+                });
+                
+                if (isGrouped) {
+                    groupedData = groupDataByCategory(filteredData);
+                    renderGroupedTable(groupedData);
+                } else if (isHierarchical) {
+                    hierarchicalData = buildHierarchicalStructure(filteredData);
+                    renderHierarchicalTable(hierarchicalData);
+                } else {
+                    renderTable(filteredData);
+                }
+            }
+
+            function updateCategorySelector() {
+                const categories = [...new Set(tableData.map(row => row['Category']))];
+                categorySelector.innerHTML = '<option value="all">All Categories</option>';
+                
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelector.appendChild(option);
+                });
+            }
+
+            function updateAccountSelector() {
+                const accountSelector = document.getElementById('accountSelector');
+                if (!accountSelector) return;
+                
+                accountSelector.innerHTML = '<option value="all">All Accounts</option>';
+                
+                // Add top-level accounts
+                Object.keys(hierarchicalData).forEach(accountNo => {
+                    const node = hierarchicalData[accountNo];
+                    if (node.level === 2) {
+                        const option = document.createElement('option');
+                        option.value = accountNo;
+                        option.textContent = `${accountNo} - ${node.data['Item']}`;
+                        accountSelector.appendChild(option);
+                    }
+                });
+            }
+
+            function getSelectedAccountData() {
+                const accountSelector = document.getElementById('accountSelector');
+                if (!accountSelector) return tableData;
+                
+                const selectedAccount = accountSelector.value;
+                if (selectedAccount === 'all') return tableData;
+                
+                // Get only the direct children of the selected account
+                const selectedData = [];
+                const node = findNodeInHierarchy(hierarchicalData[selectedAccount], selectedAccount);
+                
+                if (node && node.children) {
+                    // Only add the direct children, not the parent account itself
+                    Object.keys(node.children).forEach(childAccount => {
+                        selectedData.push(node.children[childAccount].data);
+                    });
+                }
+                
+                return selectedData;
+            }
+
+            function createChart() {
+                const chartCanvas = document.getElementById('chartCanvas');
+                const totalChartCanvas = document.getElementById('totalChartCanvas');
+                const totalChartWrapper = document.getElementById('totalChartWrapper');
+                const ctx = chartCanvas.getContext('2d');
+                const totalCtx = totalChartCanvas.getContext('2d');
+                
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+                if (totalChartInstance) {
+                    totalChartInstance.destroy();
+                }
+                
+                const selectedCategories = Array.from(categorySelector.selectedOptions).map(option => option.value);
+                const costType = document.getElementById('costType').value;
+                const chartType = document.getElementById('chartType').value;
+                const chartBy = document.getElementById('chartBy').value;
+                const selectedAccount = document.getElementById('accountSelector').value;
+                
+                let dataToChart = getSelectedAccountData();
+                
+                // Only use leaf accounts for chart calculations to avoid double-counting
+                dataToChart = getLeafAccounts(dataToChart);
+                
+                // Filter by categories if specified
+                if (!selectedCategories.includes('all')) {
+                    dataToChart = dataToChart.filter(row => selectedCategories.includes(row['Category']));
+                }
+                
+                let labels = [];
+                let datasets = [];
+                let totalData = [];
+                
+                if (costType === 'total') {
+                    // Create grouped bar chart for materials and labor side by side
+                    if (chartBy === 'category') {
+                        // Group by category
+                        const categoryData = {};
+                        dataToChart.forEach(row => {
+                            const category = row['Category'];
+                            if (!categoryData[category]) {
+                                categoryData[category] = { materials: 0, labor: 0 };
+                            }
+                            categoryData[category].materials += row['Materials'];
+                            categoryData[category].labor += row['Labor'];
+                        });
+                        
+                        labels = Object.keys(categoryData);
+                        datasets = [
+                            {
+                                label: 'Materials',
+                                data: labels.map(cat => categoryData[cat].materials),
+                                backgroundColor: '#FF6384',
+                                borderColor: '#FF6384',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Labor',
+                                data: labels.map(cat => categoryData[cat].labor),
+                                backgroundColor: '#36A2EB',
+                                borderColor: '#36A2EB',
+                                borderWidth: 1
+                            }
+                        ];
+                        totalData = labels.map(cat => categoryData[cat].materials + categoryData[cat].labor);
+                    } else if (chartBy === 'account') {
+                        // Group by account
+                        const accountData = {};
+                        dataToChart.forEach(row => {
+                            const account = row['Account No.'];
+                            if (!accountData[account]) {
+                                accountData[account] = { materials: 0, labor: 0 };
+                            }
+                            accountData[account].materials += row['Materials'];
+                            accountData[account].labor += row['Labor'];
+                        });
+                        
+                        labels = Object.keys(accountData).map(acc => `${acc} - ${tableData.find(row => row['Account No.'] === acc)?.Item || ''}`);
+                        datasets = [
+                            {
+                                label: 'Materials',
+                                data: Object.keys(accountData).map(acc => accountData[acc].materials),
+                                backgroundColor: '#FF6384',
+                                borderColor: '#FF6384',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Labor',
+                                data: Object.keys(accountData).map(acc => accountData[acc].labor),
+                                backgroundColor: '#36A2EB',
+                                borderColor: '#36A2EB',
+                                borderWidth: 1
+                            }
+                        ];
+                        totalData = Object.keys(accountData).map(acc => accountData[acc].materials + accountData[acc].labor);
+                    } else if (chartBy === 'subcategory') {
+                        // Group by subcategory
+                        const subcategoryData = {};
+                        dataToChart.forEach(row => {
+                            const subcategory = row['Subcategory'];
+                            if (!subcategoryData[subcategory]) {
+                                subcategoryData[subcategory] = { materials: 0, labor: 0 };
+                            }
+                            subcategoryData[subcategory].materials += row['Materials'];
+                            subcategoryData[subcategory].labor += row['Labor'];
+                        });
+                        
+                        labels = Object.keys(subcategoryData);
+                        datasets = [
+                            {
+                                label: 'Materials',
+                                data: labels.map(subcat => subcategoryData[subcat].materials),
+                                backgroundColor: '#FF6384',
+                                borderColor: '#FF6384',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Labor',
+                                data: labels.map(subcat => subcategoryData[subcat].labor),
+                                backgroundColor: '#36A2EB',
+                                borderColor: '#36A2EB',
+                                borderWidth: 1
+                            }
+                        ];
+                        totalData = labels.map(subcat => subcategoryData[subcat].materials + subcategoryData[subcat].labor);
+                    }
+                } else {
+                    // Single dataset for materials or labor only
+                    let data = [];
+                    
+                    if (chartBy === 'category') {
+                        // Group by category
+                        const categoryTotals = {};
+                        dataToChart.forEach(row => {
+                            const category = row['Category'];
+                            if (!categoryTotals[category]) {
+                                categoryTotals[category] = 0;
+                            }
+                            categoryTotals[category] += row[costType.charAt(0).toUpperCase() + costType.slice(1)];
+                        });
+                        
+                        labels = Object.keys(categoryTotals);
+                        data = Object.values(categoryTotals);
+                    } else if (chartBy === 'account') {
+                        // Group by account
+                        const accountTotals = {};
+                        dataToChart.forEach(row => {
+                            const account = row['Account No.'];
+                            if (!accountTotals[account]) {
+                                accountTotals[account] = 0;
+                            }
+                            accountTotals[account] += row[costType.charAt(0).toUpperCase() + costType.slice(1)];
+                        });
+                        
+                        labels = Object.keys(accountTotals).map(acc => `${acc} - ${tableData.find(row => row['Account No.'] === acc)?.Item || ''}`);
+                        data = Object.values(accountTotals);
+                    } else if (chartBy === 'subcategory') {
+                        // Group by subcategory
+                        const subcategoryTotals = {};
+                        dataToChart.forEach(row => {
+                            const subcategory = row['Subcategory'];
+                            if (!subcategoryTotals[subcategory]) {
+                                subcategoryTotals[subcategory] = 0;
+                            }
+                            subcategoryTotals[subcategory] += row[costType.charAt(0).toUpperCase() + costType.slice(1)];
+                        });
+                        
+                        labels = Object.keys(subcategoryTotals);
+                        data = Object.values(subcategoryTotals);
+                    }
+                    
+                    datasets = [{
+                        data: data,
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                            '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0', '#FF6384'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }];
+                }
+                
+                // Determine chart type - use bar for grouped data, original selection for single dataset
+                const finalChartType = (costType === 'total' && datasets.length > 1) ? 'bar' : chartType;
+                
+                chartInstance = new Chart(ctx, {
+                    type: finalChartType,
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed;
+                                        if (costType === 'total') {
+                                            // For grouped bars, show the value and percentage of total
+                                            const total = totalData[context.dataIndex];
+                                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                            return `${context.dataset.label}: ${formatValue(value)} (${percentage}%)`;
+                                        } else {
+                                            // For single dataset
+                                            const total = datasets[0].data.reduce((sum, val) => sum + val, 0);
+                                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                            return `${context.label}: ${formatValue(value)} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        scales: costType === 'total' ? {
+                            x: {
+                                stacked: false
+                            },
+                            y: {
+                                stacked: false,
+                                beginAtZero: true
+                            }
+                        } : undefined
+                    }
+                });
+                
+                // Create total cost chart when showing breakdown
+                if (costType === 'total' && totalData.length > 0) {
+                    totalChartWrapper.style.display = 'block';
+                    
+                    totalChartInstance = new Chart(totalCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Total Cost',
+                                data: totalData,
+                                backgroundColor: '#4BC0C0',
+                                borderColor: '#4BC0C0',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Total Cost by ' + chartBy.charAt(0).toUpperCase() + chartBy.slice(1),
+                                    font: {
+                                        size: 16
+                                    }
+                                },
+                                legend: {
+                                    position: 'top'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const value = context.parsed;
+                                            const total = totalData.reduce((sum, val) => sum + val, 0);
+                                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                            return `Total: ${formatValue(value)} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    totalChartWrapper.style.display = 'none';
+                }
+                
+                const accountText = selectedAccount === 'all' ? 'All Accounts' : 
+                    `${selectedAccount} - ${tableData.find(row => row['Account No.'] === selectedAccount)?.Item || ''}`;
+                
+                selectionInfo.textContent = `${selectedCategories.includes('all') ? 'All' : selectedCategories.length} categories selected from ${accountText}`;
+                
+                if (costType === 'total') {
+                    const totalMaterials = datasets[0].data.reduce((sum, val) => sum + val, 0);
+                    const totalLabor = datasets[1] ? datasets[1].data.reduce((sum, val) => sum + val, 0) : 0;
+                    const totalCost = totalMaterials + totalLabor;
+                    chartInfo.textContent = `Showing Materials vs Labor breakdown by ${chartBy} for ${accountText}. Total: ${formatValue(totalCost)} (Materials: ${formatValue(totalMaterials)}, Labor: ${formatValue(totalLabor)})`;
+                } else {
+                    const total = datasets[0].data.reduce((sum, val) => sum + val, 0);
+                    chartInfo.textContent = `Showing ${costType} cost breakdown by ${chartBy} for ${accountText}. Total: ${formatValue(total)}`;
+                }
+            }
+
+            // Event Listeners
+            loadDataBtn.addEventListener('click', function() {
+                const file = fileInput.files[0];
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                
+                if (!file) {
+                    fileStatus.textContent = 'Please select a CSV file first.';
+                    return;
+                }
+                
+                // Validate file before processing
+                const validationResult = validateCSVUpload(file);
+                if (!validationResult.isValid) {
+                    fileStatus.textContent = validationResult.message;
+                    logError('File Validation Failed', {
+                        fileName: file.name,
+                        fileSize: file.size,
+                        fileType: file.type,
+                        reason: validationResult.reason
+                    });
+                    return;
+                }
+                
+                // Show loading indicator
+                loadingIndicator.classList.add('active');
+                loadDataBtn.disabled = true;
+                fileStatus.textContent = 'Loading...';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        tableData = processCSVData(e.target.result);
+                        filteredData = [...tableData];
+                        
+                        renderTableHeaders();
+                        renderTable(filteredData);
+                        updateMetrics();
+                        updateCategorySelector();
+                        hierarchicalData = buildHierarchicalStructure(tableData); // Build hierarchy after data is loaded
+                        updateAccountSelector(); // Update account selector after hierarchy is built
+                        
+                        // Initialize toggle button state
+                        const leafToggleBtn = document.getElementById('leafToggleBtn');
+                        if (useLeafAccountsOnly) {
+                            leafToggleBtn.classList.add('active');
+                            leafToggleBtn.textContent = 'Use Leaf Accounts Only';
+                        } else {
+                            leafToggleBtn.classList.remove('active');
+                            leafToggleBtn.textContent = 'Use All Accounts';
+                        }
+                        
+                        fileStatus.textContent = `✅ Successfully loaded ${tableData.length} items from ${file.name}`;
+                    } catch (error) {
+                        fileStatus.textContent = `❌ Error loading file: ${error.message}`;
+                        logError('CSV Processing Error', {
+                            fileName: file.name,
+                            fileSize: file.size,
+                            errorMessage: error.message,
+                            errorStack: error.stack
+                        });
+                    } finally {
+                        // Hide loading indicator
+                        loadingIndicator.classList.remove('active');
+                        loadDataBtn.disabled = false;
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            searchInput.addEventListener('input', filterData);
+
+            printPdfBtn.addEventListener('click', function() {
+                // Hide charts before printing if they're visible
+                const chartWasVisible = chartContainer.classList.contains('active');
+                if (chartWasVisible) {
+                    chartContainer.classList.remove('active');
+                }
+                
+                // Add print-friendly title if not present
+                const originalTitle = document.title;
+                document.title = 'MSBR Cost Analysis Report - ' + new Date().toLocaleDateString();
+                
+                // Trigger print dialog
+                window.print();
+                
+                // Restore original state
+                document.title = originalTitle;
+                if (chartWasVisible) {
+                    chartContainer.classList.add('active');
+                }
+            });
+
+            groupBtn.addEventListener('click', function() {
+                if (isGrouped) {
+                    isGrouped = false;
+                    groupBtn.classList.remove('active');
+                    renderTable(filteredData);
+                } else {
+                    isGrouped = true;
+                    isHierarchical = false;
+                    groupBtn.classList.add('active');
+                    hierarchicalGroupBtn.classList.remove('active');
+                    groupedData = groupDataByCategory(filteredData);
+                    renderGroupedTable(groupedData);
+                }
+            });
+
+            hierarchicalGroupBtn.addEventListener('click', function() {
+                if (isHierarchical) {
+                    isHierarchical = false;
+                    hierarchicalGroupBtn.classList.remove('active');
+                    renderTable(filteredData);
+                } else {
+                    isHierarchical = true;
+                    isGrouped = false;
+                    hierarchicalGroupBtn.classList.add('active');
+                    groupBtn.classList.remove('active');
+                    hierarchicalData = buildHierarchicalStructure(filteredData);
+                    renderHierarchicalTable(hierarchicalData);
+                    updateAccountSelector(); // Update account selector after hierarchy is built
+                }
+            });
+
+            document.getElementById('leafToggleBtn').addEventListener('click', function() {
+                useLeafAccountsOnly = !useLeafAccountsOnly;
+                const btn = document.getElementById('leafToggleBtn');
+                
+                if (useLeafAccountsOnly) {
+                    btn.classList.add('active');
+                    btn.textContent = 'Use Leaf Accounts Only';
+                } else {
+                    btn.classList.remove('active');
+                    btn.textContent = 'Use All Accounts';
+                }
+                
+                // Update all displays
+                updateMetrics();
+                if (isGrouped) {
+                    groupedData = groupDataByCategory(filteredData);
+                    renderGroupedTable(groupedData);
+                } else if (isHierarchical) {
+                    hierarchicalData = buildHierarchicalStructure(filteredData);
+                    renderHierarchicalTable(hierarchicalData);
+                } else {
+                    renderTable(filteredData);
+                }
+            });
+
+            chartBtn.addEventListener('click', function() {
+                if (chartContainer.classList.contains('active')) {
+                    chartContainer.classList.remove('active');
+                    chartBtn.classList.remove('active');
+                } else {
+                    chartContainer.classList.add('active');
+                    chartBtn.classList.add('active');
+                    createChart();
+                }
+            });
+
+            chartType.addEventListener('change', createChart);
+            costType.addEventListener('change', createChart);
+            chartBy.addEventListener('change', createChart);
+            categorySelector.addEventListener('change', createChart);
+            accountSelector.addEventListener('change', createChart);
+
+            selectAllBtn.addEventListener('click', function() {
+                Array.from(categorySelector.options).forEach(option => option.selected = true);
+                createChart();
+            });
+
+            clearSelectionBtn.addEventListener('click', function() {
+                Array.from(categorySelector.options).forEach(option => option.selected = false);
+                createChart();
+            });
+
+            clearFilterBtn.addEventListener('click', function() {
+                categoryFilter.value = '';
+                createChart();
+            });
+
+            refreshChartBtn.addEventListener('click', createChart);
+
+            downloadBtn.addEventListener('click', function() {
+                const headers = ['Account No.', 'Item', 'Materials', 'Labor', 'Total', 'Materials %', 'Labor %', 'Total %', 'Category', 'Subcategory'];
+                
+                // Calculate totals for percentage calculations
+                const totalMaterials = filteredData.reduce((sum, row) => sum + row['Materials'], 0);
+                const totalLabor = filteredData.reduce((sum, row) => sum + row['Labor'], 0);
+                const totalCost = filteredData.reduce((sum, row) => sum + row['Total'], 0);
+                
+                const csvContent = [
+                    headers.join(','),
+                    ...filteredData.map(row => {
+                        const materialsPercent = totalMaterials > 0 ? (row['Materials'] / totalMaterials * 100) : 0;
+                        const laborPercent = totalLabor > 0 ? (row['Labor'] / totalLabor * 100) : 0;
+                        const totalPercent = totalCost > 0 ? (row['Total'] / totalCost * 100) : 0;
+                        
+                        const values = [
+                            row['Account No.'],
+                            row['Item'],
+                            row['Materials'],
+                            row['Labor'],
+                            row['Total'],
+                            materialsPercent.toFixed(2),
+                            laborPercent.toFixed(2),
+                            totalPercent.toFixed(2),
+                            row['Category'],
+                            row['Subcategory']
+                        ];
+                        
+                        return values.map(value => {
+                            return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+                        }).join(',');
+                    })
+                ].join('\n');
+                
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'msbr_cost_data.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+
+            // Global functions for group toggling
+            window.toggleGroup = function(category) {
+                const children = document.querySelectorAll(`tr[data-parent="${category}"]`);
+                children.forEach(child => {
+                    child.style.display = child.style.display === 'none' ? 'table-row' : 'none';
+                });
+            };
+
+            // Global function for hierarchical node toggling
+            window.toggleHierarchicalNode = function(accountNo) {
+                // Find the node in the hierarchy
+                let node = null;
+                
+                // Search in top level
+                if (hierarchicalData[accountNo]) {
+                    node = hierarchicalData[accountNo];
+                } else {
+                    // Search in children recursively
+                    for (const topAccount in hierarchicalData) {
+                        node = findNodeInHierarchy(hierarchicalData[topAccount], accountNo);
+                        if (node) break;
+                    }
+                }
+                
+                if (node) {
+                    node.expanded = !node.expanded;
+                    renderHierarchicalTable(hierarchicalData);
+                }
+            };
+
+            function findNodeInHierarchy(node, accountNo) {
+                if (node.data['Account No.'] === accountNo) {
+                    return node;
+                }
+                
+                if (node.children) {
+                    for (const childAccount in node.children) {
+                        const found = findNodeInHierarchy(node.children[childAccount], accountNo);
+                        if (found) return found;
+                    }
+                }
+                
+                return null;
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    Author: Daeho Chang
+    Organization: Argonne National Laboratory
+    Created: July 30, 2025
+    Description: Integrated ACCERT Output Analyzer - Upload, Process, and Analyze
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';">
+    <title>ACCERT-Plus: ACCERT Output Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js" 
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            gap: 20px;
+        }
+        .header-logo {
+            height: 60px;
+            width: auto;
+        }
+        .header-text {
+            flex: 1;
+        }
+        .header-title {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header-credit {
+            color: #7f8c8d;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            font-style: italic;
+        }
+        .navigation-links {
+            display: flex;
+            align-items: center;
+        }
+        .error-log {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #fff;
+            border: 1px solid #dc3545;
+            border-radius: 5px;
+            padding: 10px;
+            max-width: 300px;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+        }
+        .error-log.show {
+            display: block;
+        }
+        .error-log-header {
+            color: #dc3545;
+            font-weight: bold;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #dc3545;
+            padding-bottom: 5px;
+        }
+        .error-log-content {
+            font-size: 12px;
+            color: #333;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .nav-link {
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #3498db;
+        }
+        .nav-link:hover {
+            background: white;
+            color: #3498db;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Upload Section Styles */
+        .upload-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        .upload-section.compact {
+            padding: 15px 30px;
+            margin-bottom: 15px;
+        }
+        .upload-section.compact .instructions {
+            display: none;
+        }
+        .upload-section.compact .file-input-container {
+            padding: 20px;
+            margin: 10px 0;
+        }
+        .file-input-container {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            transition: border-color 0.3s;
+        }
+        .file-input-container:hover {
+            border-color: #2980b9;
+        }
+        .file-input-container.dragover {
+            border-color: #27ae60;
+            background-color: #f8f9fa;
+        }
+        #fileInput {
+            display: none;
+        }
+        .upload-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        .upload-btn:hover {
+            background: #2980b9;
+        }
+        .upload-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .process-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        .process-btn:hover {
+            background: #229954;
+        }
+        .process-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .file-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            display: none;
+        }
+        .file-info h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .file-info p {
+            margin: 5px 0;
+        }
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        /* Control Section Styles */
+        #controls-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        #search-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+        #searchInput {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+        #downloadBtn, #groupBtn, #hierarchicalGroupBtn, #chartBtn, #printPdfBtn {
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 18px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 12px;
+            transition: background 0.2s;
+        }
+        #downloadBtn:hover, #groupBtn:hover, #hierarchicalGroupBtn:hover, #chartBtn:hover, #printPdfBtn:hover {
+            background: #34495e;
+        }
+        
+        /* Print-specific styles */
+        @media print {
+            body {
+                background-color: white !important;
+                color: black !important;
+                font-size: 12px;
+            }
+            .upload-section,
+            #controls-container, 
+            .chart-container {
+                display: none !important;
+            }
+            .header-container {
+                background: white !important;
+                box-shadow: none !important;
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            table {
+                width: 100% !important;
+                font-size: 10px !important;
+                page-break-inside: auto;
+            }
+            th, td {
+                padding: 6px 8px !important;
+                border: 1px solid #333 !important;
+                font-size: 10px !important;
+            }
+            thead th {
+                background-color: #f0f0f0 !important;
+                color: black !important;
+            }
+        }
+        #groupBtn.active {
+            background: #27ae60;
+        }
+        #hierarchicalGroupBtn.active {
+            background: #27ae60;
+        }
+        #chartBtn.active {
+            background: #e74c3c;
+        }
+        .level-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .level-0 { background: #e74c3c; color: white; }
+        .level-1 { background: #f39c12; color: white; }
+        .level-2 { background: #f1c40f; color: #2c3e50; }
+        .level-3 { background: #2ecc71; color: white; }
+        .level-4 { background: #3498db; color: white; }
+        
+        .group-header {
+            background: #ecf0f1;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 12px 15px;
+            border-bottom: 2px solid #bdc3c7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .group-header:hover {
+            background: #d5dbdb;
+        }
+        .group-content {
+            display: none;
+        }
+        .group-content.expanded {
+            display: block;
+        }
+        .group-summary {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .chart-container.active {
+            display: block;
+        }
+        .chart-controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .chart-type-selector {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .account-selector {
+            max-width: 300px;
+            min-width: 200px;
+        }
+        .account-selector option {
+            padding: 5px;
+        }
+        .account-selector optgroup {
+            font-weight: bold;
+            color: #2980b9;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .account-selector optgroup:hover {
+            background-color: #e3f2fd;
+        }
+        .account-selector optgroup:active {
+            background-color: #bbdefb;
+        }
+        .chart-options {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .select-all-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .select-all-btn:hover {
+            background: #229954;
+        }
+        .clear-selection-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .clear-selection-btn:hover {
+            background: #c0392b;
+        }
+        .chart-info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f4fd;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            max-height: 60vh;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            table-layout: auto;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e8e9ea;
+            white-space: normal;
+            overflow-wrap: break-word;
+            max-width: 220px;
+            vertical-align: middle;
+        }
+        th:first-child, td:first-child {
+            width: 50px;
+            text-align: center;
+        }
+        thead th {
+            background-color: #34495e;
+            color: #ffffff;
+            cursor: pointer;
+            position: relative;
+        }
+        thead th:after {
+            content: '\2195';
+            position: absolute;
+            right: 15px;
+            color: #bdc3c7;
+        }
+        thead th.sort-asc:after {
+            content: '\2191';
+            color: #ffffff;
+        }
+        thead th.sort-desc:after {
+            content: '\2193';
+            color: #ffffff;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tbody tr:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.001);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .group-row {
+            background-color: #ecf0f1 !important;
+            font-weight: bold;
+            border-left: 4px solid #3498db;
+        }
+        .subgroup-row {
+            background-color: #f8f9fa !important;
+            border-left: 2px solid #bdc3c7;
+        }
+        .metrics-summary {
+            display: none;
+            grid-template-columns: 600px 1fr 1fr 1fr; /* Fixed width for total cost, flexible for others */
+            grid-template-rows: auto auto;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: stretch;
+        }
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        /* Total Cost Card - spans 2 rows on the left */
+        .total-cost-card {
+            grid-row: 1 / 3;
+            grid-column: 1 / 2;
+            min-height: 250px;
+            padding: 40px 30px;
+            border: 3px solid #3498db;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Other metric cards positioned in 3x2 grid on the right */
+        .metrics-summary .metric-card:nth-child(2) {
+            grid-row: 1 / 2;
+            grid-column: 2 / 3;
+        }
+        .metrics-summary .metric-card:nth-child(3) {
+            grid-row: 1 / 2;
+            grid-column: 3 / 4;
+        }
+        .metrics-summary .metric-card:nth-child(4) {
+            grid-row: 1 / 2;
+            grid-column: 4 / 5;
+        }
+        .metrics-summary .metric-card:nth-child(5) {
+            grid-row: 2 / 3;
+            grid-column: 2 / 3;
+        }
+        .metrics-summary .metric-card:nth-child(6) {
+            grid-row: 2 / 3;
+            grid-column: 3 / 4;
+        }
+        .metrics-summary .metric-card:nth-child(7) {
+            grid-row: 2 / 3;
+            grid-column: 4 / 5;
+        }
+        
+        /* Enhanced styling for total cost card */
+        .total-cost-card .metric-value {
+            font-size: 3.5em;
+            color: #2c3e50;
+        }
+        .total-cost-card .metric-label {
+            font-size: 1.1em;
+            color: #34495e;
+        }
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-feature-settings: 'tnum' 1;
+            letter-spacing: -0.5px;
+        }
+        .metric-label {
+            color: #7f8c8d;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Responsive layout for smaller screens */
+        @media (max-width: 1200px) {
+            .metrics-summary {
+                grid-template-columns: 500px 1fr 1fr; /* Smaller but still wider total cost card */
+                grid-template-rows: auto auto auto;
+            }
+            
+            .total-cost-card {
+                grid-row: 1 / 3 !important;
+                grid-column: 1 / 2 !important;
+                min-height: 200px !important;
+            }
+            
+            .metrics-summary .metric-card:nth-child(2) { grid-row: 1; grid-column: 2; }
+            .metrics-summary .metric-card:nth-child(3) { grid-row: 1; grid-column: 3; }
+            .metrics-summary .metric-card:nth-child(4) { grid-row: 2; grid-column: 2; }
+            .metrics-summary .metric-card:nth-child(5) { grid-row: 2; grid-column: 3; }
+            .metrics-summary .metric-card:nth-child(6) { grid-row: 3; grid-column: 2; }
+            .metrics-summary .metric-card:nth-child(7) { grid-row: 3; grid-column: 3; }
+        }
+        
+        @media (max-width: 768px) {
+            .metrics-summary {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(7, auto);
+            }
+            
+            .total-cost-card {
+                grid-row: 1 / 2 !important;
+                grid-column: 1 / 2 !important;
+                min-height: 150px !important;
+            }
+            
+            .metrics-summary .metric-card:nth-child(2) { grid-row: 2; grid-column: 1; }
+            .metrics-summary .metric-card:nth-child(3) { grid-row: 3; grid-column: 1; }
+            .metrics-summary .metric-card:nth-child(4) { grid-row: 4; grid-column: 1; }
+            .metrics-summary .metric-card:nth-child(5) { grid-row: 5; grid-column: 1; }
+            .metrics-summary .metric-card:nth-child(6) { grid-row: 6; grid-column: 1; }
+            .metrics-summary .metric-card:nth-child(7) { grid-row: 7; grid-column: 1; }
+        }
+        
+        /* Add icons to metric cards */
+        .metrics-summary .metric-card:nth-child(1) .metric-value::before { content: "💰 "; }
+        .metrics-summary .metric-card:nth-child(2) .metric-value::before { content: "📊 "; }
+        .metrics-summary .metric-card:nth-child(3) .metric-value::before { content: "📈 "; }
+        .metrics-summary .metric-card:nth-child(4) .metric-value::before { content: "⚖️ "; }
+        .metrics-summary .metric-card:nth-child(5) .metric-value::before { content: "⚡ "; }
+        .metrics-summary .metric-card:nth-child(6) .metric-value::before { content: "🔥 "; }
+        .metrics-summary .metric-card:nth-child(7) .metric-value::before { content: "💲 "; }
+        .loading-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-left: 15px;
+            color: #3498db;
+        }
+        .loading-indicator.active {
+            display: flex;
+        }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e3f2fd;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <img src="argonne logo.png" alt="Argonne National Laboratory" class="header-logo">
+        <div class="header-text">
+            <h1 class="header-title">ACCERT Output Analyzer - ACCERT-Plus</h1>
+            <p class="header-credit">Developed by Daeho Chang, Argonne National Laboratory</p>
+        </div>
+        <div class="navigation-links">
+            <a href="index.html" class="nav-link">← Back to Portal</a>
+        </div>
+    </div>
+
+    <div class="upload-section">
+        <h2>Upload & Process ACCERT Output File</h2>
+        
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <ol>
+                <li>Upload your <code>output.out</code> file from ACCERT</li>
+                <li>The file will be automatically processed to extract table data</li>
+                <li>View and analyze results in the interactive table and charts below</li>
+            </ol>
+        </div>
+        
+        <div class="file-input-container" id="dropZone">
+            <p><strong>Drag and drop your output.out file here</strong></p>
+            <p>or</p>
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                Choose File
+            </button>
+            <input type="file" id="fileInput" accept=".out,.txt" />
+        </div>
+
+        <div class="file-info" id="fileInfo">
+            <h3>File Information</h3>
+            <p><strong>Name:</strong> <span id="fileName"></span></p>
+            <p><strong>Size:</strong> <span id="fileSize"></span></p>
+            <p><strong>Type:</strong> <span id="fileType"></span></p>
+        </div>
+
+        <button class="process-btn" id="processBtn" disabled>Process File</button>
+        
+        <div class="status" id="status"></div>
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="spinner"></div>
+            <span>Processing file...</span>
+        </div>
+    </div>
+
+    <!-- Combined Cost Metrics -->
+    <div class="metrics-summary" id="metricsSummary" style="display: none;">
+        <div class="metric-card total-cost-card">
+            <div class="metric-value" id="totalCost">$0</div>
+            <div class="metric-label">Total Cost</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="totalAccounts">0</div>
+            <div class="metric-label">Total Accounts</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="levelCount">0</div>
+            <div class="metric-label">Hierarchy Levels</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="avgCostPerAccount">$0</div>
+            <div class="metric-label">Average Per Account</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="electricalOutput">-- MW</div>
+            <div class="metric-label">Electrical Output</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="thermalOutput">-- MW</div>
+            <div class="metric-label">Thermal Output</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" id="costPerKW">$0/kW</div>
+            <div class="metric-label">Cost per kW</div>
+        </div>
+    </div>
+
+    <div id="controls-container" style="display: none;">
+        <div id="search-container">
+            <input type="text" id="searchInput" placeholder="Search table...">
+        </div>
+        <div>
+            <button id="groupBtn">Group by Level</button>
+            <button id="hierarchicalGroupBtn">Hierarchical Group</button>
+            <button id="chartBtn">Show Charts</button>
+            <button id="downloadBtn">Download as CSV</button>
+            <button id="printPdfBtn">Print to PDF</button>
+        </div>
+    </div>
+
+    <div class="chart-container" id="chartContainer">
+        <div class="chart-controls">
+            <label for="chartType">Chart Type:</label>
+            <select id="chartType" class="chart-type-selector">
+                <option value="pie">Pie Chart</option>
+                <option value="bar">Bar Chart</option>
+                <option value="doughnut">Doughnut Chart</option>
+            </select>
+            <label for="levelSelector">Level:</label>
+            <select id="levelSelector" class="chart-type-selector">
+                <option value="0">Level 0 (Plant)</option>
+                <option value="1">Level 1 (Major Accounts)</option>
+                <option value="2">Level 2 (Sub-accounts)</option>
+                <option value="3">Level 3 (Components)</option>
+                <option value="4">Level 4 (Sub-components)</option>
+            </select>
+            <label for="accountFilter">Filter Accounts:</label>
+            <input type="text" id="accountFilter" class="chart-type-selector" placeholder="Filter by account code or name...">
+            <label for="accountSelector">Accounts:</label>
+            <select id="accountSelector" class="chart-type-selector account-selector" multiple>
+                <option value="all">All Accounts</option>
+            </select>
+        </div>
+        <div class="chart-options">
+            <button id="selectAllBtn" class="select-all-btn">Select All</button>
+            <button id="clearSelectionBtn" class="clear-selection-btn">Clear Selection</button>
+            <button id="selectParentGroupBtn" class="select-all-btn" style="background: #27ae60;">Select Parent Group</button>
+            <button id="clearFilterBtn" class="select-all-btn" style="background: #8e44ad;">Clear Filter</button>
+            <button id="refreshChartBtn" class="select-all-btn" style="background: #16a085;">Refresh Chart</button>
+            <span id="selectionInfo">No accounts selected</span>
+        </div>
+        <div class="chart-info" id="chartInfo">
+            Select a level and accounts to generate a chart showing cost distribution.
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="chartCanvas" width="400" height="300"></canvas>
+        </div>
+    </div>
+
+    <table id="dataTable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+    
+    <!-- Error Log Display -->
+    <div id="errorLog" class="error-log">
+        <div class="error-log-header">⚠️ Error Log</div>
+        <div class="error-log-content" id="errorLogContent"></div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const processBtn = document.getElementById('processBtn');
+            const status = document.getElementById('status');
+            const fileInfo = document.getElementById('fileInfo');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const searchInput = document.getElementById('searchInput');
+            const dataTable = document.getElementById('dataTable');
+            const tableHead = dataTable.querySelector('thead');
+            const tableBody = dataTable.querySelector('tbody');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const printPdfBtn = document.getElementById('printPdfBtn');
+            const groupBtn = document.getElementById('groupBtn');
+            const hierarchicalGroupBtn = document.getElementById('hierarchicalGroupBtn');
+            const chartBtn = document.getElementById('chartBtn');
+            const chartContainer = document.getElementById('chartContainer');
+            const chartType = document.getElementById('chartType');
+            const levelSelector = document.getElementById('levelSelector');
+            const accountFilter = document.getElementById('accountFilter');
+            const accountSelector = document.getElementById('accountSelector');
+            const selectAllBtn = document.getElementById('selectAllBtn');
+            const clearSelectionBtn = document.getElementById('clearSelectionBtn');
+            const selectParentGroupBtn = document.getElementById('selectParentGroupBtn');
+            const clearFilterBtn = document.getElementById('clearFilterBtn');
+            const refreshChartBtn = document.getElementById('refreshChartBtn');
+            const selectionInfo = document.getElementById('selectionInfo');
+            const chartInfo = document.getElementById('chartInfo');
+            const metricsSummary = document.getElementById('metricsSummary');
+            const controlsContainer = document.getElementById('controls-container');
+
+            // State variables
+            let selectedFile = null;
+            let tableData = [];
+            let filteredData = [];
+            let groupedData = {};
+            let hierarchicalData = {};
+            let sortColumn = -1;
+            let errorLogEntries = [];
+
+            // Dynamic value formatting function
+            function formatValue(value, includeSymbol = true) {
+                if (value === 0 || isNaN(value)) {
+                    return includeSymbol ? '$0' : '0';
+                }
+                
+                const absValue = Math.abs(value);
+                let formattedValue, unit, suffix;
+                
+                if (absValue >= 1000000000) {
+                    // Billions
+                    formattedValue = (value / 1000000000).toFixed(2);
+                    unit = 'billion';
+                    suffix = 'B';
+                } else if (absValue >= 1000000) {
+                    // Millions
+                    formattedValue = (value / 1000000).toFixed(2);
+                    unit = 'million';
+                    suffix = 'M';
+                } else if (absValue >= 1000) {
+                    // Thousands
+                    formattedValue = (value / 1000).toFixed(2);
+                    unit = 'thousand';
+                    suffix = 'K';
+                } else {
+                    // Less than thousands - show as actual dollars
+                    formattedValue = value.toFixed(2);
+                    unit = 'dollar';
+                    suffix = '';
+                }
+                
+                // Remove unnecessary trailing zeros and decimal point
+                formattedValue = parseFloat(formattedValue).toString();
+                
+                if (includeSymbol) {
+                    return `$${formattedValue}${suffix}`;
+                } else {
+                    return `${formattedValue}${suffix}`;
+                }
+            }
+
+            // Get appropriate unit for display purposes
+            function getDisplayUnit(values) {
+                if (!Array.isArray(values) || values.length === 0) return 'dollars';
+                
+                const maxValue = Math.max(...values.map(v => Math.abs(v)));
+                
+                if (maxValue >= 1000000000) {
+                    return 'billions';
+                } else if (maxValue >= 1000000) {
+                    return 'millions';
+                } else if (maxValue >= 1000) {
+                    return 'thousands';
+                } else {
+                    return 'dollars';
+                }
+            }
+
+            // Error Logging System
+            function logError(errorType, details = {}) {
+                const timestamp = new Date().toISOString();
+                const errorEntry = {
+                    timestamp,
+                    type: errorType,
+                    details,
+                    userAgent: navigator.userAgent,
+                    url: window.location.href
+                };
+                
+                errorLogEntries.push(errorEntry);
+                
+                // Update error log display
+                updateErrorLogDisplay();
+                
+                // Console log for debugging (in development)
+                console.error('Application Error:', errorEntry);
+                
+                // Could send to external logging service in production
+                // sendToLoggingService(errorEntry);
+            }
+            
+            function updateErrorLogDisplay() {
+                const errorLogContent = document.getElementById('errorLogContent');
+                const errorLog = document.getElementById('errorLog');
+                
+                if (errorLogEntries.length === 0) {
+                    errorLog.classList.remove('show');
+                    return;
+                }
+                
+                errorLogContent.innerHTML = '';
+                
+                // Show only last 5 errors
+                const recentErrors = errorLogEntries.slice(-5);
+                
+                recentErrors.forEach(entry => {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.style.marginBottom = '8px';
+                    errorDiv.style.paddingBottom = '5px';
+                    errorDiv.style.borderBottom = '1px solid #f0f0f0';
+                    
+                    const timeStr = new Date(entry.timestamp).toLocaleTimeString();
+                    const errorText = document.createElement('div');
+                    
+                    const timeEl = document.createElement('strong');
+                    timeEl.textContent = timeStr;
+                    
+                    const typeEl = document.createElement('span');
+                    typeEl.style.color = '#dc3545';
+                    typeEl.textContent = entry.type;
+                    
+                    const detailsEl = document.createElement('small');
+                    detailsEl.textContent = JSON.stringify(entry.details, null, 2);
+                    
+                    errorText.appendChild(timeEl);
+                    errorText.appendChild(document.createElement('br'));
+                    errorText.appendChild(typeEl);
+                    errorText.appendChild(document.createElement('br'));
+                    errorText.appendChild(detailsEl);
+                    
+                    errorDiv.appendChild(errorText);
+                    errorLogContent.appendChild(errorDiv);
+                });
+                
+                errorLog.classList.add('show');
+                
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    errorLog.classList.remove('show');
+                }, 10000);
+            }
+            
+            // Comprehensive File Upload Validation
+            function validateFileUpload(file) {
+                const validationResult = {
+                    isValid: false,
+                    message: '',
+                    reason: ''
+                };
+                
+                // 1. File size validation
+                const maxFileSize = 50 * 1024 * 1024; // 50MB limit
+                if (file.size > maxFileSize) {
+                    validationResult.message = `File too large: ${formatFileSize(file.size)}. Maximum size is 50MB.`;
+                    validationResult.reason = 'FILE_TOO_LARGE';
+                    return validationResult;
+                }
+                
+                if (file.size === 0) {
+                    validationResult.message = 'File appears to be empty (0 bytes).';
+                    validationResult.reason = 'EMPTY_FILE';
+                    return validationResult;
+                }
+                
+                // 2. File extension validation
+                const allowedExtensions = ['.out', '.txt'];
+                const fileName = file.name.toLowerCase();
+                const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+                
+                if (!hasValidExtension) {
+                    validationResult.message = `Invalid file extension. Allowed: ${allowedExtensions.join(', ')}. Found: ${getFileExtension(fileName)}`;
+                    validationResult.reason = 'INVALID_EXTENSION';
+                    return validationResult;
+                }
+                
+                // 3. File type validation (MIME type)
+                const allowedTypes = ['text/plain', 'application/octet-stream', ''];
+                if (!allowedTypes.includes(file.type) && file.type !== '') {
+                    validationResult.message = `Invalid file type: ${file.type}. Expected text file.`;
+                    validationResult.reason = 'INVALID_MIME_TYPE';
+                    return validationResult;
+                }
+                
+                // 4. File name validation (security check)
+                const dangerousPatterns = [/\.exe$/i, /\.bat$/i, /\.cmd$/i, /\.scr$/i, /\.com$/i, /\.pif$/i];
+                if (dangerousPatterns.some(pattern => pattern.test(fileName))) {
+                    validationResult.message = 'Executable files are not allowed for security reasons.';
+                    validationResult.reason = 'DANGEROUS_FILE_TYPE';
+                    return validationResult;
+                }
+                
+                // 5. File name length validation
+                if (fileName.length > 255) {
+                    validationResult.message = 'File name is too long. Maximum 255 characters.';
+                    validationResult.reason = 'FILENAME_TOO_LONG';
+                    return validationResult;
+                }
+                
+                // 6. Special character validation in filename
+                const invalidChars = /[<>:"|\\?\\*\\x00-\\x1f]/;
+                if (invalidChars.test(fileName)) {
+                    validationResult.message = 'File name contains invalid characters.';
+                    validationResult.reason = 'INVALID_FILENAME_CHARS';
+                    return validationResult;
+                }
+                
+                validationResult.isValid = true;
+                validationResult.message = 'File validation passed';
+                return validationResult;
+            }
+            
+            function getFileExtension(fileName) {
+                const lastDot = fileName.lastIndexOf('.');
+                return lastDot === -1 ? '(no extension)' : fileName.substring(lastDot);
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Global error handler
+            window.addEventListener('error', function(event) {
+                logError('JavaScript Error', {
+                    message: event.error?.message || event.message,
+                    filename: event.filename,
+                    lineno: event.lineno,
+                    colno: event.colno,
+                    stack: event.error?.stack
+                });
+            });
+            
+            // Unhandled promise rejection handler
+            window.addEventListener('unhandledrejection', function(event) {
+                logError('Unhandled Promise Rejection', {
+                    reason: event.reason,
+                    promise: event.promise.toString()
+                });
+            });
+            let sortAsc = true;
+            let isGrouped = false;
+            let isHierarchical = false;
+            let chartInstance = null;
+
+            // CSV Extractor functionality (embedded)
+            function extractTableFromText(textContent) {
+                const lines = textContent.split('\n');
+                let header = [];
+                let dataRows = [];
+                
+                const headerKeyword = 'code_of_account';
+                let headerIndex = -1;
+                
+                // Find header line
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].includes(headerKeyword) && lines[i].includes('|')) {
+                        headerIndex = i;
+                        break;
+                    }
+                }
+                
+                if (headerIndex === -1) {
+                    throw new Error(`Could not find table header with keyword '${headerKeyword}'`);
+                }
+
+                // Extract header
+                const headerLine = lines[headerIndex];
+                header = headerLine.split('|').map(h => h.trim()).filter(h => h);
+                
+                // Extract data rows (start 2 lines after header, skipping separator)
+                for (let i = headerIndex + 2; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line.startsWith('+--')) break; // End of table
+                    
+                    if (line.includes('|')) {
+                        const row = line.split('|').map(item => item.trim()).filter(item => item);
+                        if (row.length === header.length) {
+                            dataRows.push(row);
+                        }
+                    }
+                }
+                
+                if (dataRows.length === 0) {
+                    throw new Error('No data rows were found in the table');
+                }
+                
+                return { header, dataRows };
+            }
+
+            function processACCERTData(header, dataRows) {
+                const processedData = [];
+                
+                dataRows.forEach(row => {
+                    const rowData = {};
+                    header.forEach((col, index) => {
+                        rowData[col] = row[index] || '';
+                    });
+                    processedData.push(rowData);
+                });
+                
+                return processedData;
+            }
+
+            function getLevelFromCode(code) {
+                const digits = code.replace(/\D/g, '');
+                return digits.length - 1;
+            }
+
+            function getParentCode(code) {
+                const level = getLevelFromCode(code);
+                if (level <= 0) return null;
+                return code.substring(0, level);
+            }
+
+            function buildHierarchicalStructure(data) {
+                const hierarchy = {};
+                const sortedData = [...data].sort((a, b) => a.code_of_account.localeCompare(b.code_of_account));
+                
+                sortedData.forEach(row => {
+                    const code = row.code_of_account;
+                    const level = getLevelFromCode(code);
+                    
+                    if (!hierarchy[code]) {
+                        hierarchy[code] = {
+                            data: row,
+                            children: [],
+                            level: level,
+                            totalCost: parseFloat(row.total_cost) || 0,
+                            expanded: false
+                        };
+                    }
+                });
+                
+                Object.keys(hierarchy).forEach(code => {
+                    const parentCode = getParentCode(code);
+                    if (parentCode && hierarchy[parentCode]) {
+                        hierarchy[parentCode].children.push(code);
+                        hierarchy[parentCode].totalCost += hierarchy[code].totalCost;
+                    }
+                });
+                
+                return hierarchy;
+            }
+
+            function groupDataByLevel(data) {
+                const grouped = {};
+                
+                const sortedData = [...data].sort((a, b) => a.code_of_account.localeCompare(b.code_of_account));
+                
+                sortedData.forEach(row => {
+                    const level = getLevelFromCode(row.code_of_account);
+                    const parentCode = getParentCode(row.code_of_account);
+                    
+                    if (!grouped[level]) {
+                        grouped[level] = {};
+                    }
+                    
+                    if (!grouped[level][row.code_of_account]) {
+                        grouped[level][row.code_of_account] = {
+                            header: row,
+                            children: [],
+                            totalCost: parseFloat(row.total_cost) || 0
+                        };
+                    }
+                    
+                    if (parentCode && grouped[level-1] && grouped[level-1][parentCode]) {
+                        grouped[level-1][parentCode].children.push(row);
+                    }
+                });
+                
+                return grouped;
+            }
+
+            // Use the dynamic formatValue function instead of formatCurrency
+            function formatCurrency(value) {
+                return formatValue(value);
+            }
+
+            // Global variable to store raw file content
+            let rawFileContent = '';
+
+            function extractPowerOutput() {
+                if (!rawFileContent) {
+                    return { electrical: '-- MW', thermal: '-- MW', electricalMW: 0, thermalMW: 0 };
+                }
+
+                let electricalMW = 0;
+                let thermalMW = 0;
+                
+                // Common patterns for electrical output in ACCERT files
+                const electricalPatterns = [
+                    /electrical\s+output[:\s]+([0-9.,]+)\s*MW/i,
+                    /electric\s+power[:\s]+([0-9.,]+)\s*MW/i,
+                    /net\s+electrical[:\s]+([0-9.,]+)\s*MW/i,
+                    /power\s+output[:\s]+([0-9.,]+)\s*MW/i,
+                    /electrical\s+capacity[:\s]+([0-9.,]+)\s*MW/i,
+                    /electric[:\s]+([0-9.,]+)\s*MW/i
+                ];
+                
+                // Common patterns for thermal output in ACCERT files
+                const thermalPatterns = [
+                    /thermal\s+output[:\s]+([0-9.,]+)\s*MW/i,
+                    /thermal\s+power[:\s]+([0-9.,]+)\s*MW/i,
+                    /reactor\s+thermal[:\s]+([0-9.,]+)\s*MW/i,
+                    /thermal\s+capacity[:\s]+([0-9.,]+)\s*MW/i,
+                    /thermal[:\s]+([0-9.,]+)\s*MW/i
+                ];
+
+                // Try to extract electrical output
+                for (const pattern of electricalPatterns) {
+                    const match = rawFileContent.match(pattern);
+                    if (match) {
+                        electricalMW = parseFloat(match[1].replace(/,/g, ''));
+                        break;
+                    }
+                }
+
+                // Try to extract thermal output
+                for (const pattern of thermalPatterns) {
+                    const match = rawFileContent.match(pattern);
+                    if (match) {
+                        thermalMW = parseFloat(match[1].replace(/,/g, ''));
+                        break;
+                    }
+                }
+
+                // Format display values
+                const electricalDisplay = electricalMW > 0 ? `${electricalMW.toLocaleString()} MW` : '-- MW';
+                const thermalDisplay = thermalMW > 0 ? `${thermalMW.toLocaleString()} MW` : '-- MW';
+
+                return {
+                    electrical: electricalDisplay,
+                    thermal: thermalDisplay,
+                    electricalMW: electricalMW,
+                    thermalMW: thermalMW
+                };
+            }
+
+            function updateMetrics() {
+                if (tableData.length === 0) return;
+                
+                // ACCERT cost data is in millions of dollars, so convert to actual dollars
+                const totalCostInMillions = tableData.reduce((sum, row) => {
+                    return sum + (parseFloat(row.total_cost) || 0);
+                }, 0);
+                
+                // Convert from millions to actual dollars for calculations
+                const totalCostInDollars = totalCostInMillions * 1000000;
+                
+                const totalAccounts = tableData.length;
+                const levels = new Set(tableData.map(row => getLevelFromCode(row.code_of_account)));
+                const levelCount = levels.size;
+                const avgCostPerAccountInDollars = totalAccounts > 0 ? totalCostInDollars / totalAccounts : 0;
+                
+                document.getElementById('totalCost').textContent = formatCurrency(totalCostInDollars);
+                document.getElementById('totalAccounts').textContent = totalAccounts;
+                document.getElementById('levelCount').textContent = levelCount;
+                document.getElementById('avgCostPerAccount').textContent = formatCurrency(avgCostPerAccountInDollars);
+                
+                // Extract and display power output from file content
+                const powerData = extractPowerOutput();
+                document.getElementById('electricalOutput').textContent = powerData.electrical;
+                document.getElementById('thermalOutput').textContent = powerData.thermal;
+                
+                // Calculate cost per kW if electrical output is available
+                if (powerData.electricalMW > 0) {
+                    const electricalOutputKW = powerData.electricalMW * 1000;
+                    const costPerKW = totalCostInDollars / electricalOutputKW;
+                    
+                    // Always format as $/kW but with appropriate scaling for large numbers
+                    let costPerKWText;
+                    if (costPerKW >= 1000) {
+                        // For very high costs, show with K, M, B scaling but keep /kW unit
+                        costPerKWText = `${formatValue(costPerKW, false)}/kW`;
+                    } else {
+                        // For costs under $1000/kW, show standard format
+                        costPerKWText = `$${costPerKW.toFixed(2)}/kW`;
+                    }
+                    
+                    document.getElementById('costPerKW').textContent = costPerKWText;
+                } else {
+                    document.getElementById('costPerKW').textContent = '-- /kW';
+                }
+                
+                // Show metrics summary and make upload section compact
+                metricsSummary.style.display = 'grid';
+                document.querySelector('.upload-section').classList.add('compact');
+            }
+
+            function renderTable(data) {
+                if (isHierarchical && hierarchicalData) {
+                    renderHierarchicalTable(hierarchicalData);
+                    return;
+                }
+                
+                if (isGrouped) {
+                    renderGroupedTable(groupedData);
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+
+                data.forEach((row, rowIndex) => {
+                    const tr = document.createElement('tr');
+                    
+                    const levelIndicator = document.createElement('td');
+                    const level = getLevelFromCode(row.code_of_account);
+                    // Create safe level indicator to prevent XSS
+                    levelIndicator.innerHTML = ''; // Clear first
+                    const levelSpan = document.createElement('span');
+                    levelSpan.className = `level-indicator level-${level}`;
+                    levelSpan.textContent = level; // Safe text content
+                    levelIndicator.appendChild(levelSpan);
+                    tr.appendChild(levelIndicator);
+
+                    Object.values(row).forEach(cell => {
+                        const td = document.createElement('td');
+                        td.textContent = cell;
+                        tr.appendChild(td);
+                    });
+                    tableBody.appendChild(tr);
+                });
+            }
+
+            function renderHeaders(keys) {
+                tableHead.innerHTML = '';
+                const headerRow = document.createElement('tr');
+                
+                const thLevel = document.createElement('th');
+                thLevel.textContent = 'Level';
+                headerRow.appendChild(thLevel);
+
+                keys.forEach((key, index) => {
+                    const th = document.createElement('th');
+                    
+                    // Add units to total_cost column header
+                    if (key.toLowerCase().includes('total_cost') || key.toLowerCase().includes('cost')) {
+                        // Determine the appropriate unit based on the data
+                        const sampleCosts = tableData.slice(0, 10).map(row => parseFloat(row[key]) || 0);
+                        const maxCost = Math.max(...sampleCosts);
+                        const unit = maxCost >= 1000 ? '(Billions $)' : '(Millions $)';
+                        th.textContent = `${key} ${unit}`;
+                    } else {
+                        th.textContent = key;
+                    }
+                    
+                    th.addEventListener('click', () => sortData(index + 1));
+                    headerRow.appendChild(th);
+                });
+                tableHead.appendChild(headerRow);
+            }
+
+            function sortData(columnIndex) {
+                if (columnIndex === 0) return;
+                if (sortColumn === columnIndex) {
+                    sortAsc = !sortAsc;
+                } else {
+                    sortColumn = columnIndex;
+                    sortAsc = true;
+                }
+
+                const headers = Array.from(tableHead.querySelectorAll('th'));
+                headers.forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+                headers[columnIndex].classList.add(sortAsc ? 'sort-asc' : 'sort-desc');
+
+                const key = Object.keys(filteredData[0])[columnIndex - 1];
+
+                filteredData.sort((a, b) => {
+                    let valA = a[key];
+                    let valB = b[key];
+
+                    const numA = parseFloat(valA?.replace?.(/,/g, '') ?? '');
+                    const numB = parseFloat(valB?.replace?.(/,/g, '') ?? '');
+                    if (!isNaN(numA) && !isNaN(numB)) {
+                        valA = numA;
+                        valB = numB;
+                    }
+
+                    if (valA < valB) {
+                        return sortAsc ? -1 : 1;
+                    }
+                    if (valA > valB) {
+                        return sortAsc ? 1 : -1;
+                    }
+                    return 0;
+                });
+                renderTable(filteredData);
+            }
+
+            function filterTable() {
+                const query = searchInput.value.toLowerCase();
+                filteredData = tableData.filter(row => {
+                    return Object.values(row).some(cell =>
+                        cell && cell.toString().toLowerCase().includes(query)
+                    );
+                });
+                renderTable(filteredData);
+            }
+
+            // File handling functions
+            function handleFile(file) {
+                selectedFile = file;
+                
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = formatFileSize(file.size);
+                document.getElementById('fileType').textContent = file.type || 'text/plain';
+                fileInfo.style.display = 'block';
+                
+                processBtn.disabled = false;
+                
+                showStatus('File selected: ' + file.name, 'info');
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            function showStatus(message, type) {
+                status.textContent = message;
+                status.className = 'status ' + type;
+                status.style.display = 'block';
+            }
+
+            // Event listeners for file upload
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+
+            processBtn.addEventListener('click', async () => {
+                if (!selectedFile) {
+                    showStatus('Please select a file first', 'error');
+                    return;
+                }
+
+                // Comprehensive file validation with detailed checking
+                const validationResult = validateFileUpload(selectedFile);
+                if (!validationResult.isValid) {
+                    showStatus(validationResult.message, 'error');
+                    logError('File Validation Failed', {
+                        fileName: selectedFile.name,
+                        fileSize: selectedFile.size,
+                        fileType: selectedFile.type,
+                        reason: validationResult.reason
+                    });
+                    return;
+                }
+
+                processBtn.disabled = true;
+                processBtn.textContent = 'Processing...';
+                loadingIndicator.classList.add('active');
+                showStatus('Processing file...', 'info');
+
+                try {
+                    const text = await selectedFile.text();
+                    
+                    // Store raw file content for power output extraction
+                    rawFileContent = text;
+                    
+                    // Basic content validation
+                    if (text.length === 0) {
+                        throw new Error('File appears to be empty');
+                    }
+                    const { header, dataRows } = extractTableFromText(text);
+                    tableData = processACCERTData(header, dataRows);
+                    filteredData = [...tableData];
+
+                    if (tableData.length > 0) {
+                        renderHeaders(Object.keys(tableData[0]));
+                        renderTable(filteredData);
+                        updateMetrics();
+                        
+                        groupedData = groupDataByLevel(filteredData);
+                        hierarchicalData = buildHierarchicalStructure(filteredData);
+                        
+                        controlsContainer.style.display = 'flex';
+                        showStatus(`File processed successfully! Extracted ${tableData.length} records.`, 'success');
+                    } else {
+                        showStatus('No data found in the file', 'error');
+                    }
+                } catch (error) {
+                    const errorMessage = 'Error processing file: ' + error.message;
+                    showStatus(errorMessage, 'error');
+                    logError('File Processing Error', {
+                        fileName: selectedFile.name,
+                        fileSize: selectedFile.size,
+                        errorMessage: error.message,
+                        errorStack: error.stack
+                    });
+                } finally {
+                    processBtn.disabled = false;
+                    processBtn.textContent = 'Process File';
+                    loadingIndicator.classList.remove('active');
+                }
+            });
+
+            // Search functionality
+            searchInput.addEventListener('keyup', filterTable);
+
+            // Download functionality
+            downloadBtn.addEventListener('click', () => {
+                if (filteredData.length === 0) return;
+                const keys = Object.keys(filteredData[0]);
+                let csvRows = [keys.join(',')];
+                filteredData.forEach(row => {
+                    let rowStr = keys.map(key => {
+                        let v = row[key] ?? '';
+                        if (typeof v === 'string' && (v.includes(',') || v.includes('"') || v.includes('\n'))) {
+                            v = '"' + v.replace(/"/g, '""') + '"';
+                        }
+                        return v;
+                    }).join(',');
+                    csvRows.push(rowStr);
+                });
+                const csvContent = csvRows.join('\r\n');
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'accert_analysis.csv';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }, 100);
+            });
+
+            // Print functionality
+            printPdfBtn.addEventListener('click', () => {
+                const chartWasVisible = chartContainer.classList.contains('active');
+                if (chartWasVisible) {
+                    chartContainer.classList.remove('active');
+                }
+                
+                const originalTitle = document.title;
+                document.title = 'ACCERT Analysis Report - ' + new Date().toLocaleDateString();
+                
+                window.print();
+                
+                document.title = originalTitle;
+                if (chartWasVisible) {
+                    chartContainer.classList.add('active');
+                }
+            });
+
+            // Group functionality (simplified for this integration)
+            groupBtn.addEventListener('click', () => {
+                isGrouped = !isGrouped;
+                isHierarchical = false;
+                groupBtn.classList.toggle('active');
+                hierarchicalGroupBtn.classList.remove('active');
+                renderTable(filteredData);
+            });
+
+            hierarchicalGroupBtn.addEventListener('click', () => {
+                isHierarchical = !isHierarchical;
+                isGrouped = false;
+                hierarchicalGroupBtn.classList.toggle('active');
+                groupBtn.classList.remove('active');
+                renderTable(filteredData);
+            });
+
+            // Missing rendering functions
+            function renderGroupedTable(grouped) {
+                tableBody.innerHTML = '';
+                
+                Object.keys(grouped).sort((a, b) => parseInt(a) - parseInt(b)).forEach(level => {
+                    Object.keys(grouped[level]).forEach(code => {
+                        const group = grouped[level][code];
+                        
+                        // Group header row
+                        const headerTr = document.createElement('tr');
+                        headerTr.className = 'group-header';
+                        headerTr.style.cursor = 'pointer';
+                        
+                        const levelTd = document.createElement('td');
+                        // Create safe level indicator to prevent XSS
+                        const levelSpan = document.createElement('span');
+                        levelSpan.className = `level-indicator level-${level}`;
+                        levelSpan.textContent = level; // Safe text content
+                        levelTd.appendChild(levelSpan);
+                        headerTr.appendChild(levelTd);
+                        
+                        const headerTd = document.createElement('td');
+                        headerTd.colSpan = Object.keys(tableData[0]).length;
+                        const description = getAccountDescription(group.header);
+                        // Create safe header content to prevent XSS
+                        const strongEl = document.createElement('strong');
+                        strongEl.textContent = `${group.header.code_of_account} - ${description}`;
+                        const summarySpan = document.createElement('span');
+                        summarySpan.className = 'group-summary';
+                                                    // Convert from millions to actual dollars for display
+                            const groupCostInDollars = group.totalCost * 1000000;
+                            summarySpan.textContent = `(Cost: ${formatCurrency(groupCostInDollars)}, Items: ${group.children.length})`;
+                        headerTd.appendChild(strongEl);
+                        headerTd.appendChild(document.createTextNode(' '));
+                        headerTd.appendChild(summarySpan);
+                        headerTr.appendChild(headerTd);
+                        
+                        tableBody.appendChild(headerTr);
+                        
+                        // Group content
+                        const contentDiv = document.createElement('tr');
+                        contentDiv.className = 'group-content';
+                        contentDiv.style.display = 'none';
+                        
+                        // Add click handler to toggle
+                        headerTr.addEventListener('click', () => {
+                            contentDiv.style.display = contentDiv.style.display === 'none' ? 'table-row' : 'none';
+                        });
+                        
+                        group.children.forEach(child => {
+                            const childTr = document.createElement('tr');
+                            childTr.className = 'subgroup-row';
+                            
+                            const childLevelTd = document.createElement('td');
+                            const childLevel = getLevelFromCode(child.code_of_account);
+                            // Create safe level indicator to prevent XSS
+                            const childLevelSpan = document.createElement('span');
+                            childLevelSpan.className = `level-indicator level-${childLevel}`;
+                            childLevelSpan.textContent = childLevel;
+                            childLevelTd.appendChild(childLevelSpan);
+                            childTr.appendChild(childLevelTd);
+                            
+                            Object.values(child).forEach(cell => {
+                                const td = document.createElement('td');
+                                td.textContent = cell;
+                                childTr.appendChild(td);
+                            });
+                            
+                            tableBody.appendChild(childTr);
+                        });
+                    });
+                });
+            }
+            
+            function renderHierarchicalTable(hierarchy) {
+                tableBody.innerHTML = '';
+                
+                function renderNode(code, level = 0) {
+                    const node = hierarchy[code];
+                    if (!node) return;
+                    
+                    const tr = document.createElement('tr');
+                    tr.style.paddingLeft = `${level * 20}px`;
+                    
+                    const levelTd = document.createElement('td');
+                    // Create safe level indicator to prevent XSS
+                    const levelSpan = document.createElement('span');
+                    levelSpan.className = `level-indicator level-${node.level}`;
+                    levelSpan.textContent = node.level; // Safe text content
+                    levelTd.appendChild(levelSpan);
+                    tr.appendChild(levelTd);
+                    
+                    Object.values(node.data).forEach((cell, index) => {
+                        const td = document.createElement('td');
+                        if (index === 0) { // First column (code)
+                            td.style.paddingLeft = `${level * 20}px`;
+                            // Create safe HTML structure to prevent XSS
+                            const indentSpan = document.createElement('span');
+                            indentSpan.innerHTML = '&nbsp;&nbsp;'.repeat(level);
+                            const textSpan = document.createElement('span');
+                            textSpan.textContent = cell; // Safe text content
+                            td.appendChild(indentSpan);
+                            td.appendChild(textSpan);
+                        } else {
+                            td.textContent = cell;
+                        }
+                        tr.appendChild(td);
+                    });
+                    
+                    tableBody.appendChild(tr);
+                    
+                    // Render children
+                    node.children.forEach(childCode => {
+                        renderNode(childCode, level + 1);
+                    });
+                }
+                
+                // Start with root nodes (level 0)
+                Object.keys(hierarchy).filter(code => hierarchy[code].level === 0).forEach(rootCode => {
+                    renderNode(rootCode);
+                });
+            }
+            
+            // Chart functionality
+            function updateAccountSelector() {
+                const selectedLevel = parseInt(levelSelector.value);
+                const filterText = accountFilter.value.toLowerCase();
+                
+                // Clear existing options
+                accountSelector.innerHTML = '<option value="all">All Accounts</option>';
+                
+                // Filter accounts by level and search text
+                const accountsAtLevel = tableData.filter(row => {
+                    const level = getLevelFromCode(row.code_of_account);
+                    const matchesLevel = level === selectedLevel;
+                    
+                    // Get description from various possible field names
+                    const description = getAccountDescription(row);
+                    
+                    const matchesFilter = !filterText || 
+                        row.code_of_account.toLowerCase().includes(filterText) ||
+                        (description && description.toLowerCase().includes(filterText));
+                    return matchesLevel && matchesFilter;
+                });
+                
+                // Group accounts by their parent account (superaccount)
+                const groupedAccounts = {};
+                accountsAtLevel.forEach(row => {
+                    const parentCode = getParentCode(row.code_of_account);
+                    const parentKey = parentCode || 'root';
+                    
+                    if (!groupedAccounts[parentKey]) {
+                        groupedAccounts[parentKey] = [];
+                    }
+                    groupedAccounts[parentKey].push(row);
+                });
+                
+                // Sort parent accounts
+                const sortedParentKeys = Object.keys(groupedAccounts).sort((a, b) => {
+                    if (a === 'root') return -1;
+                    if (b === 'root') return 1;
+                    return a.localeCompare(b);
+                });
+                
+                // Add grouped accounts to selector
+                sortedParentKeys.forEach(parentKey => {
+                    const accounts = groupedAccounts[parentKey];
+                    
+                    // Sort accounts within each group
+                    accounts.sort((a, b) => a.code_of_account.localeCompare(b.code_of_account));
+                    
+                    // Add parent group header if there's a parent and multiple groups
+                    if (parentKey !== 'root' && sortedParentKeys.length > 1) {
+                        const parentAccount = tableData.find(row => row.code_of_account === parentKey);
+                        if (parentAccount) {
+                            const parentDescription = getAccountDescription(parentAccount);
+                            const totalCost = accounts.reduce((sum, acc) => sum + (parseFloat(acc.total_cost) || 0), 0);
+                            
+                                                         const optgroup = document.createElement('optgroup');
+                             // Convert total cost from millions to actual dollars for display
+                            const totalCostInDollars = totalCost * 1000000;
+                            optgroup.label = `${parentKey} - ${parentDescription} (${accounts.length} subaccounts, ${formatCurrency(totalCostInDollars)}) [Click to select all]`;
+                             optgroup.style.cursor = 'pointer';
+                             optgroup.style.fontWeight = 'bold';
+                             optgroup.style.color = '#2980b9';
+                             optgroup.title = 'Click to select all subaccounts in this group';
+                             optgroup.dataset.parentCode = parentKey;
+                             accountSelector.appendChild(optgroup);
+                            
+                            // Add subaccounts under this parent
+                            accounts.forEach(row => {
+                                const option = document.createElement('option');
+                                option.value = row.code_of_account;
+                                
+                                const description = getAccountDescription(row);
+                                const cost = parseFloat(row.total_cost) || 0;
+                                // Convert from millions to actual dollars for display
+                                const costInDollars = cost * 1000000;
+                                const costDisplay = formatCurrency(costInDollars);
+                                const parentCost = parentAccount ? parseFloat(parentAccount.total_cost) || 0 : totalCost;
+                                const percentage = parentCost > 0 ? ((cost / parentCost) * 100).toFixed(1) : '0.0';
+                                
+                                // Enhanced display with percentage of parent
+                                option.textContent = `  ${row.code_of_account} - ${description} (${costDisplay}, ${percentage}% of parent)`;
+                                optgroup.appendChild(option);
+                            });
+                        }
+                    } else {
+                        // Add accounts without grouping (for single group or root level)
+                        accounts.forEach(row => {
+                            const option = document.createElement('option');
+                            option.value = row.code_of_account;
+                            
+                            const description = getAccountDescription(row);
+                            const cost = parseFloat(row.total_cost) || 0;
+                            // Convert from millions to actual dollars for display
+                            const costInDollars = cost * 1000000;
+                            const costDisplay = formatCurrency(costInDollars);
+                            
+                            // Standard display for ungrouped accounts
+                            option.textContent = `${row.code_of_account} - ${description} (${costDisplay})`;
+                            accountSelector.appendChild(option);
+                        });
+                    }
+                });
+                
+                // Add click handlers to optgroup elements for easy group selection
+                addOptgroupClickHandlers();
+                
+                updateSelectionInfo();
+            }
+            
+            // Function to add click handlers to optgroup elements
+            function addOptgroupClickHandlers() {
+                const optgroups = accountSelector.querySelectorAll('optgroup');
+                optgroups.forEach(optgroup => {
+                    optgroup.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const parentCode = optgroup.dataset.parentCode;
+                        if (!parentCode) return;
+                        
+                        // Clear current selection first
+                        Array.from(accountSelector.options).forEach(option => option.selected = false);
+                        
+                        // Select all options in this optgroup
+                        const optionsInGroup = optgroup.querySelectorAll('option');
+                        optionsInGroup.forEach(option => {
+                            option.selected = true;
+                        });
+                        
+                        // Visual feedback
+                        optgroup.style.backgroundColor = '#e8f4fd';
+                        setTimeout(() => {
+                            optgroup.style.backgroundColor = '';
+                        }, 200);
+                        
+                        updateSelectionInfo();
+                        if (chartContainer.classList.contains('active')) {
+                            createChart();
+                        }
+                    });
+                    
+                    // Add hover effects
+                    optgroup.addEventListener('mouseenter', () => {
+                        optgroup.style.backgroundColor = '#f0f8ff';
+                    });
+                    
+                    optgroup.addEventListener('mouseleave', () => {
+                        optgroup.style.backgroundColor = '';
+                    });
+                });
+            }
+            
+            // Helper function to get account description from various possible field names
+            function getAccountDescription(row) {
+                // Try different common field names for descriptions in ACCERT output
+                const possibleDescFields = [
+                    'description',
+                    'item_description', 
+                    'account_description',
+                    'desc',
+                    'item',
+                    'account_name',
+                    'name'
+                ];
+                
+                for (const field of possibleDescFields) {
+                    if (row[field] && row[field].trim()) {
+                        return row[field].trim();
+                    }
+                }
+                
+                // Fallback: look for any field that might contain description-like content
+                const keys = Object.keys(row);
+                for (const key of keys) {
+                    if (key.toLowerCase().includes('desc') || key.toLowerCase().includes('name')) {
+                        if (row[key] && row[key].trim() && row[key] !== row.code_of_account) {
+                            return row[key].trim();
+                        }
+                    }
+                }
+                
+                return 'No Description';
+            }
+            
+            function updateSelectionInfo() {
+                const selected = Array.from(accountSelector.selectedOptions);
+                const allSelected = selected.some(opt => opt.value === 'all');
+                
+                if (allSelected || selected.length === 0) {
+                    selectionInfo.textContent = `All accounts selected (${accountSelector.options.length - 1} total)`;
+                } else {
+                    // Group selected accounts by parent
+                    const parentGroups = {};
+                    selected.forEach(opt => {
+                        if (opt.value === 'all') return;
+                        const parentCode = getParentCode(opt.value) || 'root';
+                        if (!parentGroups[parentCode]) {
+                            parentGroups[parentCode] = [];
+                        }
+                        parentGroups[parentCode].push(opt.value);
+                    });
+                    
+                    const groupSummary = Object.keys(parentGroups).map(parent => {
+                        const count = parentGroups[parent].length;
+                        return parent === 'root' ? `${count} root accounts` : `${count} from ${parent}`;
+                    }).join(', ');
+                    
+                    selectionInfo.textContent = `${selected.length} accounts selected (${groupSummary})`;
+                }
+            }
+            
+            function createChart() {
+                const selectedLevel = parseInt(levelSelector.value);
+                const selectedAccounts = Array.from(accountSelector.selectedOptions);
+                const allSelected = selectedAccounts.some(opt => opt.value === 'all');
+                
+                let dataToChart;
+                if (allSelected || selectedAccounts.length === 0) {
+                    dataToChart = tableData.filter(row => getLevelFromCode(row.code_of_account) === selectedLevel);
+                } else {
+                    const selectedCodes = selectedAccounts.map(opt => opt.value).filter(val => val !== 'all');
+                    dataToChart = tableData.filter(row => selectedCodes.includes(row.code_of_account));
+                }
+                
+                if (dataToChart.length === 0) {
+                    chartInfo.textContent = 'No data available for the selected criteria.';
+                    return;
+                }
+                
+                // Calculate level totals for percentage calculations (in millions)
+                const levelTotals = {};
+                tableData.forEach(row => {
+                    const level = getLevelFromCode(row.code_of_account);
+                    if (!levelTotals[level]) {
+                        levelTotals[level] = 0;
+                    }
+                    levelTotals[level] += parseFloat(row.total_cost) || 0;
+                });
+                
+                // Prepare chart data with level percentages
+                const labels = dataToChart.map(row => {
+                    const description = getAccountDescription(row);
+                    const accountLevel = getLevelFromCode(row.code_of_account);
+                    const accountCost = parseFloat(row.total_cost) || 0;
+                    const levelTotal = levelTotals[accountLevel] || 0;
+                    const levelPercentage = levelTotal > 0 ? ((accountCost / levelTotal) * 100).toFixed(1) : '0.0';
+                    
+                    return `${row.code_of_account}: ${description} (${levelPercentage}% of Level ${accountLevel})`;
+                });
+                // Convert costs from millions to actual dollars for chart display
+                const costs = dataToChart.map(row => (parseFloat(row.total_cost) || 0) * 1000000);
+                const totalCost = costs.reduce((sum, cost) => sum + cost, 0);
+                
+                // Update chart info with level context
+                const selectedLevelTotal = levelTotals[selectedLevel] || 0;
+                // Convert level totals to actual dollars for percentage calculations
+                const selectedLevelTotalInDollars = selectedLevelTotal * 1000000;
+                const selectedAsPercentOfLevel = selectedLevelTotalInDollars > 0 ? ((totalCost / selectedLevelTotalInDollars) * 100).toFixed(1) : '0.0';
+                const allLevelsTotal = Object.values(levelTotals).reduce((sum, val) => sum + val, 0);
+                const allLevelsTotalInDollars = allLevelsTotal * 1000000;
+                const selectedAsPercentOfAll = allLevelsTotalInDollars > 0 ? ((totalCost / allLevelsTotalInDollars) * 100).toFixed(1) : '0.0';
+                
+                chartInfo.innerHTML = `
+                    <strong>Chart Data:</strong> ${dataToChart.length} accounts, 
+                    <strong>Total Cost:</strong> ${formatCurrency(totalCost)}, 
+                    <strong>Level:</strong> ${selectedLevel} | 
+                    <strong>Level Coverage:</strong> ${selectedAsPercentOfLevel}% of Level ${selectedLevel} (${formatCurrency(selectedLevelTotalInDollars)}) | 
+                    <strong>Overall:</strong> ${selectedAsPercentOfAll}% of all data
+                `;
+                
+                // Destroy existing chart
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+                
+                // Create new chart
+                const ctx = document.getElementById('chartCanvas').getContext('2d');
+                const selectedChartType = chartType.value;
+                
+                const config = {
+                    type: selectedChartType,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Cost (Million $)',
+                            data: costs,
+                            backgroundColor: [
+                                '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
+                                '#1abc9c', '#34495e', '#e67e22', '#95a5a6', '#f1c40f'
+                            ].slice(0, costs.length),
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: selectedChartType === 'bar' ? 'top' : 'right'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed;
+                                        const accountCode = dataToChart[context.dataIndex].code_of_account;
+                                        const accountLevel = getLevelFromCode(accountCode);
+                                        const levelTotal = levelTotals[accountLevel] || 0;
+                                        const levelTotalInDollars = levelTotal * 1000000;
+                                        const selectedTotal = totalCost;
+                                        
+                                        const levelPercentage = levelTotalInDollars > 0 ? ((value / levelTotalInDollars) * 100).toFixed(1) : '0.0';
+                                        const selectedPercentage = selectedTotal > 0 ? ((value / selectedTotal) * 100).toFixed(1) : '0.0';
+                                        
+                                        return [
+                                            `${formatCurrency(value)}`,
+                                            `${levelPercentage}% of Level ${accountLevel}`,
+                                            `${selectedPercentage}% of selected data`
+                                        ];
+                                    },
+                                    title: function(context) {
+                                        const accountCode = dataToChart[context[0].dataIndex].code_of_account;
+                                        const description = getAccountDescription(dataToChart[context[0].dataIndex]);
+                                        return `${accountCode}: ${description}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: selectedChartType === 'bar' ? {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Cost (Million $)'
+                                }
+                            }
+                        } : {}
+                    }
+                };
+                
+                chartInstance = new Chart(ctx, config);
+            }
+
+            // Chart event listeners with automatic refresh
+            chartBtn.addEventListener('click', () => {
+                chartContainer.classList.toggle('active');
+                chartBtn.classList.toggle('active');
+                if (chartContainer.classList.contains('active') && tableData.length > 0) {
+                    updateAccountSelector();
+                    createChart(); // Auto-refresh when opening chart
+                }
+            });
+            
+            // Auto-refresh chart when level selector changes
+            levelSelector.addEventListener('change', () => {
+                updateAccountSelector();
+                if (chartContainer.classList.contains('active')) {
+                    createChart();
+                }
+            });
+            
+            // Auto-refresh chart when filter changes
+            accountFilter.addEventListener('input', () => {
+                updateAccountSelector();
+                if (chartContainer.classList.contains('active')) {
+                    createChart();
+                }
+            });
+            
+            // Auto-refresh chart when account selection changes
+            accountSelector.addEventListener('change', () => {
+                updateSelectionInfo();
+                if (chartContainer.classList.contains('active')) {
+                    createChart();
+                }
+            });
+            
+            selectAllBtn.addEventListener('click', () => {
+                Array.from(accountSelector.options).forEach(option => option.selected = true);
+                updateSelectionInfo();
+                if (chartContainer.classList.contains('active')) {
+                    createChart();
+                }
+            });
+            
+            clearSelectionBtn.addEventListener('click', () => {
+                Array.from(accountSelector.options).forEach(option => option.selected = false);
+                updateSelectionInfo();
+                if (chartContainer.classList.contains('active')) {
+                    createChart();
+                }
+            });
+            
+            selectParentGroupBtn.addEventListener('click', () => {
+                // Find the first selected account to determine its parent group
+                const selectedOptions = Array.from(accountSelector.selectedOptions);
+                if (selectedOptions.length === 0) {
+                    // If nothing selected, show prompt
+                    showStatus('Please select at least one account first, then click this button to select all accounts in the same parent group.', 'info');
+                    return;
+                }
+                
+                const firstSelectedCode = selectedOptions[0].value;
+                if (firstSelectedCode === 'all') return;
+                
+                const parentCode = getParentCode(firstSelectedCode);
+                
+                // Clear current selection
+                Array.from(accountSelector.options).forEach(option => option.selected = false);
+                
+                // Select all accounts with the same parent
+                Array.from(accountSelector.options).forEach(option => {
+                    if (option.value === 'all') return;
+                    const optionParent = getParentCode(option.value);
+                    if (optionParent === parentCode) {
+                        option.selected = true;
+                    }
+                });
+                
+                updateSelectionInfo();
+                if (chartContainer.classList.contains('active')) {
+                    createChart();
+                }
+            });
+            
+            clearFilterBtn.addEventListener('click', () => {
+                accountFilter.value = '';
+                updateAccountSelector();
+                if (chartContainer.classList.contains('active')) {
+                    createChart();
+                }
+            });
+            
+            // Auto-refresh chart when chart controls change
+            refreshChartBtn.addEventListener('click', createChart);
+            chartType.addEventListener('change', () => {
+                if (chartContainer.classList.contains('active')) {
+                    createChart();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
