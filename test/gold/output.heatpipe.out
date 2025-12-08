@@ -36,7 +36,7 @@
 [Updated]  Changed from 1000.0 m to 20000.0 m
 
 [Updating] Variable Number_of_shipping_containers
-[Updated]  Changed from 0.0 1 to 2.0 1
+[Updated]  Changed from 0.0  to 2.0 
 
 [Updating] Variable Battery_capacity_required
 [Updated]  Changed from 135.0 kW to 150.0 kW
@@ -52,10 +52,10 @@
 [Updated]  Changed from 529.9 kg to 600.0 kg
 
 [Updating] Variable Number_of_control_rod_drums
-[Updated]  Changed from 12.0 1 to 15.0 1
+[Updated]  Changed from 12.0  to 15.0 
 
 [Updating] Variable number_of_emergency_control_rods
-[Updated]  Changed from 2.0 1 to 4.0 1
+[Updated]  Changed from 2.0  to 4.0 
 
 [Updating] Variable stainless_steel_316_reflector_mass
 [Updated]  Changed from 2.0 ton to 4.0 ton
@@ -73,19 +73,19 @@
 [Updated]  Changed from 0.0 ton to 0.2 ton
 
 [Updating] Variable mass_production_cost_reduction_factor
-[Updated]  Changed from 0.0 1 to 0.5 1
+[Updated]  Changed from 0.0  to 0.5 
 
 [Updating] Variable number_of_core_cooling_heat_pipes
-[Updated]  Changed from 1134.0 1 to 1500.0 1
+[Updated]  Changed from 1134.0  to 1500.0 
 
 [Updating] Variable number_of_heat_exchangers
-[Updated]  Changed from 2.0 1 to 4.0 1
+[Updated]  Changed from 2.0  to 4.0 
 
 [Updating] Variable heat_exchangers_mass
 [Updated]  Changed from 0.4 ton to 0.6 ton
 
 [Updating] Variable number_of_IO_sensors
-[Updated]  Changed from 1000.0 1 to 800.0 1
+[Updated]  Changed from 1000.0  to 800.0 
 
 =================================Extracting user changed variables==================================
 
@@ -102,16 +102,16 @@
 |         Distance_to_utilities         |                                                                                   Distance to utilities                                                                                   | 20,000.00 |      m      |
 |          heat_exchangers_mass         |                                                                                    heat exchangers mass                                                                                   |    0.60   |     ton     |
 |           land_surface_area           |                                                                                     land surface area                                                                                     | 40,000.00 | squareMeter |
-| mass_production_cost_reduction_factor |                                                                           mass production cost reduction factor                                                                           |    0.50   |      1      |
+| mass_production_cost_reduction_factor |                                                                           mass production cost reduction factor                                                                           |    0.50   |             |
 |           moderator_ZrH_mass          |                                                                                     moderator ZrH mass                                                                                    |    0.20   |     ton     |
 |                  mwe                  |                                                                                       user_input MWE                                                                                      |    2.00   |      MW     |
 |                  mwth                 |                                                                                      user_input mwth                                                                                      |    6.00   |      MW     |
-|      Number_of_control_rod_drums      |                                                                                Number of control rod drums                                                                                |   15.00   |      1      |
-|   number_of_core_cooling_heat_pipes   |                                                                             number of core cooling heat pipes                                                                             |  1,500.00 |      1      |
-|    number_of_emergency_control_rods   |                                                                              number of emergency control rods                                                                             |    4.00   |      1      |
-|       number_of_heat_exchangers       |                                                                                 number of heat exchangers                                                                                 |    4.00   |      1      |
-|          number_of_IO_sensors         |                                                                                    number of IO sensors                                                                                   |   800.00  |      1      |
-|     Number_of_shipping_containers     |                                                                               Number of shipping containers                                                                               |    2.00   |      1      |
+|      Number_of_control_rod_drums      |                                                                                Number of control rod drums                                                                                |   15.00   |             |
+|   number_of_core_cooling_heat_pipes   |                                                                             number of core cooling heat pipes                                                                             |  1,500.00 |             |
+|    number_of_emergency_control_rods   |                                                                              number of emergency control rods                                                                             |    4.00   |             |
+|       number_of_heat_exchangers       |                                                                                 number of heat exchangers                                                                                 |    4.00   |             |
+|          number_of_IO_sensors         |                                                                                    number of IO sensors                                                                                   |   800.00  |             |
+|     Number_of_shipping_containers     |                                                                               Number of shipping containers                                                                               |    2.00   |             |
 |      primary_inner_vessel_SS_mass     |                                                                                primary inner vessel SS mass                                                                               |    0.50   |     ton     |
 |      primary_outer_vessel_SS_mass     |                                                                                primary outer vessel SS mass                                                                               |   100.00  |     ton     |
 |            shield_B4C_mass            |                                                                                      shield B4C mass                                                                                      |  7,000.00 |      kg     |

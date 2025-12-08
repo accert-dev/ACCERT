@@ -1,0 +1,24 @@
+reactors {
+    reactor( reactor_id) {
+        capacity_factor = 1
+        cycle_length = 1
+        lifetime_years = 1
+
+        power_level {
+            reference_net_electrical = 1
+            net_thermal_efficiency = 1
+        }
+
+        capital_costs {
+            scaling_factor( capital_cost_item_id ) = 1
+        }
+
+        om_costs {
+            scaling_factor( om_cost_item_id ) = 1
+        }
+
+        fuel_reloads {
+            quantity( fuel_id ) { heavy_metal_mass = 1 }
+        }
+    }
+}

@@ -30,6 +30,8 @@ Parameter "mwth" is required for cost elements:
 [Updating] Variable Cont_H_wall_m
 [Updated]  Changed from 35.3568 m to 20.0 m
 
+[Updating] Other variable(s) should be updated based on Cont_H_wall_m are ['Walls_s_m2', 'Walls_v_m3', 'Intern_tot_v_m3', 'Inside_liner_s', 'Surf_paint_m2'] 
+
 [Updating] Sup Variable Walls_s_m2, running algorithm: [walls_surface], 
 [Updating] with formulation: Cont_H_wall_m*2*PI()*(Cont_rad_out_m+Cont_rad_in_m)
 [Updated]  Reference value is : 6.47e+03 m^2, calculated value is: 3.66e+03 m^2

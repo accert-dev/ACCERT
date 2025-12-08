@@ -7,10 +7,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- **Stellarator model** for fusion cost estimation, adding stellarator-specific algorithms, variables, and LCOE evaluation. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
+- **Example:** new tutorial `docs/source/example/stellarator.rst` showing input structure and run steps. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 
-Address #30 #16 #22 
+### Changed
+ - **Fusion output naming** standardized across reactor types. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
+
+ - **Database variable entries** updated for consistency and unit handling. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
+
 ### Fixed
+- Minor aggregation errors in fusion LCOE calculations. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
+- Variable quotation issue for reading the input.([#47](https://github.com/accert-dev/ACCERT/pull/47))
 
+## [1.0.0]
+
+### Fixed
+- Address #30 #16 #22
  **Table and Column Cleanup**:
    - Removed redundant tables, including the `variable links` table, which was previously used across all models.
    - Removed the following columns from the `account` table:

@@ -10,7 +10,7 @@ accert{
             l2COA("211"){
                 alg("acc211"){
                     var("csi"){value = 16 unit = million} 
-                    var("lsa"){value = 4 unit = 1}
+                    var("lsa"){value = 4 unit = N/A}
                 }
             }
         }

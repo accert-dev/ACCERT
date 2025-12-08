@@ -1,0 +1,9 @@
+ind,var_name,var_value,var_unit,var_alg,var_need,v_linked
+1,v1,20,million,,,v6
+2,v2,50,million,,,
+3,v3,30,million,,,v6
+4,v4,2.5,km,,,
+5,v5,1500,m,,,
+6,v6,50,million,ud_cal_v6,"v1, v3",
+7,v7,50000000,dollar,,,
+8,v8,100000,$/m,,,

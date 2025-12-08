@@ -1,0 +1,11 @@
+commentDelimiter = "%"
+enabled = true
+extensions = [son]
+highlighter = "necost.wbh"
+maxDepth = 5
+name = necost
+nav = necost % indicates navigation logic for necost documents
+parser = waspson
+schema = "necost.sch"
+templates = "templates"
+validator = wasp

@@ -10,8 +10,8 @@ accert{
         MaxOccurs = 1
         InputTmpl = "ref_model"
         ValType = String
-        ValEnums = [REF:ref_models]
-        }  
+        ValEnums = [ REF:user_defined_names  REF:ref_models]
+        }            
 
     use_gncoa{
         Description = "[optional] use generic code of account"
@@ -32,7 +32,7 @@ accert{
             MinOccurs = 1
             MaxOccurs = 1
             ValType = String
-            ValEnums = [ Thermal Electric]
+            ValEnums = [ REF:user_defined_names REF:power_type]
         }
         value{
             Description = "[required] variable value "
@@ -47,7 +47,7 @@ accert{
             MinOccurs = 1
             MaxOccurs = 1
             ValType = String
-            ValEnums = [ W kW MW]
+            ValEnums = [ REF:user_defined_names REF:power_unit]
         }
     }
     var{
@@ -59,7 +59,7 @@ accert{
             MinOccurs = 1
             MaxOccurs = 1
             ValType = String
-            ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
         }
         value{
             MinOccurs = 1
@@ -72,7 +72,7 @@ accert{
             MinOccurs = 1
             MaxOccurs = 1
             ValType = String
-            ValEnums = [REF:unit_names]
+            ValEnums = [ REF:user_defined_names  REF:unit_names]
         }
     }
     l0COA{
@@ -84,7 +84,7 @@ accert{
             MinOccurs = 0
             MaxOccurs = 1
             ValType = String
-            ValEnums = [ REF:l0COA_names]
+            ValEnums = [ REF:user_defined_names   REF:l0COA_names]
         }
         l1COA{
         	Description = "level 1 code of account"
@@ -95,7 +95,7 @@ accert{
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = String
-                ValEnums = [REF:l1COA_names ]
+                ValEnums = [ REF:user_defined_names  REF:l1COA_names ]
             }
             total_cost{
                 Description = "total cost value"
@@ -113,7 +113,7 @@ accert{
                     MinOccurs = 1
                     MaxOccurs = 1
                     ValType = String
-                    ValEnums = [ million  dollar]
+                    ValEnums = [ REF:user_defined_names  REF:total_cost_unit]
                 }                                
             }
             % there is no cost element in this level
@@ -126,7 +126,7 @@ accert{
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = String
-                    ValEnums = [REF:l2COA_names] 
+                    ValEnums = [ REF:user_defined_names  REF:l2COA_names] 
                 }
                 total_cost{
                     Description = "total cost value"
@@ -144,7 +144,7 @@ accert{
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = String
-                        ValEnums = [ million  dollar]
+                        ValEnums = [ REF:user_defined_names REF:total_cost_unit ]
                     }                            
                 }
                 ce{
@@ -156,7 +156,7 @@ accert{
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = String
-                        ValEnums = [REF:L2cost_element_names]
+                        ValEnums = [ REF:user_defined_names  REF:L2cost_element_names]
                     }
                     alg{
         				Description = "???" % needs to be added
@@ -167,7 +167,7 @@ accert{
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = String
-                            ValEnums = [REF:alg_names REF:fusion_alg_names]
+                            ValEnums = [ REF:user_defined_names  REF:alg_names REF:fusion_alg_names]
                         }
                         var{
                             Description = "changed variable value"
@@ -178,9 +178,10 @@ accert{
                                 MinOccurs = 1
                                 MaxOccurs = 1
                                 ValType = String
-                                ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names 
+                                ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names 
                                 REF:heatpipe_var_names
-                                REF:fusion_var_names]
+                                REF:fusion_var_names
+                                REF:stellarator_var_names]
                             }
                             value{
                                 MinOccurs = 0
@@ -193,7 +194,7 @@ accert{
                                 MinOccurs = 0
                                 MaxOccurs = 1
                                 ValType = String
-                                ValEnums = [REF:unit_names]
+                                ValEnums = [ REF:user_defined_names  REF:unit_names]
                             }
                             alg{ % is this an alg within var within alg???? it should use a different name to avoid confusion.
                                 Description = "valriable algorithm"
@@ -204,7 +205,7 @@ accert{
                                     MinOccurs = 1
                                     MaxOccurs = 1
                                     ValType = String
-                                    ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                                    ValEnums = [ REF:user_defined_names  REF:alg_names REF:fusion_alg_names ]
                                 }
                                 var{
                                     Description = "changed variable value"
@@ -215,7 +216,7 @@ accert{
                                         MinOccurs = 1
                                         MaxOccurs = 1
                                         ValType = String
-                                        ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                                        ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
                                     }
                                     value{
                                         MinOccurs = 1
@@ -228,7 +229,7 @@ accert{
                                         MinOccurs = 1
                                         MaxOccurs = 1
                                         ValType = String
-                                        ValEnums = [ REF:unit_names ]
+                                        ValEnums = [ REF:user_defined_names   REF:unit_names ]
                                     }
                                 }
                             }                           
@@ -240,7 +241,7 @@ accert{
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = String
-                        ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                        ValEnums = [ REF:user_defined_names  REF:alg_names REF:fusion_alg_names ]
                     }
                     var{
                         Description = "changed variable value"
@@ -250,7 +251,7 @@ accert{
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = String
-                            ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
                         }
                         value{
                             MinOccurs = 0
@@ -263,7 +264,7 @@ accert{
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = String
-                            ValEnums = [REF:unit_names]
+                            ValEnums = [ REF:user_defined_names  REF:unit_names]
                         }
                         alg{
                             Description = "valriable algorithm"
@@ -273,7 +274,7 @@ accert{
                                 MinOccurs = 1
                                 MaxOccurs = 1
                                 ValType = String
-                                ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                                ValEnums = [ REF:user_defined_names  REF:alg_names REF:fusion_alg_names ]
                             }
                             var{
                                 Description = "changed variable value"
@@ -283,7 +284,7 @@ accert{
                                     MinOccurs = 1
                                     MaxOccurs = 1
                                     ValType = String
-                                    ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                                    ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
                                 }
                                 value{
                                     MinOccurs = 1
@@ -296,7 +297,7 @@ accert{
                                     MinOccurs = 1
                                     MaxOccurs = 1
                                     ValType = String
-                                    ValEnums = [REF:unit_names]
+                                    ValEnums = [ REF:user_defined_names  REF:unit_names]
                                 }
                             }
                         }
@@ -308,7 +309,7 @@ accert{
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = String
-                        ValEnums = [ REF:l3COA_names ]
+                        ValEnums = [ REF:user_defined_names   REF:l3COA_names ]
                     }
                     total_cost{
                         Description = "total cost value"
@@ -325,7 +326,7 @@ accert{
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = String
-                            ValEnums = [ million  dollar]
+                            ValEnums = [ REF:user_defined_names   REF:total_cost_unit ]
                         }                            
                     }
                     alg{
@@ -333,7 +334,7 @@ accert{
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = String
-                            ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                            ValEnums = [ REF:user_defined_names  REF:alg_names REF:fusion_alg_names ]
                         }
                         var{
                             Description = "changed variable value"
@@ -343,7 +344,7 @@ accert{
                                 MinOccurs = 1
                                 MaxOccurs = 1
                                 ValType = String
-                                ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                                ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
                             }
                             value{
                                 MinOccurs = 0
@@ -356,7 +357,7 @@ accert{
                                 MinOccurs = 0
                                 MaxOccurs = 1
                                 ValType = String
-                                ValEnums = [REF:unit_names]
+                                ValEnums = [ REF:user_defined_names  REF:unit_names]
                             }
                             alg{
                                 Description = "valriable algorithm"
@@ -366,7 +367,7 @@ accert{
                                     MinOccurs = 1
                                     MaxOccurs = 1
                                     ValType = String
-                                    ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                                    ValEnums = [ REF:user_defined_names  REF:alg_names REF:fusion_alg_names ]
                                 }
                                 var{
                                     Description = "changed variable value"
@@ -376,7 +377,7 @@ accert{
                                         MinOccurs = 1
                                         MaxOccurs = 1
                                         ValType = String
-                                        ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                                        ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
                                     }
                                     value{
                                         MinOccurs = 1
@@ -389,7 +390,7 @@ accert{
                                         MinOccurs = 1
                                         MaxOccurs = 1
                                         ValType = String
-                                        ValEnums = [REF:unit_names]
+                                        ValEnums = [ REF:user_defined_names  REF:unit_names]
                                     }
                                 }
                             }
@@ -401,14 +402,14 @@ accert{
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = String
-                            ValEnums = [REF:L3cost_element_names ]
+                            ValEnums = [ REF:user_defined_names  REF:L3cost_element_names ]
                         }
                         alg{
                             id{
                                 MinOccurs = 1
                                 MaxOccurs = 1
                                 ValType = String
-                                ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                                ValEnums = [ REF:user_defined_names  REF:alg_names REF:fusion_alg_names ]
                             }
                             var{
                                 Description = "changed variable value"
@@ -418,7 +419,7 @@ accert{
                                     MinOccurs = 1
                                     MaxOccurs = 1
                                     ValType = String
-                                    ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                                    ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
                                 }
                                 value{
                                     MinOccurs = 0
@@ -431,7 +432,7 @@ accert{
                                     MinOccurs = 0
                                     MaxOccurs = 1
                                     ValType = String
-                                    ValEnums = [REF:unit_names]
+                                    ValEnums = [ REF:user_defined_names  REF:unit_names]
                                 }
                                 alg{
                                     Description = "valriable algorithm"
@@ -441,7 +442,7 @@ accert{
                                         MinOccurs = 1
                                         MaxOccurs = 1
                                         ValType = String
-                                        ValEnums = [REF:alg_names REF:fusion_alg_names ]
+                                        ValEnums = [ REF:user_defined_names  REF:alg_names REF:fusion_alg_names ]
                                     }
                                     var{
                                         Description = "changed variable value"
@@ -451,7 +452,7 @@ accert{
                                             MinOccurs = 1
                                             MaxOccurs = 1
                                             ValType = String
-                                            ValEnums =[REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names]
+                                            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
                                         }
                                         value{
                                             MinOccurs = 1
@@ -464,7 +465,7 @@ accert{
                                             MinOccurs = 1
                                             MaxOccurs = 1
                                             ValType = String
-                                            ValEnums = [REF:unit_names]
+                                            ValEnums = [ REF:user_defined_names  REF:unit_names]
                                         }
                                     }
                                 }
@@ -495,7 +496,10 @@ accert{
 }
 
 EndOfSchema{}
-ref_models = [ "PWR12-BE" "ABR1000" "LFR", "heatpipe","fusion"]
+ref_models = [ "PWR12-BE" "ABR1000" "LFR" "heatpipe" "fusion" "stellarator"]
+power_type = ["Thermal" "Electric"] 
+power_unit = ["W" "kWW" "MW"]
+total_cost_unit = ["million" "dollar"]
 l0COA_names = ['1' '2' '3' '4' '5' '6' '7' '8' '9' 'new']
 l0GNCOA_names=['10' '20' '30' '40' '50' '60' '70' '80' '90' 'new']
 l1COA_names = ['11' '12' '13' '14' '15' '16' '17' '18' '19' 
@@ -537,7 +541,11 @@ fusion_L3COA_names = ['2141' '2142' '2171' '2172' '2173' '2174' '2211' '2212' '2
 '2215' '2221' '2222' '2223' '2231' '2232' '2233' '2241' '2242' '2243' '2244' '2245' '2246' 
 '2251' '2252' '2253' '2261' '2262' '2263' '2271' '2272' '2273' '2274' 'new']
 
-l3GNCOA_names = ['213.1' '213.2' '213.3' '213.4' '214.1' '214.2' '214.3' '214.4' '214.5' '214.6' '214.7' '215.1' '215.2' '215.3' '215.4' '215.5' '216.1' '216.2' '216.3' '216.4' '217.1' '217.2' '217.3' '217.4' '221.1' '221.2' '221.3' '222.1' '222.2' '222.3' '222.4' '222.5' '223.1' '223.2' '223.3' '223.4' '223.5' '225.1' '225.2' '231.1' '231.2' '232.1' '232.2' '232.3' '232.4' '232.5' '232.6' '232.7' '232.8' '232.9' '233.1' '233.2' '331.1' '331.2' '331.3' '331.4' '331.5' '832.1']
+l3GNCOA_names = ['213.1' '213.2' '213.3' '213.4' '214.1' '214.2' '214.3' '214.4' '214.5' '214.6' 
+'214.7' '215.1' '215.2' '215.3' '215.4' '215.5' '216.1' '216.2' '216.3' '216.4' '217.1' '217.2' 
+'217.3' '217.4' '221.1' '221.2' '221.3' '222.1' '222.2' '222.3' '222.4' '222.5' '223.1' '223.2' 
+'223.3' '223.4' '223.5' '225.1' '225.2' '231.1' '231.2' '232.1' '232.2' '232.3' '232.4' '232.5' 
+'232.6' '232.7' '232.8' '232.9' '233.1' '233.2' '331.1' '331.2' '331.3' '331.4' '331.5' '832.1']
 
 l4GNCOA_names = ['221.11' '221.12' '221.13' '221.21' '221.31' '221.32' '221.33']
 
@@ -545,8 +553,16 @@ fusion_l4COA_names = ['22121' '22122' '22123' '22124' '22131' '22132' '22211' '2
 '22213' '22214' '22215' '22221' '22222' '22223' '22224' '22511' '22512' '22513' '22514' 
 '22515' '22521' '22522' '22523' '22524' '22525' '22526' '22527' '22611' '22612' 'new']
 
-unit_names = [squareMeter cubeMeter kW MW W lbs ton kg million 'gpm*feet' '1' m 'm^2' 'm^3' 
-'dollar/m^3' 'dollar/m^2' 'psi' 'psf' 'bar' 'dollar' 'thousand']
+unit_names = [squareMeter cubeMeter kW MW W lbs ton kg million 'gpm*feet' '1' 'm' 'm^2' 'm^3' 
+'dollar/m^3' 'dollar/m^2' 'psi' 'psf' 'bar' 'dollar' 'thousand' 'None' 'N/A' 'kA', 'm3', 'amu', 
+    'kg', 'M$', 'm2', 'years', '$/m', '($/J wall plug)', 'A',
+    'MW', 'm', 'M$/MJ', 'kg/m3', 'T', 'kg/m^3', 'K', 'keV', 'C', 'J', 'A/W', 'MJ',
+    'GJ', 'fraction of tritium fused/target', 'reactions/m3/sec', 'W', 'days',
+    'Hz', 'MA-turns', 'A/m2', 'reactions/sec', 'sec', 's', 'M$/m3', '$', '$/W',
+    '$/kVA', '$/kg', '$/A-m', 'M$/vol', '$/10000m3/hr', '$/w', 'M$/year/1200MW',
+    '$/m2', '($/W)', '$/circuit', '$/MJ', '$/channel', '$/target', '$/J', 
+    '$/coil', '$/A', 'kW', 'kV', 'kg/coil' '$/m3' '$/MVA' '$/kA-m' '$/kW' '$/mva' 
+    '$/kw' '$/ka-m' 'million/ton']
 
 alg_names = ['sum_multi_accounts' 'sum_multi_weights' 'sum_multi_pumps' 'ptn_account' 
 'unit_weights' 'pump' 'containment' 'MWth_scale' 'unit_volume' 'dev_factor_ref' 'tur_exp_n' 
@@ -564,7 +580,7 @@ alg_names = ['sum_multi_accounts' 'sum_multi_weights' 'sum_multi_pumps' 'ptn_acc
 'Inner_vessel_cost' 'Reactivity_control_system_cost' 'Reflector_cost' 'Shield_cost' 
 'Moderator_cost' 'cooling_heat_pipes_cost' 'heat_exchangers_mat_cost' 
 'heat_exchangers_lab_cost' 'heat_exchangers_fac_cost' 'instrumentation_contorl_cost' 
-'turb_and_elec_sys_cost']
+'turb_and_elec_sys_cost' 'stcalaintmass' 'stcalintercoil_surface' 'stcalclgsmass']
 
 fusion_alg_names = ['acc2' 'acc21' 'acc211' 'acc212' 'acc213' 'acc214' 'acc2141' 'acc2142' 
 'acc215' 'acc216' 'acc217' 'acc2171' 'acc2172' 'acc2173' 'acc2174' 'acc22' 'acc221' 
@@ -640,7 +656,7 @@ abr_var_names = [ 'CH_abr1000' 'CH_AP1000'
  'escalate_1987'  'mwreth' 'no_of_cr' 'no_of_crd' 'no_of_rcpump' 
  'prn_235_of_231_fac' 'prn_235_of_231_lab' 'prn_235_of_231_mat' 'prn_fac_231_lab' 
  'prn_fac_231_mat' 'r_222.13_lab' 'r_222.13_mat' 'r_78_220A224_fac' 'r_78_226.4_fac' 
- 'liner_fraction'  ]
+ 'liner_fraction' 'c_220A.221_cs_weight' 'c_220A.221_ss_weight' 'sg_weight', 'c_sg_weight' 'no_sg' ]
 
 containment_var_names = ['CPI' 'Void_fraction' 'liner_fraction' 'Cont_H_tot_m' 'Cont_rad_out_m' 
  'Cont_shell_t_m' 'Cont_H_wall_m' 'Basemat_t_m' 'Dome_t_m' 'Intern_wall_t' 'React_cav_A_m2' 
@@ -768,4 +784,8 @@ containment_var_names = ['CPI' 'Void_fraction' 'liner_fraction' 'Cont_H_tot_m' '
 
 heatpipe_var_names = ['land_surface_area' 'containment_subVolume' 'Containment_hole_volume' 'Turbine_building_surface_area' 'Distance_to_utilities' 'Number_of_shipping_containers' 'Battery_capacity_required' 'primary_outer_vessel_SS_mass' 'primary_inner_vessel_SS_mass' 'B4C_total_neutron_poison_mass_Kg' 'Number_of_control_rod_drums' 'number_of_emergency_control_rods' 'stainless_steel_316_reflector_mass' 'Al2O3_reflector_mass' 'BeO_reflector_mass' 'shield_B4C_mass' 'moderator_ZrH_mass' 'mass_production_cost_reduction_factor' 'number_of_core_cooling_heat_pipes' 'number_of_heat_exchangers' 'heat_exchangers_mass' 'number_of_IO_sensors' 'mwth' 'mwe']
 
-fusion_var_names = ['a' 'acptmax' 'admvol' 'afuel' 'ai' 'aintmass' 'akappa' 'areaoh' 'awpoh' 'b0' 'blmass' 'cconfix' 'cconshpf' 'cconshtf' 'cdirt' 'cdriv0' 'cdriv1' 'cdriv2' 'cdriv3' 'cfind_0' 'cfind_1' 'cfind_2' 'cfind_3' 'cland' 'clgsmass' 'coilmass' 'convol' 'coolmass' 'coolwh' 'cowner' 'cpstcst' 'cpttf' 'crypmw' 'cryvol' 'csi' 'cturbb' 'd_0' 'd_1' 'd_2' 'd_3' 'dcdrv0' 'dcdrv1' 'dcdrv2' 'dcond_0' 'dcond_1' 'dcond_2' 'dcond_3' 'dcond_4' 'dcond_5' 'dcond_6' 'dcond_7' 'dcond_8' 'dcopper' 'dens' 'divcst' 'divsur' 'dlscal' 'drbi' 'dtstor' 'dvrtmass' 'ealphadt' 'echarge' 'echpwr' 'edrive' 'effrfss' 'elevol' 'ensxpfm' 'esbldgm3' 'estotftgj' 'etadrv' 'expel' 'expepe' 'exphts' 'exprb' 'exprf' 'exptpe' 'faccd' 'faccdfix' 'fachtmw' 'fburn' 'fcap0' 'fcdfuel' 'fcontng' 'fcsht' 'fcuohsu' 'fcupfsu' 'fkind' 'fncmass' 'fndt' 'ftrit' 'fusionrate' 'fwallcst' 'fwarea' 'fwmass' 'fwmatm' 'gain' 'gsmass' 'hccl' 'hcwt' 'helpow' 'hrbi' 'i_tf_sc_mat' 'i_tf_sup' 'iblanket' 'iefrf' 'ife' 'ifedrv' 'ifueltyp' 'imax' 'iohcl' 'ipfres' 'ireactor' 'istore' 'isumatoh' 'isumatpf' 'itart' 'l1' 'lpulse' 'lsa' 'ltot' 'mbvfac' 'mcdriv' 'n_tf' 'n_tf_turn' 'nohc' 'nphx' 'ntype' 'nvduct' 'oh_steel_frac' 'pacpmw' 'palpnb' 'peakmva' 'pfbldgm3' 'pfckts' 'pfmass' 'pfwdiv' 'pfwndl' 'pgrossmw' 'pheat' 'pibv' 'pinjht' 'pinjwp' 'plascur' 'plhybd' 'pnbitot' 'pnetelmw' 'pnucblkt' 'pnucshld' 'powfmw' 'pthermmw' 'r0' 'rbrt' 'rbvfac' 'rbvol' 'rbwt' 'reprat' 'ric_0' 'ric_1' 'ric_2' 'ric_3' 'ric_4' 'ric_5' 'ric_6' 'rjconpf_0' 'rjconpf_1' 'rjconpf_2' 'rjconpf_3' 'rjconpf_4' 'rjconpf_5' 'rjconpf_6' 'rjconpf_7' 'rjconpf_8' 'rjconpf_9' 'rjconpf_10' 'rjconpf_11' 'rjconpf_12' 'rjconpf_13' 'rjconpf_14' 'rjconpf_15' 'rjconpf_16' 'rjconpf_17' 'rjconpf_18' 'rjconpf_19' 'rjconpf_20' 'rjconpf_21' 'rpf_0' 'rpf_1' 'rpf_2' 'rpf_3' 'rpf_4' 'rpf_5' 'rpf_6' 'shmatm' 'spfbusl' 'srcktpm' 'stcl' 'tdown' 'tdspmw' 'tf_h_width ' 'tfacmw' 'tfbusl' 'tfbusmas' 'tfcbv' 'tfckw' 'tfcmw' 'tfhmax' 'tfleng' 'tfmass' 'tlvpmw' 'tmpcry' 'trcl' 'trithtmw' 'triv' 'turns_0' 'turns_1' 'turns_2' 'turns_3' 'turns_4' 'turns_5' 'turns_6' 'twopi' 'ucad' 'ucaf' 'ucahts' 'ucap' 'ucblbe' 'ucblbreed' 'ucblli' 'ucblli2o' 'ucbllipb' 'ucblss' 'ucblvd' 'ucbpmp' 'ucbus' 'uccarb' 'uccase' 'ucco' 'ucconc' 'uccpcl1' 'uccpclb' 'uccpmp' 'uccr' 'uccry' 'uccryo' 'uccu' 'ucdgen' 'ucdiv' 'ucdtc' 'ucduct' 'ucech' 'ucel' 'ucf1' 'ucfnc' 'ucfpr' 'ucfwa' 'ucfwps' 'ucfws' 'ucgss' 'uchrs' 'uchts_0' 'uchts_1' 'uciac' 'ucich' 'ucint' 'uclh' 'uclv' 'ucmb' 'ucme' 'ucmisc' 'ucnbi' 'ucnbv' 'ucpens' 'ucpfb' 'ucpfbk' 'ucpfbs' 'ucpfcb' 'ucpfdr1' 'ucpfic' 'ucpfps' 'ucphx' 'ucpp' 'ucrb' 'ucsc_0' 'ucsc_1' 'ucsc_2' 'ucsc_3' 'ucsc_4' 'ucsc_5' 'ucsc_6' 'ucsc_7' 'ucsc_8' 'ucsh' 'ucshld' 'ucswyd' 'uctfbr' 'uctfbus' 'uctfdr' 'uctfgr' 'uctfic' 'uctfps' 'uctfsw' 'uctpmp' 'uctr' 'ucturb_0' 'ucturb_1' 'ucvalv' 'ucvdsh' 'ucviac' 'ucwindpf' 'ucwindtf' 'umass' 'vacdshm' 'vachtmw' 'vcdimax' 'vf' 'vfohc' 'vol' 'volrci' 'vpfskv' 'vpumpn' 'vtfskv' 'vvmass' 'wgt2' 'whtblbe' 'whtblbreed' 'whtblli' 'whtblss' 'whtblvd' 'whtcas' 'whtconcu' 'whtconsc' 'whtcp' 'whtpfs' 'whtshld' 'whttflgs' 'wpenshld' 'wrbi' 'wsvfac' 'wsvol' 'wtblli2o' 'wtbllipb' 'rmbvol' 'ucws' 'shovol' 'expcry']
+fusion_var_names = ['a' 'acptmax' 'admvol' 'afuel' 'ai' 'aintmass' 'akappa' 'anncap' 'anncdr' 'anncp' 'anndecom' 'anndiv' 'annfuel' 'annfwbl' 'annoam' 'annwst' 'areaoh' 'awpoh' 'b0' 'bktlife' 'blmass' 'capcost' 'cconfix' 'cconshpf' 'cconshtf' 'cdcost' 'cdirt' 'cdriv0' 'cdriv1' 'cdriv2' 'cdriv3' 'cdrlife' 'cfactr' 'cfind_0' 'cfind_1' 'cfind_2' 'cfind_3' 'cland' 'clgsmass' 'cmlsa' 'coecdr' 'coecp' 'coediv' 'coefuel' 'coefwbl' 'coewst' 'coilmass' 'convol' 'coolmass' 'coolwh' 'cowner' 'cplife' 'cpstcst' 'cpttf' 'crfcdr' 'crfcp' 'crfdiv' 'crffwbl' 'crypmw' 'cryvol' 'csi' 'cturbb' 'd_0' 'd_1' 'd_2' 'd_3' 'dcdrv0' 'dcdrv1' 'dcdrv2' 'dcond_0' 'dcond_1' 'dcond_2' 'dcond_3' 'dcond_4' 'dcond_5' 'dcond_6' 'dcond_7' 'dcond_8' 'dcopper' 'decomf' 'dens' 'denstl' 'dintrt' 'discount_rate' 'divcst' 'divlife' 'divsur' 'dlscal' 'drbi' 'dtlife' 'dtstor' 'dvrtmass' 'ealphadt' 'echarge' 'echpwr' 'edrive' 'effrfss' 'elevol' 'ensxpfm' 'esbldgm3' 'estotftgj' 'etadrv' 'expcry' 'expel' 'expepe' 'exphts' 'exprb' 'exprf' 'exptpe' 'faccd' 'faccdfix' 'fachtmw' 'fburn' 'fcap0' 'fcap0cp' 'fcdfuel' 'fcontng' 'fcr0' 'fcsht' 'fcuohsu' 'fcupfsu' 'fefcdr' 'fefcp' 'fefdiv' 'feffwbl' 'fhe3' 'fkind' 'fncmass' 'fndt' 'ftrit' 'fusionrate' 'fwallcst' 'fwarea' 'fwbllife' 'fwmass' 'fwmatm' 'gain' 'gsmass' 'hccl' 'hcwt' 'helpow' 'hrbi' 'i_tf_sc_mat' 'i_tf_sup' 'iblanket' 'iefrf' 'ife' 'ifedrv' 'ifueltyp' 'imax' 'intercoil_surface' 'iohcl' 'ipfres' 'ireactor' 'istore' 'isumatoh' 'isumatpf' 'itart' 'l1' 'lpulse' 'lsa' 'ltot' 'mbvfac' 'mcdriv' 'n_day_year' 'n_tf' 'n_tf_turn' 'nohc' 'nphx' 'ntype' 'nvduct' 'oh_steel_frac' 'pacpmw' 'palpnb' 'peakmva' 'pfbldgm3' 'pfckts' 'pfmass' 'pfwdiv' 'pfwndl' 'pgrossmw' 'pheat' 'pibv' 'pinjht' 'pinjwp' 'plascur' 'plhybd' 'pnbitot' 'pnetelmw' 'pnucblkt' 'pnucshld' 'powfmw' 'pthermmw' 'r0' 'rbrt' 'rbvfac' 'rbvol' 'rbwt' 'reprat' 'ric_0' 'ric_1' 'ric_2' 'ric_3' 'ric_4' 'ric_5' 'ric_6' 'rjconpf_0' 'rjconpf_1' 'rjconpf_10' 'rjconpf_11' 'rjconpf_12' 'rjconpf_13' 'rjconpf_14' 'rjconpf_15' 'rjconpf_16' 'rjconpf_17' 'rjconpf_18' 'rjconpf_19' 'rjconpf_2' 'rjconpf_20' 'rjconpf_21' 'rjconpf_3' 'rjconpf_4' 'rjconpf_5' 'rjconpf_6' 'rjconpf_7' 'rjconpf_8' 'rjconpf_9' 'rmbvol' 'rndfuel' 'rpf_0' 'rpf_1' 'rpf_2' 'rpf_3' 'rpf_4' 'rpf_5' 'rpf_6' 'shh' 'shldmass' 'shm' 'shmatm' 'shmf' 'shovol' 'shri' 'shro' 'sigal' 'spfbusl' 'srcktpm' 'st_f_b' 'st_f_n' 'st_f_r' 'stcl' 'stella_config_coillength' 'stella_config_coilsurface' 'targtm' 'tburn' 'tcycle' 'tdown' 'tdspmw' 'tf_h_width' 'tfacmw' 'tfbusl' 'tfbusmas' 'tfcbv' 'tfckw' 'tfcmw' 'tfhmax' 'tfleng' 'tfmass' 'tftort' 'tlife' 'tlvpmw' 'tmpcry' 'trcl' 'trithtmw' 'triv' 'turns_0' 'turns_1' 'turns_2' 'turns_3' 'turns_4' 'turns_5' 'turns_6' 'twopi' 'ucad' 'ucaf' 'ucahts' 'ucap' 'ucblbe' 'ucblbreed' 'ucblli' 'ucblli2o' 'ucbllipb' 'ucblss' 'ucblvd' 'ucbpmp' 'ucbus' 'uccarb' 'uccase' 'ucco' 'ucconc' 'uccpcl1' 'uccpclb' 'uccpmp' 'uccr' 'uccry' 'uccryo' 'uccu' 'ucdgen' 'ucdiv' 'ucdtc' 'ucduct' 'ucech' 'ucel' 'ucf1' 'ucfnc' 'ucfpr' 'ucfuel' 'ucfwa' 'ucfwps' 'ucfws' 'ucgss' 'uche3' 'uchrs' 'uchts_0' 'uchts_1' 'uciac' 'ucich' 'ucint' 'uclh' 'uclv' 'ucmb' 'ucme' 'ucmisc' 'ucnbi' 'ucnbv' 'ucoam_0' 'ucoam_1' 'ucoam_2' 'ucoam_3' 'ucpens' 'ucpfb' 'ucpfbk' 'ucpfbs' 'ucpfcb' 'ucpfdr1' 'ucpfic' 'ucpfps' 'ucphx' 'ucpp' 'ucrb' 'ucsc_0' 'ucsc_1' 'ucsc_2' 'ucsc_3' 'ucsc_4' 'ucsc_5' 'ucsc_6' 'ucsc_7' 'ucsc_8' 'ucsh' 'ucshld' 'ucswyd' 'uctarg' 'uctfbr' 'uctfbus' 'uctfdr' 'uctfgr' 'uctfic' 'uctfps' 'uctfsw' 'uctpmp' 'uctr' 'ucturb_0' 'ucturb_1' 'ucvalv' 'ucvdsh' 'ucviac' 'ucwindpf' 'ucwindtf' 'ucws' 'ucwst_0' 'ucwst_1' 'ucwst_2' 'ucwst_3' 'umass' 'vacdshm' 'vachtmw' 'vcdimax' 'vf' 'vfohc' 'vol' 'volrci' 'vpfskv' 'vpumpn' 'vtfskv' 'vvmass' 'wgt2' 'whtblbe' 'whtblbreed' 'whtblli' 'whtblss' 'whtblvd' 'whtcas' 'whtconcu' 'whtconsc' 'whtcp' 'whtpfs' 'whtshld' 'whttflgs' 'wpenshld' 'wrbi' 'wsvfac' 'wsvol' 'wtblli2o' 'wtbllipb' 'wtgpd']
+
+stellarator_var_names = ['st_f_b' 'denstl' 'intercoil_surface' 'stella_config_coilsurface' 'st_f_r' 'tftort' 'stella_config_coillength' 'st_f_n']
+user_defined_names = [N/A]
+total_cost_unit = ['million' 'dollar']

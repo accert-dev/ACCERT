@@ -1,0 +1,97 @@
+﻿var_name,low,nominal,high,distribution,Notes
+ref_therm_pwr,3.00E+09,3.00E+09,3.00E+09,0,% Reference core thermal power (W)
+core_pwr_func_ref,1,1,1,0,% Core thermal power as a function of reference
+therm_efficiency,33,33,33,0,% Thermal efficiency  (%)
+HM_mass_direct_spec,88.23,88.23,88.23,0,"% Core HM mass direct spec. (in MT) If <=0 will be calculated with lines 5-10, if >0 it will be used as (MT) and lines 3-8 will be ignired"
+fuel_D,9999,9999,9999,0,% Fuel D; used only to estimate core HM mass (can be an equivalent value)
+num_ass,9999,9999,9999,0,% # ass/core Same as in standard PWR
+num_pins,9999,9999,9999,0,% # pins/ass Same as in standard PWR
+fuel_density,9999,9999,9999,0,% Fuel density (g/cc)
+HM_weight_percent,9999,9999,9999,0,% HM weight as % of Fuel weight
+ass_length,9999,9999,9999,0,% Assembly length (cm)
+max_burnup,50,50,50,0,% Maximum burnup (GWD/MTiHM)
+num_batches,3,3,3,0,% # of batches
+capital_cost,2300,4000,5800,1,% Overnight capital cost ($/kWe)
+escalation_cost_pwr,9999,9999,9999,0,% Escalation cost with power
+discount_rate,0.05,0.05,0.05,0,% Discount rate
+escalation_rate_front,0,0,0,0,% escalation rate for front end costs (%/year)
+escalation_rate_back,0,0,0,0,% escalation rate for back end costs (%/year)
+escalation_rate_OM,0,0,0,0,% escalation rate for O & M costs (%/year)
+constrct_years,5,5,5,0,% Years for construction
+interest_rate_constrct,0.05,0.05,0.05,1,% Annual interest rate during construction (will be adjusted for quarterly compounding)
+L_direct_spec,0.9,0.9,0.9,0,"% Direct specification of L (capacity factor), if L<=0 then calculated with parameters 22-26, if >0 it will be used as (MT) and lines 3-8 will be ignired"
+outage_ref,9999,9999,9999,0,% planned_outage_ref   (days)
+outage_refuel,9999,9999,9999,0,% planned_outage_refuel   (days)
+outage_cooldown_heatup,9999,9999,9999,0,% planned_outage_cooldown_heatup   (days)
+forced_outage_rate_ref,9999,9999,9999,0,% forced_outage_rate_ref (%)
+forced_outage_rate,9999,9999,9999,0,% forced_outage_rate (%)
+OM_direct_spec,58,70,84,1,"% Direct specification of O&M costs, if <=0 then calculated with parameters 29-32  (indented) [$/kWe-y] e.g. 55"
+OM_fixed_cost,0.84,1.9,2.6,1,"% O&M fixed cost (mills/kWh); if value above <=0, then set to zero, since the actual value will be calculated using values 77-80. !!Caution!! If this parameter <=0 (i.e. use the values below), then L should also be <=0"
+refuel_outage_cost,9999,9999,9999,0,% material & man power cost of a refueling outage - this is really the cost of a planned outage ($/day)
+forced_outage_cost,9999,9999,9999,0,% material & man power cost of a forced outage ($/day) 
+personnel_cost,9999,9999,9999,0,% cost per personnel ($/year)
+num_personnel,9999,9999,9999,0,% # personnel
+nrchmt_fresh,4.2,4.2,4.2,0,% Enrichment for fresh uranium fuel (%)
+feed_nrchmt_fresh,0.711,0.711,0.711,0,% feed enrichment for fresh uranium fuel (%)
+tails_nrchmt_fresh,0.25,0.25,0.25,0,% tails enrichment for fresh uranium fuel (%)
+lead_time_purchase,2,2,2,0,% Lead time for purchase for fresh uranium fuel (y)
+lead_time_conv,2,2,2,0,% Lead time for conversion for fresh uranium fuel (y)
+lead_time_nrchmt,2,2,2,0,% Lead time for enrichment for fresh uranium fuel (y)
+lead_time_fab,0.5,0.5,0.5,0,% Lead time for fabrication for fresh uranium fuel (y)
+cost_U,65,110,230,2,% Cost of U ($/kg_U)
+cost_SWU,70,100,120,1,% Cost of SWU ($/kg_SWU)
+cost_fuel_fab,200,350,500,1,% Cost of Fuel Fabrication ($/kg_U)
+extra_fab_material,0,0,0,0,% Kg of extra fab material per kg of nominal HM
+added_cost_fuel,0,0,0,0,"% Added cost for fuel fabrication (normally zero, can be used to add burnable poisons, Th, other extra materials that have independent fuel cost distribution)"
+cost_conv,6,12,18,2,% Cost of Conversion ($/kg_U product as UF6)
+cost_deconv,4,6,8,1,% Cost of De-Conversion of depleted uranium ($/kg_U product as UF6)
+cost_offsite_storage,0,0,0,0,% Cost of off-site wet storage ($/kg_HM)
+cost_SNF_cond,50,100,130,1,% Cost of SNF conditioning before shipping ($/kg_HM)
+fab_loss_percent,0.2,0.2,0.2,0,% (%) Fabrication loss for fresh uranium fuel
+conv_loss_percent,0,0,0,0,% (%) Conversion loss for fresh uranium fuel 
+rprocsng_loss_percent,1,1,1,0,% (%) Losses at the reprocessing plant that accepts fuel from previous island
+frac_core_loaded_nat,1,1,1,0,% Fraction of the core loaded with natural uranium (to go the natural uranium enrichment route)
+frac_core_loaded_reprcsd,0,0,0,0,% Fraction of the core loaded with reprocessed material from the previous island
+primary_fissile_reprcsd,1,1,1,0,% primary fissile for reprocessed stream (coming from previous island): 1: Pu;  2: U (possibly re-enriched);   3: MA
+Pu_new,0.098,0.098,0.098,0,% Pu in new refabricated fuel
+MA_new,0.04,0.04,0.04,0,% MA in new refabricated fuel
+Pu_content_previous,0.012,0.012,0.012,0,% Pu content in the previous island fuel
+MA_content_previous,0.002,0.002,0.002,0,% MA content in the previous island fuel
+FP_content_previous,0.053,0.053,0.053,0,% FP content in the previous island fuel
+cost_rprocsng,1494,1850,2214,1,% Cost of reprocessing ($/kgHM)
+cost_MOX_fab,3000,3200,5000,1,% Cost of MOX fuel fabrication ($/kgHM)
+cost_FP_cond,2200,5000,6600,1,% Cost of FP conditioning before storage ($/kgFP) 
+cost_FP_geologic,1625,6500,8125,0,% Cost of FP to geologic reporsitory ($/kgFP)  
+lead_time_rprocsng,2,2,2,0,% Lead time for reprocessing
+lead_time_refab,2,2,2,0,% Lead time for re-fabrication
+lead_time_FP_cond,0,0,0,0,% Lead time for FP conditioning 
+lead_time_FP_disposal,0,0,0,0,% Lead time for FP disposal 
+nrchmt_lvl_product_rec,4.95,4.95,4.95,0,% Enrichment level of the product using recycled uranium
+nrchmt_lvl_tails_rec,0.3,0.3,0.3,0,% Enrichment level of the tails using recycled uranium
+nrchmt_lvl_feed_rec,1.5,1.5,1.5,0,% Enrichment level of the feed using recycled uranium (i.e. fraction of U-235 in fuel from the previous island)
+cost_conv_rec,6,11,50,1,% Cost of conversion for recycled uranium (usually higher than that of natural uranium)
+cost_nrchmt_rec,85,110,135,0,% Cost of enrichment services ($/SWU) for recycled uranium (usually higher than for natural uranium)
+lead_time_conv_rec,2,2,2,0,% Lead time for conversion of recycled uranium (y)
+lead_time_nrchmt_rec,2,2,2,0,% Lead time for enrichment of recycled uranium (y)
+frac_back_end_1,0,0,0,0,% Fraction of Back-end route  - 1: do nothing 
+frac_back_end_2,1,1,1,0,% Fraction of Back-end route  -  2: geol. repository 
+frac_back_end_3,0,0,0,0,% Fraction of Back-end route  -  3: dry storage+repository 
+frac_back_end_4,0,0,0,0,% Fraction of Back-end route  -  4: 1 mills/kWh - 
+frac_back_end_5,0,0,0,0,% Fraction of Back-end route  -  5: Reprocessing within the island
+cost_dry_storage,0,0,0,0,% Specific cost of dry storage ($/kgHM)
+cost_geologic_disposal,265,550,801,1,% Specific cost of geologic disposal ($/kgHM)
+cost_ec_rprocsng,9999,9999,9999,0,% Specific cost of electrochemical reprocessing/refabrication within the island ($/kgHM) (depl. U is supposed free).
+frac_FP_discharged,9999,9999,9999,0,% Fraction of FP in fuel discharged from same island recycling
+cost_replacement,9999,9999,9999,0,% Cost of replacement power ($/day)
+outage_duration_uprates,9999,9999,9999,0,% (Rarely Used) Duration of outage for power uprates (months)
+waste_disposal_fee,9999,9999,9999,0,% Waste disposal fee (mills/kWh)
+lead_time_dry_storage,0,0,0,0,% Lead time for dry-storage (y)
+frac_DU_deconverted,1,1,1,0,% Fraction of DU to be deconverted (the rest must be re-used)
+cost_Th,9999,9999,9999,0,% Cost of Th ($/kgHM)
+frac_NU_new,0,0,0,0,% Fraction of NU (kg/kg of new fuel) in newly refab fuel after reprocessing
+frac_DU_new,0,0,0,0,% Fraction of DU (kg/kg of new fuel) in newly refab fuel after reprocessing
+frac_Th_new,0,0,0,0,% Fraction of Th (kg/kg of new fuel) in newly refab fuel after reprocessing
+U_content_previous,0.95,0.95,0.95,0,% U content in the previous island fuel
+cost_RU_disposal,9999,9999,9999,0,% Cost of RU disposal ($/kgHM)
+frac_RU_discarded,9999,9999,9999,0,% Fraction of RU to be discarded (kg/kg of newly refabricated fuel)
+cost_DU_disposal,2,4,22,1,% Cost of DU disposal ($/kgHM)

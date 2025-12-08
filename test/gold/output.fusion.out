@@ -22,7 +22,8 @@ WARNING: No power input found in the user input file
 [Updated]  Changed from 16.0 million to 16.0 million
 
 [Updating] Variable lsa
-[Updated]  Changed from 4.0 1 to 4.0 1
+[Note] Original unit is not available, no conversion needed
+[Updated]  Changed from 4.0  to 4.0 
 
 =================================Extracting user changed variables==================================
 
@@ -31,7 +32,7 @@ WARNING: No power input found in the user input file
 | var_name |                     var_description                     | var_value | var_unit |
 +----------+---------------------------------------------------------+-----------+----------+
 |   csi    |                 allowance for site costs                |   16.00   | million  |
-|   lsa    | Level of safety assurance switch (generally use 3 or 4) |    4.00   |    1     |
+|   lsa    | Level of safety assurance switch (generally use 3 or 4) |    4.00   |          |
 +----------+---------------------------------------------------------+-----------+----------+
 
 
@@ -40,9 +41,9 @@ variable "csi" affects account(s):
 211
 
 variable "lsa" affects account(s):
-211, 212, 213, 2141, 2142, 215, 216, 2171, 2172, 2173, 2174, 22121, 22122, 22123, 22124, 22131,
-22132, 2214, 22211, 22212, 22213, 22214, 22215, 22221, 22222, 22223, 22224, 2223, 22611, 22612,
-2262, 2263, 241, 242, 243, 244, 245, 25, 26
+211, 212, 213, 2141, 2142, 215, 216, 2171, 2172, 2173, 2174, 2211, 22121, 22122, 22123, 22124,
+22131, 22132, 2214, 22211, 22212, 22213, 22214, 22215, 22221, 22222, 22223, 22224, 2223, 22611,
+22612, 2262, 2263, 241, 242, 243, 244, 245, 25, 26
 
 ======================================== Updating accounts =========================================
 [Updating] Account [211], running algorithm: [acc211], 
@@ -111,6 +112,27 @@ variable "lsa" affects account(s):
 [Updating] with formulation: acc2174 = 1.0e-6*uccr*cryvol**exprb*cmlsa[lsa - 1]
 [Updating] Total cost of account 2174
 [Updated]  Changed from 7,570,723.20 dollar to 7,570,723.00 dollar
+
+ 
+[Updating] Account [2211], running algorithm: [acc2211], 
+[Updating] with formulation: if ife == 1:
+        acc2211 = (1.0e-6*cmlsa[lsa - 1]
+            *  (ucblss*(fwmatm(1, 1)+ fwmatm(2, 1)+ fwmatm(3, 1))
+            + uccarb*(fwmatm(1, 2)+ fwmatm(2, 2)+ fwmatm(3, 2))
+            + ucblli2o*(fwmatm(1, 4) + fwmatm(2, 4)+ fwmatm(3, 4))
+            + ucconc*(fwmatm(1, 5)+ fwmatm(2, 5)+ fwmatm(3, 5))))
+    else:
+        acc2211 = (1.0e-6* cmlsa[lsa - 1]*((ucfwa + ucfws)* fwarea+ ucfwps)) 
+    acc2211 = fkind * acc2211
+    if ifueltyp == 1:
+        acc2211 = 0
+        acc2211 = fwallcst
+    elif ifueltyp == 2:
+        fwallcst = acc2211
+    else:
+        fwallcst = 0.0e0
+[Updating] Total cost of account 2211
+[Updated]  Changed from 191,300,792.10 dollar to 190,799,999.00 dollar
 
  
 [Updating] Account [22121], running algorithm: [acc22121], 
@@ -252,7 +274,7 @@ variable "lsa" affects account(s):
 
  
 [Updating] Account [22221], running algorithm: [acc22221], 
-[Updating] with formulation: 
+[Updating] with formulation: None
 [Updating] Total cost of account 22221
 [Updated]  Changed from 466,068,431.20 dollar to 466,068,431.00 dollar
 
@@ -294,7 +316,7 @@ variable "lsa" affects account(s):
 
  
 [Updating] Account [2263], running algorithm: [acc2263], 
-[Updating] with formulation: 
+[Updating] with formulation: None
 [Updating] Total cost of account 2263
 [Updated]  Changed from 193,350,599.40 dollar to 193,350,599.00 dollar
 
@@ -313,7 +335,7 @@ variable "lsa" affects account(s):
 
  
 [Updating] Account [243], running algorithm: [acc243], 
-[Updating] with formulation: 
+[Updating] with formulation: None
 [Updating] Total cost of account 243
 [Updated]  Changed from 6,573,339.47 dollar to 6,579,999.00 dollar
 
@@ -361,7 +383,7 @@ variable "lsa" affects account(s):
 +-----------------+--------------------------------------------------+------------+-------+---------------+
 | code_of_account |               account_description                | total_cost | level | review_status |
 +-----------------+--------------------------------------------------+------------+-------+---------------+
-| 2               | Plant direct cost                                |   5,523.94 |   0   |    Updated    |
+| 2               | Plant direct cost                                |   5,523.44 |   0   |    Updated    |
 |  21             | Total account 21 cost                            |     778.65 |   1   |    Updated    |
 |   211           | Site improvements, facilities, land              |      35.20 |   2   |   User Input  |
 |   212           | Reactor building cost                            |     452.16 |   2   |   User Input  |
@@ -376,9 +398,9 @@ variable "lsa" affects account(s):
 |    2172         | Control room buildings cost                      |      21.00 |   3   |   User Input  |
 |    2173         | Shop and warehouses cost                         |      11.50 |   3   |   User Input  |
 |    2174         | Cryogenic building cost                          |       7.57 |   3   |   User Input  |
-|  22             | Total account 22 cost                            |   4,450.97 |   1   |    Updated    |
-|   221           | Total account 221 cost                           |   1,413.06 |   2   |    Updated    |
-|    2211         | First wall cost                                  |     191.30 |   3   |   Unchanged   |
+|  22             | Total account 22 cost                            |   4,450.47 |   1   |    Updated    |
+|   221           | Total account 221 cost                           |   1,412.56 |   2   |    Updated    |
+|    2211         | First wall cost                                  |     190.80 |   3   |   User Input  |
 |    2212         | Blanket total cost                               |     981.66 |   3   |    Updated    |
 |     22121       | Blanket beryllium cost                           |     261.09 |   4   |   User Input  |
 |     22122       | Blanket breeder material cost                    |     639.85 |   4   |   User Input  |
@@ -453,3 +475,4 @@ variable "lsa" affects account(s):
 |  26             | Heat rejection system cost                       |      50.52 |   1   |   User Input  |
 +-----------------+--------------------------------------------------+------------+-------+---------------+
 Successfully created excel file fusion_updated_account.xlsx
+Successfully created excel file fusion_LCOE_results.xlsx

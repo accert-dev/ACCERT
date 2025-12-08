@@ -1,7 +1,9 @@
 mysql.connector-python==8.0.24
-prettytable
+prettytable==3.4.0
 configparser
 openpyxl
 pandoc
 pytest
 pandas
+numpy==1.26.4
+matplotlib

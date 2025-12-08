@@ -95,6 +95,22 @@ class Accert:
             self.alg_tabl = 'fusion_alg'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
+        elif "stellarator" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'stellarator'
+            self.acc_tabl = 'ste_acc'
+            self.cel_tabl = None
+            self.var_tabl = 'ste_var'
+            self.alg_tabl = 'fusion_alg'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
+        elif "user_defined" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'user_defined'
+            self.acc_tabl = 'user_defined_account'
+            self.cel_tabl = None
+            self.var_tabl = 'user_defined_variable'
+            self.alg_tabl = 'user_defined_algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
         return None
 
     def load_obj(self, input_path, accert_path):
@@ -113,8 +129,8 @@ class Accert:
         """    
 
         import subprocess
-        sonvalidxml = accert_path + "/bin/sonvalidxml"
-        schema = accert_path + "/src/etc/accert.sch"
+        sonvalidxml = os.path.join(accert_path, "bin", "sonvalidxml")
+        schema = os.path.join(accert_path, "src", "etc", "accert.sch")
         cmd = ' '.join([sonvalidxml, schema, input_path])
         xmlresult = subprocess.check_output(cmd, shell=True)
         ### obtain pieces of input by name for convenience
@@ -350,7 +366,7 @@ class Accert:
         # DEALLOCATE PREPARE stmt;
         # END$$
         # DELIMITER ;
-
+        var_id = str(var_id).replace("'","").replace('"','')
         c.callproc('extract_variable_info_on_name',(self.var_tabl, var_id))
         for row in c.stored_results():
             results = row.fetchall()
@@ -419,11 +435,20 @@ class Accert:
         # NOTE: org_var_info is a tuple
         org_var_value = float(org_var_info[0])
         org_var_unit = str(org_var_info[1])
+        # remove the quotes from the string
+        u_i_var_unit = str(u_i_var_unit).replace("'","").replace('"','')
+
         unit_convert = self.check_unit_conversion(org_var_unit,u_i_var_unit)
         if unit_convert:
             u_i_var_value = self.convert_unit(u_i_var_value,u_i_var_unit,org_var_unit)
             u_i_var_unit = org_var_unit
         # # DEBUG print
+        # do not print unit if unit is '1' or 'N/A' or 'none' or 'None'
+        if u_i_var_unit == '1' or u_i_var_unit == 'N/A' or u_i_var_unit == 'none' or u_i_var_unit == 'None':
+            u_i_var_unit = ''
+        if org_var_unit == '1' or org_var_unit == 'N/A' or org_var_unit == 'none' or org_var_unit == 'None':
+            org_var_unit = ''
+        var_id = str(var_id).replace("'","").replace('"','')
         self.update_variable_info_on_name(c,var_id,u_i_var_value,u_i_var_unit)
         if not quite:
             print('[Updated]  Changed from {} {} to {} {}\n'.format(org_var_value,org_var_unit, u_i_var_value, u_i_var_unit))
@@ -460,7 +485,8 @@ class Accert:
         # DEALLOCATE PREPARE stmt;
         # END$$
         # DELIMITER ;
-        c.callproc('update_variable_info_on_name', (self.var_tabl, var_id, float(var_value), var_unit))
+        args = (self.var_tabl, var_id, float(var_value), var_unit)
+        c.callproc('update_variable_info_on_name', args)
         return None    
 
     def update_super_variable(self, c,var_id):
@@ -506,11 +532,17 @@ class Accert:
         # # # create a value list for debugging
         # # var_value_lst = []
         variables = {}
-        for var_ind, var_name in enumerate(var_name_lst):
-            # var_value_lst.append(get_var_value_by_name(c, var_name))
-            variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
-        print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
-        alg_value = self.run_pre_alg(alg, **variables)
+        if self.cel_tabl:
+            for var_ind, var_name in enumerate(var_name_lst):
+                # var_value_lst.append(get_var_value_by_name(c, var_name))
+                variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
+            print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
+            alg_value = self.run_pre_alg(alg, **variables)
+        else:
+            for var_ind, var_name in enumerate(var_name_lst):
+                variables[var_name] = self.get_var_value_by_name(c, var_name)
+            print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
+            alg_value= self.update_account_value(alg, alg_name, variables)
         self.update_input_variable(c,sup_var_name,alg_value,sup_var_unit,quite = True)
         if alg_unit == '1':
             alg_unit=''
@@ -567,6 +599,34 @@ class Accert:
         tc_info = results[0]    
         return tc_info
 
+    def cal_LCOE(self, c, ut, accert):
+        """
+        Calculates the Levelized Cost of Energy (LCOE) based on the input data.
+
+        Parameters
+        ----------
+        c : MySQLCursor
+            MySQLCursor class instantiates objects that can execute MySQL statements.
+        ut : Utility_methods
+            Utility_methods class instantiates objects that can perform utility methods.
+        accert : Accert
+            Accert class instantiates objects that can perform ACCERT methods.
+
+        Returns
+        -------
+        None
+        """
+        if self.ref_model == 'fusion' or self.ref_model == 'stellarator':
+            # inport the LCOE module
+            module = importlib.import_module('Algorithm.LCOE')
+            LCOE_module = module.LCOE(c, ut, accert)
+            LCOE_module.setup_tables(Accert)
+            LCOE_module.quote_variable_values(c,Accert)
+            LCOE_module.coelc()
+            LCOE_module.generate_excel()
+        else:
+            pass
+
     def check_unit_conversion(self, org_unit, new_unit):
         """
         Checks if unit conversion is needed.
@@ -579,6 +639,9 @@ class Accert:
             New unit.
         """
         if org_unit == new_unit:
+            return False
+        elif org_unit == "N/A" or org_unit == "none" or org_unit == "None":
+            print('[Note] Original unit is not available, no conversion needed')
             return False
         else:
             return True
@@ -706,7 +769,12 @@ class Accert:
         if unit_convert:
             u_i_tc_value = self.convert_unit(u_i_tc_value,u_i_tc_unit,org_tc_unit)
             u_i_tc_unit = org_tc_unit
-        self.update_total_cost_on_name(c,tc_id,u_i_tc_value)   
+        self.update_total_cost_on_name(c,tc_id,u_i_tc_value)
+        # do not print unit if unit is '1' or 'N/A' or 'none' or 'None'
+        if u_i_tc_unit == '1' or u_i_tc_unit == 'N/A' or u_i_tc_unit == 'none' or u_i_tc_unit == 'None':
+           u_i_tc_unit = ''
+        if org_tc_unit == '1' or org_tc_unit == 'N/A' or org_tc_unit == 'none' or org_tc_unit == 'None':
+           org_tc_unit = ''  
         print('[Updated]  Changed from {:,.2f} {} to {:,.2f} {}\n'.format( org_tc_value,org_tc_unit, int(u_i_tc_value), org_tc_unit))
         return None
 
@@ -979,7 +1047,7 @@ class Accert:
 
     def update_new_accounts(self, c):
         """
-        Updates the affected accounts based on the variables. This funstion is called
+        Updates the affected accounts based on the variables. This function is called
         when there is no cost element table.
 
         Parameters
@@ -1318,23 +1386,6 @@ class Accert:
         print("..:::::..:::.......::::......::........::..:::::..:::::..:::::")
         print('\n')
 
-    # def write_to_excel(self, statement, filename,conn):
-    #     """
-    #     Writes the results to an excel file.
-
-    #     Parameters
-    #     ----------
-    #     statement : str
-    #         SQL statement.
-    #     filename : str
-    #         Filename of the excel file.
-    #     conn : MySQLConnection
-    #         MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
-    #     """
-    #     df=sql.read_sql(statement,conn)
-    #     df.to_excel(filename,index=False)       
-    #     print("Successfully created excel file {}".format(filename))
-
     def execute_accert(self, c, ut):
         """
         Executes the ACCERT program.
@@ -1363,6 +1414,7 @@ class Accert:
         self.process_COA(c, accert)
         self.finalize_process(c, ut, accert)
         self.generate_results(c, ut, accert)
+        self.cal_LCOE(c, ut, accert)
         conn.close()
         sys.stdout.close()
         sys.stdout = stdoutOrigin
@@ -1385,7 +1437,7 @@ class Accert:
         self.setup_table_names(accert)
         ut.setup_table_names(c, Accert)
         # if ref.model is not fusion or user defined then process cost elements:
-        if Accert.ref_model != "fusion":
+        if self.cel_tabl:
             ut.print_user_request_parameter(c)
         else:
             pass
@@ -1443,10 +1495,14 @@ class Accert:
         var_id : str
             Variable ID.
         """
-
+        var_id = str(var_id).replace('"', '').replace("'", "")
         sup_val_lst = self.extract_super_val(c, var_id)
         if sup_val_lst:
             sup_val_lst = sup_val_lst.split(',')
+            # also remove the space after the comma
+            sup_val_lst = [x.strip() for x in sup_val_lst]
+        if sup_val_lst:
+            print('[Updating] Other variable(s) should be updated based on {} are {} \n'.format(var_id, sup_val_lst))
         while sup_val_lst:
             sup_val = sup_val_lst.pop(0)
             if sup_val:
@@ -1454,7 +1510,7 @@ class Accert:
                 new_sup_val = self.extract_super_val(c, sup_val)
                 if new_sup_val:
                     sup_val_lst.extend(new_sup_val.split(','))
-
+                    
     def process_COA(self, c, accert):
         """
         Change the total cost of the account table by user inputs.
@@ -1503,7 +1559,7 @@ class Accert:
                 print('[USER_INPUT]', 'New account', user_added_coa, user_added_coa_desc, user_added_coa_total_cost, '\n')
                 self.insert_COA(c, str(parent_id),user_added_coa,user_added_coa_desc,user_added_coa_total_cost)
             # if ref.model is not fusion then process cost elements:
-            if self.ref_model!="fusion":
+            if self.cel_tabl:
                 self.process_ce(c, account)
             else:
                 if account.alg:
@@ -1514,7 +1570,7 @@ class Accert:
                                     self.process_var(c, var)
                                 else:
                                     self.process_alg(c, var)
-                elif accout.var:
+                elif account.var:
                     for var in account.var:
                         self.process_var(c, var)
             for i in range(3, 7):
@@ -1583,6 +1639,7 @@ class Accert:
                     u_i_var_unit = str(var.unit.value)
                     self.update_input_variable(c, var_id, u_i_var_value, u_i_var_unit, var_type='Sub ')
         var_id = str(alg_inp.id).replace('"', '')
+        
         self.update_super_variable(c, var_id)
 
     def check_and_process_total_cost(self, c, accert):
@@ -1729,7 +1786,7 @@ class Accert:
         ut.extract_user_changed_variables(c)
         # if the model is not fusion or user assigned then process the cost elements
         # NOTE: Accert is the instance of the Accert class use Capital A
-        if Accert.ref_model!="fusion" and Accert.ref_model!="user_assigned":
+        if self.cel_tabl:
             # NOTE the extract_affected_cost_elements will not be executed for fusion model
             ut.extract_affected_cost_elements(c)
             self.update_new_cost_elements(c)
@@ -1755,10 +1812,10 @@ class Accert:
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
         model = Accert.ref_model
-        if model in ["abr1000", "heatpipe", "lfr", "pwr12-be", "fusion"]:
+        if model:
             # generate results for the models in the future we can add more models
             self._generate_common_results(c, ut, accert, model)
-            if model != "fusion":
+            if self.cel_tabl:
                 self.generate_results_table_with_cost_elements(c, conn, level=3)
         self.generate_results_table(c, conn, level=3)
 
@@ -1784,8 +1841,8 @@ class Accert:
             self._print_results(ut, c, fac, lab, mat, all_flag)
         elif model == "pwr12-be":
             self._pwr12be_processing(c, ut, accert)
-        elif model == "fusion":
-            self._fusion_processing(c, ut, accert)
+        else:
+            self._no_cost_element_processing(c, ut, accert)
 
     def _common_cost_processing(self, c, accert):
         """
@@ -1830,7 +1887,6 @@ class Accert:
         else:
             ut.print_leveled_accounts(c, all=all_flag, tol_fac=fac, tol_lab=lab, tol_mat=mat, cost_unit='million', level=3)
 
-
     def _pwr12be_processing(self, c, ut, accert):
         """
         Processing for the pwr12-be model.
@@ -1856,9 +1912,8 @@ class Accert:
             print(' Generating results table for review '.center(100, '='))   
             print('\n') 
             ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
- 
 
-    def _fusion_processing(self, c, ut, accert):
+    def _no_cost_element_processing(self, c, ut, accert):
         """
         Processing for the fusion model.
 
@@ -1920,6 +1975,7 @@ class Accert:
         filename = str(self.ref_model) + filename_suffix
         df.to_excel(filename, index=False)
         print(f"Successfully created excel file {filename}")
+
 
     def generate_results_table(self, c, conn, level=3):
         """

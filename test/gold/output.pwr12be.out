@@ -46,6 +46,8 @@ Parameter "mwe" is required for cost elements:
 [Updating] Variable c_221.12_cs_weight
 [Updated]  Changed from 536.0 ton to 538.0 ton
 
+[Updating] Other variable(s) should be updated based on c_221.12_cs_weight are ['c_221.12_tol_weight'] 
+
 [Updating] Sup Variable c_221.12_tol_weight, running algorithm: [rpv_mass], 
 [Updating] with formulation: weight_of_carbon_steel+weight_of_stainless_steel
 [Updated]  Reference value is : 5.54e+02 ton, calculated value is: 5.56e+02 ton
@@ -53,6 +55,8 @@ Parameter "mwe" is required for cost elements:
 [Updating] Variable c_221.12_ss_weight
 [Unit Changed] Converted input from 40340.0 lbs to 18.29790128 ton
 [Updated]  Changed from 18.3 ton to 18.29790128 ton
+
+[Updating] Other variable(s) should be updated based on c_221.12_ss_weight are ['c_221.12_tol_weight'] 
 
 [Updating] Sup Variable c_221.12_tol_weight, running algorithm: [rpv_mass], 
 [Updating] with formulation: weight_of_carbon_steel+weight_of_stainless_steel
@@ -77,7 +81,7 @@ Parameter "mwe" is required for cost elements:
 | c_221.12_tol_weight |         weight of the reactor primary vessel         |   556.30  |   ton    |
 |         mwe         |                    user_input MWE                    |  1,000.00 |    MW    |
 |         mwth        |                   user_input mwth                    |  3,000.00 |    MW    |
-|        n_231        |                 Scaling exponent law                 |    1.03   |    1     |
+|        n_231        |                 Scaling exponent law                 |    1.03   |          |
 |         p_in        |                Inlet turbine pressure                |   68.00   |   bar    |
 |     ref_211_fac     |                yardwork factory cost                 |    0.27   | million  |
 |     ref_211_mat     |                yardwork material cost                |   10.30   | million  |
