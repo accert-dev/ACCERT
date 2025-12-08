@@ -1,7 +1,9 @@
 # Importing libararies
+import os
 import pandas as pd
 import numpy as np
-
+import scipy.stats as stats; 
+import threading
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -215,3 +217,151 @@ def update_cons_duration_2(db0, db1, ref_duration, prev_cons_duration, baseline_
     
     return 0.3*lab_hrs_delta *ref_duration + prev_cons_duration
     
+    
+    
+    
+
+# Arguments within the function
+
+# n_Samples_df, all_var_df ::  'n_Samples_df' contains number of scenarios to be sampled and simulated, 
+#                              'all_var_df' provided from the Excel sheet contains name, distribution types for  
+#                               multiple inputs to be sampled/varied
+
+def sampler(n_Samples, all_var_df): #  min_, max_, mean, stds
+  #  
+  # Reading number of samples requested
+  #    
+#   n_Samples     = n_Samples_df.iloc[0, 0]
+  #  
+  # Intitialize number of levers and sample-storing array
+  #
+  n_var          = all_var_df.shape[0]   # all_var_df.shape[0] provides of number of variables to be randomized
+  random_samples = np.empty((n_var, n_Samples))    # random sample-storing array
+  #  
+  # Extract information regarding distributions
+  #
+  dist_type = all_var_df['Distribution'];    min_ = all_var_df['Min'];     max_   = all_var_df['Max'];     med_ = all_var_df['Median']
+  low_ = all_var_df['Low'];                 high_ = all_var_df['High'];    Set_   = all_var_df['Set'];     Probabilities_ = all_var_df['Probabilities']
+  Type = all_var_df['Type'];
+  #  
+  # Intitialize random sample-storing array
+  #
+  for iter in range(n_var):
+    # print(iter)
+    #  
+    # Normal Distribution Sampler: Discrete and Continuous
+    #
+    if dist_type[iter] in ['normal', 'Normal', 'Gaussian', 'gaussian']:
+      random_samples[iter, :]  = trunc_normal(min_[iter], low_[iter], med_[iter], high_[iter], max_[iter], n_Samples)
+      if Type[iter] in ['discrete', 'Discrete', 'Integer', 'integer']:
+          random_samples[iter, :] = np.round(random_samples[iter, :])
+    #  
+    # Lognormal Distribution Sampler: Discrete and Continuous
+    #
+    elif dist_type[iter] in ['lognormal', 'LogNormal', 'Lognormal']:
+      random_samples[iter, :] = truncate_shift_lognormal(min_[iter], low_[iter], med_[iter],  high_[iter], max_[iter], n_Samples)
+      if Type[iter] in ['discrete', 'Discrete', 'Integer', 'integer']:
+          random_samples[iter, :] = np.round(random_samples[iter, :])
+    #  
+    # Triangular Distribution Sampler: Discrete and Continuous
+    #
+    elif dist_type[iter] in ['triangular', 'Triangular']:
+      random_samples[iter, :] = np.random.triangular(left=min_[iter], mode=med_[iter], right=max_[iter], size=n_Samples)
+      if Type[iter] in ['discrete', 'Discrete', 'Integer', 'integer']:
+          random_samples[iter, :] = np.round(random_samples[iter, :])
+    #  
+    # Uniform Distribution Sampler: Discrete and Continuous
+    #
+    elif dist_type[iter] in ['uniform', 'Uniform']:
+      random_samples[iter, :] = np.random.uniform(left=min_[iter], right=max_[iter], size=n_Samples)
+      if Type[iter] in ['discrete', 'Discrete', 'Integer', 'integer']:
+          random_samples[iter, :] = np.round(random_samples[iter, :])
+    #  
+    # Binary/Boolean/Discrete-Set Distribution Sampler
+    #
+    elif dist_type[iter] in ['binary', 'Binary', 'Boolean', 'boolean', 'set', 'Set']:
+      random_samples[iter, :] = np.random.choice(eval('['+Set_[iter]+']'), size = n_Samples, p = eval('['+Probabilities_[iter]+']'))
+    else:
+      raise ValueError("Enter valid distribution type. Invalid entry: {}".format(dist_type[i]))
+
+  return random_samples
+
+
+# Truncated Normal
+def trunc_normal(min_, low_, med_, high_, max_, n_Samples):
+    #
+    # 'low_' and 'high_' assumed to provide a spread of 4 standard deviations
+    #
+    std_dev = (high_ - low_)/4
+    #
+    # 'mean' same as 'median' provided in excel sheet due to distribution's symmetry 
+    #
+    mean_   = med_ 
+    #
+    # Scaling and shifting due to underlying script of scipy's truncated normal
+    #
+    a, b = (min_ - mean_)/std_dev, (max_ - mean_)/std_dev
+    #
+    # Generating 'n_Samples' samples from truncated normal
+    #
+    sample_ = stats.truncnorm.rvs(a=a, b=b, loc=mean_, scale=std_dev, size=n_Samples)
+    return sample_
+
+
+# Truncated and Shifted Lognormal via Normal Representation
+def truncate_shift_lognormal(min_, low_, med_, high_, max_, n_Samples):
+    # Calculate the shape and scale parameters
+    #
+    # X is lognormal, so the distribution logX is gaussian/normal in nature, 
+    # Thus, values of log(X_low) and log(X_high) assumed to span four standard deviations of the normal distribution of logX, 
+    # thereby providing shape factor for the lognormal distribution of X.
+    #
+    std_dev = (np.log(high_)-np.log(low_))/4   # standard deviation of normal distribution logX between high and low value
+    #
+    # 'median_' in the excel sheet provides the scale or the median for the distribution of logX
+    #
+    mean_ = np.log(med_)                             # mean of logX
+    #
+    # Scaling and shifting due to underlying script of scipy's truncated normal
+    #
+    a, b = (np.log(min_) - mean_)/std_dev, (np.log(max_) - mean_)/std_dev
+    #
+    # Generating ''n_Samples' samples from truncated normal
+    #
+    sample_normal = stats.truncnorm.rvs(a=a, b=b, loc=mean_, scale=std_dev, size=n_Samples)
+    sample_       = np.exp(sample_normal)
+    return sample_
+    
+    
+    
+def sheet_info(path_sheet, subsheet_names_dict):
+    #
+    # Reading Excel sheets as Dataframes
+    #
+    subsheet_keys   = subsheet_names_dict.keys()
+    subsheet_names  = subsheet_names_dict.values()
+    #
+    subsheets_df_dict = {};
+    #
+    for subsheet_keys, subsheet_names in subsheet_names_dict.items():
+        subsheets_df_dict[subsheet_keys] = pd.read_excel(path_sheet, sheet_name=subsheet_names_dict[subsheet_names])
+    return subsheets_df_dict    
+
+
+
+# def save_to_csv(batch_results, filename, mode='a'):
+#     """ Save batch results to CSV file. """
+#     df = pd.DataFrame(batch_results)
+    df.to_csv(filename, mode=mode, header=not os.path.isfile(filename), index=False)
+
+
+# Create a global lock
+csv_lock = threading.Lock()
+
+def save_to_csv(batch_results, filename, mode='a'):
+    """ Save batch results to CSV file in a thread-safe manner. """
+    df = pd.DataFrame(batch_results)
+    
+    # Acquire the lock before writing to the file
+    with csv_lock:
+        df.to_csv(filename, mode=mode, header=not os.path.isfile(filename), index=False)
