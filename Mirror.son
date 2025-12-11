@@ -1,0 +1,9 @@
+% ACCERT Test input file
+% Author: J. Zhou (jia.zhou@anl.gov)
+% Last updated: 08/08/2024
+
+
+accert{
+    ref_model = "mirror"
+    var("r_magnet"){value = 2.0 unit = "TODO"}
+}
