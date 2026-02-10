@@ -1,0 +1,112 @@
+# src/crf/model/finance.py
+# Insurance, interest, ITC application
+
+import numpy as np
+import pandas as pd
+
+from .core_accounts import update_high_level_costs, ITC_reduction_factor
+
+COLS = [
+    "Account", "Title", "Total Cost (USD)",
+    "Factory Equipment Cost", "Site Labor Hours",
+    "Site Labor Cost", "Site Material Cost"
+]
+
+
+def insurance_cost_update(base_df: pd.DataFrame, df: pd.DataFrame, power: float):
+    db = df.copy()
+
+    new_tot = float(db.loc[db["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0]) + \
+              float(db.loc[db["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
+
+    base_tot = float(base_df.loc[base_df["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0]) + \
+               float(base_df.loc[base_df["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
+
+    factor = new_tot / base_tot
+
+    old_52 = float(df.loc[df["Account"].eq(52), "Total Cost (USD)"].iloc[0])
+    db.loc[db["Account"].eq(52), "Total Cost (USD)"] = old_52 * factor
+
+    return update_high_level_costs(db, power)[COLS].copy()
+
+
+def update_interest_cost(
+    store,
+    df: pd.DataFrame,
+    final_construction_duration: float,
+    interest_rate: float,
+    startup_0: float,
+    n_th: int,
+    power: float
+):
+    Months, CDFs = store.get_spending_curve()
+    dur = float(final_construction_duration)
+
+    n_years = int(dur / 12)
+    if n_years <= 0:
+        annual_periods = np.array([dur - 1])
+    else:
+        annual_periods = np.linspace(12, 12 * n_years, n_years)
+        if max(annual_periods) < int(dur) - 1:
+            annual_periods = np.append(annual_periods, dur - 1)
+
+    new_period = 103 * annual_periods / dur
+    annual_cum_spend = np.interp(new_period, Months, CDFs)
+    annual_spend = np.append(annual_cum_spend[0], np.diff(annual_cum_spend))
+
+    tot_overnight_cost = float(
+        df.loc[df["Title"].eq("Total Overnight Cost (Accounts 10 to 50)"), "Total Cost (USD)"].iloc[0]
+    )
+
+    annual_loan_add = annual_spend * tot_overnight_cost
+    interest_exp = ((1 + interest_rate) ** ((dur - annual_periods) / 12)) * annual_loan_add - annual_loan_add
+    tot_int_exp_construction = float(np.sum(interest_exp))
+
+    if n_th == 1:
+        startup = startup_0
+    else:
+        startup = max(7, startup_0 * (1 - 0.3) ** np.log2(n_th))
+
+    int_exp_startup = (tot_int_exp_construction + tot_overnight_cost) * ((1 + interest_rate) ** (startup / 12)) \
+                      - (tot_int_exp_construction + tot_overnight_cost)
+
+    db = df.copy()
+    db.loc[db["Account"].eq(62), "Total Cost (USD)"] = float(int_exp_startup + tot_int_exp_construction)
+
+    db2 = update_high_level_costs(db, power)[COLS].copy()
+
+    tot_cap_investment = float(
+        db2.loc[db2["Title"].eq("Total Capital Investment Cost (All Accounts)"), "Total Cost (USD)"].iloc[0]
+    )
+    return db2, tot_overnight_cost, tot_cap_investment
+
+
+def update_itc(
+    df: pd.DataFrame,
+    tot_overnight_cost: float,
+    tot_cap_investment: float,
+    n_th: int,
+    ITC_0: float,
+    n_ITC: int,
+    reactor_power: float
+):
+    ITC = ITC_0 if n_th <= n_ITC else 0.0
+
+    db = df.copy()
+
+    itc_factor = ITC_reduction_factor(ITC)
+    itc_reduced_occ = tot_overnight_cost * itc_factor
+    occ_reduction = tot_overnight_cost - itc_reduced_occ
+
+    # Titles must exist (same as your original)
+    db.loc[db["Title"].eq("Total Overnight Cost - ITC reduced"), "Total Cost (USD)"] = itc_reduced_occ
+    db.loc[db["Title"].eq("Total Overnight Cost -ITC reduced (US$/kWe)"), "Total Cost (USD)"] = itc_reduced_occ / reactor_power
+    db.loc[db["Title"].eq("Total Capital Investment Cost - ITC reduced"), "Total Cost (USD)"] = tot_cap_investment - occ_reduction
+
+    levelized_NCI = float(
+        db.loc[db["Title"].eq("Total Capital Investment Cost - ITC reduced"), "Total Cost (USD)"].iloc[0] / reactor_power
+    )
+    db.loc[db["Title"].eq("Total Capital Investment Cost - ITC reduced (US$/kWe)"), "Total Cost (USD)"] = levelized_NCI
+
+    db2 = update_high_level_costs(db, reactor_power)[COLS].copy()
+    return db2, itc_reduced_occ / reactor_power, levelized_NCI
