@@ -3,9 +3,14 @@ import pickle
 import numpy as np
 
 from .io.excel_inputs import InputStore
-from .io.excel_levers import read_lever_sheet
+from .io.excel_levers import read_levers_sheet
 from .sampling.sampler import sample_levers
-from .sampling.lever_schema import unpack_sample_column, STATIC_KEYS
+from .sampling.lever_schema import (
+    STATIC_KEYS,
+    attach_internal_ids,
+    sample_column_to_levers,
+    static_row_from_levers,
+)
 from .sampling.postprocess import apply_itc_rounding
 from .model.avg_runner import run_avg_all_units
 from .utils.serialize import write_csv_row, stream_pickle_dump
@@ -44,28 +49,7 @@ def run_one_scenario(config: dict, levers: dict) -> dict:
     inp = normalize_levers(levers)
 
     result = run_avg_all_units(config=config, inp=inp, store=store)
-
-    # attach static input columns (raw sampled values, matching your previous CSV meaning)
-    # IMPORTANT: keep the same static key ordering as before
-    static_vals = {
-      "Num_orders": levers["num_orders"],
-      "ITC": levers["itc_percent"],
-      "n_ITC": levers["n_itc"],
-      "interest rate": levers["interest_percent"],
-      "Design completion": levers["design_completion_percent"],
-      "Design_Maturity_0": levers["design_maturity"],
-      "supply chain exp_0": levers["proc_exp"],
-      "N supply chain": levers["N_proc"],
-      "Const Proficiency": levers["ce_exp"],
-      "N const prof": levers["N_cons"],
-      "AE": levers["ae_exp"],
-      "N AE prof": levers["N_AE"],
-      "standardization": levers["standardization_percent"],
-      "modularity": levers["modularity_code"],
-      "BOP commercial": levers["bop_grade_code"],
-      "RB Safety Related": levers["rb_grade_code"],
-    }
-
+    static_vals = static_row_from_levers(levers)
     return {**static_vals, **result}
 
 
@@ -77,7 +61,9 @@ def run_sampling_from_excel(
     out_pkl: str,
     seed: int | None = None
 ):
-    levers_df = read_lever_sheet(levers_xlsx, sheet_name="Levers")
+    levers_df = read_levers_sheet(levers_xlsx, sheet_name="Levers")
+    levers_df = attach_internal_ids(levers_df)   
+
     samples = sample_levers(n_samples, levers_df, seed=seed)  # shape (n_levers, n_samples)
 
     # headers: build from max num_orders in sampled set
@@ -100,8 +86,12 @@ def run_sampling_from_excel(
         writer.writeheader()
 
         for i in range(n_samples):
-            levers = unpack_sample_column(samples[:, i])
-            row = run_one_scenario(config, levers)
+            # levers = unpack_sample_column(samples[:, i])
+            # row = run_one_scenario(config, levers)
+
+
+            levers_raw = sample_column_to_levers(samples, levers_df, i)
+            row = run_one_scenario(config, levers_raw)
 
             write_csv_row(writer, row, headers)
             stream_pickle_dump(row, pkl_f)
