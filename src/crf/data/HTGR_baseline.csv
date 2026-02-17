@@ -1,0 +1,34 @@
+Account,Title,Total Cost (USD),Factory Equipment Cost,Site Labor Hours,Site Labor Cost,Site Material Cost
+10,Capitalized Pre-Construction Costs,,,,,
+11,Land & Land Rights,15000000,,,,
+12,Site Permits,0,,,,
+13,Plant Licensing,107009771.98697068,,,,
+14,Plant Permits,4721019.352366353,,,,
+15,Plant Studies,0,,,,
+16,Plant Reports,0,,,,
+18,Other Pre-Construction Costs,36194481.701475374,,,,
+20,Capitalized Direct Costs,,,,,
+21,Structures & Improvements,914902741.8258162,90263521.11,11824706.17,591583080.9,233056139.8
+212,Reactor Containment Building,413396747.7312481,65728880.25,5420558.48,264358228.1,83309639.36
+213,Turbine Room and Heater Bay,15257054.820128009,1136504.843,163947.4218,8458991.226,5661558.752
+211 plus 214 to 219,Othe Structures & Improvements,486248939.27444005,23398136.024113387,6240200.264892557,318765861.5921357,144084941.65819097
+22,Reactor System,1813536678,1530752484,4903887.695,261886915.4,20897278.33
+23,Energy Conversion System,665574715.5139421,534245006.41216296,2364645.320437796,125502354.2820378,5827354.82
+232.1,Electricity Generation Systems,576019409.4786329,486396295.4,1682189.488,89623114.06,0
+233,Ultimate Heat Sink,89555306.03530921,47848710.99,682455.832,35879240.23,5827354.82
+24,Electrical Equipment,140508400.4910087,28461247.42,1597897.041,86126547.25,25920605.82
+25,Initial fuel inventory,451686470.5748004,,0,0,0
+26,Miscellaneous Equipment,214388490.9241457,65401342.47,2408453.335,129937709.9,19049438.52
+28,Simulator,0,,,,
+30,Capitalized Indirect Services Costs,,,,,
+31,Factory & Field Indirect Costs,691371059.4821017,,,,
+32,Factory and construction supervision,2734393138.1498117,,,,
+33,Start-Up Costs,115036083.38555087,,,,
+34,Shipping & Transportation Costs,9686167.142,,,,
+35,Engineering Services,738767482.8,,,,
+50,Capitalized Supplementary Costs,,,,,
+51,Taxes,187500,,,,
+52,Insurance,38204331.42647941,,,,
+54,Decommissioning ,8141760,,,,
+60,Capitalized Financial Costs,,,,,
+62,Interest ,3202161760.899656,,,,

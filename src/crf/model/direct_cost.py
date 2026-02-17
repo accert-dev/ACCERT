@@ -86,7 +86,7 @@ def add_BOP_RP_grades(
 
     # duration update from grade change
     duration_ref = 125 if reactor_type == "Concept A" else 80
-    new_dur = float(update_cons_duration(df, db2, duration_ref))
+    new_dur = update_cons_duration(df, db2, duration_ref)
 
     # modularity factor on duration; for n>=2 assume modularized
     mod = mod_0 if n_th == 1 else "modularized"

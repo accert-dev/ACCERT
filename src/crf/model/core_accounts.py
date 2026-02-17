@@ -1,7 +1,79 @@
-import numpy as np
 import pandas as pd
+import numpy as np
+
+REQUIRED_DERIVED_ROWS = [
+    # Subtotals + $/kWe rows
+    ("10s - Subtotal", None),
+    ("10s - $/kWe", None),
+    ("20s - Subtotal", None),
+    ("20s - $/kWe", None),
+    ("30s - Subtotal", None),
+    ("30s - $/kWe", None),
+    ("50s - Subtotal", None),
+    ("50s - $/kWe", None),
+    ("60s - Subtotal", None),
+    ("60s - $/kWe", None),
+
+    # Final results
+    ("Total Direct Capital Cost (Accounts 10 to 20)", None),
+    ("(Accounts 10 to 20) US$/kWe", None),
+    ("Base Construction Cost (Accounts 10 to 30)", None),
+    ("(Accounts 10 to 30) US$/kWe", None),
+    ("Total Overnight Cost (Accounts 10 to 50)", None),
+    ("(Accounts 10 to 50) US$/kWe", None),
+    ("Total Capital Investment Cost (All Accounts)", None),
+    ("(Accounts 10 to 60) US$/kWe", None),
+
+    # ITC reduced outputs (updated later, but create placeholders now)
+    ("Total Overnight Cost - ITC reduced", None),
+    ("Total Overnight Cost -ITC reduced (US$/kWe)", None),
+    ("Total Capital Investment Cost - ITC reduced", None),
+    ("Total Capital Investment Cost - ITC reduced (US$/kWe)", None),
+]
+
+COST_COLS = [
+    "Total Cost (USD)",
+    "Factory Equipment Cost",
+    "Site Labor Hours",
+    "Site Labor Cost",
+    "Site Material Cost",
+]
+
+ALL_COLS = ["Account", "Title"] + COST_COLS
+
+
+def _blank_row(title: str, account=None) -> dict:
+    row = {c: np.nan for c in ALL_COLS}
+    row["Title"] = title
+    row["Account"] = account
+    return row
+
+
+def ensure_rows_exist(db: pd.DataFrame) -> pd.DataFrame:
+    """
+    Ensure all derived rows exist (by Title). If missing, append them.
+    """
+    if not set(ALL_COLS).issubset(db.columns):
+        missing = set(ALL_COLS) - set(db.columns)
+        raise ValueError(f"DB missing columns: {sorted(missing)}")
+
+    existing_titles = set(db["Title"].astype(str).tolist())
+    rows_to_add = []
+    for title, acct in REQUIRED_DERIVED_ROWS:
+        if title not in existing_titles:
+            rows_to_add.append(_blank_row(title, acct))
+
+    if rows_to_add:
+        db = pd.concat([db, pd.DataFrame(rows_to_add)], ignore_index=True)
+
+    return db
+
 
 def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFrame:
+    db = ensure_rows_exist(db)
+    # change all nan to 0 for cost calculations (but keep original db unchanged for later use)
+    db = db.copy()
+    db[COST_COLS] = db[COST_COLS].fillna(0.0)
     # account 21
     db.loc[db.Account == 21, "Factory Equipment Cost"] = (
         db.loc[db.Account == 212, "Factory Equipment Cost"].values
@@ -23,7 +95,6 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
         + db.loc[db.Account == 213, "Site Labor Hours"].values
         + db.loc[db.Account == "211 plus 214 to 219", "Site Labor Hours"].values
     )
-
     # account 23
     db.loc[db.Account == 23, "Factory Equipment Cost"] = (
         db.loc[db.Account == "232.1", "Factory Equipment Cost"].values
@@ -43,36 +114,37 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     )
 
     # total costs for 21..26 components
-    for x in [21, 212, 213, "211 plus 214 to 219", 22, 23, "232.1", 233, 24, 26]:
+    for x in [21, 22, 23, 24, 25, 26]:
         db.loc[db["Account"] == x, "Total Cost (USD)"] = (
             db.loc[db["Account"] == x, "Factory Equipment Cost"]
             + db.loc[db["Account"] == x, "Site Labor Cost"]
             + db.loc[db["Account"] == x, "Site Material Cost"]
         )
 
+
     # subtotals
     db.loc[db["Title"] == "10s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin([11, 12, 13, 14, 15, 16, 18]), "Total Cost (USD)"
-    ].sum()
+        db["Account"].isin(["11", "12", "13", "14", "15", "16", "18"]), "Total Cost (USD)"
+    ].fillna(0.0).sum()
 
     db.loc[db["Title"] == "20s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin([21, 22, 23, 24, 25, 26, 28]), "Total Cost (USD)"
-    ].sum()
+        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Total Cost (USD)"
+    ].fillna(0.0).sum()
 
     db.loc[db["Title"] == "30s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin([31, 32, 33, 34, 35]), "Total Cost (USD)"
-    ].sum()
+        db["Account"].isin(["31", "32", "33", "34", "35"]), "Total Cost (USD)"
+    ].fillna(0.0).sum()
 
     db.loc[db["Title"] == "50s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin([51, 52, 54]), "Total Cost (USD)"
-    ].sum()
+        db["Account"].isin(["51", "52", "54"]), "Total Cost (USD)"
+    ].fillna(0.0).sum()
 
     db.loc[db["Title"] == "60s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin([62]), "Total Cost (USD)"
-    ].sum()
+        db["Account"].isin(["62"]), "Total Cost (USD)"
+    ].fillna(0.0).sum()
 
     # $/kWe lines
-    for t in ["10s", "20s", "30s", "40s", "50s", "60s"]:
+    for t in ["10s", "20s", "30s", "50s", "60s"]:
         db.loc[db["Title"] == f"{t} - $/kWe", "Total Cost (USD)"] = (
             db.loc[db["Title"] == f"{t} - Subtotal", "Total Cost (USD)"].values / reactor_power
         )
@@ -118,47 +190,50 @@ def ITC_reduction_factor(itc_level: float) -> float:
     factors = [1, 0.95, 0.73, 0.63, 0.53]
     return float(np.interp(itc_level, itc_values, factors))
 
-def sum_lab_hrs(db: pd.DataFrame):
-    return (
-        db.loc[db.Account == 21, "Site Labor Hours"].values
-        + db.loc[db.Account == 22, "Site Labor Hours"].values
-        + db.loc[db.Account == 23, "Site Labor Hours"].values
-        + db.loc[db.Account == 24, "Site Labor Hours"].values
-        + db.loc[db.Account == 26, "Site Labor Hours"].values
+def sum_lab_hrs(db: pd.DataFrame) -> float:
+    return float(
+        db.loc[db["Account"].astype(str).str.strip().isin(["21","22","23","24","26"]), "Site Labor Hours"]
+          .fillna(0.0)
+          .sum()
     )
 
-def update_cons_duration(db0: pd.DataFrame, db1: pd.DataFrame, ref_duration: float):
-    sum_old = (
-        db0.loc[db0.Account == 21, "Site Labor Hours"].values
-        + db0.loc[db0.Account == 22, "Site Labor Hours"].values
-        + db0.loc[db0.Account == 23, "Site Labor Hours"].values
-        + db0.loc[db0.Account == 24, "Site Labor Hours"].values
-        + db0.loc[db0.Account == 26, "Site Labor Hours"].values
-    )
-    sum_new = (
-        db1.loc[db1.Account == 21, "Site Labor Hours"].values
-        + db1.loc[db1.Account == 22, "Site Labor Hours"].values
-        + db1.loc[db1.Account == 23, "Site Labor Hours"].values
-        + db1.loc[db1.Account == 24, "Site Labor Hours"].values
-        + db1.loc[db1.Account == 26, "Site Labor Hours"].values
-    )
+def update_cons_duration(db0: pd.DataFrame, db1: pd.DataFrame, ref_duration: float) -> float:
+    def _sum_hours(db):
+        return float(
+            db.loc[db["Account"].astype(str).str.strip().isin(["21","22","23","24","26"]), "Site Labor Hours"]
+              .fillna(0.0)
+              .sum()
+        )
+
+    sum_old = _sum_hours(db0)
+    sum_new = _sum_hours(db1)
+
+    if sum_old == 0:
+        return float(ref_duration)
+
     lab_delta = (sum_new - sum_old) / sum_old
-    return 0.3 * lab_delta * ref_duration + ref_duration
+    return float(0.3 * lab_delta * ref_duration + ref_duration)
 
-def update_cons_duration_2(db0, db1, ref_duration, prev_cons_duration, baseline_lab_hours):
-    sum_old = (
-        db0.loc[db0.Account == 21, "Site Labor Hours"].values
-        + db0.loc[db0.Account == 22, "Site Labor Hours"].values
-        + db0.loc[db0.Account == 23, "Site Labor Hours"].values
-        + db0.loc[db0.Account == 24, "Site Labor Hours"].values
-        + db0.loc[db0.Account == 26, "Site Labor Hours"].values
-    )
-    sum_new = (
-        db1.loc[db1.Account == 21, "Site Labor Hours"].values
-        + db1.loc[db1.Account == 22, "Site Labor Hours"].values
-        + db1.loc[db1.Account == 23, "Site Labor Hours"].values
-        + db1.loc[db1.Account == 24, "Site Labor Hours"].values
-        + db1.loc[db1.Account == 26, "Site Labor Hours"].values
-    )
-    lab_delta = (sum_new - sum_old) / baseline_lab_hours
-    return 0.3 * lab_delta * ref_duration + prev_cons_duration
+def update_cons_duration_2(
+    db0: pd.DataFrame,
+    db1: pd.DataFrame,
+    ref_duration: float,
+    prev_cons_duration: float,
+    baseline_lab_hours: float
+) -> float:
+    def _sum_hours(db):
+        return float(
+            db.loc[db["Account"].astype(str).str.strip().isin(["21","22","23","24","26"]), "Site Labor Hours"]
+              .fillna(0.0)
+              .sum()
+        )
+
+    sum_old = _sum_hours(db0)
+    sum_new = _sum_hours(db1)
+
+    if baseline_lab_hours == 0:
+        return float(prev_cons_duration)
+
+    lab_delta = (sum_new - sum_old) / float(baseline_lab_hours)
+    return float(0.3 * lab_delta * ref_duration + float(prev_cons_duration))
+

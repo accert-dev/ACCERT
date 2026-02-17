@@ -13,21 +13,31 @@ COLS = [
 ]
 
 
-def insurance_cost_update(base_df: pd.DataFrame, df: pd.DataFrame, power: float):
-    db = df.copy()
+def insurance_cost_update(base_df, updated_df, power):
+    # Ensure derived rows (subtotals/totals) exist and are up-to-date
+    base_df = update_high_level_costs(base_df.copy(), power)
+    updated_df = update_high_level_costs(updated_df.copy(), power)
 
-    new_tot = float(db.loc[db["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0]) + \
-              float(db.loc[db["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
+    ref_20 = float(base_df.loc[base_df["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0])
+    ref_30 = float(base_df.loc[base_df["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
 
-    base_tot = float(base_df.loc[base_df["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0]) + \
-               float(base_df.loc[base_df["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
+    new_20 = float(updated_df.loc[updated_df["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0])
+    new_30 = float(updated_df.loc[updated_df["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
 
-    factor = new_tot / base_tot
+    denom = ref_20 + ref_30
+    change_factor = 1.0 if denom == 0 else (new_20 + new_30) / denom
 
-    old_52 = float(df.loc[df["Account"].eq(52), "Total Cost (USD)"].iloc[0])
-    db.loc[db["Account"].eq(52), "Total Cost (USD)"] = old_52 * factor
+    # Update Account 52 (Insurance)
+    mask52 = updated_df["Account"].astype(str).str.strip().eq("52")
+    if not mask52.any():
+        raise KeyError("Account 52 (Insurance) not found in dataframe.")
+    ins0 = float(np.nan_to_num(updated_df.loc[mask52, "Total Cost (USD)"].iloc[0], nan=0.0))
+    updated_df.loc[mask52, "Total Cost (USD)"] = ins0 * change_factor
 
-    return update_high_level_costs(db, power)[COLS].copy()
+    # Recompute derived totals after change
+    updated_df = update_high_level_costs(updated_df, power)
+    return updated_df
+
 
 
 def update_interest_cost(

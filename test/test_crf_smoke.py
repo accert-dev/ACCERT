@@ -10,15 +10,25 @@ from crf import run_one_scenario
 
 def main():
 
+    # config = {
+    #     "inputs_xlsx": "Inputs.xlsx",
+    #     "reactor_type": "Concept A",
+    #     "f_22": 250_000_000,
+    #     "f_2321": 150_000_000,
+    #     "land_cost_per_acre_0": 22000,
+    #     "startup_0": 16,
+    #     "staggering_ratio": 0.75,
+    # }
     config = {
-        "inputs_xlsx": "Inputs.xlsx",
-        "reactor_type": "Concept A",
-        "f_22": 250_000_000,
-        "f_2321": 150_000_000,
-        "land_cost_per_acre_0": 22000,
-        "startup_0": 16,
-        "staggering_ratio": 0.75,
+    "reactor_type": "HTGR", # or "SFR"
+    # "data_dir": "src/crf/data",   # 
+    "f_22": 250_000_000,
+    "f_2321": 150_000_000,
+    "land_cost_per_acre_0": 22000,
+    "startup_0": 16,
+    "staggering_ratio": 0.75,
     }
+
 
     # baseline-style levers (raw form, like from Excel)
     levers = {

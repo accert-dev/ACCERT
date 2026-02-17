@@ -28,10 +28,12 @@ def update_indirect_cost(
     sum_new_mat_cost = 0.0
     sum_new_lab_cost = 0.0
     sum_new_lab_hrs = 0.0
-    for acct in [21, 22, 23, 24, 26]:
-        sum_new_mat_cost += float(db.loc[db["Account"].eq(acct), "Site Material Cost"].iloc[0])
-        sum_new_lab_cost += float(db.loc[db["Account"].eq(acct), "Site Labor Cost"].iloc[0])
-        sum_new_lab_hrs += float(db.loc[db["Account"].eq(acct), "Site Labor Hours"].iloc[0])
+    mask = db["Account"].astype(str).str.strip().isin(["21","22","23","24","26"])
+    sum_new_mat_cost = float(db.loc[mask, "Site Material Cost"].fillna(0.0).sum())
+    sum_new_lab_cost = float(db.loc[mask, "Site Labor Cost"].fillna(0.0).sum())
+    sum_new_lab_hrs  = float(db.loc[mask, "Site Labor Hours"].fillna(0.0).sum())
+
+
 
     dur = float(final_construction_duration)
 
