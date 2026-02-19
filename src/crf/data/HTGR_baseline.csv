@@ -17,7 +17,7 @@ Account,Title,Total Cost (USD),Factory Equipment Cost,Site Labor Hours,Site Labo
 232.1,Electricity Generation Systems,576019409.4786329,486396295.4,1682189.488,89623114.06,0
 233,Ultimate Heat Sink,89555306.03530921,47848710.99,682455.832,35879240.23,5827354.82
 24,Electrical Equipment,140508400.4910087,28461247.42,1597897.041,86126547.25,25920605.82
-25,Initial fuel inventory,451686470.5748004,,0,0,0
+25,Initial fuel inventory,451686470.5748004,451686470.5748004,0,0,0
 26,Miscellaneous Equipment,214388490.9241457,65401342.47,2408453.335,129937709.9,19049438.52
 28,Simulator,0,,,,
 30,Capitalized Indirect Services Costs,,,,,

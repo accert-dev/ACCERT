@@ -75,51 +75,63 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     db = db.copy()
     db[COST_COLS] = db[COST_COLS].fillna(0.0)
     # account 21
-    db.loc[db.Account == 21, "Factory Equipment Cost"] = (
-        db.loc[db.Account == 212, "Factory Equipment Cost"].values
-        + db.loc[db.Account == 213, "Factory Equipment Cost"].values
+    db.loc[db.Account == "21", "Factory Equipment Cost"] = (
+        db.loc[db.Account == "212", "Factory Equipment Cost"].values
+        + db.loc[db.Account == "213", "Factory Equipment Cost"].values
         + db.loc[db.Account == "211 plus 214 to 219", "Factory Equipment Cost"].values
     )
-    db.loc[db.Account == 21, "Site Material Cost"] = (
-        db.loc[db.Account == 212, "Site Material Cost"].values
-        + db.loc[db.Account == 213, "Site Material Cost"].values
+    db.loc[db.Account == "21", "Site Material Cost"] = (
+        db.loc[db.Account == "212", "Site Material Cost"].values
+        + db.loc[db.Account == "213", "Site Material Cost"].values
         + db.loc[db.Account == "211 plus 214 to 219", "Site Material Cost"].values
     )
-    db.loc[db.Account == 21, "Site Labor Cost"] = (
-        db.loc[db.Account == 212, "Site Labor Cost"].values
-        + db.loc[db.Account == 213, "Site Labor Cost"].values
+    db.loc[db.Account == "21", "Site Labor Cost"] = (
+        db.loc[db.Account == "212", "Site Labor Cost"].values
+        + db.loc[db.Account == "213", "Site Labor Cost"].values
         + db.loc[db.Account == "211 plus 214 to 219", "Site Labor Cost"].values
     )
-    db.loc[db.Account == 21, "Site Labor Hours"] = (
-        db.loc[db.Account == 212, "Site Labor Hours"].values
-        + db.loc[db.Account == 213, "Site Labor Hours"].values
+    db.loc[db.Account == "21", "Site Labor Hours"] = (
+        db.loc[db.Account == "212", "Site Labor Hours"].values
+        + db.loc[db.Account == "213", "Site Labor Hours"].values
         + db.loc[db.Account == "211 plus 214 to 219", "Site Labor Hours"].values
     )
     # account 23
-    db.loc[db.Account == 23, "Factory Equipment Cost"] = (
+    db.loc[db.Account == "23", "Factory Equipment Cost"] = (
         db.loc[db.Account == "232.1", "Factory Equipment Cost"].values
-        + db.loc[db.Account == 233, "Factory Equipment Cost"].values
+        + db.loc[db.Account == "233", "Factory Equipment Cost"].values
     )
-    db.loc[db.Account == 23, "Site Material Cost"] = (
+    db.loc[db.Account == "23", "Site Material Cost"] = (
         db.loc[db.Account == "232.1", "Site Material Cost"].values
-        + db.loc[db.Account == 233, "Site Material Cost"].values
+        + db.loc[db.Account == "233", "Site Material Cost"].values
     )
-    db.loc[db.Account == 23, "Site Labor Cost"] = (
+    db.loc[db.Account == "23", "Site Labor Cost"] = (
         db.loc[db.Account == "232.1", "Site Labor Cost"].values
-        + db.loc[db.Account == 233, "Site Labor Cost"].values
+        + db.loc[db.Account == "233", "Site Labor Cost"].values
     )
-    db.loc[db.Account == 23, "Site Labor Hours"] = (
+    db.loc[db.Account == "23", "Site Labor Hours"] = (
         db.loc[db.Account == "232.1", "Site Labor Hours"].values
-        + db.loc[db.Account == 233, "Site Labor Hours"].values
+        + db.loc[db.Account == "233", "Site Labor Hours"].values
     )
 
-    # total costs for 21..26 components
-    for x in [21, 22, 23, 24, 25, 26]:
-        db.loc[db["Account"] == x, "Total Cost (USD)"] = (
-            db.loc[db["Account"] == x, "Factory Equipment Cost"]
-            + db.loc[db["Account"] == x, "Site Labor Cost"]
-            + db.loc[db["Account"] == x, "Site Material Cost"]
-        )
+    # total costs for all accounts should be updated except the lines
+    # with no Account (subtotals, $/kWe, and final results)
+    db.loc[db["Account"].notna(), "Total Cost (USD)"] = (
+        db.loc[db["Account"].notna(), "Factory Equipment Cost"].values
+        + db.loc[db["Account"].notna(), "Site Material Cost"].values
+        + db.loc[db["Account"].notna(), "Site Labor Cost"].values
+    )
+
+
+
+
+
+
+    # for x in [21, 22, 23, 24, 25, 26]:
+    #     db.loc[db["Account"] == x, "Total Cost (USD)"] = (
+    #         db.loc[db["Account"] == x, "Factory Equipment Cost"]
+    #         + db.loc[db["Account"] == x, "Site Labor Cost"]
+    #         + db.loc[db["Account"] == x, "Site Material Cost"]
+    #     )
 
 
     # subtotals
@@ -183,6 +195,8 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     db.loc[db["Title"] == "(Accounts 10 to 60) US$/kWe", "Total Cost (USD)"] = (
         db.loc[db["Title"] == "Total Capital Investment Cost (All Accounts)", "Total Cost (USD)"].values / reactor_power
     )
+    # print(db[8:21])
+    # print(db[35:37])  # debug print
     return db
 
 def ITC_reduction_factor(itc_level: float) -> float:
