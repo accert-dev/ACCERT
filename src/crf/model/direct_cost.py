@@ -186,8 +186,9 @@ def update_direct_cost(
 ):
     reactor_df, power = store.get_baseline(reactor_type)
     db, baseline_lab_hours = add_factory_cost(reactor_df, power, f_22, f_2321, num_orders)
-    # all Total Cost (USD) columns should be 0 at this point
-    db["Total Cost (USD)"] = 0.0
+    # all Total Cost (USD) columns should be 0 
+    # when accounts are in 20s
+    db.loc[db["Account"].isin(['21', '211 plus 214 to 219', '212', '213', '22', '23', '232.1', '233', '24', '25', '26']), "Total Cost (USD)"] = 0.0
     db = update_high_level_costs(db, power)[COLS].copy()
     # print("After factory cost update:")
     # print(db[8:21])

@@ -95,6 +95,8 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
         + db.loc[db.Account == "213", "Site Labor Hours"].values
         + db.loc[db.Account == "211 plus 214 to 219", "Site Labor Hours"].values
     )
+
+
     # account 23
     db.loc[db.Account == "23", "Factory Equipment Cost"] = (
         db.loc[db.Account == "232.1", "Factory Equipment Cost"].values
@@ -114,24 +116,16 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     )
 
     # total costs for all accounts should be updated except the lines
-    # with no Account (subtotals, $/kWe, and final results)
-    db.loc[db["Account"].notna(), "Total Cost (USD)"] = (
-        db.loc[db["Account"].notna(), "Factory Equipment Cost"].values
-        + db.loc[db["Account"].notna(), "Site Material Cost"].values
-        + db.loc[db["Account"].notna(), "Site Labor Cost"].values
-    )
+    # with no Account (subtotals, $/kWe, and final results) but only 
+    # accounts under 20s has factory equipment costs, labor hours, and 
+    # labor costs, so we can skip accounts 10s, 30s 50s and 60s
 
-
-
-
-
-
-    # for x in [21, 22, 23, 24, 25, 26]:
-    #     db.loc[db["Account"] == x, "Total Cost (USD)"] = (
-    #         db.loc[db["Account"] == x, "Factory Equipment Cost"]
-    #         + db.loc[db["Account"] == x, "Site Labor Cost"]
-    #         + db.loc[db["Account"] == x, "Site Material Cost"]
-    #     )
+    for x in ['21', '211 plus 214 to 219', '212', '213', '22', '23', '232.1', '233', '24', '25', '26']:
+        db.loc[db["Account"] == x, "Total Cost (USD)"] = (
+            db.loc[db["Account"] == x, "Factory Equipment Cost"]
+            + db.loc[db["Account"] == x, "Site Labor Cost"]
+            + db.loc[db["Account"] == x, "Site Material Cost"]
+        )
 
 
     # subtotals
@@ -195,8 +189,7 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     db.loc[db["Title"] == "(Accounts 10 to 60) US$/kWe", "Total Cost (USD)"] = (
         db.loc[db["Title"] == "Total Capital Investment Cost (All Accounts)", "Total Cost (USD)"].values / reactor_power
     )
-    # print(db[8:21])
-    # print(db[35:37])  # debug print
+    # print(db[["Account", "Title", "Total Cost (USD)"]])
     return db
 
 def ITC_reduction_factor(itc_level: float) -> float:
