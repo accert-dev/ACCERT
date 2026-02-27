@@ -19,7 +19,7 @@ Account,Title,Total Cost (USD),Factory Equipment Cost,Site Labor Hours,Site Labo
 24,Electrical Equipment,140508400.4910087,28461247.42,1597897.041,86126547.25,25920605.82
 25,Initial fuel inventory,451686470.5748004,451686470.5748004,0,0,0
 26,Miscellaneous Equipment,214388490.9241457,65401342.47,2408453.335,129937709.9,19049438.52
-28,Simulator,0,,,,
+28,Simulator,0,0,0,0,0
 30,Capitalized Indirect Services Costs,,,,,
 31,Factory & Field Indirect Costs,691371059.4821017,,,,
 32,Factory and construction supervision,2734393138.1498117,,,,

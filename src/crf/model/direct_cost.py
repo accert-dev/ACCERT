@@ -85,9 +85,11 @@ def add_BOP_RP_grades(
     db2 = update_high_level_costs(db, power)[COLS].copy()
 
     # duration update from grade change
-    duration_ref = 125 if reactor_type == "Concept A" else 80
+    duration_ref = 125 if reactor_type == "HTGR" else 80
+    # duration_ref = 100 if reactor_type == "HTGR" else 64
+    print(f"DEBUG: reactor_type={reactor_type}, duration_ref={duration_ref}")
     new_dur = update_cons_duration(df, db2, duration_ref)
-
+    print(f"DEBUG: new_dur before modulized change={new_dur}")
     # modularity factor on duration; for n>=2 assume modularized
     mod = mod_0 if n_th == 1 else "modularized"
     mod_factor = 0.8 if mod == "modularized" else 1.0
@@ -146,7 +148,7 @@ def add_reworking_productivity(
 
     productivity = 0.145 * ce_exp + 0.71
 
-    if reactor_type == "Concept B":
+    if reactor_type == "SFR":
         rework = (-0.9 * design_completion + 1.9) * (-0.15 * ae_exp + 1.3) * (-0.15 * ce_exp + 1.3)
         ref_duration = 80
     else:
@@ -162,8 +164,9 @@ def add_reworking_productivity(
         setv(db, acct, "Site Labor Cost", float(getv(df, acct, "Site Labor Cost")) * rework / productivity)
 
     db2 = update_high_level_costs(db, power)[COLS].copy()
-
+    print(f"DEBUG: ref_duration={ref_duration}, prev_cons_duration={prev_cons_duration}, baseline_lab_hours={baseline_lab_hours}")             
     new_dur = float(update_cons_duration_2(df, db2, ref_duration, prev_cons_duration, baseline_lab_hours))
+    print(f"DEBUG: new_dur={new_dur}")
     return db2, new_dur
 
 
@@ -190,27 +193,12 @@ def update_direct_cost(
     # when accounts are in 20s
     db.loc[db["Account"].isin(['21', '211 plus 214 to 219', '212', '213', '22', '23', '232.1', '233', '24', '25', '26']), "Total Cost (USD)"] = 0.0
     db = update_high_level_costs(db, power)[COLS].copy()
-    # print("After factory cost update:")
-    # print(db[8:21])
-    # print(db[35:37])  # debug print
     db = add_land_cost(db, land_cost_per_acre_0, power)
-    # print("After land cost update:")
-    # print(db[8:21])
-    # print(db[35:37])  # debug print
     db, prev_dur = add_BOP_RP_grades(db, RB_grade_0, BOP_grade_0, power, reactor_type, n_th, mod_0)
-    # print("After BOP/RP grade update:")
-    # print(db[8:21])
-    # print(db[35:37])  # debug print 
     db = add_bulk_ordering(db, num_orders, f_22, f_2321, power)
-    # print("After bulk ordering update:")
-    # print(db[8:21])
-    # print(db[35:37])  # debug print 
     db, dur_no_delay = add_reworking_productivity(
         db, reactor_type, n_th,
         design_completion_0, ae_exp_0, N_AE, ce_exp_0, N_cons,
         power, prev_dur, baseline_lab_hours
     )
-    # print("After direct cost updates:")
-    # print(db[8:21])
-    # print(db[35:37])  # debug print
     return db, dur_no_delay

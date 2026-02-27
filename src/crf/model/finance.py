@@ -119,4 +119,9 @@ def update_itc(
     db.loc[db["Title"].eq("Total Capital Investment Cost - ITC reduced (US$/kWe)"), "Total Cost (USD)"] = levelized_NCI
 
     db2 = update_high_level_costs(db, reactor_power)[COLS].copy()
+    print('DEBUG db2')
+    # print line 22 to 26 and line 37 38
+    print(db2[22:27])
+    # print line 37 and 38    Title  Total Cost (USD)
+    print(db2.iloc[[37, 38]][["Title", "Total Cost (USD)"]])
     return db2, itc_reduced_occ / reactor_power, levelized_NCI

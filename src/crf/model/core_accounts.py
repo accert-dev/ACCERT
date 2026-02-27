@@ -189,7 +189,6 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     db.loc[db["Title"] == "(Accounts 10 to 60) US$/kWe", "Total Cost (USD)"] = (
         db.loc[db["Title"] == "Total Capital Investment Cost (All Accounts)", "Total Cost (USD)"].values / reactor_power
     )
-    # print(db[["Account", "Title", "Total Cost (USD)"]])
     return db
 
 def ITC_reduction_factor(itc_level: float) -> float:
