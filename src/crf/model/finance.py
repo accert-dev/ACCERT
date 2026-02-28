@@ -3,7 +3,7 @@
 
 import numpy as np
 import pandas as pd
-
+from ..utils.df_ops import setv
 from .core_accounts import update_high_level_costs, ITC_reduction_factor
 
 COLS = [
@@ -76,12 +76,12 @@ def update_interest_cost(
         startup = startup_0
     else:
         startup = max(7, startup_0 * (1 - 0.3) ** np.log2(n_th))
-
     int_exp_startup = (tot_int_exp_construction + tot_overnight_cost) * ((1 + interest_rate) ** (startup / 12)) \
                       - (tot_int_exp_construction + tot_overnight_cost)
 
     db = df.copy()
-    db.loc[db["Account"].eq(62), "Total Cost (USD)"] = float(int_exp_startup + tot_int_exp_construction)
+    int_curved = float(tot_int_exp_construction + int_exp_startup)
+    setv(db, "62", "Total Cost (USD)", int_curved)
 
     db2 = update_high_level_costs(db, power)[COLS].copy()
 
@@ -108,7 +108,6 @@ def update_itc(
     itc_reduced_occ = tot_overnight_cost * itc_factor
     occ_reduction = tot_overnight_cost - itc_reduced_occ
 
-    # Titles must exist (same as your original)
     db.loc[db["Title"].eq("Total Overnight Cost - ITC reduced"), "Total Cost (USD)"] = itc_reduced_occ
     db.loc[db["Title"].eq("Total Overnight Cost -ITC reduced (US$/kWe)"), "Total Cost (USD)"] = itc_reduced_occ / reactor_power
     db.loc[db["Title"].eq("Total Capital Investment Cost - ITC reduced"), "Total Cost (USD)"] = tot_cap_investment - occ_reduction
@@ -119,9 +118,4 @@ def update_itc(
     db.loc[db["Title"].eq("Total Capital Investment Cost - ITC reduced (US$/kWe)"), "Total Cost (USD)"] = levelized_NCI
 
     db2 = update_high_level_costs(db, reactor_power)[COLS].copy()
-    print('DEBUG db2')
-    # print line 22 to 26 and line 37 38
-    print(db2[22:27])
-    # print line 37 and 38    Title  Total Cost (USD)
-    print(db2.iloc[[37, 38]][["Title", "Total Cost (USD)"]])
     return db2, itc_reduced_occ / reactor_power, levelized_NCI

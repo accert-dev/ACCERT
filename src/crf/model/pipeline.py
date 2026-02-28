@@ -57,6 +57,7 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
         n_th=n_th,
         power=power,
     )
+    org_occ = float(tot_occ/power)
+    org_tci = float(tot_cap/power)  
     final_df, net_occ, nci = update_itc(with_interest, tot_occ, tot_cap, n_th, inp["ITC_0"], inp["n_ITC"], power)
-
-    return final_df, net_occ, nci, float(final_dur)
+    return final_df, org_occ, net_occ, org_tci, nci, float(final_dur)

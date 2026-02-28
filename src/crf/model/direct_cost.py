@@ -19,7 +19,9 @@ COLS = [
     "Factory Equipment Cost", "Site Labor Hours",
     "Site Labor Cost", "Site Material Cost"
 ]
-# exclude account 25 because it is the initial fuel cost and should not be affected by rework
+# exclude account 25 because it is the initial fuel cost and 
+# should not be affected by rework. Those accounts are end level accounts
+# that do not have sub-accounts 
 ACCT_DIRECT = [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]
 
 
@@ -87,13 +89,10 @@ def add_BOP_RP_grades(
     # duration update from grade change
     duration_ref = 125 if reactor_type == "HTGR" else 80
     # duration_ref = 100 if reactor_type == "HTGR" else 64
-    print(f"DEBUG: reactor_type={reactor_type}, duration_ref={duration_ref}")
     new_dur = update_cons_duration(df, db2, duration_ref)
-    print(f"DEBUG: new_dur before modulized change={new_dur}")
     # modularity factor on duration; for n>=2 assume modularized
     mod = mod_0 if n_th == 1 else "modularized"
     mod_factor = 0.8 if mod == "modularized" else 1.0
-
     return db2, new_dur * mod_factor
 
 
@@ -164,9 +163,7 @@ def add_reworking_productivity(
         setv(db, acct, "Site Labor Cost", float(getv(df, acct, "Site Labor Cost")) * rework / productivity)
 
     db2 = update_high_level_costs(db, power)[COLS].copy()
-    print(f"DEBUG: ref_duration={ref_duration}, prev_cons_duration={prev_cons_duration}, baseline_lab_hours={baseline_lab_hours}")             
     new_dur = float(update_cons_duration_2(df, db2, ref_duration, prev_cons_duration, baseline_lab_hours))
-    print(f"DEBUG: new_dur={new_dur}")
     return db2, new_dur
 
 

@@ -19,7 +19,6 @@ def main():
     "staggering_ratio": 0.75,
     }
 
-    # baseline-style levers (raw form, like from Excel)
     levers = {
         "num_orders": 13, 
         "itc_percent": 40,
@@ -40,14 +39,10 @@ def main():
     }
 
     result = run_one_scenario(config, levers)
-
-    print("\nTest Successful")
-    print("avg_OCC:", result["avg_OCC"])
-    print("avg_TCI:", result["avg_TCI"])
-    print("avg_duration:", result["avg_duration"])
     for k, v in result.items():
-        if k not in ["avg_OCC", "avg_TCI", "avg_duration"]:
-            print(f"{k}: {v}")  
+        print(f"{k}: {v}")
+    print("\nTest Successful")
+
 
 if __name__ == "__main__":
     main()

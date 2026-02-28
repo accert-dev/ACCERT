@@ -204,6 +204,10 @@ def sum_lab_hrs(db: pd.DataFrame) -> float:
     )
 
 def update_cons_duration(db0: pd.DataFrame, db1: pd.DataFrame, ref_duration: float) -> float:
+    """Calculate new construction duration based on change in labor hours for accounts 21, 22, 23, 24, and 26.
+    The formula is: new_duration = 0.3 * labor_hours_delta * ref_duration + ref_duration, where labor_hours_delta = (new_hours - old_hours) / old_hours.
+    this function should be used before the standardization effect is applied.
+    """
     def _sum_hours(db):
         return float(
             db.loc[db["Account"].astype(str).str.strip().isin(["21","22","23","24","26"]), "Site Labor Hours"]
@@ -213,10 +217,6 @@ def update_cons_duration(db0: pd.DataFrame, db1: pd.DataFrame, ref_duration: flo
 
     sum_old = _sum_hours(db0)
     sum_new = _sum_hours(db1)
-
-    if sum_old == 0:
-        return float(ref_duration)
-
     lab_delta = (sum_new - sum_old) / sum_old
     return float(0.3 * lab_delta * ref_duration + ref_duration)
 
@@ -227,6 +227,8 @@ def update_cons_duration_2(
     prev_cons_duration: float,
     baseline_lab_hours: float
 ) -> float:
+    """Calculate new construction duration based on change in labor hours for accounts 21, 22, 23, 24, and 26. This should be used after the standardization effect is applied, so the labor hours change should be compared to the baseline labor hours instead of the previous labor hours. NOTE I think I should merge this with the previous function and just pass in the baseline labor hours as an argument.
+    """
     def _sum_hours(db):
         return float(
             db.loc[db["Account"].astype(str).str.strip().isin(["21","22","23","24","26"]), "Site Labor Hours"]
@@ -236,10 +238,6 @@ def update_cons_duration_2(
 
     sum_old = _sum_hours(db0)
     sum_new = _sum_hours(db1)
-
-    if baseline_lab_hours == 0:
-        return float(prev_cons_duration)
-
     lab_delta = (sum_new - sum_old) / float(baseline_lab_hours)
     return float(0.3 * lab_delta * ref_duration + float(prev_cons_duration))
 

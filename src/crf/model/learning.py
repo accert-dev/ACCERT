@@ -86,15 +86,11 @@ def act_cons_duration_plus_delay(
     T_26 = 0.21 * (B_21 + D) + B_26 + D
 
     T_end = max(T_21, T_22, T_23, T_24, T_25, T_26)
-
-    supply_chain_delay = max(T_end - ref_construction_duration, 0)
-    print(f"DEBUG: cons_duration_no_delay={cons_duration_no_delay}")
+    supply_chain_delay = max(T_end - ref_construction_duration, 0)                       
     return float(cons_duration_no_delay) + float(supply_chain_delay)
-
 
 def duration_learning_effect(n_th: int, standardization_0: float, actual_construction_duration_plus_delay: float):
     standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
-    # fitted_LR_duration = 0.15 * standardization / 0.7
     fitted_LR_duration = 0.103719051 * standardization / 0.7
     duration_multiplier = (1 - fitted_LR_duration) ** np.log2(n_th)
     return float(duration_multiplier) * float(actual_construction_duration_plus_delay)
