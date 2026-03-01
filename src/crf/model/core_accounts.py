@@ -17,8 +17,8 @@ REQUIRED_DERIVED_ROWS = [
     # Final results
     ("Total Direct Capital Cost (Accounts 10 to 20)", None),
     ("(Accounts 10 to 20) US$/kWe", None),
-    ("Base Construction Cost (Accounts 10 to 30)", None),
-    ("(Accounts 10 to 30) US$/kWe", None),
+    ("Base Construction Cost (Accounts 20 to 30)", None),
+    ("(Accounts 20 to 30) US$/kWe", None),
     ("Total Overnight Cost (Accounts 10 to 50)", None),
     ("(Accounts 10 to 50) US$/kWe", None),
     ("Total Capital Investment Cost (All Accounts)", None),
@@ -137,6 +137,22 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
         db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Total Cost (USD)"
     ].fillna(0.0).sum()
 
+    db.loc[db["Title"] == "20s - Subtotal", "Factory Equipment Cost"] = db.loc[
+        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Factory Equipment Cost"
+    ].fillna(0.0).sum()
+
+    db.loc[db["Title"] == "20s - Subtotal", "Site Material Cost"] = db.loc[
+        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Site Material Cost"
+    ].fillna(0.0).sum()
+
+    db.loc[db["Title"] == "20s - Subtotal", "Site Labor Cost"] = db.loc[
+        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Site Labor Cost"
+    ].fillna(0.0).sum()
+
+    db.loc[db["Title"] == "20s - Subtotal", "Site Labor Hours"] = db.loc[
+        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Site Labor Hours"
+    ].fillna(0.0).sum()
+
     db.loc[db["Title"] == "30s - Subtotal", "Total Cost (USD)"] = db.loc[
         db["Account"].isin(["31", "32", "33", "34", "35"]), "Total Cost (USD)"
     ].fillna(0.0).sum()
@@ -154,6 +170,16 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
         db.loc[db["Title"] == f"{t} - $/kWe", "Total Cost (USD)"] = (
             db.loc[db["Title"] == f"{t} - Subtotal", "Total Cost (USD)"].values / reactor_power
         )
+    # 20s equipment, material, labor costs per kWe
+    db.loc[db["Title"] == "20s - $/kWe", "Factory Equipment Cost"] = (
+        db.loc[db["Title"] == "20s - Subtotal", "Factory Equipment Cost"].values / reactor_power
+    )
+    db.loc[db["Title"] == "20s - $/kWe", "Site Material Cost"] = (
+        db.loc[db["Title"] == "20s - Subtotal", "Site Material Cost"].values / reactor_power
+    )
+    db.loc[db["Title"] == "20s - $/kWe", "Site Labor Cost"] = (
+        db.loc[db["Title"] == "20s - Subtotal", "Site Labor Cost"].values / reactor_power
+    )
 
     # final rollups
     db.loc[db["Title"] == "Total Direct Capital Cost (Accounts 10 to 20)", "Total Cost (USD)"] = (
@@ -161,13 +187,14 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
         + db.loc[db["Title"] == "20s - Subtotal", "Total Cost (USD)"].values
     )
 
-    db.loc[db["Title"] == "Base Construction Cost (Accounts 10 to 30)", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "Total Direct Capital Cost (Accounts 10 to 20)", "Total Cost (USD)"].values
+    db.loc[db["Title"] == "Base Construction Cost (Accounts 20 to 30)", "Total Cost (USD)"] = (
+        + db.loc[db["Title"] == "20s - Subtotal", "Total Cost (USD)"].values
         + db.loc[db["Title"] == "30s - Subtotal", "Total Cost (USD)"].values
     )
 
     db.loc[db["Title"] == "Total Overnight Cost (Accounts 10 to 50)", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "Base Construction Cost (Accounts 10 to 30)", "Total Cost (USD)"].values
+        db.loc[db["Title"] == "10s - Subtotal", "Total Cost (USD)"].values
+        + db.loc[db["Title"] == "Base Construction Cost (Accounts 20 to 30)", "Total Cost (USD)"].values
         + db.loc[db["Title"] == "50s - Subtotal", "Total Cost (USD)"].values
     )
 
@@ -180,8 +207,8 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     db.loc[db["Title"] == "(Accounts 10 to 20) US$/kWe", "Total Cost (USD)"] = (
         db.loc[db["Title"] == "Total Direct Capital Cost (Accounts 10 to 20)", "Total Cost (USD)"].values / reactor_power
     )
-    db.loc[db["Title"] == "(Accounts 10 to 30) US$/kWe", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "Base Construction Cost (Accounts 10 to 30)", "Total Cost (USD)"].values / reactor_power
+    db.loc[db["Title"] == "(Accounts 20 to 30) US$/kWe", "Total Cost (USD)"] = (
+        db.loc[db["Title"] == "Base Construction Cost (Accounts 20 to 30)", "Total Cost (USD)"].values / reactor_power
     )
     db.loc[db["Title"] == "(Accounts 10 to 50) US$/kWe", "Total Cost (USD)"] = (
         db.loc[db["Title"] == "Total Overnight Cost (Accounts 10 to 50)", "Total Cost (USD)"].values / reactor_power

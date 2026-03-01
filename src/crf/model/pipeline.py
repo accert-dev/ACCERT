@@ -9,7 +9,6 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     Returns: (final_df, levelized_net_OCC, levelized_NCI, final_construction_duration_scalar)
     """
     base0, power = store.get_baseline(config["reactor_type"])
-
     # direct updates (returns df + duration without supply chain delay)
     direct_df, dur_no_delay = update_direct_cost(
         store=store,
@@ -28,7 +27,6 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
         N_cons=inp["N_cons"],
         mod_0=inp["mod_0"],
     )
-
     # duration: add delay + learning
     dur_plus_delay = act_cons_duration_plus_delay(
         reactor_type=config["reactor_type"],
@@ -42,10 +40,8 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
 
     # learning on direct costs
     direct_plus_learning = learning_effect(direct_df, n_th, inp["standardization_0"], power)
-
     # indirect costs
     with_indirect = update_indirect_cost(n_th, inp["standardization_0"], direct_plus_learning, final_dur, power)
-
     # insurance + interest + ITC
     with_insurance = insurance_cost_update(base0, with_indirect, power)
     with_interest, tot_occ, tot_cap = update_interest_cost(
