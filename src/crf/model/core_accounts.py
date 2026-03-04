@@ -75,6 +75,10 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     db = db.copy()
     db[COST_COLS] = db[COST_COLS].fillna(0.0)
     # account 21
+    # Note when sum up the higher lever account like 21,  we need to make sure there are
+    # lower level accounts (like 211 plus 214 to 219) to be added before the sum, otherwise 
+    # the sum might lead to an empty value and the final result will be misleading.
+
     db.loc[db.Account == "21", "Factory Equipment Cost"] = (
         db.loc[db.Account == "212", "Factory Equipment Cost"].values
         + db.loc[db.Account == "213", "Factory Equipment Cost"].values
@@ -245,6 +249,7 @@ def update_cons_duration(db0: pd.DataFrame, db1: pd.DataFrame, ref_duration: flo
     sum_old = _sum_hours(db0)
     sum_new = _sum_hours(db1)
     lab_delta = (sum_new - sum_old) / sum_old
+    print(f"in update_cons_duration, sum_old: {sum_old}, sum_new: {sum_new}, lab_delta: {lab_delta}, ref_duration: {ref_duration}")
     return float(0.3 * lab_delta * ref_duration + ref_duration)
 
 def update_cons_duration_2(
@@ -266,5 +271,7 @@ def update_cons_duration_2(
     sum_old = _sum_hours(db0)
     sum_new = _sum_hours(db1)
     lab_delta = (sum_new - sum_old) / float(baseline_lab_hours)
+    # NOTE ref_duration here should be modulized?
+    # ref_duration=ref_duration*0.8   
     return float(0.3 * lab_delta * ref_duration + float(prev_cons_duration))
 

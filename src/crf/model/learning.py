@@ -62,12 +62,12 @@ def act_cons_duration_plus_delay(
         Design_Maturity = 2
         proc_exp = min(proc_exp_0 + (2 / N_proc) * (n_th - 1), 2)
 
-    if reactor_type == "SFR":
-        task_length_multiplier = 1.0
-        ref_construction_duration = 64
-    else:  # Concept A
+    if reactor_type == "HTGR":
         task_length_multiplier = 100 / 64
         ref_construction_duration = 100
+    elif reactor_type == "SFR":
+        task_length_multiplier = 1.0
+        ref_construction_duration = 64
 
     B_21 = 42.1 * task_length_multiplier
     B_22 = 60.2 * task_length_multiplier
@@ -82,15 +82,23 @@ def act_cons_duration_plus_delay(
     T_22 = 0.09 * (B_21 + D) + B_22 + D
     T_23 = 0.24 * (B_21 + D) + B_23 + D
     T_24 = 0.24 * (B_21 + D) + 0.34 * (B_23 + D) + B_24 + D
-    T_25 = 0.18 * (B_21 + D) + B_25 + D
+    T_25 = 0.18 * (B_21 + D) + B_25 + D # NOTE: need to check  whether the delay should be applied to B_25
     T_26 = 0.21 * (B_21 + D) + B_26 + D
 
     T_end = max(T_21, T_22, T_23, T_24, T_25, T_26)
-    supply_chain_delay = max(T_end - ref_construction_duration, 0)                       
+    supply_chain_delay = max(T_end - ref_construction_duration, 0)
+    print(f"T_end for plant {n_th}: {T_end}, ref_construction_duration: {ref_construction_duration}, supply_chain_delay: {supply_chain_delay}")
+    print(f"cons_duration_no_delay for plant {n_th}: {cons_duration_no_delay}")                    
     return float(cons_duration_no_delay) + float(supply_chain_delay)
 
-def duration_learning_effect(n_th: int, standardization_0: float, actual_construction_duration_plus_delay: float):
+def duration_learning_effect(reactor_type: str, 
+                             n_th: int, 
+                             standardization_0: float, 
+                             actual_construction_duration_plus_delay: float):
     standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
-    fitted_LR_duration = 0.103719051 * standardization / 0.7
+    if reactor_type == "HTGR":
+        fitted_LR_duration = 0.103719051 * standardization / 0.7
+    elif reactor_type == "SFR":
+        fitted_LR_duration = 0.15*standardization/0.7
     duration_multiplier = (1 - fitted_LR_duration) ** np.log2(n_th)
     return float(duration_multiplier) * float(actual_construction_duration_plus_delay)

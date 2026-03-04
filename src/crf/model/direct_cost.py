@@ -147,12 +147,12 @@ def add_reworking_productivity(
 
     productivity = 0.145 * ce_exp + 0.71
 
-    if reactor_type == "SFR":
-        rework = (-0.9 * design_completion + 1.9) * (-0.15 * ae_exp + 1.3) * (-0.15 * ce_exp + 1.3)
-        ref_duration = 80
-    else:
+    if reactor_type == "HTGR":
         rework = (-0.69 * design_completion + 1.69) * (-0.125 * ae_exp + 1.25) * (-0.125 * ce_exp + 1.25)
         ref_duration = 125
+    elif reactor_type == "SFR":
+        rework = (-0.9 * design_completion + 1.9) * (-0.15 * ae_exp + 1.3) * (-0.15 * ce_exp + 1.3)
+        ref_duration = 80
 
     db = df.copy()
 
@@ -192,10 +192,12 @@ def update_direct_cost(
     db = update_high_level_costs(db, power)[COLS].copy()
     db = add_land_cost(db, land_cost_per_acre_0, power)
     db, prev_dur = add_BOP_RP_grades(db, RB_grade_0, BOP_grade_0, power, reactor_type, n_th, mod_0)
+    print(f"Duration after add_BOP_RP_grades for plant {n_th}: {prev_dur}")
     db = add_bulk_ordering(db, num_orders, f_22, f_2321, power)
     db, dur_no_delay = add_reworking_productivity(
         db, reactor_type, n_th,
         design_completion_0, ae_exp_0, N_AE, ce_exp_0, N_cons,
         power, prev_dur, baseline_lab_hours
     )
+    print(f"Duration after add_reworking_productivity for plant {n_th}: {dur_no_delay}")
     return db, dur_no_delay
