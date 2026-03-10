@@ -77,7 +77,7 @@ def add_BOP_RP_grades(
             ["Site Material Cost", "Site Labor Cost", "Site Labor Hours", "Factory Equipment Cost"],
             0.6
         )
-        # for 232.1 apply to factory+labor but NOT material (matches your original)
+        # for 232.1 apply to factory+labor but NOT material 
         mulv(
             db, ["232.1"],
             ["Factory Equipment Cost", "Site Labor Cost", "Site Labor Hours"],
@@ -87,12 +87,37 @@ def add_BOP_RP_grades(
     db2 = update_high_level_costs(db, power)[COLS].copy()
 
     # duration update from grade change
-    duration_ref = 125 if reactor_type == "HTGR" else 80
-    # duration_ref = 100 if reactor_type == "HTGR" else 64
-    new_dur = update_cons_duration(df, db2, duration_ref)
-    # modularity factor on duration; for n>=2 assume modularized
-    mod = mod_0 if n_th == 1 else "modularized"
-    mod_factor = 0.8 if mod == "modularized" else 1.0
+    if reactor_type == "HTGR":
+        ref_duration = 125
+    elif reactor_type == "SFR":
+        ref_duration = 80
+    else:
+        raise ValueError(f"Unknown reactor type: {reactor_type}")
+
+    new_dur = update_cons_duration(df, db2, ref_duration)
+
+    # applying modularity civil construction if HTGR of SFR, for n>=2 assume 
+    # modularized, if other reactor type such as AP1000, we assume no modularity 
+    # effect on duration for now.
+    if reactor_type in ["HTGR", "SFR"]:
+        mod = mod_0 if n_th == 1 else "modularized"    
+    elif reactor_type == "AP1000":
+        mod = mod_0 if n_th == 1 else "non_modularized"
+
+    mod_factor = 0.8 if mod == "modularized" else 1.0 # NOTE see excel Relationship sheet D4
+    # NOTE in excel tool HTGR does nothing here, SFR factory cost of 21 with the 20% reduction 
+    # with AP1000 all labor cost with the 20% reduction in 20s accounts, 
+    if reactor_type == "SFR":
+        for acct in [21, "211 plus 214 to 219", 212, 213]:
+            setv(db2, acct, "Factory Equipment Cost", float(getv(db2, acct, "Factory Equipment Cost")) * mod_factor)
+        db2 = update_high_level_costs(db2, power)[COLS].copy()
+    elif reactor_type == "AP1000":
+        for acct in [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]:
+            setv(db2, acct, "Site Labor Cost", float(getv(db2, acct, "Site Labor Cost")) * mod_factor)
+            setv(db2, acct, "Site Labor Hours", float(getv(db2, acct, "Site Labor Hours")) * mod_factor)
+        db2 = update_high_level_costs(db2, power)[COLS].copy()
+
+
     return db2, new_dur * mod_factor
 
 
@@ -185,19 +210,22 @@ def update_direct_cost(
     mod_0: str
 ):
     reactor_df, power = store.get_baseline(reactor_type)
-    db, baseline_lab_hours = add_factory_cost(reactor_df, power, f_22, f_2321, num_orders)
+    db, baseline_lab_hours = add_factory_cost(reactor_df, power, f_22, f_2321, num_orders)   
     # all Total Cost (USD) columns should be 0 
     # when accounts are in 20s
     db.loc[db["Account"].isin(['21', '211 plus 214 to 219', '212', '213', '22', '23', '232.1', '233', '24', '25', '26']), "Total Cost (USD)"] = 0.0
     db = update_high_level_costs(db, power)[COLS].copy()
     db = add_land_cost(db, land_cost_per_acre_0, power)
     db, prev_dur = add_BOP_RP_grades(db, RB_grade_0, BOP_grade_0, power, reactor_type, n_th, mod_0)
-    print(f"Duration after add_BOP_RP_grades for plant {n_th}: {prev_dur}")
+    # print(f"Duration after add_BOP_RP_grades for plant {n_th}: {prev_dur}")
     db = add_bulk_ordering(db, num_orders, f_22, f_2321, power)
+    if n_th == 1:
+        print('after add_bulk_ordering for plant 1:')
+        print(db)
     db, dur_no_delay = add_reworking_productivity(
         db, reactor_type, n_th,
         design_completion_0, ae_exp_0, N_AE, ce_exp_0, N_cons,
         power, prev_dur, baseline_lab_hours
     )
-    print(f"Duration after add_reworking_productivity for plant {n_th}: {dur_no_delay}")
+    # print(f"Duration after add_reworking_productivity for plant {n_th}: {dur_no_delay}")
     return db, dur_no_delay

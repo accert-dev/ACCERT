@@ -87,8 +87,8 @@ def act_cons_duration_plus_delay(
 
     T_end = max(T_21, T_22, T_23, T_24, T_25, T_26)
     supply_chain_delay = max(T_end - ref_construction_duration, 0)
-    print(f"T_end for plant {n_th}: {T_end}, ref_construction_duration: {ref_construction_duration}, supply_chain_delay: {supply_chain_delay}")
-    print(f"cons_duration_no_delay for plant {n_th}: {cons_duration_no_delay}")                    
+    # print(f"T_end for plant {n_th}: {T_end}, ref_construction_duration: {ref_construction_duration}, supply_chain_delay: {supply_chain_delay}")
+    # print(f"cons_duration_no_delay for plant {n_th}: {cons_duration_no_delay}")                    
     return float(cons_duration_no_delay) + float(supply_chain_delay)
 
 def duration_learning_effect(reactor_type: str, 

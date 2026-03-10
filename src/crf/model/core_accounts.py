@@ -249,7 +249,7 @@ def update_cons_duration(db0: pd.DataFrame, db1: pd.DataFrame, ref_duration: flo
     sum_old = _sum_hours(db0)
     sum_new = _sum_hours(db1)
     lab_delta = (sum_new - sum_old) / sum_old
-    print(f"in update_cons_duration, sum_old: {sum_old}, sum_new: {sum_new}, lab_delta: {lab_delta}, ref_duration: {ref_duration}")
+    # print(f"in update_cons_duration, sum_old: {sum_old}, sum_new: {sum_new}, lab_delta: {lab_delta}, ref_duration: {ref_duration}")
     return float(0.3 * lab_delta * ref_duration + ref_duration)
 
 def update_cons_duration_2(

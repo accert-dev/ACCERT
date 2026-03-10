@@ -43,7 +43,7 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     # learning on direct costs
     direct_plus_learning = learning_effect(direct_df, n_th, inp["standardization_0"], power)
     # indirect costs
-    print(f"final_dur for plant {n_th}: {final_dur}")
+    # print(f"final_dur for plant {n_th}: {final_dur}")
     with_indirect = update_indirect_cost(n_th, inp["standardization_0"], direct_plus_learning, final_dur, power)
     # insurance + interest + ITC
     with_insurance = insurance_cost_update(base0, with_indirect, power)
@@ -59,6 +59,6 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     org_occ = float(tot_occ/power)
     org_tci = float(tot_cap/power)  
     final_df, net_occ, nci = update_itc(with_interest, tot_occ, tot_cap, n_th, inp["ITC_0"], inp["n_ITC"], power)
-    print(f"Final OCC for plant {n_th}: {net_occ}")
-    print(final_df)
+    # print(f"Final OCC for plant {n_th}: {net_occ}")
+    # print(final_df)
     return final_df, org_occ, net_occ, org_tci, nci, float(final_dur)
