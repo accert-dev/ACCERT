@@ -121,28 +121,35 @@ def add_BOP_RP_grades(
     return db2, new_dur * mod_factor
 
 
-def add_bulk_ordering(df: pd.DataFrame, num_orders: int, f_22: float, f_2321: float, power: float):
+def add_bulk_ordering(df: pd.DataFrame, num_orders: int, f_22: float, f_2321: float, power: float, reactor_type: str):
     """
     Applies average learning reduction to factory equipment cost of 22 and 232.1,
     but keeps factory-building portion intact.
     """
     db = df.copy()
-
-    lr22 = 0.1802341659291420
-    lr2321 = 0.2607462372040820
+    if reactor_type == "HTGR":
+        lr22 = 0.1802341659291420
+        lr2321 = 0.2607462372040820
+    elif reactor_type == "SFR":
+        lr22 = 0.209920296472118
+        lr2321 = 0.222118386536136
+    else:
+        raise ValueError(f"Unknown reactor type: {reactor_type}")
 
     red22 = 0.0
     red2321 = 0.0
     for ith in range(1, num_orders + 1):
         red22 += ((1 - lr22) ** np.log2(ith)) / num_orders
         red2321 += ((1 - lr2321) ** np.log2(ith)) / num_orders
-
+    print(f"red22: {red22}, red2321: {red2321}")
     old22 = float(getv(df, 22, "Factory Equipment Cost"))
     new22 = red22 * (old22 - (f_22 / num_orders)) + (f_22 / num_orders)
+    print(f"old22: {old22}, new22: {new22}")
     setv(db, 22, "Factory Equipment Cost", new22)
 
     old2321 = float(getv(df, "232.1", "Factory Equipment Cost"))
     new2321 = red2321 * (old2321 - (f_2321 / num_orders)) + (f_2321 / num_orders)
+    print(f"old2321: {old2321}, new2321: {new2321}")
     setv(db, "232.1", "Factory Equipment Cost", new2321)
 
     return update_high_level_costs(db, power)[COLS].copy()
@@ -218,7 +225,10 @@ def update_direct_cost(
     db = add_land_cost(db, land_cost_per_acre_0, power)
     db, prev_dur = add_BOP_RP_grades(db, RB_grade_0, BOP_grade_0, power, reactor_type, n_th, mod_0)
     # print(f"Duration after add_BOP_RP_grades for plant {n_th}: {prev_dur}")
-    db = add_bulk_ordering(db, num_orders, f_22, f_2321, power)
+    if n_th == 1:
+        print('after add_BOP_RP_grades for plant 1:')
+        print(db)
+    db = add_bulk_ordering(db, num_orders, f_22, f_2321, power, reactor_type)
     if n_th == 1:
         print('after add_bulk_ordering for plant 1:')
         print(db)
