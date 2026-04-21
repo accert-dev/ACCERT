@@ -12,33 +12,36 @@ COLS = [
     "Site Labor Cost", "Site Material Cost"
 ]
 
-
-def insurance_cost_update(base_df, updated_df, power):
+def tax_update(df: pd.DataFrame, power: float):
+    # Tax is Property tax rate (1.25%) * land cost( total cost of Account11)
     # Ensure derived rows (subtotals/totals) exist and are up-to-date
-    base_df = update_high_level_costs(base_df.copy(), power)
-    updated_df = update_high_level_costs(updated_df.copy(), power)
-
-    ref_20 = float(base_df.loc[base_df["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0])
-    ref_30 = float(base_df.loc[base_df["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
-
-    new_20 = float(updated_df.loc[updated_df["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0])
-    new_30 = float(updated_df.loc[updated_df["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
-
-    denom = ref_20 + ref_30
-    change_factor = 1.0 if denom == 0 else (new_20 + new_30) / denom
-
-    # Update Account 52 (Insurance)
-    mask52 = updated_df["Account"].astype(str).str.strip().eq("52")
-    if not mask52.any():
-        raise KeyError("Account 52 (Insurance) not found in dataframe.")
-    ins0 = float(np.nan_to_num(updated_df.loc[mask52, "Total Cost (USD)"].iloc[0], nan=0.0))
-    updated_df.loc[mask52, "Total Cost (USD)"] = ins0 * change_factor
-
+    df = update_high_level_costs(df.copy(), power)
+    land_cost = float(df.loc[df["Account"].eq("11"), "Total Cost (USD)"].iloc[0])
+    tax = 0.0125 * land_cost
+    setv(df, "51", "Total Cost (USD)", tax)
     # Recompute derived totals after change
-    updated_df = update_high_level_costs(updated_df, power)
-    return updated_df
+    df = update_high_level_costs(df, power)
+    return df
 
+def insurance_cost_update(df, power):
+    # Insurance rate * sum of direct and indirect costs	0.45%
+    df = update_high_level_costs(df.copy(), power)
+    new_20 = float(df.loc[df["Title"].eq("20s - Subtotal"), "Total Cost (USD)"].iloc[0])
+    new_30 = float(df.loc[df["Title"].eq("30s - Subtotal"), "Total Cost (USD)"].iloc[0])
+    new_52 = 0.0045 * (new_20 + new_30)
+    # Update Account 52 (Insurance)
+    setv(df, "52", "Total Cost (USD)", new_52)
+    # Recompute derived totals after change
+    df = update_high_level_costs(df, power)
+    return df
 
+def decomission_cost_update(df, power):
+    # Decommission cost is calculated as $7.71/kWe per year for decommissioning costs	
+    # power*$7.71/kWe
+    decomm_cost = power * 7.71
+    setv(df, "54", "Total Cost (USD)", decomm_cost)
+    df = update_high_level_costs(df, power)
+    return df
 
 def update_interest_cost(
     store,
@@ -47,9 +50,10 @@ def update_interest_cost(
     interest_rate: float,
     startup_0: float,
     n_th: int,
-    power: float
+    power: float,
+    reactor_type: str
 ):
-    Months, CDFs = store.get_spending_curve()
+    Months, CDFs = store.get_spending_curve(reactor_type)
     dur = float(final_construction_duration)
 
     n_years = int(dur / 12)
@@ -59,8 +63,13 @@ def update_interest_cost(
         annual_periods = np.linspace(12, 12 * n_years, n_years)
         if max(annual_periods) < int(dur) - 1:
             annual_periods = np.append(annual_periods, dur - 1)
+    if reactor_type == "HTGR":
+        new_period = 103 * annual_periods / dur
+    elif reactor_type == "SFR":
+        new_period = 44 * annual_periods / dur
+    else:
+        raise ValueError(f"Unknown reactor type: {reactor_type}")
 
-    new_period = 103 * annual_periods / dur
     annual_cum_spend = np.interp(new_period, Months, CDFs)
     annual_spend = np.append(annual_cum_spend[0], np.diff(annual_cum_spend))
 

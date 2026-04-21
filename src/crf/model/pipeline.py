@@ -1,7 +1,7 @@
 from .direct_cost import update_direct_cost
 from .learning import learning_effect, act_cons_duration_plus_delay, duration_learning_effect
 from .indirect_cost import update_indirect_cost
-from .finance import insurance_cost_update, update_interest_cost, update_itc
+from .finance import tax_update, insurance_cost_update, decomission_cost_update, update_interest_cost, update_itc
 
 def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     """
@@ -39,23 +39,29 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     final_dur = duration_learning_effect(reactor_type=config["reactor_type"], 
                                         n_th=n_th, 
                                         standardization_0=inp["standardization_0"], actual_construction_duration_plus_delay=dur_plus_delay)
-
+    
     # learning on direct costs
-    direct_plus_learning = learning_effect(direct_df, n_th, inp["standardization_0"], power)
+    direct_plus_learning = learning_effect(direct_df, n_th, inp["standardization_0"], power, config["reactor_type"])
     # indirect costs
-    # print(f"final_dur for plant {n_th}: {final_dur}")
     with_indirect = update_indirect_cost(n_th, inp["standardization_0"], direct_plus_learning, final_dur, power)
-    # insurance + interest + ITC
-    with_insurance = insurance_cost_update(base0, with_indirect, power)
+
+    # Supplementary costs: tax, insurance, decommissioning
+    with_tax = tax_update(with_indirect, power)
+    with_insurance = insurance_cost_update(with_tax, power)
+    with_decomm = decomission_cost_update(with_insurance, power)
+
+    # Finance costs: interest during construction and ITC
     with_interest, tot_occ, tot_cap = update_interest_cost(
         store=store,
-        df=with_insurance,
+        df=with_decomm,
         final_construction_duration=final_dur,
         interest_rate=inp["interest_rate_0"],
         startup_0=config["startup_0"],
         n_th=n_th,
         power=power,
+        reactor_type=config["reactor_type"],
     )
+
     org_occ = float(tot_occ/power)
     org_tci = float(tot_cap/power)  
     final_df, net_occ, nci = update_itc(with_interest, tot_occ, tot_cap, n_th, inp["ITC_0"], inp["n_ITC"], power)

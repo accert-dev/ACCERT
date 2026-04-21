@@ -46,10 +46,16 @@ class InputStore:
         self._baseline[reactor_type] = (df, power)
         return df.copy(), power
 
-    def get_spending_curve(self):
+    def get_spending_curve(self,reactor_type: str):
+
         if self._spending is not None:
             return self._spending
-        sp_path = path = self.data_dir / "ref_spending_curve.csv"
+        if reactor_type == "HTGR":
+            sp_path = self.data_dir / "HTGR_spending_curve.csv"
+        elif reactor_type == "SFR":
+            sp_path = self.data_dir / "SFR_spending_curve.csv"
+        else:
+            raise ValueError(f"Unknown reactor_type: {reactor_type}")
         sp = pd.read_csv(sp_path)
         if "Month" not in sp.columns or "CDF" not in sp.columns:
             raise ValueError(f"{sp_path} must contain Month and CDF")

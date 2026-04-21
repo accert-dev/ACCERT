@@ -19,21 +19,52 @@ COLS = [
 ACCT_DIRECT = [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]
 
 
-def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power: float):
+def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power: float, reactor_type: str):
     # standardization cap for FOAK
     standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
 
     # fitted learning rates (same order as ACCT_DIRECT)
-    mat_lr = np.array([
-        0.099588665391, 0.099588665391, 0.099588665391, 0.080817992281,
-        0.0, 0.099588665391, 0.099588665391, 0.099588665391
-    ]) * standardization / 0.7
+    # n_noak is the number of units after which the learning effect is fully realized, which is set to 8 based on expert elicitation. The learning rate is then calculated as 1-(1-std_learning_rate)^(1/log2(n_noak)).
+    # std_learning_rate for HTGR:
+    #     	    Fac	    Mat	    Lab Cost	Lab Hrs
+    # 21		0.96	0.73	0.55	    0.55
+    # 22		0.55	0.78	0.62	    0.62
+    # 232.1	    0.40		    0.64	    0.64
+    # 233		0.96	0.73	0.55	    0.55
+    # 24		0.96	0.73	0.55	    0.55
+    # 26		0.96	0.73	0.55	    0.55
+    # std_learning_rate for SFR :
+    #     	    Fac	    Mat	    Lab Cost	Lab Hrs
+    # 21		0.96	0.73	0.55	    0.55
+    # 22		0.49	0.73	0.55        0.55
+    # 232.1	    0.47		    0.55        0.55        
+    # 233		0.96	0.73	0.55	    0.55
+    # 24		0.96	0.73	0.55	    0.55
+    # 26		0.96	0.73	0.55        0.55
 
-    lab_lr = np.array([
-        0.180678729399, 0.180678729399, 0.180678729399, 0.146555539499,
-        0.137148574884, 0.180678729399, 0.180678729399, 0.180678729399
-    ]) * standardization / 0.7
+    # However, learning is not applied to the factory cost
+    if reactor_type == "HTGR":
+        mat_lr = np.array([
+            0.099588665391, 0.099588665391, 0.099588665391, 0.080817992281,
+            0.0, 0.099588665391, 0.099588665391, 0.099588665391
+        ]) * standardization / 0.7
 
+        lab_lr = np.array([
+            0.180678729399, 0.180678729399, 0.180678729399, 0.146555539499,
+            0.137148574884, 0.180678729399, 0.180678729399, 0.180678729399
+        ]) * standardization / 0.7
+    elif reactor_type == "SFR":
+        mat_lr = np.array([
+            0.099588665391, 0.099588665391, 0.099588665391, 0.099588665391,
+            0.099588665391, 0.099588665391, 0.099588665391, 0.099588665391
+        ]) * standardization / 0.7
+
+        lab_lr = np.array([
+            0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399,
+            0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399
+        ]) * standardization / 0.7
+    else:
+        raise ValueError(f"Unknown reactor type: {reactor_type}")
     db = df.copy()
 
     for idx, acct in enumerate(ACCT_DIRECT):
@@ -86,9 +117,7 @@ def act_cons_duration_plus_delay(
     T_26 = 0.21 * (B_21 + D) + B_26 + D
 
     T_end = max(T_21, T_22, T_23, T_24, T_25, T_26)
-    supply_chain_delay = max(T_end - ref_construction_duration, 0)
-    # print(f"T_end for plant {n_th}: {T_end}, ref_construction_duration: {ref_construction_duration}, supply_chain_delay: {supply_chain_delay}")
-    # print(f"cons_duration_no_delay for plant {n_th}: {cons_duration_no_delay}")                    
+    supply_chain_delay = max(T_end - ref_construction_duration, 0)                   
     return float(cons_duration_no_delay) + float(supply_chain_delay)
 
 def duration_learning_effect(reactor_type: str, 
