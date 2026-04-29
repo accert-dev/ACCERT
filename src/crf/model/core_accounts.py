@@ -257,7 +257,8 @@ def update_cons_duration_2(
     db1: pd.DataFrame,
     ref_duration: float,
     prev_cons_duration: float,
-    baseline_lab_hours: float
+    baseline_lab_hours: float,
+    reactor_type: str
 ) -> float:
     """Calculate new construction duration based on change in labor hours for accounts 21, 22, 23, 24, and 26. This should be used after the standardization effect is applied, so the labor hours change should be compared to the baseline labor hours instead of the previous labor hours. NOTE I think I should merge this with the previous function and just pass in the baseline labor hours as an argument.
     """
@@ -272,6 +273,11 @@ def update_cons_duration_2(
     sum_new = _sum_hours(db1)
     lab_delta = (sum_new - sum_old) / float(baseline_lab_hours)
     # NOTE ref_duration here should be modulized?
-    # ref_duration=ref_duration*0.8   
-    return float(0.3 * lab_delta * ref_duration + float(prev_cons_duration))
+    # ref_duration=ref_duration*0.8 
+    if reactor_type in ["HTGR", "SFR"]:
+        return float(0.3 * lab_delta * ref_duration + float(prev_cons_duration))
+    elif reactor_type == "AP1000":
+        return float(0.04 * lab_delta * ref_duration + float(prev_cons_duration))
+    else:
+        raise ValueError(f"Unknown reactor type: {reactor_type}")
 

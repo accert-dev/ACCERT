@@ -10,7 +10,7 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
     num_orders = int(inp["num_orders"])
     n_itc = int(inp["n_ITC"])
 
-    OCC, NETOCC, TCI, NCI, DUR = [], [], [], [], []
+    OCC, NETOCC, TCI, NCI, DUR, STAUP = [], [], [], [], [], []
     if details:
         # Stores the 10s, 20s, 30s, 50s and 60s, with 20s equipment, material, labor costs
         D10s, D20s, D30s, D50s, D60s = [], [], [], [], []
@@ -22,6 +22,7 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
         OCC.append(occ)
         TCI.append(tci)
         DUR.append(dur)
+        STAUP.append(max(7, config["startup_0"] * (1 - 0.3) ** np.log2(n_th)))
         if n_th <= n_itc:
             NETOCC.append(netocc)
             NCI.append(nci)
@@ -40,6 +41,7 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
     TCI = np.array(TCI, dtype=float)
     NCI = np.array(NCI, dtype=float)
     DUR = np.array(DUR, dtype=float)
+    STAUP = np.array(STAUP, dtype=float)
     if details:
         D10s = np.array(D10s, dtype=float)
         D20s = np.array(D20s, dtype=float)
@@ -63,6 +65,7 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
         avg_TCI = float(np.mean(TCI))
     avg_duration = float(np.mean(DUR))
 
+
     final_startup_duration = max(7, config["startup_0"] * (1 - 0.3) ** np.log2(num_orders))
     cons_duration_cumulative_wz_startup = (
         (1 - config["staggering_ratio"]) * np.sum(DUR[:-1]) + DUR[-1] + final_startup_duration
@@ -80,6 +83,8 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
         out[f"NCI_{i+1}"] = float(v)
     for i, v in enumerate(DUR):
         out[f"duration_{i+1}"] = float(v)
+    for i, v in enumerate(STAUP):
+        out[f"STAUP_{i+1}"] = float(v)
     if details:
         for i, v in enumerate(D10s):
             out[f"D10s_{i+1}"] = float(v)

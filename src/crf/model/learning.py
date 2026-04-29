@@ -164,7 +164,12 @@ def duration_learning_effect(reactor_type: str,
                              standardization_0: float, 
                              actual_construction_duration_plus_delay: float,
                              n_of_NOAK: int):
-    standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
+    if reactor_type in ["HTGR", "SFR"]:
+        standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
+    elif reactor_type == "AP1000":
+        # for AP1000, we assume the learning effect on duration is related to 
+        # standardization and cross site transfer efficiencies
+        standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0* standardization_0  
     if reactor_type == "HTGR":
         fitted_LR_duration = 0.103719051 * standardization / 0.7
     elif reactor_type == "SFR":

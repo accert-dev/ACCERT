@@ -50,8 +50,9 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
                                            config["reactor_type"],
                                            inp["num_orders"],
                                            )
+    
     # indirect costs
-    with_indirect = update_indirect_cost(n_th, inp["standardization_0"], direct_plus_learning, final_dur, power)
+    with_indirect = update_indirect_cost(n_th, inp["standardization_0"], direct_plus_learning, final_dur, power, reactor_type=config["reactor_type"])
 
     # Supplementary costs: tax, insurance, decommissioning
     with_tax = tax_update(with_indirect, power)
@@ -73,11 +74,6 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     org_occ = float(tot_occ/power)
     org_tci = float(tot_cap/power)  
     final_df, net_occ, nci = update_itc(with_interest, tot_occ, tot_cap, n_th, inp["ITC_0"], inp["n_ITC"], power)
-    reactor_type=config["reactor_type"]
-    if reactor_type in ["HTGR", "SFR"]:
-        startup_dur = max(7, 16*(1-0.3)**np.log2(n_th))
-    elif reactor_type == "AP1000":
-        startup_dur = max(7, 28*(1-0.3)**np.log2(n_th)) # NOTE: need to check whether the startup duration learning should be the same as other types
 
     # print(f"Final OCC for plant {n_th}: {net_occ}")
     # print(final_df)

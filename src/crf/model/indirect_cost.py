@@ -18,7 +18,8 @@ def update_indirect_cost(
     standardization_0: float,
     df: pd.DataFrame,
     final_construction_duration: float,
-    power: float
+    power: float,
+    reactor_type: str
 ):
     standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
     factor_35 = (10 / 3) * (1 - standardization)
@@ -38,10 +39,14 @@ def update_indirect_cost(
     dur = float(final_construction_duration)
     # print(f"DEBUG: final_construction_duration={dur}, standardization={standardization}, factor_35={factor_35}")
     val31 = (sum_new_mat_cost * 0.785 * sum_new_lab_hrs / dur / 160 / 1058) + sum_new_lab_cost * 0.36
-    val32 = sum_new_lab_cost * 0.36 * 3.661 * dur / 72
+    if reactor_type in ["HTGR", "SFR"]:
+        val32 = sum_new_lab_cost * 0.36 * 3.661 * dur / 72
+        val35 = (0.27017603 * val32) * factor_35
+    elif reactor_type == "AP1000":
+        val32 = sum_new_lab_cost * 0.36 * 1.2 * dur / 42
+        val35 = 0.27017603 * val32 
     val33 = 0.04207006 * val32
     val34 = 0.00354234616938 * val32
-    val35 = (0.27017603 * val32) * factor_35
     # print(f"DEBUG: val31={val31}, val32={val32}, val33={val33}, val34={val34}, val35={val35}")
     setv(db, 31, "Total Cost (USD)", val31)
     setv(db, 32, "Total Cost (USD)", val32)

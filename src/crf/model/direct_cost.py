@@ -212,7 +212,7 @@ def add_reworking_productivity(
         setv(db, acct, "Site Labor Cost", float(getv(df, acct, "Site Labor Cost")) * rework / productivity)
 
     db2 = update_high_level_costs(db, power)[COLS].copy()
-    new_dur = float(update_cons_duration_2(df, db2, ref_duration, prev_cons_duration, baseline_lab_hours))
+    new_dur = float(update_cons_duration_2(df, db2, ref_duration, prev_cons_duration, baseline_lab_hours, reactor_type))
     return db2, new_dur
 
 
