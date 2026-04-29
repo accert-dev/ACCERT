@@ -67,6 +67,8 @@ def update_interest_cost(
         new_period = 103 * annual_periods / dur
     elif reactor_type == "SFR":
         new_period = 44 * annual_periods / dur
+    elif reactor_type == "AP1000":
+        new_period = 75 * annual_periods / dur
     else:
         raise ValueError(f"Unknown reactor type: {reactor_type}")
 

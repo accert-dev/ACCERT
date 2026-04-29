@@ -27,12 +27,14 @@ class InputStore:
             df, power = self._baseline[reactor_type]
             return df.copy(), power
         if reactor_type == "HTGR":
-            # path = f"{self.data_dir}/HTGR_baseline.csv"
             path = self.data_dir / "HTGR_baseline.csv"
             power = 1056 * 1000
         elif reactor_type == "SFR":
             path = self.data_dir / "SFR_baseline.csv"
             power = 310.8 * 1000
+        elif reactor_type == "AP1000":
+            path = self.data_dir / "AP1000_baseline.csv"
+            power = 2234 * 1000
         else:
             raise ValueError(f"Unknown reactor_type: {reactor_type}")
         # print current running path for debugging
@@ -54,6 +56,8 @@ class InputStore:
             sp_path = self.data_dir / "HTGR_spending_curve.csv"
         elif reactor_type == "SFR":
             sp_path = self.data_dir / "SFR_spending_curve.csv"
+        elif reactor_type == "AP1000":
+            sp_path = self.data_dir / "AP1000_spending_curve.csv"
         else:
             raise ValueError(f"Unknown reactor_type: {reactor_type}")
         sp = pd.read_csv(sp_path)

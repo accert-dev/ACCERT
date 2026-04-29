@@ -25,15 +25,15 @@ COLS = [
 ACCT_DIRECT = [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]
 
 
-def add_factory_cost(df: pd.DataFrame, power: float, f_22: float, f_2321: float, num_orders: int):
+def add_factory_cost(df: pd.DataFrame, power: float, f_22: float, f_2321: float, num_orders: int, reactor_type: str):
     db = df.copy()
+    if reactor_type in ["HTGR", "SFR"]:
+        # Add factory-building shares; clear old values first (keep numeric dtype)
+        setv(db, 22, "Factory Equipment Cost", np.nan)
+        setv(db, "232.1", "Factory Equipment Cost", np.nan)
 
-    # Add factory-building shares; clear old values first (keep numeric dtype)
-    setv(db, 22, "Factory Equipment Cost", np.nan)
-    setv(db, "232.1", "Factory Equipment Cost", np.nan)
-
-    setv(db, 22, "Factory Equipment Cost", float(getv(df, 22, "Factory Equipment Cost")) + f_22 / num_orders)
-    setv(db, "232.1", "Factory Equipment Cost", float(getv(df, "232.1", "Factory Equipment Cost")) + f_2321 / num_orders)
+        setv(db, 22, "Factory Equipment Cost", float(getv(df, 22, "Factory Equipment Cost")) + f_22 / num_orders)
+        setv(db, "232.1", "Factory Equipment Cost", float(getv(df, "232.1", "Factory Equipment Cost")) + f_2321 / num_orders)
 
     db = update_high_level_costs(db, power)[COLS].copy()
     baseline_lab_hours = sum_lab_hrs(db)
@@ -60,8 +60,11 @@ def add_BOP_RP_grades(
 ):
     # RB grade does not change; BOP becomes non_nuclear after FOAK
     RB_grade = RB_grade_0
-    BOP_grade = BOP_grade_0 if n_th == 1 else "non_nuclear"
-
+    if reactor_type in ["HTGR", "SFR"]:
+        BOP_grade = BOP_grade_0 if n_th == 1 else "non_nuclear"
+    elif reactor_type == "AP1000":
+        BOP_grade = BOP_grade_0 if n_th == 1 else "nuclear"
+    
     db = df.copy()
 
     if RB_grade == "non_nuclear":
@@ -72,18 +75,25 @@ def add_BOP_RP_grades(
         )
 
     if BOP_grade == "non_nuclear":
-        mulv(
-            db, [213],
-            ["Site Material Cost", "Site Labor Cost", "Site Labor Hours", "Factory Equipment Cost"],
-            0.6
-        )
-        # for 232.1 apply to factory+labor but NOT material 
-        mulv(
-            db, ["232.1"],
-            ["Factory Equipment Cost", "Site Labor Cost", "Site Labor Hours"],
-            0.6
-        )
-
+        if reactor_type in ["HTGR", "SFR"]:
+            mulv(
+                db, [213],
+                ["Site Material Cost", "Site Labor Cost", "Site Labor Hours", "Factory Equipment Cost"],
+                0.6
+            )
+            # for 232.1 apply to factory+labor but NOT material 
+            mulv(
+                db, ["232.1"],
+                ["Factory Equipment Cost", "Site Labor Cost", "Site Labor Hours"],
+                0.6
+            )
+        elif reactor_type == "AP1000":
+            # for AP1000 applied BOP tpp 213.1 and 232.1 but applied to 213 instead
+            mulv(
+                db, [ 213, "232.1"],
+                ["Site Material Cost", "Site Labor Cost", "Site Labor Hours", "Factory Equipment Cost"],
+                0.6
+            )
     db2 = update_high_level_costs(db, power)[COLS].copy()
 
     # duration update from grade change
@@ -91,6 +101,8 @@ def add_BOP_RP_grades(
         ref_duration = 125
     elif reactor_type == "SFR":
         ref_duration = 80
+    elif reactor_type == "AP1000":
+        ref_duration = 76    
     else:
         raise ValueError(f"Unknown reactor type: {reactor_type}")
 
@@ -133,6 +145,10 @@ def add_bulk_ordering(df: pd.DataFrame, num_orders: int, f_22: float, f_2321: fl
     elif reactor_type == "SFR":
         lr22 = 0.209920296472118
         lr2321 = 0.222118386536136
+    elif reactor_type == "AP1000":
+        # no learning for AP1000 since it is already modularized and we assume no modularity effect
+        lr22 = 0.0
+        lr2321 = 0.0
     else:
         raise ValueError(f"Unknown reactor type: {reactor_type}")
 
@@ -182,7 +198,11 @@ def add_reworking_productivity(
     elif reactor_type == "SFR":
         rework = (-0.9 * design_completion + 1.9) * (-0.15 * ae_exp + 1.3) * (-0.15 * ce_exp + 1.3)
         ref_duration = 80
-
+    elif reactor_type == "AP1000":
+        rework = (-0.69 * design_completion + 1.69) * (-0.125 * ae_exp + 1.25) * (-0.125 * ce_exp + 1.25)
+        ref_duration = 76
+    else:
+        raise ValueError(f"Unknown reactor type: {reactor_type}")
     db = df.copy()
 
     for acct in ACCT_DIRECT:
@@ -214,7 +234,7 @@ def update_direct_cost(
     mod_0: str
 ):
     reactor_df, power = store.get_baseline(reactor_type)
-    db, baseline_lab_hours = add_factory_cost(reactor_df, power, f_22, f_2321, num_orders)   
+    db, baseline_lab_hours = add_factory_cost(reactor_df, power, f_22, f_2321, num_orders, reactor_type)   
     # all Total Cost (USD) columns should be 0 
     # when accounts are in 20s
     db.loc[db["Account"].isin(['21', '211 plus 214 to 219', '212', '213', '22', '23', '232.1', '233', '24', '25', '26']), "Total Cost (USD)"] = 0.0
@@ -222,16 +242,9 @@ def update_direct_cost(
     db = add_land_cost(db, land_cost_per_acre_0, power)
     db, prev_dur = add_BOP_RP_grades(db, RB_grade_0, BOP_grade_0, power, reactor_type, n_th, mod_0)
     db = add_bulk_ordering(db, num_orders, f_22, f_2321, power, reactor_type)
-    # if n_th == 1:
-    #     print('after add_bulk_ordering for plant 1:')
-    #     print(db)
     db, dur_no_delay = add_reworking_productivity(
         db, reactor_type, n_th,
         design_completion_0, ae_exp_0, N_AE, ce_exp_0, N_cons,
         power, prev_dur, baseline_lab_hours
     )
-    # if n_th == 1:
-    #     print('after add_reworking_productivity for plant 1:')
-    #     print(db)
-    # print(f"Duration after add_reworking_productivity for plant {n_th}: {dur_no_delay}")
     return db, dur_no_delay

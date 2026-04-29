@@ -39,6 +39,7 @@ def normalize_levers(levers: dict) -> dict:
       "mod_0": label01(levers["modularity_code"], "stick_built", "modularized"),
       "BOP_grade_0": label01(levers["bop_grade_code"], "nuclear", "non_nuclear"),
       "RB_grade_0": label01(levers["rb_grade_code"], "nuclear", "non_nuclear"),
+      "num_NOAK": int(levers["num_NOAK"]) if "num_NOAK" in levers else int(levers["num_orders"]),
     }
 
 

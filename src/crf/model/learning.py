@@ -19,12 +19,14 @@ COLS = [
 ACCT_DIRECT = [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]
 
 
-def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power: float, reactor_type: str):
+def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power: float, reactor_type: str, n_of_NOAK: int):
     # standardization cap for FOAK
     standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
 
     # fitted learning rates (same order as ACCT_DIRECT)
-    # n_noak is the number of units after which the learning effect is fully realized, which is set to 8 based on expert elicitation. The learning rate is then calculated as 1-(1-std_learning_rate)^(1/log2(n_noak)).
+    # n_noak is the number of units after which the learning effect is fully realized, 
+    # which is set to 8 based on expert elicitation. The learning rate is then calculated 
+    # as 1-(1-std_learning_rate)^(1/log2(n_noak)).
     # std_learning_rate for HTGR:
     #     	    Fac	    Mat	    Lab Cost	Lab Hrs
     # 21		0.96	0.73	0.55	    0.55
@@ -41,6 +43,17 @@ def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power
     # 233		0.96	0.73	0.55	    0.55
     # 24		0.96	0.73	0.55	    0.55
     # 26		0.96	0.73	0.55        0.55
+    # c_NOAK/c_FOAK for AP1000:
+    #     	    Fac	            Mat	    Lab Cost	Lab Hrs
+    # 21		0.0	            0.73	0.55        0.9769914
+    # 22		0.930884915	    0.73    0.55        0.9864236
+    # 232.1	    0.957187482		0.73    0.55        0.9769914  
+    # 233		0.0	            0.73	0.55        0.9769914
+    # 24		0.0	            0.73    0.55        0.9769914
+    # 26		0.0             0.73    0.55        0.9769914
+
+
+
 
     # However, learning is not applied to the factory cost
     if reactor_type == "HTGR":
@@ -63,6 +76,22 @@ def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power
             0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399,
             0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399
         ]) * standardization / 0.7
+    elif reactor_type == "AP1000":
+        # we will apply learning on factory cost for AP1000 of account 22 and 232.1, 
+        # but not for other accounts since AP1000 is already modularized and we assume 
+        # no modularity effect on other accounts.
+        # overall_lr = (1 - np.exp(np.log(c_NOAK/c_FOAK)/np.log2(n_of_NOAK))) * standardization / 0.7
+        fac_lr_22 = (1 - np.exp(np.log(0.930884915)/np.log2(n_of_NOAK))) * standardization / 0.7
+        fac_lr_2321 = (1 - np.exp(np.log(0.957187482)/np.log2(n_of_NOAK))) * standardization / 0.7
+        mat_lr = np.array([
+            0.099588665391, 0.099588665391, 0.099588665391, 0.099588665391,
+            0.099588665391, 0.099588665391, 0.099588665391, 0.099588665391
+        ]) * standardization / 0.7      
+        lab_lr = np.array([
+            0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399,
+            0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399
+        ]) * standardization / 0.7
+
     else:
         raise ValueError(f"Unknown reactor type: {reactor_type}")
     db = df.copy()
@@ -74,6 +103,10 @@ def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power
         setv(db, acct, "Site Material Cost", float(getv(df, acct, "Site Material Cost")) * mat_mult)
         setv(db, acct, "Site Labor Hours", float(getv(df, acct, "Site Labor Hours")) * lab_mult)
         setv(db, acct, "Site Labor Cost", float(getv(df, acct, "Site Labor Cost")) * lab_mult)
+    if reactor_type == "AP1000":
+        # apply learning on factory cost for account 22 and 232.1 for AP1000
+        setv(db, 22, "Factory Equipment Cost", float(getv(df, 22, "Factory Equipment Cost")) * (1 - fac_lr_22) ** np.log2(n_th))
+        setv(db, "232.1", "Factory Equipment Cost", float(getv(df, "232.1", "Factory Equipment Cost")) * (1 - fac_lr_2321) ** np.log2(n_th))
 
     return update_high_level_costs(db, power)[COLS].copy()
 
@@ -99,7 +132,13 @@ def act_cons_duration_plus_delay(
     elif reactor_type == "SFR":
         task_length_multiplier = 1.0
         ref_construction_duration = 64
-
+    elif reactor_type == "AP1000":
+        task_length_multiplier = 76 / 64
+        ref_construction_duration = 76
+    else:
+        raise ValueError(f"Unknown reactor type: {reactor_type}")
+    # NOTE Ryan mentioned that the supply chain delay need to be adjusted
+    # and I am waiting for the final version of CRF of the AP1000
     B_21 = 42.1 * task_length_multiplier
     B_22 = 60.2 * task_length_multiplier
     B_23 = 14.8 * task_length_multiplier
@@ -123,11 +162,16 @@ def act_cons_duration_plus_delay(
 def duration_learning_effect(reactor_type: str, 
                              n_th: int, 
                              standardization_0: float, 
-                             actual_construction_duration_plus_delay: float):
+                             actual_construction_duration_plus_delay: float,
+                             n_of_NOAK: int):
     standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
     if reactor_type == "HTGR":
         fitted_LR_duration = 0.103719051 * standardization / 0.7
     elif reactor_type == "SFR":
         fitted_LR_duration = 0.15*standardization/0.7
+    elif reactor_type == "AP1000": 
+        fitted_LR_duration = (1- np.exp(np.log(42/76)/np.log2(n_of_NOAK)))*standardization/0.7
+        
+        # fitted_LR_duration = (1 - EXP(LN(42/76)/LOG(N_of_NOAK,2))) * standardization / 0.7
     duration_multiplier = (1 - fitted_LR_duration) ** np.log2(n_th)
     return float(duration_multiplier) * float(actual_construction_duration_plus_delay)

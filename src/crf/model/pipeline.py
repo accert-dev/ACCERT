@@ -2,6 +2,7 @@ from .direct_cost import update_direct_cost
 from .learning import learning_effect, act_cons_duration_plus_delay, duration_learning_effect
 from .indirect_cost import update_indirect_cost
 from .finance import tax_update, insurance_cost_update, decomission_cost_update, update_interest_cost, update_itc
+import numpy as np
 
 def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     """
@@ -38,10 +39,17 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     )
     final_dur = duration_learning_effect(reactor_type=config["reactor_type"], 
                                         n_th=n_th, 
-                                        standardization_0=inp["standardization_0"], actual_construction_duration_plus_delay=dur_plus_delay)
+                                        standardization_0=inp["standardization_0"], 
+                                        actual_construction_duration_plus_delay=dur_plus_delay,
+                                        n_of_NOAK=inp["num_orders"])
     
     # learning on direct costs
-    direct_plus_learning = learning_effect(direct_df, n_th, inp["standardization_0"], power, config["reactor_type"])
+    direct_plus_learning = learning_effect(direct_df, n_th, 
+                                           inp["standardization_0"], 
+                                           power, 
+                                           config["reactor_type"],
+                                           inp["num_orders"],
+                                           )
     # indirect costs
     with_indirect = update_indirect_cost(n_th, inp["standardization_0"], direct_plus_learning, final_dur, power)
 
@@ -65,6 +73,12 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int):
     org_occ = float(tot_occ/power)
     org_tci = float(tot_cap/power)  
     final_df, net_occ, nci = update_itc(with_interest, tot_occ, tot_cap, n_th, inp["ITC_0"], inp["n_ITC"], power)
+    reactor_type=config["reactor_type"]
+    if reactor_type in ["HTGR", "SFR"]:
+        startup_dur = max(7, 16*(1-0.3)**np.log2(n_th))
+    elif reactor_type == "AP1000":
+        startup_dur = max(7, 28*(1-0.3)**np.log2(n_th)) # NOTE: need to check whether the startup duration learning should be the same as other types
+
     # print(f"Final OCC for plant {n_th}: {net_occ}")
     # print(final_df)
     return final_df, org_occ, net_occ, org_tci, nci, float(final_dur)
