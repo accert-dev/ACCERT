@@ -1,4 +1,6 @@
 # src/crf/sampling/sampler.py
+from typing import Optional
+
 import numpy as np
 import scipy.stats as stats
 
@@ -15,7 +17,7 @@ def truncate_shift_lognormal(min_, low_, med_, high_, max_, n):
     x = stats.truncnorm.rvs(a=a, b=b, loc=mean, scale=std, size=n)
     return np.exp(x)
 
-def sample_levers(n_samples: int, levers_df, seed: int | None = None) -> np.ndarray:
+def sample_levers(n_samples: int, levers_df, seed: Optional[int] = None) -> np.ndarray:
     if seed is not None:
         np.random.seed(seed)
 

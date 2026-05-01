@@ -1,4 +1,6 @@
 import csv
+from typing import Optional
+
 import numpy as np
 import pandas as pd
 
@@ -59,7 +61,7 @@ def run_sampling_from_excel(
     n_samples: int,
     out_csv: str,
     out_pkl: str,
-    seed: int | None = None
+    seed: Optional[int] = None
 ):
     levers_df = read_levers_sheet(levers_xlsx, sheet_name="Levers")
     levers_df = attach_internal_ids(levers_df)   
@@ -68,12 +70,13 @@ def run_sampling_from_excel(
 
     # headers: build from max num_orders in sampled set
     max_orders = int(np.max(samples[0, :]))
+    has_itc = bool(np.any(samples[2, :] > 0))
 
     headers_wo_itc = (
     STATIC_KEYS
-    + [f"OCC_{i}" for i in range(max_orders)]
-    + [f"TCI_{i}" for i in range(max_orders)]
-    + [f"duration_{i}" for i in range(max_orders)]
+    + [f"OCC_{i}" for i in range(1, max_orders + 1)]
+    + [f"TCI_{i}" for i in range(1, max_orders + 1)]
+    + [f"duration_{i}" for i in range(1, max_orders + 1)]
     + [
         "cons_duration_cumulative_wz_startup",
         "occLastUnit", "TCILastUnit", "durationsLastUnit",
@@ -82,11 +85,11 @@ def run_sampling_from_excel(
     )
     headers_w_itc = (
     STATIC_KEYS
-    + [f"OCC_{i}" for i in range(max_orders)]
-    + [f"NETOCC_{i}" for i in range(max_orders)]
-    + [f"TCI_{i}" for i in range(max_orders)]
-    + [f"NCI_{i}" for i in range(max_orders)]
-    + [f"duration_{i}" for i in range(max_orders)]
+    + [f"OCC_{i}" for i in range(1, max_orders + 1)]
+    + [f"NETOCC_{i}" for i in range(1, max_orders + 1)]
+    + [f"TCI_{i}" for i in range(1, max_orders + 1)]
+    + [f"NCI_{i}" for i in range(1, max_orders + 1)]
+    + [f"duration_{i}" for i in range(1, max_orders + 1)]
     + [
         "cons_duration_cumulative_wz_startup",
         "occLastUnit", "TCILastUnit", "durationsLastUnit",
@@ -94,26 +97,16 @@ def run_sampling_from_excel(
     ]
     )
 
+    headers = headers_w_itc if has_itc else headers_wo_itc
+
     with open(out_csv, "w", newline="", encoding="utf-8") as csv_f, open(out_pkl, "wb") as pkl_f:
         writer = csv.DictWriter(csv_f, fieldnames=headers)
         writer.writeheader()
         for i in range(n_samples):
             levers_raw = sample_column_to_levers(samples, levers_df, i)
             row = run_one_scenario(config, levers_raw)
-            n_itc = int(levers_raw["n_itc"])
-            if n_itc > 0:
-                headers = headers_w_itc
-            else:
-                headers = headers_wo_itc
             write_csv_row(writer, row, headers)
             stream_pickle_dump(row, pkl_f)
-
-    levers = apply_itc_rounding(levers)
-    inp = normalize_levers(levers)
-
-    result = run_avg_all_units(config=config, inp=inp, store=store, details=False)
-    static_vals = static_row_from_levers(levers)
-    return {**static_vals, **result}
 
 def print_scenario_result(result: dict):
     print("Results by plant number:\n")
