@@ -56,6 +56,9 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
     occLastUnit = float(OCC[-1])
     TCILastUnit = float(TCI[-1])
     durationsLastUnit = float(DUR[-1])
+    noak_unit = min(max(int(inp.get("num_NOAK", num_orders)), 1), num_orders)
+    occNOAKUnit = float(OCC[noak_unit - 1])
+    occ_reduction_from_FOAK_to_NOAK_percent = float((OCC[0] - occNOAKUnit) / OCC[0] * 100.0)
     if n_itc > 0:
         # from 1st to n_ITC-th unit (inclusive) have ITC, so use NETOCC/NCI for avg; from (n_ITC+1)-th to last unit have no ITC, so use OCC/TCI for avg; 
         avg_OCC = float(np.mean(NETOCC))*(n_itc/num_orders) + float(np.mean(OCC[n_itc:]))*((num_orders-n_itc)/num_orders)
@@ -106,6 +109,8 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
     out.update({
         "cons_duration_cumulative_wz_startup": float(cons_duration_cumulative_wz_startup),
         "occLastUnit": occLastUnit,
+        "occNOAKUnit": occNOAKUnit,
+        "occ_reduction_from_FOAK_to_NOAK_percent": occ_reduction_from_FOAK_to_NOAK_percent,
         "TCILastUnit": TCILastUnit,
         "durationsLastUnit": durationsLastUnit,
         "avg_OCC": avg_OCC,

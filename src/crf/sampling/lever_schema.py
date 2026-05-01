@@ -40,7 +40,7 @@ EXCEL_NAME_TO_ID_ORDERED = [
 ]
 
 STATIC_KEYS = [
-    "Num_orders", "ITC", "n_ITC", "interest rate", "Design completion", "Design_Maturity_0",
+    "Num_orders", "num_NOAK", "ITC", "n_ITC", "interest rate", "Design completion", "Design_Maturity_0",
     "supply chain exp_0", "N supply chain", "Const Proficiency", "N const prof", "AE",
     "N AE prof", "standardization", "modularity", "BOP commercial", "RB Safety Related",
 ]
@@ -103,6 +103,7 @@ def static_row_from_levers(levers_raw: dict) -> dict:
     """
     return {
         "Num_orders": levers_raw["num_orders"],
+        "num_NOAK": levers_raw.get("num_NOAK", levers_raw["num_orders"]),
         "ITC": levers_raw["itc_percent"],
         "n_ITC": levers_raw["n_itc"],
         "interest rate": levers_raw["interest_percent"],

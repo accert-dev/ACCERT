@@ -1,7 +1,7 @@
 Cost Reduction Framework
 ========================
 
-The Cost Reduction Framework (CRF) estimates how overnight capital cost, total
+The Cost Reduction Framework estimates how overnight capital cost, total
 capital investment, and construction duration change across a sequence of firm
 reactor orders. It is available as the ``crf`` Python package inside ACCERT.
 
@@ -49,7 +49,30 @@ cost-reduction levers.
 
 The returned dictionary includes the static lever values, per-unit metrics such
 as ``OCC_1``, ``TCI_1``, and ``duration_1``, and summary metrics such as
-``avg_OCC``, ``avg_TCI``, and ``avg_duration``.
+``avg_OCC``, ``avg_TCI``, ``avg_duration``, and
+``occ_reduction_from_FOAK_to_NOAK_percent``.
+
+Visualization
+-------------
+
+Use ``save_dashboard`` to generate dashboard-style capital-cost figures from a
+scenario result. The dashboard includes the same core cost-reduction views as
+the Excel dashboard: OCC, TCI, construction duration, cost breakdowns, and the
+percent OCC reduction from FOAK to NOAK.
+
+.. code-block:: python
+
+   from crf import run_one_scenario, save_dashboard
+
+   result = run_one_scenario(config, levers)
+   save_dashboard(
+       result,
+       "cost_reduction_framework_dashboard.png",
+       title="AP1000 Cost Reduction Framework",
+   )
+
+For downstream analysis, ``results_to_dataframe`` converts the scenario result
+to a chart-ready ``pandas.DataFrame`` with one row per plant.
 
 Configuration
 -------------
@@ -62,7 +85,7 @@ Configuration
    * - Key
      - Description
    * - ``reactor_type``
-     - Built-in CRF baseline: ``AP1000``, ``SFR``, or ``HTGR``.
+     - Built-in Cost Reduction Framework baseline: ``AP1000``, ``SFR``, or ``HTGR``.
    * - ``f_22``
      - Reactor building cost adjustment.
    * - ``f_2321``
@@ -91,7 +114,7 @@ inputs use ``0`` or ``1`` and are converted internally to model labels.
    * - ``num_NOAK``
      - Plant number used for nth-of-a-kind learning. Defaults to ``num_orders``.
    * - ``itc_percent``
-     - Investment tax credit percentage. Values are rounded to the nearest supported CRF ITC level.
+     - Investment tax credit percentage. Values are rounded to the nearest supported Cost Reduction Framework ITC level.
    * - ``n_itc``
      - Number of first units eligible for ITC.
    * - ``interest_percent``
@@ -140,8 +163,8 @@ The ``Levers`` sheet must include these columns:
 
    Levers, Min, Low, Median, High, Max, Distribution, Type, Set, Probabilities
 
-The lever rows must follow the order expected by CRF because several rows share
-the same display name:
+The lever rows must follow the order expected by the Cost Reduction Framework
+because several rows share the same display name:
 
 .. code-block:: text
 

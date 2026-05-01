@@ -5,7 +5,9 @@ Run from the repository root with:
     PYTHONPATH=src python tutorial/crf_quickstart.py
 """
 
-from crf import print_scenario_result, run_one_scenario
+from pathlib import Path
+
+from crf import print_scenario_result, run_one_scenario, save_dashboard
 
 
 config = {
@@ -41,3 +43,7 @@ levers = {
 if __name__ == "__main__":
     result = run_one_scenario(config, levers)
     print_scenario_result(result)
+
+    output_path = Path("cost_reduction_framework_dashboard.png")
+    save_dashboard(result, output_path, title="AP1000 Cost Reduction Framework")
+    print(f"\nSaved dashboard figure to: {output_path.resolve()}")

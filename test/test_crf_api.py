@@ -4,7 +4,13 @@ import pickle
 import pandas as pd
 import pytest
 
-from crf import run_one_scenario, run_sampling_from_excel
+from crf import (
+    occ_reduction_from_foak_to_noak,
+    results_to_dataframe,
+    run_one_scenario,
+    run_sampling_from_excel,
+    save_dashboard,
+)
 from crf.api import normalize_levers
 from crf.sampling.lever_schema import EXCEL_NAME_TO_ID_ORDERED
 
@@ -86,6 +92,7 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
     result = run_one_scenario(_config(), _levers())
 
     assert result["Num_orders"] == 2
+    assert result["num_NOAK"] == 2
     assert result["ITC"] == 30
     assert result["n_ITC"] == 1
     assert result["OCC_1"] > 0
@@ -95,6 +102,25 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
     assert result["avg_OCC"] > 0
     assert result["avg_TCI"] > 0
     assert result["avg_duration"] > 0
+    assert result["occ_reduction_from_FOAK_to_NOAK_percent"] == pytest.approx(
+        (result["OCC_1"] - result["OCC_2"]) / result["OCC_1"] * 100
+    )
+
+
+def test_visualization_helpers_create_dashboard(tmp_path):
+    result = run_one_scenario(_config(), _levers())
+    frame = results_to_dataframe(result)
+    out_png = tmp_path / "cost_reduction_framework_dashboard.png"
+
+    assert list(frame["Plant number"]) == [1, 2]
+    assert frame.loc[1, "OCC reduction from FOAK"] == pytest.approx(
+        occ_reduction_from_foak_to_noak(result)
+    )
+
+    save_dashboard(result, str(out_png), title="Cost Reduction Framework Test")
+
+    assert out_png.exists()
+    assert out_png.stat().st_size > 0
 
 
 def test_run_sampling_from_excel_writes_csv_and_pickle_outputs(tmp_path):

@@ -79,7 +79,8 @@ def run_sampling_from_excel(
     + [f"duration_{i}" for i in range(1, max_orders + 1)]
     + [
         "cons_duration_cumulative_wz_startup",
-        "occLastUnit", "TCILastUnit", "durationsLastUnit",
+        "occLastUnit", "occNOAKUnit", "occ_reduction_from_FOAK_to_NOAK_percent",
+        "TCILastUnit", "durationsLastUnit",
         "avg_OCC", "avg_TCI", "avg_duration",
     ]
     )
@@ -92,7 +93,8 @@ def run_sampling_from_excel(
     + [f"duration_{i}" for i in range(1, max_orders + 1)]
     + [
         "cons_duration_cumulative_wz_startup",
-        "occLastUnit", "TCILastUnit", "durationsLastUnit",
+        "occLastUnit", "occNOAKUnit", "occ_reduction_from_FOAK_to_NOAK_percent",
+        "TCILastUnit", "durationsLastUnit",
         "avg_OCC", "avg_TCI", "avg_duration",
     ]
     )
@@ -144,7 +146,17 @@ def print_scenario_result(result: dict):
         
     print(results_df.round(2).fillna("").to_string(index=False))
 
-    summary_metrics = ["cons_duration_cumulative_wz_startup", "occLastUnit", "TCILastUnit", "durationsLastUnit", "avg_OCC", "avg_TCI", "avg_duration"]
+    summary_metrics = [
+        "cons_duration_cumulative_wz_startup",
+        "occLastUnit",
+        "occNOAKUnit",
+        "occ_reduction_from_FOAK_to_NOAK_percent",
+        "TCILastUnit",
+        "durationsLastUnit",
+        "avg_OCC",
+        "avg_TCI",
+        "avg_duration",
+    ]
     print("\nSummary metrics:\n")
     for metric in summary_metrics:
         print(f"{metric}: {result[metric]:.2f}")
