@@ -87,10 +87,7 @@ def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
     contributions = {
         "Bulk-ordering": _trace_delta(noak_trace, foak_trace, "Bulk-ordering"),
         "Elimination of rework": _trace_delta(noak_trace, foak_trace, "Elimination of rework"),
-        "Supplychain efficiency": (
-            _trace_delta(noak_trace, foak_trace, "indirect_cost_delta")
-            + _trace_delta(noak_trace, foak_trace, "supplementary_cost_delta")
-        ),
+        "Supplychain efficiency": _trace_delta(noak_trace, foak_trace, "Supplychain efficiency"),
         "Labor productivity": _trace_delta(noak_trace, foak_trace, "Labor productivity"),
         "Experience and cross-site standardization": _trace_delta(
             noak_trace, foak_trace, "Experience and cross-site standardization"
@@ -101,8 +98,7 @@ def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
             noak_trace, foak_trace, "Non safety-related Reactor Building"
         ),
     }
-    residual = (noak_occ - foak_occ) - sum(contributions.values())
-    contributions["Experience and cross-site standardization"] += residual
+    _allocate_waterfall_residual(contributions, (noak_occ - foak_occ) - sum(contributions.values()))
 
     rows = [
         {
@@ -137,6 +133,38 @@ def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
 
 def _trace_delta(noak_trace: dict, foak_trace: dict, key: str) -> float:
     return float(noak_trace.get(key, 0.0)) - float(foak_trace.get(key, 0.0))
+
+
+def _allocate_waterfall_residual(contributions: dict, residual: float) -> None:
+    """Allocate downstream model effects across levers that reduce OCC.
+
+    Some model terms, especially indirect and supplementary costs, are
+    recalculated after direct-cost levers have changed the cost base. The
+    spreadsheet waterfall distributes those downstream effects across the
+    levers instead of assigning them to one lever. Do the same here so the
+    waterfall reconciles without overstating experience/standardization.
+    """
+    if abs(residual) < 1e-9:
+        return
+
+    if residual < 0:
+        keys = [
+            key for key, value in contributions.items()
+            if value < 0 and key != "Supplychain efficiency"
+        ]
+    else:
+        keys = [
+            key for key, value in contributions.items()
+            if value > 0 and key != "Supplychain efficiency"
+        ]
+
+    weight_total = sum(abs(contributions[key]) for key in keys)
+    if weight_total == 0:
+        contributions["Experience and cross-site standardization"] += residual
+        return
+
+    for key in keys:
+        contributions[key] += residual * abs(contributions[key]) / weight_total
 
 def run_sampling_from_excel(
     config: dict,

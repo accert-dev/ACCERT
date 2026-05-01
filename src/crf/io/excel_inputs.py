@@ -37,8 +37,6 @@ class InputStore:
             power = 2234 * 1000
         else:
             raise ValueError(f"Unknown reactor_type: {reactor_type}")
-        # print current running path for debugging
-        print(f"Loading baseline from: {path}")
         df = pd.read_csv(path)
         missing = set(COLS) - set(df.columns)
         if missing:
@@ -67,4 +65,3 @@ class InputStore:
         cdfs = sp["CDF"].to_numpy(dtype=float)
         self._spending = (months, cdfs)
         return self._spending
-

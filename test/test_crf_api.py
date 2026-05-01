@@ -124,6 +124,11 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
     assert waterfall.iloc[1:-1]["absolute_change"].sum() == pytest.approx(
         result["OCC_2"] - result["OCC_1"]
     )
+    supplychain_delta = waterfall.loc[
+        waterfall["label"].eq("Supplychain efficiency"),
+        "absolute_change",
+    ].iloc[0]
+    assert abs(supplychain_delta) < abs(result["OCC_2"] - result["OCC_1"]) * 0.1
 
 
 def test_visualization_helpers_create_dashboard(tmp_path):

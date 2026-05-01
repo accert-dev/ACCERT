@@ -45,6 +45,11 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int, trace=None
                                         standardization_0=inp["standardization_0"], 
                                         actual_construction_duration_plus_delay=dur_plus_delay,
                                         n_of_NOAK=inp["num_orders"])
+    no_supply_final_dur = duration_learning_effect(reactor_type=config["reactor_type"], 
+                                        n_th=n_th, 
+                                        standardization_0=inp["standardization_0"], 
+                                        actual_construction_duration_plus_delay=dur_no_delay,
+                                        n_of_NOAK=inp["num_orders"])
     if trace is not None:
         trace["duration_learning_months"] = float(final_dur) - float(dur_plus_delay)
     
@@ -59,14 +64,25 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int, trace=None
     
     # indirect costs
     with_indirect = update_indirect_cost(n_th, inp["standardization_0"], direct_plus_learning, final_dur, power, reactor_type=config["reactor_type"])
-    if trace is not None:
-        trace["indirect_cost_delta"] = _occ_per_kwe(with_indirect, power) - _occ_per_kwe(direct_plus_learning, power)
 
     # Supplementary costs: tax, insurance, decommissioning
     with_tax = tax_update(with_indirect, power)
     with_insurance = insurance_cost_update(with_tax, power)
     with_decomm = decomission_cost_update(with_insurance, power)
     if trace is not None:
+        no_supply_indirect = update_indirect_cost(
+            n_th,
+            inp["standardization_0"],
+            direct_plus_learning,
+            no_supply_final_dur,
+            power,
+            reactor_type=config["reactor_type"],
+        )
+        no_supply_tax = tax_update(no_supply_indirect, power)
+        no_supply_insurance = insurance_cost_update(no_supply_tax, power)
+        no_supply_decomm = decomission_cost_update(no_supply_insurance, power)
+        trace["Supplychain efficiency"] = _occ_per_kwe(with_decomm, power) - _occ_per_kwe(no_supply_decomm, power)
+        trace["indirect_cost_delta"] = _occ_per_kwe(with_indirect, power) - _occ_per_kwe(direct_plus_learning, power)
         trace["supplementary_cost_delta"] = _occ_per_kwe(with_decomm, power) - _occ_per_kwe(with_indirect, power)
 
     # Finance costs: interest during construction and ITC

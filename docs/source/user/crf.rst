@@ -187,4 +187,5 @@ because several rows share the same display name:
    Commercial BOP
    Non-safety-related RB
 
-See ``tutorial/crf_quickstart.py`` for a runnable deterministic scenario.
+Runnable deterministic examples are available in ``tutorial/crf_ap1000_example.py``,
+``tutorial/crf_htgr_example.py``, and ``tutorial/crf_sfr_example.py``.
