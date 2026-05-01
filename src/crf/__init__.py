@@ -11,6 +11,7 @@ from .api import (
 )
 from .visualization import (
     occ_reduction_from_foak_to_noak,
+    levers_to_dataframe,
     plot_dashboard,
     results_to_dataframe,
     save_dashboard,
@@ -24,6 +25,7 @@ __all__ = [
     "run_sampling_from_excel",
     "print_scenario_result",
     "occ_reduction_from_foak_to_noak",
+    "levers_to_dataframe",
     "plot_dashboard",
     "results_to_dataframe",
     "save_dashboard",

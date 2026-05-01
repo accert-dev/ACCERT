@@ -1,5 +1,6 @@
 import numpy as np
 from .pipeline import calculate_final_result
+from .schedule import build_schedule_start_months, effective_staggering_ratio
 # Ignore runtime warning 
 
 def run_avg_all_units(config: dict, inp: dict, store, details=False):
@@ -70,9 +71,9 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
 
 
     final_startup_duration = max(7, config["startup_0"] * (1 - 0.3) ** np.log2(num_orders))
-    cons_duration_cumulative_wz_startup = (
-        (1 - config["staggering_ratio"]) * np.sum(DUR[:-1]) + DUR[-1] + final_startup_duration
-    )
+    start_months = build_schedule_start_months(config, DUR, STAUP)
+    finish_months = start_months + DUR + STAUP
+    cons_duration_cumulative_wz_startup = float(finish_months[-1])
 
     # expand arrays to OCC_i / TCI_i / duration_i
     out = {}
@@ -116,5 +117,6 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
         "avg_OCC": avg_OCC,
         "avg_TCI": avg_TCI,
         "avg_duration": avg_duration,
+        "effective_staggering_ratio": effective_staggering_ratio(config),
     })
     return out

@@ -16,6 +16,7 @@ from .sampling.lever_schema import (
 from .sampling.postprocess import apply_itc_rounding
 from .model.avg_runner import run_avg_all_units
 from .model.pipeline import calculate_final_result
+from .model.schedule import effective_staggering_ratio
 from .utils.serialize import write_csv_row, stream_pickle_dump
 
 
@@ -55,6 +56,8 @@ def run_one_scenario(config: dict, levers: dict) -> dict:
     result = run_avg_all_units(config=config, inp=inp, store=store, details=True)
     static_vals = static_row_from_levers(levers)
     out = {**static_vals, **result}
+    out["reactor_type"] = config.get("reactor_type", "")
+    out["staggering_ratio"] = effective_staggering_ratio(config)
     out["occ_waterfall"] = calculate_occ_waterfall(config, levers)
     return out
 

@@ -39,8 +39,8 @@ cost-reduction levers.
        "ae_exp": 0.5,
        "N_AE": 4,
        "standardization_percent": 80,
-       "modularity_code": 1,
-       "bop_grade_code": 1,
+       "modularity_code": 0,
+       "bop_grade_code": 0,
        "rb_grade_code": 0,
    }
 
@@ -56,9 +56,10 @@ Visualization
 -------------
 
 Use ``save_dashboard`` to generate dashboard-style capital-cost figures from a
-scenario result. The dashboard includes the same core cost-reduction views as
-the Excel dashboard: OCC, TCI, construction duration, cost breakdowns, and the
-FOAK-to-NOAK OCC reduction waterfall by lever.
+scenario result. The dashboard includes a lever input table, OCC, TCI,
+construction duration, cost breakdowns, a staggered construction timeline, and
+the FOAK-to-NOAK OCC reduction waterfall by lever. Set ``show_levers=False`` to
+omit the lever input table and generate the compact chart-only dashboard.
 
 .. code-block:: python
 
@@ -69,12 +70,14 @@ FOAK-to-NOAK OCC reduction waterfall by lever.
        result,
        "cost_reduction_framework_dashboard.png",
        title="AP1000 Cost Reduction Framework",
+       show_levers=True,
    )
 
 For downstream analysis, ``results_to_dataframe`` converts the scenario result
 to a chart-ready ``pandas.DataFrame`` with one row per plant, while
-``waterfall_to_dataframe`` returns the FOAK-to-NOAK waterfall values using the
-lever labels from the Excel dashboard.
+``levers_to_dataframe`` returns the lever table and ``waterfall_to_dataframe``
+returns the FOAK-to-NOAK waterfall values using the lever labels from the Excel
+dashboard.
 
 Configuration
 -------------
@@ -97,7 +100,7 @@ Configuration
    * - ``startup_0``
      - First-unit startup duration in months.
    * - ``staggering_ratio``
-     - Fractional overlap between sequential unit construction schedules.
+     - Fractional overlap between sequential unit construction schedules. The timeline chart delays later plant starts when needed so construction and startup finish dates do not move backward.
 
 Levers
 ------

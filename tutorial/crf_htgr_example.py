@@ -38,11 +38,18 @@ levers = {
     "rb_grade_code": 0,
 }
 
+show_lever_table = True
+
 
 if __name__ == "__main__":
     result = run_one_scenario(config, levers)
     print_scenario_result(result)
 
     output_path = Path("cost_reduction_framework_htgr_dashboard.png")
-    save_dashboard(result, output_path, title="HTGR Cost Reduction Framework")
+    save_dashboard(
+        result,
+        output_path,
+        title="HTGR Cost Reduction Framework",
+        show_levers=show_lever_table,
+    )
     print(f"\nSaved dashboard figure to: {output_path.resolve()}")

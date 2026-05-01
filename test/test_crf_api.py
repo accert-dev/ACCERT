@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 
 from crf import (
+    levers_to_dataframe,
     occ_reduction_from_foak_to_noak,
     results_to_dataframe,
     run_one_scenario,
@@ -13,6 +14,7 @@ from crf import (
     waterfall_to_dataframe,
 )
 from crf.api import normalize_levers
+from crf.model.schedule import build_schedule_timeline
 from crf.sampling.lever_schema import EXCEL_NAME_TO_ID_ORDERED
 
 
@@ -96,6 +98,8 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
     assert result["num_NOAK"] == 2
     assert result["ITC"] == 30
     assert result["n_ITC"] == 1
+    assert result["staggering_ratio"] == pytest.approx(_config()["staggering_ratio"])
+    assert result["effective_staggering_ratio"] == pytest.approx(_config()["staggering_ratio"])
     assert result["OCC_1"] > 0
     assert result["OCC_2"] > 0
     assert result["NETOCC_1"] < result["OCC_1"]
@@ -130,11 +134,27 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
     ].iloc[0]
     assert abs(supplychain_delta) < abs(result["OCC_2"] - result["OCC_1"]) * 0.1
 
+    timeline = build_schedule_timeline(
+        {**_config(), "staggering_ratio": result["staggering_ratio"]},
+        [1, 2],
+        [result["duration_1"], result["duration_2"]],
+        [result["STAUP_1"], result["STAUP_2"]],
+    )
+    assert timeline["construction_finish_month"][1] >= timeline["construction_finish_month"][0]
+    assert timeline["startup_finish_month"][1] >= timeline["startup_finish_month"][0]
+
+    levers = levers_to_dataframe(result)
+    assert levers.loc[0, "Design Completion"] == "70%"
+    assert levers.loc[1, "Design Completion"] == "100%"
+    assert levers.loc[0, "Cross Site Standardization"] == ""
+    assert levers.loc[1, "Cross Site Standardization"] == "80%"
+
 
 def test_visualization_helpers_create_dashboard(tmp_path):
     result = run_one_scenario(_config(), _levers())
     frame = results_to_dataframe(result)
     out_png = tmp_path / "cost_reduction_framework_dashboard.png"
+    compact_png = tmp_path / "cost_reduction_framework_compact_dashboard.png"
 
     assert list(frame["Plant number"]) == [1, 2]
     assert frame.loc[1, "OCC reduction from FOAK"] == pytest.approx(
@@ -142,9 +162,17 @@ def test_visualization_helpers_create_dashboard(tmp_path):
     )
 
     save_dashboard(result, str(out_png), title="Cost Reduction Framework Test")
+    save_dashboard(
+        result,
+        str(compact_png),
+        title="Cost Reduction Framework Test",
+        show_levers=False,
+    )
 
     assert out_png.exists()
     assert out_png.stat().st_size > 0
+    assert compact_png.exists()
+    assert compact_png.stat().st_size > 0
 
 
 def test_run_sampling_from_excel_writes_csv_and_pickle_outputs(tmp_path):
