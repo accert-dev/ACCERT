@@ -15,6 +15,7 @@ from .sampling.lever_schema import (
 )
 from .sampling.postprocess import apply_itc_rounding
 from .model.avg_runner import run_avg_all_units
+from .model.pipeline import calculate_final_result
 from .utils.serialize import write_csv_row, stream_pickle_dump
 
 
@@ -53,7 +54,89 @@ def run_one_scenario(config: dict, levers: dict) -> dict:
 
     result = run_avg_all_units(config=config, inp=inp, store=store, details=True)
     static_vals = static_row_from_levers(levers)
-    return {**static_vals, **result}
+    out = {**static_vals, **result}
+    out["occ_waterfall"] = calculate_occ_waterfall(config, levers)
+    return out
+
+
+def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
+    """Calculate FOAK-to-NOAK OCC waterfall contributions by model stage."""
+    store = InputStore(config.get("data_dir"))
+    normalized = normalize_levers(levers)
+    noak_unit = min(max(int(normalized.get("num_NOAK", normalized["num_orders"])), 1), int(normalized["num_orders"]))
+
+    foak_trace = {}
+    noak_trace = {}
+    calculate_final_result(config=config, inp=normalized, store=store, n_th=1, trace=foak_trace)
+    calculate_final_result(config=config, inp=normalized, store=store, n_th=noak_unit, trace=noak_trace)
+
+    foak_occ = float(foak_trace["final_occ"])
+    noak_occ = float(noak_trace["final_occ"])
+
+    labels = [
+        "Bulk-ordering",
+        "Elimination of rework",
+        "Supplychain efficiency",
+        "Labor productivity",
+        "Experience and cross-site standardization",
+        "Modular Construction",
+        "Commercial BOP",
+        "Non safety-related Reactor Building",
+    ]
+
+    contributions = {
+        "Bulk-ordering": _trace_delta(noak_trace, foak_trace, "Bulk-ordering"),
+        "Elimination of rework": _trace_delta(noak_trace, foak_trace, "Elimination of rework"),
+        "Supplychain efficiency": (
+            _trace_delta(noak_trace, foak_trace, "indirect_cost_delta")
+            + _trace_delta(noak_trace, foak_trace, "supplementary_cost_delta")
+        ),
+        "Labor productivity": _trace_delta(noak_trace, foak_trace, "Labor productivity"),
+        "Experience and cross-site standardization": _trace_delta(
+            noak_trace, foak_trace, "Experience and cross-site standardization"
+        ),
+        "Modular Construction": _trace_delta(noak_trace, foak_trace, "Modular Construction"),
+        "Commercial BOP": _trace_delta(noak_trace, foak_trace, "Commercial BOP"),
+        "Non safety-related Reactor Building": _trace_delta(
+            noak_trace, foak_trace, "Non safety-related Reactor Building"
+        ),
+    }
+    residual = (noak_occ - foak_occ) - sum(contributions.values())
+    contributions["Experience and cross-site standardization"] += residual
+
+    rows = [
+        {
+            "label": "FOAK \n(no firm orders)",
+            "absolute_change": foak_occ,
+            "cumulative_occ": foak_occ,
+            "kind": "total",
+        }
+    ]
+    cumulative = foak_occ
+    for label in labels:
+        change = float(contributions[label])
+        cumulative += change
+        rows.append(
+            {
+                "label": label,
+                "absolute_change": change,
+                "cumulative_occ": cumulative,
+                "kind": "change",
+            }
+        )
+    rows.append(
+        {
+            "label": "NOAK \n(firm orders)",
+            "absolute_change": noak_occ,
+            "cumulative_occ": noak_occ,
+            "kind": "total",
+        }
+    )
+    return rows
+
+
+def _trace_delta(noak_trace: dict, foak_trace: dict, key: str) -> float:
+    return float(noak_trace.get(key, 0.0)) - float(foak_trace.get(key, 0.0))
 
 def run_sampling_from_excel(
     config: dict,

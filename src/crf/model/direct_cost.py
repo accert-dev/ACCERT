@@ -25,6 +25,22 @@ COLS = [
 ACCT_DIRECT = [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]
 
 
+def _total_occ_per_kwe(df: pd.DataFrame, power: float) -> float:
+    db = update_high_level_costs(df.copy(), power)
+    return float(
+        db.loc[
+            db["Title"].eq("Total Overnight Cost (Accounts 10 to 50)"),
+            "Total Cost (USD)",
+        ].iloc[0]
+        / power
+    )
+
+
+def _record_delta(trace, key: str, before: pd.DataFrame, after: pd.DataFrame, power: float):
+    if trace is not None:
+        trace[key] = _total_occ_per_kwe(after, power) - _total_occ_per_kwe(before, power)
+
+
 def add_factory_cost(df: pd.DataFrame, power: float, f_22: float, f_2321: float, num_orders: int, reactor_type: str):
     db = df.copy()
     if reactor_type in ["HTGR", "SFR"]:
@@ -56,7 +72,8 @@ def add_BOP_RP_grades(
     power: float,
     reactor_type: str,
     n_th: int,
-    mod_0: str
+    mod_0: str,
+    trace=None
 ):
     # RB grade does not change; BOP becomes non_nuclear after FOAK
     RB_grade = RB_grade_0
@@ -67,13 +84,16 @@ def add_BOP_RP_grades(
     
     db = df.copy()
 
+    before_rb = db.copy()
     if RB_grade == "non_nuclear":
         mulv(
             db, [212],
             ["Site Material Cost", "Site Labor Cost", "Site Labor Hours", "Factory Equipment Cost"],
             0.6
         )
+    _record_delta(trace, "Non safety-related Reactor Building", before_rb, db, power)
 
+    before_bop = db.copy()
     if BOP_grade == "non_nuclear":
         if reactor_type in ["HTGR", "SFR"]:
             mulv(
@@ -94,6 +114,7 @@ def add_BOP_RP_grades(
                 ["Site Material Cost", "Site Labor Cost", "Site Labor Hours", "Factory Equipment Cost"],
                 0.6
             )
+    _record_delta(trace, "Commercial BOP", before_bop, db, power)
     db2 = update_high_level_costs(db, power)[COLS].copy()
 
     # duration update from grade change
@@ -119,6 +140,7 @@ def add_BOP_RP_grades(
     mod_factor = 0.8 if mod == "modularized" else 1.0 # NOTE see excel Relationship sheet D4
     # NOTE in excel tool HTGR does nothing here, SFR factory cost of 21 with the 20% reduction 
     # with AP1000 all labor cost with the 20% reduction in 20s accounts, 
+    before_mod = db2.copy()
     if reactor_type == "SFR":
         for acct in [21, "211 plus 214 to 219", 212, 213]:
             setv(db2, acct, "Factory Equipment Cost", float(getv(db2, acct, "Factory Equipment Cost")) * mod_factor)
@@ -128,12 +150,13 @@ def add_BOP_RP_grades(
             setv(db2, acct, "Site Labor Cost", float(getv(db2, acct, "Site Labor Cost")) * mod_factor)
             setv(db2, acct, "Site Labor Hours", float(getv(db2, acct, "Site Labor Hours")) * mod_factor)
         db2 = update_high_level_costs(db2, power)[COLS].copy()
+    _record_delta(trace, "Modular Construction", before_mod, db2, power)
 
 
     return db2, new_dur * mod_factor
 
 
-def add_bulk_ordering(df: pd.DataFrame, num_orders: int, f_22: float, f_2321: float, power: float, reactor_type: str):
+def add_bulk_ordering(df: pd.DataFrame, num_orders: int, f_22: float, f_2321: float, power: float, reactor_type: str, trace=None):
     """
     Applies average learning reduction to factory equipment cost of 22 and 232.1,
     but keeps factory-building portion intact.
@@ -165,7 +188,9 @@ def add_bulk_ordering(df: pd.DataFrame, num_orders: int, f_22: float, f_2321: fl
     new2321 = red2321 * (old2321 - (f_2321 / num_orders)) + (f_2321 / num_orders)
     setv(db, "232.1", "Factory Equipment Cost", new2321)
 
-    return update_high_level_costs(db, power)[COLS].copy()
+    db2 = update_high_level_costs(db, power)[COLS].copy()
+    _record_delta(trace, "Bulk-ordering", df, db2, power)
+    return db2
 
 
 def add_reworking_productivity(
@@ -179,7 +204,8 @@ def add_reworking_productivity(
     N_cons: float,
     power: float,
     prev_cons_duration: float,
-    baseline_lab_hours
+    baseline_lab_hours,
+    trace=None
 ):
     if n_th == 1:
         design_completion = design_completion_0
@@ -208,10 +234,19 @@ def add_reworking_productivity(
     for acct in ACCT_DIRECT:
         setv(db, acct, "Factory Equipment Cost", float(getv(df, acct, "Factory Equipment Cost")) * rework)
         setv(db, acct, "Site Material Cost", float(getv(df, acct, "Site Material Cost")) * rework)
-        setv(db, acct, "Site Labor Hours", float(getv(df, acct, "Site Labor Hours")) * rework / productivity)
-        setv(db, acct, "Site Labor Cost", float(getv(df, acct, "Site Labor Cost")) * rework / productivity)
+        setv(db, acct, "Site Labor Hours", float(getv(df, acct, "Site Labor Hours")) * rework)
+        setv(db, acct, "Site Labor Cost", float(getv(df, acct, "Site Labor Cost")) * rework)
+
+    rework_db = update_high_level_costs(db, power)[COLS].copy()
+    _record_delta(trace, "Elimination of rework", df, rework_db, power)
+
+    db = rework_db.copy()
+    for acct in ACCT_DIRECT:
+        setv(db, acct, "Site Labor Hours", float(getv(rework_db, acct, "Site Labor Hours")) / productivity)
+        setv(db, acct, "Site Labor Cost", float(getv(rework_db, acct, "Site Labor Cost")) / productivity)
 
     db2 = update_high_level_costs(db, power)[COLS].copy()
+    _record_delta(trace, "Labor productivity", rework_db, db2, power)
     new_dur = float(update_cons_duration_2(df, db2, ref_duration, prev_cons_duration, baseline_lab_hours, reactor_type))
     return db2, new_dur
 
@@ -231,7 +266,8 @@ def update_direct_cost(
     N_AE: float,
     ce_exp_0: float,
     N_cons: float,
-    mod_0: str
+    mod_0: str,
+    trace=None
 ):
     reactor_df, power = store.get_baseline(reactor_type)
     db, baseline_lab_hours = add_factory_cost(reactor_df, power, f_22, f_2321, num_orders, reactor_type)   
@@ -240,11 +276,11 @@ def update_direct_cost(
     db.loc[db["Account"].isin(['21', '211 plus 214 to 219', '212', '213', '22', '23', '232.1', '233', '24', '25', '26']), "Total Cost (USD)"] = 0.0
     db = update_high_level_costs(db, power)[COLS].copy()
     db = add_land_cost(db, land_cost_per_acre_0, power)
-    db, prev_dur = add_BOP_RP_grades(db, RB_grade_0, BOP_grade_0, power, reactor_type, n_th, mod_0)
-    db = add_bulk_ordering(db, num_orders, f_22, f_2321, power, reactor_type)
+    db, prev_dur = add_BOP_RP_grades(db, RB_grade_0, BOP_grade_0, power, reactor_type, n_th, mod_0, trace=trace)
+    db = add_bulk_ordering(db, num_orders, f_22, f_2321, power, reactor_type, trace=trace)
     db, dur_no_delay = add_reworking_productivity(
         db, reactor_type, n_th,
         design_completion_0, ae_exp_0, N_AE, ce_exp_0, N_cons,
-        power, prev_dur, baseline_lab_hours
+        power, prev_dur, baseline_lab_hours, trace=trace
     )
     return db, dur_no_delay

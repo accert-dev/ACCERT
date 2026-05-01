@@ -58,7 +58,7 @@ Visualization
 Use ``save_dashboard`` to generate dashboard-style capital-cost figures from a
 scenario result. The dashboard includes the same core cost-reduction views as
 the Excel dashboard: OCC, TCI, construction duration, cost breakdowns, and the
-percent OCC reduction from FOAK to NOAK.
+FOAK-to-NOAK OCC reduction waterfall by lever.
 
 .. code-block:: python
 
@@ -72,7 +72,9 @@ percent OCC reduction from FOAK to NOAK.
    )
 
 For downstream analysis, ``results_to_dataframe`` converts the scenario result
-to a chart-ready ``pandas.DataFrame`` with one row per plant.
+to a chart-ready ``pandas.DataFrame`` with one row per plant, while
+``waterfall_to_dataframe`` returns the FOAK-to-NOAK waterfall values using the
+lever labels from the Excel dashboard.
 
 Configuration
 -------------

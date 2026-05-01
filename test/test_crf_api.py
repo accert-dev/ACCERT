@@ -10,6 +10,7 @@ from crf import (
     run_one_scenario,
     run_sampling_from_excel,
     save_dashboard,
+    waterfall_to_dataframe,
 )
 from crf.api import normalize_levers
 from crf.sampling.lever_schema import EXCEL_NAME_TO_ID_ORDERED
@@ -104,6 +105,24 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
     assert result["avg_duration"] > 0
     assert result["occ_reduction_from_FOAK_to_NOAK_percent"] == pytest.approx(
         (result["OCC_1"] - result["OCC_2"]) / result["OCC_1"] * 100
+    )
+    waterfall = waterfall_to_dataframe(result)
+    assert waterfall["label"].tolist() == [
+        "FOAK \n(no firm orders)",
+        "Bulk-ordering",
+        "Elimination of rework",
+        "Supplychain efficiency",
+        "Labor productivity",
+        "Experience and cross-site standardization",
+        "Modular Construction",
+        "Commercial BOP",
+        "Non safety-related Reactor Building",
+        "NOAK \n(firm orders)",
+    ]
+    assert waterfall.iloc[0]["cumulative_occ"] == pytest.approx(result["OCC_1"])
+    assert waterfall.iloc[-1]["cumulative_occ"] == pytest.approx(result["OCC_2"])
+    assert waterfall.iloc[1:-1]["absolute_change"].sum() == pytest.approx(
+        result["OCC_2"] - result["OCC_1"]
     )
 
 

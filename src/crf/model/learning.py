@@ -19,7 +19,18 @@ COLS = [
 ACCT_DIRECT = [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]
 
 
-def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power: float, reactor_type: str, n_of_NOAK: int):
+def _total_occ_per_kwe(df: pd.DataFrame, power: float) -> float:
+    db = update_high_level_costs(df.copy(), power)
+    return float(
+        db.loc[
+            db["Title"].eq("Total Overnight Cost (Accounts 10 to 50)"),
+            "Total Cost (USD)",
+        ].iloc[0]
+        / power
+    )
+
+
+def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power: float, reactor_type: str, n_of_NOAK: int, trace=None):
     # standardization cap for FOAK
     standardization = min(0.7, standardization_0) if n_th == 1 else standardization_0
 
@@ -108,7 +119,10 @@ def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power
         setv(db, 22, "Factory Equipment Cost", float(getv(df, 22, "Factory Equipment Cost")) * (1 - fac_lr_22) ** np.log2(n_th))
         setv(db, "232.1", "Factory Equipment Cost", float(getv(df, "232.1", "Factory Equipment Cost")) * (1 - fac_lr_2321) ** np.log2(n_th))
 
-    return update_high_level_costs(db, power)[COLS].copy()
+    db2 = update_high_level_costs(db, power)[COLS].copy()
+    if trace is not None:
+        trace["Experience and cross-site standardization"] = _total_occ_per_kwe(db2, power) - _total_occ_per_kwe(df, power)
+    return db2
 
 
 def act_cons_duration_plus_delay(
