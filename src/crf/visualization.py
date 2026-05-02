@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import sys
 import tempfile
 import textwrap
 from pathlib import Path
@@ -12,7 +13,8 @@ os.environ.setdefault("MPLCONFIGDIR", tempfile.gettempdir())
 
 import matplotlib
 
-matplotlib.use("Agg")
+if "ipykernel" not in sys.modules:
+    matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import numpy as np
