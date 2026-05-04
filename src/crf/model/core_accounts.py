@@ -41,6 +41,20 @@ COST_COLS = [
 
 ALL_COLS = ["Account", "Title"] + COST_COLS
 
+ACCOUNT_21_DETAIL_ACCOUNTS = ["211", "212", "213", "214", "215", "216", "217"]
+DIRECT_DETAIL_ACCOUNTS = [*ACCOUNT_21_DETAIL_ACCOUNTS, "22", "232.1", "233", "24", "26"]
+TOTAL_COST_DETAIL_ACCOUNTS = [
+    "21",
+    *ACCOUNT_21_DETAIL_ACCOUNTS,
+    "22",
+    "23",
+    "232.1",
+    "233",
+    "24",
+    "25",
+    "26",
+]
+
 
 def _blank_row(title: str, account=None) -> dict:
     row = {c: np.nan for c in ALL_COLS}
@@ -74,31 +88,11 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     # change all nan to 0 for cost calculations (but keep original db unchanged for later use)
     db = db.copy()
     db[COST_COLS] = db[COST_COLS].fillna(0.0)
-    # account 21
-    # Note when sum up the higher lever account like 21,  we need to make sure there are
-    # lower level accounts (like 211 plus 214 to 219) to be added before the sum, otherwise 
-    # the sum might lead to an empty value and the final result will be misleading.
+    def _sum_accounts(accounts, col):
+        return db.loc[db["Account"].astype(str).str.strip().isin(accounts), col].fillna(0.0).sum()
 
-    db.loc[db.Account == "21", "Factory Equipment Cost"] = (
-        db.loc[db.Account == "212", "Factory Equipment Cost"].values
-        + db.loc[db.Account == "213", "Factory Equipment Cost"].values
-        + db.loc[db.Account == "211 plus 214 to 219", "Factory Equipment Cost"].values
-    )
-    db.loc[db.Account == "21", "Site Material Cost"] = (
-        db.loc[db.Account == "212", "Site Material Cost"].values
-        + db.loc[db.Account == "213", "Site Material Cost"].values
-        + db.loc[db.Account == "211 plus 214 to 219", "Site Material Cost"].values
-    )
-    db.loc[db.Account == "21", "Site Labor Cost"] = (
-        db.loc[db.Account == "212", "Site Labor Cost"].values
-        + db.loc[db.Account == "213", "Site Labor Cost"].values
-        + db.loc[db.Account == "211 plus 214 to 219", "Site Labor Cost"].values
-    )
-    db.loc[db.Account == "21", "Site Labor Hours"] = (
-        db.loc[db.Account == "212", "Site Labor Hours"].values
-        + db.loc[db.Account == "213", "Site Labor Hours"].values
-        + db.loc[db.Account == "211 plus 214 to 219", "Site Labor Hours"].values
-    )
+    for col in ["Factory Equipment Cost", "Site Material Cost", "Site Labor Cost", "Site Labor Hours"]:
+        db.loc[db.Account == "21", col] = _sum_accounts(ACCOUNT_21_DETAIL_ACCOUNTS, col)
 
 
     # account 23
@@ -124,7 +118,7 @@ def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFr
     # accounts under 20s has factory equipment costs, labor hours, and 
     # labor costs, so we can skip accounts 10s, 30s 50s and 60s
 
-    for x in ['21', '211 plus 214 to 219', '212', '213', '22', '23', '232.1', '233', '24', '25', '26']:
+    for x in TOTAL_COST_DETAIL_ACCOUNTS:
         db.loc[db["Account"] == x, "Total Cost (USD)"] = (
             db.loc[db["Account"] == x, "Factory Equipment Cost"]
             + db.loc[db["Account"] == x, "Site Labor Cost"]
@@ -280,4 +274,3 @@ def update_cons_duration_2(
         return float(0.04 * lab_delta * ref_duration + float(prev_cons_duration))
     else:
         raise ValueError(f"Unknown reactor type: {reactor_type}")
-

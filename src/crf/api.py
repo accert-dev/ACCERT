@@ -23,28 +23,30 @@ from .utils.serialize import write_csv_row, stream_pickle_dump
 def normalize_levers(levers: dict) -> dict:
     """Convert raw lever dict to model-ready normalized values."""
     def label01(x, zero_label, one_label):
-        if x == 0: return zero_label
-        if x == 1: return one_label
+        if x == 0:
+            return zero_label
+        if x == 1:
+            return one_label
         return x
 
     return {
-      "num_orders": int(levers["num_orders"]),
-      "ITC_0": float(levers["itc_percent"]) / 100.0,
-      "n_ITC": levers["n_itc"],
-      "interest_rate_0": float(levers["interest_percent"]) / 100.0,
-      "design_completion_0": float(levers["design_completion_percent"]) / 100.0,
-      "Design_Maturity_0": levers["design_maturity"],
-      "proc_exp_0": levers["proc_exp"],
-      "N_proc": levers["N_proc"],
-      "ce_exp_0": levers["ce_exp"],
-      "N_cons": levers["N_cons"],
-      "ae_exp_0": levers["ae_exp"],
-      "N_AE": levers["N_AE"],
-      "standardization_0": float(levers["standardization_percent"]) / 100.0,
-      "mod_0": label01(levers["modularity_code"], "stick_built", "modularized"),
-      "BOP_grade_0": label01(levers["bop_grade_code"], "nuclear", "non_nuclear"),
-      "RB_grade_0": label01(levers["rb_grade_code"], "nuclear", "non_nuclear"),
-      "num_NOAK": int(levers["num_NOAK"]) if "num_NOAK" in levers else int(levers["num_orders"]),
+        "num_orders": int(levers["num_orders"]),
+        "ITC_0": float(levers["itc_percent"]) / 100.0,
+        "n_ITC": levers["n_itc"],
+        "interest_rate_0": float(levers["interest_percent"]) / 100.0,
+        "design_completion_0": float(levers["design_completion_percent"]) / 100.0,
+        "Design_Maturity_0": levers["design_maturity"],
+        "proc_exp_0": levers["proc_exp"],
+        "N_proc": levers["N_proc"],
+        "ce_exp_0": levers["ce_exp"],
+        "N_cons": levers["N_cons"],
+        "ae_exp_0": levers["ae_exp"],
+        "N_AE": levers["N_AE"],
+        "standardization_0": float(levers["standardization_percent"]) / 100.0,
+        "mod_0": label01(levers["modularity_code"], "stick_built", "modularized"),
+        "BOP_grade_0": label01(levers["bop_grade_code"], "nuclear", "non_nuclear"),
+        "RB_grade_0": label01(levers["rb_grade_code"], "nuclear", "non_nuclear"),
+        "num_NOAK": int(levers.get("num_NOAK", levers["num_orders"])),
     }
 
 
@@ -169,6 +171,29 @@ def _allocate_waterfall_residual(contributions: dict, residual: float) -> None:
     for key in keys:
         contributions[key] += residual * abs(contributions[key]) / weight_total
 
+
+def _sampling_headers(max_orders: int, has_itc: bool) -> list[str]:
+    per_unit_headers = (
+        [f"OCC_{i}" for i in range(1, max_orders + 1)]
+        + ([f"NETOCC_{i}" for i in range(1, max_orders + 1)] if has_itc else [])
+        + [f"TCI_{i}" for i in range(1, max_orders + 1)]
+        + ([f"NCI_{i}" for i in range(1, max_orders + 1)] if has_itc else [])
+        + [f"duration_{i}" for i in range(1, max_orders + 1)]
+    )
+    summary_headers = [
+        "cons_duration_cumulative_wz_startup",
+        "occLastUnit",
+        "occNOAKUnit",
+        "occ_reduction_from_FOAK_to_NOAK_percent",
+        "TCILastUnit",
+        "durationsLastUnit",
+        "avg_OCC",
+        "avg_TCI",
+        "avg_duration",
+    ]
+    return STATIC_KEYS + per_unit_headers + summary_headers
+
+
 def run_sampling_from_excel(
     config: dict,
     levers_xlsx: str,
@@ -178,7 +203,7 @@ def run_sampling_from_excel(
     seed: Optional[int] = None
 ):
     levers_df = read_levers_sheet(levers_xlsx, sheet_name="Levers")
-    levers_df = attach_internal_ids(levers_df)   
+    levers_df = attach_internal_ids(levers_df)
 
     samples = sample_levers(n_samples, levers_df, seed=seed)  # shape (n_levers, n_samples)
 
@@ -186,34 +211,7 @@ def run_sampling_from_excel(
     max_orders = int(np.max(samples[0, :]))
     has_itc = bool(np.any(samples[2, :] > 0))
 
-    headers_wo_itc = (
-    STATIC_KEYS
-    + [f"OCC_{i}" for i in range(1, max_orders + 1)]
-    + [f"TCI_{i}" for i in range(1, max_orders + 1)]
-    + [f"duration_{i}" for i in range(1, max_orders + 1)]
-    + [
-        "cons_duration_cumulative_wz_startup",
-        "occLastUnit", "occNOAKUnit", "occ_reduction_from_FOAK_to_NOAK_percent",
-        "TCILastUnit", "durationsLastUnit",
-        "avg_OCC", "avg_TCI", "avg_duration",
-    ]
-    )
-    headers_w_itc = (
-    STATIC_KEYS
-    + [f"OCC_{i}" for i in range(1, max_orders + 1)]
-    + [f"NETOCC_{i}" for i in range(1, max_orders + 1)]
-    + [f"TCI_{i}" for i in range(1, max_orders + 1)]
-    + [f"NCI_{i}" for i in range(1, max_orders + 1)]
-    + [f"duration_{i}" for i in range(1, max_orders + 1)]
-    + [
-        "cons_duration_cumulative_wz_startup",
-        "occLastUnit", "occNOAKUnit", "occ_reduction_from_FOAK_to_NOAK_percent",
-        "TCILastUnit", "durationsLastUnit",
-        "avg_OCC", "avg_TCI", "avg_duration",
-    ]
-    )
-
-    headers = headers_w_itc if has_itc else headers_wo_itc
+    headers = _sampling_headers(max_orders, has_itc)
 
     with open(out_csv, "w", newline="", encoding="utf-8") as csv_f, open(out_pkl, "wb") as pkl_f:
         writer = csv.DictWriter(csv_f, fieldnames=headers)
@@ -224,40 +222,32 @@ def run_sampling_from_excel(
             write_csv_row(writer, row, headers)
             stream_pickle_dump(row, pkl_f)
 
+
 def print_scenario_result(result: dict):
     print("Results by plant number:\n")
-    max_orders = max([int(k.split("_")[1]) for k in result.keys() if k.startswith("OCC_")])
-    results_df = pd.DataFrame({"Plant_number": list(range(1, max_orders+1))})
-    for k, v in result.items():
-        if k.startswith("OCC_"):
-            results_df[f"OCC"] = results_df["Plant_number"].apply(lambda x: result.get(f"OCC_{x}", None))
-        elif k.startswith("NETOCC_"):
-            results_df[f"NETOCC"] = results_df["Plant_number"].apply(lambda x: result.get(f"NETOCC_{x}", None))
-        elif k.startswith("TCI_"):
-            results_df[f"TCI"] = results_df["Plant_number"].apply(lambda x: result.get(f"TCI_{x}", None))
-        elif k.startswith("NCI_"):
-            results_df[f"NCI"] = results_df["Plant_number"].apply(lambda x: result.get(f"NCI_{x}", None))
-        elif k.startswith("duration_"):
-            results_df[f"duration"] = results_df["Plant_number"].apply(lambda x: result.get(f"duration_{x}", None))
-        elif k.startswith("STAUP_"):
-            results_df[f"STAUP"] = results_df["Plant_number"].apply(lambda x: result.get(f"STAUP_{x}", None))
-        elif k.startswith("D10s_"):
-            results_df[f"D10s"] = results_df["Plant_number"].apply(lambda x: result.get(f"D10s_{x}", None))
-        elif k.startswith("D20s_"):
-            results_df[f"D20s"] = results_df["Plant_number"].apply(lambda x: result.get(f"D20s_{x}", None))
-        elif k.startswith("D30s_"): 
-            results_df[f"D30s"] = results_df["Plant_number"].apply(lambda x: result.get(f"D30s_{x}", None))
-        elif k.startswith("D50s_"):
-            results_df[f"D50s"] = results_df["Plant_number"].apply(lambda x: result.get(f"D50s_{x}", None))
-        elif k.startswith("D60s_"):
-            results_df[f"D60s"] = results_df["Plant_number"].apply(lambda x: result.get(f"D60s_{x}", None))
-        elif k.startswith("D20_equip_"):
-            results_df[f"D20_equip"] = results_df["Plant_number"].apply(lambda x: result.get(f"D20_equip_{x}", None))
-        elif k.startswith("D20_mat_"):
-            results_df[f"D20_mat"] = results_df["Plant_number"].apply(lambda x: result.get(f"D20_mat_{x}", None))
-        elif k.startswith("D20_labor_"):
-            results_df[f"D20_labor"] = results_df["Plant_number"].apply(lambda x: result.get(f"D20_labor_{x}", None)) 
-        
+    max_orders = max(int(k.split("_")[1]) for k in result if k.startswith("OCC_"))
+    plants = list(range(1, max_orders + 1))
+    results_df = pd.DataFrame({"Plant_number": plants})
+    for prefix, column in [
+        ("OCC", "OCC"),
+        ("NETOCC", "NETOCC"),
+        ("TCI", "TCI"),
+        ("NCI", "NCI"),
+        ("duration", "duration"),
+        ("STAUP", "STAUP"),
+        ("D10s", "D10s"),
+        ("D20s", "D20s"),
+        ("D30s", "D30s"),
+        ("D50s", "D50s"),
+        ("D60s", "D60s"),
+        ("D20_equip", "D20_equip"),
+        ("D20_mat", "D20_mat"),
+        ("D20_labor", "D20_labor"),
+    ]:
+        values = [result.get(f"{prefix}_{plant}") for plant in plants]
+        if any(value is not None for value in values):
+            results_df[column] = values
+
     print(results_df.round(2).fillna("").to_string(index=False))
 
     summary_metrics = [

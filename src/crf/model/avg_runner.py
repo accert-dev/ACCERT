@@ -69,8 +69,6 @@ def run_avg_all_units(config: dict, inp: dict, store, details=False):
         avg_TCI = float(np.mean(TCI))
     avg_duration = float(np.mean(DUR))
 
-
-    final_startup_duration = max(7, config["startup_0"] * (1 - 0.3) ** np.log2(num_orders))
     start_months = build_schedule_start_months(config, DUR, STAUP)
     finish_months = start_months + DUR + STAUP
     cons_duration_cumulative_wz_startup = float(finish_months[-1])

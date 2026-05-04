@@ -7,6 +7,15 @@ COLS = [
   "Site Labor Cost", "Site Material Cost"
 ]
 
+NUMERIC_COLS = [col for col in COLS if col not in {"Account", "Title"}]
+
+
+def _normalize_account(value) -> str:
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    return text
+
 class InputStore:
     """
     Minimal store:
@@ -43,6 +52,9 @@ class InputStore:
             raise ValueError(f"{path} missing columns: {sorted(missing)}")
 
         df = df[COLS].copy()
+        df["Account"] = df["Account"].map(_normalize_account)
+        for col in NUMERIC_COLS:
+            df[col] = pd.to_numeric(df[col].astype(str).str.replace(",", "", regex=False), errors="coerce")
         self._baseline[reactor_type] = (df, power)
         return df.copy(), power
 

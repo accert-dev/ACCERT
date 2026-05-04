@@ -1,6 +1,8 @@
 # src/crf/model/direct_cost.py
 # Direct-cost pipeline:
-#   add_factory_cost -> add_land_cost -> add_BOP_RP_grades -> add_bulk_ordering -> add_reworking_productivity
+#   add_factory_cost -> add_land_cost -> add_commercial_bop
+#   -> add_non_safety_related_rb -> add_modular_civil_construction
+#   -> add_bulk_ordering -> add_reworking_productivity
 # Returns updated df and construction duration (no supply-chain delay yet)
 
 import numpy as np
@@ -8,6 +10,9 @@ import pandas as pd
 
 from ..utils.df_ops import getv, setv, mulv
 from .core_accounts import (
+    ACCOUNT_21_DETAIL_ACCOUNTS,
+    DIRECT_DETAIL_ACCOUNTS,
+    TOTAL_COST_DETAIL_ACCOUNTS,
     update_high_level_costs,
     sum_lab_hrs,
     update_cons_duration,
@@ -22,7 +27,7 @@ COLS = [
 # exclude account 25 because it is the initial fuel cost and 
 # should not be affected by rework. Those accounts are end level accounts
 # that do not have sub-accounts 
-ACCT_DIRECT = [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]
+ACCT_DIRECT = DIRECT_DETAIL_ACCOUNTS
 
 
 def _total_occ_per_kwe(df: pd.DataFrame, power: float) -> float:
@@ -65,34 +70,33 @@ def add_land_cost(df: pd.DataFrame, land_cost_per_acre: float, power: float):
     return update_high_level_costs(db, power)[COLS].copy()
 
 
-def add_BOP_RP_grades(
+def _grade_ref_duration(reactor_type: str) -> float:
+    if reactor_type == "HTGR":
+        return 125
+    if reactor_type == "SFR":
+        return 80
+    if reactor_type == "AP1000":
+        return 76
+    raise ValueError(f"Unknown reactor type: {reactor_type}")
+
+
+def add_commercial_bop(
     df: pd.DataFrame,
-    RB_grade_0: str,
     BOP_grade_0: str,
     power: float,
     reactor_type: str,
     n_th: int,
-    mod_0: str,
-    trace=None
+    trace=None,
 ):
-    # RB grade does not change; BOP becomes non_nuclear after FOAK
-    RB_grade = RB_grade_0
+    """Apply the commercial BOP grade lever."""
     if reactor_type in ["HTGR", "SFR"]:
         BOP_grade = BOP_grade_0 if n_th == 1 else "non_nuclear"
     elif reactor_type == "AP1000":
         BOP_grade = BOP_grade_0 if n_th == 1 else "nuclear"
-    
+    else:
+        raise ValueError(f"Unknown reactor type: {reactor_type}")
+
     db = df.copy()
-
-    before_rb = db.copy()
-    if RB_grade == "non_nuclear":
-        mulv(
-            db, [212],
-            ["Site Material Cost", "Site Labor Cost", "Site Labor Hours", "Factory Equipment Cost"],
-            0.6
-        )
-    _record_delta(trace, "Non safety-related Reactor Building", before_rb, db, power)
-
     before_bop = db.copy()
     if BOP_grade == "non_nuclear":
         if reactor_type in ["HTGR", "SFR"]:
@@ -115,20 +119,38 @@ def add_BOP_RP_grades(
                 0.6
             )
     _record_delta(trace, "Commercial BOP", before_bop, db, power)
-    db2 = update_high_level_costs(db, power)[COLS].copy()
+    return update_high_level_costs(db, power)[COLS].copy()
 
-    # duration update from grade change
-    if reactor_type == "HTGR":
-        ref_duration = 125
-    elif reactor_type == "SFR":
-        ref_duration = 80
-    elif reactor_type == "AP1000":
-        ref_duration = 76    
-    else:
-        raise ValueError(f"Unknown reactor type: {reactor_type}")
 
-    new_dur = update_cons_duration(df, db2, ref_duration)
+def add_non_safety_related_rb(
+    df: pd.DataFrame,
+    RB_grade_0: str,
+    power: float,
+    trace=None,
+):
+    """Apply the non-safety-related reactor building lever."""
+    db = df.copy()
+    before_rb = db.copy()
+    if RB_grade_0 == "non_nuclear":
+        mulv(
+            db, [212],
+            ["Site Material Cost", "Site Labor Cost", "Site Labor Hours", "Factory Equipment Cost"],
+            0.6,
+        )
+    _record_delta(trace, "Non safety-related Reactor Building", before_rb, db, power)
+    return update_high_level_costs(db, power)[COLS].copy()
 
+
+def add_modular_civil_construction(
+    df: pd.DataFrame,
+    power: float,
+    reactor_type: str,
+    n_th: int,
+    mod_0: str,
+    base_duration: float,
+    trace=None,
+):
+    """Apply the modular civil construction lever."""
     # applying modularity civil construction if HTGR of SFR, for n>=2 assume 
     # modularized, if other reactor type such as AP1000, we assume no modularity 
     # effect on duration for now.
@@ -140,20 +162,20 @@ def add_BOP_RP_grades(
     mod_factor = 0.8 if mod == "modularized" else 1.0 # NOTE see excel Relationship sheet D4
     # NOTE in excel tool HTGR does nothing here, SFR factory cost of 21 with the 20% reduction 
     # with AP1000 all labor cost with the 20% reduction in 20s accounts, 
-    before_mod = db2.copy()
+    db = df.copy()
+    before_mod = db.copy()
     if reactor_type == "SFR":
-        for acct in [21, "211 plus 214 to 219", 212, 213]:
-            setv(db2, acct, "Factory Equipment Cost", float(getv(db2, acct, "Factory Equipment Cost")) * mod_factor)
-        db2 = update_high_level_costs(db2, power)[COLS].copy()
+        for acct in ACCOUNT_21_DETAIL_ACCOUNTS:
+            setv(db, acct, "Factory Equipment Cost", float(getv(db, acct, "Factory Equipment Cost")) * mod_factor)
+        db = update_high_level_costs(db, power)[COLS].copy()
     elif reactor_type == "AP1000":
-        for acct in [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]:
-            setv(db2, acct, "Site Labor Cost", float(getv(db2, acct, "Site Labor Cost")) * mod_factor)
-            setv(db2, acct, "Site Labor Hours", float(getv(db2, acct, "Site Labor Hours")) * mod_factor)
-        db2 = update_high_level_costs(db2, power)[COLS].copy()
-    _record_delta(trace, "Modular Construction", before_mod, db2, power)
+        for acct in ACCT_DIRECT:
+            setv(db, acct, "Site Labor Cost", float(getv(db, acct, "Site Labor Cost")) * mod_factor)
+            setv(db, acct, "Site Labor Hours", float(getv(db, acct, "Site Labor Hours")) * mod_factor)
+        db = update_high_level_costs(db, power)[COLS].copy()
+    _record_delta(trace, "Modular Construction", before_mod, db, power)
 
-
-    return db2, new_dur * mod_factor
+    return db, base_duration * mod_factor
 
 
 def add_bulk_ordering(df: pd.DataFrame, num_orders: int, f_22: float, f_2321: float, power: float, reactor_type: str, trace=None):
@@ -273,10 +295,14 @@ def update_direct_cost(
     db, baseline_lab_hours = add_factory_cost(reactor_df, power, f_22, f_2321, num_orders, reactor_type)   
     # all Total Cost (USD) columns should be 0 
     # when accounts are in 20s
-    db.loc[db["Account"].isin(['21', '211 plus 214 to 219', '212', '213', '22', '23', '232.1', '233', '24', '25', '26']), "Total Cost (USD)"] = 0.0
+    db.loc[db["Account"].isin(TOTAL_COST_DETAIL_ACCOUNTS), "Total Cost (USD)"] = 0.0
     db = update_high_level_costs(db, power)[COLS].copy()
     db = add_land_cost(db, land_cost_per_acre_0, power)
-    db, prev_dur = add_BOP_RP_grades(db, RB_grade_0, BOP_grade_0, power, reactor_type, n_th, mod_0, trace=trace)
+    before_grades = db.copy()
+    db = add_commercial_bop(db, BOP_grade_0, power, reactor_type, n_th, trace=trace)
+    db = add_non_safety_related_rb(db, RB_grade_0, power, trace=trace)
+    prev_dur = update_cons_duration(before_grades, db, _grade_ref_duration(reactor_type))
+    db, prev_dur = add_modular_civil_construction(db, power, reactor_type, n_th, mod_0, prev_dur, trace=trace)
     db = add_bulk_ordering(db, num_orders, f_22, f_2321, power, reactor_type, trace=trace)
     db, dur_no_delay = add_reworking_productivity(
         db, reactor_type, n_th,

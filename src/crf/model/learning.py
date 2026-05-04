@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils.df_ops import getv, setv
-from .core_accounts import update_high_level_costs
+from .core_accounts import ACCOUNT_21_DETAIL_ACCOUNTS, DIRECT_DETAIL_ACCOUNTS, update_high_level_costs
 
 COLS = [
     "Account", "Title", "Total Cost (USD)",
@@ -16,7 +16,7 @@ COLS = [
     "Site Labor Cost", "Site Material Cost"
 ]
 
-ACCT_DIRECT = [212, 213, "211 plus 214 to 219", 22, "232.1", 233, 24, 26]
+ACCT_DIRECT = DIRECT_DETAIL_ACCOUNTS
 
 
 def _total_occ_per_kwe(df: pd.DataFrame, power: float) -> float:
@@ -66,27 +66,25 @@ def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power
 
 
 
-    # However, learning is not applied to the factory cost
+    def rates_from_map(material_rates: dict, labor_rates: dict):
+        return (
+            np.array([material_rates[str(acct)] for acct in ACCT_DIRECT]) * standardization / 0.7,
+            np.array([labor_rates[str(acct)] for acct in ACCT_DIRECT]) * standardization / 0.7,
+        )
+
     if reactor_type == "HTGR":
-        mat_lr = np.array([
-            0.099588665391, 0.099588665391, 0.099588665391, 0.080817992281,
-            0.0, 0.099588665391, 0.099588665391, 0.099588665391
-        ]) * standardization / 0.7
-
-        lab_lr = np.array([
-            0.180678729399, 0.180678729399, 0.180678729399, 0.146555539499,
-            0.137148574884, 0.180678729399, 0.180678729399, 0.180678729399
-        ]) * standardization / 0.7
+        mat_rates = {acct: 0.099588665391 for acct in ACCOUNT_21_DETAIL_ACCOUNTS}
+        mat_rates.update({"22": 0.080817992281, "232.1": 0.0, "233": 0.099588665391, "24": 0.099588665391, "26": 0.099588665391})
+        lab_rates = {acct: 0.180678729399 for acct in ACCOUNT_21_DETAIL_ACCOUNTS}
+        lab_rates.update({"22": 0.146555539499, "232.1": 0.137148574884, "233": 0.180678729399, "24": 0.180678729399, "26": 0.180678729399})
+        mat_lr, lab_lr = rates_from_map(
+            mat_rates,
+            lab_rates,
+        )
     elif reactor_type == "SFR":
-        mat_lr = np.array([
-            0.099588665391, 0.099588665391, 0.099588665391, 0.099588665391,
-            0.099588665391, 0.099588665391, 0.099588665391, 0.099588665391
-        ]) * standardization / 0.7
-
-        lab_lr = np.array([
-            0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399,
-            0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399
-        ]) * standardization / 0.7
+        all_mat = {str(acct): 0.099588665391 for acct in ACCT_DIRECT}
+        all_lab = {str(acct): 0.180678729399 for acct in ACCT_DIRECT}
+        mat_lr, lab_lr = rates_from_map(all_mat, all_lab)
     elif reactor_type == "AP1000":
         # we will apply learning on factory cost for AP1000 of account 22 and 232.1, 
         # but not for other accounts since AP1000 is already modularized and we assume 
@@ -94,14 +92,9 @@ def learning_effect(df: pd.DataFrame, n_th: int, standardization_0: float, power
         # overall_lr = (1 - np.exp(np.log(c_NOAK/c_FOAK)/np.log2(n_of_NOAK))) * standardization / 0.7
         fac_lr_22 = (1 - np.exp(np.log(0.930884915)/np.log2(n_of_NOAK))) * standardization / 0.7
         fac_lr_2321 = (1 - np.exp(np.log(0.957187482)/np.log2(n_of_NOAK))) * standardization / 0.7
-        mat_lr = np.array([
-            0.099588665391, 0.099588665391, 0.099588665391, 0.099588665391,
-            0.099588665391, 0.099588665391, 0.099588665391, 0.099588665391
-        ]) * standardization / 0.7      
-        lab_lr = np.array([
-            0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399,
-            0.180678729399, 0.180678729399, 0.180678729399, 0.180678729399
-        ]) * standardization / 0.7
+        all_mat = {str(acct): 0.099588665391 for acct in ACCT_DIRECT}
+        all_lab = {str(acct): 0.180678729399 for acct in ACCT_DIRECT}
+        mat_lr, lab_lr = rates_from_map(all_mat, all_lab)
 
     else:
         raise ValueError(f"Unknown reactor type: {reactor_type}")
