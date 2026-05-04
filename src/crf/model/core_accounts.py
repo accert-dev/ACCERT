@@ -55,6 +55,43 @@ TOTAL_COST_DETAIL_ACCOUNTS = [
     "26",
 ]
 
+ACCOUNT_SUBTOTALS = {
+    "10s - Subtotal": ["11", "12", "13", "14", "15", "16", "18"],
+    "20s - Subtotal": ["21", "22", "23", "24", "25", "26", "28"],
+    "30s - Subtotal": ["31", "32", "33", "34", "35"],
+    "50s - Subtotal": ["51", "52", "54"],
+    "60s - Subtotal": ["62"],
+}
+
+PER_KWE_ROWS = {
+    "10s": "10s - Subtotal",
+    "20s": "20s - Subtotal",
+    "30s": "30s - Subtotal",
+    "50s": "50s - Subtotal",
+    "60s": "60s - Subtotal",
+}
+
+FINAL_TOTAL_ROWS = {
+    "Total Direct Capital Cost (Accounts 10 to 20)": ["10s - Subtotal", "20s - Subtotal"],
+    "Base Construction Cost (Accounts 20 to 30)": ["20s - Subtotal", "30s - Subtotal"],
+    "Total Overnight Cost (Accounts 10 to 50)": [
+        "10s - Subtotal",
+        "Base Construction Cost (Accounts 20 to 30)",
+        "50s - Subtotal",
+    ],
+    "Total Capital Investment Cost (All Accounts)": [
+        "Total Overnight Cost (Accounts 10 to 50)",
+        "60s - Subtotal",
+    ],
+}
+
+FINAL_PER_KWE_ROWS = {
+    "(Accounts 10 to 20) US$/kWe": "Total Direct Capital Cost (Accounts 10 to 20)",
+    "(Accounts 20 to 30) US$/kWe": "Base Construction Cost (Accounts 20 to 30)",
+    "(Accounts 10 to 50) US$/kWe": "Total Overnight Cost (Accounts 10 to 50)",
+    "(Accounts 10 to 60) US$/kWe": "Total Capital Investment Cost (All Accounts)",
+}
+
 
 def _blank_row(title: str, account=None) -> dict:
     row = {c: np.nan for c in ALL_COLS}
@@ -83,137 +120,106 @@ def ensure_rows_exist(db: pd.DataFrame) -> pd.DataFrame:
     return db
 
 
-def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFrame:
-    db = ensure_rows_exist(db)
-    # change all nan to 0 for cost calculations (but keep original db unchanged for later use)
-    db = db.copy()
-    db[COST_COLS] = db[COST_COLS].fillna(0.0)
-    def _sum_accounts(accounts, col):
-        return db.loc[db["Account"].astype(str).str.strip().isin(accounts), col].fillna(0.0).sum()
+def _index_rows_by_value(series: pd.Series) -> dict[str, list[int]]:
+    rows: dict[str, list[int]] = {}
+    for pos, value in enumerate(series.to_numpy()):
+        rows.setdefault(str(value).strip(), []).append(pos)
+    return rows
+
+
+def _sum_accounts(db: pd.DataFrame, account_rows: dict[str, list[int]], accounts: list[str], col: str) -> float:
+    rows = [idx for account in accounts for idx in account_rows.get(str(account), [])]
+    if not rows:
+        return 0.0
+    return float(db[col].to_numpy()[rows].sum())
+
+
+def _sum_titles(db: pd.DataFrame, title_rows: dict[str, list[int]], titles: list[str], col: str) -> float:
+    rows = [idx for title in titles for idx in title_rows.get(title, [])]
+    if not rows:
+        return 0.0
+    return float(db[col].to_numpy()[rows].sum())
+
+
+def _set_account_value(db: pd.DataFrame, account_rows: dict[str, list[int]], account: str, col: str, value: float) -> None:
+    rows = account_rows.get(str(account), [])
+    if rows:
+        db.iloc[rows, db.columns.get_loc(col)] = value
+
+
+def _set_title_value(db: pd.DataFrame, title_rows: dict[str, list[int]], title: str, col: str, value: float) -> None:
+    rows = title_rows.get(title, [])
+    if rows:
+        db.iloc[rows, db.columns.get_loc(col)] = value
+
+
+def _roll_up_detail_accounts(db: pd.DataFrame, account_rows: dict[str, list[int]]) -> None:
+    for col in ["Factory Equipment Cost", "Site Material Cost", "Site Labor Cost", "Site Labor Hours"]:
+        _set_account_value(db, account_rows, "21", col, _sum_accounts(db, account_rows, ACCOUNT_21_DETAIL_ACCOUNTS, col))
 
     for col in ["Factory Equipment Cost", "Site Material Cost", "Site Labor Cost", "Site Labor Hours"]:
-        db.loc[db.Account == "21", col] = _sum_accounts(ACCOUNT_21_DETAIL_ACCOUNTS, col)
+        _set_account_value(db, account_rows, "23", col, _sum_accounts(db, account_rows, ["232.1", "233"], col))
 
 
-    # account 23
-    db.loc[db.Account == "23", "Factory Equipment Cost"] = (
-        db.loc[db.Account == "232.1", "Factory Equipment Cost"].values
-        + db.loc[db.Account == "233", "Factory Equipment Cost"].values
-    )
-    db.loc[db.Account == "23", "Site Material Cost"] = (
-        db.loc[db.Account == "232.1", "Site Material Cost"].values
-        + db.loc[db.Account == "233", "Site Material Cost"].values
-    )
-    db.loc[db.Account == "23", "Site Labor Cost"] = (
-        db.loc[db.Account == "232.1", "Site Labor Cost"].values
-        + db.loc[db.Account == "233", "Site Labor Cost"].values
-    )
-    db.loc[db.Account == "23", "Site Labor Hours"] = (
-        db.loc[db.Account == "232.1", "Site Labor Hours"].values
-        + db.loc[db.Account == "233", "Site Labor Hours"].values
-    )
-
-    # total costs for all accounts should be updated except the lines
-    # with no Account (subtotals, $/kWe, and final results) but only 
-    # accounts under 20s has factory equipment costs, labor hours, and 
-    # labor costs, so we can skip accounts 10s, 30s 50s and 60s
-
-    for x in TOTAL_COST_DETAIL_ACCOUNTS:
-        db.loc[db["Account"] == x, "Total Cost (USD)"] = (
-            db.loc[db["Account"] == x, "Factory Equipment Cost"]
-            + db.loc[db["Account"] == x, "Site Labor Cost"]
-            + db.loc[db["Account"] == x, "Site Material Cost"]
+def _update_total_cost_rows(db: pd.DataFrame, account_rows: dict[str, list[int]]) -> None:
+    rows = [idx for account in TOTAL_COST_DETAIL_ACCOUNTS for idx in account_rows.get(account, [])]
+    if rows:
+        total_col = db.columns.get_loc("Total Cost (USD)")
+        factory_col = db.columns.get_loc("Factory Equipment Cost")
+        labor_col = db.columns.get_loc("Site Labor Cost")
+        material_col = db.columns.get_loc("Site Material Cost")
+        db.iloc[rows, total_col] = (
+            db.iloc[rows, factory_col].to_numpy()
+            + db.iloc[rows, labor_col].to_numpy()
+            + db.iloc[rows, material_col].to_numpy()
         )
 
 
-    # subtotals
-    db.loc[db["Title"] == "10s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin(["11", "12", "13", "14", "15", "16", "18"]), "Total Cost (USD)"
-    ].fillna(0.0).sum()
+def _update_subtotals(db: pd.DataFrame, account_rows: dict[str, list[int]], title_rows: dict[str, list[int]]) -> None:
+    for title, accounts in ACCOUNT_SUBTOTALS.items():
+        _set_title_value(db, title_rows, title, "Total Cost (USD)", _sum_accounts(db, account_rows, accounts, "Total Cost (USD)"))
 
-    db.loc[db["Title"] == "20s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Total Cost (USD)"
-    ].fillna(0.0).sum()
-
-    db.loc[db["Title"] == "20s - Subtotal", "Factory Equipment Cost"] = db.loc[
-        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Factory Equipment Cost"
-    ].fillna(0.0).sum()
-
-    db.loc[db["Title"] == "20s - Subtotal", "Site Material Cost"] = db.loc[
-        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Site Material Cost"
-    ].fillna(0.0).sum()
-
-    db.loc[db["Title"] == "20s - Subtotal", "Site Labor Cost"] = db.loc[
-        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Site Labor Cost"
-    ].fillna(0.0).sum()
-
-    db.loc[db["Title"] == "20s - Subtotal", "Site Labor Hours"] = db.loc[
-        db["Account"].isin(["21", "22", "23", "24", "25", "26", "28"]), "Site Labor Hours"
-    ].fillna(0.0).sum()
-
-    db.loc[db["Title"] == "30s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin(["31", "32", "33", "34", "35"]), "Total Cost (USD)"
-    ].fillna(0.0).sum()
-
-    db.loc[db["Title"] == "50s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin(["51", "52", "54"]), "Total Cost (USD)"
-    ].fillna(0.0).sum()
-
-    db.loc[db["Title"] == "60s - Subtotal", "Total Cost (USD)"] = db.loc[
-        db["Account"].isin(["62"]), "Total Cost (USD)"
-    ].fillna(0.0).sum()
-
-    # $/kWe lines
-    for t in ["10s", "20s", "30s", "50s", "60s"]:
-        db.loc[db["Title"] == f"{t} - $/kWe", "Total Cost (USD)"] = (
-            db.loc[db["Title"] == f"{t} - Subtotal", "Total Cost (USD)"].values / reactor_power
+    for col in ["Factory Equipment Cost", "Site Material Cost", "Site Labor Cost", "Site Labor Hours"]:
+        _set_title_value(
+            db,
+            title_rows,
+            "20s - Subtotal",
+            col,
+            _sum_accounts(db, account_rows, ACCOUNT_SUBTOTALS["20s - Subtotal"], col),
         )
-    # 20s equipment, material, labor costs per kWe
-    db.loc[db["Title"] == "20s - $/kWe", "Factory Equipment Cost"] = (
-        db.loc[db["Title"] == "20s - Subtotal", "Factory Equipment Cost"].values / reactor_power
-    )
-    db.loc[db["Title"] == "20s - $/kWe", "Site Material Cost"] = (
-        db.loc[db["Title"] == "20s - Subtotal", "Site Material Cost"].values / reactor_power
-    )
-    db.loc[db["Title"] == "20s - $/kWe", "Site Labor Cost"] = (
-        db.loc[db["Title"] == "20s - Subtotal", "Site Labor Cost"].values / reactor_power
-    )
 
-    # final rollups
-    db.loc[db["Title"] == "Total Direct Capital Cost (Accounts 10 to 20)", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "10s - Subtotal", "Total Cost (USD)"].values
-        + db.loc[db["Title"] == "20s - Subtotal", "Total Cost (USD)"].values
-    )
 
-    db.loc[db["Title"] == "Base Construction Cost (Accounts 20 to 30)", "Total Cost (USD)"] = (
-        + db.loc[db["Title"] == "20s - Subtotal", "Total Cost (USD)"].values
-        + db.loc[db["Title"] == "30s - Subtotal", "Total Cost (USD)"].values
-    )
+def _update_per_kwe_rows(db: pd.DataFrame, title_rows: dict[str, list[int]], reactor_power: float) -> None:
+    for prefix, subtotal_title in PER_KWE_ROWS.items():
+        subtotal = _sum_titles(db, title_rows, [subtotal_title], "Total Cost (USD)")
+        _set_title_value(db, title_rows, f"{prefix} - $/kWe", "Total Cost (USD)", subtotal / reactor_power)
 
-    db.loc[db["Title"] == "Total Overnight Cost (Accounts 10 to 50)", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "10s - Subtotal", "Total Cost (USD)"].values
-        + db.loc[db["Title"] == "Base Construction Cost (Accounts 20 to 30)", "Total Cost (USD)"].values
-        + db.loc[db["Title"] == "50s - Subtotal", "Total Cost (USD)"].values
-    )
+    for col in ["Factory Equipment Cost", "Site Material Cost", "Site Labor Cost"]:
+        value = _sum_titles(db, title_rows, ["20s - Subtotal"], col) / reactor_power
+        _set_title_value(db, title_rows, "20s - $/kWe", col, value)
 
-    db.loc[db["Title"] == "Total Capital Investment Cost (All Accounts)", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "Total Overnight Cost (Accounts 10 to 50)", "Total Cost (USD)"].values
-        + db.loc[db["Title"] == "60s - Subtotal", "Total Cost (USD)"].values
-    )
 
-    # final $/kWe
-    db.loc[db["Title"] == "(Accounts 10 to 20) US$/kWe", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "Total Direct Capital Cost (Accounts 10 to 20)", "Total Cost (USD)"].values / reactor_power
-    )
-    db.loc[db["Title"] == "(Accounts 20 to 30) US$/kWe", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "Base Construction Cost (Accounts 20 to 30)", "Total Cost (USD)"].values / reactor_power
-    )
-    db.loc[db["Title"] == "(Accounts 10 to 50) US$/kWe", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "Total Overnight Cost (Accounts 10 to 50)", "Total Cost (USD)"].values / reactor_power
-    )
-    db.loc[db["Title"] == "(Accounts 10 to 60) US$/kWe", "Total Cost (USD)"] = (
-        db.loc[db["Title"] == "Total Capital Investment Cost (All Accounts)", "Total Cost (USD)"].values / reactor_power
-    )
+def _update_final_totals(db: pd.DataFrame, title_rows: dict[str, list[int]], reactor_power: float) -> None:
+    for title, input_titles in FINAL_TOTAL_ROWS.items():
+        _set_title_value(db, title_rows, title, "Total Cost (USD)", _sum_titles(db, title_rows, input_titles, "Total Cost (USD)"))
+
+    for title, source_title in FINAL_PER_KWE_ROWS.items():
+        value = _sum_titles(db, title_rows, [source_title], "Total Cost (USD)") / reactor_power
+        _set_title_value(db, title_rows, title, "Total Cost (USD)", value)
+
+
+def update_high_level_costs(db: pd.DataFrame, reactor_power: float) -> pd.DataFrame:
+    db = ensure_rows_exist(db).copy().reset_index(drop=True)
+    db[COST_COLS] = db[COST_COLS].fillna(0.0)
+    account_rows = _index_rows_by_value(db["Account"])
+    title_rows = _index_rows_by_value(db["Title"])
+
+    _roll_up_detail_accounts(db, account_rows)
+    _update_total_cost_rows(db, account_rows)
+    _update_subtotals(db, account_rows, title_rows)
+    _update_per_kwe_rows(db, title_rows, reactor_power)
+    _update_final_totals(db, title_rows, reactor_power)
+
     return db
 
 def ITC_reduction_factor(itc_level: float) -> float:

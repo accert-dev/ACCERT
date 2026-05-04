@@ -6,7 +6,6 @@ Account,Title,Total Cost (USD),Factory Equipment Cost,Site Labor Hours,Site Labo
 15,Plant Studies,0,,,,
 16,Plant Reports,0,,,,
 18,Other Pre-Construction Costs,36194481.701475374,,,,
-20,Capitalized Direct Costs,,,,,
 21,Structures & Improvements,244678343.40844324,64350800.859366685,2899406.5371647766,145691461.9059903,34636080.64308626
 211,Site Preparation/Yard Work,"18,566,943.23","228,767.48","259,216.40","11,662,088.06","6,676,087.70"
 212,Reactor Containment Building,145108927.86932492,"57,583,605.37","1,605,670.31","81,082,169.34","6,443,153.16"
@@ -23,15 +22,12 @@ Account,Title,Total Cost (USD),Factory Equipment Cost,Site Labor Hours,Site Labo
 25,Initial fuel inventory,279724434,279724434,,,
 26,Miscellaneous Equipment,25655315.75412561,8372438.256640577,278805.25137804874,15110212.41,2172665.0833824323
 28,Simulator,0,0,,,
-30,Capitalized Indirect Services Costs,,,,,
 31,Factory & Field Indirect Costs,146051996.53692532,,,,
 32,Factory and construction supervision,506256124.80995834,,,,
 33,Start-Up Costs,21298225.546122435,,,,
 34,Shipping & Transportation Costs,1793334.4599472817,,,,
 35,Engineering Services,136778270.01496467,,,,
-50,Capitalized Supplementary Costs,,,,,
 51,Taxes,3510602.4683867483,,,,
 52,Insurance,10484751.183521552,,,,
 54,Decommissioning ,14606673.443824586,,,,
-60,Capitalized Financial Costs,,,,,
 62,Interest ,592300799.7656411,,,,
