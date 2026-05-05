@@ -3,14 +3,14 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from izt import available_countries, level_account_summary, run_adjustment
+from iat import available_countries, level_account_summary, run_adjustment
 
 
-def test_izt_available_countries():
+def test_iat_available_countries():
     assert available_countries() == ["China", "Korea", "UAE"]
 
 
-def test_izt_china_account_22_formula(tmp_path):
+def test_iat_china_account_22_formula(tmp_path):
     csv_path = tmp_path / "accert_output.csv"
     pd.DataFrame(
         [
@@ -47,7 +47,7 @@ def test_izt_china_account_22_formula(tmp_path):
     assert result["adjusted_total"] == pytest.approx(expected_equipment + expected_labor + expected_material)
 
 
-def test_izt_china_account_211_inherits_account_21_localization(tmp_path):
+def test_iat_china_account_211_inherits_account_21_localization(tmp_path):
     csv_path = tmp_path / "accert_output.csv"
     pd.DataFrame(
         [
@@ -84,7 +84,7 @@ def test_izt_china_account_211_inherits_account_21_localization(tmp_path):
     assert result["adjusted_total"] < result["input_total"]
 
 
-def test_izt_runs_on_packaged_ap1000_baseline():
+def test_iat_runs_on_packaged_ap1000_baseline():
     baseline = Path("src/crf/data/AP1000_baseline.csv")
     result = run_adjustment(
         {
@@ -109,7 +109,7 @@ def test_izt_runs_on_packaged_ap1000_baseline():
     assert coa_20["Adjusted Total Cost"] == pytest.approx(leaf_20s["Adjusted Total Cost"].sum())
 
 
-def test_izt_level_account_summary_includes_level_1_and_2():
+def test_iat_level_account_summary_includes_level_1_and_2():
     baseline = Path("src/crf/data/AP1000_baseline.csv")
     result = run_adjustment(
         {

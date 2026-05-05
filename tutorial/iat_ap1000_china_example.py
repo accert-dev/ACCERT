@@ -2,7 +2,7 @@
 
 Run from the repository root with:
 
-    python tutorial/izt_ap1000_china_example.py
+    python tutorial/iat_ap1000_china_example.py
 """
 
 from pathlib import Path
@@ -13,7 +13,7 @@ SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from izt import level_account_summary, print_adjustment_result, run_adjustment
+from iat import level_account_summary, print_adjustment_result, run_adjustment
 
 
 config = {
@@ -21,7 +21,7 @@ config = {
     "country": "China",
     "year_dollar": 2024,
     "input_csv": REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv",
-    "output_csv": REPO_ROOT / "tutorial" / "izt_ap1000_china_adjusted.csv",
+    "output_csv": REPO_ROOT / "tutorial" / "iat_ap1000_china_adjusted.csv",
 }
 
 

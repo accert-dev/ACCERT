@@ -212,7 +212,7 @@ def adjust_cost_dataframe(
 
 
 def print_adjustment_result(result: dict[str, Any]) -> None:
-    """Print a concise IZT result summary."""
+    """Print a concise IAT result summary."""
     print("International Adjustment Tool result\n")
     print(f"Reactor type: {result['reactor_type']}")
     print(f"Country: {result['country']}")
