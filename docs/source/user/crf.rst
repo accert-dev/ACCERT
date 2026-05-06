@@ -91,6 +91,8 @@ Configuration
      - Description
    * - ``reactor_type``
      - Built-in Cost Reduction Framework baseline: ``AP1000``, ``SFR``, or ``HTGR``.
+   * - ``baseline_csv``
+     - Optional CSV path used instead of the built-in reactor baseline. This is useful when passing an International Adjustment Tool output into CRF. If the CSV contains IAT adjusted columns, CRF uses those adjusted costs as the baseline and leaves the packaged baseline in ``src/crf/data`` unchanged.
    * - ``f_22``
      - Reactor building cost adjustment.
    * - ``f_2321``
@@ -191,4 +193,5 @@ because several rows share the same display name:
    Non-safety-related RB
 
 Runnable deterministic examples are available in ``tutorial/crf_ap1000_example.py``,
-``tutorial/crf_htgr_example.py``, and ``tutorial/crf_sfr_example.py``.
+``tutorial/crf_htgr_example.py``, and ``tutorial/crf_sfr_example.py``. A connected
+IAT-to-CRF example is available in ``tutorial/crf_iat_ap1000_china_example.py``.

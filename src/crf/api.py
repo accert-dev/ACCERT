@@ -51,7 +51,7 @@ def normalize_levers(levers: dict) -> dict:
 
 
 def run_one_scenario(config: dict, levers: dict) -> dict:
-    store = InputStore(config.get("data_dir"))
+    store = _input_store(config)
     levers = apply_itc_rounding(levers)
     inp = normalize_levers(levers)
 
@@ -66,7 +66,7 @@ def run_one_scenario(config: dict, levers: dict) -> dict:
 
 def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
     """Calculate FOAK-to-NOAK OCC waterfall contributions by model stage."""
-    store = InputStore(config.get("data_dir"))
+    store = _input_store(config)
     normalized = normalize_levers(levers)
     noak_unit = min(max(int(normalized.get("num_NOAK", normalized["num_orders"])), 1), int(normalized["num_orders"]))
 
@@ -134,6 +134,13 @@ def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
         }
     )
     return rows
+
+
+def _input_store(config: dict) -> InputStore:
+    return InputStore(
+        data_dir=config.get("data_dir"),
+        baseline_csv=config.get("baseline_csv"),
+    )
 
 
 def _trace_delta(noak_trace: dict, foak_trace: dict, key: str) -> float:

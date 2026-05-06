@@ -5,8 +5,10 @@ from .api import (
     adjust_cost_dataframe,
     available_countries,
     level_account_summary,
+    occ_cost_dataframe,
     print_adjustment_result,
     run_adjustment,
+    run_occ_scenarios,
 )
 
 __all__ = [
@@ -14,6 +16,8 @@ __all__ = [
     "adjust_cost_dataframe",
     "available_countries",
     "level_account_summary",
+    "occ_cost_dataframe",
     "print_adjustment_result",
     "run_adjustment",
+    "run_occ_scenarios",
 ]

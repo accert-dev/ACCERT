@@ -65,13 +65,14 @@ def run_adjustment(config: dict[str, Any]) -> dict[str, Any]:
     family = reactor_family_from_type(reactor_type)
     assumptions = load_assumptions(config.get("assumptions_path"))
 
-    if "input_csv" in config and config["input_csv"]:
+    if "occ_value" in config:
+        df = occ_cost_dataframe(assumptions, family, float(config["occ_value"]))
+        input_source = f"{family} OCC input {float(config['occ_value']):,.2f}"
+    elif "input_csv" in config and config["input_csv"]:
         df = read_accert_cost_csv(config["input_csv"])
         input_source = str(config["input_csv"])
     else:
-        scenario = config.get("reference_scenario", "scenario_1")
-        df = reference_cost_dataframe(assumptions, family, scenario)
-        input_source = f"{family} {scenario} packaged IAT reference"
+        raise ValueError("IAT requires either input_csv for ACCERT output or occ_value for standalone OCC input")
 
     adjusted = adjust_cost_dataframe(
         df,
@@ -104,6 +105,59 @@ def run_adjustment(config: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def run_occ_scenarios(config: dict[str, Any]) -> dict[str, Any]:
+    """Run IAT on one or more standalone OCC inputs.
+
+    ``occ_values`` should be an iterable of OCC totals in the selected dollar
+    year. Each OCC total is allocated to COAs using the packaged IAT COA
+    breakdown and cost-category percentages before country adjustment.
+    """
+    occ_values = config.get("occ_values")
+    if occ_values is None:
+        occ_values = [config["occ_value"]]
+
+    scenario_results = []
+    summary_rows = []
+    adjusted_frames = []
+    for idx, occ_value in enumerate(occ_values, start=1):
+        scenario_config = dict(config)
+        scenario_config.pop("occ_values", None)
+        scenario_config["occ_value"] = float(occ_value)
+        scenario_config.pop("output_csv", None)
+        result = run_adjustment(scenario_config)
+        scenario_name = config.get("scenario_names", [])[idx - 1] if idx - 1 < len(config.get("scenario_names", [])) else f"Scenario {idx}"
+        result["scenario"] = scenario_name
+        scenario_results.append(result)
+        summary_rows.append(
+            {
+                "Scenario": scenario_name,
+                "Input OCC": float(occ_value),
+                "Adjusted OCC": result["adjusted_total"],
+                "Difference": result["adjusted_total"] - float(occ_value),
+                "Adjustment Ratio": result["adjustment_ratio"],
+            }
+        )
+        frame = result["adjusted_costs"].copy()
+        frame.insert(0, "Scenario", scenario_name)
+        adjusted_frames.append(frame)
+
+    summary = pd.DataFrame(summary_rows)
+    output_csv = config.get("output_csv")
+    if output_csv and adjusted_frames:
+        Path(output_csv).parent.mkdir(parents=True, exist_ok=True)
+        pd.concat(adjusted_frames, ignore_index=True).to_csv(output_csv, index=False)
+
+    return {
+        "reactor_type": config["reactor_type"],
+        "reactor_family": reactor_family_from_type(config["reactor_type"]),
+        "country": normalize_country(config["country"]),
+        "year_dollar": config["year_dollar"],
+        "summary": summary,
+        "scenario_results": scenario_results,
+        "output_csv": output_csv,
+    }
+
+
 def read_accert_cost_csv(path: str | Path) -> pd.DataFrame:
     """Read an ACCERT/CRF-style COA CSV and normalize numeric cost columns."""
     df = pd.read_csv(path)
@@ -123,27 +177,37 @@ def read_accert_cost_csv(path: str | Path) -> pd.DataFrame:
     return df
 
 
-def reference_cost_dataframe(assumptions: dict[str, Any], family: str, scenario: str) -> pd.DataFrame:
-    """Create a standalone LR/SMR dataframe from packaged IAT reference costs."""
+def occ_cost_dataframe(assumptions: dict[str, Any], family: str, occ_value: float) -> pd.DataFrame:
+    """Allocate a standalone OCC value using IAT COA/category breakdowns."""
     if family not in assumptions["families"]:
         raise ValueError(f"Unknown reactor family: {family}")
 
     rows = []
     for record in assumptions["families"][family]:
-        costs = record["reference_costs_usd_per_kwe"].get(scenario)
-        if costs is None:
-            raise ValueError(f"Unknown reference scenario: {scenario}")
+        coa_share = float(record.get("coa_breakdown", 0.0))
+        if coa_share <= 0.0:
+            continue
+        total = float(occ_value) * coa_share
+        shares = record.get("category_shares", {})
+        category_costs = {
+            category: total * float(shares.get(category, 0.0))
+            for category in COST_CATEGORIES
+        }
+        allocated = sum(category_costs.values())
+        if abs(total - allocated) > 1e-9:
+            category_costs["catchall"] += total - allocated
+
         rows.append(
             {
                 "Account": record["account"],
                 "Title": record["title"],
-                "Total Cost (USD)": sum(float(costs.get(cat, 0.0)) for cat in COST_CATEGORIES),
-                "Factory Equipment Cost": float(costs.get("equipment", 0.0)),
+                "Total Cost (USD)": total,
+                "Factory Equipment Cost": category_costs["equipment"],
                 "Site Labor Hours": 0.0,
-                "Site Labor Cost": float(costs.get("labor", 0.0)),
-                "Site Material Cost": float(costs.get("material", 0.0)),
-                "Land Cost": float(costs.get("land", 0.0)),
-                "Catch-All Cost": float(costs.get("catchall", 0.0)),
+                "Site Labor Cost": category_costs["labor"],
+                "Site Material Cost": category_costs["material"],
+                "Land Cost": category_costs["land"],
+                "Catch-All Cost": category_costs["catchall"],
             }
         )
     return pd.DataFrame(rows)
@@ -181,16 +245,19 @@ def adjust_cost_dataframe(
     for _, row in out.iterrows():
         record = _find_localization_record(str(row["Account"]), records, country)
         original = _category_costs(row, record)
-        localization = record["localization"][country] if record is not None else {}
-        adjusted = {
-            category: _adjust_category_cost(
-                amount=original[category],
-                local_share=float(localization.get(category, 0.0)),
-                factor=float(factors[category]),
-                tariff=float(factors["import_tariff"]),
-            )
-            for category in COST_CATEGORIES
-        }
+        if _is_passthrough_account(str(row["Account"])):
+            adjusted = original.copy()
+        else:
+            localization = record["localization"][country] if record is not None else {}
+            adjusted = {
+                category: _adjust_category_cost(
+                    amount=original[category],
+                    local_share=float(localization.get(category, 0.0)),
+                    factor=float(factors[category]),
+                    tariff=float(factors["import_tariff"]),
+                )
+                for category in COST_CATEGORIES
+            }
         adjusted_rows.append(
             {
                 "Matched IAT Account": record["account"] if record is not None else "",
@@ -309,16 +376,30 @@ def _find_localization_record(account: str, records: list[dict[str, Any]], count
 
 
 def _account_candidates(account: str) -> list[str]:
-    candidates = [account]
     base = account.split(".", 1)[0]
+    superaccount = _level_2_superaccount(account)
+    if superaccount and superaccount != account:
+        candidates = [superaccount, account]
+    else:
+        candidates = [account]
+
     if base != account:
         candidates.append(base)
 
     for length in range(len(base) - 1, 1, -1):
-        candidates.append(base[:length])
+        parent = base[:length]
+        if parent != superaccount:
+            candidates.append(parent)
 
     seen = set()
     return [candidate for candidate in candidates if not (candidate in seen or seen.add(candidate))]
+
+
+def _level_2_superaccount(account: str) -> str:
+    base = normalize_account(account).split(".", 1)[0]
+    if len(base) > 2 and base[:2].isdigit():
+        return base[:2]
+    return normalize_account(account)
 
 
 def _has_localization_assumptions(record: dict[str, Any], country: str) -> bool:
@@ -327,6 +408,11 @@ def _has_localization_assumptions(record: dict[str, Any], country: str) -> bool:
     return any(float(localization.get(category, 0.0)) > 0.0 for category in COST_CATEGORIES) or any(
         float(shares.get(category, 0.0)) > 0.0 for category in COST_CATEGORIES
     )
+
+
+def _is_passthrough_account(account: str) -> bool:
+    normalized = normalize_account(account)
+    return normalized.startswith("6")
 
 
 def _leaf_account_mask(accounts: list[str]) -> list[bool]:

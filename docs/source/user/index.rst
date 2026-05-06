@@ -14,3 +14,4 @@ User's Guide
    build_your_own
    using_necost
    crf
+   iat
