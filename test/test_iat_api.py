@@ -6,13 +6,16 @@ import pytest
 from iat import available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+AP1000_BASELINE = REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv"
+
 
 def test_iat_available_countries():
     assert available_countries() == ["China", "Korea", "UAE"]
 
 
 def test_iat_packaged_localization_csvs_store_leaf_level_2_accounts_only():
-    for path in Path("src/iat/data").glob("*_localization.csv"):
+    for path in (REPO_ROOT / "src" / "iat" / "data").glob("*_localization.csv"):
         df = pd.read_csv(path, dtype={"account": str})
         assert not any(col.startswith("scenario_") for col in df.columns)
         stored_accounts = df["account"].astype(str).str.replace(r"\.0$", "", regex=True)
@@ -196,7 +199,7 @@ def test_iat_china_account_18_uses_land_and_60_series_passes_through(tmp_path):
 
 
 def test_iat_runs_on_packaged_ap1000_baseline():
-    baseline = Path("src/crf/data/AP1000_baseline.csv")
+    baseline = AP1000_BASELINE
     result = run_adjustment(
         {
             "reactor_type": "ACCERT output-LR",
@@ -226,7 +229,7 @@ def test_iat_runs_on_packaged_ap1000_baseline():
 
 
 def test_iat_level_account_summary_includes_level_1_and_2():
-    baseline = Path("src/crf/data/AP1000_baseline.csv")
+    baseline = AP1000_BASELINE
     result = run_adjustment(
         {
             "reactor_type": "ACCERT output-LR",
@@ -241,7 +244,7 @@ def test_iat_level_account_summary_includes_level_1_and_2():
 
 
 def test_iat_ap1000_china_keeps_account_18_and_60_from_increasing():
-    baseline = Path("src/crf/data/AP1000_baseline.csv")
+    baseline = AP1000_BASELINE
     result = run_adjustment(
         {
             "reactor_type": "ACCERT output-LR",

@@ -1,8 +1,11 @@
 import csv
 import pickle
+from pathlib import Path
 
 import pandas as pd
 import pytest
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 from crf import (
     levers_to_dataframe,
@@ -153,7 +156,7 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
 
 
 def test_run_one_scenario_can_use_iat_adjusted_baseline_csv(tmp_path):
-    baseline = pd.read_csv("src/crf/data/AP1000_baseline.csv")
+    baseline = pd.read_csv(REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv")
     adjusted = baseline.copy()
     adjusted["Adjusted Total Cost"] = adjusted["Total Cost (USD)"] * 0.5
     adjusted["Adjusted Factory Equipment Cost"] = adjusted["Factory Equipment Cost"] * 0.5
