@@ -1,5 +1,4 @@
 
-
 Accert Code Reference
 ==========================
 This section provides detailed information on the Accert codebase. The Accert codebase is divided into two main sections: the main Accert class and utility functions. The main Accert class contains the main functions and methods for the Accert model, while the utility functions contain helper functions for the Accert model.
@@ -8,14 +7,13 @@ This section provides detailed information on the Accert codebase. The Accert co
    :maxdepth: 1
    :caption: Contents:
 
-Accert Class 
+Accert Class
 --------------------
 
 .. autosummary::
    :toctree: main/
    :template: function.rst
-                         
-                             
+
    Main.Accert.__init__
    Main.Accert.setup_table_names
    Main.Accert.load_obj
@@ -80,13 +78,12 @@ Accert Class
    Main.Accert._generate_excel
    Main.Accert.generate_results_table
 
-                           
 Accert Utility Functions
 --------------------------
 .. autosummary::
    :toctree: utility/
    :template: function.rst
-                                
+
    utility_accert.Utility_methods.__init__
    utility_accert.Utility_methods.setup_table_names
    utility_accert.Utility_methods.print_table
