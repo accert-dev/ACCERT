@@ -35,9 +35,10 @@ if __name__ == "__main__":
         print(f"Standalone LR OCC scenarios adjusted to {country}\n")
         print(result["summary"].round(2).to_string(index=False))
 
-        print("\nLevel 1 and level 2 account comparison for first OCC case:")
+        print("\nLevel 1 and level 2 OCC account comparison for first OCC case, excluding 60s financing:")
         first = result["scenario_results"][0]
         summary = level_account_summary(first["adjusted_costs"], max_level=2)
+        summary = summary.loc[~summary["COA"].astype(str).str.startswith("6")]
         columns = [
             "COA",
             "Level",

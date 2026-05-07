@@ -61,11 +61,24 @@ def run_one_scenario(config: dict, levers: dict) -> dict:
     out["reactor_type"] = config.get("reactor_type", "")
     out["staggering_ratio"] = effective_staggering_ratio(config)
     out["occ_waterfall"] = calculate_occ_waterfall(config, levers)
+    out["tci_waterfall"] = calculate_tci_waterfall(config, levers)
     return out
 
 
 def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
     """Calculate FOAK-to-NOAK OCC waterfall contributions by model stage."""
+    return _calculate_capital_waterfall(config, levers, metric="occ")
+
+
+def calculate_tci_waterfall(config: dict, levers: dict) -> list[dict]:
+    """Calculate FOAK-to-NOAK TCI waterfall contributions by model stage."""
+    return _calculate_capital_waterfall(config, levers, metric="tci")
+
+
+def _calculate_capital_waterfall(config: dict, levers: dict, metric: str) -> list[dict]:
+    if metric not in {"occ", "tci"}:
+        raise ValueError("metric must be 'occ' or 'tci'")
+
     store = _input_store(config)
     normalized = normalize_levers(levers)
     noak_unit = min(max(int(normalized.get("num_NOAK", normalized["num_orders"])), 1), int(normalized["num_orders"]))
@@ -75,8 +88,10 @@ def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
     calculate_final_result(config=config, inp=normalized, store=store, n_th=1, trace=foak_trace)
     calculate_final_result(config=config, inp=normalized, store=store, n_th=noak_unit, trace=noak_trace)
 
-    foak_occ = float(foak_trace["final_occ"])
-    noak_occ = float(noak_trace["final_occ"])
+    final_key = f"final_{metric}"
+    cumulative_key = f"cumulative_{metric}"
+    foak_value = float(foak_trace[final_key])
+    noak_value = float(noak_trace[final_key])
 
     labels = [
         "Bulk-ordering",
@@ -103,17 +118,18 @@ def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
             noak_trace, foak_trace, "Non safety-related Reactor Building"
         ),
     }
-    _allocate_waterfall_residual(contributions, (noak_occ - foak_occ) - sum(contributions.values()))
+    _allocate_waterfall_residual(contributions, (noak_value - foak_value) - sum(contributions.values()))
 
     rows = [
         {
             "label": "FOAK \n(no firm orders)",
-            "absolute_change": foak_occ,
-            "cumulative_occ": foak_occ,
+            "absolute_change": foak_value,
+            cumulative_key: foak_value,
             "kind": "total",
+            "metric": metric.upper(),
         }
     ]
-    cumulative = foak_occ
+    cumulative = foak_value
     for label in labels:
         change = float(contributions[label])
         cumulative += change
@@ -121,16 +137,18 @@ def calculate_occ_waterfall(config: dict, levers: dict) -> list[dict]:
             {
                 "label": label,
                 "absolute_change": change,
-                "cumulative_occ": cumulative,
+                cumulative_key: cumulative,
                 "kind": "change",
+                "metric": metric.upper(),
             }
         )
     rows.append(
         {
             "label": "NOAK \n(firm orders)",
-            "absolute_change": noak_occ,
-            "cumulative_occ": noak_occ,
+            "absolute_change": noak_value,
+            cumulative_key: noak_value,
             "kind": "total",
+            "metric": metric.upper(),
         }
     )
     return rows
@@ -148,7 +166,7 @@ def _trace_delta(noak_trace: dict, foak_trace: dict, key: str) -> float:
 
 
 def _allocate_waterfall_residual(contributions: dict, residual: float) -> None:
-    """Allocate downstream model effects across levers that reduce OCC.
+    """Allocate downstream model effects across levers that reduce capital cost.
 
     Some model terms, especially indirect and supplementary costs, are
     recalculated after direct-cost levers have changed the cost base. The

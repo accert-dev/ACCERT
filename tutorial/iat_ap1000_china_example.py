@@ -28,7 +28,7 @@ config = {
 if __name__ == "__main__":
     result = run_adjustment(config)
     print_adjustment_result(result)
-    print("\nLevel 1 and level 2 account comparison:")
+    print("\nLevel 1 and level 2 OCC account comparison, excluding 60s financing:")
     columns = [
         "COA",
         "Level",
@@ -38,4 +38,5 @@ if __name__ == "__main__":
         "Adjustment Ratio",
     ]
     summary = level_account_summary(result["adjusted_costs"], max_level=2)
+    summary = summary.loc[~summary["COA"].astype(str).str.startswith("6")]
     print(summary[columns].round(2).to_string(index=False))

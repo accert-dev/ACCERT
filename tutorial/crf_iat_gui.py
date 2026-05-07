@@ -53,8 +53,8 @@ HTML = r"""<!doctype html>
       --accent-2: #2f7d57;
       --orange: #f28c34;
       --purple: #8062a7;
-      --sidebar: #0d3f58;
-      --sidebar-2: #145f78;
+      --sidebar: #082f4a;
+      --sidebar-2: #0e7284;
       --bg: #edf2f8;
     }
     * { box-sizing: border-box; }
@@ -72,7 +72,7 @@ HTML = r"""<!doctype html>
       gap: 16px;
       padding: 14px 18px;
       border-bottom: 1px solid #0c3a50;
-      background: linear-gradient(90deg, #0d3f58, #17647f);
+      background: linear-gradient(90deg, #082f4a, #0b6f86 58%, #15937f);
       color: white;
     }
     h1 {
@@ -88,7 +88,9 @@ HTML = r"""<!doctype html>
     }
     aside {
       border-right: 0;
-      background: linear-gradient(180deg, var(--sidebar), var(--sidebar-2));
+      background:
+        radial-gradient(circle at 12% 0%, rgba(78, 188, 214, 0.22), transparent 28%),
+        linear-gradient(180deg, var(--sidebar), #07556f 48%, var(--sidebar-2));
       padding: 14px;
       overflow: auto;
     }
@@ -97,17 +99,17 @@ HTML = r"""<!doctype html>
       overflow: auto;
     }
     fieldset {
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(207,239,248,0.28);
       border-radius: 6px;
       margin: 0 0 12px;
       padding: 12px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.1);
       color: #eef7fb;
     }
     legend {
       padding: 0 6px;
       font-weight: 700;
-      color: #d8f2ff;
+      color: #c8f4ff;
       text-transform: uppercase;
       font-size: 12px;
       letter-spacing: 0.04em;
@@ -142,11 +144,11 @@ HTML = r"""<!doctype html>
     }
     input, select {
       width: 100%;
-      border: 1px solid #bac3cc;
+      border: 1px solid #90b9cb;
       border-radius: 5px;
       padding: 7px 8px;
       font: inherit;
-      background: #fff;
+      background: #f7fbff;
       color: var(--ink);
     }
     input[type="checkbox"] {
@@ -169,8 +171,8 @@ HTML = r"""<!doctype html>
       gap: 10px;
       margin-top: 8px;
       padding: 8px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(207,239,248,0.28);
+      background: rgba(8, 47, 74, 0.18);
       border-radius: 6px;
     }
     .lever-stack {
@@ -197,7 +199,7 @@ HTML = r"""<!doctype html>
       background: var(--orange);
       cursor: pointer;
     }
-    button.secondary { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); }
+    button.secondary { background: rgba(255,255,255,0.14); border: 1px solid rgba(199,239,250,0.45); }
     button:disabled { opacity: 0.55; cursor: not-allowed; }
     .actions {
       display: flex;
@@ -353,6 +355,21 @@ HTML = r"""<!doctype html>
     .coa-parent.expanded td:first-child::before { content: "- "; }
     .coa-child.hidden-row { display: none; }
     .coa-child td:first-child { padding-left: 24px; }
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin: 8px 0 4px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .table-toolbar select {
+      width: auto;
+      min-width: 160px;
+      background: #fff;
+      color: var(--ink);
+    }
     .links {
       display: flex;
       flex-wrap: wrap;
@@ -387,6 +404,17 @@ HTML = r"""<!doctype html>
       border-radius: 6px;
       padding: 8px 10px;
       text-decoration: none;
+    }
+    .scenario-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.72);
+      padding: 12px;
+      margin: 12px 0 16px;
+    }
+    .scenario-card h4 {
+      margin: 0 0 8px;
+      font-size: 16px;
     }
     img.dashboard {
       max-width: 100%;
@@ -467,10 +495,19 @@ HTML = r"""<!doctype html>
             <input id="yearDollar" type="number" value="2024">
           </div>
         </div>
-        <label for="iatCsv">ACCERT CSV path</label>
-        <input id="iatCsv" value="src/crf/data/AP1000_baseline.csv">
-        <label for="occValues">OCC values for standalone mode</label>
-        <input id="occValues" value="5250, 5750, 6250">
+        <div id="iatCsvGroup">
+          <label for="iatCsv">ACCERT CSV path</label>
+          <input id="iatCsv" value="src/crf/data/AP1000_baseline.csv">
+        </div>
+        <div id="occScenarioGroup" class="hidden">
+          <label for="scenarioCount">Scenario numbers</label>
+          <input id="scenarioCount" type="number" min="1" max="3" step="1" value="3">
+          <div id="occInputs" class="triple">
+            <div><label for="occValue1">Scenario 1 OCC</label><input id="occValue1" type="number" value="5250"></div>
+            <div><label for="occValue2">Scenario 2 OCC</label><input id="occValue2" type="number" value="5750"></div>
+            <div><label for="occValue3">Scenario 3 OCC</label><input id="occValue3" type="number" value="6250"></div>
+          </div>
+        </div>
       </fieldset>
 
       <fieldset id="crfPanel">
@@ -543,10 +580,19 @@ HTML = r"""<!doctype html>
 
   <script>
     const $ = (id) => document.getElementById(id);
+    let lastData = null;
+    let coaUnit = "billion";
 
     function numberValue(id) {
       const value = $(id).value.trim();
       return value === "" ? null : Number(value);
+    }
+
+    function occScenarioValues() {
+      const count = Math.max(1, Math.min(3, Number($("scenarioCount").value || 1)));
+      const values = [];
+      for (let i = 1; i <= count; i++) values.push(numberValue(`occValue${i}`));
+      return values;
     }
 
     function payload() {
@@ -559,7 +605,8 @@ HTML = r"""<!doctype html>
           country: $("country").value,
           year_dollar: numberValue("yearDollar"),
           input_csv: $("iatCsv").value,
-          occ_values: $("occValues").value
+          scenario_count: numberValue("scenarioCount"),
+          occ_values: occScenarioValues()
         },
         crf: {
           reactor_type: $("crfReactorType").value,
@@ -598,19 +645,32 @@ HTML = r"""<!doctype html>
       $("iatPanel").classList.toggle("hidden", mode === "crf_only");
       $("crfPanel").classList.toggle("hidden", mode === "iat_only");
       $("leverPanel").classList.toggle("hidden", mode === "iat_only");
-      const iatOcc = $("iatInputMode").value === "occ";
+      const iatOcc = mode === "iat_only" && $("iatInputMode").value === "occ";
+      $("iatCsvGroup").classList.toggle("hidden", iatOcc);
+      $("occScenarioGroup").classList.toggle("hidden", !iatOcc);
       $("iatCsv").disabled = iatOcc;
-      $("occValues").disabled = !iatOcc;
       if (mode === "iat_crf") {
         $("iatInputMode").value = "csv";
         $("iatCsv").disabled = false;
-        $("occValues").disabled = true;
+        $("iatCsvGroup").classList.remove("hidden");
+        $("occScenarioGroup").classList.add("hidden");
       }
+      updateScenarioInputs();
       const maxOrders = Math.max(0, Number($("numOrders").value || 0));
       ["nProc", "nCons", "nAe", "nItc", "numNoak"].forEach(id => {
         $(id).max = maxOrders;
         if (Number($(id).value) > maxOrders) $(id).value = maxOrders;
       });
+    }
+
+    function updateScenarioInputs() {
+      const count = Math.max(1, Math.min(3, Number($("scenarioCount").value || 1)));
+      $("scenarioCount").value = count;
+      for (let i = 1; i <= 3; i++) {
+        const wrapper = $(`occValue${i}`).closest("div");
+        wrapper.classList.toggle("hidden", i > count);
+        $(`occValue${i}`).disabled = i > count;
+      }
     }
 
     function enhanceLabels() {
@@ -622,7 +682,10 @@ HTML = r"""<!doctype html>
         country: "Country where localization and adjustment factors are applied.",
         yearDollar: "Dollar year label for the IAT run.",
         iatCsv: "Input ACCERT/COA CSV. Relative paths are resolved from the ACCERT repository root.",
-        occValues: "Comma-separated OCC values for standalone IAT mode.",
+        scenarioCount: "Standalone IAT scenario count. Choose 1 to 3 OCC scenarios.",
+        occValue1: "Scenario 1 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
+        occValue2: "Scenario 2 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
+        occValue3: "Scenario 3 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
         crfReactorType: "CRF reactor case to run.",
         baselineCsv: "Optional CSV baseline for CRF. Connected IAT-to-CRF runs fill this automatically.",
         f22: "Factory equipment cost input used by the CRF baseline calculations.",
@@ -630,7 +693,7 @@ HTML = r"""<!doctype html>
         landCost: "Land cost per acre for preconstruction land accounts.",
         startup: "FOAK startup duration in months.",
         staggering: "Fractional overlap used for the sequential construction timeline.",
-        numOrders: "Number of firm orders: determines the size of the order book for a reactor concept and directly impacts equipment costs for all plants within the order, including the first. Range: 1 or more.",
+        numOrders: "Number of firm orders: This determines the size of the order book for a given reactor concept. It directly impacts equipment costs for all plants within the order (including the first).",
         numNoak: "NOAK unit: plant number used for the FOAK-to-NOAK comparison. Range: 1 to firm orders.",
         itcPercent: "Investment tax credits (ITC): federal tax credits claimed by the generation owner after project completion. Only ITC is considered because this framework focuses on capital expenses. Range: 0 to 100%.",
         nItc: "Number of plants ITC is applied to: the first few plants in the order book that receive ITC, as chosen by the user. Range: 0 to firm orders.",
@@ -658,7 +721,9 @@ HTML = r"""<!doctype html>
         const help = document.createElement("span");
         help.className = "help";
         help.textContent = "?";
-        help.title = helpText[id];
+        help.dataset.tip = esc(helpText[id]);
+        help.addEventListener("mousemove", event => showTip(event, help.dataset.tip));
+        help.addEventListener("mouseleave", hideTip);
         row.appendChild(help);
       });
     }
@@ -696,7 +761,11 @@ HTML = r"""<!doctype html>
     function coaTable(rows, columns, powerKwe) {
       if (!rows || !rows.length) return "";
       const kept = rows.filter(row => !String(row.COA || "").startsWith("6"));
-      return `<table class="coa-table"><thead><tr>${columns.map(c => `<th>${c.label}</th>`).join("")}</tr></thead><tbody>
+      return `<div class="table-toolbar"><span>Show cost as</span><select class="coaUnit">
+        <option value="billion"${coaUnit === "billion" ? " selected" : ""}>Billion USD</option>
+        <option value="million"${coaUnit === "million" ? " selected" : ""}>Million USD</option>
+        <option value="perkw"${coaUnit === "perkw" ? " selected" : ""}>OCC $/kW</option>
+      </select></div><table class="coa-table"><thead><tr>${columns.map(c => `<th>${c.label}</th>`).join("")}</tr></thead><tbody>
         ${kept.map(row => {
           const coa = String(row.COA || "");
           const isParent = coa.length === 2 && coa.endsWith("0");
@@ -709,8 +778,14 @@ HTML = r"""<!doctype html>
     }
 
     function moneyCell(value, row, powerKwe) {
-      const perKw = powerKwe ? Number(value || 0) / Number(powerKwe) : null;
-      return `${fmtMoneyScale(value)}${perKw !== null ? `<div class="cell-sub">${fmtPerKw(perKw)}</div>` : ""}`;
+      const number = Number(value || 0);
+      if (coaUnit === "perkw") {
+        return powerKwe ? fmtPerKw(number / Number(powerKwe)) : "";
+      }
+      if (coaUnit === "million") {
+        return `$${(number / 1e6).toLocaleString(undefined, {maximumFractionDigits: 2})}M`;
+      }
+      return `$${(number / 1e9).toLocaleString(undefined, {maximumFractionDigits: 3})}B`;
     }
 
     function links(files) {
@@ -772,6 +847,7 @@ HTML = r"""<!doctype html>
       }
       svg += `<line x1="${m.left}" y1="${m.top}" x2="${m.left}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
+      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">Cost ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const cx = m.left + groupW * idx + groupW / 2;
         const tciH = m.top + innerH - y(r.TCI);
@@ -808,6 +884,7 @@ HTML = r"""<!doctype html>
         svg += `<text x="${m.left - 8}" y="${yy + 4}" text-anchor="end" fill="#596775" font-size="11">${fmt(value)}</text>`;
       }
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
+      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">TCI ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const cumulative = Number(r.cumulative_tci || 0);
         const change = Number(r.absolute_change || 0);
@@ -868,6 +945,7 @@ HTML = r"""<!doctype html>
         svg += `<line class="grid" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
         svg += `<text x="${m.left - 8}" y="${yy + 4}" text-anchor="end" fill="#596775" font-size="11">${fmt(value)}</text>`;
       }
+      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">${mode.toUpperCase()} ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const x = m.left + step * idx + (step - bw) / 2;
         let total = 0;
@@ -907,6 +985,7 @@ HTML = r"""<!doctype html>
         svg += `<line class="grid" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
         svg += `<text x="${m.left - 8}" y="${yy + 4}" text-anchor="end" fill="#596775" font-size="11">${fmt(value)}</text>`;
       }
+      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">Duration (months)</text>`;
       rows.forEach((r, idx) => {
         const x = m.left + step * idx + (step - bw) / 2;
         const construction = Number(r["Construction duration"] || 0);
@@ -930,15 +1009,15 @@ HTML = r"""<!doctype html>
       const m = {left: 54, right: 18, top: 22, bottom: 42};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
-      const max = niceMax(Math.max(...rows.map(r => Number(r.startup_end_year || 0))) * 1.05);
+      const max = Math.max(1, Math.ceil(Math.max(...rows.map(r => Number(r.startup_end_year || 0))) * 1.05));
       const x = v => m.left + (Number(v || 0) / max) * innerW;
       const rowH = innerH / rows.length;
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sequential construction timeline">`;
-      for (let i = 0; i <= 6; i++) {
-        const value = max * i / 6;
+      const tickStep = Math.max(1, Math.ceil(max / 6));
+      for (let value = 0; value <= max; value += tickStep) {
         const xx = x(value);
         svg += `<line class="grid" x1="${xx}" y1="${m.top}" x2="${xx}" y2="${m.top + innerH}"></line>`;
-        svg += `<text x="${xx}" y="${h - 18}" text-anchor="middle" fill="#596775" font-size="10">${fmt(value)}</text>`;
+        svg += `<text x="${xx}" y="${h - 18}" text-anchor="middle" fill="#596775" font-size="10">${value}</text>`;
       }
       rows.forEach((r, idx) => {
         const y = m.top + idx * rowH + rowH * 0.2;
@@ -950,6 +1029,7 @@ HTML = r"""<!doctype html>
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r.plant)}</b><br>Construction: ${fmt(r.construction_start_year)}-${fmt(r.construction_end_year)} years" x="${cs}" y="${y}" width="${Math.max(1, ce - cs)}" height="${bh}" fill="#ff7f0e" stroke="#333"></rect>`;
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r.plant)}</b><br>Startup end: ${fmt(r.startup_end_year)} years" x="${ce}" y="${y}" width="${Math.max(1, se - ce)}" height="${bh}" fill="#9467bd" stroke="#333"></rect>`;
       });
+      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">Reactor number</text>`;
       svg += `<text x="${m.left + innerW / 2}" y="${h - 2}" text-anchor="middle" fill="#596775" font-size="11">Time (years)</text>`;
       svg += `</svg>`;
       return svg;
@@ -975,31 +1055,44 @@ HTML = r"""<!doctype html>
       });
     }
 
+    function iatBlock(iat, title = "") {
+      let html = title ? `<div class="scenario-card"><h4>${title}</h4>` : "";
+      html += metrics([
+        {label: "Input OCC", value: fmtMoneyScale(iat.input_occ_total), sub: fmtPerKw(iat.input_occ_per_kw)},
+        {label: "Adjusted OCC", value: fmtMoneyScale(iat.adjusted_occ_total), sub: fmtPerKw(iat.adjusted_occ_per_kw)},
+        {label: "Average OCC adjustment factor", value: fmt(iat.occ_adjustment_factor)},
+        {label: "Country", value: iat.country}
+      ]);
+      html += coaTable(iat.comparison, [
+        {key: "COA", label: "COA"},
+        {key: "Title", label: "Title"},
+        {key: "Original Total Cost", label: "Original", format: moneyCell},
+        {key: "Adjusted Total Cost", label: "Adjusted", format: moneyCell},
+        {key: "Adjustment Ratio", label: "Ratio", format: fmt}
+      ], iat.power_kwe);
+      return title ? `${html}</div>` : html;
+    }
+
     function render(data) {
+      lastData = data;
       const result = $("result");
       let html = `<div class="hero"><h2>${data.workflow_label}</h2><p>ACCERT workflow results with saved outputs and interactive cost plots.</p></div>`;
       html += links(data.files);
       if (data.iat) {
         html += `<h3>IAT Result</h3>`;
-        html += metrics([
-          {label: "Input OCC", value: fmtMoneyScale(data.iat.input_occ_total), sub: fmtPerKw(data.iat.input_occ_per_kw)},
-          {label: "Adjusted OCC", value: fmtMoneyScale(data.iat.adjusted_occ_total), sub: fmtPerKw(data.iat.adjusted_occ_per_kw)},
-          {label: "Average OCC adjustment factor", value: fmt(data.iat.occ_adjustment_factor)},
-          {label: "Country", value: data.iat.country}
-        ]);
-        html += coaTable(data.iat.comparison, [
-          {key: "COA", label: "COA"},
-          {key: "Title", label: "Title"},
-          {key: "Original Total Cost", label: "Original", format: moneyCell},
-          {key: "Adjusted Total Cost", label: "Adjusted", format: moneyCell},
-          {key: "Adjustment Ratio", label: "Ratio", format: fmt}
-        ], data.iat.power_kwe);
-        html += table(data.iat.summary, [
-          {key: "Scenario", label: "Scenario"},
-          {key: "Input OCC", label: "Input OCC", format: fmt},
-          {key: "Adjusted OCC", label: "Adjusted OCC", format: fmt},
-          {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
-        ]);
+        if (data.iat.scenarios && data.iat.scenarios.length) {
+          html += table(data.iat.summary, [
+            {key: "Scenario", label: "Scenario"},
+            {key: "Input OCC", label: "Input OCC", format: fmt},
+            {key: "Adjusted OCC", label: "Adjusted OCC", format: fmt},
+            {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
+          ]);
+          data.iat.scenarios.forEach((scenario, idx) => {
+            html += iatBlock(scenario, `${scenario.scenario || `Scenario ${idx + 1}`} result`);
+          });
+        } else {
+          html += iatBlock(data.iat);
+        }
       }
       if (data.crf) {
         html += `<h3>CRF Result</h3>`;
@@ -1046,6 +1139,12 @@ HTML = r"""<!doctype html>
         html += `<h3>Notes</h3><ul>${data.notes.map(n => `<li>${n}</li>`).join("")}</ul>`;
       }
       result.innerHTML = html;
+      document.querySelectorAll(".coaUnit").forEach(select => {
+        select.addEventListener("change", event => {
+          coaUnit = event.target.value;
+          render(lastData);
+        });
+      });
       if (data.crf) {
         $("capitalChart").innerHTML = capitalChart(data.crf.plants);
         $("breakdownPreview").innerHTML = breakdownChart(data.crf.plants, "tci");
@@ -1087,6 +1186,7 @@ HTML = r"""<!doctype html>
 
     $("workflow").addEventListener("change", updatePanels);
     $("iatInputMode").addEventListener("change", updatePanels);
+    $("scenarioCount").addEventListener("input", updatePanels);
     $("numOrders").addEventListener("input", updatePanels);
     $("runBtn").addEventListener("click", runWorkflow);
     $("resetBtn").addEventListener("click", () => location.reload());
@@ -1124,10 +1224,15 @@ def _int(value, default=None):
     return int(float(value))
 
 
-def _parse_occ_values(value: str) -> list[float]:
-    values = [item.strip() for item in str(value).split(",") if item.strip()]
+def _parse_occ_values(value) -> list[float]:
+    if isinstance(value, list):
+        values = [item for item in value if item not in (None, "")]
+    else:
+        values = [item.strip() for item in str(value).split(",") if item.strip()]
     if not values:
         raise ValueError("At least one OCC value is required for standalone IAT mode")
+    if len(values) > 3:
+        raise ValueError("Standalone IAT supports 1 to 3 OCC scenarios")
     return [float(item) for item in values]
 
 
@@ -1292,12 +1397,26 @@ def _summarize_iat_result(result: dict, power_kwe: float) -> dict:
 def _summarize_occ_result(result: dict, power_kwe: float) -> dict:
     first = result["scenario_results"][0]
     metrics = _iat_metrics(first["adjusted_costs"], power_kwe)
+    scenarios = []
+    for scenario in result["scenario_results"]:
+        scenario_metrics = _iat_metrics(scenario["adjusted_costs"], power_kwe)
+        scenario_metrics.update(
+            {
+                "scenario": scenario.get("scenario", ""),
+                "country": scenario["country"],
+                "input_total": scenario["input_total"],
+                "adjusted_total": scenario["adjusted_total"],
+                "adjustment_ratio": scenario["occ_adjustment_ratio"],
+            }
+        )
+        scenarios.append(scenario_metrics)
     return {
         "country": result["country"],
         "input_total": first["input_total"],
         "adjusted_total": first["adjusted_total"],
         "adjustment_ratio": first["occ_adjustment_ratio"],
         "summary": _records(result["summary"]),
+        "scenarios": scenarios,
         **metrics,
     }
 

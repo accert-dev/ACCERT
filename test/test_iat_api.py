@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from iat import available_countries, level_account_summary, occ_cost_dataframe, run_adjustment, run_occ_scenarios
+from iat import available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 
 
@@ -190,6 +190,9 @@ def test_iat_china_account_18_uses_land_and_60_series_passes_through(tmp_path):
 
     assert account_62["Matched IAT Account"] == ""
     assert account_62["Adjusted Total Cost"] == pytest.approx(account_62["Original Total Cost"])
+    assert result["input_occ"] == pytest.approx(1_000.0)
+    assert result["adjusted_occ"] == pytest.approx(1_000.0)
+    assert result["occ_adjustment_ratio"] == pytest.approx(1.0)
 
 
 def test_iat_runs_on_packaged_ap1000_baseline():
@@ -206,6 +209,11 @@ def test_iat_runs_on_packaged_ap1000_baseline():
     assert result["adjusted_total"] > 0
     assert "Adjusted Total Cost" in result["adjusted_costs"].columns
     assert "Is Leaf Account" in result["adjusted_costs"].columns
+    input_occ, adjusted_occ = occ_totals(result["adjusted_costs"])
+    assert result["input_occ"] == pytest.approx(input_occ)
+    assert result["adjusted_occ"] == pytest.approx(adjusted_occ)
+    assert result["occ_adjustment_ratio"] == pytest.approx(adjusted_occ / input_occ)
+    assert result["occ_adjustment_ratio"] != pytest.approx(result["adjustment_ratio"])
 
     comparison = result["comparison"]
     coa_20 = comparison.loc[comparison["COA"].eq("20")].iloc[0]
@@ -270,5 +278,6 @@ def test_iat_runs_multiple_standalone_occ_scenarios():
         }
     )
     assert list(result["summary"]["Input OCC"]) == [5000.0, 6000.0, 7000.0]
+    assert "Adjustment Ratio of OCC" in result["summary"].columns
     assert len(result["scenario_results"]) == 3
     assert all(value > 0 for value in result["summary"]["Adjusted OCC"])

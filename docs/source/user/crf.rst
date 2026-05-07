@@ -58,7 +58,7 @@ Visualization
 Use ``save_dashboard`` to generate dashboard-style capital-cost figures from a
 scenario result. The dashboard includes a lever input table, OCC, TCI,
 construction duration, cost breakdowns, a staggered construction timeline, and
-the FOAK-to-NOAK OCC reduction waterfall by lever. Set ``show_levers=False`` to
+the FOAK-to-NOAK TCI reduction waterfall by lever. Set ``show_levers=False`` to
 omit the lever input table and generate the compact chart-only dashboard.
 
 .. code-block:: python
@@ -76,8 +76,8 @@ omit the lever input table and generate the compact chart-only dashboard.
 For downstream analysis, ``results_to_dataframe`` converts the scenario result
 to a chart-ready ``pandas.DataFrame`` with one row per plant, while
 ``levers_to_dataframe`` returns the lever table and ``waterfall_to_dataframe``
-returns the FOAK-to-NOAK waterfall values using the lever labels from the Excel
-dashboard.
+returns the FOAK-to-NOAK TCI waterfall values using the lever labels from the
+Excel dashboard.
 
 Configuration
 -------------

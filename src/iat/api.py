@@ -37,6 +37,9 @@ LEVEL_2_GROUP_TITLES = {
 }
 
 
+OCC_GROUP_PREFIXES = ("1", "2", "3", "5")
+
+
 def available_countries() -> list[str]:
     """Return countries currently available in the packaged IAT assumptions."""
     return sorted(load_assumptions()["adjustment_factors"])
@@ -89,6 +92,7 @@ def run_adjustment(config: dict[str, Any]) -> dict[str, Any]:
     total_mask = adjusted["Is Leaf Account"]
     input_total = float(adjusted.loc[total_mask, "Original Total Cost"].sum())
     adjusted_total = float(adjusted.loc[total_mask, "Adjusted Total Cost"].sum())
+    input_occ, adjusted_occ = occ_totals(adjusted)
     comparison = account_group_comparison(adjusted)
     return {
         "reactor_type": reactor_type,
@@ -99,6 +103,9 @@ def run_adjustment(config: dict[str, Any]) -> dict[str, Any]:
         "input_total": input_total,
         "adjusted_total": adjusted_total,
         "adjustment_ratio": adjusted_total / input_total if input_total else 0.0,
+        "input_occ": input_occ,
+        "adjusted_occ": adjusted_occ,
+        "occ_adjustment_ratio": adjusted_occ / input_occ if input_occ else 0.0,
         "comparison": comparison,
         "adjusted_costs": adjusted,
         "output_csv": output_csv,
@@ -132,9 +139,9 @@ def run_occ_scenarios(config: dict[str, Any]) -> dict[str, Any]:
             {
                 "Scenario": scenario_name,
                 "Input OCC": float(occ_value),
-                "Adjusted OCC": result["adjusted_total"],
-                "Difference": result["adjusted_total"] - float(occ_value),
-                "Adjustment Ratio": result["adjustment_ratio"],
+                "Adjusted OCC": result["adjusted_occ"],
+                "Difference": result["adjusted_occ"] - float(occ_value),
+                "Adjustment Ratio of OCC": result["occ_adjustment_ratio"],
             }
         )
         frame = result["adjusted_costs"].copy()
@@ -285,12 +292,14 @@ def print_adjustment_result(result: dict[str, Any]) -> None:
     print(f"Country: {result['country']}")
     print(f"Year dollar: {result['year_dollar']}")
     print(f"Input source: {result['input_source']}")
-    print(f"Input total: {result['input_total']:,.2f}")
-    print(f"Adjusted total: {result['adjusted_total']:,.2f}")
-    print(f"Adjustment ratio: {result['adjustment_ratio']:.4f}")
+    print(f"Input OCC: {result['input_occ']:,.2f}")
+    print(f"Adjusted OCC: {result['adjusted_occ']:,.2f}")
+    print(f"Adjustment ratio of OCC: {result['occ_adjustment_ratio']:.4f}")
     if "comparison" in result and not result["comparison"].empty:
         print("\nCOA comparison:")
-        print(result["comparison"].round(2).to_string(index=False))
+        comparison = result["comparison"]
+        comparison = comparison.loc[~comparison["COA"].astype(str).str.startswith("6")]
+        print(comparison.round(2).to_string(index=False))
     if result.get("output_csv"):
         print(f"Saved adjusted CSV to: {result['output_csv']}")
 
@@ -317,6 +326,16 @@ def account_group_comparison(adjusted_df: pd.DataFrame) -> pd.DataFrame:
             }
         )
     return pd.DataFrame(rows)
+
+
+def occ_totals(adjusted_df: pd.DataFrame) -> tuple[float, float]:
+    """Return original and adjusted OCC totals, excluding 60-series financing."""
+    leaf_df = adjusted_df.loc[adjusted_df["Is Leaf Account"]].copy()
+    accounts = leaf_df["Account"].astype(str).map(normalize_account)
+    occ_mask = accounts.str.startswith(OCC_GROUP_PREFIXES)
+    input_occ = float(leaf_df.loc[occ_mask, "Original Total Cost"].sum())
+    adjusted_occ = float(leaf_df.loc[occ_mask, "Adjusted Total Cost"].sum())
+    return input_occ, adjusted_occ
 
 
 def level_account_summary(adjusted_df: pd.DataFrame, max_level: int = 2) -> pd.DataFrame:
