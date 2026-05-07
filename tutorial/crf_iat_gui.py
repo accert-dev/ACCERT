@@ -29,7 +29,7 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 from crf import results_to_dataframe, run_one_scenario, save_dashboard, waterfall_to_dataframe
-from iat import level_account_summary, run_adjustment, run_occ_scenarios
+from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
 
 
 HOST = "127.0.0.1"
@@ -405,6 +405,74 @@ HTML = r"""<!doctype html>
       padding: 8px 10px;
       text-decoration: none;
     }
+    .file-input-row {
+      display: flex;
+      gap: 6px;
+    }
+    .file-input-row input[type="text"] {
+      flex: 1;
+      min-width: 0;
+      background: #f7fbff;
+      color: var(--ink);
+      border: 1px solid #90b9cb;
+      border-radius: 5px;
+      padding: 7px 8px;
+      font: inherit;
+      cursor: default;
+    }
+    .file-input-row button {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      font-size: 12px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(199,239,250,0.55);
+    }
+    select[multiple] {
+      min-height: 68px;
+      padding: 4px;
+    }
+    select[multiple] option {
+      padding: 4px 6px;
+    }
+    .country-dropdown { position: relative; }
+    .country-dropdown-btn {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      padding: 7px 8px;
+      background: #f7fbff;
+      color: var(--ink);
+      border: 1px solid #90b9cb;
+      border-radius: 5px;
+      font: inherit;
+      font-weight: 400;
+      cursor: pointer;
+    }
+    .country-dropdown-menu {
+      position: absolute;
+      z-index: 100;
+      top: calc(100% + 2px);
+      left: 0;
+      right: 0;
+      background: #f7fbff;
+      border: 1px solid #90b9cb;
+      border-radius: 5px;
+      padding: 4px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.22);
+    }
+    .country-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: var(--ink);
+      font-weight: 400;
+    }
+    .country-option:hover { background: #e4f3fa; }
+    .country-option input[type="checkbox"] { margin: 0; cursor: pointer; }
     .scenario-card {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -467,45 +535,61 @@ HTML = r"""<!doctype html>
           <div>
             <label for="iatInputMode">Input type</label>
             <select id="iatInputMode">
-              <option value="csv" selected>ACCERT CSV</option>
-              <option value="occ">Standalone OCC</option>
+              <option value="occ" selected>Standalone OCC</option>
+              <option value="csv">ACCERT output</option>
             </select>
           </div>
           <div>
             <label for="iatReactorType">Reactor type</label>
             <select id="iatReactorType">
-              <option value="ACCERT output-LR" selected>ACCERT output-LR</option>
-              <option value="ACCERT output-SMR">ACCERT output-SMR</option>
-              <option value="large reactor">Large reactor</option>
+              <option value="Large Reactor" selected>Large Reactor</option>
               <option value="SMR">SMR</option>
             </select>
           </div>
         </div>
         <div class="row">
           <div>
-            <label for="country">Country</label>
-            <select id="country">
-              <option>China</option>
-              <option>Korea</option>
-              <option>UAE</option>
+            <label>Country</label>
+            <select id="countrySingle" class="hidden">
+              <option value="China">China</option>
+              <option value="Korea">Korea</option>
+              <option value="UAE">UAE</option>
             </select>
+            <div id="countryMulti" class="country-dropdown">
+              <button type="button" class="country-dropdown-btn" id="countryDropdownBtn">
+                <span id="countryDropdownLabel">Korea, China, UAE</span><span>▾</span>
+              </button>
+              <div class="country-dropdown-menu hidden" id="countryDropdownMenu">
+                <label class="country-option"><input type="checkbox" value="Korea" checked> Korea</label>
+                <label class="country-option"><input type="checkbox" value="China" checked> China</label>
+                <label class="country-option"><input type="checkbox" value="UAE" checked> UAE</label>
+              </div>
+            </div>
           </div>
           <div>
             <label for="yearDollar">Year dollar</label>
             <input id="yearDollar" type="number" value="2024">
           </div>
         </div>
-        <div id="iatCsvGroup">
-          <label for="iatCsv">ACCERT CSV path</label>
-          <input id="iatCsv" value="src/crf/data/AP1000_baseline.csv">
+        <div id="iatCsvGroup" class="hidden">
+          <label>ACCERT CSV file</label>
+          <div class="file-input-row">
+            <input type="text" id="iatCsvName" readonly placeholder="No file selected">
+            <button type="button" id="iatBrowseBtn">Browse…</button>
+            <input id="iatCsvFile" type="file" accept=".csv" class="hidden">
+          </div>
         </div>
-        <div id="occScenarioGroup" class="hidden">
-          <label for="scenarioCount">Scenario numbers</label>
+        <div id="electricOutputGroup" class="hidden">
+          <label for="electricOutputMwe">Electric output (MWe)</label>
+          <input id="electricOutputMwe" type="number" min="1" step="1" value="2234">
+        </div>
+        <div id="occScenarioGroup">
+          <label for="scenarioCount">Scenario count ($/kWe inputs)</label>
           <input id="scenarioCount" type="number" min="1" max="3" step="1" value="3">
           <div id="occInputs" class="triple">
-            <div><label for="occValue1">Scenario 1 OCC</label><input id="occValue1" type="number" value="5250"></div>
-            <div><label for="occValue2">Scenario 2 OCC</label><input id="occValue2" type="number" value="5750"></div>
-            <div><label for="occValue3">Scenario 3 OCC</label><input id="occValue3" type="number" value="6250"></div>
+            <div><label for="occValue1">Scenario 1 ($/kWe)</label><input id="occValue1" type="number" value="5250"></div>
+            <div><label for="occValue2">Scenario 2 ($/kWe)</label><input id="occValue2" type="number" value="5750"></div>
+            <div><label for="occValue3">Scenario 3 ($/kWe)</label><input id="occValue3" type="number" value="6250"></div>
           </div>
         </div>
       </fieldset>
@@ -518,8 +602,12 @@ HTML = r"""<!doctype html>
           <option>HTGR</option>
           <option>SFR</option>
         </select>
-        <label for="baselineCsv">Optional CRF baseline CSV</label>
-        <input id="baselineCsv" placeholder="Leave blank for built-in baseline">
+        <label for="crfCsvName">Optional CRF baseline CSV</label>
+        <div class="file-input-row">
+          <input type="text" id="crfCsvName" readonly placeholder="Leave blank for built-in baseline">
+          <button type="button" id="crfBrowseBtn">Browse…</button>
+          <input id="crfCsvFile" type="file" accept=".csv" class="hidden">
+        </div>
         <div class="triple">
           <div><label for="f22">f_22</label><input id="f22" type="number" value="250000000"></div>
           <div><label for="f2321">f_2321</label><input id="f2321" type="number" value="150000000"></div>
@@ -536,18 +624,17 @@ HTML = r"""<!doctype html>
         <legend>CRF Levers</legend>
         <div class="triple">
           <div><label for="numOrders">Firm orders</label><input id="numOrders" type="number" value="10"></div>
-          <div><label for="numNoak">NOAK unit</label><input id="numNoak" type="number" value="8"></div>
           <div><label for="itcPercent">ITC %</label><input id="itcPercent" type="number" value="0"></div>
+          <div><label for="designCompletion">Design compl. %</label><input id="designCompletion" type="number" value="70"></div>
         </div>
         <div class="triple">
+          <div><label for="numNoak">NOAK unit</label><input id="numNoak" type="number" value="8"></div>
           <div><label for="nItc">ITC units</label><input id="nItc" type="number" value="0"></div>
-          <div><label for="interest">Interest %</label><input id="interest" type="number" value="6"></div>
-          <div><label for="designCompletion">Design completion %</label><input id="designCompletion" type="number" value="70"></div>
-        </div>
-        <div class="triple">
           <div><label for="designMaturity">Design maturity</label><input id="designMaturity" type="number" min="0" max="2" step="0.1" value="1"></div>
+        </div>
+        <div class="row">
+          <div><label for="interest">Interest %</label><input id="interest" type="number" value="6"></div>
           <div><label for="standardization">Standardization %</label><input id="standardization" type="number" value="80"></div>
-          <div><label for="modularity">Modular civil</label><select id="modularity"><option value="0">False</option><option value="1">True</option></select></div>
         </div>
         <div class="lever-matrix">
           <div class="lever-stack">
@@ -563,9 +650,10 @@ HTML = r"""<!doctype html>
             <div><label for="ceExp">Construction prof.</label><input id="ceExp" type="number" min="0" max="2" step="0.1" value="0.5"></div>
           </div>
         </div>
-        <div class="row">
+        <div class="triple">
           <div><label for="bopGrade">Commercial BOP</label><select id="bopGrade"><option value="0">False</option><option value="1">True</option></select></div>
-          <div><label for="rbGrade">Non-safety RB</label><select id="rbGrade"><option value="0">False</option><option value="1">True</option></select></div>
+          <div><label for="rbGrade">Non-safety-related RB</label><select id="rbGrade"><option value="0">False</option><option value="1">True</option></select></div>
+          <div><label for="modularity">Modular civil constr.</label><select id="modularity"><option value="0">False</option><option value="1">True</option></select></div>
         </div>
       </fieldset>
     </aside>
@@ -583,6 +671,11 @@ HTML = r"""<!doctype html>
     let lastData = null;
     let coaUnit = "billion";
 
+    let _csvFileContent = null;
+    let _csvFilePath = null;
+    let _crfFileContent = null;
+    let _crfFilePath = null;
+
     function numberValue(id) {
       const value = $(id).value.trim();
       return value === "" ? null : Number(value);
@@ -595,22 +688,74 @@ HTML = r"""<!doctype html>
       return values;
     }
 
+    function selectedCountries() {
+      const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crf";
+      if (isCsvMode) return [$("countrySingle").value];
+      return Array.from(document.querySelectorAll("#countryDropdownMenu input[type='checkbox']:checked"))
+        .map(cb => cb.value);
+    }
+
+    function updateCountryDropdownLabel() {
+      const selected = Array.from(
+        document.querySelectorAll("#countryDropdownMenu input[type='checkbox']:checked")
+      ).map(cb => cb.value);
+      $("countryDropdownLabel").textContent = selected.length ? selected.join(", ") : "Select countries";
+    }
+
+    function updateDefaultCsvPath() {
+      if (_csvFileContent) return;
+      const rt = $("iatReactorType").value;
+      const path = rt === "SMR" ? "src/crf/data/SFR_baseline.csv" : "src/crf/data/AP1000_baseline.csv";
+      _csvFilePath = path;
+      $("iatCsvName").value = path;
+    }
+
+    function updateElectricOutputDefault() {
+      const rt = $("iatReactorType").value;
+      $("electricOutputMwe").value = rt === "SMR" ? "310.8" : "2234";
+    }
+
+    function updateCrfDefaults() {
+      const rt = $("crfReactorType").value;
+      if (rt === "AP1000") {
+        $("startup").value = "25";
+        $("bopGrade").value = "0";
+        $("modularity").value = "0";
+      } else {
+        $("startup").value = "16";
+        $("bopGrade").value = "1";
+        $("modularity").value = "1";
+      }
+    }
+
+    function apiReactorType() {
+      const rt = $("iatReactorType").value;
+      const mode = $("iatInputMode").value;
+      if (mode === "csv") return rt === "Large Reactor" ? "ACCERT output-LR" : "ACCERT output-SMR";
+      return rt === "Large Reactor" ? "large reactor" : "SMR";
+    }
+
     function payload() {
       return {
         workflow: $("workflow").value,
         output_name: $("outputName").value,
         iat: {
           input_mode: $("iatInputMode").value,
-          reactor_type: $("iatReactorType").value,
-          country: $("country").value,
+          reactor_type: apiReactorType(),
+          countries: selectedCountries(),
           year_dollar: numberValue("yearDollar"),
-          input_csv: $("iatCsv").value,
+          input_csv: _csvFilePath,
+          csv_content: _csvFileContent,
+          csv_filename: _csvFileContent ? $("iatCsvName").value : null,
+          electric_output_mwe: numberValue("electricOutputMwe"),
           scenario_count: numberValue("scenarioCount"),
           occ_values: occScenarioValues()
         },
         crf: {
           reactor_type: $("crfReactorType").value,
-          baseline_csv: $("baselineCsv").value,
+          baseline_csv: _crfFilePath,
+          baseline_csv_content: _crfFileContent,
+          baseline_csv_filename: _crfFileContent ? $("crfCsvName").value : null,
           f_22: numberValue("f22"),
           f_2321: numberValue("f2321"),
           land_cost_per_acre_0: numberValue("landCost"),
@@ -641,21 +786,30 @@ HTML = r"""<!doctype html>
     }
 
     function updatePanels() {
-      const mode = $("workflow").value;
-      $("iatPanel").classList.toggle("hidden", mode === "crf_only");
-      $("crfPanel").classList.toggle("hidden", mode === "iat_only");
-      $("leverPanel").classList.toggle("hidden", mode === "iat_only");
-      const iatOcc = mode === "iat_only" && $("iatInputMode").value === "occ";
-      $("iatCsvGroup").classList.toggle("hidden", iatOcc);
-      $("occScenarioGroup").classList.toggle("hidden", !iatOcc);
-      $("iatCsv").disabled = iatOcc;
-      if (mode === "iat_crf") {
+      const workflow = $("workflow").value;
+      $("iatPanel").classList.toggle("hidden", workflow === "crf_only");
+      $("crfPanel").classList.toggle("hidden", workflow === "iat_only");
+      $("leverPanel").classList.toggle("hidden", workflow === "iat_only");
+      const inputMode = $("iatInputMode").value;
+      const isCsvMode = inputMode === "csv" || workflow === "iat_crf";
+      if (workflow === "iat_crf") {
         $("iatInputMode").value = "csv";
-        $("iatCsv").disabled = false;
         $("iatCsvGroup").classList.remove("hidden");
         $("occScenarioGroup").classList.add("hidden");
+      } else {
+        const isCsv = inputMode === "csv";
+        $("iatCsvGroup").classList.toggle("hidden", !isCsv);
+        $("occScenarioGroup").classList.toggle("hidden", isCsv);
+      }
+      $("countrySingle").classList.toggle("hidden", !isCsvMode);
+      $("countryMulti").classList.toggle("hidden", isCsvMode);
+      $("electricOutputGroup").classList.toggle("hidden", !isCsvMode);
+      if (isCsvMode) {
+        updateDefaultCsvPath();
+        updateElectricOutputDefault();
       }
       updateScenarioInputs();
+      updateCrfDefaults();
       const maxOrders = Math.max(0, Number($("numOrders").value || 0));
       ["nProc", "nCons", "nAe", "nItc", "numNoak"].forEach(id => {
         $(id).max = maxOrders;
@@ -687,7 +841,7 @@ HTML = r"""<!doctype html>
         occValue2: "Scenario 2 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
         occValue3: "Scenario 3 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
         crfReactorType: "CRF reactor case to run.",
-        baselineCsv: "Optional CSV baseline for CRF. Connected IAT-to-CRF runs fill this automatically.",
+        crfCsvName: "Optional CSV baseline for CRF. Connected IAT-to-CRF runs fill this automatically.",
         f22: "Factory equipment cost input used by the CRF baseline calculations.",
         f2321: "Turbine-generator equipment cost input used by the CRF baseline calculations.",
         landCost: "Land cost per acre for preconstruction land accounts.",
@@ -758,14 +912,15 @@ HTML = r"""<!doctype html>
       </tbody></table>`;
     }
 
-    function coaTable(rows, columns, powerKwe) {
+    function coaTable(rows, columns, powerKwe, showToolbar = true) {
       if (!rows || !rows.length) return "";
       const kept = rows.filter(row => !String(row.COA || "").startsWith("6"));
-      return `<div class="table-toolbar"><span>Show cost as</span><select class="coaUnit">
+      const toolbar = showToolbar ? `<div class="table-toolbar"><span>Show cost as</span><select class="coaUnit">
         <option value="billion"${coaUnit === "billion" ? " selected" : ""}>Billion USD</option>
         <option value="million"${coaUnit === "million" ? " selected" : ""}>Million USD</option>
-        <option value="perkw"${coaUnit === "perkw" ? " selected" : ""}>OCC $/kW</option>
-      </select></div><table class="coa-table"><thead><tr>${columns.map(c => `<th>${c.label}</th>`).join("")}</tr></thead><tbody>
+        <option value="perkw"${coaUnit === "perkw" ? " selected" : ""}>$/kWe</option>
+      </select></div>` : "";
+      return `${toolbar}<table class="coa-table"><thead><tr>${columns.map(c => `<th>${c.label}</th>`).join("")}</tr></thead><tbody>
         ${kept.map(row => {
           const coa = String(row.COA || "");
           const isParent = coa.length === 2 && coa.endsWith("0");
@@ -780,7 +935,7 @@ HTML = r"""<!doctype html>
     function moneyCell(value, row, powerKwe) {
       const number = Number(value || 0);
       if (coaUnit === "perkw") {
-        return powerKwe ? fmtPerKw(number / Number(powerKwe)) : "";
+        return powerKwe ? fmtKwe(number / Number(powerKwe)) : "";
       }
       if (coaUnit === "million") {
         return `$${(number / 1e6).toLocaleString(undefined, {maximumFractionDigits: 2})}M`;
@@ -1055,22 +1210,121 @@ HTML = r"""<!doctype html>
       });
     }
 
+    function fmtKwe(value) {
+      return value != null ? `$${fmt(value)}/kWe` : "";
+    }
+
     function iatBlock(iat, title = "") {
       let html = title ? `<div class="scenario-card"><h4>${title}</h4>` : "";
       html += metrics([
-        {label: "Input OCC", value: fmtMoneyScale(iat.input_occ_total), sub: fmtPerKw(iat.input_occ_per_kw)},
-        {label: "Adjusted OCC", value: fmtMoneyScale(iat.adjusted_occ_total), sub: fmtPerKw(iat.adjusted_occ_per_kw)},
-        {label: "Average OCC adjustment factor", value: fmt(iat.occ_adjustment_factor)},
+        {label: "Input OCC ($/kWe)", value: fmtKwe(iat.input_occ_per_kw)},
+        {label: "Adjusted OCC ($/kWe)", value: fmtKwe(iat.adjusted_occ_per_kw)},
+        {label: "OCC adjustment factor", value: fmt(iat.occ_adjustment_factor)},
         {label: "Country", value: iat.country}
       ]);
-      html += coaTable(iat.comparison, [
-        {key: "COA", label: "COA"},
-        {key: "Title", label: "Title"},
-        {key: "Original Total Cost", label: "Original", format: moneyCell},
-        {key: "Adjusted Total Cost", label: "Adjusted", format: moneyCell},
-        {key: "Adjustment Ratio", label: "Ratio", format: fmt}
-      ], iat.power_kwe);
+      const isStandalone = !iat.power_kwe || iat.power_kwe === 1.0;
+      if (isStandalone) {
+        html += coaTable(iat.comparison, [
+          {key: "COA", label: "COA"},
+          {key: "Title", label: "Title"},
+          {key: "Original Total Cost", label: "Original ($/kWe)", format: v => fmtKwe(v)},
+          {key: "Adjusted Total Cost", label: "Adjusted ($/kWe)", format: v => fmtKwe(v)},
+          {key: "Adjustment Ratio", label: "Ratio", format: fmt}
+        ], 1.0, false);
+      } else {
+        const unitLabel = coaUnit === "perkw" ? "$/kWe" : coaUnit === "million" ? "M USD" : "B USD";
+        html += coaTable(iat.comparison, [
+          {key: "COA", label: "COA"},
+          {key: "Title", label: "Title"},
+          {key: "Original Total Cost", label: `Original (${unitLabel})`, format: (v, row, kwe) => moneyCell(v, row, kwe)},
+          {key: "Adjusted Total Cost", label: `Adjusted (${unitLabel})`, format: (v, row, kwe) => moneyCell(v, row, kwe)},
+          {key: "Adjustment Ratio", label: "Ratio", format: fmt}
+        ], iat.power_kwe, true);
+      }
       return title ? `${html}</div>` : html;
+    }
+
+    function occComparisonChart(rows) {
+      if (!rows || !rows.length) return "";
+      const countries = [...new Set(rows.map(r => r.country))];
+      const scenarios = [...new Set(rows.map(r => r.scenario))];
+      const w = 760, h = 300;
+      const m = {left: 60, right: 16, top: 30, bottom: 52};
+      const innerW = w - m.left - m.right;
+      const innerH = h - m.top - m.bottom;
+      const maxVal = Math.max(...rows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
+      const yScale = v => m.top + innerH - (Number(v || 0) / maxVal) * innerH;
+      const palette = ["#00c2e0", "#a86fe0", "#47c18e"];
+      const groupW = innerW / countries.length;
+      const barW = Math.min(32, groupW / scenarios.length * 0.72);
+      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="OCC comparison by country">`;
+      for (let i = 0; i <= 4; i++) {
+        const v = maxVal * i / 4;
+        const yy = yScale(v);
+        svg += `<line stroke="#2a3a4a" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
+        svg += `<text x="${m.left - 6}" y="${yy + 4}" text-anchor="end" fill="#8ba3b8" font-size="11">${fmt(Math.round(v))}</text>`;
+      }
+      svg += `<text transform="translate(16,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#8ba3b8" font-size="11">Adjusted OCC ($/kWe)</text>`;
+      countries.forEach((country, ci) => {
+        const cxBase = m.left + groupW * ci + groupW / 2 - (scenarios.length - 1) * (barW + 2) / 2;
+        scenarios.forEach((scenario, si) => {
+          const row = rows.find(r => r.country === country && r.scenario === scenario);
+          if (!row) return;
+          const val = Number(row.adjusted_occ_per_kw || 0);
+          const x = cxBase + si * (barW + 2);
+          const barH = innerH - (yScale(val) - m.top);
+          const color = palette[si % palette.length];
+          svg += `<rect class="hoverable" data-tip="<b>${esc(country)} — ${esc(scenario)}</b><br>Adjusted OCC: ${fmt(Math.round(val))} $/kWe" x="${x}" y="${yScale(val)}" width="${barW}" height="${barH}" fill="${color}" rx="2"></rect>`;
+          svg += `<text x="${x + barW / 2}" y="${yScale(val) - 3}" text-anchor="middle" fill="#e0f0ff" font-size="10" font-weight="bold">$${fmt(Math.round(val))}</text>`;
+        });
+        svg += `<text x="${m.left + groupW * ci + groupW / 2}" y="${h - 8}" text-anchor="middle" fill="#8ba3b8" font-size="12">${esc(country)}</text>`;
+      });
+      scenarios.forEach((scenario, si) => {
+        const lx = m.left + si * 120;
+        svg += `<rect x="${lx}" y="${m.top - 20}" width="10" height="10" fill="${palette[si % palette.length]}"></rect>`;
+        svg += `<text x="${lx + 14}" y="${m.top - 11}" fill="#8ba3b8" font-size="11">${esc(scenario)}</text>`;
+      });
+      svg += `</svg>`;
+      return svg;
+    }
+
+    function localForeignChart(rows) {
+      if (!rows || !rows.length) return "";
+      const w = 760, h = 320;
+      const m = {left: 60, right: 16, top: 30, bottom: 80};
+      const innerW = w - m.left - m.right;
+      const innerH = h - m.top - m.bottom;
+      const maxVal = Math.max(...rows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
+      const yScale = v => m.top + innerH - (Number(v || 0) / maxVal) * innerH;
+      const step = innerW / rows.length;
+      const barW = Math.min(36, step * 0.62);
+      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Local vs Foreign OCC breakdown">`;
+      for (let i = 0; i <= 4; i++) {
+        const v = maxVal * i / 4;
+        const yy = yScale(v);
+        svg += `<line stroke="#2a3a4a" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
+        svg += `<text x="${m.left - 6}" y="${yy + 4}" text-anchor="end" fill="#8ba3b8" font-size="11">${fmt(Math.round(v))}</text>`;
+      }
+      svg += `<text transform="translate(16,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#8ba3b8" font-size="11">OCC ($/kWe)</text>`;
+      rows.forEach((r, idx) => {
+        const foreign = Number(r.foreign_per_kw || 0);
+        const local = Number(r.local_per_kw || 0);
+        const x = m.left + step * idx + (step - barW) / 2;
+        const yForeign = yScale(foreign + local);
+        const yLocal = yScale(local);
+        const localH = Math.max(1, yScale(0) - yLocal);
+        const foreignH = Math.max(1, yLocal - yForeign);
+        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Foreign: ${fmt(Math.round(foreign))} $/kWe" x="${x}" y="${yLocal - foreignH}" width="${barW}" height="${foreignH}" fill="#0f3a5e" rx="1"></rect>`;
+        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Local: ${fmt(Math.round(local))} $/kWe" x="${x}" y="${yLocal}" width="${barW}" height="${localH}" fill="#00c2e0" rx="1"></rect>`;
+        if (foreign > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal - foreignH / 2 + 4}" text-anchor="middle" fill="#8ba3b8" font-size="9">$${fmt(Math.round(foreign))}</text>`;
+        if (local > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal + localH / 2 + 4}" text-anchor="middle" fill="#0d2438" font-size="9">$${fmt(Math.round(local))}</text>`;
+        const label = String(r.label || "");
+        svg += `<text transform="translate(${x + barW / 2},${h - 68}) rotate(45)" text-anchor="start" fill="#8ba3b8" font-size="10">${esc(label.slice(0, 20))}</text>`;
+      });
+      svg += `<rect x="${m.left}" y="${h - 20}" width="10" height="10" fill="#00c2e0"></rect><text x="${m.left + 14}" y="${h - 11}" fill="#8ba3b8" font-size="11">Local (domestically sourced)</text>`;
+      svg += `<rect x="${m.left + 200}" y="${h - 20}" width="10" height="10" fill="#0f3a5e"></rect><text x="${m.left + 214}" y="${h - 11}" fill="#8ba3b8" font-size="11">Foreign (imported, with tariff)</text>`;
+      svg += `</svg>`;
+      return svg;
     }
 
     function render(data) {
@@ -1079,19 +1333,49 @@ HTML = r"""<!doctype html>
       let html = `<div class="hero"><h2>${data.workflow_label}</h2><p>ACCERT workflow results with saved outputs and interactive cost plots.</p></div>`;
       html += links(data.files);
       if (data.iat) {
-        html += `<h3>IAT Result</h3>`;
-        if (data.iat.scenarios && data.iat.scenarios.length) {
-          html += table(data.iat.summary, [
-            {key: "Scenario", label: "Scenario"},
-            {key: "Input OCC", label: "Input OCC", format: fmt},
-            {key: "Adjusted OCC", label: "Adjusted OCC", format: fmt},
-            {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
-          ]);
-          data.iat.scenarios.forEach((scenario, idx) => {
-            html += iatBlock(scenario, `${scenario.scenario || `Scenario ${idx + 1}`} result`);
+        if (data.iat.country_results && data.iat.country_results.length) {
+          html += `<div class="tabs">
+            <button class="active" data-tab="iat-results">IAT Results</button>
+            <button data-tab="iat-comparison">Country Comparison</button>
+          </div>`;
+          html += `<div id="tab-iat-results" class="tab-panel active">`;
+          data.iat.country_results.forEach(cr => {
+            const d = cr.data;
+            html += `<h3>${esc(cr.country)}</h3>`;
+            if (d.scenarios && d.scenarios.length) {
+              html += table(d.summary, [
+                {key: "Scenario", label: "Scenario"},
+                {key: "Input OCC", label: "Input OCC ($/kWe)", format: fmt},
+                {key: "Adjusted OCC", label: "Adjusted OCC ($/kWe)", format: fmt},
+                {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
+              ]);
+              d.scenarios.forEach((s, i) => { html += iatBlock(s, `${s.scenario || `Scenario ${i + 1}`} result`); });
+            } else {
+              html += iatBlock(d);
+            }
           });
+          html += `</div>`;
+          html += `<div id="tab-iat-comparison" class="tab-panel">
+            <div class="chart-grid">
+              <div class="chart-panel"><h3>OCC Comparison by Country</h3><div id="iatOccCompChart"></div></div>
+              <div class="chart-panel"><h3>Local vs Foreign OCC</h3><div id="iatLfChart"></div></div>
+            </div>
+          </div>`;
         } else {
-          html += iatBlock(data.iat);
+          html += `<h3>IAT Result</h3>`;
+          if (data.iat.scenarios && data.iat.scenarios.length) {
+            html += table(data.iat.summary, [
+              {key: "Scenario", label: "Scenario"},
+              {key: "Input OCC", label: "Input OCC ($/kWe)", format: fmt},
+              {key: "Adjusted OCC", label: "Adjusted OCC ($/kWe)", format: fmt},
+              {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
+            ]);
+            data.iat.scenarios.forEach((scenario, idx) => {
+              html += iatBlock(scenario, `${scenario.scenario || `Scenario ${idx + 1}`} result`);
+            });
+          } else {
+            html += iatBlock(data.iat);
+          }
         }
       }
       if (data.crf) {
@@ -1130,8 +1414,9 @@ HTML = r"""<!doctype html>
         </div></div>`;
         html += `<div id="tab-dashboard" class="tab-panel">`;
         if (data.crf.dashboard_url) {
-          html += `<div class="download-bar"><span>Dashboard image${data.crf.show_levers ? " with lever table" : " without lever table"}</span><a href="${data.crf.dashboard_url}" target="_blank">Download PNG</a></div>`;
-          html += `<img class="dashboard" src="${data.crf.dashboard_url}" alt="CRF dashboard">`;
+          const dashUrl = `${data.crf.dashboard_url}?t=${Date.now()}`;
+          html += `<div class="download-bar"><span>Dashboard image${data.crf.show_levers ? " with lever table" : " without lever table"}</span><a href="${dashUrl}" target="_blank">Download PNG</a></div>`;
+          html += `<img class="dashboard" src="${dashUrl}" alt="CRF dashboard">`;
         }
         html += `</div>`;
       }
@@ -1157,6 +1442,12 @@ HTML = r"""<!doctype html>
         setupCoaTables();
         bindTips(result);
       } else {
+        if (data.iat && data.iat.country_results) {
+          setupTabs();
+          $("iatOccCompChart").innerHTML = occComparisonChart(data.iat.comparison_chart || []);
+          $("iatLfChart").innerHTML = localForeignChart(data.iat.comparison_chart || []);
+          bindTips(result);
+        }
         setupCoaTables();
       }
     }
@@ -1186,8 +1477,48 @@ HTML = r"""<!doctype html>
 
     $("workflow").addEventListener("change", updatePanels);
     $("iatInputMode").addEventListener("change", updatePanels);
+    $("iatReactorType").addEventListener("change", () => {
+      const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crf";
+      if (isCsvMode) {
+        if (!_csvFileContent) updateDefaultCsvPath();
+        updateElectricOutputDefault();
+      }
+    });
     $("scenarioCount").addEventListener("input", updatePanels);
     $("numOrders").addEventListener("input", updatePanels);
+    $("countryDropdownBtn").addEventListener("click", e => {
+      e.stopPropagation();
+      $("countryDropdownMenu").classList.toggle("hidden");
+    });
+    document.addEventListener("click", e => {
+      if (!$("countryMulti").contains(e.target)) {
+        $("countryDropdownMenu").classList.add("hidden");
+      }
+    });
+    document.querySelectorAll("#countryDropdownMenu input[type='checkbox']").forEach(cb => {
+      cb.addEventListener("change", updateCountryDropdownLabel);
+    });
+    $("iatBrowseBtn").addEventListener("click", () => $("iatCsvFile").click());
+    $("iatCsvFile").addEventListener("change", () => {
+      const file = $("iatCsvFile").files[0];
+      if (!file) return;
+      _csvFilePath = null;
+      $("iatCsvName").value = file.name;
+      const reader = new FileReader();
+      reader.onload = e => { _csvFileContent = e.target.result; };
+      reader.readAsText(file);
+    });
+    $("crfBrowseBtn").addEventListener("click", () => $("crfCsvFile").click());
+    $("crfCsvFile").addEventListener("change", () => {
+      const file = $("crfCsvFile").files[0];
+      if (!file) return;
+      _crfFilePath = null;
+      $("crfCsvName").value = file.name;
+      const reader = new FileReader();
+      reader.onload = e => { _crfFileContent = e.target.result; };
+      reader.readAsText(file);
+    });
+    $("crfReactorType").addEventListener("change", updateCrfDefaults);
     $("runBtn").addEventListener("click", runWorkflow);
     $("resetBtn").addEventListener("click", () => location.reload());
     enhanceLabels();
@@ -1258,12 +1589,14 @@ def _occ_rows(summary: pd.DataFrame) -> pd.DataFrame:
 
 
 def _reactor_power_kwe(payload: dict) -> float:
-    reactor = str(payload.get("crf", {}).get("reactor_type") or payload.get("iat", {}).get("reactor_type") or "")
-    if "HTGR" in reactor or "SMR" in reactor:
-        return 310.8 * 1000
-    if "SFR" in reactor:
-        return 2234 * 1000
-    return 1056 * 1000
+    iat = payload.get("iat", {})
+    if iat.get("input_mode") == "occ":
+        return 1.0
+    mwe = _num(iat.get("electric_output_mwe"), 0.0)
+    if mwe and mwe > 0:
+        return mwe * 1000.0
+    reactor = str(iat.get("reactor_type") or "")
+    return 310.8 * 1000.0 if "SMR" in reactor else 2234.0 * 1000.0
 
 
 def _iat_metrics(adjusted_costs: pd.DataFrame, power_kwe: float) -> dict:
@@ -1272,6 +1605,7 @@ def _iat_metrics(adjusted_costs: pd.DataFrame, power_kwe: float) -> dict:
     input_occ = float(occ["Original Total Cost"].sum())
     adjusted_occ = float(occ["Adjusted Total Cost"].sum())
     factor = adjusted_occ / input_occ if input_occ else 0.0
+    lf = occ_local_foreign_totals(adjusted_costs)
     return {
         "input_occ_total": input_occ,
         "adjusted_occ_total": adjusted_occ,
@@ -1279,6 +1613,8 @@ def _iat_metrics(adjusted_costs: pd.DataFrame, power_kwe: float) -> dict:
         "power_kwe": power_kwe,
         "input_occ_per_kw": input_occ / power_kwe if power_kwe else None,
         "adjusted_occ_per_kw": adjusted_occ / power_kwe if power_kwe else None,
+        "local_occ_per_kw": lf["local"] / power_kwe if power_kwe else None,
+        "foreign_occ_per_kw": lf["foreign"] / power_kwe if power_kwe else None,
         "comparison": _records(summary),
     }
 
@@ -1324,11 +1660,14 @@ def _file_info(path: Path) -> dict:
     }
 
 
-def _iat_config(payload: dict, output_csv: Path | None = None) -> dict:
+def _iat_config(payload: dict, output_csv: Path | None = None, country: str | None = None) -> dict:
     iat = payload["iat"]
+    if country is None:
+        countries = iat.get("countries") or []
+        country = countries[0] if countries else iat.get("country", "China")
     config = {
         "reactor_type": iat["reactor_type"],
-        "country": iat["country"],
+        "country": country,
         "year_dollar": _int(iat["year_dollar"], 2024),
     }
     if output_csv is not None:
@@ -1337,9 +1676,17 @@ def _iat_config(payload: dict, output_csv: Path | None = None) -> dict:
         config["occ_values"] = _parse_occ_values(iat["occ_values"])
         return config
 
-    input_csv = _resolve_path(iat["input_csv"])
+    csv_content = iat.get("csv_content")
+    if csv_content:
+        csv_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", iat.get("csv_filename") or "upload.csv")
+        tmp_path = OUTPUT_DIR / f"_upload_{csv_name}"
+        tmp_path.write_text(csv_content)
+        config["input_csv"] = tmp_path
+        return config
+
+    input_csv = _resolve_path(iat.get("input_csv"))
     if input_csv is None:
-        raise ValueError("IAT CSV input path is required")
+        raise ValueError("IAT CSV input path or uploaded file is required")
     config["input_csv"] = input_csv
     return config
 
@@ -1354,9 +1701,19 @@ def _crf_config(payload: dict, baseline_csv: Path | None = None) -> dict:
         "startup_0": _num(crf["startup_0"], 28.0),
         "staggering_ratio": _num(crf["staggering_ratio"], 0.75),
     }
-    baseline = baseline_csv or _resolve_path(crf.get("baseline_csv"))
-    if baseline is not None:
-        config["baseline_csv"] = baseline
+    if baseline_csv is not None:
+        config["baseline_csv"] = baseline_csv
+        return config
+    csv_content = crf.get("baseline_csv_content")
+    if csv_content:
+        csv_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", crf.get("baseline_csv_filename") or "crf_upload.csv")
+        tmp_path = OUTPUT_DIR / f"_crf_upload_{csv_name}"
+        tmp_path.write_text(csv_content)
+        config["baseline_csv"] = tmp_path
+        return config
+    path = _resolve_path(crf.get("baseline_csv"))
+    if path is not None:
+        config["baseline_csv"] = path
     return config
 
 
@@ -1474,15 +1831,46 @@ def run_workflow(payload: dict) -> dict:
     }
 
     if workflow == "iat_only":
-        iat_csv = OUTPUT_DIR / f"{name}_iat_adjusted.csv"
-        iat_config = _iat_config(payload, iat_csv)
-        if payload["iat"]["input_mode"] == "occ":
-            result = run_occ_scenarios(iat_config)
-            response["iat"] = _summarize_occ_result(result, _reactor_power_kwe(payload))
-        else:
-            result = run_adjustment(iat_config)
-            response["iat"] = _summarize_iat_result(result, _reactor_power_kwe(payload))
-        files["IAT CSV"] = _file_info(iat_csv)
+        iat = payload["iat"]
+        countries = iat.get("countries") or [iat.get("country", "China")]
+        if not countries:
+            raise ValueError("At least one country must be selected")
+        power_kwe = _reactor_power_kwe(payload)
+        country_results: list[dict] = []
+        comparison_chart: list[dict] = []
+        for country in countries:
+            country_slug = re.sub(r"[^A-Za-z0-9]+", "_", country.lower())
+            iat_csv = OUTPUT_DIR / f"{name}_iat_{country_slug}_adjusted.csv"
+            config = _iat_config(payload, iat_csv, country=country)
+            if iat["input_mode"] == "occ":
+                result = run_occ_scenarios(config)
+                summary = _summarize_occ_result(result, power_kwe)
+                for scenario in summary["scenarios"]:
+                    comparison_chart.append({
+                        "country": country,
+                        "scenario": scenario.get("scenario", ""),
+                        "adjusted_occ_per_kw": scenario.get("adjusted_occ_per_kw"),
+                        "local_per_kw": scenario.get("local_occ_per_kw"),
+                        "foreign_per_kw": scenario.get("foreign_occ_per_kw"),
+                        "label": f"{country} — {scenario.get('scenario', '')}",
+                    })
+            else:
+                result = run_adjustment(config)
+                summary = _summarize_iat_result(result, power_kwe)
+                comparison_chart.append({
+                    "country": country,
+                    "scenario": "Adjusted OCC",
+                    "adjusted_occ_per_kw": summary.get("adjusted_occ_per_kw"),
+                    "local_per_kw": summary.get("local_occ_per_kw"),
+                    "foreign_per_kw": summary.get("foreign_occ_per_kw"),
+                    "label": country,
+                })
+            country_results.append({"country": country, "data": summary})
+            files[f"IAT CSV ({country})"] = _file_info(iat_csv)
+        response["iat"] = {
+            "country_results": country_results,
+            "comparison_chart": comparison_chart,
+        }
         return response
 
     if workflow == "crf_only":
@@ -1507,10 +1895,11 @@ def run_workflow(payload: dict) -> dict:
         iat_payload["iat"]["input_mode"] = "csv"
         iat_result = run_adjustment(_iat_config(iat_payload, iat_csv))
         crf_result = run_one_scenario(_crf_config(payload, baseline_csv=iat_csv), _levers(payload))
+        _crf_countries = payload["iat"].get("countries") or [payload["iat"].get("country", "")]
         save_dashboard(
             crf_result,
             dashboard,
-            title=f"{payload['crf']['reactor_type']} {payload['iat']['country']} Cost Reduction Framework",
+            title=f"{payload['crf']['reactor_type']} {_crf_countries[0]} Cost Reduction Framework",
             show_levers=bool(payload["crf"].get("show_levers", True)),
         )
         response["iat"] = _summarize_iat_result(iat_result, _reactor_power_kwe(payload))
@@ -1541,7 +1930,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, HTML.encode("utf-8"), "text/html; charset=utf-8")
             return
         if self.path.startswith("/outputs/"):
-            name = Path(unquote(self.path.split("/outputs/", 1)[1])).name
+            raw = self.path.split("/outputs/", 1)[1].split("?", 1)[0]
+            name = Path(unquote(raw)).name
             path = OUTPUT_DIR / name
             if not path.exists() or not path.is_file():
                 self._send(404, b"Not found", "text/plain; charset=utf-8")

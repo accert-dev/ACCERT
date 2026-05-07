@@ -68,6 +68,12 @@ def load_assumptions(path: str | None = None) -> dict[str, Any]:
             "LR": _read_family_records(data_dir / "lr_localization.csv"),
             "SMR": _read_family_records(data_dir / "smr_localization.csv"),
         },
+        "input_is_occ": {
+            "LR": True,
+            "SMR": True,
+            "ACCERT output-LR": False,
+            "ACCERT output-SMR": False,
+        },
     }
 
 

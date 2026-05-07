@@ -118,6 +118,7 @@ def run_occ_scenarios(config: dict[str, Any]) -> dict[str, Any]:
     ``occ_values`` should be an iterable of OCC totals in the selected dollar
     year. Each OCC total is allocated to COAs using the packaged IAT COA
     breakdown and cost-category percentages before country adjustment.
+    The unit of the OCC values is $/kWe. 
     """
     occ_values = config.get("occ_values")
     if occ_values is None:
@@ -203,7 +204,6 @@ def occ_cost_dataframe(assumptions: dict[str, Any], family: str, occ_value: floa
         allocated = sum(category_costs.values())
         if abs(total - allocated) > 1e-9:
             category_costs["catchall"] += total - allocated
-
         rows.append(
             {
                 "Account": record["account"],
@@ -254,17 +254,23 @@ def adjust_cost_dataframe(
         original = _category_costs(row, record)
         if _is_passthrough_account(str(row["Account"])):
             adjusted = original.copy()
+            foreign: dict[str, float] = {cat: 0.0 for cat in COST_CATEGORIES}
+            local: dict[str, float] = original.copy()
         else:
             localization = record["localization"][country] if record is not None else {}
-            adjusted = {
-                category: _adjust_category_cost(
+            adjusted = {}
+            foreign = {}
+            local = {}
+            for category in COST_CATEGORIES:
+                f, l = _adjust_category_cost_split(
                     amount=original[category],
                     local_share=float(localization.get(category, 0.0)),
                     factor=float(factors[category]),
                     tariff=float(factors["import_tariff"]),
                 )
-                for category in COST_CATEGORIES
-            }
+                adjusted[category] = f + l
+                foreign[category] = f
+                local[category] = l
         adjusted_rows.append(
             {
                 "Matched IAT Account": record["account"] if record is not None else "",
@@ -277,6 +283,8 @@ def adjust_cost_dataframe(
                 "Original Total Cost": sum(original.values()),
                 **{ADJUSTED_COLUMNS[category]: adjusted[category] for category in COST_CATEGORIES},
                 "Adjusted Total Cost": sum(adjusted.values()),
+                "Total Local Cost": sum(local.values()),
+                "Total Foreign Cost": sum(foreign.values()),
             }
         )
 
@@ -336,6 +344,28 @@ def occ_totals(adjusted_df: pd.DataFrame) -> tuple[float, float]:
     input_occ = float(leaf_df.loc[occ_mask, "Original Total Cost"].sum())
     adjusted_occ = float(leaf_df.loc[occ_mask, "Adjusted Total Cost"].sum())
     return input_occ, adjusted_occ
+
+
+def occ_local_foreign_totals(adjusted_df: pd.DataFrame) -> dict[str, float]:
+    """Return OCC split into input, adjusted, local, and foreign totals (excl. 60-series).
+
+    Local cost is the portion sourced domestically (adjusted with the local factor).
+    Foreign cost is the imported portion (subject to import tariff).
+    """
+    leaf_df = adjusted_df.loc[adjusted_df["Is Leaf Account"]].copy()
+    accounts = leaf_df["Account"].astype(str).map(normalize_account)
+    occ_mask = accounts.str.startswith(OCC_GROUP_PREFIXES)
+    occ_df = leaf_df.loc[occ_mask]
+    input_occ = float(occ_df["Original Total Cost"].sum())
+    adjusted_occ = float(occ_df["Adjusted Total Cost"].sum())
+    local_occ = float(occ_df["Total Local Cost"].sum()) if "Total Local Cost" in occ_df.columns else 0.0
+    foreign_occ = float(occ_df["Total Foreign Cost"].sum()) if "Total Foreign Cost" in occ_df.columns else 0.0
+    return {
+        "input": input_occ,
+        "adjusted": adjusted_occ,
+        "local": local_occ,
+        "foreign": foreign_occ,
+    }
 
 
 def level_account_summary(adjusted_df: pd.DataFrame, max_level: int = 2) -> pd.DataFrame:
@@ -515,3 +545,13 @@ def _category_costs(row: pd.Series, record: dict[str, Any] | None) -> dict[str, 
 def _adjust_category_cost(amount: float, local_share: float, factor: float, tariff: float) -> float:
     imported_share = 1.0 - local_share
     return amount * (imported_share * (1.0 + tariff) + local_share * factor)
+
+
+def _adjust_category_cost_split(
+    amount: float, local_share: float, factor: float, tariff: float
+) -> tuple[float, float]:
+    """Return (foreign_cost, local_cost) for a single cost category."""
+    imported_share = 1.0 - local_share
+    foreign = amount * imported_share * (1.0 + tariff)
+    local = amount * local_share * factor
+    return foreign, local

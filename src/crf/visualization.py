@@ -176,7 +176,7 @@ def plot_dashboard(
     noak_reduction = tci_reduction_from_foak_to_noak(result)
 
     if figsize is None:
-        figsize = (18, 16) if show_levers else (16, 12)
+        figsize = (24, 18) if show_levers else (22, 13)
 
     fig = plt.figure(figsize=figsize, constrained_layout=True)
     if show_levers:
@@ -199,7 +199,7 @@ def plot_dashboard(
                 [fig.add_subplot(gs[2, 0]), fig.add_subplot(gs[2, 1])],
             ]
         )
-    fig.suptitle(title or "Cost Reduction Framework Dashboard", fontsize=16, fontweight="bold")
+    fig.suptitle(title or "Cost Reduction Framework Dashboard", fontsize=18, fontweight="bold")
 
     x = df["Plant number"]
 
@@ -213,7 +213,7 @@ def plot_dashboard(
     ax.set_title("Capital Cost: OCC and TCI")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("$/kWe")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
 
     ax = axes[0, 1]
     ax.bar(x, df["Construction duration"], label="Construction", color=CAPITAL_COLORS["duration"])
@@ -228,7 +228,7 @@ def plot_dashboard(
     ax.set_title("Total Construction Duration")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("Months")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
 
     ax = axes[1, 0]
     breakdown = [
@@ -242,7 +242,7 @@ def plot_dashboard(
     ax.set_title("10-60 - TCI Breakdown")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("$/kWe")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
 
     ax = axes[1, 1]
     _plot_build_timeline(ax, result, df)
@@ -259,7 +259,7 @@ def plot_dashboard(
     ax.set_title("10-50 - OCC Components")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("$/kWe")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
 
     ax = axes[2, 1]
     _plot_tci_waterfall(ax, result, noak_reduction)
@@ -276,7 +276,7 @@ def save_dashboard(
     result: dict,
     out_path: str,
     title: Optional[str] = None,
-    dpi: int = 180,
+    dpi: int = 150,
     show_levers: bool = True,
 ) -> str:
     """Save the dashboard figure and return the output path."""
@@ -326,8 +326,8 @@ def _plot_lever_table(ax, result: dict) -> None:
         colLoc="center",
     )
     table.auto_set_font_size(False)
-    table.set_fontsize(7.2)
-    table.scale(1.0, 1.18)
+    table.set_fontsize(8.5)
+    table.scale(1.0, 1.25)
 
     header_color = "#17647f"
     highlight = "#bfe7f3"
@@ -350,7 +350,7 @@ def _plot_lever_table(ax, result: dict) -> None:
         f"Lever Inputs: {int(result['Num_orders'])} firm orders, "
         f"{int(result['n_ITC'])} reactors claiming ITC, ITC {float(result['ITC']):.0f}%",
         loc="left",
-        fontsize=11,
+        fontsize=13,
         fontweight="bold",
         color=header_color,
         pad=6,
@@ -464,7 +464,7 @@ def _plot_tci_waterfall(ax, result: dict, noak_reduction: float) -> None:
             label,
             ha="center",
             va=va,
-            fontsize=8,
+            fontsize=9,
             fontweight="bold",
             color=color,
             rotation=90 if len(label) > 7 else 0,
@@ -473,7 +473,7 @@ def _plot_tci_waterfall(ax, result: dict, noak_reduction: float) -> None:
     ax.set_title(f"% {metric} Reduction from FOAK to NOAK")
     ax.set_ylabel(f"{metric} ($/kWe)")
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(labels, rotation=0, ha="center", fontsize=7)
+    ax.set_xticklabels(labels, rotation=0, ha="center", fontsize=9)
     ax.grid(True, axis="y", alpha=0.25)
     ax.set_ylim(0, max([bottom + height for bottom, height in zip(bottoms, heights)] + [foak_value]) * 1.14)
     ax.text(
@@ -483,7 +483,7 @@ def _plot_tci_waterfall(ax, result: dict, noak_reduction: float) -> None:
         transform=ax.transAxes,
         ha="right",
         va="top",
-        fontsize=9,
+        fontsize=11,
         bbox={"facecolor": "white", "edgecolor": "#cccccc", "alpha": 0.9},
     )
 
@@ -504,7 +504,7 @@ def _stacked_bars(ax, x: Iterable[int], df: pd.DataFrame, columns: list[tuple[st
         bottom += clean_values
 
 
-def _wrap_label(label: str, width: int = 13) -> str:
+def _wrap_label(label: str, width: int = 16) -> str:
     compact = " ".join(str(label).split())
     return "\n".join(textwrap.wrap(compact, width=width))
 
