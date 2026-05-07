@@ -21,7 +21,7 @@ Create a raw_account.csv file, that table should includes with the following col
 
 .. csv-table:: [Example account Table]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/raw_account_example.csv
+   :file: ../../../tutorial/accert/user_defined/raw_account_example.csv
    :widths: auto
    :class: normal-table
 
@@ -37,7 +37,7 @@ The script will generate a `user_defined_account.csv` file in the same directory
 
 .. csv-table:: [Generated account Table with added review_status and prn columns]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/user_defined_account.csv
+   :file: ../../../tutorial/accert/user_defined/user_defined_account.csv
    :widths: auto
    :class: normal-table
 
@@ -49,7 +49,7 @@ The `raw_variable_automated_generated.csv` file will be filled in by the user to
 
 .. csv-table:: [Generated variable Table]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/raw_variable_automated_generated.csv
+   :file: ../../../tutorial/accert/user_defined/raw_variable_automated_generated.csv
    :widths: auto
    :class: normal-table
 
@@ -61,7 +61,7 @@ If some variables are calculated from other variables, the user can fill in the 
 
 .. csv-table:: [Example filled in variable Table]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/raw_variable_example.csv
+   :file: ../../../tutorial/accert/user_defined/raw_variable_example.csv
    :widths: auto
    :class: normal-table
 
@@ -81,7 +81,7 @@ The script will generate 3 files:
 
 .. csv-table:: [Generated algorithm Table]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/user_defined_algorithm.csv
+   :file: ../../../tutorial/accert/user_defined/user_defined_algorithm.csv
    :widths: auto
    :class: normal-table
 
@@ -89,13 +89,13 @@ This table will be used to create the database table. the column `alg_for` is th
 
 And the `user_defined_func.py` file will be used to calculate the total cost of each account. User can modify the `user_defined_func.py` file to implement the algorithm. Each algorithm function will have the notes to explain the algorithm with the needed variables.
 
-.. include:: ../../../tutorial/user_defined/user_defined_func_generated.py
+.. include:: ../../../tutorial/accert/user_defined/user_defined_func_generated.py
    :literal:
 
 
 After filled in the algorithm function, it should be saved as `user_defined_func.py` in the same directory. Here is an example of the filled in algorithm function.
 
-.. include:: ../../../tutorial/user_defined/user_defined_func.py
+.. include:: ../../../tutorial/accert/user_defined/user_defined_func.py
    :literal:
 
 
@@ -142,7 +142,7 @@ After the database table is created, you can start preparing the input file for 
 
 The script will generate a list of accepted values for the user-defined reference model. The user can fill in the input file with the accepted values. The input file should be in the son format. Here is an example of the input file.
 
-.. include:: ../../../tutorial/user_defined/user_defined_input.son
+.. include:: ../../../tutorial/accert/user_defined/user_defined_input.son
    :literal:
 
 Run your own reference model
@@ -156,7 +156,7 @@ After the input file is prepared, you can run the reference model with the follo
 
 The script will generate the output file in the same directory. The output file will be in the son format. Here is an example of the output file, that just created.
 
-.. include:: ../../../tutorial/user_defined/output.out
+.. include:: ../../../tutorial/accert/user_defined/output.out
    :literal:
 
 

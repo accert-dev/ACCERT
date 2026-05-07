@@ -1,18 +1,18 @@
 """Run IAT on the AP1000 baseline, then use that China-adjusted CSV in CRF.
 
 This example keeps the original AP1000 baseline in ``src/crf/data`` unchanged.
-IAT writes a separate adjusted CSV into ``tutorial``. CRF then uses that file
-through ``config["baseline_csv"]``.
+IAT writes a separate adjusted CSV into ``tutorial/combined``. CRF then uses
+that file through ``config["baseline_csv"]``.
 
 Run from the repository root with:
 
-    python tutorial/crf_iat_ap1000_china_example.py
+    python tutorial/combined/crf_iat_ap1000_china_example.py
 """
 
 from pathlib import Path
 import sys
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -22,8 +22,8 @@ from iat import print_adjustment_result, run_adjustment
 
 
 ORIGINAL_AP1000_BASELINE = REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv"
-IAT_OUTPUT_CSV = REPO_ROOT / "tutorial" / "iat_ap1000_china_for_crf.csv"
-DASHBOARD_OUTPUT = REPO_ROOT / "tutorial" / "crf_iat_ap1000_china_dashboard.png"
+IAT_OUTPUT_CSV = REPO_ROOT / "tutorial" / "combined" / "iat_ap1000_china_for_crf.csv"
+DASHBOARD_OUTPUT = REPO_ROOT / "tutorial" / "combined" / "crf_iat_ap1000_china_dashboard.png"
 
 iat_config = {
     "reactor_type": "ACCERT output-LR",

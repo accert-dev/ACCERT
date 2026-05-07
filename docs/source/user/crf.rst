@@ -192,6 +192,6 @@ because several rows share the same display name:
    Commercial BOP
    Non-safety-related RB
 
-Runnable deterministic examples are available in ``tutorial/crf_ap1000_example.py``,
-``tutorial/crf_htgr_example.py``, and ``tutorial/crf_sfr_example.py``. A connected
-IAT-to-CRF example is available in ``tutorial/crf_iat_ap1000_china_example.py``.
+Runnable deterministic examples are available in ``tutorial/crf/crf_ap1000_example.py``,
+``tutorial/crf/crf_htgr_example.py``, and ``tutorial/crf/crf_sfr_example.py``. A connected
+IAT-to-CRF example is available in ``tutorial/combined/crf_iat_ap1000_china_example.py``.

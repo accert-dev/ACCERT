@@ -6,7 +6,7 @@ The ABR1000 example demonstrates the cost estimation process for Advanced Burner
 General Input Structure
 ------------------------
 
-The example input is located at ``ACCERT/tutorial/ABR1000.son``.
+The example input is located at ``ACCERT/tutorial/accert/ABR1000.son``.
 
 Reactor Model
 ~~~~~~~~~~~~~~
@@ -60,10 +60,10 @@ To run the ABR1000 example with Python, execute the following command:
 
 .. code-block:: console
 
-    > cd ACCERT/tutorial
-    > python ../src/Main.pi -i ABR1000.son
+    > cd ACCERT/tutorial/accert
+    > python ../../src/Main.py -i ABR1000.son
 
-The output will be saved in the ``tutorial`` directory as ``output.out``, ``abr1000_variable_affected_cost_elements.xlsx``, ``abr1000_updated_cost_element.xlsx``, and ``abr1000_updated_account.xlsx``. The ``output.out`` file contains the cost estimation results, while the Excel files provide detailed information on the cost elements and accounts affected by the input variables.
+The output will be saved in the ``tutorial/accert`` directory as ``output.out``, ``abr1000_variable_affected_cost_elements.xlsx``, ``abr1000_updated_cost_element.xlsx``, and ``abr1000_updated_account.xlsx``. The ``output.out`` file contains the cost estimation results, while the Excel files provide detailed information on the cost elements and accounts affected by the input variables.
 
 
 Using NEAMS Workbench
@@ -72,8 +72,8 @@ Using NEAMS Workbench
 To run the ABR1000 example using the NEAMS Workbench, follow these steps:
 
 1. Open the NEAMS Workbench.
-2. Click on the **file** menu and select **open file**, then navigate to the ``ACCERT/tutorial`` directory and select the ``ABR1000.son`` file.
+2. Click on the **file** menu and select **open file**, then navigate to the ``ACCERT/tutorial/accert`` directory and select the ``ABR1000.son`` file.
 3. In the main window, select App as `Accert`, then click on the **Run** button to execute the simulation.
-4. Click on the **file** menu and select **open file**, then navigate to the ``ACCERT/tutorial`` directory and select the ``output.out`` file to view the cost estimation results.
+4. Click on the **file** menu and select **open file**, then navigate to the ``ACCERT/tutorial/accert`` directory and select the ``output.out`` file to view the cost estimation results.
 
 

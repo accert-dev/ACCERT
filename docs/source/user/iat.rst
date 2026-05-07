@@ -68,7 +68,7 @@ baseline CSV.
            "country": "China",
            "year_dollar": 2024,
            "input_csv": Path("src/crf/data/AP1000_baseline.csv"),
-           "output_csv": Path("tutorial/iat_ap1000_china_adjusted.csv"),
+           "output_csv": Path("tutorial/iat/outputs/iat_ap1000_china_adjusted.csv"),
        }
    )
    print_adjustment_result(result)
@@ -94,13 +94,13 @@ an ACCERT output CSV.
            "year_dollar": 2024,
            "occ_values": [5250, 5750, 6250],
            "scenario_names": ["LR OCC case 1", "LR OCC case 2", "LR OCC case 3"],
-           "output_csv": "tutorial/iat_lr_occ_korea_adjusted.csv",
+           "output_csv": "tutorial/iat/outputs/iat_lr_occ_korea_adjusted.csv",
        }
    )
    print(result["summary"])
 
 Runnable standalone examples for China, Korea, and UAE are in
-``tutorial/iat_lr_occ_china_example.py``.
+``tutorial/iat/iat_lr_occ_china_example.py``.
 
 Connecting IAT to the Cost Reduction Framework
 ----------------------------------------------
@@ -120,13 +120,13 @@ baseline CSV in ``src/crf/data``. Pass the IAT output path to CRF with the
            "country": "China",
            "year_dollar": 2024,
            "input_csv": "src/crf/data/AP1000_baseline.csv",
-           "output_csv": "tutorial/iat_ap1000_china_for_crf.csv",
+           "output_csv": "tutorial/combined/iat_ap1000_china_for_crf.csv",
        }
    )
 
    crf_config = {
        "reactor_type": "AP1000",
-       "baseline_csv": "tutorial/iat_ap1000_china_for_crf.csv",
+       "baseline_csv": "tutorial/combined/iat_ap1000_china_for_crf.csv",
        "f_22": 250_000_000,
        "f_2321": 150_000_000,
        "land_cost_per_acre_0": 22_000,
@@ -141,4 +141,4 @@ material, and labor columns as the starting baseline. The original AP1000 CSV
 is left unchanged.
 
 The connected runnable example is
-``tutorial/crf_iat_ap1000_china_example.py``.
+``tutorial/combined/crf_iat_ap1000_china_example.py``.

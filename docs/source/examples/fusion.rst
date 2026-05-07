@@ -6,7 +6,7 @@ The fusion example demonstrates the integration of ACCERT with a large tokamak f
 General Input Structure
 ------------------------
 
-The input file for the fusion model is located at ``accert/tutorial/fusion.son``.
+The input file for the fusion model is located at ``accert/tutorial/accert/Fusion.son``.
 
 Reactor Model
 ~~~~~~~~~~~~~~
@@ -60,7 +60,7 @@ To run the fusion example with Python, execute the following command:
 
 .. code-block:: console
 
-    > cd ACCERT/tutorial
-    > python ../src/Main.pi -i fusion.son
+    > cd ACCERT/tutorial/accert
+    > python ../../src/Main.py -i Fusion.son
 
-The output will be generated in the ``tutorial`` directory as ``output.out``, and ``fusion_updated_account.xlsx``. The ``output.out`` file contains the cost estimation results, while the Excel files provide detailed information on the accounts affected by the input variables. Note that the fusion example does not generate the ``*_variable_affected_cost_elements.xlsx`` file as it does not have any cost elements associated with the input variables, there is only one account affected by the input variables.
+The output will be generated in the ``tutorial/accert`` directory as ``output.out``, and ``fusion_updated_account.xlsx``. The ``output.out`` file contains the cost estimation results, while the Excel files provide detailed information on the accounts affected by the input variables. Note that the fusion example does not generate the ``*_variable_affected_cost_elements.xlsx`` file as it does not have any cost elements associated with the input variables, there is only one account affected by the input variables.

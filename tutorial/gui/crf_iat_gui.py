@@ -2,7 +2,7 @@
 
 Run from the repository root with:
 
-    python tutorial/crf_iat_gui.py
+    python tutorial/gui/crf_iat_gui.py
 
 Then open:
 
@@ -23,7 +23,7 @@ from urllib.parse import unquote
 
 import pandas as pd
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))

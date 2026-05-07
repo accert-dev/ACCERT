@@ -2,7 +2,7 @@
 
 Run from the repository root with:
 
-    python tutorial/iat_lr_occ_china_example.py
+    python tutorial/iat/iat_lr_occ_china_example.py
 """
 
 from pathlib import Path
@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -30,7 +30,7 @@ COUNTRIES = ["China", "Korea", "UAE"]
 
 if __name__ == "__main__":
     for country in COUNTRIES:
-        output_csv = REPO_ROOT / "tutorial" / f"iat_lr_occ_{country.lower()}_adjusted.csv"
+        output_csv = REPO_ROOT / "tutorial" / "iat" / "outputs" / f"iat_lr_occ_{country.lower()}_adjusted.csv"
         config = {**BASE_CONFIG, "country": country, "output_csv": output_csv}
         result = run_occ_scenarios(config)
 

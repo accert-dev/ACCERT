@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -10,7 +10,7 @@ from crf import print_scenario_result, run_one_scenario, save_dashboard
 
 
 config = {
-    "reactor_type": "SFR",
+    "reactor_type": "HTGR",
     "f_22": 250_000_000,
     "f_2321": 150_000_000,
     "land_cost_per_acre_0": 22_000,
@@ -45,11 +45,11 @@ if __name__ == "__main__":
     result = run_one_scenario(config, levers)
     print_scenario_result(result)
 
-    output_path = Path("cost_reduction_framework_sfr_dashboard.png")
+    output_path = Path("cost_reduction_framework_htgr_dashboard.png")
     save_dashboard(
         result,
         output_path,
-        title="SFR Cost Reduction Framework",
+        title="HTGR Cost Reduction Framework",
         show_levers=show_lever_table,
     )
     print(f"\nSaved dashboard figure to: {output_path.resolve()}")

@@ -2,14 +2,14 @@
 
 Run from the repository root with:
 
-    python tutorial/iat_ap1000_china_example.py
+    python tutorial/iat/iat_ap1000_china_example.py
 """
 
 from pathlib import Path
 import sys
 import pandas as pd
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -22,7 +22,7 @@ config = {
     "country": "China",
     "year_dollar": 2024,
     "input_csv": REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv",
-    "output_csv": REPO_ROOT / "tutorial" / "iat_ap1000_china_adjusted.csv",
+    "output_csv": REPO_ROOT / "tutorial" / "iat" / "outputs" / "iat_ap1000_china_adjusted.csv",
 }
 
 
