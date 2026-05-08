@@ -192,6 +192,31 @@ because several rows share the same display name:
    Commercial BOP
    Non-safety-related RB
 
-Runnable deterministic examples are available in ``tutorial/crf/crf_ap1000_example.py``,
-``tutorial/crf/crf_htgr_example.py``, and ``tutorial/crf/crf_sfr_example.py``. A connected
-IAT-to-CRF example is available in ``tutorial/combined/crf_iat_ap1000_china_example.py``.
+Running Examples
+----------------
+
+The tutorial scripts are designed to run from the ACCERT repository root. They
+add ``src`` to ``sys.path`` themselves, so you do not need to set
+``PYTHONPATH`` for these examples.
+
+.. code-block:: bash
+
+   cd ACCERT
+   python tutorial/crf/crf_ap1000_example.py
+   python tutorial/crf/crf_htgr_example.py
+   python tutorial/crf/crf_sfr_example.py
+
+The connected IAT-to-CRF example first creates an IAT-adjusted AP1000 China
+CSV and then passes that CSV to CRF without modifying ``src/crf/data``:
+
+.. code-block:: bash
+
+   python tutorial/combined/crf_iat_ap1000_china_example.py
+
+To use the local GUI for CRF, IAT, or the connected IAT-then-CRF workflow, run:
+
+.. code-block:: bash
+
+   python tutorial/gui/crf_iat_gui.py
+
+Then open ``http://127.0.0.1:8765/`` in a browser.

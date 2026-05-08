@@ -13,6 +13,23 @@ IAT can run in two modes:
   values and IAT allocates the total using packaged COA and cost-category
   shares.
 
+Running IAT
+-----------
+
+The tutorial scripts are designed to run from the ACCERT repository root. They
+add ``src`` to ``sys.path`` themselves, so you do not need to set
+``PYTHONPATH`` for the tutorials.
+
+.. code-block:: bash
+
+   cd ACCERT
+   python tutorial/iat/iat_ap1000_china_example.py
+   python tutorial/iat/iat_lr_occ_china_example.py
+
+When writing your own short script outside the tutorial folder, either run it
+from the repository root with ``PYTHONPATH=src`` or install ACCERT in your
+Python environment before importing ``iat``.
+
 Packaged Assumptions
 --------------------
 
@@ -57,6 +74,12 @@ ACCERT CSV Input
 Use ``run_adjustment`` with ``input_csv`` when the input is an ACCERT or CRF
 baseline CSV.
 
+The packaged AP1000 example can be run from the repository root with:
+
+.. code-block:: bash
+
+   python tutorial/iat/iat_ap1000_china_example.py
+
 .. code-block:: python
 
    from pathlib import Path
@@ -82,6 +105,13 @@ Standalone OCC Input
 
 Use ``run_occ_scenarios`` when the input is one or more OCC totals rather than
 an ACCERT output CSV.
+
+The packaged standalone example runs large-reactor OCC scenarios for China,
+Korea, and UAE:
+
+.. code-block:: bash
+
+   python tutorial/iat/iat_lr_occ_china_example.py
 
 .. code-block:: python
 
@@ -142,3 +172,35 @@ is left unchanged.
 
 The connected runnable example is
 ``tutorial/combined/crf_iat_ap1000_china_example.py``.
+
+Run it from the repository root with:
+
+.. code-block:: bash
+
+   python tutorial/combined/crf_iat_ap1000_china_example.py
+
+Running the GUI
+---------------
+
+The IAT and Cost Reduction Framework can also be run through the local GUI:
+
+.. code-block:: bash
+
+   cd ACCERT
+   python tutorial/gui/crf_iat_gui.py
+
+Then open ``http://127.0.0.1:8765/`` in a browser. The GUI supports three
+workflows:
+
+* ``IAT only`` applies international adjustment to either an ACCERT output CSV
+  or standalone OCC values. In standalone mode, enter the scenario count and
+  then one OCC value for each scenario.
+* ``CRF only`` runs the Cost Reduction Framework using a built-in reactor
+  baseline or an optional user-provided baseline CSV.
+* ``IAT then CRF`` first writes an IAT-adjusted CSV and then passes that CSV to
+  CRF through ``baseline_csv``. This does not modify the packaged baseline CSVs
+  in ``src/crf/data``.
+
+The GUI writes generated CSV files and dashboard images under
+``tutorial/gui_outputs``. Interactive charts show exact values on hover, and
+the result panels include download links for generated CSV and PNG outputs.

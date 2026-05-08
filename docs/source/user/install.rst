@@ -560,13 +560,15 @@ ACCERT Execution
 **Through Command Line**
 
 
-- Execute ACCERT using Python:
+- Execute ACCERT using Python from the repository root:
 
   .. code-block:: shell
 
-      $ python ACCERT/src/Main.py -i myinput.son
+      $ cd ACCERT
+      $ python src/Main.py -i tutorial/accert/PWR12-BE.son
 
-  - Replace `myinput.son` with your input file, such as `PWR12-BE.son` or `ABR1000.son`.
+  - Replace ``tutorial/accert/PWR12-BE.son`` with your input file, such as
+    ``tutorial/accert/ABR1000.son`` or another ``.son`` file.
 
 Troubleshooting
 ---------------
@@ -601,7 +603,6 @@ Additional Resources
   - `https://github.com/accert-dev/ACCERT <https://github.com/accert-dev/ACCERT>`_
 - **NEAMS Workbench Documentation**:
   - `NEAMS Workbench User Guide <https://code.ornl.gov/neams-workbench/documentation>`_
-
 
 
 
