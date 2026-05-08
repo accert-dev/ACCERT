@@ -83,7 +83,7 @@ HTML = r"""<!doctype html>
     }
     main {
       display: grid;
-      grid-template-columns: minmax(330px, 430px) 1fr;
+      grid-template-columns: minmax(500px, 560px) minmax(0, 1fr);
       min-height: calc(100vh - 57px);
     }
     aside {
@@ -157,28 +157,46 @@ HTML = r"""<!doctype html>
     }
     .row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
     .triple {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
     }
     .lever-matrix {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 8px;
-      padding: 8px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+      padding: 12px;
       border: 1px solid rgba(207,239,248,0.28);
       background: rgba(8, 47, 74, 0.18);
       border-radius: 6px;
     }
     .lever-stack {
       display: grid;
-      grid-template-rows: auto auto;
-      gap: 8px;
+      grid-template-rows: repeat(2, 74px);
+      gap: 10px;
+    }
+    #leverPanel .triple > div,
+    #leverPanel .row > div,
+    #leverPanel .lever-stack > div {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 74px;
+    }
+    #leverPanel .label-row {
+      min-height: 34px;
+      margin: 0 0 5px;
+      align-items: flex-end;
+    }
+    #leverPanel input,
+    #leverPanel select {
+      height: 38px;
     }
     .inline {
       display: flex;
@@ -280,26 +298,26 @@ HTML = r"""<!doctype html>
     .tab-panel.active { display: block; }
     .chart-grid {
       display: grid;
-      grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
       align-items: stretch;
     }
     .chart-panel {
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #fff;
-      padding: 12px;
-      min-height: 330px;
+      padding: 18px 22px;
+      min-height: 570px;
       box-shadow: 0 2px 8px rgba(25, 47, 70, 0.06);
     }
     .chart-panel h3 {
-      margin: 0 0 8px;
-      font-size: 15px;
+      margin: 0 0 12px;
+      font-size: 19px;
       color: var(--ink);
     }
     .chart-panel svg {
       width: 100%;
-      height: 300px;
+      height: 500px;
       display: block;
     }
     .axis text, .tick text { fill: #596775; font-size: 11px; }
@@ -887,6 +905,11 @@ HTML = r"""<!doctype html>
       return Number(value).toLocaleString(undefined, {maximumFractionDigits: 2});
     }
 
+    function fmtInt(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "";
+      return Math.round(Number(value)).toLocaleString();
+    }
+
     function fmtMoneyScale(value) {
       const number = Number(value || 0);
       const abs = Math.abs(number);
@@ -985,24 +1008,24 @@ HTML = r"""<!doctype html>
 
     function capitalChart(rows) {
       if (!rows || !rows.length) return "";
-      const w = 760, h = 300;
-      const m = {left: 54, right: 16, top: 22, bottom: 42};
+      const w = 1120, h = 430;
+      const m = {left: 78, right: 28, top: 34, bottom: 66};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = niceMax(Math.max(...rows.flatMap(r => [Number(r.TCI || 0), Number(r.OCC || 0)])) * 1.08);
       const y = v => m.top + innerH - (Number(v || 0) / max) * innerH;
       const groupW = innerW / rows.length;
-      const barW = Math.max(7, Math.min(22, groupW * 0.28));
+      const barW = Math.max(16, Math.min(42, groupW * 0.34));
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="TCI and OCC by plant">`;
       for (let i = 0; i <= 4; i++) {
         const value = max * i / 4;
         const yy = y(value);
         svg += `<line class="grid" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
-        svg += `<text x="${m.left - 8}" y="${yy + 4}" text-anchor="end" fill="#596775" font-size="11">${fmt(value)}</text>`;
+        svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${fmt(value)}</text>`;
       }
       svg += `<line x1="${m.left}" y1="${m.top}" x2="${m.left}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
-      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">Cost ($/kW)</text>`;
+      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Cost ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const cx = m.left + groupW * idx + groupW / 2;
         const tciH = m.top + innerH - y(r.TCI);
@@ -1010,36 +1033,36 @@ HTML = r"""<!doctype html>
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>TCI: ${fmt(r.TCI)}" x="${cx - barW - 2}" y="${y(r.TCI)}" width="${barW}" height="${tciH}" fill="#2ca02c"></rect>`;
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>OCC: ${fmt(r.OCC)}" x="${cx + 2}" y="${y(r.OCC)}" width="${barW}" height="${occH}" fill="#1f77b4"></rect>`;
         if (idx % Math.ceil(rows.length / 8) === 0 || rows.length <= 8) {
-          svg += `<text x="${cx}" y="${h - 18}" text-anchor="middle" fill="#596775" font-size="11">${esc(r["Plant number"])}</text>`;
+          svg += `<text x="${cx}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${esc(r["Plant number"])}</text>`;
         }
       });
-      svg += `<text x="${m.left + innerW / 2}" y="${h - 2}" text-anchor="middle" fill="#596775" font-size="11">Plant number</text>`;
-      svg += `<rect x="${w - 150}" y="8" width="10" height="10" fill="#2ca02c"></rect><text x="${w - 134}" y="17" fill="#596775" font-size="12">TCI</text>`;
-      svg += `<rect x="${w - 92}" y="8" width="10" height="10" fill="#1f77b4"></rect><text x="${w - 76}" y="17" fill="#596775" font-size="12">OCC</text>`;
+      svg += `<text x="${m.left + innerW / 2}" y="${h - 6}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Plant number</text>`;
+      svg += `<rect x="${w - 170}" y="14" width="14" height="14" fill="#2ca02c"></rect><text x="${w - 148}" y="26" fill="#596775" font-size="15" font-weight="700">TCI</text>`;
+      svg += `<rect x="${w - 94}" y="14" width="14" height="14" fill="#1f77b4"></rect><text x="${w - 72}" y="26" fill="#596775" font-size="15" font-weight="700">OCC</text>`;
       svg += `</svg>`;
       return svg;
     }
 
     function waterfallChart(rows) {
       if (!rows || !rows.length) return "";
-      const w = 840, h = 300;
-      const m = {left: 56, right: 18, top: 22, bottom: 78};
+      const w = 1120, h = 460;
+      const m = {left: 78, right: 28, top: 34, bottom: 112};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = niceMax(Math.max(...rows.map(r => Number(r.cumulative_tci || 0))) * 1.08);
       const y = v => m.top + innerH - (Number(v || 0) / max) * innerH;
       const step = innerW / rows.length;
-      const bw = Math.max(16, Math.min(36, step * 0.58));
+      const bw = Math.max(24, Math.min(58, step * 0.62));
       let previous = 0;
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="TCI waterfall savings by lever">`;
       for (let i = 0; i <= 4; i++) {
         const value = max * i / 4;
         const yy = y(value);
         svg += `<line class="grid" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
-        svg += `<text x="${m.left - 8}" y="${yy + 4}" text-anchor="end" fill="#596775" font-size="11">${fmt(value)}</text>`;
+        svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${fmt(value)}</text>`;
       }
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
-      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">TCI ($/kW)</text>`;
+      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">TCI ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const cumulative = Number(r.cumulative_tci || 0);
         const change = Number(r.absolute_change || 0);
@@ -1057,9 +1080,9 @@ HTML = r"""<!doctype html>
           svg += `<line x1="${x - step * 0.18}" y1="${y(start)}" x2="${x}" y2="${y(start)}" stroke="#aeb8c4" stroke-dasharray="3 3"></line>`;
         }
         const label = String(r.label || "").replace(/\n/g, " ");
-        svg += `<text transform="translate(${x + bw / 2},${h - 68}) rotate(55)" text-anchor="start" fill="#596775" font-size="10">${esc(label.slice(0, 22))}</text>`;
+        svg += `<text transform="translate(${x + bw / 2},${h - 96}) rotate(52)" text-anchor="start" fill="#596775" font-size="13" font-weight="700">${esc(label.slice(0, 28))}</text>`;
         if (!isTotal && Math.abs(pct) > 0.05) {
-          svg += `<text x="${x + bw / 2}" y="${barY - 4}" text-anchor="middle" fill="#596775" font-size="10">${fmt(pct)}%</text>`;
+          svg += `<text x="${x + bw / 2}" y="${barY - 8}" text-anchor="middle" fill="#596775" font-size="13" font-weight="800">${fmt(pct)}%</text>`;
         }
         previous = cumulative;
       });
@@ -1085,22 +1108,23 @@ HTML = r"""<!doctype html>
             ["Supplementary costs", "50 - Supplementary", "#e377c2"],
             ["Financing costs", "60 - Financing", "#8c564b"]
           ];
-      const w = 760, h = 300;
-      const m = {left: 54, right: 16, top: 20, bottom: 54};
+      const w = 1120, h = 430;
+      const m = {left: 78, right: 28, top: 30, bottom: 78};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = niceMax(Math.max(...rows.map(r => keys.reduce((sum, [k]) => sum + Number(r[k] || 0), 0))) * 1.08);
       const y = v => m.top + innerH - (Number(v || 0) / max) * innerH;
       const step = innerW / rows.length;
-      const bw = Math.max(10, Math.min(30, step * 0.56));
+      const bw = Math.max(18, Math.min(50, step * 0.62));
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${mode.toUpperCase()} cost breakdown by plant">`;
       for (let i = 0; i <= 4; i++) {
         const value = max * i / 4;
         const yy = y(value);
         svg += `<line class="grid" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
-        svg += `<text x="${m.left - 8}" y="${yy + 4}" text-anchor="end" fill="#596775" font-size="11">${fmt(value)}</text>`;
+        svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${fmt(value)}</text>`;
       }
-      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">${mode.toUpperCase()} ($/kW)</text>`;
+      svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
+      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${mode.toUpperCase()} ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const x = m.left + step * idx + (step - bw) / 2;
         let total = 0;
@@ -1112,12 +1136,12 @@ HTML = r"""<!doctype html>
           svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>${esc(label)}: ${fmt(value)}<br>Total: ${fmt(total)}" x="${x}" y="${y1}" width="${bw}" height="${Math.max(0.5, y0 - y1)}" fill="${color}"></rect>`;
         });
         if (idx % Math.ceil(rows.length / 8) === 0 || rows.length <= 8) {
-          svg += `<text x="${x + bw / 2}" y="${h - 18}" text-anchor="middle" fill="#596775" font-size="11">${esc(r["Plant number"])}</text>`;
+          svg += `<text x="${x + bw / 2}" y="${h - 44}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${esc(r["Plant number"])}</text>`;
         }
       });
       keys.slice(0, 5).forEach(([key, label, color], idx) => {
-        const x = m.left + idx * 138;
-        svg += `<rect x="${x}" y="${h - 12}" width="9" height="9" fill="${color}"></rect><text x="${x + 13}" y="${h - 4}" fill="#596775" font-size="10">${esc(label.replace("20 - Direct: ", ""))}</text>`;
+        const x = m.left + idx * 190;
+        svg += `<rect x="${x}" y="${h - 22}" width="13" height="13" fill="${color}"></rect><text x="${x + 20}" y="${h - 11}" fill="#596775" font-size="13" font-weight="700">${esc(label.replace("20 - Direct: ", ""))}</text>`;
       });
       svg += `</svg>`;
       return svg;
@@ -1125,22 +1149,23 @@ HTML = r"""<!doctype html>
 
     function durationChart(rows) {
       if (!rows || !rows.length) return "";
-      const w = 760, h = 300;
-      const m = {left: 54, right: 16, top: 22, bottom: 42};
+      const w = 1120, h = 430;
+      const m = {left: 78, right: 28, top: 34, bottom: 66};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = niceMax(Math.max(...rows.map(r => Number(r["Construction duration"] || 0) + Number(r["Startup duration"] || 0))) * 1.08);
       const y = v => m.top + innerH - (Number(v || 0) / max) * innerH;
       const step = innerW / rows.length;
-      const bw = Math.max(10, Math.min(30, step * 0.56));
+      const bw = Math.max(18, Math.min(52, step * 0.62));
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Construction and startup durations">`;
       for (let i = 0; i <= 4; i++) {
         const value = max * i / 4;
         const yy = y(value);
         svg += `<line class="grid" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
-        svg += `<text x="${m.left - 8}" y="${yy + 4}" text-anchor="end" fill="#596775" font-size="11">${fmt(value)}</text>`;
+        svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${fmt(value)}</text>`;
       }
-      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">Duration (months)</text>`;
+      svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
+      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Duration (months)</text>`;
       rows.forEach((r, idx) => {
         const x = m.left + step * idx + (step - bw) / 2;
         const construction = Number(r["Construction duration"] || 0);
@@ -1149,19 +1174,19 @@ HTML = r"""<!doctype html>
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>Construction: ${fmt(construction)} months" x="${x}" y="${y0}" width="${bw}" height="${m.top + innerH - y0}" fill="#ff7f0e"></rect>`;
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>Startup: ${fmt(startup)} months<br>Total: ${fmt(construction + startup)} months" x="${x}" y="${y(construction + startup)}" width="${bw}" height="${y0 - y(construction + startup)}" fill="#9467bd"></rect>`;
         if (idx % Math.ceil(rows.length / 8) === 0 || rows.length <= 8) {
-          svg += `<text x="${x + bw / 2}" y="${h - 18}" text-anchor="middle" fill="#596775" font-size="11">${esc(r["Plant number"])}</text>`;
+          svg += `<text x="${x + bw / 2}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${esc(r["Plant number"])}</text>`;
         }
       });
-      svg += `<rect x="${w - 164}" y="8" width="10" height="10" fill="#ff7f0e"></rect><text x="${w - 148}" y="17" fill="#596775" font-size="12">Construction</text>`;
-      svg += `<rect x="${w - 68}" y="8" width="10" height="10" fill="#9467bd"></rect><text x="${w - 52}" y="17" fill="#596775" font-size="12">Startup</text>`;
+      svg += `<rect x="${w - 202}" y="14" width="14" height="14" fill="#ff7f0e"></rect><text x="${w - 180}" y="26" fill="#596775" font-size="15" font-weight="700">Construction</text>`;
+      svg += `<rect x="${w - 86}" y="14" width="14" height="14" fill="#9467bd"></rect><text x="${w - 64}" y="26" fill="#596775" font-size="15" font-weight="700">Startup</text>`;
       svg += `</svg>`;
       return svg;
     }
 
     function timelineChart(rows) {
       if (!rows || !rows.length) return "";
-      const w = 760, h = 300;
-      const m = {left: 54, right: 18, top: 22, bottom: 42};
+      const w = 1120, h = 430;
+      const m = {left: 78, right: 28, top: 34, bottom: 66};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = Math.max(1, Math.ceil(Math.max(...rows.map(r => Number(r.startup_end_year || 0))) * 1.05));
@@ -1172,7 +1197,7 @@ HTML = r"""<!doctype html>
       for (let value = 0; value <= max; value += tickStep) {
         const xx = x(value);
         svg += `<line class="grid" x1="${xx}" y1="${m.top}" x2="${xx}" y2="${m.top + innerH}"></line>`;
-        svg += `<text x="${xx}" y="${h - 18}" text-anchor="middle" fill="#596775" font-size="10">${value}</text>`;
+        svg += `<text x="${xx}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${value}</text>`;
       }
       rows.forEach((r, idx) => {
         const y = m.top + idx * rowH + rowH * 0.2;
@@ -1180,12 +1205,12 @@ HTML = r"""<!doctype html>
         const cs = x(r.construction_start_year);
         const ce = x(r.construction_end_year);
         const se = x(r.startup_end_year);
-        svg += `<text x="${m.left - 12}" y="${y + bh * 0.7}" text-anchor="end" fill="#596775" font-size="11">${esc(r.plant)}</text>`;
+        svg += `<text x="${m.left - 14}" y="${y + bh * 0.7}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${esc(r.plant)}</text>`;
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r.plant)}</b><br>Construction: ${fmt(r.construction_start_year)}-${fmt(r.construction_end_year)} years" x="${cs}" y="${y}" width="${Math.max(1, ce - cs)}" height="${bh}" fill="#ff7f0e" stroke="#333"></rect>`;
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r.plant)}</b><br>Startup end: ${fmt(r.startup_end_year)} years" x="${ce}" y="${y}" width="${Math.max(1, se - ce)}" height="${bh}" fill="#9467bd" stroke="#333"></rect>`;
       });
-      svg += `<text transform="translate(14,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="11">Reactor number</text>`;
-      svg += `<text x="${m.left + innerW / 2}" y="${h - 2}" text-anchor="middle" fill="#596775" font-size="11">Time (years)</text>`;
+      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Reactor number</text>`;
+      svg += `<text x="${m.left + innerW / 2}" y="${h - 6}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Time (years)</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -1389,7 +1414,7 @@ HTML = r"""<!doctype html>
         html += metrics([
           {label: "Average OCC ($/kW)", value: fmt(data.crf.avg_occ)},
           {label: "Average TCI ($/kW)", value: fmt(data.crf.avg_tci)},
-          {label: "Average duration (months)", value: fmt(data.crf.avg_duration)},
+          {label: "Average duration (months)", value: fmtInt(data.crf.avg_duration)},
           {label: "OCC reduction (%)", value: fmt(data.crf.occ_reduction_percent)}
         ]);
         html += `<div class="tabs">
