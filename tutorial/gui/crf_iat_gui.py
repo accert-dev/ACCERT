@@ -971,6 +971,14 @@ HTML = r"""<!doctype html>
       return `<div class="links">${Object.entries(files).map(([name, info]) => `<a href="${info.url}" target="_blank">${name}</a>`).join("")}</div>`;
     }
 
+    function fileLink(label, info) {
+      return info ? `<div class="links"><a href="${info.url}" target="_blank">${esc(label)}</a></div>` : "";
+    }
+
+    function tabSafe(value) {
+      return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "tab";
+    }
+
     function esc(value) {
       return String(value ?? "").replace(/[&<>"']/g, ch => ({
         "&": "&amp;",
@@ -1009,7 +1017,7 @@ HTML = r"""<!doctype html>
     function capitalChart(rows) {
       if (!rows || !rows.length) return "";
       const w = 1120, h = 430;
-      const m = {left: 78, right: 28, top: 34, bottom: 66};
+      const m = {left: 108, right: 28, top: 34, bottom: 66};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = niceMax(Math.max(...rows.flatMap(r => [Number(r.TCI || 0), Number(r.OCC || 0)])) * 1.08);
@@ -1025,7 +1033,7 @@ HTML = r"""<!doctype html>
       }
       svg += `<line x1="${m.left}" y1="${m.top}" x2="${m.left}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
-      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Cost ($/kW)</text>`;
+      svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Cost ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const cx = m.left + groupW * idx + groupW / 2;
         const tciH = m.top + innerH - y(r.TCI);
@@ -1046,7 +1054,7 @@ HTML = r"""<!doctype html>
     function waterfallChart(rows) {
       if (!rows || !rows.length) return "";
       const w = 1120, h = 460;
-      const m = {left: 78, right: 28, top: 34, bottom: 112};
+      const m = {left: 108, right: 28, top: 34, bottom: 112};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = niceMax(Math.max(...rows.map(r => Number(r.cumulative_tci || 0))) * 1.08);
@@ -1062,7 +1070,7 @@ HTML = r"""<!doctype html>
         svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${fmt(value)}</text>`;
       }
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
-      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">TCI ($/kW)</text>`;
+      svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">TCI ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const cumulative = Number(r.cumulative_tci || 0);
         const change = Number(r.absolute_change || 0);
@@ -1094,22 +1102,22 @@ HTML = r"""<!doctype html>
       if (!rows || !rows.length) return "";
       const keys = mode === "occ"
         ? [
-            ["Preconstruction costs", "10 - Preconstruction", "#1f77b4"],
-            ["Direct costs: equipment", "20 - Direct: Equipment", "#2ca02c"],
-            ["Direct costs: material", "20 - Direct: Material", "#ff7f0e"],
-            ["Direct costs: labor", "20 - Direct: Labor", "#d62728"],
-            ["Indirect costs", "30 - Indirect", "#9467bd"],
-            ["Supplementary costs", "50 - Supplementary", "#e377c2"]
+            ["Preconstruction costs", "10 - Preconstruction", "#4e79a7"],
+            ["Direct costs: equipment", "20 - Direct: Equipment", "#76b7b2"],
+            ["Direct costs: material", "20 - Direct: Material", "#f28e2b"],
+            ["Direct costs: labor", "20 - Direct: Labor", "#e15759"],
+            ["Indirect costs", "30 - Indirect", "#59a14f"],
+            ["Supplementary costs", "50 - Supplementary", "#b07aa1"]
           ]
         : [
-            ["Preconstruction costs", "10 - Preconstruction", "#1f77b4"],
-            ["Direct costs", "20 - Direct", "#2ca02c"],
-            ["Indirect costs", "30 - Indirect", "#9467bd"],
-            ["Supplementary costs", "50 - Supplementary", "#e377c2"],
-            ["Financing costs", "60 - Financing", "#8c564b"]
+            ["Preconstruction costs", "10 - Preconstruction", "#4e79a7"],
+            ["Direct costs", "20 - Direct", "#59a14f"],
+            ["Indirect costs", "30 - Indirect", "#f28e2b"],
+            ["Supplementary costs", "50 - Supplementary", "#b07aa1"],
+            ["Financing costs", "60 - Financing", "#e15759"]
           ];
       const w = 1120, h = 430;
-      const m = {left: 78, right: 28, top: 30, bottom: 78};
+      const m = {left: 108, right: 28, top: 30, bottom: 78};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = niceMax(Math.max(...rows.map(r => keys.reduce((sum, [k]) => sum + Number(r[k] || 0), 0))) * 1.08);
@@ -1124,7 +1132,7 @@ HTML = r"""<!doctype html>
         svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${fmt(value)}</text>`;
       }
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
-      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${mode.toUpperCase()} ($/kW)</text>`;
+      svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${mode.toUpperCase()} ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const x = m.left + step * idx + (step - bw) / 2;
         let total = 0;
@@ -1150,7 +1158,7 @@ HTML = r"""<!doctype html>
     function durationChart(rows) {
       if (!rows || !rows.length) return "";
       const w = 1120, h = 430;
-      const m = {left: 78, right: 28, top: 34, bottom: 66};
+      const m = {left: 108, right: 28, top: 34, bottom: 66};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = niceMax(Math.max(...rows.map(r => Number(r["Construction duration"] || 0) + Number(r["Startup duration"] || 0))) * 1.08);
@@ -1165,7 +1173,7 @@ HTML = r"""<!doctype html>
         svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${fmt(value)}</text>`;
       }
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
-      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Duration (months)</text>`;
+      svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Duration (months)</text>`;
       rows.forEach((r, idx) => {
         const x = m.left + step * idx + (step - bw) / 2;
         const construction = Number(r["Construction duration"] || 0);
@@ -1186,7 +1194,7 @@ HTML = r"""<!doctype html>
     function timelineChart(rows) {
       if (!rows || !rows.length) return "";
       const w = 1120, h = 430;
-      const m = {left: 78, right: 28, top: 34, bottom: 66};
+      const m = {left: 108, right: 28, top: 34, bottom: 66};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const max = Math.max(1, Math.ceil(Math.max(...rows.map(r => Number(r.startup_end_year || 0))) * 1.05));
@@ -1209,7 +1217,7 @@ HTML = r"""<!doctype html>
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r.plant)}</b><br>Construction: ${fmt(r.construction_start_year)}-${fmt(r.construction_end_year)} years" x="${cs}" y="${y}" width="${Math.max(1, ce - cs)}" height="${bh}" fill="#ff7f0e" stroke="#333"></rect>`;
         svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r.plant)}</b><br>Startup end: ${fmt(r.startup_end_year)} years" x="${ce}" y="${y}" width="${Math.max(1, se - ce)}" height="${bh}" fill="#9467bd" stroke="#333"></rect>`;
       });
-      svg += `<text transform="translate(20,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Reactor number</text>`;
+      svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Reactor number</text>`;
       svg += `<text x="${m.left + innerW / 2}" y="${h - 6}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Time (years)</text>`;
       svg += `</svg>`;
       return svg;
@@ -1273,41 +1281,42 @@ HTML = r"""<!doctype html>
       if (!rows || !rows.length) return "";
       const countries = [...new Set(rows.map(r => r.country))];
       const scenarios = [...new Set(rows.map(r => r.scenario))];
-      const w = 760, h = 300;
-      const m = {left: 60, right: 16, top: 30, bottom: 52};
+      const w = 1120, h = 430;
+      const m = {left: 108, right: 28, top: 46, bottom: 72};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const maxVal = Math.max(...rows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
       const yScale = v => m.top + innerH - (Number(v || 0) / maxVal) * innerH;
-      const palette = ["#00c2e0", "#a86fe0", "#47c18e"];
+      const palette = ["#4e79a7", "#f28e2b", "#59a14f", "#b07aa1"];
       const groupW = innerW / countries.length;
-      const barW = Math.min(32, groupW / scenarios.length * 0.72);
+      const barW = Math.max(28, Math.min(58, groupW / Math.max(1, scenarios.length) * 0.62));
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="OCC comparison by country">`;
       for (let i = 0; i <= 4; i++) {
         const v = maxVal * i / 4;
         const yy = yScale(v);
-        svg += `<line stroke="#2a3a4a" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
-        svg += `<text x="${m.left - 6}" y="${yy + 4}" text-anchor="end" fill="#8ba3b8" font-size="11">${fmt(Math.round(v))}</text>`;
+        svg += `<line stroke="#d5e0ea" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
+        svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#41566d" font-size="15" font-weight="700">${fmt(Math.round(v))}</text>`;
       }
-      svg += `<text transform="translate(16,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#8ba3b8" font-size="11">Adjusted OCC ($/kWe)</text>`;
+      svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8093a7"></line>`;
+      svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#41566d" font-size="15" font-weight="700">Adjusted OCC ($/kWe)</text>`;
       countries.forEach((country, ci) => {
-        const cxBase = m.left + groupW * ci + groupW / 2 - (scenarios.length - 1) * (barW + 2) / 2;
+        const cxBase = m.left + groupW * ci + groupW / 2 - (scenarios.length - 1) * (barW + 6) / 2;
         scenarios.forEach((scenario, si) => {
           const row = rows.find(r => r.country === country && r.scenario === scenario);
           if (!row) return;
           const val = Number(row.adjusted_occ_per_kw || 0);
-          const x = cxBase + si * (barW + 2);
+          const x = cxBase + si * (barW + 6);
           const barH = innerH - (yScale(val) - m.top);
           const color = palette[si % palette.length];
           svg += `<rect class="hoverable" data-tip="<b>${esc(country)} — ${esc(scenario)}</b><br>Adjusted OCC: ${fmt(Math.round(val))} $/kWe" x="${x}" y="${yScale(val)}" width="${barW}" height="${barH}" fill="${color}" rx="2"></rect>`;
-          svg += `<text x="${x + barW / 2}" y="${yScale(val) - 3}" text-anchor="middle" fill="#e0f0ff" font-size="10" font-weight="bold">$${fmt(Math.round(val))}</text>`;
+          svg += `<text x="${x + barW / 2}" y="${yScale(val) - 8}" text-anchor="middle" fill="#30465c" font-size="13" font-weight="800">$${fmt(Math.round(val))}</text>`;
         });
-        svg += `<text x="${m.left + groupW * ci + groupW / 2}" y="${h - 8}" text-anchor="middle" fill="#8ba3b8" font-size="12">${esc(country)}</text>`;
+        svg += `<text x="${m.left + groupW * ci + groupW / 2}" y="${h - 22}" text-anchor="middle" fill="#41566d" font-size="15" font-weight="700">${esc(country)}</text>`;
       });
       scenarios.forEach((scenario, si) => {
-        const lx = m.left + si * 120;
-        svg += `<rect x="${lx}" y="${m.top - 20}" width="10" height="10" fill="${palette[si % palette.length]}"></rect>`;
-        svg += `<text x="${lx + 14}" y="${m.top - 11}" fill="#8ba3b8" font-size="11">${esc(scenario)}</text>`;
+        const lx = m.left + si * 170;
+        svg += `<rect x="${lx}" y="${m.top - 28}" width="14" height="14" fill="${palette[si % palette.length]}"></rect>`;
+        svg += `<text x="${lx + 22}" y="${m.top - 16}" fill="#41566d" font-size="14" font-weight="700">${esc(scenario)}</text>`;
       });
       svg += `</svg>`;
       return svg;
@@ -1315,22 +1324,23 @@ HTML = r"""<!doctype html>
 
     function localForeignChart(rows) {
       if (!rows || !rows.length) return "";
-      const w = 760, h = 320;
-      const m = {left: 60, right: 16, top: 30, bottom: 80};
+      const w = 1120, h = 440;
+      const m = {left: 108, right: 28, top: 42, bottom: 108};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const maxVal = Math.max(...rows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
       const yScale = v => m.top + innerH - (Number(v || 0) / maxVal) * innerH;
       const step = innerW / rows.length;
-      const barW = Math.min(36, step * 0.62);
+      const barW = Math.max(28, Math.min(58, step * 0.62));
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Local vs Foreign OCC breakdown">`;
       for (let i = 0; i <= 4; i++) {
         const v = maxVal * i / 4;
         const yy = yScale(v);
-        svg += `<line stroke="#2a3a4a" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
-        svg += `<text x="${m.left - 6}" y="${yy + 4}" text-anchor="end" fill="#8ba3b8" font-size="11">${fmt(Math.round(v))}</text>`;
+        svg += `<line stroke="#d5e0ea" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
+        svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#41566d" font-size="15" font-weight="700">${fmt(Math.round(v))}</text>`;
       }
-      svg += `<text transform="translate(16,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#8ba3b8" font-size="11">OCC ($/kWe)</text>`;
+      svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8093a7"></line>`;
+      svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#41566d" font-size="15" font-weight="700">OCC ($/kWe)</text>`;
       rows.forEach((r, idx) => {
         const foreign = Number(r.foreign_per_kw || 0);
         const local = Number(r.local_per_kw || 0);
@@ -1339,15 +1349,15 @@ HTML = r"""<!doctype html>
         const yLocal = yScale(local);
         const localH = Math.max(1, yScale(0) - yLocal);
         const foreignH = Math.max(1, yLocal - yForeign);
-        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Foreign: ${fmt(Math.round(foreign))} $/kWe" x="${x}" y="${yLocal - foreignH}" width="${barW}" height="${foreignH}" fill="#0f3a5e" rx="1"></rect>`;
-        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Local: ${fmt(Math.round(local))} $/kWe" x="${x}" y="${yLocal}" width="${barW}" height="${localH}" fill="#00c2e0" rx="1"></rect>`;
-        if (foreign > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal - foreignH / 2 + 4}" text-anchor="middle" fill="#8ba3b8" font-size="9">$${fmt(Math.round(foreign))}</text>`;
-        if (local > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal + localH / 2 + 4}" text-anchor="middle" fill="#0d2438" font-size="9">$${fmt(Math.round(local))}</text>`;
+        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Foreign: ${fmt(Math.round(foreign))} $/kWe" x="${x}" y="${yLocal - foreignH}" width="${barW}" height="${foreignH}" fill="#9c755f" rx="1"></rect>`;
+        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Local: ${fmt(Math.round(local))} $/kWe" x="${x}" y="${yLocal}" width="${barW}" height="${localH}" fill="#4e79a7" rx="1"></rect>`;
+        if (foreign > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal - foreignH / 2 + 4}" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">$${fmt(Math.round(foreign))}</text>`;
+        if (local > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal + localH / 2 + 4}" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">$${fmt(Math.round(local))}</text>`;
         const label = String(r.label || "");
-        svg += `<text transform="translate(${x + barW / 2},${h - 68}) rotate(45)" text-anchor="start" fill="#8ba3b8" font-size="10">${esc(label.slice(0, 20))}</text>`;
+        svg += `<text transform="translate(${x + barW / 2},${h - 90}) rotate(45)" text-anchor="start" fill="#41566d" font-size="13" font-weight="700">${esc(label.slice(0, 24))}</text>`;
       });
-      svg += `<rect x="${m.left}" y="${h - 20}" width="10" height="10" fill="#00c2e0"></rect><text x="${m.left + 14}" y="${h - 11}" fill="#8ba3b8" font-size="11">Local (domestically sourced)</text>`;
-      svg += `<rect x="${m.left + 200}" y="${h - 20}" width="10" height="10" fill="#0f3a5e"></rect><text x="${m.left + 214}" y="${h - 11}" fill="#8ba3b8" font-size="11">Foreign (imported, with tariff)</text>`;
+      svg += `<rect x="${m.left}" y="${h - 28}" width="14" height="14" fill="#4e79a7"></rect><text x="${m.left + 22}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Local (domestically sourced)</text>`;
+      svg += `<rect x="${m.left + 280}" y="${h - 28}" width="14" height="14" fill="#9c755f"></rect><text x="${m.left + 302}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Foreign (imported, with tariff)</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -1356,18 +1366,26 @@ HTML = r"""<!doctype html>
       lastData = data;
       const result = $("result");
       let html = `<div class="hero"><h2>${data.workflow_label}</h2><p>ACCERT workflow results with saved outputs and interactive cost plots.</p></div>`;
-      html += links(data.files);
+      const isStandaloneMultiCountryIat = data.workflow === "iat_only"
+        && data.iat
+        && data.iat.country_results
+        && data.iat.country_results.some(cr => cr.data && cr.data.scenarios && cr.data.scenarios.length);
+      if (!isStandaloneMultiCountryIat) {
+        html += links(data.files);
+      }
       if (data.iat) {
         if (data.iat.country_results && data.iat.country_results.length) {
-          html += `<div class="tabs">
-            <button class="active" data-tab="iat-results">IAT Results</button>
-            <button data-tab="iat-comparison">Country Comparison</button>
-          </div>`;
-          html += `<div id="tab-iat-results" class="tab-panel active">`;
-          data.iat.country_results.forEach(cr => {
-            const d = cr.data;
-            html += `<h3>${esc(cr.country)}</h3>`;
-            if (d.scenarios && d.scenarios.length) {
+          if (isStandaloneMultiCountryIat) {
+            html += `<div class="tabs">`;
+            data.iat.country_results.forEach((cr, idx) => {
+              html += `<button class="${idx === 0 ? "active" : ""}" data-tab="iat-country-${tabSafe(cr.country)}">${esc(cr.country)}</button>`;
+            });
+            html += `</div>`;
+            data.iat.country_results.forEach((cr, idx) => {
+              const d = cr.data;
+              html += `<div id="tab-iat-country-${tabSafe(cr.country)}" class="tab-panel ${idx === 0 ? "active" : ""}">`;
+              html += `<h3>${esc(cr.country)}</h3>`;
+              html += fileLink(`IAT CSV (${cr.country})`, data.files && data.files[`IAT CSV (${cr.country})`]);
               html += table(d.summary, [
                 {key: "Scenario", label: "Scenario"},
                 {key: "Input OCC", label: "Input OCC ($/kWe)", format: fmt},
@@ -1375,17 +1393,32 @@ HTML = r"""<!doctype html>
                 {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
               ]);
               d.scenarios.forEach((s, i) => { html += iatBlock(s, `${s.scenario || `Scenario ${i + 1}`} result`); });
-            } else {
-              html += iatBlock(d);
-            }
-          });
-          html += `</div>`;
-          html += `<div id="tab-iat-comparison" class="tab-panel">
-            <div class="chart-grid">
+              html += `</div>`;
+            });
+            html += `<h3>Country Comparison</h3><div class="chart-grid">
               <div class="chart-panel"><h3>OCC Comparison by Country</h3><div id="iatOccCompChart"></div></div>
               <div class="chart-panel"><h3>Local vs Foreign OCC</h3><div id="iatLfChart"></div></div>
-            </div>
-          </div>`;
+            </div>`;
+          } else {
+            html += `<div class="tabs">
+              <button class="active" data-tab="iat-results">IAT Results</button>
+              <button data-tab="iat-comparison">Country Comparison</button>
+            </div>`;
+            html += `<div id="tab-iat-results" class="tab-panel active">`;
+            data.iat.country_results.forEach(cr => {
+              const d = cr.data;
+              html += `<h3>${esc(cr.country)}</h3>`;
+              html += fileLink(`IAT CSV (${cr.country})`, data.files && data.files[`IAT CSV (${cr.country})`]);
+              html += iatBlock(d);
+            });
+            html += `</div>`;
+            html += `<div id="tab-iat-comparison" class="tab-panel">
+              <div class="chart-grid">
+                <div class="chart-panel"><h3>OCC Comparison by Country</h3><div id="iatOccCompChart"></div></div>
+                <div class="chart-panel"><h3>Local vs Foreign OCC</h3><div id="iatLfChart"></div></div>
+              </div>
+            </div>`;
+          }
         } else {
           html += `<h3>IAT Result</h3>`;
           if (data.iat.scenarios && data.iat.scenarios.length) {
@@ -1882,6 +1915,14 @@ def run_workflow(payload: dict) -> dict:
             else:
                 result = run_adjustment(config)
                 summary = _summarize_iat_result(result, power_kwe)
+                comparison_chart.append({
+                    "country": "Base case",
+                    "scenario": "Original OCC",
+                    "adjusted_occ_per_kw": summary.get("input_occ_per_kw"),
+                    "local_per_kw": summary.get("input_occ_per_kw"),
+                    "foreign_per_kw": 0.0,
+                    "label": "Base case",
+                })
                 comparison_chart.append({
                     "country": country,
                     "scenario": "Adjusted OCC",
