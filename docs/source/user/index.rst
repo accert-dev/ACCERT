@@ -15,3 +15,4 @@ User's Guide
    using_necost
    crf
    iat
+   gui_combined
