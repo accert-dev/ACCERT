@@ -321,8 +321,8 @@ HTML = r"""<!doctype html>
       display: block;
     }
     .axis text, .tick text { fill: #596775; font-size: 11px; }
-    .axis line, .axis path, .grid line { stroke: #ccd5df; }
-    .grid line { stroke-width: 1; }
+    .axis line, .axis path, .grid line, line.grid { stroke: #ccd5df; }
+    .grid line, line.grid { stroke-width: 1; }
     .hoverable { cursor: pointer; transition: opacity 120ms ease; }
     .hoverable:hover { opacity: 0.78; }
     #tooltip {
@@ -1169,9 +1169,13 @@ HTML = r"""<!doctype html>
       for (let i = 0; i <= 4; i++) {
         const value = max * i / 4;
         const yy = y(value);
-        svg += `<line class="grid" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
+        svg += `<line class="grid" stroke="#c7d4e2" x1="${m.left}" y1="${yy}" x2="${w - m.right}" y2="${yy}"></line>`;
         svg += `<text x="${m.left - 10}" y="${yy + 5}" text-anchor="end" fill="#596775" font-size="15" font-weight="700">${fmt(value)}</text>`;
       }
+      rows.forEach((r, idx) => {
+        const xx = m.left + step * idx + step / 2;
+        svg += `<line stroke="#edf2f7" x1="${xx}" y1="${m.top}" x2="${xx}" y2="${m.top + innerH}"></line>`;
+      });
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8896a7"></line>`;
       svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Duration (months)</text>`;
       rows.forEach((r, idx) => {
@@ -1204,12 +1208,14 @@ HTML = r"""<!doctype html>
       const tickStep = Math.max(1, Math.ceil(max / 6));
       for (let value = 0; value <= max; value += tickStep) {
         const xx = x(value);
-        svg += `<line class="grid" x1="${xx}" y1="${m.top}" x2="${xx}" y2="${m.top + innerH}"></line>`;
+        svg += `<line class="grid" stroke="#c7d4e2" x1="${xx}" y1="${m.top}" x2="${xx}" y2="${m.top + innerH}"></line>`;
         svg += `<text x="${xx}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${value}</text>`;
       }
       rows.forEach((r, idx) => {
         const y = m.top + idx * rowH + rowH * 0.2;
         const bh = Math.max(6, rowH * 0.6);
+        const rowMid = m.top + idx * rowH + rowH / 2;
+        svg += `<line stroke="#edf2f7" x1="${m.left}" y1="${rowMid}" x2="${w - m.right}" y2="${rowMid}"></line>`;
         const cs = x(r.construction_start_year);
         const ce = x(r.construction_end_year);
         const se = x(r.startup_end_year);
@@ -1324,8 +1330,15 @@ HTML = r"""<!doctype html>
 
     function localForeignChart(rows) {
       if (!rows || !rows.length) return "";
+      const countryOrder = [...new Set(rows.map(r => r.country))];
+      const scenarioOrder = [...new Set(rows.map(r => r.scenario))];
+      rows = [...rows].sort((a, b) => {
+        const countryDiff = countryOrder.indexOf(a.country) - countryOrder.indexOf(b.country);
+        if (countryDiff !== 0) return countryDiff;
+        return scenarioOrder.indexOf(a.scenario) - scenarioOrder.indexOf(b.scenario);
+      });
       const w = 1120, h = 440;
-      const m = {left: 108, right: 28, top: 42, bottom: 108};
+      const m = {left: 108, right: 28, top: 42, bottom: 126};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const maxVal = Math.max(...rows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
@@ -1353,8 +1366,10 @@ HTML = r"""<!doctype html>
         svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Local: ${fmt(Math.round(local))} $/kWe" x="${x}" y="${yLocal}" width="${barW}" height="${localH}" fill="#4e79a7" rx="1"></rect>`;
         if (foreign > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal - foreignH / 2 + 4}" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">$${fmt(Math.round(foreign))}</text>`;
         if (local > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal + localH / 2 + 4}" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">$${fmt(Math.round(local))}</text>`;
-        const label = String(r.label || "");
-        svg += `<text transform="translate(${x + barW / 2},${h - 90}) rotate(45)" text-anchor="start" fill="#41566d" font-size="13" font-weight="700">${esc(label.slice(0, 24))}</text>`;
+        const country = String(r.country || "").slice(0, 16);
+        const scenario = String(r.scenario || "").slice(0, 18);
+        svg += `<text x="${x + barW / 2}" y="${h - 96}" text-anchor="middle" fill="#41566d" font-size="12" font-weight="800">${esc(scenario)}</text>`;
+        svg += `<text x="${x + barW / 2}" y="${h - 78}" text-anchor="middle" fill="#41566d" font-size="12" font-weight="700">${esc(country)}</text>`;
       });
       svg += `<rect x="${m.left}" y="${h - 28}" width="14" height="14" fill="#4e79a7"></rect><text x="${m.left + 22}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Local (domestically sourced)</text>`;
       svg += `<rect x="${m.left + 280}" y="${h - 28}" width="14" height="14" fill="#9c755f"></rect><text x="${m.left + 302}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Foreign (imported, with tariff)</text>`;
@@ -1380,6 +1395,7 @@ HTML = r"""<!doctype html>
             data.iat.country_results.forEach((cr, idx) => {
               html += `<button class="${idx === 0 ? "active" : ""}" data-tab="iat-country-${tabSafe(cr.country)}">${esc(cr.country)}</button>`;
             });
+            html += `<button data-tab="iat-comparison">Country Comparison</button>`;
             html += `</div>`;
             data.iat.country_results.forEach((cr, idx) => {
               const d = cr.data;
@@ -1395,9 +1411,11 @@ HTML = r"""<!doctype html>
               d.scenarios.forEach((s, i) => { html += iatBlock(s, `${s.scenario || `Scenario ${i + 1}`} result`); });
               html += `</div>`;
             });
-            html += `<h3>Country Comparison</h3><div class="chart-grid">
-              <div class="chart-panel"><h3>OCC Comparison by Country</h3><div id="iatOccCompChart"></div></div>
-              <div class="chart-panel"><h3>Local vs Foreign OCC</h3><div id="iatLfChart"></div></div>
+            html += `<div id="tab-iat-comparison" class="tab-panel">
+              <div class="chart-grid">
+                <div class="chart-panel"><h3>OCC Comparison by Country</h3><div id="iatOccCompChart"></div></div>
+                <div class="chart-panel"><h3>Local vs Foreign OCC</h3><div id="iatLfChart"></div></div>
+              </div>
             </div>`;
           } else {
             html += `<div class="tabs">
@@ -1896,6 +1914,7 @@ def run_workflow(payload: dict) -> dict:
         power_kwe = _reactor_power_kwe(payload)
         country_results: list[dict] = []
         comparison_chart: list[dict] = []
+        base_scenarios_added: set[str] = set()
         for country in countries:
             country_slug = re.sub(r"[^A-Za-z0-9]+", "_", country.lower())
             iat_csv = OUTPUT_DIR / f"{name}_iat_{country_slug}_adjusted.csv"
@@ -1904,13 +1923,24 @@ def run_workflow(payload: dict) -> dict:
                 result = run_occ_scenarios(config)
                 summary = _summarize_occ_result(result, power_kwe)
                 for scenario in summary["scenarios"]:
+                    scenario_name = scenario.get("scenario", "")
+                    if scenario_name not in base_scenarios_added:
+                        comparison_chart.append({
+                            "country": "Base case",
+                            "scenario": scenario_name,
+                            "adjusted_occ_per_kw": scenario.get("input_occ_per_kw"),
+                            "local_per_kw": scenario.get("input_occ_per_kw"),
+                            "foreign_per_kw": 0.0,
+                            "label": f"Base case — {scenario_name}",
+                        })
+                        base_scenarios_added.add(scenario_name)
                     comparison_chart.append({
                         "country": country,
-                        "scenario": scenario.get("scenario", ""),
+                        "scenario": scenario_name,
                         "adjusted_occ_per_kw": scenario.get("adjusted_occ_per_kw"),
                         "local_per_kw": scenario.get("local_occ_per_kw"),
                         "foreign_per_kw": scenario.get("foreign_occ_per_kw"),
-                        "label": f"{country} — {scenario.get('scenario', '')}",
+                        "label": f"{country} — {scenario_name}",
                     })
             else:
                 result = run_adjustment(config)
