@@ -338,7 +338,9 @@ Graphical User Interface * Dynamic windows</p>
 href="https://www.ornl.gov/project/neams-workbench">NEAMS Workbench</a>
 and relies on input files using Workbench’s SON format. Instructions for
 installing ACCERT both with and without Workbench are provided in this
-README.</p>
+README. ACCERT uses the bundled SQLite database at
+<code>src/accertdb.sqlite</code>; no MySQL server or root password is
+required.</p>
 <h2 id="installation">Installation</h2>
 <h3 id="clone-accert">Clone ACCERT</h3>
 <ul>
@@ -349,19 +351,10 @@ install ACCERT (e.g., CODE)</li>
 [~]&gt; cd CODE   
 [~/CODE]&gt; git clone https://git-out.gss.anl.gov/jia.zhou/accert.git   
 [~/CODE]&gt; cd accert</code></pre>
-<h3 id="installation-of-mysql-community-server">Installation of MySQL
-Community Server</h3>
-<ul>
-<li><p>Obtain the <a href="https://dev.mysql.com/downloads/mysql/">MySQL
-Community Server</a></p></li>
-<li><p>Install MySQL Community Server</p>
-<p>[<strong>NOTE</strong>] You’ll need to enter a <strong>strong
-password</strong> under Root Account Password. Don’t forget your
-password! It’s extremely important that you keep track of your root
-password for MySQL, as it’s difficult to reset. Write it down somewhere
-easily accessible, or add it to a password manager to keep it
-secure.</p></li>
-</ul>
+<h3 id="sqlite-database">SQLite database</h3>
+<p>ACCERT ships with <code>src/accertdb.sqlite</code>. To rebuild the
+database from the SQLite schema/data script, run:</p>
+<pre class="console"><code>[~/accert]&gt; python src/database_install.py</code></pre>
 <h3 id="installation-of-accert-libraries">Installation of ACCERT
 libraries</h3>
 <ul>
@@ -382,13 +375,12 @@ Workbench</a></li>
 [~/accert]&gt; ln -s /Applications/Workbench-5.0.0.app/Contents/bin/docprint ./bin/docprint</code></pre>
 <h3 id="test-installation">Test installation</h3>
 <ul>
-<li>Edit <code>install.conf</code> file in ‘src’ folder, change line
-‘PASSWD =’, add your own MySQL root password, and commit your
-changes.</li>
-<li>Test python MySQL connection and installation</li>
+<li>No <code>install.conf</code> file is required for the SQLite database.</li>
+<li>Run the SQLite installation and smoke tests.</li>
 </ul>
 <pre><code>[~/ACCERT]&gt; cd src 
-[~/src]&gt; python installCheck.py</code></pre>
+[~/src]&gt; python database_install.py
+[~/ACCERT]&gt; pytest test/test_sqlite.py</code></pre>
 <p><a name="startofinput"></a></p>
 <h3 id="table-of-contents">Table Of Contents</h3>
 <ul>

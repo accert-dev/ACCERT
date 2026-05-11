@@ -1,4 +1,4 @@
-import mysql.connector
+from sqlite_accert_connection import connect as accert_sqlite_connect
 import os
 from prettytable import PrettyTable
 import configparser
@@ -15,6 +15,15 @@ from typing import Union
 
 warnings.filterwarnings('ignore')
 PathLike = Union[str, bytes, os.PathLike]
+
+
+def _accert_sqlite_db_path() -> str:
+    """Return the SQLite database path for ACCERT."""
+    return os.environ.get(
+        "ACCERT_SQLITE_DB",
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "accertdb.sqlite"),
+    )
+
 
 class Accert:
     def __init__(self, input_path, accert_path):
@@ -1995,18 +2004,7 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     code_folder = os.path.dirname(os.path.abspath(__file__))
-    initfile = os.path.join(code_folder, 'install.conf')
-    ins = configparser.ConfigParser()
-    ins.read(initfile)
-    passwd = ins.get("INSTALL","PASSWD")
-
-    conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password=passwd,
-    database="accert_db",
-    auth_plugin="mysql_native_password"
-    )
+    conn = accert_sqlite_connect(db_path=_accert_sqlite_db_path())
     # conn.commit()
     # NOTE: cursor is a class that instantiates objects that can execute MySQL statements
     # only commit when you are sure that the transaction is complete

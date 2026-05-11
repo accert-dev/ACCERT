@@ -114,25 +114,11 @@ In the same folder a `user_defined_algorithm.sql` file will be generated. Run th
 
 The script will create the database table and insert the data from the `user_defined_account.csv`, `user_defined_variable.csv` and `user_defined_algorithm.csv` files into the database.
 
-You can also run mysql command and source the `user_defined_algorithm.sql` file to create the database table.
+To apply the SQL to a different SQLite database file, pass ``--db``:
 
 .. code-block:: bash
 
-    $ mysql -h localhost -u root -p
-    Enter password:
-    Welcome to the MySQL monitor.  Commands end with ; or \g.
-    Your MySQL connection id is 2475
-    Server version: 8.0.27 MySQL Community Server - GPL
-
-    Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
-
-    Oracle is a registered trademark of Oracle Corporation and/or its
-    affiliates. Other names may be trademarks of their respective
-    owners.
-
-    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-    mysql>source user_defined_algorithm.sql
+    python ../../../src/scripts/run_sql.py user_defined_algorithm.sql --db /path/to/accertdb.sqlite
 
 
 Prepare the input file

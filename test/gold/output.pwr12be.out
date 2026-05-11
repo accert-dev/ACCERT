@@ -75,16 +75,16 @@ Parameter "mwe" is required for cost elements:
 +---------------------+------------------------------------------------------+-----------+----------+
 |       var_name      |                   var_description                    | var_value | var_unit |
 +---------------------+------------------------------------------------------+-----------+----------+
-|      c_213_fac      |       Turbine building structure factory cost        |    1.79   | million  |
+|        n_231        |                 Scaling exponent law                 |    1.03   |          |
+|         p_in        |                Inlet turbine pressure                |   68.00   |   bar    |
+|         mwth        |                   user_input mwth                    |  3,000.00 |    MW    |
 |  c_221.12_cs_weight |    weight of the carbon steel parts of the vessel    |   538.00  |   ton    |
 |  c_221.12_ss_weight | weight of the stainless steel cladding of the vessel |   18.30   |   ton    |
 | c_221.12_tol_weight |         weight of the reactor primary vessel         |   556.30  |   ton    |
-|         mwe         |                    user_input MWE                    |  1,000.00 |    MW    |
-|         mwth        |                   user_input mwth                    |  3,000.00 |    MW    |
-|        n_231        |                 Scaling exponent law                 |    1.03   |          |
-|         p_in        |                Inlet turbine pressure                |   68.00   |   bar    |
 |     ref_211_fac     |                yardwork factory cost                 |    0.27   | million  |
 |     ref_211_mat     |                yardwork material cost                |   10.30   | million  |
+|      c_213_fac      |       Turbine building structure factory cost        |    1.79   | million  |
+|         mwe         |                    user_input MWE                    |  1,000.00 |    MW    |
 +---------------------+------------------------------------------------------+-----------+----------+
 
 
@@ -124,201 +124,201 @@ variable "mwe" affects cost element(s):
 ====================================== Updating cost elements ======================================
 
 
-[Updating] Cost element [220A.211_fac], running algorithm: [unit_weights], 
-[Updating] with formulation: weight_of_carbon_steel*0.14+weight_of_stainless_steel*0.31
-[Updated]  Reference value is : $70,000,000 , calculated value is: $80,992,349  
- 
-[Updating] Cost element [262_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $4,510,480  , calculated value is: $4,051,196   
- 
-[Updating] Cost element [237_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $9,795,180  , calculated value is: $8,797,774   
- 
-[Updating] Cost element [234_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $2,022,430  , calculated value is: $1,816,496   
- 
-[Updating] Cost element [233_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $3,277,750  , calculated value is: $2,943,986   
- 
-[Updating] Cost element [226.7_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $2,393,290  , calculated value is: $2,092,649   
- 
-[Updating] Cost element [226.4_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $2,705,780  , calculated value is: $2,365,884   
- 
-[Updating] Cost element [222_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $1,795,340  , calculated value is: $1,569,811   
- 
-[Updating] Cost element [222.14_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $28,193     , calculated value is: $24,651      
- 
-[Updating] Cost element [222.12_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $1,119,110  , calculated value is: $978,525     
- 
-[Updating] Cost element [222.11_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $437,412    , calculated value is: $382,465     
- 
-[Updating] Cost element [213_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $32,364,600 , calculated value is: $29,069,025  
- 
-[Updating] Cost element [262_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $35,896,600 , calculated value is: $32,241,396  
- 
-[Updating] Cost element [237_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $13,130,900 , calculated value is: $11,793,800  
- 
-[Updating] Cost element [234_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $20,317,400 , calculated value is: $18,248,523  
- 
-[Updating] Cost element [233_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $22,964,300 , calculated value is: $20,625,921  
- 
-[Updating] Cost element [226.7_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $24,625,600 , calculated value is: $21,532,141  
- 
-[Updating] Cost element [226.4_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $18,621,600 , calculated value is: $16,282,395  
- 
-[Updating] Cost element [222_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $18,143,900 , calculated value is: $15,864,698  
- 
-[Updating] Cost element [222.14_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $281,935    , calculated value is: $246,518     
- 
-[Updating] Cost element [222.12_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $11,381,600 , calculated value is: $9,951,838   
- 
-[Updating] Cost element [222.11_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $4,374,120  , calculated value is: $3,824,650   
- 
-[Updating] Cost element [213_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $31,835,200 , calculated value is: $28,593,512  
- 
-[Updating] Cost element [262_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $86,813,900 , calculated value is: $77,974,010  
- 
-[Updating] Cost element [234_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $44,874,300 , calculated value is: $40,304,926  
- 
-[Updating] Cost element [233_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $56,339,400 , calculated value is: $50,602,616  
- 
-[Updating] Cost element [226.7_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $28,179,300 , calculated value is: $24,639,456  
- 
-[Updating] Cost element [226.4_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $19,443,300 , calculated value is: $17,000,820  
- 
-[Updating] Cost element [222_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $8,265,360  , calculated value is: $7,227,068   
- 
-[Updating] Cost element [222.14_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $15,028     , calculated value is: $13,140      
- 
-[Updating] Cost element [222.12_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $4,394,350  , calculated value is: $3,842,334   
- 
-[Updating] Cost element [222.11_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $3,780,840  , calculated value is: $3,305,891   
+[Updating] Cost element [211_fac], running algorithm: [esc_1987], 
+[Updating] with formulation: escalator*cost_in_1987
+[Updated]  Reference value is : $810,015    , calculated value is: $769,340     
  
 [Updating] Cost element [213_fac], running algorithm: [MWth_scale], 
 [Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
 [Updated]  Reference value is : $1,770,660  , calculated value is: $1,607,731   
  
+[Updating] Cost element [220A.211_fac], running algorithm: [unit_weights], 
+[Updating] with formulation: weight_of_carbon_steel*0.14+weight_of_stainless_steel*0.31
+[Updated]  Reference value is : $70,000,000 , calculated value is: $80,992,349  
+ 
+[Updating] Cost element [222.11_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $3,780,840  , calculated value is: $3,305,891   
+ 
+[Updating] Cost element [222.12_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $4,394,350  , calculated value is: $3,842,334   
+ 
+[Updating] Cost element [222.14_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $15,028     , calculated value is: $13,140      
+ 
+[Updating] Cost element [222_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $8,265,360  , calculated value is: $7,227,068   
+ 
+[Updating] Cost element [226.4_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $19,443,300 , calculated value is: $17,000,820  
+ 
+[Updating] Cost element [226.7_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $28,179,300 , calculated value is: $24,639,456  
+ 
 [Updating] Cost element [231_fac], running algorithm: [dev_factor_ref], 
 [Updating] with formulation: cost_of_ref*scale/factor
 [Updated]  Reference value is : $356,031,000, calculated value is: $357,314,737 
  
-[Updating] Cost element [211_mat], running algorithm: [esc_1987], 
-[Updating] with formulation: escalator*cost_in_1987
-[Updated]  Reference value is : $29,075,000 , calculated value is: $29,348,892  
+[Updating] Cost element [233_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $56,339,400 , calculated value is: $50,602,616  
  
-[Updating] Cost element [211_fac], running algorithm: [esc_1987], 
-[Updating] with formulation: escalator*cost_in_1987
-[Updated]  Reference value is : $810,015    , calculated value is: $769,340     
+[Updating] Cost element [234_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $44,874,300 , calculated value is: $40,304,926  
  
-[Updating] Cost element [221.12_mat], running algorithm: [cost_by_weight], 
-[Updating] with formulation: tol_weight*coat_per_unit
-[Updated]  Reference value is : $639,771    , calculated value is: $712,061     
- 
-[Updating] Cost element [221.12_lab], running algorithm: [cost_by_weight], 
-[Updating] with formulation: tol_weight*coat_per_unit
-[Updated]  Reference value is : $6,397,710  , calculated value is: $7,120,613   
- 
-[Updating] Cost element [246_mat], running algorithm: [MWe_scale], 
+[Updating] Cost element [241_fac], running algorithm: [MWe_scale], 
 [Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $20,755,500 , calculated value is: $19,668,071  
- 
-[Updating] Cost element [245_mat], running algorithm: [MWe_scale], 
-[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $12,309,900 , calculated value is: $11,664,966  
- 
-[Updating] Cost element [242_mat], running algorithm: [MWe_scale], 
-[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $849,719    , calculated value is: $805,202     
- 
-[Updating] Cost element [241_mat], running algorithm: [MWe_scale], 
-[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $251,723    , calculated value is: $238,535     
- 
-[Updating] Cost element [246_lab], running algorithm: [MWe_scale], 
-[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $33,434,500 , calculated value is: $31,682,879  
- 
-[Updating] Cost element [245_lab], running algorithm: [MWe_scale], 
-[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $51,236,700 , calculated value is: $48,552,394  
- 
-[Updating] Cost element [242_lab], running algorithm: [MWe_scale], 
-[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $4,446,170  , calculated value is: $4,213,231   
- 
-[Updating] Cost element [241_lab], running algorithm: [MWe_scale], 
-[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $1,720,620  , calculated value is: $1,630,477   
- 
-[Updating] Cost element [246_fac], running algorithm: [MWe_scale], 
-[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $4,510,910  , calculated value is: $4,274,583   
+[Updated]  Reference value is : $32,067,500 , calculated value is: $30,387,462  
  
 [Updating] Cost element [242_fac], running algorithm: [MWe_scale], 
 [Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
 [Updated]  Reference value is : $52,157,800 , calculated value is: $49,425,260  
  
-[Updating] Cost element [241_fac], running algorithm: [MWe_scale], 
+[Updating] Cost element [246_fac], running algorithm: [MWe_scale], 
 [Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
-[Updated]  Reference value is : $32,067,500 , calculated value is: $30,387,462  
+[Updated]  Reference value is : $4,510,910  , calculated value is: $4,274,583   
+ 
+[Updating] Cost element [262_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $86,813,900 , calculated value is: $77,974,010  
+ 
+[Updating] Cost element [213_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $31,835,200 , calculated value is: $28,593,512  
+ 
+[Updating] Cost element [221.12_lab], running algorithm: [cost_by_weight], 
+[Updating] with formulation: tol_weight*coat_per_unit
+[Updated]  Reference value is : $6,397,710  , calculated value is: $7,120,613   
+ 
+[Updating] Cost element [222.11_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $4,374,120  , calculated value is: $3,824,650   
+ 
+[Updating] Cost element [222.12_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $11,381,600 , calculated value is: $9,951,838   
+ 
+[Updating] Cost element [222.14_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $281,935    , calculated value is: $246,518     
+ 
+[Updating] Cost element [222_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $18,143,900 , calculated value is: $15,864,698  
+ 
+[Updating] Cost element [226.4_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $18,621,600 , calculated value is: $16,282,395  
+ 
+[Updating] Cost element [226.7_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $24,625,600 , calculated value is: $21,532,141  
+ 
+[Updating] Cost element [233_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $22,964,300 , calculated value is: $20,625,921  
+ 
+[Updating] Cost element [234_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $20,317,400 , calculated value is: $18,248,523  
+ 
+[Updating] Cost element [237_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $13,130,900 , calculated value is: $11,793,800  
+ 
+[Updating] Cost element [241_lab], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $1,720,620  , calculated value is: $1,630,477   
+ 
+[Updating] Cost element [242_lab], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $4,446,170  , calculated value is: $4,213,231   
+ 
+[Updating] Cost element [245_lab], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $51,236,700 , calculated value is: $48,552,394  
+ 
+[Updating] Cost element [246_lab], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $33,434,500 , calculated value is: $31,682,879  
+ 
+[Updating] Cost element [262_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $35,896,600 , calculated value is: $32,241,396  
+ 
+[Updating] Cost element [211_mat], running algorithm: [esc_1987], 
+[Updating] with formulation: escalator*cost_in_1987
+[Updated]  Reference value is : $29,075,000 , calculated value is: $29,348,892  
+ 
+[Updating] Cost element [213_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $32,364,600 , calculated value is: $29,069,025  
+ 
+[Updating] Cost element [221.12_mat], running algorithm: [cost_by_weight], 
+[Updating] with formulation: tol_weight*coat_per_unit
+[Updated]  Reference value is : $639,771    , calculated value is: $712,061     
+ 
+[Updating] Cost element [222.11_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $437,412    , calculated value is: $382,465     
+ 
+[Updating] Cost element [222.12_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,119,110  , calculated value is: $978,525     
+ 
+[Updating] Cost element [222.14_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $28,193     , calculated value is: $24,651      
+ 
+[Updating] Cost element [222_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,795,340  , calculated value is: $1,569,811   
+ 
+[Updating] Cost element [226.4_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $2,705,780  , calculated value is: $2,365,884   
+ 
+[Updating] Cost element [226.7_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $2,393,290  , calculated value is: $2,092,649   
+ 
+[Updating] Cost element [233_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $3,277,750  , calculated value is: $2,943,986   
+ 
+[Updating] Cost element [234_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $2,022,430  , calculated value is: $1,816,496   
+ 
+[Updating] Cost element [237_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $9,795,180  , calculated value is: $8,797,774   
+ 
+[Updating] Cost element [241_mat], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $251,723    , calculated value is: $238,535     
+ 
+[Updating] Cost element [242_mat], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $849,719    , calculated value is: $805,202     
+ 
+[Updating] Cost element [245_mat], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $12,309,900 , calculated value is: $11,664,966  
+ 
+[Updating] Cost element [246_mat], running algorithm: [MWe_scale], 
+[Updating] with formulation: cost_of_ref*(electric_power/electric_power_of_ref)^electric_power_scale
+[Updated]  Reference value is : $20,755,500 , calculated value is: $19,668,071  
+ 
+[Updating] Cost element [262_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $4,510,480  , calculated value is: $4,051,196   
  
 
 
@@ -327,7 +327,7 @@ variable "mwe" affects cost element(s):
 +-----+--------------+-----------------+--------------+----------+---------+
 |  1  |   211_fac    |    769339.89    |    21_fac    |   211    |    1    |
 |  3  |   213_fac    |   1607731.2757  |    21_fac    |   213    |    1    |
-|  24 | 220A.211_fac |    80992349.0   |   220A_fac   | 220A.211 |    1    |
+|  24 | 220A.211_fac |  80992349.3968  |   220A_fac   | 220A.211 |    1    |
 |  56 |  222.11_fac  |  3305891.38618  |   222_fac    |  222.11  |    1    |
 |  57 |  222.12_fac  |  3842334.19324  |   222_fac    |  222.12  |    1    |
 |  59 |  222.14_fac  |   13140.40834   |   222_fac    |  222.14  |    1    |
@@ -342,7 +342,7 @@ variable "mwe" affects cost element(s):
 |  91 |   246_fac    |  4274583.42751  |    24_fac    |   246    |    1    |
 | 100 |   262_fac    |  77974010.29805 |    26_fac    |   262    |    1    |
 | 105 |   213_lab    |  28593511.51632 |    21_lab    |   213    |    1    |
-| 153 |  221.12_lab  |    7120613.12   |   221_lab    |  221.12  |    1    |
+| 153 |  221.12_lab  |  7120613.13638  |   221_lab    |  221.12  |    1    |
 | 158 |  222.11_lab  |  3824649.97319  |   222_lab    |  222.11  |    1    |
 | 159 |  222.12_lab  |  9951838.39114  |   222_lab    |  222.12  |    1    |
 | 161 |  222.14_lab  |   246518.13699  |   222_lab    |  222.14  |    1    |
@@ -359,7 +359,7 @@ variable "mwe" affects cost element(s):
 | 202 |   262_lab    |  32241395.7319  |    26_lab    |   262    |    1    |
 | 205 |   211_mat    |    29348892.1   |    21_mat    |   211    |    1    |
 | 207 |   213_mat    |  29069025.43541 |    21_mat    |   213    |    1    |
-| 255 |  221.12_mat  |    712061.312   |   221_mat    |  221.12  |    1    |
+| 255 |  221.12_mat  |   712061.31364  |   221_mat    |  221.12  |    1    |
 | 260 |  222.11_mat  |   382464.99767  |   222_mat    |  222.11  |    1    |
 | 261 |  222.12_mat  |   978525.48003  |   222_mat    |  222.12  |    1    |
 | 263 |  222.14_mat  |   24650.98339   |   222_mat    |  222.14  |    1    |

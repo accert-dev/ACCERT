@@ -11,7 +11,7 @@ Prerequisites
 --------------
 
 - ACCERT installation (see :doc:`Installation Guide <install>`).
-- MySQL database initialized with the updated schema containing the *stellarator* algorithms and variables.
+- SQLite database initialized with the updated schema containing the *stellarator* algorithms and variables.
 - ACCERT main branch after PR #47.
 
 New Features
@@ -65,5 +65,4 @@ The output will be generated in the ``tutorial/accert`` directory, as ``output.o
 
 - **stellarator_updated_account.xlsx**: Contains the updated cost breakdown for the stellarator model.
 - **stellarator_LCOE_results.xlsx**: Contains the LCOE analysis results specific to the stellarator configuration.
-
 

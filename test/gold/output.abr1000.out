@@ -910,17 +910,70 @@ Parameter "mwth" is required for cost elements:
 +------------------------------------------+-----------------------------------------------------------------------------------+---------------+----------+
 |                 var_name                 |                                  var_description                                  |   var_value   | var_unit |
 +------------------------------------------+-----------------------------------------------------------------------------------+---------------+----------+
-|              Cont_H_wall_m               |                              Containment wall height                              |     20.00     |    m     |
-|              Inside_liner_s              |                                Inside liner surface                               |    3,609.15   |   m^2    |
-|             Intern_tot_v_m3              |                                 Tot intenal Volume                                |   18,047.57   |   m^3    |
-|              Internal_s_m2               |                             Building internal surface                             |    2,457.26   |   m^2    |
-|              Internal_v_m3               |                              Building internal volume                             |    1,497.95   |   m^3    |
-|                Liner_s_m2                |                                   Liner Surface                                   |    3,609.15   |   m^2    |
 |                   mwth                   |                                  user_input mwth                                  |    1,000.00   |    MW    |
+|              Cont_H_wall_m               |                              Containment wall height                              |     20.00     |    m     |
+|                Walls_s_m2                |                                   Walls surface                                   |    3,657.87   |   m^2    |
+|                Walls_v_m3                |                                    Walls volume                                   |    2,508.57   |   m^3    |
+|             Intern_tot_v_m3              |                                 Tot intenal Volume                                |   18,047.57   |   m^3    |
+|              Internal_v_m3               |                              Building internal volume                             |    1,497.95   |   m^3    |
+|              Internal_s_m2               |                             Building internal surface                             |    2,457.26   |   m^2    |
 |               Struct_v_m3                |                             volume of the structures                              |    7,680.88   |   m^3    |
+|              Inside_liner_s              |                                Inside liner surface                               |    3,609.15   |   m^2    |
+|                Liner_s_m2                |                                   Liner Surface                                   |    3,609.15   |   m^2    |
+|              Surf_paint_m2               |                                  painted surface                                  |    9,440.85   |   m^2    |
+|       Total_Labor_Cadweld_Superstr       |             Total cost of Labor Cadweld Superstructure (shell) in 2017            |   825,368.67  |  dollar  |
+|       Total_Labor_Cadweld_Interior       |               Total cost of Labor Cadweld Interior structure in 2017              |   207,256.18  |  dollar  |
+|      Total_Labor_Concrete_Superstr       |            Total cost of Labor Concrete Superstructure (shell) in 2017            |   629,273.99  |  dollar  |
+|      Total_Labor_Concrete_Interior       |              Total cost of Labor Concrete Interior structure in 2017              |   419,530.50  |  dollar  |
+|    Total_Labor_Constr_joints_Superstr    |       Total cost of Labor Construction joints Superstructure (shell) in 2017      |   130,622.52  |  dollar  |
+|    Total_Labor_Constr_joints_Interior    |         Total cost of Labor Construction joints Interior structure in 2017        |   14,448.72   |  dollar  |
+|   Total_Labor_Embedded_steel_Superstr    |         Total cost of Labor Embedded steel Superstructure (shell) in 2017         |   115,067.96  |  dollar  |
+|   Total_Labor_Embedded_steel_Interior    |           Total cost of Labor Embedded steel Interior structure in 2017           |  1,449,654.85 |  dollar  |
+|      Total_Labor_Formwork_Superstr       |            Total cost of Labor Formwork Superstructure (shell) in 2017            |  1,153,216.49 |  dollar  |
+|      Total_Labor_Formwork_Interior       |              Total cost of Labor Formwork Interior structure in 2017              |  1,633,049.15 |  dollar  |
+| Total_Labor_Maj_supp_embedments_Interior |      Total cost of Labor Major Support Embedments Interior structure in 2017      |   660,160.98  |  dollar  |
+|   Total_Labor_Reinforc_steel_Superstr    |         Total cost of Labor Reinforc steel Superstructure (shell) in 2017         |  2,348,419.94 |  dollar  |
+|   Total_Labor_Reinforc_steel_Interior    |           Total cost of Labor Reinforc steel Interior structure in 2017           |  1,318,853.97 |  dollar  |
+|  Total_Labor_Rubbing_surfaces_Superstr   |        Total cost of Labor Rubbing surfaces Superstructure (shell) in 2017        |   87,349.92   |  dollar  |
+|  Total_Labor_Rubbing_surfaces_Interior   |          Total cost of Labor Rubbing surfaces Interior structure in 2017          |   69,909.19   |  dollar  |
+|    Total_Labor_Waterproofing_Superstr    |          Total cost of Labor Waterproofing Superstructure (shell) in 2017         |    8,815.47   |  dollar  |
+|        Total_Labor_Lighting_Power        |                     Total cost of Labor Lighting Power in 2017                    |   509,302.56  |  dollar  |
+|         Total_Labor_Plumb_drains         |                      Total cost of Labor Plumb drains in 2017                     |   156,472.47  |  dollar  |
+|         Total_Labor_Special_HVAC         |                      Total cost of Labor Special HVAC in 2017                     |   574,454.31  |  dollar  |
+|            Total_Labor_other             |                         Total cost of Labor other in 2017                         |   27,432.31   |  dollar  |
+|      Total_Labor_Misc_steel_frames       |               Total cost of Labor miscellaneous steel frames in 2017              |   219,135.57  |  dollar  |
+|         Total_Labor_Struct_steel         |                      Total cost of Labor Struct steel in 2017                     |   308,233.80  |  dollar  |
+|          Total_Labor_cont_liner          |                   Total cost of Labor Containment liner in 2017                   |  8,084,276.56 |  dollar  |
+|   Total_Labor_fl_grate_handrail_stairs   |   Total cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017  |   90,598.83   |  dollar  |
+|           Total_Labor_painting           |                        Total cost of Labor painting in 2017                       |  2,352,281.21 |  dollar  |
+|        Total_Mat_Cadweld_Superstr        |           Total cost of Material Cadweld Superstructure (shell) in 2017           |   428,011.68  |  dollar  |
+|        Total_Mat_Cadweld_Interior        |             Total cost of Material Cadweld Interior structure in 2017             |   107,492.80  |  dollar  |
+|       Total_Mat_Concrete_Superstr        |           Total cost of Material Concrete Superstructure (shell) in 2017          |   392,239.51  |  dollar  |
+|       Total_Mat_Concrete_Interior        |             Total cost of Material Concrete Interior structure in 2017            |   228,796.69  |  dollar  |
+|     Total_Mat_Constr_joints_Superstr     |     Total cost of Material Construction joints Superstructure (shell) in 2017     |   80,107.34   |  dollar  |
+|     Total_Mat_Constr_joints_Interior     |       Total cost of Material Construction joints Interior structure in 2017       |    8,895.30   |  dollar  |
+|    Total_Mat_Embedded_steel_Superstr     |        Total cost of Material Embedded steel Superstructure (shell) in 2017       |   54,511.16   |  dollar  |
+|    Total_Mat_Embedded_steel_Interior     |          Total cost of Material Embedded steel Interior structure in 2017         |   686,824.47  |  dollar  |
+|       Total_Mat_Formwork_Superstr        |           Total cost of Material Formwork Superstructure (shell) in 2017          |   143,315.32  |  dollar  |
+|       Total_Mat_Formwork_Interior        |             Total cost of Material Formwork Interior structure in 2017            |   154,119.66  |  dollar  |
+|  Total_Mat_Maj_supp_embedments_Interior  |     Total cost of Material Major Support Embedments Interior structure in 2017    |   968,978.09  |  dollar  |
+|    Total_Mat_Reinforc_steel_Superstr     |        Total cost of Material Reinforc steel Superstructure (shell) in 2017       |  1,864,667.91 |  dollar  |
+|    Total_Mat_Reinforc_steel_Interior     |          Total cost of Material Reinforc steel Interior structure in 2017         |   884,314.03  |  dollar  |
+|   Total_Mat_Rubbing_surfaces_Superstr    |       Total cost of Material Rubbing surfaces Superstructure (shell) in 2017      |    7,132.85   |  dollar  |
+|   Total_Mat_Rubbing_surfaces_Interior    |         Total cost of Material Rubbing surfaces Interior structure in 2017        |    5,774.57   |  dollar  |
+|     Total_Mat_Waterproofing_Superstr     |        Total cost of Material Waterproofing Superstructure (shell) in 2017        |    4,718.65   |  dollar  |
+|         Total_Mat_Lighting_Power         |                   Total cost of Material Lighting Power in 2017                   |   256,997.47  |  dollar  |
+|          Total_Mat_Plumb_drains          |                    Total cost of Material Plumb drains in 2017                    |   79,770.28   |  dollar  |
+|          Total_Mat_Special_HVAC          |                    Total cost of Material Special HVAC in 2017                    |   455,340.32  |  dollar  |
+|             Total_Mat_other              |                        Total cost of Material other in 2017                       |   101,607.85  |  dollar  |
+|       Total_Mat_Misc_steel_frames        |             Total cost of Material miscellaneous steel frames in 2017             |   365,149.14  |  dollar  |
+|          Total_Mat_Struct_steel          |                    Total cost of Material Struct steel in 2017                    |   604,331.81  |  dollar  |
+|           Total_Mat_cont_liner           |                  Total cost of Material Containment liner in 2017                 | 12,463,148.42 |  dollar  |
+|    Total_Mat_fl_grate_handrail_stairs    | Total cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017 |   102,510.23  |  dollar  |
+|            Total_Mat_painting            |                      Total cost of Material painting in 2017                      |   668,789.54  |  dollar  |
 |            Sum_Labor_Cadweld             |                            Total cost of Labor Cadweld                            |  2,540,293.16 |  dollar  |
 |            Sum_Labor_Concrete            |                            Total cost of Labor Concrete                           |  1,836,590.78 |  dollar  |
-|         Sum_Labor_Constr_joints          |                         Total cost of Labor Constr joints                         |   212,569.30  |  dollar  |
+|         Sum_Labor_Constr_joints          |                         Total cost of Labor Constr joints                         |   212,569.31  |  dollar  |
 |         Sum_Labor_Embedded_steel         |                         Total cost of Labor Embedded steel                        |  1,590,131.11 |  dollar  |
 |            Sum_Labor_Formwork            |                            Total cost of Labor Formwork                           |  3,439,536.04 |  dollar  |
 |      Sum_Labor_Maj_supp_embedments       |                      Total cost of Labor Maj supp embedments                      |   660,160.98  |  dollar  |
@@ -930,73 +983,20 @@ Parameter "mwth" is required for cost elements:
 |             Sum_Mat_Cadweld              |                           Total cost of Material Cadweld                          |  1,317,412.11 |  dollar  |
 |             Sum_Mat_Concrete             |                          Total cost of Material Concrete                          |  1,328,470.40 |  dollar  |
 |          Sum_Mat_Constr_joints           |                        Total cost of Material Constr joints                       |   130,376.53  |  dollar  |
-|          Sum_Mat_Embedded_steel          |                       Total cost of Material Embedded steel                       |   753,337.54  |  dollar  |
+|          Sum_Mat_Embedded_steel          |                       Total cost of Material Embedded steel                       |   753,337.53  |  dollar  |
 |             Sum_Mat_Formwork             |                          Total cost of Material Formwork                          |   385,042.24  |  dollar  |
 |       Sum_Mat_Maj_supp_embedments        |                     Total cost of Material Maj supp embedments                    |   968,978.09  |  dollar  |
 |          Sum_Mat_Reinforc_steel          |                       Total cost of Material Reinforc steel                       |  6,070,982.65 |  dollar  |
 |         Sum_Mat_Rubbing_surfaces         |                      Total cost of Material Rubbing surfaces                      |   16,579.07   |  dollar  |
 |          Sum_Mat_Waterproofing           |                        Total cost of Material Waterproofing                       |    9,808.25   |  dollar  |
-|              Surf_paint_m2               |                                  painted surface                                  |    9,440.85   |   m^2    |
-|             Tot_Labor_concr              |                  Total cost of labor of containment construction                  | 17,498,627.52 |  dollar  |
-|          Tot_Labor_containment           |                         Total cost of labor of containment                        | 32,009,001.02 |  dollar  |
+|             Tot_Labor_concr              |                  Total cost of labor of containment construction                  | 17,498,627.51 |  dollar  |
 |           Tot_Labor_equipment            |                   Total cost of labor of containment equipments                   |  1,267,661.66 |  dollar  |
 |             Tot_Labor_others             |              Total cost of labor of other non-concrete related items              | 13,242,711.84 |  dollar  |
 |              Tot_Mat_concr               |                 Total cost of material of containment construction                | 10,991,857.25 |  dollar  |
-|           Tot_Mat_containment            |                       Total cost of material of containment                       | 27,872,929.22 |  dollar  |
 |            Tot_Mat_equipment             |                  Total cost of material of containment equipments                 |   893,715.91  |  dollar  |
 |              Tot_Mat_others              |            Total cost of material of other non-concrete related items             | 15,987,356.06 |  dollar  |
-|       Total_Labor_Cadweld_Interior       |               Total cost of Labor Cadweld Interior structure in 2017              |   207,256.18  |  dollar  |
-|       Total_Labor_Cadweld_Superstr       |             Total cost of Labor Cadweld Superstructure (shell) in 2017            |   825,368.66  |  dollar  |
-|      Total_Labor_Concrete_Interior       |              Total cost of Labor Concrete Interior structure in 2017              |   419,530.50  |  dollar  |
-|      Total_Labor_Concrete_Superstr       |            Total cost of Labor Concrete Superstructure (shell) in 2017            |   629,273.99  |  dollar  |
-|    Total_Labor_Constr_joints_Interior    |         Total cost of Labor Construction joints Interior structure in 2017        |   14,448.72   |  dollar  |
-|    Total_Labor_Constr_joints_Superstr    |       Total cost of Labor Construction joints Superstructure (shell) in 2017      |   130,622.52  |  dollar  |
-|          Total_Labor_cont_liner          |                   Total cost of Labor Containment liner in 2017                   |  8,084,276.56 |  dollar  |
-|   Total_Labor_Embedded_steel_Interior    |           Total cost of Labor Embedded steel Interior structure in 2017           |  1,449,654.85 |  dollar  |
-|   Total_Labor_Embedded_steel_Superstr    |         Total cost of Labor Embedded steel Superstructure (shell) in 2017         |   115,067.96  |  dollar  |
-|   Total_Labor_fl_grate_handrail_stairs   |   Total cost of Labor Floor grating (galvanized), Handrail, Stair treads in 2017  |   90,598.83   |  dollar  |
-|      Total_Labor_Formwork_Interior       |              Total cost of Labor Formwork Interior structure in 2017              |  1,633,049.15 |  dollar  |
-|      Total_Labor_Formwork_Superstr       |            Total cost of Labor Formwork Superstructure (shell) in 2017            |  1,153,216.49 |  dollar  |
-|        Total_Labor_Lighting_Power        |                     Total cost of Labor Lighting Power in 2017                    |   509,302.56  |  dollar  |
-| Total_Labor_Maj_supp_embedments_Interior |      Total cost of Labor Major Support Embedments Interior structure in 2017      |   660,160.98  |  dollar  |
-|      Total_Labor_Misc_steel_frames       |               Total cost of Labor miscellaneous steel frames in 2017              |   219,135.57  |  dollar  |
-|            Total_Labor_other             |                         Total cost of Labor other in 2017                         |   27,432.31   |  dollar  |
-|           Total_Labor_painting           |                        Total cost of Labor painting in 2017                       |  2,352,281.21 |  dollar  |
-|         Total_Labor_Plumb_drains         |                      Total cost of Labor Plumb drains in 2017                     |   156,472.47  |  dollar  |
-|   Total_Labor_Reinforc_steel_Interior    |           Total cost of Labor Reinforc steel Interior structure in 2017           |  1,318,853.97 |  dollar  |
-|   Total_Labor_Reinforc_steel_Superstr    |         Total cost of Labor Reinforc steel Superstructure (shell) in 2017         |  2,348,419.94 |  dollar  |
-|  Total_Labor_Rubbing_surfaces_Interior   |          Total cost of Labor Rubbing surfaces Interior structure in 2017          |   69,909.19   |  dollar  |
-|  Total_Labor_Rubbing_surfaces_Superstr   |        Total cost of Labor Rubbing surfaces Superstructure (shell) in 2017        |   87,349.92   |  dollar  |
-|         Total_Labor_Special_HVAC         |                      Total cost of Labor Special HVAC in 2017                     |   574,454.31  |  dollar  |
-|         Total_Labor_Struct_steel         |                      Total cost of Labor Struct steel in 2017                     |   308,233.80  |  dollar  |
-|    Total_Labor_Waterproofing_Superstr    |          Total cost of Labor Waterproofing Superstructure (shell) in 2017         |    8,815.47   |  dollar  |
-|        Total_Mat_Cadweld_Interior        |             Total cost of Material Cadweld Interior structure in 2017             |   107,492.80  |  dollar  |
-|        Total_Mat_Cadweld_Superstr        |           Total cost of Material Cadweld Superstructure (shell) in 2017           |   428,011.68  |  dollar  |
-|       Total_Mat_Concrete_Interior        |             Total cost of Material Concrete Interior structure in 2017            |   228,796.69  |  dollar  |
-|       Total_Mat_Concrete_Superstr        |           Total cost of Material Concrete Superstructure (shell) in 2017          |   392,239.51  |  dollar  |
-|     Total_Mat_Constr_joints_Interior     |       Total cost of Material Construction joints Interior structure in 2017       |    8,895.30   |  dollar  |
-|     Total_Mat_Constr_joints_Superstr     |     Total cost of Material Construction joints Superstructure (shell) in 2017     |   80,107.34   |  dollar  |
-|           Total_Mat_cont_liner           |                  Total cost of Material Containment liner in 2017                 | 12,463,148.42 |  dollar  |
-|    Total_Mat_Embedded_steel_Interior     |          Total cost of Material Embedded steel Interior structure in 2017         |   686,824.47  |  dollar  |
-|    Total_Mat_Embedded_steel_Superstr     |        Total cost of Material Embedded steel Superstructure (shell) in 2017       |   54,511.16   |  dollar  |
-|    Total_Mat_fl_grate_handrail_stairs    | Total cost of Material Floor grating (galvanized), Handrail, Stair treads in 2017 |   102,510.23  |  dollar  |
-|       Total_Mat_Formwork_Interior        |             Total cost of Material Formwork Interior structure in 2017            |   154,119.66  |  dollar  |
-|       Total_Mat_Formwork_Superstr        |           Total cost of Material Formwork Superstructure (shell) in 2017          |   143,315.32  |  dollar  |
-|         Total_Mat_Lighting_Power         |                   Total cost of Material Lighting Power in 2017                   |   256,997.47  |  dollar  |
-|  Total_Mat_Maj_supp_embedments_Interior  |     Total cost of Material Major Support Embedments Interior structure in 2017    |   968,978.09  |  dollar  |
-|       Total_Mat_Misc_steel_frames        |             Total cost of Material miscellaneous steel frames in 2017             |   365,149.14  |  dollar  |
-|             Total_Mat_other              |                        Total cost of Material other in 2017                       |   101,607.85  |  dollar  |
-|            Total_Mat_painting            |                      Total cost of Material painting in 2017                      |   668,789.54  |  dollar  |
-|          Total_Mat_Plumb_drains          |                    Total cost of Material Plumb drains in 2017                    |   79,770.28   |  dollar  |
-|    Total_Mat_Reinforc_steel_Interior     |          Total cost of Material Reinforc steel Interior structure in 2017         |   884,314.03  |  dollar  |
-|    Total_Mat_Reinforc_steel_Superstr     |        Total cost of Material Reinforc steel Superstructure (shell) in 2017       |  1,864,667.91 |  dollar  |
-|   Total_Mat_Rubbing_surfaces_Interior    |         Total cost of Material Rubbing surfaces Interior structure in 2017        |    5,774.57   |  dollar  |
-|   Total_Mat_Rubbing_surfaces_Superstr    |       Total cost of Material Rubbing surfaces Superstructure (shell) in 2017      |    7,132.85   |  dollar  |
-|          Total_Mat_Special_HVAC          |                    Total cost of Material Special HVAC in 2017                    |   455,340.32  |  dollar  |
-|          Total_Mat_Struct_steel          |                    Total cost of Material Struct steel in 2017                    |   604,331.81  |  dollar  |
-|     Total_Mat_Waterproofing_Superstr     |        Total cost of Material Waterproofing Superstructure (shell) in 2017        |    4,718.65   |  dollar  |
-|                Walls_s_m2                |                                   Walls surface                                   |    3,657.87   |   m^2    |
-|                Walls_v_m3                |                                    Walls volume                                   |    2,508.57   |   m^3    |
+|          Tot_Labor_containment           |                         Total cost of labor of containment                        | 32,009,001.02 |  dollar  |
+|           Tot_Mat_containment            |                       Total cost of material of containment                       | 27,872,929.22 |  dollar  |
 +------------------------------------------+-----------------------------------------------------------------------------------+---------------+----------+
 
 
@@ -1017,86 +1017,6 @@ variable "Tot_Mat_containment" affects cost element(s):
 ====================================== Updating cost elements ======================================
 
 
-[Updating] Cost element [212_mat], running algorithm: [containment], 
-[Updating] with formulation: containment structure + equipment + others
-[Updated]  Reference value is : $37,484,659 , calculated value is: $27,872,929  
- 
-[Updating] Cost element [212_lab], running algorithm: [containment], 
-[Updating] with formulation: containment structure + equipment + others
-[Updated]  Reference value is : $43,940,776 , calculated value is: $32,009,001  
- 
-[Updating] Cost element [222_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $523,270    , calculated value is: $523,270     
- 
-[Updating] Cost element [222.14_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $8,217      , calculated value is: $8,217       
- 
-[Updating] Cost element [222.13_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $61,390     , calculated value is: $61,390      
- 
-[Updating] Cost element [222.12_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $326,175    , calculated value is: $326,175     
- 
-[Updating] Cost element [222.11_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $127,488    , calculated value is: $127,488     
- 
-[Updating] Cost element [213_mat], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $12,070,728 , calculated value is: $12,070,728  
- 
-[Updating] Cost element [222_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $5,288,233  , calculated value is: $5,288,233   
- 
-[Updating] Cost element [222.14_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $82,173     , calculated value is: $82,173      
- 
-[Updating] Cost element [222.13_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $613,897    , calculated value is: $613,897     
- 
-[Updating] Cost element [222.12_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $3,317,279  , calculated value is: $3,317,279   
- 
-[Updating] Cost element [222.11_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $1,274,883  , calculated value is: $1,274,883   
- 
-[Updating] Cost element [213_lab], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $11,873,274 , calculated value is: $11,873,274  
- 
-[Updating] Cost element [226.4_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $34,304,867 , calculated value is: $34,304,867  
- 
-[Updating] Cost element [222_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $2,409,023  , calculated value is: $2,409,023   
- 
-[Updating] Cost element [222.14_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $4,380      , calculated value is: $4,380       
- 
-[Updating] Cost element [222.13_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $21,901     , calculated value is: $219,007     
- 
-[Updating] Cost element [222.12_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $1,280,778  , calculated value is: $1,280,778   
- 
-[Updating] Cost element [222.11_fac], running algorithm: [MWth_scale], 
-[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
-[Updated]  Reference value is : $1,101,964  , calculated value is: $1,101,964   
- 
 [Updating] Cost element [213_fac], running algorithm: [MWth_scale], 
 [Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
 [Updated]  Reference value is : $660,389    , calculated value is: $660,389     
@@ -1104,6 +1024,86 @@ variable "Tot_Mat_containment" affects cost element(s):
 [Updating] Cost element [220A.224_fac], running algorithm: [MWth_lmfbrscale], 
 [Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_LMFBR)^thermal_power_scale
 [Updated]  Reference value is : $1,379,368  , calculated value is: $2,291,911   
+ 
+[Updating] Cost element [222.11_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,101,964  , calculated value is: $1,101,964   
+ 
+[Updating] Cost element [222.12_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,280,778  , calculated value is: $1,280,778   
+ 
+[Updating] Cost element [222.13_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $21,901     , calculated value is: $219,007     
+ 
+[Updating] Cost element [222.14_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $4,380      , calculated value is: $4,380       
+ 
+[Updating] Cost element [222_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $2,409,023  , calculated value is: $2,409,023   
+ 
+[Updating] Cost element [226.4_fac], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $34,304,867 , calculated value is: $34,304,867  
+ 
+[Updating] Cost element [212_lab], running algorithm: [containment], 
+[Updating] with formulation: containment structure + equipment + others
+[Updated]  Reference value is : $43,940,776 , calculated value is: $32,009,001  
+ 
+[Updating] Cost element [213_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $11,873,274 , calculated value is: $11,873,274  
+ 
+[Updating] Cost element [222.11_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $1,274,883  , calculated value is: $1,274,883   
+ 
+[Updating] Cost element [222.12_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $3,317,279  , calculated value is: $3,317,279   
+ 
+[Updating] Cost element [222.13_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $613,897    , calculated value is: $613,897     
+ 
+[Updating] Cost element [222.14_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $82,173     , calculated value is: $82,173      
+ 
+[Updating] Cost element [222_lab], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $5,288,233  , calculated value is: $5,288,233   
+ 
+[Updating] Cost element [212_mat], running algorithm: [containment], 
+[Updating] with formulation: containment structure + equipment + others
+[Updated]  Reference value is : $37,484,659 , calculated value is: $27,872,929  
+ 
+[Updating] Cost element [213_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $12,070,728 , calculated value is: $12,070,728  
+ 
+[Updating] Cost element [222.11_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $127,488    , calculated value is: $127,488     
+ 
+[Updating] Cost element [222.12_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $326,175    , calculated value is: $326,175     
+ 
+[Updating] Cost element [222.13_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $61,390     , calculated value is: $61,390      
+ 
+[Updating] Cost element [222.14_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $8,217      , calculated value is: $8,217       
+ 
+[Updating] Cost element [222_mat], running algorithm: [MWth_scale], 
+[Updating] with formulation: cost_of_ref*(thermal_power/thermal_power_of_ref)^thermal_power_scale
+[Updated]  Reference value is : $523,270    , calculated value is: $523,270     
  
 
 
@@ -1118,14 +1118,14 @@ variable "Tot_Mat_containment" affects cost element(s):
 |  20 |  222.14_fac  |   4380.13611   |   222_fac    |  222.14  |    1    |
 |  21 |   222_fac    | 2409022.67706  |    22_fac    |   222    |    1    |
 |  23 |  226.4_fac   | 34304867.3856  |   226_fac    |  226.4   |    1    |
-|  38 |   212_lab    | 32009001.02191 |    21_lab    |   212    |    1    |
+|  38 |   212_lab    | 32009001.0187  |    21_lab    |   212    |    1    |
 |  39 |   213_lab    | 11873273.98938 |    21_lab    |   213    |    1    |
 |  53 |  222.11_lab  |  1274883.3244  |   222_lab    |  222.11  |    1    |
 |  54 |  222.12_lab  | 3317279.46371  |   222_lab    |  222.12  |    1    |
 |  55 |  222.13_lab  |  613896.82308  |   222_lab    |  222.13  |    1    |
 |  56 |  222.14_lab  |  82172.71233   |   222_lab    |  222.14  |    1    |
 |  57 |   222_lab    | 5288232.80385  |    22_mat    |   222    |    1    |
-|  74 |   212_mat    | 27872929.22357 |    21_mat    |   212    |    1    |
+|  74 |   212_mat    | 27872929.22085 |    21_mat    |   212    |    1    |
 |  75 |   213_mat    | 12070728.12312 |    21_mat    |   213    |    1    |
 |  89 |  222.11_mat  |  127488.33256  |   222_mat    |  222.11  |    1    |
 |  90 |  222.12_mat  |  326175.16001  |   222_mat    |  222.12  |    1    |
