@@ -58,8 +58,9 @@ Visualization
 Use ``save_dashboard`` to generate dashboard-style capital-cost figures from a
 scenario result. The dashboard includes a lever input table, OCC, TCI,
 construction duration, cost breakdowns, a staggered construction timeline, and
-the FOAK-to-NOAK TCI reduction waterfall by lever. Set ``show_levers=False`` to
-omit the lever input table and generate the compact chart-only dashboard.
+the FOAK-to-NOAK Total Capital Investment (TCI) reduction waterfall by lever. 
+Set ``show_levers=False`` to omit the lever input table and generate the 
+compact chart-only dashboard.
 
 .. code-block:: python
 
@@ -92,7 +93,7 @@ Configuration
    * - ``reactor_type``
      - Built-in Cost Reduction Framework baseline: ``AP1000``, ``SFR``, or ``HTGR``.
    * - ``baseline_csv``
-     - Optional CSV path used instead of the built-in reactor baseline. This is useful when passing an International Adjustment Tool output into CRF. If the CSV contains IAT adjusted columns, CRF uses those adjusted costs as the baseline and leaves the packaged baseline in ``src/crf/data`` unchanged.
+     - Optional CSV path used instead of the built-in reactor baseline. This is useful when passing an International Adjustment Tool output into CRF. If the CSV contains International Adjustment Tool (IAT) adjusted columns, CRF uses those adjusted costs as the baseline and leaves the packaged baseline in ``src/crf/data`` unchanged.
    * - ``f_22``
      - Reactor building cost adjustment.
    * - ``f_2321``
