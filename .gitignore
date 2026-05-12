@@ -6,3 +6,9 @@
 **/.DS_Store
 **/*.out
 **/install.conf
+docs/build/
+docs/source/reference/main.rst
+docs/source/reference/main/
+docs/source/reference/utility/
+docs/source/reference/database.rst
+docs/source/reference/database/

@@ -37,6 +37,7 @@ Central to ACCERT is the **Code of Accounts (COA)** system, which offers a stand
 
    .. admonition:: Important
       :class: important
+
       ACCERT now allows cost estimates without cost categories, providing flexibility for users to customize their cost breakdowns.
 
 Using ACCERT with NEAMS Workbench

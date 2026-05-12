@@ -1,8 +1,8 @@
 """Install or refresh the ACCERT SQLite database.
 
 Usage:
-    python src/database_install_sqlite.py
-    python src/database_install_sqlite.py --db src/accertdb.sqlite --sql src/accertdb_sqlite_schema_data.sql
+    python src/database_install.py
+    python src/database_install.py --db src/accertdb.sqlite --sql src/accertdb_sqlite_schema_data.sql
 """
 from __future__ import annotations
 

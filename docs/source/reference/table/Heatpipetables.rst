@@ -27,7 +27,7 @@ The table includes the following columns:
 
 .. csv-table:: [Heatpipe Account Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/heatpipe_account.csv
+   :file: ../../../../tutorial/accert/ref_tables/heatpipe_account.csv
    :widths: auto
    :class: normal-table
 
@@ -51,13 +51,13 @@ The table includes the following columns:
 
 .. csv-table:: [Heatpipe Cost Element Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/heatpipe_cost_element.csv
+   :file: ../../../../tutorial/accert/ref_tables/heatpipe_cost_element.csv
    :widths: auto
    :class: normal-table
 
 Heatpipe Variable Table
 --------------------------
-This table contains the variable information for the Heat pipe microreactor model. All variables are needed to calculate the cost of the cost element or a super variable. Some variables are connected to the algorithm table through the `var_alg` column, which links each variable to a specific algorithm. The table is also connected to itself through the `v_linked` and `var_needed` column, which links each variable to a superior variable and the variables needed to calculate it.
+This table contains the variable information for the Heat pipe microreactor model. All variables are needed to calculate the cost of the cost element or a super variable. Some variables are connected to the algorithm table through the ``var_alg`` column, which links each variable to a specific algorithm. The table is also connected to itself through the ``v_linked`` and ``var_needed`` column, which links each variable to a superior variable and the variables needed to calculate it.
 
 The table includes the following columns:
 
@@ -71,8 +71,5 @@ The table includes the following columns:
    - **v_linked**: superior variable if any
    - **user_input**: user input status of the variable, 0 for not user input and 1 for user input, note that the default value should always be 0
 
-.. csv-table:: [Heatpipe Variable Table]
-   :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/heatpipe_variable.csv
-   :widths: auto
-   :class: wide-table
+.. literalinclude:: ../../../../tutorial/accert/ref_tables/heatpipe_variable.csv
+   :language: text

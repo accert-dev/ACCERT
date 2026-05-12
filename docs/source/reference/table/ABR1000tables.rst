@@ -32,7 +32,7 @@ The table includes the following columns:
 
 .. csv-table:: [ABR1000 Account Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/ABR1000_account.csv
+   :file: ../../../../tutorial/accert/ref_tables/ABR1000_account.csv
    :widths: auto
    :class: normal-table
 
@@ -57,7 +57,7 @@ The table includes the following columns:
  
 .. csv-table:: [ABR1000 Cost Element Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/ABR1000_cost_element.csv
+   :file: ../../../../tutorial/accert/ref_tables/ABR1000_cost_element.csv
    :widths: auto
    :class: normal-table
 
@@ -79,6 +79,6 @@ The table includes the following columns:
 
 .. csv-table:: [ABR1000 Variable Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/ABR1000_variable.csv
+   :file: ../../../../tutorial/accert/ref_tables/ABR1000_variable.csv
    :class: wide-table
 

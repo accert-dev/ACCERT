@@ -27,7 +27,7 @@ The table includes the following columns:
 
 .. csv-table:: [PWR12-BE Account Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/PWR12-BE_accounts.csv
+   :file: ../../../../tutorial/accert/ref_tables/PWR12-BE_accounts.csv
    :widths: auto
    :class: normal-table
 
@@ -52,7 +52,7 @@ The table includes the following columns:
 
 .. csv-table:: [PWR12-BE Cost Element Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/PWR12-BE_cost_element.csv
+   :file: ../../../../tutorial/accert/ref_tables/PWR12-BE_cost_element.csv
    :widths: auto
    :class: wide-table
 
@@ -74,6 +74,6 @@ The table includes the following columns:
 
 .. csv-table:: [PWR12-BE Variable Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/PWR12-BE_variable.csv
+   :file: ../../../../tutorial/accert/ref_tables/PWR12-BE_variable.csv
    :widths: auto
    :class: wide-table
