@@ -1,17 +1,13 @@
-"""SQLite compatibility layer for ACCERT.
+"""SQLite connection layer for ACCERT.
 
-Drop this file into ACCERT/src.  It provides two entry points:
+This module provides two entry points:
 
-1. connect_sqlite(db_path) -> (sqlite3 connection, ACCERT cursor adapter)
-2. connect(...) -> MySQL-connector-compatible connection object
+1. connect_sqlite(db_path) -> (SQLite connection adapter, ACCERT cursor adapter)
+2. connect(...) -> SQLite connection adapter
 
-The second form is intentionally compatible with calls such as:
-
-    mysql.connector.connect(host="localhost", user="root", password=..., database="accert_db")
-
-used in the original ACCERT Main.py.  Instead of opening a MySQL server, it
-opens ACCERT/src/accertdb.sqlite and returns a connection object whose cursor
-supports the subset of MySQLCursor used by ACCERT, including:
+The second form accepts legacy keyword arguments so older ACCERT call sites can
+open the bundled SQLite database without carrying server configuration around.
+The returned cursor supports the procedure-style API used by ACCERT:
 
     c.callproc(...)
     c.stored_results()
@@ -19,7 +15,7 @@ supports the subset of MySQLCursor used by ACCERT, including:
     c.fetchall()
     c.fetchone()
 
-Stored procedure names are implemented in accert_sqlite_procedures.py.
+Procedure names are implemented in accert_sqlite_procedures.py.
 """
 from __future__ import annotations
 
@@ -43,7 +39,7 @@ def get_default_db_path(code_folder: str | os.PathLike[str] | None = None) -> st
 
 
 class SQLiteConnectionAdapter:
-    """Small wrapper that mimics the subset of mysql.connector connection used by ACCERT."""
+    """Small wrapper around sqlite3 with the connection methods ACCERT uses."""
 
     def __init__(self, db_path: str | os.PathLike[str] | None = None):
         self.db_path = str(db_path or get_default_db_path())
@@ -78,8 +74,8 @@ class SQLiteConnectionAdapter:
         return self._conn.execute(*args, **kwargs)
 
 
-class _MySQLConnectorShim:
-    """Object used as mysql.connector in the Main.py wrapper."""
+class _ConnectorShim:
+    """Connector-like object for tests and legacy monkeypatching."""
 
     @staticmethod
     def connect(*args: Any, **kwargs: Any) -> SQLiteConnectionAdapter:
@@ -93,11 +89,10 @@ def connect_sqlite(db_path: str | os.PathLike[str] | None = None) -> tuple[SQLit
 
 
 def connect(*args: Any, **kwargs: Any) -> SQLiteConnectionAdapter:
-    """MySQL-compatible connect function.
+    """Open the ACCERT SQLite database.
 
-    Accepts mysql.connector.connect-style arguments and ignores MySQL-only
-    fields such as host/user/password/auth_plugin.  The SQLite DB path is
-    selected in this order:
+    Accepts legacy connection keyword arguments and ignores fields that are not
+    needed by SQLite. The database path is selected in this order:
 
     1. explicit db_path=... or sqlite_path=...
     2. environment variable ACCERT_SQLITE_DB
@@ -109,4 +104,4 @@ def connect(*args: Any, **kwargs: Any) -> SQLiteConnectionAdapter:
 
 
 # Expose a connector-like object for direct monkeypatching.
-connector = _MySQLConnectorShim()
+connector = _ConnectorShim()

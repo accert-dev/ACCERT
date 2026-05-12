@@ -13,7 +13,7 @@ if SRC_PATH not in sys.path:
 
 @pytest.fixture
 def input_params_data():
-    input_params_file = "./OT01A_i1_r5_rev6.csv"
+    input_params_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "OT01A_i1_r5_rev6.csv")
     return pd.read_csv(input_params_file).set_index("var_name").transpose()
 
 

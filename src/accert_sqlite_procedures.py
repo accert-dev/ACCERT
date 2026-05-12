@@ -1,12 +1,11 @@
 """
-SQLite replacements for all MySQL stored procedures found in accertdb.sql.
+SQLite procedure implementations for ACCERT.
 
 Design
 ------
-SQLite does not support MySQL stored procedures. This module rewrites each
-procedure as a Python function that accepts a sqlite3.Connection and normal
-Python arguments. The functions return rows for SELECT-style procedures and
-return None for UPDATE/INSERT/DELETE procedures.
+Each procedure is a Python function that accepts a sqlite3.Connection and
+normal Python arguments. The functions return rows for SELECT-style procedures
+and return None for UPDATE/INSERT/DELETE procedures.
 
 The companion SQLiteCursorAdapter class lets existing ACCERT code keep the
 same c.callproc(...); c.stored_results() pattern with minimal changes.
@@ -81,7 +80,7 @@ class StoredResult:
 
 
 class SQLiteCursorAdapter:
-    """Small adapter that mimics the subset of MySQLCursor used by ACCERT.
+    """Small adapter that provides the cursor API used by ACCERT.
 
     Use this when you want to keep existing ACCERT methods that do:
         c.callproc('procedure_name', args)
@@ -110,12 +109,6 @@ class SQLiteCursorAdapter:
         return self._stored_results
 
     def execute(self, sql: str, params: Sequence[Any] = ()) -> sqlite3.Cursor:
-        stripped = sql.strip().rstrip(";")
-        upper = stripped.upper()
-        # MySQL-only commands that should be harmless no-ops in SQLite.
-        if upper.startswith("USE ") or upper.startswith("SET SQL_SAFE_UPDATES"):
-            self._last_cursor = self.conn.execute("SELECT 1 WHERE 0")
-            return self._last_cursor
         self._last_cursor = self.conn.execute(sql, tuple(params))
         return self._last_cursor
 
@@ -131,7 +124,7 @@ class SQLiteCursorAdapter:
 
 
 # ---------------------------------------------------------------------------
-# Stored procedure replacements, 1:1 names from accertdb.sql
+# Procedure implementations registered by name for ACCERT call sites.
 # ---------------------------------------------------------------------------
 
 def cal_direct_cost_elements(conn: sqlite3.Connection, acc_table: str, cel_table: str) -> list[tuple]:
@@ -581,5 +574,5 @@ def callproc(conn: sqlite3.Connection, procname: str, args: Sequence[Any] = ()) 
     try:
         func = PROCEDURES[procname]
     except KeyError as exc:
-        raise KeyError(f"No SQLite replacement registered for stored procedure {procname!r}") from exc
+        raise KeyError(f"No SQLite procedure registered for {procname!r}") from exc
     return func(conn, *tuple(args))

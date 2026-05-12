@@ -36,9 +36,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
      - `cost_1987`
    - These changes streamline the database structure, removing unnecessary complexity.
 
- **Stored Procedure Usage**:
-   - Removed previous usage of the `execute` method in the Python MySQL connector. The system now exclusively uses stored procedures for database interactions, ensuring consistency and improved performance.
-   - Removed redundant stored procedures to streamline database operations and eliminate outdated or unnecessary functionality.
+ **Database Procedure Usage**:
+   - Consolidated database interactions through named database procedures for consistency and maintainability.
+   - Removed redundant database procedures to streamline operations and eliminate outdated or unnecessary functionality.
 ### Added 
  **Fusion Model Addition**: 
    - A new fusion model has been integrated into ACCERT to extend its functionality and coverage for fusion-related cost assessments.

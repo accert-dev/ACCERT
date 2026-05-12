@@ -19,7 +19,7 @@ The software comprises three major components:
 ACCERT is designed for integration with the [NEAMS
 Workbench](https://www.ornl.gov/project/neams-workbench) and relies on input
 files using Workbench's SON format. ACCERT uses the bundled SQLite database at
-`src/accertdb.sqlite`; no MySQL server or root password is required. Instructions for installing ACCERT both
+`src/accertdb.sqlite`. Instructions for installing ACCERT both
 with and without Workbench are provided in this README.
 
 ## Documentation

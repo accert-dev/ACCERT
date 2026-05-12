@@ -73,4 +73,4 @@ New Features
 
    - Redundant tables and columns have been eliminated to streamline the database structure.
    - Fusion algorithms have been segregated from the main `accert_algorithm.csv` file, reducing clutter and improving code organization.
-   - Unnecessary stored procedures have been removed, simplifying database operations and improving performance.
+   - Unnecessary database procedures have been removed, simplifying database operations and improving performance.

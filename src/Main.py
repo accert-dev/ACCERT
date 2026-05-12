@@ -151,8 +151,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements. 
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements. 
         inp_id : str
             COA ID
 
@@ -163,18 +163,6 @@ class Accert:
         coa_others
             List of a COA's other info, including ind, lft, rgt.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `get_current_COAs`(IN table_name VARCHAR(50), 
-        #                                 IN inp_id VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT code_of_account, 
-        #                     ind FROM ', table_name, ' WHERE supaccount = ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @inp_id = inp_id;
-        #     EXECUTE stmt USING @inp_id;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('get_current_COAs',(self.acc_tabl, inp_id))
         for row in c.stored_results():
             coa_info = row.fetchall()
@@ -190,24 +178,12 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         min_ind : int
             Original index of the account next to the inserted COA.
 
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_before_insert`(IN table_name VARCHAR(50),
-        #                                             IN min_ind INT)
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', table_name,
-        #                     ' SET ind = ind + 1 WHERE ind > ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @min_ind = min_ind-1;
-        #     EXECUTE stmt USING @max_ind;
-        #     DEALLOCATE PREPARE stmt;  
-        # END$$
-        # DELIMITER ;
 
         c.callproc('update_account_before_insert',(self.acc_tabl, min_ind-1))
         return None
@@ -219,8 +195,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ind : int
             Index of the new inserted COA.
         supaccount : str
@@ -238,45 +214,6 @@ class Accert:
         prn : str(float), optional
             Percentage of the total cost of new inserted COA. (Set to 0% by default)
         """       
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_COA`(IN table_name VARCHAR(50),
-        #                                           IN ind INT,
-        #                                           IN supaccount VARCHAR(50),
-        #                                           IN level INT,
-        #                                           IN lft INT,
-        #                                           IN rgt INT,
-        #                                           IN code_of_account VARCHAR(50),
-        #                                           IN account_description VARCHAR(50),
-        #                                           IN total_cost INT,
-        #                                           IN unit VARCHAR(50),
-        #                                           IN main_subaccounts VARCHAR(100),
-        #                                           IN cost_elements VARCHAR(50),
-        #                                           IN review_status VARCHAR(50),
-        #                                           IN prn VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('INSERT INTO ', table_name,
-        #                        ' (ind, supaccount, level, lft, rgt, code_of_account, account_description, 
-        #                           total_cost, unit, main_subaccounts, cost_elements, review_status, prn) 
-        #                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        # PREPARE stmt FROM @stmt;
-        # SET @ind = ind;
-        # SET @supaccount = supaccount;
-        # SET @level = level;
-        # SET @lft = lft;
-        # SET @rgt = rgt;
-        # SET @code_of_account = code_of_account;
-        # SET @account_description = account_description;
-        # SET @total_cost = total_cost;
-        # SET @unit = unit;
-        # SET @main_subaccounts = main_subaccounts;
-        # SET @cost_elements = cost_elements;
-        # SET @review_status = review_status;
-        # SET @prn = prn;
-        # EXECUTE stmt USING @ind, @supaccount, @level, @lft, @rgt, @code_of_account, @account_description,
-        # @total_cost, @unit, @main_subaccounts, @cost_elements, @review_status, @prn;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
 
         c.callproc('insert_new_COA',(self.acc_tabl, ind, supaccount, level, 
                                    code_of_account, account_description, total_cost, 
@@ -289,8 +226,8 @@ class Accert:
         
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         sup_coa : str
             Super account of the new inserted COA.
         user_added_coa : str
@@ -316,17 +253,6 @@ class Accert:
         # TODO : return a new COA id with the COA list as input
         # new_COA = get_new_COA_id(current_COAs)
 
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `sup_coa_level`(IN table_name VARCHAR(50),
-        #                                           IN supaccount VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT level FROM ', table_name, ' WHERE code_of_account = ?');
-        # PREPARE stmt FROM @stmt;
-        # SET @supaccount = supaccount;
-        # EXECUTE stmt USING @supaccount;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
 
         c.callproc('sup_coa_level',(self.acc_tabl, sup_coa))
 
@@ -353,8 +279,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
 
@@ -364,17 +290,6 @@ class Accert:
             Variable info including variable name and variable unit
         """
 
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_variable_info_on_name`(IN table_name VARCHAR(50),
-        #                                           IN var_name VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT var_value, var_unit FROM ', table_name, ' WHERE var_name = ?');
-        # PREPARE stmt FROM @stmt;
-        # SET @var_name = var_name;
-        # EXECUTE stmt USING @var_name;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         var_id = str(var_id).replace("'","").replace('"','')
         c.callproc('extract_variable_info_on_name',(self.var_tabl, var_id))
         for row in c.stored_results():
@@ -388,8 +303,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
 
@@ -398,17 +313,6 @@ class Accert:
         sup_val : List[str]
             Super variable info including the name of the super variable.
         """    
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_super_val`(IN table_name VARCHAR(50),
-        #                                          IN var_name VARCHAR(50))
-        # BEGIN
-        #    SET @stmt = CONCAT('SELECT v_linked FROM ', table_name, ' WHERE var_name = ?');
-        # PREPARE stmt FROM @stmt;
-        # SET @var_name = var_name;
-        # EXECUTE stmt USING @var_name;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('extract_super_val',(self.var_tabl, var_id))
         for row in c.stored_results():
            results = row.fetchone()    
@@ -425,8 +329,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
         u_i_var_value : float
@@ -469,8 +373,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
         var_value : float   
@@ -478,22 +382,6 @@ class Accert:
         var_unit : str
             Variable unit.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable_info_on_name`(IN table_name VARCHAR(50),
-        #                             IN `u_i_var_name` VARCHAR(50), IN `value` FLOAT, IN `unit` VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', table_name, ' SET var_value = ?,
-        #                         var_unit = ?,
-        #                         user_input = ? WHERE var_name = ?');
-        # PREPARE stmt FROM @stmt;
-        # SET @var_value = value;
-        # SET @var_unit = unit;
-        # SET @user_input = 1;
-        # SET @var_name = u_i_var_name;
-        # EXECUTE stmt USING @var_value, @var_unit, @user_input, @var_name;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         args = (self.var_tabl, var_id, float(var_value), var_unit)
         c.callproc('update_variable_info_on_name', args)
         return None    
@@ -504,27 +392,11 @@ class Accert:
         
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_super_variable`(IN var_table_name VARCHAR(50),
-        #                             IN alg_table_name VARCHAR(50), IN `u_i_var_name` VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT var.ind, var.var_name, var.var_value,
-        #                         var.var_alg, var.var_need, alg.ind, alg.alg_python,
-        #                         alg.alg_formulation, alg.alg_units, var.var_unit
-        #                         FROM ', var_table_name, ' as var JOIN ', alg_table_name, ' as alg
-        #                         ON var.var_alg=alg.alg_name
-        #                         WHERE var.var_name=?');
-        # PREPARE stmt FROM @stmt;
-        # SET @var_name = u_i_var_name;
-        # EXECUTE stmt USING @var_name;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('update_super_variable',(self.var_tabl, self.alg_tabl, var_id))
         for row in c.stored_results():
             result = row.fetchone()
@@ -568,8 +440,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         tc_id : str
             Total cost ID.
         """
@@ -584,19 +456,7 @@ class Accert:
         #             FROM account
         #             WHERE code_of_account = "{}" ;
         #             """.format(tc_id))
-        # Stored procedure
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_total_cost_on_name`(IN tc_id VARCHAR(50),
-        #                                         IN table_name VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT code_of_account, account_description, total_cost, unit
-        #                         FROM ', table_name, ' WHERE code_of_account = ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @tc_id = tc_id;
-        #     EXECUTE stmt USING @tc_id;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
+        # procedure
         tc_id = str(tc_id).replace("'","").replace('"','')
         # remove single quotes or double quotes from the string
         # c.execute("""SELECT code_of_account, account_description, total_cost
@@ -614,8 +474,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility_methods
             Utility_methods class instantiates objects that can perform utility methods.
         accert : Accert
@@ -761,8 +621,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         tc_id : str
             COA of the total cost.
         u_i_tc_value : float
@@ -793,8 +653,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         tc_id : str
             COA of the total cost.
         u_i_tc_value : float
@@ -810,22 +670,6 @@ class Accert:
         ## Statement is not working as expected when passing in a string in a dictionary
         ## but it works when passing in the string directly in .format() method
 
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_total_cost_on_name`(IN table_name VARCHAR(50),
-        #                                                                         IN `tc_id` VARCHAR(50), 
-        #                                                                         IN `u_i_tc_value` FLOAT, 
-        #                                                                         IN `u_i_tc_unit` VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', table_name, ' SET total_cost = ?, unit = ?, 
-        #                                               review_status = "User Input" WHERE code_of_account = ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @tc_id = tc_id;
-        #     SET @u_i_tc_value = u_i_tc_value;
-        #     SET @u_i_tc_unit = u_i_tc_unit;
-        #     EXECUTE stmt USING @u_i_tc_value, @u_i_tc_unit, @tc_id;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         u_i_tc_value= float(u_i_tc_value)
         c.callproc('update_total_cost_on_name',(self.acc_tabl,tc_id,u_i_tc_value))
 
@@ -837,8 +681,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_name : str
             Variable name.
 
@@ -847,17 +691,6 @@ class Accert:
         var_value : str
             Variable value.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `get_var_value_by_name`(IN table_name VARCHAR(50),
-        #                                                                     IN `var_name` VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT var_value FROM ', table_name, ' WHERE var_name = ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @var_name = var_name;
-        #     EXECUTE stmt USING @var_name;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('get_var_value_by_name',(self.var_tabl,var_name))
         for row in c.stored_results():
             var_value = row.fetchone()[0]
@@ -944,8 +777,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ce_name : str
             Cost element name starting with the COA of the account.
         alg_value : float
@@ -955,38 +788,8 @@ class Accert:
         -------
         None
         """
-        # Turn off safe update mode
-        # keep the original note for future reference
-        c.execute("""SET SQL_SAFE_UPDATES = 0;""")
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_on_name`(
-        #     IN table_name VARCHAR(50),
-        #     IN ce_name VARCHAR(50),
-        #     IN alg_value DECIMAL(20,5)  
-        # )
-        # BEGIN
-        #     -- Disable safe updates for this operation
-        #     SET SQL_SAFE_UPDATES = 0;
-
-        #     -- Build the dynamic SQL query
-        #     SET @stmt = CONCAT('UPDATE ', table_name, 
-        #                     ' SET cost_2017 = ', alg_value, 
-        #                     ', updated = 1 WHERE cost_element = ''', ce_name, '''');
-
-        #     -- Prepare and execute the dynamic statement
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-
-        #     -- Deallocate the prepared statement
-        #     DEALLOCATE PREPARE stmt;
-
-        # END;$$
-        # DELIMITER ;
-
-        # NOTE, float is used for alg_value, but it can be changed to DECIMAL(20,15) in the 
-        # stored procedure, since float in python is equivalent to double in MySQL, tested 
-        # for several values but using float in stored procedure is not recommended since 
-        # the rolled up value may not be accurate.
+        # NOTE, float is used for alg_value. The rolled up value may not be
+        # accurate if the procedure needs higher decimal precision.
         c.callproc('update_cost_element_on_name',(self.cel_tabl,ce_name,float(alg_value)))
 
         return None
@@ -997,36 +800,14 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor 
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter 
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Updating cost elements '.center(100,'='))
         print('\n')
         c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.alg_tabl))
         for row in c.stored_results():
             results = row.fetchall()
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_cost_elements`(IN cel_tabl_name VARCHAR(50),
-        #                                                                         IN var_tabl_name VARCHAR(50),
-        #                                                                         IN alg_tabl_name VARCHAR(50))
-        # BEGIN
-        # 	SET SQL_SAFE_UPDATES = 0;
-        #     SET @stmt = CONCAT("SELECT ce.ind, ce.cost_element,
-        #        ce.cost_2017, ce.alg_name,
-        #        ce.variables, ce.algno,
-        #        alg.alg_python, alg.alg_formulation, alg.alg_units 
-        # 		FROM ", cel_tabl_name, " AS ce 
-        # 		JOIN ", alg_tabl_name, " AS alg ON ce.alg_name = alg.alg_name
-        # 		WHERE EXISTS (
-        # 			SELECT 1
-        # 			FROM ", var_tabl_name, " AS va
-        # 			WHERE va.user_input = 1
-        # 			AND FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0);");
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         for row in results:
             ce_name = row[1]
             org_ce_value = row[2]
@@ -1061,34 +842,13 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         # for fusion or user defined table,  there is no cost_element table
         # so the update_new_cost_elements will not be executed
         # instead, the update_new_accounts will be executed
         print(' Updating accounts '.center(100,'='))
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_accounts`(IN acc_tabl_name VARCHAR(50),
-        #                                                                         IN var_tabl_name VARCHAR(50),
-        #                                                                         IN alg_tabl_name VARCHAR(50))
-        # BEGIN
-        #     SET SQL_SAFE_UPDATES = 0;
-        #     SET @stmt = CONCAT("SELECT ac.ind, ac.code_of_account,
-        #     ac.total_cost, ac.alg_name,
-        #     ac.variables, 
-        #     alg.alg_python, alg.alg_formulation, alg.alg_units 
-        #         FROM ", acc_tabl_name, " AS ac 
-        #         JOIN ", alg_tabl_name, " AS alg ON ac.alg_name = alg.alg_name
-        #         WHERE EXISTS (
-        #             SELECT 1
-        #             FROM ", var_tabl_name, " AS va
-        #             WHERE va.user_input = 1
-        #             AND FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0);");
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
         c.callproc('update_new_accounts',(self.acc_tabl,self.var_tabl,self.alg_tabl))
         for row in c.stored_results():
             results = row.fetchall()
@@ -1114,6 +874,7 @@ class Accert:
                 alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
             self.update_total_cost(c, acc_name, alg_value, 'dollar')
             print(' ')
+        return None
 
     def update_account_table_by_cost_elements(self, c):
         """
@@ -1121,38 +882,12 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Updating account table '.center(100,'='))
         print('\n')
         print('[Updating] Updating account table by cost elements')
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_table_by_cost_elements`(IN acc_tabl_name varchar(50),
-        #                                                                                     IN cel_tabl_name varchar(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
-        #                         '(SELECT ', acc_tabl_name, '.code_of_account,
-        #                                 ce.total_cost as cost,
-        #                                 ce.updated as updated,
-        #                                 ', acc_tabl_name, '.unit
-        #                         FROM ', acc_tabl_name, '
-        #                         JOIN (SELECT account,
-        #                                     sum(cost_2017) as total_cost,
-        #                                     sum(updated) as updated
-        #                             FROM ', cel_tabl_name, '
-        #                             GROUP BY ', cel_tabl_name, '.account ) as ce
-        #                         on ', acc_tabl_name, '.code_of_account = ce.account
-        #                         ORDER BY ', acc_tabl_name, '.ind) as updated_account
-        #                         SET ', acc_tabl_name, '.total_cost = updated_account.cost,
-        #                         review_status = \'Ready for Review\'
-        #                         WHERE updated_account.updated > 0
-        #                         and ', acc_tabl_name, '.code_of_account = updated_account.code_of_account;');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('update_account_table_by_cost_elements', (self.acc_tabl, self.cel_tabl))
         print('[Updated]  Account table updated from cost elements\n')
         return None
@@ -1163,8 +898,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Roll up cost elements '.center(100,'='))
         print('\n')
@@ -1181,37 +916,13 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         from_level : int
             Roll up from a given level.
         to_level : int
             Roll up to a given level.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_cost_elements_by_level`(IN table_name varchar(50), 
-        #                                                                   IN from_level int, IN to_level int)
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', table_name, ',',
-        #                         '(SELECT c',to_level,'.cost_element as ce',to_level,'_ce, ',
-        #                             'sum(uc',from_level,'.cost_2017) as c',to_level,'_cal_total_cost ',
-        #                         'FROM ', table_name, ' as uc',from_level,
-        #                         ' JOIN ', table_name, ' as c',to_level,
-        #                         ' on uc',from_level,'.sup_cost_ele=c',to_level,'.cost_element ',
-        #                         'join account as ac',to_level,
-        #                         ' on c',to_level,'.account = ac',to_level,'.code_of_account ',
-        #                         'where ac',to_level,'.level=',to_level,
-        #                         ' group by c',to_level,'.cost_element) as updated_ce',to_level,
-        #                         ' SET ',
-        #                         table_name,'.cost_2017 = updated_ce',to_level,'.c',to_level,'_cal_total_cost,',
-        #                         table_name,'.updated = 1 ',
-        #                         'WHERE ',
-        #                         table_name,'.cost_element = updated_ce',to_level,'.ce',to_level,'_ce');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('roll_up_cost_elements_by_level',(self.cel_tabl,from_level,to_level))
         print('[Updating] Roll up cost elements from level {} to level {}'.format(from_level,to_level))
         return None
@@ -1222,8 +933,8 @@ class Accert:
         
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Rolling up account table '.center(100,'='))
         print('\n')
@@ -1238,8 +949,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         from_level : int
             Roll up from a given level.
         to_level : int
@@ -1259,8 +970,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Rolling up account table by GNCOA '.center(100,'='))
         # remove 220A first
@@ -1275,8 +986,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
 
         def fetch_sum_and_update(cost_type, proc_name):
@@ -1290,7 +1001,7 @@ class Accert:
             proc_name : str
                 Procedure name.
             """
-            # Call stored procedure and fetch results
+            # Call procedure and fetch results
             print(f'[Updating] Summing cost element for {cost_type}')
             c.callproc(proc_name, (self.cel_tabl, self.acc_tabl))
             for row in c.stored_results():
@@ -1320,8 +1031,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
 
         print(' Rolling up account table '.center(100,'='))
@@ -1338,8 +1049,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         c.callproc('roll_up_lmt_direct_cost',(self.acc_tabl,))
         print('[Updated]  Account table rolled up for direct cost.\n')
@@ -1351,13 +1062,13 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         c.callproc('cal_direct_cost_elements', (self.acc_tabl, self.cel_tabl))
 
         # After the procedure execution, fetch the OUT parameters from the cursor
-        # The stored procedure call doesn't return results, but the OUT parameters are updated
+        # The procedure call doesn't return results, but the OUT parameters are updated
         for row in c.stored_results():
             results = row.fetchall()
         fac, lab, mat = results[0]
@@ -1369,8 +1080,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements
         """
         ### only update account 222 and account 2C
         self.roll_up_account_table(c, from_level=3, to_level=2)
@@ -1401,15 +1112,14 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : UserTable
             UserTable class instantiates objects that can execute user input statements.
         """
         self.print_logo()
 
         accert = self.load_obj(input_path, accert_path).accert
-        c.execute("USE accert_db")
         print(' Reading user input '.center(100, '='))
         print('\n')
 
@@ -1434,8 +1144,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1457,8 +1167,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1480,8 +1190,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1499,8 +1209,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
         """
@@ -1527,8 +1237,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1543,8 +1253,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         level_accounts : list
             List of level accounts.
         accert : ACCERT
@@ -1593,8 +1303,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         account : Account
             Account class instantiates objects that can parse the account.
         """
@@ -1618,8 +1328,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_inp : Variable
 
         """
@@ -1635,8 +1345,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         alg_inp : Algorithm
         """
 
@@ -1661,8 +1371,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1677,8 +1387,8 @@ class Accert:
         
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1695,8 +1405,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         level_accounts : list
             List of level accounts.
         accert : ACCERT
@@ -1718,8 +1428,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1735,8 +1445,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         level_accounts : list
             List of level accounts.
         accert : ACCERT
@@ -1784,8 +1494,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1813,8 +1523,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1834,8 +1544,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1859,8 +1569,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1878,8 +1588,8 @@ class Accert:
         ----------
         ut : Utility class
             Utility class for processing user input.
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         fac : float
             Factory cost.
         lab : float
@@ -1902,8 +1612,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1928,8 +1638,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1947,10 +1657,10 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        conn : MySQLConnection
-            MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
+        conn : SQLiteConnectionAdapter
+            SQLiteConnectionAdapter class instantiates objects that represent a connection to the SQLite database file.
         level : int
             Level of the account.
         """
@@ -1960,17 +1670,17 @@ class Accert:
 
     def _generate_excel(self, c, filename_suffix, proc_name,  *args, remove_last_col=False):
         """
-        Generate an Excel file from stored procedure results.
+        Generate an Excel file from procedure results.
         
         Parameters:
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         proc_name : str
-            Name of the stored procedure.
+            Name of the procedure.
         filename_suffix : str
             Suffix of the filename.
         args : tuple
-            Arguments for the stored procedure.
+            Arguments for the procedure.
         remove_last_col : bool
             Remove the last column if required.
         """
@@ -2006,7 +1716,7 @@ if __name__ == "__main__":
     code_folder = os.path.dirname(os.path.abspath(__file__))
     conn = accert_sqlite_connect(db_path=_accert_sqlite_db_path())
     # conn.commit()
-    # NOTE: cursor is a class that instantiates objects that can execute MySQL statements
+    # NOTE: cursor is a class that instantiates objects that can execute SQLite statements
     # only commit when you are sure that the transaction is complete
     c = conn.cursor()
     ut = Utility_methods()

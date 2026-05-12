@@ -81,4 +81,4 @@ ln -sf "${workbench_path}/bin/sonvalidxml" "$ACCERT_DIR/../bin/sonvalidxml"
 
 # 10) Confirm installation is finished
 echo -e "${GREEN}ACCERT has been set up.${NC}"
-echo -e "${YELLOW}ACCERT now uses SQLite. No MySQL root password or install.conf file is required.${NC}"
+echo -e "${YELLOW}ACCERT uses the bundled SQLite database in src/accertdb.sqlite.${NC}"

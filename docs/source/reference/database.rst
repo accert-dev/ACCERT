@@ -1,7 +1,7 @@
 
                                
-Database Stored Procedures
-==========================
+Database Procedures
+===================
 
 .. toctree::
    :maxdepth: 1

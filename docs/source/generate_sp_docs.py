@@ -1,4 +1,4 @@
-"""Generate reference pages for SQLite procedure replacements."""
+"""Generate reference pages for ACCERT SQLite procedures."""
 
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def append_to_toctree(sp_name: str) -> None:
 
 
 def main() -> None:
-    print(f"Reading SQLite procedure replacements from: {procedure_file_path}")
+    print(f"Reading SQLite procedures from: {procedure_file_path}")
     clean_output_directory(output_dir)
 
     if toctree_file_path.exists():
@@ -49,8 +49,8 @@ def main() -> None:
     with toctree_file_path.open("w", encoding="utf-8") as toctree_file:
         toctree_file.write(
             """
-Database Procedure Replacements
-===============================
+Database Procedures
+===================
 
 .. toctree::
    :maxdepth: 1
@@ -73,7 +73,7 @@ title: {sp_name}
 
 # {sp_name}
 
-SQLite/Python replacement for the former ACCERT database stored procedure.
+SQLite/Python implementation for an ACCERT database procedure.
 
 ## Parameters
 
@@ -88,7 +88,7 @@ See ``src/accert_sqlite_procedures.py``.
         (output_dir / f"{sp_name}.md").write_text(content, encoding="utf-8")
         append_to_toctree(sp_name)
 
-    print("All SQLite procedure replacement docs have been generated successfully.")
+    print("All SQLite procedure docs have been generated successfully.")
 
 
 if __name__ == "__main__":

@@ -32,8 +32,8 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         align_key : list[str], optional
             List of column names to align. (By default none)
         align : list[str], optional
@@ -68,8 +68,8 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         all : bool, optional
             If True, print all the accounts columns. (By default False)
         cost_unit : str, optional
@@ -78,17 +78,6 @@ class Utility_methods:
             Level of account. (By default 3)
         """    
         if all:
-            # DELIMITER $$
-            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_account_all`(IN table_name varchar(50),
-            #                                                                 IN level int)
-            # BEGIN
-            #     SET @stmt=CONCAT('SELECT * FROM ',table_name,' WHERE level <= ?');
-            #     PREPARE stmt FROM @stmt;
-            #     SET @level=level;
-            #     EXECUTE stmt USING @level;
-            #     DEALLOCATE PREPARE stmt;
-            # END$$
-            # DELIMITER ;
 
             c.callproc('print_account_all', (self.acc_tabl,level))
 
@@ -96,24 +85,6 @@ class Utility_methods:
             #                     FROM account
             #                     WHERE level <= %(u_i_level)s;""",{'u_i_level': str(level)})
         else:
-            # DELIMITER $$
-            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_account_simple`(IN table_name varchar(50),
-            #                                                                    IN level int)
-            # BEGIN
-            #     SET @stmt=CONCAT('SELECT ind,
-            #                             code_of_account,
-            #                             account_description,
-            #                             total_cost,
-            #                             unit,
-            #                             level,
-            #                             review_status
-            #                             FROM ',table_name,' WHERE level <= ?');
-            #     PREPARE stmt FROM @stmt;
-            #     SET @level=level;
-            #     EXECUTE stmt USING @level;
-            #     DEALLOCATE PREPARE stmt;
-            # END$$
-            # DELIMITER ;
 
             c.callproc('print_account_simple', (self.acc_tabl,level))
             # c.execute("""SELECT ind,
@@ -156,8 +127,8 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         all : bool, optional
             If True, print all the accounts columns. (By default False)
         cost_unit : str, optional
@@ -166,83 +137,11 @@ class Utility_methods:
             Level of account. (By default 3)
         """
         if all:
-            # DELIMITER $$
-            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_accounts_all`(IN acc_table varchar(50),
-            #                                                                         IN  cel_table varchar(50),
-            #                                                                         IN  level int)
-            # BEGIN
-            #     SET @stmt=CONCAT('SELECT acc.level,
-            #                             rankedcoa.COA as code_of_account,
-            #                             acc.account_description,
-            #                             sorted_ce.fac_cost,
-            #                             sorted_ce.lab_cost,
-            #                             sorted_ce.mat_cost,
-            #                             acc.total_cost,
-            #                             acc.unit,
-            #                             acc.review_status
-            #                             FROM ',acc_table,' as acc
-            #                             JOIN
-            #                             (SELECT node.code_of_account,
-            #                                     CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS COA
-            #                                 FROM ',acc_table,' AS node,
-            #                                     ',acc_table,' AS parent
-            #                                 WHERE node.lft BETWEEN parent.lft AND parent.rgt
-            #                                 GROUP BY node.code_of_account) as rankedcoa
-            #                                 ON acc.code_of_account=rankedcoa.code_of_account
-            #                                 JOIN (SELECT splt_act.code_of_account,
-            #                                     cef.cost_2017 as fac_cost,
-            #                                     cel.cost_2017 as lab_cost,
-            #                                     cem.cost_2017 as mat_cost
-            #                                     FROM 
-            #                                     (SELECT code_of_account,total_cost,
-            #                                             SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 1), ",", -1) AS fac_name,
-            #                                             SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 2), ",", -1) AS lab_name,
-            #                                             SUBSTRING_INDEX(SUBSTRING_INDEX(cost_elements, ",", 3), ",", -1) AS mat_name
-            #                                             FROM ',acc_table,') as splt_act
-            #                                     LEFT JOIN ',cel_table,' as cef
-            #                                     ON cef.cost_element= splt_act.fac_name
-            #                                     LEFT JOIN ',cel_table,' as cel
-            #                                     ON cel.cost_element= splt_act.lab_name
-            #                                     LEFT JOIN ',cel_table,' as cem
-            #                                     ON cem.cost_element= splt_act.mat_name) as sorted_ce
-            #                                     ON sorted_ce.code_of_account=acc.code_of_account
-            #                                     WHERE acc.level <= ?
-            #                                     ORDER BY acc.lft;');
-            #     PREPARE stmt FROM @stmt;
-            #     SET @level=level;
-            #     EXECUTE stmt USING @level;
-            #     DEALLOCATE PREPARE stmt;
-            # END$$
-            # DELIMITER ;
 
             c.callproc('print_leveled_accounts_all', (self.acc_tabl,self.cel_tabl,level))
             align_key=["code_of_account", "account_description", "fac_cost", "lab_cost", "mat_cost", "total_cost"] 
             align=[ "l", "l", "r", "r", "r", "r"]
         else:
-            # DELIMITER $$
-            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_leveled_accounts_simple`(IN acc_table VARCHAR(255), IN level INT)
-            # BEGIN
-            #     SET @stmt = CONCAT('SELECT rankedcoa.code_of_account,
-            #                     acc.account_description,
-            #                     acc.total_cost,
-            #                     acc.unit,
-            #                     acc.level,
-            #                     acc.review_status
-            #                     FROM ',acc_table,' as acc
-            #                     JOIN
-            #                     (SELECT node.code_of_account AS COA , CONCAT( REPEAT(" ", COUNT(parent.code_of_account) - 1), node.code_of_account) AS code_of_account
-            #                     FROM ',acc_table,' AS node,
-            #                                     ',acc_table,' AS parent
-            #                     WHERE node.lft BETWEEN parent.lft AND parent.rgt
-            #                     GROUP BY node.code_of_account) as rankedcoa
-            #                     ON acc.code_of_account=rankedcoa.COA
-            #                     WHERE acc.level <= ?');
-            #     PREPARE stmt FROM @stmt;
-            #     SET @level=level;
-            #     EXECUTE stmt USING @level;
-            #     DEALLOCATE PREPARE stmt;
-            # END$$
-            # DELIMITER ;
             c.callproc('print_leveled_accounts_simple', (self.acc_tabl,level))
             # c.execute("""SELECT rankedcoa.code_of_account,
             #                     account.account_description,
@@ -304,8 +203,8 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         all : bool, optional
             If True, print all the accounts columns. (By default False)
         cost_unit : str, optional
@@ -364,18 +263,9 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_table`(IN table_name VARCHAR(255))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT * FROM ',table_name);
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('print_table', (self.alg_tabl,))
         self.print_table(c)
         return None
@@ -385,8 +275,8 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         c.callproc('print_table', (self.cel_tabl,))
         self.print_table(c)
@@ -397,8 +287,8 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         c.callproc('print_table', (self.fac_tabl,))
         # c.execute("""SELECT *
@@ -412,8 +302,8 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor 
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter 
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         c.callproc('print_table', (self.esc_tabl,))
         # c.execute("""SELECT *
@@ -427,8 +317,8 @@ class Utility_methods:
         
         Parameters
         ----------
-        c : MySQLCursor 
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter 
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         c.callproc('print_table', (self.var_tabl,))
         # c.execute("""SELECT *
@@ -442,36 +332,11 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         all : bool, optional
             If True, prints all columns. (By default False)
         """
-            # DELIMITER $$
-            # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_user_request_parameter`(IN all_col BOOLEAN,
-            #                                                                            IN var_table VARCHAR(50), 
-            #                                                                            IN vlk_table VARCHAR(50))
-            # BEGIN
-            #     IF all_col THEN
-            # 		SET @stmt = CONCAT('SELECT va.ind, va.var_name, affectv.ce_affected FROM ',var_table,' as va JOIN 
-            # 								(SELECT variable, group_concat(ce) as ce_affected
-            # 								FROM ',vlk_table,' as vlk 
-            # 								group by variable) as affectv on va.var_name = affectv.variable
-            # 								where va.var_value IS NULL
-            # 								order by va.ind');
-            #     ELSE
-            #         SET @stmt = CONCAT('SELECT va.var_name, affectv.ce_affected FROM ',var_table,' as va JOIN
-            #                             (SELECT variable, group_concat(ce) as ce_affected
-            #                             FROM ',vlk_table,' as vlk
-            #                             group by variable) as affectv on va.var_name = affectv.variable
-            #                             where va.var_value IS NULL
-            #                             order by va.ind;');
-            #     END IF;
-            #     PREPARE stmt FROM @stmt;
-            #     EXECUTE stmt;
-            #     DEALLOCATE PREPARE stmt;
-            # END$$
-            # DELIMITER ;
         if all:
             c.callproc('print_user_request_parameter', (True, self.var_tabl, self.cel_tabl))
             self.print_table(c)
@@ -500,25 +365,9 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `print_updated_cost_elements`(IN cel_table VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT ind,
-        #                                 cost_element,
-        #                                 cost_2017,    
-        #                                 sup_cost_ele,
-        #                                 account,
-        #                                 updated
-        #                         FROM ',cel_table,'
-        #                         WHERE updated = 1');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
 
         c.callproc('print_updated_cost_elements', (self.cel_tabl,))
         self.print_table(c)
@@ -528,30 +377,11 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Extracting affected cost elements '.center(100,'='))
         print('\n')
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_affected_cost_elements`(IN cel_table varchar(50),
-        #                                                                               IN var_table varchar(50))
-        # BEGIN
-        #     SET @stmt = CONCAT("SELECT va.var_name, (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
-        #         FROM ", cel_table, " ce
-        #         WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) AS ce_affected
-        #                         FROM
-        #                         (SELECT * FROM ",var_table,"
-        #                         WHERE user_input = 1) as va
-        #                         WHERE (SELECT GROUP_CONCAT(ce.cost_element SEPARATOR ', ')
-        # 								FROM ", cel_table, " ce
-        # 						WHERE FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0) IS NOT NULL
-        #                         ");
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END
-        # DELIMITER ;
 
         c.callproc('extract_affected_cost_elements',(self.cel_tabl,self.var_tabl))
         for row in c.stored_results():
@@ -566,29 +396,10 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print('Extracting affected accounts'.center(100,'='))
-        # DELIMITER $$
-        # CREATE DEFINER=`root@`localhost` PROCEDURE `extract_affected_accounts`(IN acc_table VARCHAR(50),
-        #                                                                         IN var_table VARCHAR(50)) 
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT va.var_name,
-        #                             (SELECT GROUP_CONCAT(ac.code_of_account SEPARATOR ", ")
-        #                             FROM ',acc_table,' ac
-        #                             WHERE FIND_IN_SET(va.var_name, REPLACE(ac.variables, " ", "")) > 0) AS ac_affected
-        #                             FROM
-        #                             (SELECT * FROM ',var_table,'
-        #                             WHERE user_input = 1) as va
-        #                             WHERE (SELECT GROUP_CONCAT(ac.code_of_account SEPARATOR ", ")
-        #                             FROM ',acc_table,' ac
-        #                             WHERE FIND_IN_SET(va.var_name, REPLACE(ac.variables, " ", "")) > 0) IS NOT NULL;');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('extract_affected_accounts',(self.acc_tabl,self.var_tabl))
         for row in c.stored_results():
             results = row.fetchall()
@@ -602,20 +413,10 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print('Extracting user changed variables'.center(100,'='))
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_user_changed_variables`(IN table_name VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT var_name,var_description, var_value, var_unit
-        #                         FROM ', table_name, ' WHERE user_input = 1 ORDER BY var_name;');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('extract_user_changed_variables',(self.var_tabl,))
         # c.execute("""SELECT var_name,var_description, var_value, var_unit 
         #                 FROM `accert_db_test`.`variable` 
@@ -629,21 +430,9 @@ class Utility_methods:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_changed_cost_elements`(IN cel_table VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT cost_element, cost_2017
-        #                         FROM ',cel_table,'
-        #                         WHERE updated != 0
-        #                         ORDER BY account, cost_element;');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         print('Extracting changed cost elements'.center(100,'='))
         c.callproc('extract_changed_cost_elements',(self.cel_tabl,))
         

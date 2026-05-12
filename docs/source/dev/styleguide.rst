@@ -19,8 +19,8 @@ Python code should work with all currently `supported versions`_ of Python.
 .. _os: https://docs.python.org/3/library/os.html
 .. _Path: https://docs.python.org/3/library/pathlib.html#pathlib.Path
 
-SQLite replacement logic for former stored procedures lives in
-``src/accert_sqlite_procedures.py``. New database code should use parameterized
-queries for values and validate table or column identifiers before interpolation.
+SQLite procedure logic lives in ``src/accert_sqlite_procedures.py``. New
+database code should use parameterized queries for values and validate table or
+column identifiers before interpolation.
 
 Consistent style is important for us, because everyone must know what to expect. Knowing our rules, you'll find it easier to read our code, and when you decide to contribute (which we hope you'll consider!) we'll find it easier to read and review your code.

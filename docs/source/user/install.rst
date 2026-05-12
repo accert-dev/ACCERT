@@ -2,8 +2,7 @@ Installation Guide
 ==================
 
 This guide describes how to install ACCERT on Windows, macOS, and Linux.
-ACCERT now uses a bundled SQLite database, so no MySQL server, root password,
-or ``install.conf`` file is required.
+ACCERT uses the bundled SQLite database at ``src/accertdb.sqlite``.
 
 Prerequisites
 -------------

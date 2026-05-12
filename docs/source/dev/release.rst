@@ -30,7 +30,7 @@ New Features
 4. **Improved Scalability and Maintainability**:
 
    - Removed redundant tables and columns from the database, simplifying its structure.
-   - Redundant stored procedures have been eliminated to streamline database operations.
+   - Redundant database procedures have been eliminated to streamline database operations.
    - Fusion-related algorithms are now separate from the main database, housed in Python files for easier updates.
 
 5. **Refactored Algorithm Storage**:
@@ -59,14 +59,14 @@ Bug Fixes
 Performance Enhancements
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-- **Stored Procedure Usage**:
+- **Database Procedure Usage**:
 
-  - Replaced instances of the `execute` method with stored procedures for database interaction, leading to better performance and more consistent operations.
+  - Consolidated database interactions through named database procedures, leading to more consistent operations.
 
 Version 0.1.0 (04/05/2023)
 --------------------------
 
-`ACCERT relational database <https://github.com/accert-dev/ACCERT/blob/main/src/accertdb.sql>`_
+`ACCERT relational database <https://github.com/accert-dev/ACCERT/blob/main/src/accertdb.sqlite>`_
 
 `PWR-12BE case <https://github.com/accert-dev/ACCERT/blob/main/tutorial/PWR12-BE.son>`_
 
@@ -83,5 +83,4 @@ New Features
 - **Relational Databases**: Provides access to comprehensive cost data from reference reactor models, which can be tailored to new designs.
 - **Hierarchical Structure**: COAs are organized across multiple levels (typically between 0-5), decomposing complex systems into manageable components and subtasks.
 - **Installation automating**: Provides a script to automate the installation process.
-
 
