@@ -97,7 +97,7 @@ Run the test suite from the repository root:
 
 .. code-block:: shell
 
-   $ pytest
+   $ pytest test
 
 Troubleshooting
 ---------------

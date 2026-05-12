@@ -1,16 +1,19 @@
 import sys
 import os
+from pathlib import Path
 
-src_path = os.path.abspath(os.path.join(os.pardir, 'src'))
-sys.path.insert(0, src_path)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+TEST_DIR = Path(__file__).resolve().parent
+SRC_PATH = PROJECT_ROOT / 'src'
+sys.path.insert(0, str(SRC_PATH))
 from utility_accert import Utility_methods 
 from Main import Accert
 import pytest
 
 
 ut = Utility_methods()
-accert_path = os.path.dirname(os.getcwd())
-input_path = os.path.join(os.getcwd(), 'accert_unit_test_input.son')
+accert_path = str(PROJECT_ROOT)
+input_path = str(TEST_DIR / 'accert_unit_test_input.son')
 accert = Accert(input_path, accert_path)
 accert.ref_model = 'pwr12-be'
 accert.acc_tabl = 'account'
@@ -56,7 +59,7 @@ def test_update_input_variable(cursor):
     # check if the value is updated
     cursor.execute("""SELECT var_name,var_value, var_unit
                     FROM variable 
-                    WHERE var_name = "c_213_fac";""")
+                    WHERE var_name = ?;""", ("c_213_fac",))
     expect_output = ('c_213_fac',  0.0, 'million') 
     assert expect_output in cursor.fetchall()
 
@@ -67,7 +70,7 @@ def test_update_variable_info_on_name(cursor):
     # check if the value is updated
     cursor.execute("""SELECT var_name,var_value, var_unit
                     FROM variable
-                    WHERE var_name = "c_213_fac";""")
+                    WHERE var_name = ?;""", ("c_213_fac",))
     expect_output = ('c_213_fac',  0.0, 'million') 
     assert expect_output in cursor.fetchall()
 
@@ -78,7 +81,7 @@ def test_update_super_variable(cursor):
     # check if the value is updated only check the user_input column
     cursor.execute("""SELECT var_name,user_input
                     FROM variable 
-                    WHERE var_name = "n_231";""")
+                    WHERE var_name = ?;""", ("n_231",))
     expect_output = ('n_231', 1)
     assert expect_output in cursor.fetchall()
 
@@ -89,7 +92,7 @@ def test_update_total_cost(cursor):
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, total_cost
                     FROM account 
-                    WHERE code_of_account = "211";""")
+                    WHERE code_of_account = ?;""", ("211",))
     expect_output = ('211',  1000000.0) 
     assert expect_output in cursor.fetchall()
 
@@ -100,7 +103,7 @@ def test_update_total_cost_on_name(cursor):
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, total_cost
                     FROM account 
-                    WHERE code_of_account = "211";""")
+                    WHERE code_of_account = ?;""", ("211",))
     expect_output = ('211',  1000000.0 ) 
     assert expect_output in cursor.fetchall()
 
@@ -111,7 +114,7 @@ def test_update_cost_element_on_name(cursor):
     # check if the value is updated
     cursor.execute("""SELECT cost_element, cost_2017, updated
                     FROM cost_element
-                    WHERE cost_element = "211_fac";""")
+                    WHERE cost_element = ?;""", ("211_fac",))
     expect_output = ('211_fac', 2000.0, 1)
     assert expect_output in cursor.fetchall()
 
@@ -138,7 +141,7 @@ def test_roll_up_account_table(cursor):
     # check updated column
     cursor.execute("""SELECT code_of_account, review_status
                     FROM account 
-                    WHERE review_status = 'updated';""")
+                    WHERE review_status = ?;""", ("Updated",))
     expect_output = [('218', 'Updated'), ('21', 'Updated'), ('2', 'Updated')]
     real_output = cursor.fetchall()
     for tup in expect_output:
@@ -157,7 +160,7 @@ def test_roll_up_lmt_account_table(cursor):
     # check updated column
     cursor.execute("""SELECT code_of_account, review_status
                     FROM abr_account
-                    WHERE review_status = 'updated';""")
+                    WHERE review_status = ?;""", ("Updated",))
     expect_output = [('222', 'Updated')]
     accert.acc_tabl = 'account'
     assert expect_output==cursor.fetchall()
@@ -170,7 +173,7 @@ def test_sum_cost_elements_2C(cursor):
     # check if the value is updated
     cursor.execute("""SELECT cost_element, updated
                     FROM abr_cost_element 
-                    WHERE account = "2";""")
+                    WHERE account = ?;""", ("2",))
     expect_output = [('2c_fac',1), ('2c_lab', 1), ('2c_mat',1)]
     real_output = cursor.fetchall()
     for tup in expect_output:
@@ -184,7 +187,7 @@ def test_roll_up_lmt_account_2C(cursor):
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, review_status
                     FROM abr_account
-                    WHERE code_of_account = "2C";""")
+                    WHERE code_of_account = ?;""", ("2C",))
     expect_output = [('2C', 'Ready for Review')]
     assert expect_output==cursor.fetchall()
 
@@ -196,7 +199,7 @@ def test_roll_up_lmt_direct_cost(cursor):
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, review_status
                     FROM abr_account
-                    WHERE code_of_account = "2";""")
+                    WHERE code_of_account = ?;""", ("2",))
     expect_output = [('2', 'Ready for Review')]
     assert expect_output==cursor.fetchall()
 
