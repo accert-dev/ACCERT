@@ -17,6 +17,8 @@ import sqlite3
 from dataclasses import dataclass
 from typing import Any, Iterable, List, Optional, Sequence, Tuple
 
+from Algorithm.PWRABRFunc import ALGORITHM_METADATA
+
 _IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
@@ -57,6 +59,16 @@ def _with_decoded_text(rows: Iterable[tuple]) -> list[tuple]:
 
 def _contains_csv_var(variables: Any, var_name: str) -> bool:
     return str(var_name).strip() in _split_csv(variables)
+
+
+def _algorithm_metadata(alg_name: Any) -> Optional[dict[str, Any]]:
+    if alg_name is None:
+        return None
+    name = str(alg_name)
+    metadata = ALGORITHM_METADATA.get(name) or ALGORITHM_METADATA.get(name.strip())
+    if metadata is not None:
+        return metadata
+    return next((meta for key, meta in ALGORITHM_METADATA.items() if key.strip() == name.strip()), None)
 
 
 def _table_columns(conn: sqlite3.Connection, table_name: str) -> list[str]:
@@ -446,6 +458,29 @@ def update_cost_element_on_name(conn: sqlite3.Connection, table_name: str, ce_na
 
 
 def update_new_accounts(conn: sqlite3.Connection, acc_tabl_name: str, var_tabl_name: str, alg_tabl_name: str) -> list[tuple]:
+    if alg_tabl_name == "algorithm":
+        acc_rows = _fetchall(conn, f"""
+            SELECT ind, code_of_account, total_cost, alg_name, variables
+            FROM {qident(acc_tabl_name)}
+            WHERE alg_name IS NOT NULL AND trim(alg_name) != ''
+        """)
+        user_vars = [r[0] for r in _fetchall(conn, f"SELECT var_name FROM {qident(var_tabl_name)} WHERE user_input = 1")]
+        rows = []
+        for ind, code_of_account, total_cost, alg_name, variables in acc_rows:
+            metadata = _algorithm_metadata(alg_name)
+            if metadata and any(_contains_csv_var(variables, v) for v in user_vars):
+                rows.append((
+                    ind,
+                    code_of_account,
+                    total_cost,
+                    alg_name,
+                    variables,
+                    metadata["alg_python"],
+                    metadata["alg_formulation"],
+                    metadata["alg_units"],
+                ))
+        return _with_decoded_text(rows)
+
     acc_rows = _fetchall(conn, f"""
         SELECT ac.ind, ac.code_of_account, ac.total_cost, ac.alg_name, ac.variables,
                alg.alg_python, alg.alg_formulation, alg.alg_units
@@ -457,6 +492,30 @@ def update_new_accounts(conn: sqlite3.Connection, acc_tabl_name: str, var_tabl_n
 
 
 def update_new_cost_elements(conn: sqlite3.Connection, cel_tabl_name: str, var_tabl_name: str, alg_tabl_name: str) -> list[tuple]:
+    if alg_tabl_name == "algorithm":
+        ce_rows = _fetchall(conn, f"""
+            SELECT ind, cost_element, cost_2017, alg_name, variables, algno
+            FROM {qident(cel_tabl_name)}
+            WHERE alg_name IS NOT NULL AND trim(alg_name) != ''
+        """)
+        user_vars = [r[0] for r in _fetchall(conn, f"SELECT var_name FROM {qident(var_tabl_name)} WHERE user_input = 1")]
+        rows = []
+        for ind, cost_element, cost_2017, alg_name, variables, algno in ce_rows:
+            metadata = _algorithm_metadata(alg_name)
+            if metadata and any(_contains_csv_var(variables, v) for v in user_vars):
+                rows.append((
+                    ind,
+                    cost_element,
+                    cost_2017,
+                    alg_name,
+                    variables,
+                    algno,
+                    metadata["alg_python"],
+                    metadata["alg_formulation"],
+                    metadata["alg_units"],
+                ))
+        return _with_decoded_text(rows)
+
     ce_rows = _fetchall(conn, f"""
         SELECT ce.ind, ce.cost_element, ce.cost_2017, ce.alg_name, ce.variables, ce.algno,
                alg.alg_python, alg.alg_formulation, alg.alg_units
@@ -468,6 +527,30 @@ def update_new_cost_elements(conn: sqlite3.Connection, cel_tabl_name: str, var_t
 
 
 def update_super_variable(conn: sqlite3.Connection, var_table_name: str, alg_table_name: str, u_i_var_name: str) -> list[tuple]:
+    if alg_table_name == "algorithm":
+        rows = _fetchall(conn, f"""
+            SELECT ind, var_name, var_value, var_alg, var_need, var_unit
+            FROM {qident(var_table_name)}
+            WHERE var_name = ?
+        """, (u_i_var_name,))
+        result = []
+        for ind, var_name, var_value, var_alg, var_need, var_unit in rows:
+            metadata = _algorithm_metadata(var_alg)
+            if metadata:
+                result.append((
+                    ind,
+                    var_name,
+                    var_value,
+                    var_alg,
+                    var_need,
+                    metadata["ind"],
+                    metadata["alg_python"],
+                    metadata["alg_formulation"],
+                    metadata["alg_units"],
+                    var_unit,
+                ))
+        return _with_decoded_text(result)
+
     return _with_decoded_text(_fetchall(conn, f"""
         SELECT var.ind, var.var_name, var.var_value, var.var_alg, var.var_need,
                alg.ind, alg.alg_python, alg.alg_formulation, alg.alg_units, var.var_unit

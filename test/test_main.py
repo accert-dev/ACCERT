@@ -244,9 +244,8 @@ def test_run_pre_alg():
     """ test function run_pre_alg, this function will run the pre programed algorithm. the pre algorithm
     will update the cost element table for PWR12 BE and ABR1000. NOTE: all the pre programed algorithm
     output unit is million"""
-    alg='sum(kwargs.values())'
     kwargs={'v_1': 1, 'v_2': 2}
-    assert accert.run_pre_alg(alg, **kwargs)==3
+    assert accert.run_pre_alg('sum_multi_accounts', **kwargs)==3
 
 def test_cal_direct_cost_elements(cursor,conn):
     """ test function cal_direct_cost_elements, this function will calculate the direct cost for 

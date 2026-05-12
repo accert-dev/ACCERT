@@ -406,7 +406,7 @@ class Accert:
         alg_name = result[3]
         var_name_lst = [x.strip() for x in result[4].split(',')]
         alg_no = result[5]
-        alg = result[6]
+        alg_py = result[6]
         alg_form = result[7]
         alg_unit = result[8]
         sup_var_unit = result[9]
@@ -418,12 +418,12 @@ class Accert:
                 # var_value_lst.append(get_var_value_by_name(c, var_name))
                 variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
             print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
-            alg_value = self.run_pre_alg(alg, **variables)
+            alg_value = self.update_account_value(alg_py, alg_name, variables)
         else:
             for var_ind, var_name in enumerate(var_name_lst):
                 variables[var_name] = self.get_var_value_by_name(c, var_name)
             print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
-            alg_value= self.update_account_value(alg, alg_name, variables)
+            alg_value= self.update_account_value(alg_py, alg_name, variables)
         self.update_input_variable(c,sup_var_name,alg_value,sup_var_unit,quite = True)
         if alg_unit == '1':
             alg_unit=''
@@ -698,7 +698,7 @@ class Accert:
 
     def run_pre_alg(self, alg, **kwargs):
         """
-        Runs pre-algorithms.
+        Runs a reference algorithm without evaluating database text.
 
         Parameters
         ----------
@@ -712,31 +712,20 @@ class Accert:
         alg_value : float
             Algorithm value
         """
-        # NOTE: comments below is the original note from Patrick,
-        #       I would want to keep the original note for future reference
-        # add the variables in kwargs to the local
-        # function namespace
-        # (equivalent to c1 = 10; c2 = 10; c3 = 40.5)
-        locals().update(kwargs)
-        # report back the user algorithm
-        # evaluate the algorithm
-        alg_value = eval(alg)
-        return alg_value
+        if alg == 'sum(kwargs.values())':
+            return sum(kwargs.values())
+        return self.update_account_value('PWRABRFunc', alg, kwargs)
 
     def update_account_value(self, alg_py, alg_name, variables):
         """
-        Calls the specified algorithm with the given variables. Only called for fusion model now.
-        For PWR, ABR,LFR, HEATPIPE the alg_py is in the form of a string that will be 
-        evaluated in the Algorithm table stored in database. For Fusion, the algorithm is in 
-        the form of a python file name that stored in Algorithm folder. For example, in 
-        Fusion model, the alg_py value is 'FusionFunc' then it should look for FusionFunc.py 
-        in the Algorithm folder.
+        Calls the specified algorithm with the given variables. The algorithm
+        module name points to a Python file in the Algorithm folder.
 
 
         Parameters
         ----------
         alg_py : str
-            Algorithm in python.
+            Algorithm Python module name.
         alg_name : str
             Algorithm name.my
         variables : dict
@@ -749,13 +738,8 @@ class Accert:
 
         
         """
-        # Dynamically import the module
         module = importlib.import_module(f'Algorithm.{alg_py}')
-        
-        # Get the class from the module
         class_ = getattr(module, alg_py)
-        
-        # Create an instance of the class
         algorithm_instance = class_(
             ind=1,  # Dummy value, may be needed for future reference
             alg_name=alg_name,
@@ -767,7 +751,6 @@ class Accert:
             constants=''  # Dummy value, replace as needed
         )
         
-        # Run the algorithm and get the result
         result = algorithm_instance.run(variables)
         return result
 
@@ -814,7 +797,7 @@ class Accert:
             alg_name = row[3]
             var_name_lst = [x.strip() for x in row[4].split(',')]
             alg_no = row[5]
-            alg = row[6]
+            alg_py = row[6]
             alg_form = row[7]
             alg_unit = row[8]
             # NOTE cost element unit is always in USD dollar
@@ -826,7 +809,7 @@ class Accert:
                 # var_value_lst.append(get_var_value_by_name(c, var_name))
                 variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
             print('[Updating] Cost element [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(ce_name, alg_name, alg_form))
-            alg_value = self.run_pre_alg(alg, **variables)
+            alg_value = self.update_account_value(alg_py, alg_name, variables)
             unit_convert = self.check_unit_conversion('dollar',alg_unit)
             if unit_convert:
                 alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
