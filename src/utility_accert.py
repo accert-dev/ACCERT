@@ -1,6 +1,5 @@
 from prettytable import PrettyTable
 import textwrap
-from Algorithm.PWRABRFunc import ALGORITHM_METADATA
 
 class Utility_methods:
     """
@@ -260,31 +259,13 @@ class Utility_methods:
         return None
                                       
     def print_algorithm(self, c):
-        """Prints the configured algorithm registry.
+        """Prints the output algorithm table.
 
         Parameters
         ----------
         c : SQLiteCursorAdapter
             SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
-        if self.alg_tabl == 'algorithm':
-            fields = [
-                'ind',
-                'alg_name',
-                'alg_for',
-                'alg_description',
-                'alg_python',
-                'alg_formulation',
-                'alg_units',
-                'variables',
-                'constants',
-            ]
-            table = PrettyTable(fields)
-            for metadata in ALGORITHM_METADATA.values():
-                table.add_row([metadata[field] for field in fields])
-            print(table)
-            return None
-
         c.callproc('print_table', (self.alg_tabl,))
         self.print_table(c)
         return None
