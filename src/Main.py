@@ -1,5 +1,8 @@
 from sqlite_accert_connection import connect as accert_sqlite_connect
+import atexit
 import os
+import shutil
+import tempfile
 from prettytable import PrettyTable
 import configparser
 import xml2obj
@@ -18,11 +21,23 @@ PathLike = Union[str, bytes, os.PathLike]
 
 
 def _accert_sqlite_db_path() -> str:
-    """Return the SQLite database path for ACCERT."""
-    return os.environ.get(
-        "ACCERT_SQLITE_DB",
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "accertdb.sqlite"),
-    )
+    """Return a run-local SQLite database path for ACCERT.
+
+    Normal ACCERT runs update many rows while calculating results. To keep the
+    bundled reference database reusable, run against a temporary copy by default.
+    Set ACCERT_SQLITE_DB only when you intentionally want to use a specific
+    writable database file.
+    """
+    db_env = os.environ.get("ACCERT_SQLITE_DB")
+    if db_env:
+        return db_env
+
+    source_db = os.path.join(os.path.dirname(os.path.abspath(__file__)), "accertdb.sqlite")
+    fd, run_db = tempfile.mkstemp(prefix="accert_run_", suffix=".sqlite")
+    os.close(fd)
+    shutil.copy2(source_db, run_db)
+    atexit.register(lambda path=run_db: os.path.exists(path) and os.remove(path))
+    return run_db
 
 
 class Accert:
@@ -85,6 +100,14 @@ class Accert:
             self.acc_tabl = 'account'
             self.cel_tabl = 'cost_element'
             self.var_tabl = 'variable'
+            self.alg_tabl = 'algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
+        elif "lpsr" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'lpsr'
+            self.acc_tabl = 'lpsr_account'
+            self.cel_tabl = 'lpsr_cost_element'
+            self.var_tabl = 'lpsr_variable'
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
@@ -1117,6 +1140,7 @@ class Accert:
         self.finalize_process(c, ut, accert)
         self.generate_results(c, ut, accert)
         self.cal_LCOE(c, ut, accert)
+        conn.commit()
         conn.close()
         sys.stdout.close()
         sys.stdout = stdoutOrigin
@@ -1541,6 +1565,8 @@ class Accert:
             fac, lab, mat = self.cal_direct_cost_elements(c)
             all_flag = model != "lfr"
             self._print_results(ut, c, fac, lab, mat, all_flag)
+        elif model == "lpsr":
+            self._lpsr_processing(c, ut, accert)
         elif model == "pwr12-be":
             self._pwr12be_processing(c, ut, accert)
         else:
@@ -1614,6 +1640,14 @@ class Accert:
             print(' Generating results table for review '.center(100, '='))   
             print('\n') 
             ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
+
+    def _lpsr_processing(self, c, ut, accert):
+        self.update_account_table_by_cost_elements(c)
+        self.check_and_process_total_cost(c, accert)
+        self.roll_up_account_table(c, from_level=2, to_level=0)
+        print(' Generating results table for review '.center(100, '='))
+        print('\n')
+        ut.print_leveled_accounts(c, all=True, cost_unit='million', level=2)
 
     def _no_cost_element_processing(self, c, ut, accert):
         """
