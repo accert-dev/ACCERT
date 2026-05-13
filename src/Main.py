@@ -1642,6 +1642,7 @@ class Accert:
             ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
 
     def _lpsr_processing(self, c, ut, accert):
+        self.roll_up_cost_elements(c)
         self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c, from_level=2, to_level=0)

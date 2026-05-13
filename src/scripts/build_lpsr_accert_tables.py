@@ -137,6 +137,17 @@ def _level_1_accounts(level_2_accounts: list[str]) -> list[str]:
     return [f"A.{code}." for code in sorted({_account_code(account)[:2] for account in level_2_accounts})]
 
 
+def _ordered_accounts(level_1_accounts: list[str], level_2_accounts: list[str]) -> list[str]:
+    ordered = ["A.2"]
+    for level_1 in level_1_accounts:
+        ordered.append(level_1)
+        parent = _account_code(level_1)
+        ordered.extend(
+            account for account in level_2_accounts if _account_code(account).startswith(parent)
+        )
+    return ordered
+
+
 def _description(row) -> str:
     value = row.get("Account Description")
     return "" if value is None else str(value)
@@ -165,15 +176,19 @@ def build_rows(result, baseline):
 
     level_2_accounts = _level_2_accounts(result)
     level_1_accounts = _level_1_accounts(level_2_accounts)
-    selected_accounts = ["A.1", "A.2"] + level_1_accounts + level_2_accounts + ["A.9"]
+    selected_accounts = _ordered_accounts(level_1_accounts, level_2_accounts)
+    level_2_by_parent = {
+        _account_code(level_1): [
+            account for account in level_2_accounts
+            if _account_code(account).startswith(_account_code(level_1))
+        ]
+        for level_1 in level_1_accounts
+    }
 
     for ind, account in enumerate(selected_accounts, start=1):
         code = _account_code(account)
         row = result.loc[account] if account in result.index else None
-        if code == "1":
-            level = 0
-            supaccount = ""
-        elif code in {"2", "9"}:
+        if code == "2":
             level = 0
             supaccount = ""
         elif len(code) == 2:
@@ -183,7 +198,12 @@ def build_rows(result, baseline):
             level = 2
             supaccount = code[:2]
         description = LEVEL_1_DESCRIPTIONS.get(code, _description(row) if row is not None else "")
-        total_cost = _cost(row, "Total Cost") if row is not None else 0.0
+        if row is not None:
+            total_cost = _cost(row, "Total Cost")
+        elif len(code) == 2:
+            total_cost = sum(_cost(result.loc[child], "Total Cost") for child in level_2_by_parent[code])
+        else:
+            total_cost = 0.0
         account_rows.append(
             (
                 ind,
@@ -199,61 +219,99 @@ def build_rows(result, baseline):
 
     element_ind = 1
     variable_ind = 1
-    for account in level_2_accounts + ["A.9"]:
-        if account not in result.index:
-            continue
-        row = result.loc[account]
-        code = _account_code(account)
-        for suffix, column in COST_COLUMNS.items():
-            final_cost = _cost(row, column)
-            reference_cost = _baseline_cost(baseline, account, column)
-            multiplier = final_cost / reference_cost if reference_cost else final_cost
-            ref_name = f"c_{code}_{suffix}"
-            mult_name = f"k_{code}_{suffix}"
-            variables = f"{ref_name}, {mult_name}"
+    for suffix, column in COST_COLUMNS.items():
+        direct_cost = 0.0
+        for level_1 in level_1_accounts:
+            parent_code = _account_code(level_1)
+            parent_cost = 0.0
+            for account in level_2_by_parent[parent_code]:
+                if account not in result.index:
+                    continue
+                row = result.loc[account]
+                code = _account_code(account)
+                final_cost = _cost(row, column)
+                parent_cost += final_cost
+                reference_cost = _baseline_cost(baseline, account, column)
+                multiplier = final_cost / reference_cost if reference_cost else final_cost
+                ref_name = f"c_{code}_{suffix}"
+                mult_name = f"k_{code}_{suffix}"
+                variables = f"{ref_name}, {mult_name}"
+                cost_element_rows.append(
+                    (
+                        element_ind,
+                        f"{code}_{suffix}",
+                        final_cost,
+                        f"{parent_code}_{suffix}",
+                        "lpsr_scaled_cost",
+                        "dollar",
+                        variables,
+                        code,
+                        "LPSR1",
+                        0,
+                    )
+                )
+                variable_rows.append(
+                    (
+                        variable_ind,
+                        ref_name,
+                        f"LPSR reference for account {code} {column}",
+                        reference_cost,
+                        "dollar",
+                        "",
+                        "",
+                        "",
+                        0,
+                    )
+                )
+                variable_ind += 1
+                variable_rows.append(
+                    (
+                        variable_ind,
+                        mult_name,
+                        f"LPSR multiplier for account {code} {column}",
+                        multiplier,
+                        "1",
+                        "lpsr_scaled_cost",
+                        "",
+                        "",
+                        0,
+                    )
+                )
+                variable_ind += 1
+                element_ind += 1
+
+            direct_cost += parent_cost
             cost_element_rows.append(
                 (
                     element_ind,
-                    f"{code}_{suffix}",
-                    final_cost,
-                    f"{code}_total",
-                    "lpsr_scaled_cost",
+                    f"{parent_code}_{suffix}",
+                    parent_cost,
+                    f"2_{suffix}",
+                    "NO_ALG",
                     "dollar",
-                    variables,
-                    code,
-                    "LPSR1",
+                    "N/A",
+                    parent_code,
+                    "N/A",
                     0,
                 )
             )
-            variable_rows.append(
-                (
-                    variable_ind,
-                    ref_name,
-                    f"LPSR reference for account {code} {column}",
-                    reference_cost,
-                    "dollar",
-                    "",
-                    "",
-                    "",
-                    0,
-                )
-            )
-            variable_ind += 1
-            variable_rows.append(
-                (
-                    variable_ind,
-                    mult_name,
-                    f"LPSR multiplier for account {code} {column}",
-                    multiplier,
-                    "1",
-                    "lpsr_scaled_cost",
-                    "",
-                    "",
-                    0,
-                )
-            )
-            variable_ind += 1
             element_ind += 1
+
+        cost_element_rows.append(
+            (
+                element_ind,
+                f"2_{suffix}",
+                direct_cost,
+                "",
+                "NO_ALG",
+                "dollar",
+                "N/A",
+                "2",
+                "N/A",
+                0,
+            )
+        )
+        element_ind += 1
 
     return account_rows, cost_element_rows, variable_rows
 
