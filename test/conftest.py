@@ -34,9 +34,16 @@ def cursor(conn):
 
 @pytest.fixture
 def prepare_environment():
-    """Clean up 'output.out' and any relevant Excel files before running the test."""
-    # Patterns for files to clean up
-    cleanup_patterns = ["output.out", "*_updated_account.xlsx", "*_updated_cost_element.xlsx", "*_variable_affected_cost_elements.xlsx"]
+    """Clean up ACCERT output files before running the test."""
+    cleanup_patterns = [
+        "output.out",
+        "*_upd_acc_*.csv",
+        "*_upd_ce_*.csv",
+        "*_aff_ce_*.csv",
+        "*_updated_account.xlsx",
+        "*_updated_cost_element.xlsx",
+        "*_variable_affected_cost_elements.xlsx",
+    ]
     cleanup_dirs = [os.getcwd(), os.path.dirname(os.path.abspath(__file__))]
     
     # Remove files matching the patterns
@@ -47,5 +54,5 @@ def prepare_environment():
     yield
 
 @pytest.fixture
-def excel_patterns():
-    return ["*_updated_account.xlsx", "*_updated_cost_element.xlsx", "*_variable_affected_cost_elements.xlsx"]
+def csv_patterns():
+    return ["*_upd_acc_*.csv", "*_upd_ce_*.csv", "*_aff_ce_*.csv"]

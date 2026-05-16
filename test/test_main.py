@@ -1,5 +1,6 @@
 import sys
 import os
+import glob
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -123,15 +124,19 @@ def test_roll_up_cost_elements(cursor):
     element for pwr12be, also test the function roll_up_cost_elements_by_level"""
     # roll up the cost element for pwr12be
     assert accert.roll_up_cost_elements(cursor)==None
-    # only the higher level cost element is updated
-    # check updated column
-    cursor.execute("""SELECT cost_element, updated
-                    FROM cost_element
-                    WHERE updated = 1;""")
-    expect_output = [('218_fac', 1), ('21_fac', 1),('2_fac', 1)]
-    real_output = cursor.fetchall()
-    for tup in expect_output:
-        assert tup in real_output
+    # Parent cost elements should equal the sum of their child cost elements.
+    # Rollup recalculates cost_2017 but does not mark parents as directly updated.
+    for cost_element in ('218_fac', '21_fac', '2_fac'):
+        cursor.execute("""SELECT cost_2017, updated
+                        FROM cost_element
+                        WHERE cost_element = ?;""", (cost_element,))
+        parent_cost, updated = cursor.fetchone()
+        cursor.execute("""SELECT SUM(cost_2017)
+                        FROM cost_element
+                        WHERE sup_cost_ele = ?;""", (cost_element,))
+        child_total = cursor.fetchone()[0]
+        assert round(parent_cost, 2) == round(child_total, 2)
+        assert updated == 0
 
 def test_roll_up_account_table(cursor):
     """ test function roll_up_account_table,this function will roll up the account table and also test the function roll_up_account_table_by_level"""
@@ -232,6 +237,8 @@ def test_check_unit_conversion():
     possible. for example, if the unit is dollar and the new unit is million, the function will
     return True"""
     assert accert.check_unit_conversion('dollar','million')==True
+    assert accert.check_unit_conversion('dollar','$')==False
+    assert accert.check_unit_conversion('N/A','million')==False
 
 def test_convert_unit():
     """ test function convert_unit, this function will return the converted value of the
@@ -239,6 +246,7 @@ def test_convert_unit():
     to_unit is million, the function will return the converted value 1. this function 
     also test convert_unit_scale"""
     assert accert.convert_unit(1000000,'dollar','million')==1
+    assert accert.convert_unit(1,'$','dollar')==1
 
 def test_run_pre_alg():
     """ test function run_pre_alg, this function will run the pre programed algorithm. the pre algorithm
@@ -260,19 +268,21 @@ def test_cal_direct_cost_elements(cursor,conn):
 def test_generate_results_table(cursor,conn):
     """ test function generate_results_table, this function will generate the results table for 
     each cost element. This function will update the cost element table for PWR12BE. Also, this
-    function will test write_to_excel function"""
+    function will test CSV output."""
     accert.ref_model = 'pwr12-be'
     accert.acc_tabl = 'account'
     accert.cel_tabl = 'cost_element'
     accert.var_tabl = 'variable'
+    for pattern in ('pwr12-be_upd_acc_*.csv', 'pwr12-be_aff_ce_*.csv', 'pwr12-be_upd_ce_*.csv'):
+        for output_file in glob.glob(pattern):
+            os.remove(output_file)
     assert accert.generate_results_table(cursor, conn, level=3)==None
-    # check whether the results xlsx file is generated
-    assert os.path.isfile('pwr12-be_updated_account.xlsx')==True
+    # check whether the results CSV file is generated
+    assert len(glob.glob('pwr12-be_upd_acc_*.csv')) == 1
     assert accert.generate_results_table_with_cost_elements(cursor, conn, level=3)==None
 
-    assert os.path.isfile('pwr12-be_variable_affected_cost_elements.xlsx')==True
-    assert os.path.isfile('pwr12-be_updated_cost_element.xlsx')==True
-    # remove the generated xlsx file
-    os.remove('pwr12-be_updated_account.xlsx')
-    os.remove('pwr12-be_variable_affected_cost_elements.xlsx')
-    os.remove('pwr12-be_updated_cost_element.xlsx')
+    assert len(glob.glob('pwr12-be_aff_ce_*.csv')) == 1
+    assert len(glob.glob('pwr12-be_upd_ce_*.csv')) == 1
+    for pattern in ('pwr12-be_upd_acc_*.csv', 'pwr12-be_aff_ce_*.csv', 'pwr12-be_upd_ce_*.csv'):
+        for output_file in glob.glob(pattern):
+            os.remove(output_file)

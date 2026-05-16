@@ -36,3 +36,8 @@ Homepage = "https://github.com/accert-dev/ACCERT"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:datetime\\.datetime\\.utcnow\\(\\) is deprecated and scheduled for removal in a future version:DeprecationWarning:openpyxl\\.packaging\\.core",
+]

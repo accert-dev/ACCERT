@@ -42,6 +42,33 @@ def _accert_sqlite_db_path() -> str:
 
 
 class Accert:
+    NO_UNIT_VALUES = {"", "1", "n/a", "none", "null"}
+    UNIT_ALIASES = {"$": "dollar"}
+    UNIT_CONVERSIONS = {
+        ("KW", "MW"): 0.001,
+        ("KW", "GW"): 0.000001,
+        ("MW", "KW"): 1000,
+        ("MW", "GW"): 0.001,
+        ("GW", "KW"): 1000000,
+        ("GW", "MW"): 1000,
+        ("million", "dollar"): 1000000,
+        ("million", "thousand"): 1000,
+        ("thousand", "million"): 1 / 1000,
+        ("thousand", "dollar"): 1000,
+        ("dollar", "thousand"): 1 / 1000,
+        ("dollar", "million"): 1 / 1000000,
+        ("lbs", "kg"): 0.453592,
+        ("lbs", "ton"): 0.000453592,
+        ("kg", "lbs"): 2.20462,
+        ("kg", "ton"): 0.001,
+        ("ton", "lbs"): 2204.62,
+        ("ton", "kg"): 1000,
+        ("bar", "psi"): 14.5038,
+        ("bar", "psf"): 2088.54,
+        ("psi", "bar"): 0.068947572927646,
+        ("psi", "psf"): 144,
+    }
+
     def __init__(self, input_path, accert_path):
         """
         Initialize the Accert class.
@@ -524,6 +551,15 @@ class Accert:
         else:
             pass
 
+    def _normalize_unit(self, unit):
+        if unit is None:
+            return ""
+        unit = str(unit).strip()
+        return self.UNIT_ALIASES.get(unit, unit)
+
+    def _has_unit(self, unit):
+        return self._normalize_unit(unit).lower() not in self.NO_UNIT_VALUES
+
     def check_unit_conversion(self, org_unit, new_unit):
         """
         Checks if unit conversion is needed.
@@ -535,15 +571,13 @@ class Accert:
         new_unit : str
             New unit.
         """
+        org_unit = self._normalize_unit(org_unit)
+        new_unit = self._normalize_unit(new_unit)
         if org_unit == new_unit:
             return False
-        elif {org_unit, new_unit} == {'dollar', '$'}:
+        if not self._has_unit(org_unit) or not self._has_unit(new_unit):
             return False
-        elif org_unit == "N/A" or org_unit == "none" or org_unit == "None":
-            print('[Note] Original unit is not available, no conversion needed')
-            return False
-        else:
-            return True
+        return True
 
     def convert_unit(self, current_value, current_unit, to_unit):
         """
@@ -565,7 +599,7 @@ class Accert:
         """
         scale = float(self.convert_unit_scale(current_unit,to_unit))
         to_value = current_value * scale
-        if to_unit != 'dollar':
+        if self._normalize_unit(to_unit) != 'dollar':
             print("[Unit Changed] Converted input from {} {} to {} {}".format(current_value, current_unit,to_value,to_unit))
         return to_value
 
@@ -584,66 +618,14 @@ class Accert:
         -------
         scale : float
         """      
+        current_unit = self._normalize_unit(current_unit)
+        to_unit = self._normalize_unit(to_unit)
         if current_unit == to_unit:
             return 1
-        elif current_unit == 'KW':
-            if to_unit == 'MW':
-                return 0.001
-            elif to_unit == 'GW':
-                return 0.000001
-        elif current_unit == 'MW':
-            if to_unit == 'KW':
-                return 1000
-            elif to_unit == 'GW':
-                return 0.001
-        elif current_unit == 'GW':
-            if to_unit == 'KW':
-                return 1000000
-            elif to_unit == 'MW':
-                return 1000
-        elif current_unit == 'million':
-            if to_unit == 'dollar':
-                return 1000000
-            elif to_unit == 'thousand':
-                return 1000
-        elif current_unit == 'thousand':
-            if to_unit == 'million':
-                return 1/1000
-            elif to_unit == 'dollar':
-                return 1000
-        elif current_unit == 'dollar':
-            if to_unit == 'thousand':
-                return 1/1000
-            elif to_unit == 'million':
-                return 1/1000000
-        elif current_unit == 'lbs':
-            if to_unit == 'kg':
-                return 0.453592
-            elif to_unit == 'ton':
-                return 0.000453592
-        elif current_unit == 'kg':
-            if to_unit == 'lbs':
-                return 2.20462
-            elif to_unit == 'ton':
-                return 0.001
-        elif current_unit == 'ton':
-            if to_unit == 'lbs':
-                return 2204.62
-            elif to_unit == 'kg':
-                return 1000
-        elif current_unit == 'bar':
-            if to_unit == 'psi':
-                return 14.5038
-            elif to_unit == 'psf':
-                return 2088.54
-        elif current_unit == 'psi':
-            if to_unit == 'bar':
-                return 0.068947572927646
-            elif to_unit == 'psf':
-                return 144
-        else:
-            print('Cannot convert unit from ',current_unit,'to',to_unit)
-            raise ValueError
+        try:
+            return self.UNIT_CONVERSIONS[(current_unit, to_unit)]
+        except KeyError as exc:
+            raise ValueError(f"Cannot convert unit from {current_unit} to {to_unit}") from exc
 
     def update_total_cost(self, c,tc_id, u_i_tc_value, u_i_tc_unit):
         """

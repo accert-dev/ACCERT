@@ -22,7 +22,6 @@ WARNING: No power input found in the user input file
 [Updated]  Changed from 16.0 million to 16.0 million
 
 [Updating] Variable lsa
-[Note] Original unit is not available, no conversion needed
 [Updated]  Changed from 4.0  to 4.0 
 
 =================================Extracting user changed variables==================================
@@ -474,5 +473,5 @@ variable "lsa" affects account(s):
 |  25             | Miscellaneous plant equipment cost               |      25.00 |   1   |   User Input  |
 |  26             | Heat rejection system cost                       |      50.52 |   1   |   User Input  |
 +-----------------+--------------------------------------------------+------------+-------+---------------+
-Successfully created excel file fusion_updated_account.xlsx
+Successfully created CSV file fusion_upd_acc_20260515_234601.csv
 Successfully created excel file fusion_LCOE_results.xlsx
