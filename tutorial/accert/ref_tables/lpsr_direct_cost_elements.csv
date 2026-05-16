@@ -1,0 +1,487 @@
+ind,cost_element,cost_2017,sup_cost_ele,alg_name,fun_unit,variables,account,algno,updated,source_row_type
+1,2_fac,1144477414.301749,,,$,,2,LPSR_DIRECT,1,rollup_from_subaccounts
+2,2_mat,278289575.6553897,,,$,,2,LPSR_DIRECT,1,rollup_from_subaccounts
+3,2_lab,915543535.9907448,,,$,,2,LPSR_DIRECT,1,rollup_from_subaccounts
+4,21_fac,110031553.36311592,2_fac,,$,,21,LPSR_DIRECT,1,rollup_from_subaccounts
+5,21_mat,172626251.23772037,2_mat,,$,,21,LPSR_DIRECT,1,rollup_from_subaccounts
+6,21_lab,373668681.1145364,2_lab,,$,,21,LPSR_DIRECT,1,rollup_from_subaccounts
+7,211_fac,430945.803167464,21_fac,,$,,211,LPSR_DIRECT,1,rollup_from_subaccounts
+8,211_mat,21996672.308503065,21_mat,,$,,211,LPSR_DIRECT,1,rollup_from_subaccounts
+9,211_lab,36709673.90063027,21_lab,,$,,211,LPSR_DIRECT,1,rollup_from_subaccounts
+10,211.1_fac,232653.08709677425,211_fac,category_scale,$,"ref_211_1_fac, scale_S",211.1,LPSR_DIRECT,1,category_scaled
+11,211.1_mat,3048807.5577903227,211_mat,category_scale,$,"ref_211_1_mat, scale_S",211.1,LPSR_DIRECT,1,category_scaled
+12,211.1_lab,4038537.328870968,211_lab,category_scale,$,"ref_211_1_lab, scale_S",211.1,LPSR_DIRECT,1,category_scaled
+13,211.4_fac,0.0,211_fac,,$,,211.4,LPSR_DIRECT,1,category_scaled
+14,211.4_mat,3706432.266015384,211_mat,category_scale,$,"ref_211_4_mat, scale_P",211.4,LPSR_DIRECT,1,category_scaled
+15,211.4_lab,4975624.347012703,211_lab,category_scale,$,"ref_211_4_lab, scale_P",211.4,LPSR_DIRECT,1,category_scaled
+16,211.7_fac,198292.71607068976,211_fac,,$,,211.7,LPSR_DIRECT,1,rollup_from_subaccounts
+17,211.7_mat,15241432.48469736,211_mat,,$,,211.7,LPSR_DIRECT,1,rollup_from_subaccounts
+18,211.7_lab,27695512.2247466,211_lab,,$,,211.7,LPSR_DIRECT,1,rollup_from_subaccounts
+19,211.71_fac,198292.71607068976,211.7_fac,sum_all,$,"ce_211_711_fac, ce_211_712_fac",211.71,LPSR_DIRECT,1,rollup_from_moved_variables
+20,211.71_mat,15241432.48469736,211.7_mat,sum_all,$,"ce_211_711_mat, ce_211_712_mat",211.71,LPSR_DIRECT,1,rollup_from_moved_variables
+21,211.71_lab,27695512.2247466,211.7_lab,sum_all,$,"ce_211_711_lab, ce_211_712_lab",211.71,LPSR_DIRECT,1,rollup_from_moved_variables
+22,212_fac,92973647.76933645,21_fac,,$,,212,LPSR_DIRECT,1,rollup_from_subaccounts
+23,212_mat,92928754.37019151,21_mat,,$,,212,LPSR_DIRECT,1,rollup_from_subaccounts
+24,212_lab,245204967.0694305,21_lab,,$,,212,LPSR_DIRECT,1,rollup_from_subaccounts
+25,212.1_fac,91329747.05645116,212_fac,,$,,212.1,LPSR_DIRECT,1,rollup_from_subaccounts
+26,212.1_mat,78240322.48660171,212_mat,,$,,212.1,LPSR_DIRECT,1,rollup_from_subaccounts
+27,212.1_lab,230898527.170366,212_lab,,$,,212.1,LPSR_DIRECT,1,rollup_from_subaccounts
+28,212.13_fac,0.0,212.1_fac,,$,,212.13,LPSR_DIRECT,1,collapsed_rollup_zero
+29,212.13_mat,8064116.039825644,212.1_mat,category_scale,$,"ref_212_13_mat, scale_sub_str_V",212.13,LPSR_DIRECT,1,collapsed_category_scaled
+30,212.13_lab,11130198.913088772,212.1_lab,category_scale,$,"ref_212_13_lab, scale_sub_str_V",212.13,LPSR_DIRECT,1,collapsed_category_scaled
+31,212.14_fac,3384358.55023979,212.1_fac,sum_all,$,"ce_212_141_fac, ce_212_140_fac, ce_212_142_fac, ce_212_149_fac",212.14,LPSR_DIRECT,1,rollup_from_moved_variables
+32,212.14_mat,33647293.27072946,212.1_mat,sum_all,$,"ce_212_141_mat, ce_212_140_mat, ce_212_142_mat, ce_212_149_mat",212.14,LPSR_DIRECT,1,rollup_from_moved_variables
+33,212.14_lab,70208165.24507333,212.1_lab,sum_all,$,"ce_212_141_lab, ce_212_140_lab, ce_212_142_lab, ce_212_149_lab",212.14,LPSR_DIRECT,1,rollup_from_moved_variables
+34,212.15_fac,87945388.50621137,212.1_fac,category_scale,$,"ref_212_15_fac, scale_sup_str_S, f_ss_cont_fac",212.15,LPSR_DIRECT,1,category_scaled
+35,212.15_mat,36528913.1760466,212.1_mat,category_scale,$,"ref_212_15_mat, scale_sup_str_S, f_ss_cont_mat",212.15,LPSR_DIRECT,1,category_scaled
+36,212.15_lab,149560163.01220387,212.1_lab,category_scale,$,"ref_212_15_lab, scale_sup_str_S, f_ss_cont_lab",212.15,LPSR_DIRECT,1,category_scaled
+37,212.2_fac,1643900.7128852722,212_fac,,$,,212.2,LPSR_DIRECT,1,rollup_from_subaccounts
+38,212.2_mat,2469485.147717824,212_mat,,$,,212.2,LPSR_DIRECT,1,rollup_from_subaccounts
+39,212.2_lab,8659386.634936525,212_lab,,$,,212.2,LPSR_DIRECT,1,rollup_from_subaccounts
+40,212.21_fac,151291.49102764585,212.2_fac,category_scale,$,"ref_212_21_fac, scale_sup_const",212.21,LPSR_DIRECT,1,collapsed_category_scaled
+41,212.21_mat,206114.98714819315,212.2_mat,category_scale,$,"ref_212_21_mat, scale_sup_const",212.21,LPSR_DIRECT,1,collapsed_category_scaled
+42,212.21_lab,1053843.7893342776,212.2_lab,category_scale,$,"ref_212_21_lab, scale_sup_const",212.21,LPSR_DIRECT,1,collapsed_category_scaled
+43,212.22_fac,240144.8684569628,212.2_fac,category_scale,$,"ref_212_22_fac, scale_P",212.22,LPSR_DIRECT,1,collapsed_category_scaled
+44,212.22_mat,7208.552067777857,212.2_mat,category_scale,$,"ref_212_22_mat, scale_P",212.22,LPSR_DIRECT,1,collapsed_category_scaled
+45,212.22_lab,67456.73381113581,212.2_lab,category_scale,$,"ref_212_22_lab, scale_P",212.22,LPSR_DIRECT,1,collapsed_category_scaled
+46,212.23_fac,1054079.7135006634,212.2_fac,category_scale,$,"ref_212_23_fac, scale_P",212.23,LPSR_DIRECT,1,collapsed_category_scaled
+47,212.23_mat,895102.7105585907,212.2_mat,category_scale,$,"ref_212_23_mat, scale_P",212.23,LPSR_DIRECT,1,collapsed_category_scaled
+48,212.23_lab,3945218.541045286,212.2_lab,category_scale,$,"ref_212_23_lab, scale_P",212.23,LPSR_DIRECT,1,collapsed_category_scaled
+49,212.24_fac,0.0,212.2_fac,,$,,212.24,LPSR_DIRECT,1,category_scaled
+50,212.24_mat,1351908.0178102625,212.2_mat,category_scale,$,"ref_212_24_mat, scale_sup_const",212.24,LPSR_DIRECT,1,category_scaled
+51,212.24_lab,3480752.427645825,212.2_lab,category_scale,$,"ref_212_24_lab, scale_sup_const",212.24,LPSR_DIRECT,1,category_scaled
+52,212.25_fac,198384.6399,212.2_fac,category_scale,$,ref_212_25_fac,212.25,LPSR_DIRECT,1,category_scaled
+53,212.25_mat,9150.880133,212.2_mat,category_scale,$,ref_212_25_mat,212.25,LPSR_DIRECT,1,category_scaled
+54,212.25_lab,112115.1431,212.2_lab,category_scale,$,ref_212_25_lab,212.25,LPSR_DIRECT,1,category_scaled
+55,212.3_fac,0.0,212_fac,,$,,212.3,LPSR_DIRECT,1,category_scaled
+56,212.3_mat,12218946.735872,212_mat,category_scale,$,"ref_212_3_mat, scale_frm_S",212.3,LPSR_DIRECT,1,category_scaled
+57,212.3_lab,5647053.2641280005,212_lab,category_scale,$,"ref_212_3_lab, scale_frm_S",212.3,LPSR_DIRECT,1,category_scaled
+58,213_fac,1449086.9027616812,21_fac,,$,,213,LPSR_DIRECT,1,rollup_from_subaccounts
+59,213_mat,32880295.11386501,21_mat,,$,,213,LPSR_DIRECT,1,rollup_from_subaccounts
+60,213_lab,37311758.8316887,21_lab,,$,,213,LPSR_DIRECT,1,rollup_from_subaccounts
+61,213.1_fac,0.0,213_fac,,$,,213.1,LPSR_DIRECT,1,rollup_from_subaccounts
+62,213.1_mat,31187978.693863448,213_mat,,$,,213.1,LPSR_DIRECT,1,rollup_from_subaccounts
+63,213.1_lab,30638299.12943875,213_lab,,$,,213.1,LPSR_DIRECT,1,rollup_from_subaccounts
+64,213.13_fac,0.0,213.1_fac,,$,,213.13,LPSR_DIRECT,1,collapsed_rollup_zero
+65,213.13_mat,4273022.20025912,213.1_mat,category_scale,$,"ref_213_13_mat, scale_turb_gen_bldg_sub_vol",213.13,LPSR_DIRECT,1,collapsed_category_scaled
+66,213.13_lab,10110109.25530089,213.1_lab,category_scale,$,"ref_213_13_lab, scale_turb_gen_bldg_sub_vol",213.13,LPSR_DIRECT,1,collapsed_category_scaled
+67,213.14_fac,0.0,213.1_fac,sum_all,$,"ce_213_141_fac, ce_213_142_fac, ce_213_143_fac, ce_213_144_fac, ce_213_145_fac, ce_213_146_fac, ce_213_147_fac, ce_213_149_fac",213.14,LPSR_DIRECT,1,rollup_from_moved_variables
+68,213.14_mat,26914956.49360433,213.1_mat,sum_all,$,"ce_213_141_mat, ce_213_142_mat, ce_213_143_mat, ce_213_144_mat, ce_213_145_mat, ce_213_146_mat, ce_213_147_mat, ce_213_149_mat",213.14,LPSR_DIRECT,1,rollup_from_moved_variables
+69,213.14_lab,20528189.874137864,213.1_lab,sum_all,$,"ce_213_141_lab, ce_213_142_lab, ce_213_143_lab, ce_213_144_lab, ce_213_145_lab, ce_213_146_lab, ce_213_147_lab, ce_213_149_lab",213.14,LPSR_DIRECT,1,rollup_from_moved_variables
+70,213.2_fac,1449086.9027616812,213_fac,,$,,213.2,LPSR_DIRECT,1,rollup_from_subaccounts
+71,213.2_mat,1692316.4200015557,213_mat,,$,,213.2,LPSR_DIRECT,1,rollup_from_subaccounts
+72,213.2_lab,6673459.7022499535,213_lab,,$,,213.2,LPSR_DIRECT,1,rollup_from_subaccounts
+73,213.21_fac,24709.32158828453,213.2_fac,category_scale,$,"ref_213_21_fac, scale_bldg_V",213.21,LPSR_DIRECT,1,collapsed_category_scaled
+74,213.21_mat,867043.7474063353,213.2_mat,category_scale,$,"ref_213_21_mat, scale_bldg_V",213.21,LPSR_DIRECT,1,collapsed_category_scaled
+75,213.21_lab,3534676.365423392,213.2_lab,category_scale,$,"ref_213_21_lab, scale_bldg_V",213.21,LPSR_DIRECT,1,collapsed_category_scaled
+76,213.22_fac,1196390.0660733967,213.2_fac,category_scale,$,"ref_213_22_fac, scale_P",213.22,LPSR_DIRECT,1,collapsed_category_scaled
+77,213.22_mat,284087.1889724544,213.2_mat,category_scale,$,"ref_213_22_mat, scale_P",213.22,LPSR_DIRECT,1,collapsed_category_scaled
+78,213.22_lab,1714769.981035543,213.2_lab,category_scale,$,"ref_213_22_lab, scale_P",213.22,LPSR_DIRECT,1,collapsed_category_scaled
+79,213.24_fac,0.0,213.2_fac,,$,,213.24,LPSR_DIRECT,1,category_scaled
+80,213.24_mat,531808.410249766,213.2_mat,category_scale,$,"ref_213_24_mat, scale_bldg_V",213.24,LPSR_DIRECT,1,category_scaled
+81,213.24_lab,1325681.8386410188,213.2_lab,category_scale,$,"ref_213_24_lab, scale_bldg_V",213.24,LPSR_DIRECT,1,category_scaled
+82,213.25_fac,227987.5151,213.2_fac,category_scale,$,ref_213_25_fac,213.25,LPSR_DIRECT,1,collapsed_category_scaled
+83,213.25_mat,9377.073373,213.2_mat,category_scale,$,ref_213_25_mat,213.25,LPSR_DIRECT,1,collapsed_category_scaled
+84,213.25_lab,98331.51715,213.2_lab,category_scale,$,ref_213_25_lab,213.25,LPSR_DIRECT,1,collapsed_category_scaled
+85,214_fac,171454.8001,21_fac,category_scale,$,ref_214_fac,214,LPSR_DIRECT,1,collapsed_category_scaled
+86,214_mat,1107592.1165,21_mat,category_scale,$,ref_214_mat,214,LPSR_DIRECT,1,collapsed_category_scaled
+87,214_lab,3253960.2307,21_lab,category_scale,$,ref_214_lab,214,LPSR_DIRECT,1,collapsed_category_scaled
+88,215_fac,6578892.21423963,21_fac,,$,,215,LPSR_DIRECT,1,rollup_from_subaccounts
+89,215_mat,5965672.231961898,21_mat,,$,,215,LPSR_DIRECT,1,rollup_from_subaccounts
+90,215_lab,16575867.46653163,21_lab,,$,,215,LPSR_DIRECT,1,rollup_from_subaccounts
+91,215.1_fac,0.0,215_fac,,$,,215.1,LPSR_DIRECT,1,rollup_from_subaccounts
+92,215.1_mat,5132369.742021473,215_mat,,$,,215.1,LPSR_DIRECT,1,rollup_from_subaccounts
+93,215.1_lab,12279546.157902673,215_lab,,$,,215.1,LPSR_DIRECT,1,rollup_from_subaccounts
+94,215.13_fac,0.0,215.1_fac,,$,,215.13,LPSR_DIRECT,1,collapsed_rollup_zero
+95,215.13_mat,577623.8206042887,215.1_mat,category_scale,$,"ref_215_13_mat, scale_pri_aux_bldg_sub_vol",215.13,LPSR_DIRECT,1,collapsed_category_scaled
+96,215.13_lab,807214.8622750315,215.1_lab,category_scale,$,"ref_215_13_lab, scale_pri_aux_bldg_sub_vol",215.13,LPSR_DIRECT,1,collapsed_category_scaled
+97,215.14_fac,0.0,215.1_fac,sum_all,$,"ce_215_141_fac, ce_215_142_fac, ce_215_145_fac, ce_215_146_fac, ce_215_147_fac, ce_215_149_fac",215.14,LPSR_DIRECT,1,rollup_from_moved_variables
+98,215.14_mat,4554745.921417184,215.1_mat,sum_all,$,"ce_215_141_mat, ce_215_142_mat, ce_215_145_mat, ce_215_146_mat, ce_215_147_mat, ce_215_149_mat",215.14,LPSR_DIRECT,1,rollup_from_moved_variables
+99,215.14_lab,11472331.295627637,215.1_lab,sum_all,$,"ce_215_141_lab, ce_215_142_lab, ce_215_145_lab, ce_215_146_lab, ce_215_147_lab, ce_215_149_lab",215.14,LPSR_DIRECT,1,rollup_from_moved_variables
+100,215.2_fac,6578892.21423963,215_fac,,$,,215.2,LPSR_DIRECT,1,rollup_from_subaccounts
+101,215.2_mat,833302.489940424,215_mat,,$,,215.2,LPSR_DIRECT,1,rollup_from_subaccounts
+102,215.2_lab,4296321.308628961,215_lab,,$,,215.2,LPSR_DIRECT,1,rollup_from_subaccounts
+103,215.21_fac,2879.3960544802108,215.2_fac,category_scale,$,"ref_215_21_fac, scale_pri_aux_bldg_bldg_vol",215.21,LPSR_DIRECT,1,collapsed_category_scaled
+104,215.21_mat,132380.8488404441,215.2_mat,category_scale,$,"ref_215_21_mat, scale_pri_aux_bldg_bldg_vol",215.21,LPSR_DIRECT,1,collapsed_category_scaled
+105,215.21_lab,562478.5833441088,215.2_lab,category_scale,$,"ref_215_21_lab, scale_pri_aux_bldg_bldg_vol",215.21,LPSR_DIRECT,1,collapsed_category_scaled
+106,215.22_fac,5375380.983437112,215.2_fac,sum_all,$,"ce_215_221_fac, ce_215_222_fac, ce_215_223_fac, ce_215_224_fac, ce_215_225_fac, ce_215_226_fac, ce_215_227_fac, ce_215_228_fac",215.22,LPSR_DIRECT,1,rollup_from_moved_variables
+107,215.22_mat,482360.7278475697,215.2_mat,sum_all,$,"ce_215_221_mat, ce_215_222_mat, ce_215_223_mat, ce_215_224_mat, ce_215_225_mat, ce_215_226_mat, ce_215_227_mat, ce_215_228_mat",215.22,LPSR_DIRECT,1,rollup_from_moved_variables
+108,215.22_lab,2703852.261889753,215.2_lab,sum_all,$,"ce_215_221_lab, ce_215_222_lab, ce_215_223_lab, ce_215_224_lab, ce_215_225_lab, ce_215_226_lab, ce_215_227_lab, ce_215_228_lab",215.22,LPSR_DIRECT,1,rollup_from_moved_variables
+109,215.23_fac,880698.684048038,215.2_fac,category_scale,$,"ref_215_23_fac, scale_P",215.23,LPSR_DIRECT,1,collapsed_category_scaled
+110,215.23_mat,32931.74687662137,215.2_mat,category_scale,$,"ref_215_23_mat, scale_P",215.23,LPSR_DIRECT,1,collapsed_category_scaled
+111,215.23_lab,384297.4078205576,215.2_lab,category_scale,$,"ref_215_23_lab, scale_P",215.23,LPSR_DIRECT,1,collapsed_category_scaled
+112,215.24_fac,0.0,215.2_fac,,$,,215.24,LPSR_DIRECT,1,category_scaled
+113,215.24_mat,171501.43373578883,215.2_mat,category_scale,$,"ref_215_24_mat, scale_pri_aux_bldg_bldg_vol",215.24,LPSR_DIRECT,1,category_scaled
+114,215.24_lab,489101.3601745418,215.2_lab,category_scale,$,"ref_215_24_lab, scale_pri_aux_bldg_bldg_vol",215.24,LPSR_DIRECT,1,category_scaled
+115,215.25_fac,319933.1507,215.2_fac,category_scale,$,ref_215_25_fac,215.25,LPSR_DIRECT,1,category_scaled
+116,215.25_mat,14127.73264,215.2_mat,category_scale,$,ref_215_25_mat,215.25,LPSR_DIRECT,1,category_scaled
+117,215.25_lab,156591.6954,215.2_lab,category_scale,$,ref_215_25_lab,215.25,LPSR_DIRECT,1,category_scaled
+118,216_fac,1486377.2053707205,21_fac,,$,,216,LPSR_DIRECT,1,rollup_from_subaccounts
+119,216_mat,6031169.352730089,21_mat,,$,,216,LPSR_DIRECT,1,rollup_from_subaccounts
+120,216_lab,13737628.524587575,21_lab,,$,,216,LPSR_DIRECT,1,rollup_from_subaccounts
+121,216.1_fac,0.0,216_fac,,$,,216.1,LPSR_DIRECT,1,rollup_from_subaccounts
+122,216.1_mat,5154906.815235156,216_mat,,$,,216.1,LPSR_DIRECT,1,rollup_from_subaccounts
+123,216.1_lab,10334313.0313636,216_lab,,$,,216.1,LPSR_DIRECT,1,rollup_from_subaccounts
+124,216.13_fac,0.0,216.1_fac,,$,,216.13,LPSR_DIRECT,1,collapsed_rollup_zero
+125,216.13_mat,1575739.8118354392,216.1_mat,category_scale,$,"ref_216_13_mat, scale_waste_bldg_sub_vol",216.13,LPSR_DIRECT,1,collapsed_category_scaled
+126,216.13_lab,2410506.351253909,216.1_lab,category_scale,$,"ref_216_13_lab, scale_waste_bldg_sub_vol",216.13,LPSR_DIRECT,1,collapsed_category_scaled
+127,216.14_fac,0.0,216.1_fac,sum_all,$,"ce_216_141_fac, ce_216_142_fac, ce_216_143_fac, ce_216_144_fac, ce_216_145_fac, ce_216_146_fac, ce_216_147_fac, ce_216_148_fac, ce_216_149_fac",216.14,LPSR_DIRECT,1,rollup_from_moved_variables
+128,216.14_mat,3579167.003399716,216.1_mat,sum_all,$,"ce_216_141_mat, ce_216_142_mat, ce_216_143_mat, ce_216_144_mat, ce_216_145_mat, ce_216_146_mat, ce_216_147_mat, ce_216_148_mat, ce_216_149_mat",216.14,LPSR_DIRECT,1,rollup_from_moved_variables
+129,216.14_lab,7923806.680109691,216.1_lab,sum_all,$,"ce_216_141_lab, ce_216_142_lab, ce_216_143_lab, ce_216_144_lab, ce_216_145_lab, ce_216_146_lab, ce_216_147_lab, ce_216_148_lab, ce_216_149_lab",216.14,LPSR_DIRECT,1,rollup_from_moved_variables
+130,216.2_fac,1486377.2053707205,216_fac,,$,,216.2,LPSR_DIRECT,1,rollup_from_subaccounts
+131,216.2_mat,876262.5374949343,216_mat,,$,,216.2,LPSR_DIRECT,1,rollup_from_subaccounts
+132,216.2_lab,3403315.493223977,216_lab,,$,,216.2,LPSR_DIRECT,1,rollup_from_subaccounts
+133,216.21_fac,0.0,216.2_fac,,$,,216.21,LPSR_DIRECT,1,collapsed_rollup_zero
+134,216.21_mat,79727.10495302429,216.2_mat,category_scale,$,"ref_216_21_mat, scale_waste_bldg_bldg_vol",216.21,LPSR_DIRECT,1,collapsed_category_scaled
+135,216.21_lab,402839.8447840233,216.2_lab,category_scale,$,"ref_216_21_lab, scale_waste_bldg_bldg_vol",216.21,LPSR_DIRECT,1,collapsed_category_scaled
+136,216.22_fac,1129907.8226707203,216.2_fac,category_scale,$,"ref_216_22_fac, scale_P",216.22,LPSR_DIRECT,1,collapsed_category_scaled
+137,216.22_mat,671914.0609659693,216.2_mat,category_scale,$,"ref_216_22_mat, scale_P",216.22,LPSR_DIRECT,1,collapsed_category_scaled
+138,216.22_lab,2541393.777735903,216.2_lab,category_scale,$,"ref_216_22_lab, scale_P",216.22,LPSR_DIRECT,1,collapsed_category_scaled
+139,216.24_fac,0.0,216.2_fac,,$,,216.24,LPSR_DIRECT,1,category_scaled
+140,216.24_mat,107845.67580594058,216.2_mat,category_scale,$,"ref_216_24_mat, scale_waste_bldg_bldg_vol",216.24,LPSR_DIRECT,1,category_scaled
+141,216.24_lab,284517.4500040504,216.2_lab,category_scale,$,"ref_216_24_lab, scale_waste_bldg_bldg_vol",216.24,LPSR_DIRECT,1,category_scaled
+142,216.25_fac,356469.3827,216.2_fac,category_scale,$,ref_216_25_fac,216.25,LPSR_DIRECT,1,collapsed_category_scaled
+143,216.25_mat,16775.69577,216.2_mat,category_scale,$,ref_216_25_mat,216.25,LPSR_DIRECT,1,collapsed_category_scaled
+144,216.25_lab,174564.4207,216.2_lab,category_scale,$,ref_216_25_lab,216.25,LPSR_DIRECT,1,collapsed_category_scaled
+145,217_fac,2204617.674834721,21_fac,,$,,217,LPSR_DIRECT,1,rollup_from_subaccounts
+146,217_mat,8137960.03368471,21_mat,,$,,217,LPSR_DIRECT,1,rollup_from_subaccounts
+147,217_lab,8998713.633201843,21_lab,,$,,217,LPSR_DIRECT,1,rollup_from_subaccounts
+148,217.1_fac,0.0,217_fac,,$,,217.1,LPSR_DIRECT,1,rollup_from_subaccounts
+149,217.1_mat,1815252.8855193416,217_mat,,$,,217.1,LPSR_DIRECT,1,rollup_from_subaccounts
+150,217.1_lab,4490969.334175324,217_lab,,$,,217.1,LPSR_DIRECT,1,rollup_from_subaccounts
+151,217.13_fac,0.0,217.1_fac,,$,,217.13,LPSR_DIRECT,1,collapsed_rollup_zero
+152,217.13_mat,244051.81145442225,217.1_mat,category_scale,$,"ref_217_13_mat, scale_fuel_stor_bldg_sub_vol",217.13,LPSR_DIRECT,1,collapsed_category_scaled
+153,217.13_lab,479436.37236405554,217.1_lab,category_scale,$,"ref_217_13_lab, scale_fuel_stor_bldg_sub_vol",217.13,LPSR_DIRECT,1,collapsed_category_scaled
+154,217.3_fac,0.0,217_fac,,$,,217.3,LPSR_DIRECT,1,category_scaled
+155,217.3_mat,5865094.614844391,217_mat,category_scale,$,"ref_217_3_mat, scale_frm_S_9_71886e_06",217.3,LPSR_DIRECT,1,category_scaled
+156,217.3_lab,2710585.6542799296,217_lab,category_scale,$,"ref_217_3_lab, scale_frm_S_9_71886e_06",217.3,LPSR_DIRECT,1,category_scaled
+157,217.14_fac,0.0,217.1_fac,sum_all,$,"ce_217_141_fac, ce_217_142_fac, ce_217_145_fac, ce_217_147_fac, ce_217_149_fac",217.14,LPSR_DIRECT,1,rollup_from_moved_variables
+158,217.14_mat,1571201.0740649195,217.1_mat,sum_all,$,"ce_217_141_mat, ce_217_142_mat, ce_217_145_mat, ce_217_147_mat, ce_217_149_mat",217.14,LPSR_DIRECT,1,rollup_from_moved_variables
+159,217.14_lab,4011532.9618112673,217.1_lab,sum_all,$,"ce_217_141_lab, ce_217_142_lab, ce_217_145_lab, ce_217_147_lab, ce_217_149_lab",217.14,LPSR_DIRECT,1,rollup_from_moved_variables
+160,217.2_fac,2204617.674834721,217_fac,,$,,217.2,LPSR_DIRECT,1,rollup_from_subaccounts
+161,217.2_mat,457612.53332097805,217_mat,,$,,217.2,LPSR_DIRECT,1,rollup_from_subaccounts
+162,217.2_lab,1797158.6447465897,217_lab,,$,,217.2,LPSR_DIRECT,1,rollup_from_subaccounts
+163,217.21_fac,4929.67913615625,217.2_fac,category_scale,$,"ref_217_21_fac, scale_fuel_stor_bldg_bldg_vol",217.21,LPSR_DIRECT,1,collapsed_category_scaled
+164,217.21_mat,98636.73888344064,217.2_mat,category_scale,$,"ref_217_21_mat, scale_fuel_stor_bldg_bldg_vol",217.21,LPSR_DIRECT,1,collapsed_category_scaled
+165,217.21_lab,231363.3464218125,217.2_lab,category_scale,$,"ref_217_21_lab, scale_fuel_stor_bldg_bldg_vol",217.21,LPSR_DIRECT,1,collapsed_category_scaled
+166,217.22_fac,193137.19639836828,217.2_fac,category_scale,$,"ref_217_22_fac, scale_P",217.22,LPSR_DIRECT,1,collapsed_category_scaled
+167,217.22_mat,276068.03852274094,217.2_mat,category_scale,$,"ref_217_22_mat, scale_P",217.22,LPSR_DIRECT,1,collapsed_category_scaled
+168,217.22_lab,1233996.4705383326,217.2_lab,category_scale,$,"ref_217_22_lab, scale_P",217.22,LPSR_DIRECT,1,collapsed_category_scaled
+169,217.23_fac,2006550.7993001963,217.2_fac,category_scale,$,"ref_217_23_fac, scale_P",217.23,LPSR_DIRECT,1,collapsed_category_scaled
+170,217.23_mat,10569.183227296426,217.2_mat,category_scale,$,"ref_217_23_mat, scale_P",217.23,LPSR_DIRECT,1,collapsed_category_scaled
+171,217.23_lab,139900.69843956982,217.2_lab,category_scale,$,"ref_217_23_lab, scale_P",217.23,LPSR_DIRECT,1,collapsed_category_scaled
+172,217.24_fac,0.0,217.2_fac,,$,,217.24,LPSR_DIRECT,1,category_scaled
+173,217.24_mat,72338.57268750001,217.2_mat,category_scale,$,"ref_217_24_mat, scale_fuel_stor_bldg_bldg_vol",217.24,LPSR_DIRECT,1,category_scaled
+174,217.24_lab,191898.129346875,217.2_lab,category_scale,$,"ref_217_24_lab, scale_fuel_stor_bldg_bldg_vol",217.24,LPSR_DIRECT,1,category_scaled
+175,218_fac,4736530.993305282,21_fac,,$,,218,LPSR_DIRECT,1,rollup_from_subaccounts
+176,218_mat,3578135.7102841227,21_mat,,$,,218,LPSR_DIRECT,1,rollup_from_subaccounts
+177,218_lab,11876111.457765903,21_lab,,$,,218,LPSR_DIRECT,1,rollup_from_subaccounts
+178,218A_fac,2319565.4875418823,218_fac,,$,,218A,LPSR_DIRECT,1,rollup_from_subaccounts
+179,218A_mat,1021548.2510833788,218_mat,,$,,218A,LPSR_DIRECT,1,rollup_from_subaccounts
+180,218A_lab,2910538.8039643723,218_lab,,$,,218A,LPSR_DIRECT,1,rollup_from_subaccounts
+181,218A.1_fac,0.0,218A_fac,sum_all,$,"ce_218A_13_fac, ce_218A_14_fac",218A.1,LPSR_DIRECT,1,rollup_from_moved_variables
+182,218A.1_mat,849971.7765882438,218A_mat,sum_all,$,"ce_218A_13_mat, ce_218A_14_mat",218A.1,LPSR_DIRECT,1,rollup_from_moved_variables
+183,218A.1_lab,1796415.8019143462,218A_lab,sum_all,$,"ce_218A_13_lab, ce_218A_14_lab",218A.1,LPSR_DIRECT,1,rollup_from_moved_variables
+184,218A.2_fac,2319565.487541883,218A_fac,sum_all,$,"ce_218A_21_fac, ce_218A_23_fac, ce_218A_24_fac",218A.2,LPSR_DIRECT,1,rollup_from_moved_variables
+185,218A.2_mat,171576.47449513487,218A_mat,sum_all,$,"ce_218A_21_mat, ce_218A_23_mat, ce_218A_24_mat",218A.2,LPSR_DIRECT,1,rollup_from_moved_variables
+186,218A.2_lab,1114123.0020500266,218A_lab,sum_all,$,"ce_218A_21_lab, ce_218A_23_lab, ce_218A_24_lab",218A.2,LPSR_DIRECT,1,rollup_from_moved_variables
+187,218B_fac,1971055.821421292,218_fac,,$,,218B,LPSR_DIRECT,1,rollup_from_subaccounts
+188,218B_mat,460781.812542733,218_mat,,$,,218B,LPSR_DIRECT,1,rollup_from_subaccounts
+189,218B_lab,3188068.1449142173,218_lab,,$,,218B,LPSR_DIRECT,1,rollup_from_subaccounts
+190,218B.1_fac,0.0,218B_fac,,$,,218B.1,LPSR_DIRECT,1,collapsed_rollup_zero
+191,218B.1_mat,0.0,218B_mat,,$,,218B.1,LPSR_DIRECT,1,collapsed_rollup_zero
+192,218B.1_lab,0.0,218B_lab,,$,,218B.1,LPSR_DIRECT,1,collapsed_rollup_zero
+193,218B.2_fac,1971055.821421292,218B_fac,sum_all,$,"ce_218B_21_fac, ce_218B_22_fac, ce_218B_23_fac, ce_218B_24_fac, ce_218B_25_fac",218B.2,LPSR_DIRECT,1,rollup_from_moved_variables
+194,218B.2_mat,460781.812542733,218B_mat,sum_all,$,"ce_218B_21_mat, ce_218B_22_mat, ce_218B_23_mat, ce_218B_24_mat, ce_218B_25_mat",218B.2,LPSR_DIRECT,1,rollup_from_moved_variables
+195,218B.2_lab,3188068.1449142173,218B_lab,sum_all,$,"ce_218B_21_lab, ce_218B_22_lab, ce_218B_23_lab, ce_218B_24_lab, ce_218B_25_lab",218B.2,LPSR_DIRECT,1,rollup_from_moved_variables
+196,218D_fac,87852.60004,218_fac,category_scale,$,ref_218D_fac,218D,LPSR_DIRECT,1,category_scaled
+197,218D_mat,353929.4,218_mat,category_scale,$,ref_218D_mat,218D,LPSR_DIRECT,1,category_scaled
+198,218D_lab,784039.4097,218_lab,category_scale,$,ref_218D_lab,218D,LPSR_DIRECT,1,category_scaled
+199,218E_fac,49315.18593202376,218_fac,category_scale,$,"ref_218E_fac, scale_P",218E,LPSR_DIRECT,1,collapsed_category_scaled
+200,218E_mat,18191.997602118216,218_mat,category_scale,$,"ref_218E_mat, scale_P",218E,LPSR_DIRECT,1,collapsed_category_scaled
+201,218E_lab,95542.26775439648,218_lab,category_scale,$,"ref_218E_lab, scale_P",218E,LPSR_DIRECT,1,collapsed_category_scaled
+202,218F_fac,0.0,218_fac,,$,,218F,LPSR_DIRECT,1,category_scaled
+203,218F_mat,641027.370017589,218_mat,category_scale,$,"ref_218F_mat, scale_P",218F,LPSR_DIRECT,1,category_scaled
+204,218F_lab,1980573.54905032,218_lab,category_scale,$,"ref_218F_lab, scale_P",218F,LPSR_DIRECT,1,category_scaled
+205,218G_fac,0.0,218_fac,category_scale,$,"ref_218G_fac, scale_elec_tunnel_bldg_vol",218G,LPSR_DIRECT,1,category_scaled
+206,218G_mat,0.0,218_mat,category_scale,$,"ref_218G_mat, scale_elec_tunnel_bldg_vol",218G,LPSR_DIRECT,1,category_scaled
+207,218G_lab,0.0,218_lab,category_scale,$,"ref_218G_lab, scale_elec_tunnel_bldg_vol",218G,LPSR_DIRECT,1,category_scaled
+208,218H_fac,0.0,218_fac,category_scale,$,"ref_218H_fac, scale_non_ess_swgr_bldg_bldg_vol",218H,LPSR_DIRECT,1,category_scaled
+209,218H_mat,0.0,218_mat,category_scale,$,"ref_218H_mat, scale_non_ess_swgr_bldg_bldg_vol",218H,LPSR_DIRECT,1,category_scaled
+210,218H_lab,0.0,218_lab,category_scale,$,"ref_218H_lab, scale_non_ess_swgr_bldg_bldg_vol",218H,LPSR_DIRECT,1,category_scaled
+211,218J_fac,77499.82531922421,218_fac,category_scale,$,"ref_218J_fac, scale_P",218J,LPSR_DIRECT,1,collapsed_category_scaled
+212,218J_mat,52137.00304983045,218_mat,category_scale,$,"ref_218J_mat, scale_P",218J,LPSR_DIRECT,1,collapsed_category_scaled
+213,218J_lab,475597.9280464933,218_lab,category_scale,$,"ref_218J_lab, scale_P",218J,LPSR_DIRECT,1,collapsed_category_scaled
+214,218K_fac,0.0,218_fac,,$,,218K,LPSR_DIRECT,1,category_scaled
+215,218K_mat,260974.42321495048,218_mat,category_scale,$,"ref_218K_mat, scale_P",218K,LPSR_DIRECT,1,category_scaled
+216,218K_lab,641259.2827296411,218_lab,category_scale,$,"ref_218K_lab, scale_P",218K,LPSR_DIRECT,1,category_scaled
+217,218L_fac,137163.4,218_fac,category_scale,$,ref_218L_fac,218L,LPSR_DIRECT,1,category_scaled
+218,218L_mat,667730.7999,218_mat,category_scale,$,ref_218L_mat,218L,LPSR_DIRECT,1,category_scaled
+219,218L_lab,1478143.59,218_lab,category_scale,$,ref_218L_lab,218L,LPSR_DIRECT,1,category_scaled
+220,218P_fac,0.0,218_fac,,$,,218P,LPSR_DIRECT,1,category_scaled
+221,218P_mat,0.0,218_mat,category_scale,$,"ref_218P_mat, scale_cont_hatch_ms_bldg_vol",218P,LPSR_DIRECT,1,category_scaled
+222,218P_lab,0.0,218_lab,category_scale,$,"ref_218P_lab, scale_cont_hatch_ms_bldg_vol",218P,LPSR_DIRECT,1,category_scaled
+223,218S_fac,0.0,218_fac,category_scale,$,"ref_218S_fac, scale_wwt_bldg_bldg_vol",218S,LPSR_DIRECT,1,category_scaled
+224,218S_mat,0.0,218_mat,category_scale,$,"ref_218S_mat, scale_wwt_bldg_bldg_vol",218S,LPSR_DIRECT,1,category_scaled
+225,218S_lab,0.0,218_lab,category_scale,$,"ref_218S_lab, scale_wwt_bldg_bldg_vol",218S,LPSR_DIRECT,1,category_scaled
+226,218T_fac,94078.67305085954,218_fac,category_scale,$,"ref_218T_fac, scale_P",218T,LPSR_DIRECT,1,collapsed_category_scaled
+227,218T_mat,34246.05284352289,218_mat,category_scale,$,"ref_218T_mat, scale_P",218T,LPSR_DIRECT,1,collapsed_category_scaled
+228,218T_lab,149759.1416064629,218_lab,category_scale,$,"ref_218T_lab, scale_P",218T,LPSR_DIRECT,1,collapsed_category_scaled
+229,218V_fac,0.0,218_fac,,$,,218V,LPSR_DIRECT,1,category_scaled
+230,218V_mat,67568.60003,218_mat,category_scale,$,ref_218V_mat,218V,LPSR_DIRECT,1,category_scaled
+231,218V_lab,172589.34,218_lab,category_scale,$,ref_218V_lab,218V,LPSR_DIRECT,1,category_scaled
+232,22_fac,505493292.6388652,2_fac,,$,,22,LPSR_DIRECT,1,rollup_from_subaccounts
+233,22_mat,33422135.098415047,2_mat,,$,,22,LPSR_DIRECT,1,rollup_from_subaccounts
+234,22_lab,154325265.91347942,2_lab,,$,,22,LPSR_DIRECT,1,rollup_from_subaccounts
+235,221_fac,131877857.72483112,22_fac,,$,,221,LPSR_DIRECT,1,rollup_from_subaccounts
+236,221_mat,12170243.63075808,22_mat,,$,,221,LPSR_DIRECT,1,rollup_from_subaccounts
+237,221_lab,8942457.575285902,22_lab,,$,,221,LPSR_DIRECT,1,rollup_from_subaccounts
+238,221.1_fac,49949276.94635335,221_fac,category_scale,$,"ref_221_1_fac, scale_frm_vsl_M",221.1,LPSR_DIRECT,1,collapsed_category_scaled
+239,221.1_mat,11924684.78896102,221_mat,category_scale,$,"ref_221_1_mat, scale_frm_vsl_M",221.1,LPSR_DIRECT,1,collapsed_category_scaled
+240,221.1_lab,6326706.020821496,221_lab,category_scale,$,"ref_221_1_lab, scale_frm_vsl_M",221.1,LPSR_DIRECT,1,collapsed_category_scaled
+241,221.3_fac,46195485.18005672,221_fac,category_scale,$,"ref_221_3_fac, scale_rx_D",221.3,LPSR_DIRECT,1,category_scaled
+242,221.3_mat,116351.76842863896,221_mat,category_scale,$,"ref_221_3_mat, scale_rx_D",221.3,LPSR_DIRECT,1,category_scaled
+243,221.3_lab,1249676.590938091,221_lab,category_scale,$,"ref_221_3_lab, scale_rx_D",221.3,LPSR_DIRECT,1,category_scaled
+244,221.2_fac,35733095.59842105,221_fac,category_scale,$,"ref_221_2_fac, scale_n_crs",221.2,LPSR_DIRECT,1,collapsed_category_scaled
+245,221.2_mat,129207.07336842106,221_mat,category_scale,$,"ref_221_2_mat, scale_n_crs",221.2,LPSR_DIRECT,1,collapsed_category_scaled
+246,221.2_lab,1366074.9635263158,221_lab,category_scale,$,"ref_221_2_lab, scale_n_crs",221.2,LPSR_DIRECT,1,collapsed_category_scaled
+247,222_fac,256194224.68510327,22_fac,,$,,222,LPSR_DIRECT,1,rollup_from_subaccounts
+248,222_mat,2373987.285485063,22_mat,,$,,222,LPSR_DIRECT,1,rollup_from_subaccounts
+249,222_lab,22969797.95015922,22_lab,,$,,222,LPSR_DIRECT,1,rollup_from_subaccounts
+250,222.1_fac,256194224.68510327,222_fac,,$,,222.1,LPSR_DIRECT,1,rollup_from_subaccounts
+251,222.1_mat,2373987.285485063,222_mat,,$,,222.1,LPSR_DIRECT,1,rollup_from_subaccounts
+252,222.1_lab,22969797.95015922,222_lab,,$,,222.1,LPSR_DIRECT,1,rollup_from_subaccounts
+253,222.11_fac,91711426.41363835,222.1_fac,sum_all,$,"ce_222_111_fac, ce_222_119_fac",222.11,LPSR_DIRECT,1,rollup_from_moved_variables
+254,222.11_mat,722716.4583391445,222.1_mat,sum_all,$,"ce_222_111_mat, ce_222_119_mat",222.11,LPSR_DIRECT,1,rollup_from_moved_variables
+255,222.11_lab,6694293.522195743,222.1_lab,sum_all,$,"ce_222_111_lab, ce_222_119_lab",222.11,LPSR_DIRECT,1,rollup_from_moved_variables
+256,222.12_fac,6090848.3911,222.1_fac,category_scale,$,"ref_222_12_fac, scale_mc_piping_M",222.12,LPSR_DIRECT,1,collapsed_category_scaled
+257,222.12_mat,1077287.3122,222.1_mat,category_scale,$,"ref_222_12_mat, scale_mc_piping_M",222.12,LPSR_DIRECT,1,collapsed_category_scaled
+258,222.12_lab,10930435.76825,222.1_lab,category_scale,$,"ref_222_12_lab, scale_mc_piping_M",222.12,LPSR_DIRECT,1,collapsed_category_scaled
+259,222.13_fac,149684047.65844318,222.1_fac,sum_all,$,"ce_222_132_fac, ce_222_139_fac",222.13,LPSR_DIRECT,1,rollup_from_moved_variables
+260,222.13_mat,513003.793847437,222.1_mat,sum_all,$,"ce_222_132_mat, ce_222_139_mat",222.13,LPSR_DIRECT,1,rollup_from_moved_variables
+261,222.13_lab,4727001.693954208,222.1_lab,sum_all,$,"ce_222_132_lab, ce_222_139_lab",222.13,LPSR_DIRECT,1,rollup_from_moved_variables
+262,222.14_fac,8707902.221921742,222.1_fac,category_scale,$,"ref_222_14_fac, scale_frm_prz_M",222.14,LPSR_DIRECT,1,collapsed_category_scaled
+263,222.14_mat,60979.72109848157,222.1_mat,category_scale,$,"ref_222_14_mat, scale_frm_prz_M",222.14,LPSR_DIRECT,1,collapsed_category_scaled
+264,222.14_lab,618066.9657592648,222.1_lab,category_scale,$,"ref_222_14_lab, scale_frm_prz_M",222.14,LPSR_DIRECT,1,collapsed_category_scaled
+265,223_fac,25278929.81229612,22_fac,,$,,223,LPSR_DIRECT,1,rollup_from_subaccounts
+266,223_mat,2588813.3250284577,22_mat,,$,,223,LPSR_DIRECT,1,rollup_from_subaccounts
+267,223_lab,23579459.025913805,22_lab,,$,,223,LPSR_DIRECT,1,rollup_from_subaccounts
+268,223.1_fac,6453318.67364326,223_fac,category_scale,$,"ref_223_1_fac, scale_P, f_simp_sfgd",223.1,LPSR_DIRECT,1,collapsed_category_scaled
+269,223.1_mat,455278.5937317083,223_mat,category_scale,$,"ref_223_1_mat, scale_P, f_simp_sfgd",223.1,LPSR_DIRECT,1,collapsed_category_scaled
+270,223.1_lab,5426708.837907713,223_lab,category_scale,$,"ref_223_1_lab, scale_P, f_simp_sfgd",223.1,LPSR_DIRECT,1,collapsed_category_scaled
+271,223.3_fac,12725941.18781688,223_fac,category_scale,$,"ref_223_3_fac, scale_P, f_simp_sfgd",223.3,LPSR_DIRECT,1,collapsed_category_scaled
+272,223.3_mat,1307957.2804844156,223_mat,category_scale,$,"ref_223_3_mat, scale_P, f_simp_sfgd",223.3,LPSR_DIRECT,1,collapsed_category_scaled
+273,223.3_lab,8828443.338181678,223_lab,category_scale,$,"ref_223_3_lab, scale_P, f_simp_sfgd",223.3,LPSR_DIRECT,1,collapsed_category_scaled
+274,223.4_fac,4759707.480389864,223_fac,category_scale,$,"ref_223_4_fac, scale_cont_V, f_simp_sfgd",223.4,LPSR_DIRECT,1,collapsed_category_scaled
+275,223.4_mat,754158.8425336033,223_mat,category_scale,$,"ref_223_4_mat, scale_cont_V, f_simp_sfgd",223.4,LPSR_DIRECT,1,collapsed_category_scaled
+276,223.4_lab,8503675.051616209,223_lab,category_scale,$,"ref_223_4_lab, scale_cont_V, f_simp_sfgd",223.4,LPSR_DIRECT,1,collapsed_category_scaled
+277,223.5_fac,1339962.470446115,223_fac,category_scale,$,"ref_223_5_fac, scale_cont_V, f_simp_sfgd",223.5,LPSR_DIRECT,1,collapsed_category_scaled
+278,223.5_mat,71418.60827873048,223_mat,category_scale,$,"ref_223_5_mat, scale_cont_V, f_simp_sfgd",223.5,LPSR_DIRECT,1,collapsed_category_scaled
+279,223.5_lab,820631.7982082039,223_lab,category_scale,$,"ref_223_5_lab, scale_cont_V, f_simp_sfgd",223.5,LPSR_DIRECT,1,collapsed_category_scaled
+280,224_fac,26794891.28158856,22_fac,,$,,224,LPSR_DIRECT,1,rollup_from_subaccounts
+281,224_mat,1887697.9819883336,22_mat,,$,,224,LPSR_DIRECT,1,rollup_from_subaccounts
+282,224_lab,18782347.93344825,22_lab,,$,,224,LPSR_DIRECT,1,rollup_from_subaccounts
+283,224.1_fac,11646081.268603573,224_fac,category_scale,$,"ref_224_1_fac, scale_pri_flow, f_simp_radw",224.1,LPSR_DIRECT,1,collapsed_category_scaled
+284,224.1_mat,1600556.1527891876,224_mat,category_scale,$,"ref_224_1_mat, scale_pri_flow, f_simp_radw",224.1,LPSR_DIRECT,1,collapsed_category_scaled
+285,224.1_lab,15572648.505977605,224_lab,category_scale,$,"ref_224_1_lab, scale_pri_flow, f_simp_radw",224.1,LPSR_DIRECT,1,collapsed_category_scaled
+286,224.2_fac,2047524.5969637253,224_fac,category_scale,$,"ref_224_2_fac, scale_pri_flow, f_simp_radw",224.2,LPSR_DIRECT,1,collapsed_category_scaled
+287,224.2_mat,50200.49247127167,224_mat,category_scale,$,"ref_224_2_mat, scale_pri_flow, f_simp_radw",224.2,LPSR_DIRECT,1,collapsed_category_scaled
+288,224.2_lab,805741.3367229335,224_lab,category_scale,$,"ref_224_2_lab, scale_pri_flow, f_simp_radw",224.2,LPSR_DIRECT,1,collapsed_category_scaled
+289,224.3_fac,13101285.416021263,224_fac,category_scale,$,"ref_224_3_fac, scale_P, f_simp_radw",224.3,LPSR_DIRECT,1,collapsed_category_scaled
+290,224.3_mat,236941.33672787464,224_mat,category_scale,$,"ref_224_3_mat, scale_P, f_simp_radw",224.3,LPSR_DIRECT,1,collapsed_category_scaled
+291,224.3_lab,2403958.090747718,224_lab,category_scale,$,"ref_224_3_lab, scale_P, f_simp_radw",224.3,LPSR_DIRECT,1,collapsed_category_scaled
+292,225_fac,3270902.2125306865,22_fac,,$,,225,LPSR_DIRECT,1,rollup_from_subaccounts
+293,225_mat,168642.40329945993,22_mat,,$,,225,LPSR_DIRECT,1,rollup_from_subaccounts
+294,225_lab,1831783.426633416,22_lab,,$,,225,LPSR_DIRECT,1,rollup_from_subaccounts
+295,225.1_fac,1321017.194962626,225_fac,,$,,225.1,LPSR_DIRECT,1,rollup_from_subaccounts
+296,225.1_mat,71832.50828855019,225_mat,,$,,225.1,LPSR_DIRECT,1,rollup_from_subaccounts
+297,225.1_lab,929355.0730576696,225_lab,,$,,225.1,LPSR_DIRECT,1,rollup_from_subaccounts
+298,225.11_fac,932414.0826678256,225.1_fac,sum_all,$,"ce_225_111_fac, ce_225_112_fac, ce_225_113_fac, ce_225_114_fac",225.11,LPSR_DIRECT,1,rollup_from_moved_variables
+299,225.11_mat,29860.461718590203,225.1_mat,sum_all,$,"ce_225_111_mat, ce_225_112_mat, ce_225_113_mat, ce_225_114_mat",225.11,LPSR_DIRECT,1,rollup_from_moved_variables
+300,225.11_lab,374968.4145384696,225.1_lab,sum_all,$,"ce_225_111_lab, ce_225_112_lab, ce_225_113_lab, ce_225_114_lab",225.11,LPSR_DIRECT,1,rollup_from_moved_variables
+301,225.12_fac,162195.24438000002,225.1_fac,category_scale,$,"ref_225_12_fac, f_simp_fuel_hndl",225.12,LPSR_DIRECT,1,category_scaled
+302,225.12_mat,1671.09275944,225.1_mat,category_scale,$,"ref_225_12_mat, f_simp_fuel_hndl",225.12,LPSR_DIRECT,1,category_scaled
+303,225.12_lab,20945.3836072,225.1_lab,category_scale,$,"ref_225_12_lab, f_simp_fuel_hndl",225.12,LPSR_DIRECT,1,category_scaled
+304,225.13_fac,226407.8679148,225.1_fac,category_scale,$,"ref_225_13_fac, f_simp_fuel_hndl",225.13,LPSR_DIRECT,1,collapsed_category_scaled
+305,225.13_mat,40300.95381052,225.1_mat,category_scale,$,"ref_225_13_mat, f_simp_fuel_hndl",225.13,LPSR_DIRECT,1,collapsed_category_scaled
+306,225.13_lab,533441.2749119999,225.1_lab,category_scale,$,"ref_225_13_lab, f_simp_fuel_hndl",225.13,LPSR_DIRECT,1,collapsed_category_scaled
+307,225.3_fac,118054.6107,225_fac,category_scale,$,"ref_225_3_fac, f_simp_fuel_hndl",225.3,LPSR_DIRECT,1,collapsed_category_scaled
+308,225.3_mat,5599.922718000001,225_mat,category_scale,$,"ref_225_3_mat, f_simp_fuel_hndl",225.3,LPSR_DIRECT,1,collapsed_category_scaled
+309,225.3_lab,74536.493564,225_lab,category_scale,$,"ref_225_3_lab, f_simp_fuel_hndl",225.3,LPSR_DIRECT,1,collapsed_category_scaled
+310,225.4_fac,1831830.4068680604,225_fac,category_scale,$,"ref_225_4_fac, scale_sfp_V, f_simp_fuel_hndl",225.4,LPSR_DIRECT,1,collapsed_category_scaled
+311,225.4_mat,91209.97229290976,225_mat,category_scale,$,"ref_225_4_mat, scale_sfp_V, f_simp_fuel_hndl",225.4,LPSR_DIRECT,1,collapsed_category_scaled
+312,225.4_lab,827891.8600117461,225_lab,category_scale,$,"ref_225_4_lab, scale_sfp_V, f_simp_fuel_hndl",225.4,LPSR_DIRECT,1,collapsed_category_scaled
+313,226_fac,29393532.91593124,22_fac,,$,,226,LPSR_DIRECT,1,rollup_from_subaccounts
+314,226_mat,4996191.196851019,22_mat,,$,,226,LPSR_DIRECT,1,rollup_from_subaccounts
+315,226_lab,41653854.79138828,22_lab,,$,,226,LPSR_DIRECT,1,rollup_from_subaccounts
+316,226.1_fac,884281.722,226_fac,category_scale,$,"ref_226_1_fac, f_simp_other_rx_equip",226.1,LPSR_DIRECT,1,collapsed_category_scaled
+317,226.1_mat,100030.5006,226_mat,category_scale,$,"ref_226_1_mat, f_simp_other_rx_equip",226.1,LPSR_DIRECT,1,collapsed_category_scaled
+318,226.1_lab,1285762.813,226_lab,category_scale,$,"ref_226_1_lab, f_simp_other_rx_equip",226.1,LPSR_DIRECT,1,collapsed_category_scaled
+319,226.3_fac,1008062.44472,226_fac,category_scale,$,"ref_226_3_fac, f_simp_other_rx_equip",226.3,LPSR_DIRECT,1,collapsed_category_scaled
+320,226.3_mat,314458.9487118,226_mat,category_scale,$,"ref_226_3_mat, f_simp_other_rx_equip",226.3,LPSR_DIRECT,1,collapsed_category_scaled
+321,226.3_lab,1500098.767785,226_lab,category_scale,$,"ref_226_3_lab, f_simp_other_rx_equip",226.3,LPSR_DIRECT,1,collapsed_category_scaled
+322,226.4_fac,10779212.801253986,226_fac,category_scale,$,"ref_226_4_fac, scale_pri_flow, f_simp_other_rx_equip",226.4,LPSR_DIRECT,1,collapsed_category_scaled
+323,226.4_mat,1786320.5599440474,226_mat,category_scale,$,"ref_226_4_mat, scale_pri_flow, f_simp_other_rx_equip",226.4,LPSR_DIRECT,1,collapsed_category_scaled
+324,226.4_lab,15557168.866937764,226_lab,category_scale,$,"ref_226_4_lab, scale_pri_flow, f_simp_other_rx_equip",226.4,LPSR_DIRECT,1,collapsed_category_scaled
+325,226.6_fac,190878.9004,226_fac,category_scale,$,"ref_226_6_fac, f_simp_other_rx_equip",226.6,LPSR_DIRECT,1,collapsed_category_scaled
+326,226.6_mat,1829.36467,226_mat,category_scale,$,"ref_226_6_mat, f_simp_other_rx_equip",226.6,LPSR_DIRECT,1,collapsed_category_scaled
+327,226.6_lab,46626.9427,226_lab,category_scale,$,"ref_226_6_lab, f_simp_other_rx_equip",226.6,LPSR_DIRECT,1,collapsed_category_scaled
+328,226.7_fac,12149388.47494475,226_fac,,$,,226.7,LPSR_DIRECT,1,rollup_from_subaccounts
+329,226.7_mat,1731078.2074551722,226_mat,,$,,226.7,LPSR_DIRECT,1,rollup_from_subaccounts
+330,226.7_lab,22393927.55553552,226_lab,,$,,226.7,LPSR_DIRECT,1,rollup_from_subaccounts
+331,226.71_fac,6721644.787227787,226.7_fac,category_scale,$,"ref_226_71_fac, scale_P, f_simp_other_rx_equip",226.71,LPSR_DIRECT,1,collapsed_category_scaled
+332,226.71_mat,1138155.514313134,226.7_mat,category_scale,$,"ref_226_71_mat, scale_P, f_simp_other_rx_equip",226.71,LPSR_DIRECT,1,collapsed_category_scaled
+333,226.71_lab,14772657.51801433,226.7_lab,category_scale,$,"ref_226_71_lab, scale_P, f_simp_other_rx_equip",226.71,LPSR_DIRECT,1,collapsed_category_scaled
+334,226.72_fac,5427743.687716965,226.7_fac,category_scale,$,"ref_226_72_fac, scale_pri_flow, f_simp_other_rx_equip",226.72,LPSR_DIRECT,1,collapsed_category_scaled
+335,226.72_mat,592922.6931420382,226.7_mat,category_scale,$,"ref_226_72_mat, scale_pri_flow, f_simp_other_rx_equip",226.72,LPSR_DIRECT,1,collapsed_category_scaled
+336,226.72_lab,7621270.037521191,226.7_lab,category_scale,$,"ref_226_72_lab, scale_pri_flow, f_simp_other_rx_equip",226.72,LPSR_DIRECT,1,collapsed_category_scaled
+337,226.8_fac,3933935.745,226_fac,category_scale,$,"ref_226_8_fac, f_simp_other_rx_equip",226.8,LPSR_DIRECT,1,collapsed_category_scaled
+338,226.8_mat,1004082.496825,226_mat,category_scale,$,"ref_226_8_mat, f_simp_other_rx_equip",226.8,LPSR_DIRECT,1,collapsed_category_scaled
+339,226.8_lab,177501.65108,226_lab,category_scale,$,"ref_226_8_lab, f_simp_other_rx_equip",226.8,LPSR_DIRECT,1,collapsed_category_scaled
+340,226.9_fac,447772.8276125,226_fac,category_scale,$,"ref_226_9_fac, f_simp_other_rx_equip",226.9,LPSR_DIRECT,1,collapsed_category_scaled
+341,226.9_mat,58391.118645,226_mat,category_scale,$,"ref_226_9_mat, f_simp_other_rx_equip",226.9,LPSR_DIRECT,1,collapsed_category_scaled
+342,226.9_lab,692768.19435,226_lab,category_scale,$,"ref_226_9_lab, f_simp_other_rx_equip",226.9,LPSR_DIRECT,1,collapsed_category_scaled
+343,227_fac,32682954.00658421,22_fac,,$,,227,LPSR_DIRECT,1,rollup_from_subaccounts
+344,227_mat,2043124.673604632,22_mat,,$,,227,LPSR_DIRECT,1,rollup_from_subaccounts
+345,227_lab,23395908.85965053,22_lab,,$,,227,LPSR_DIRECT,1,rollup_from_subaccounts
+346,227.1_fac,5862176.921089473,227_fac,,$,,227.1,LPSR_DIRECT,1,rollup_from_subaccounts
+347,227.1_mat,145741.10852847368,227_mat,,$,,227.1,LPSR_DIRECT,1,rollup_from_subaccounts
+348,227.1_lab,2890469.7719368413,227_lab,,$,,227.1,LPSR_DIRECT,1,rollup_from_subaccounts
+349,227.11_fac,2348124.118,227.1_fac,category_scale,$,ref_227_11_fac,227.11,LPSR_DIRECT,1,category_scaled
+350,227.11_mat,47080.64023,227.1_mat,category_scale,$,ref_227_11_mat,227.11,LPSR_DIRECT,1,category_scaled
+351,227.11_lab,956553.3662,227.1_lab,category_scale,$,ref_227_11_lab,227.11,LPSR_DIRECT,1,category_scaled
+352,227.15_fac,201316.7982,227.1_fac,category_scale,$,ref_227_15_fac,227.15,LPSR_DIRECT,1,category_scaled
+353,227.15_mat,7611.624429,227.1_mat,category_scale,$,ref_227_15_mat,227.15,LPSR_DIRECT,1,category_scaled
+354,227.15_lab,146670.7044,227.1_lab,category_scale,$,ref_227_15_lab,227.15,LPSR_DIRECT,1,category_scaled
+355,227.16_fac,841507.4498,227.1_fac,category_scale,$,ref_227_16_fac,227.16,LPSR_DIRECT,1,category_scaled
+356,227.16_mat,29789.75467,227.1_mat,category_scale,$,ref_227_16_mat,227.16,LPSR_DIRECT,1,category_scaled
+357,227.16_lab,573931.4903,227.1_lab,category_scale,$,ref_227_16_lab,227.16,LPSR_DIRECT,1,category_scaled
+358,227.17_fac,805269.6058,227.1_fac,category_scale,$,ref_227_17_fac,227.17,LPSR_DIRECT,1,category_scaled
+359,227.17_mat,29789.75467,227.1_mat,category_scale,$,ref_227_17_mat,227.17,LPSR_DIRECT,1,category_scaled
+360,227.17_lab,573931.4903,227.1_lab,category_scale,$,ref_227_17_lab,227.17,LPSR_DIRECT,1,category_scaled
+361,227.18_fac,1007976.135,227.1_fac,category_scale,$,ref_227_18_fac,227.18,LPSR_DIRECT,1,category_scaled
+362,227.18_mat,21971.66031,227.1_mat,category_scale,$,ref_227_18_mat,227.18,LPSR_DIRECT,1,category_scaled
+363,227.18_lab,446391.7474,227.1_lab,category_scale,$,ref_227_18_lab,227.18,LPSR_DIRECT,1,category_scaled
+364,227.19_fac,657982.8142894737,227.1_fac,category_scale,$,"ref_227_19_fac, scale_n_crs",227.19,LPSR_DIRECT,1,category_scaled
+365,227.19_mat,9497.674219473683,227.1_mat,category_scale,$,"ref_227_19_mat, scale_n_crs",227.19,LPSR_DIRECT,1,category_scaled
+366,227.19_lab,192990.9733368421,227.1_lab,category_scale,$,"ref_227_19_lab, scale_n_crs",227.19,LPSR_DIRECT,1,category_scaled
+367,227.2_fac,6575350.648,227_fac,category_scale,$,ref_227_2_fac,227.2,LPSR_DIRECT,1,category_scaled
+368,227.2_mat,89960.81599,227_mat,category_scale,$,ref_227_2_mat,227.2,LPSR_DIRECT,1,category_scaled
+369,227.2_lab,913902.4667,227_lab,category_scale,$,ref_227_2_lab,227.2,LPSR_DIRECT,1,category_scaled
+370,227.3_fac,6821452.5089,227_fac,category_scale,$,ref_227_3_fac,227.3,LPSR_DIRECT,1,collapsed_category_scaled
+371,227.3_mat,141557.21612300002,227_mat,category_scale,$,ref_227_3_mat,227.3,LPSR_DIRECT,1,collapsed_category_scaled
+372,227.3_lab,2569941.7028400004,227_lab,category_scale,$,ref_227_3_lab,227.3,LPSR_DIRECT,1,collapsed_category_scaled
+373,227.4_fac,6578958.462052632,227_fac,category_scale,$,"ref_227_4_fac, scale_n_crs",227.4,LPSR_DIRECT,1,collapsed_category_scaled
+374,227.4_mat,231764.0694947368,227_mat,category_scale,$,"ref_227_4_mat, scale_n_crs",227.4,LPSR_DIRECT,1,collapsed_category_scaled
+375,227.4_lab,2354463.598226316,227_lab,category_scale,$,"ref_227_4_lab, scale_n_crs",227.4,LPSR_DIRECT,1,collapsed_category_scaled
+376,227.5_fac,527288.0859105263,227_fac,category_scale,$,"ref_227_5_fac, scale_n_crs",227.5,LPSR_DIRECT,1,category_scaled
+377,227.5_mat,1054159.797131579,227_mat,category_scale,$,"ref_227_5_mat, scale_n_crs",227.5,LPSR_DIRECT,1,category_scaled
+378,227.5_lab,10807359.919578947,227_lab,category_scale,$,"ref_227_5_lab, scale_n_crs",227.5,LPSR_DIRECT,1,category_scaled
+379,227.9_fac,6317727.380631579,227_fac,category_scale,$,"ref_227_9_fac, scale_n_crs",227.9,LPSR_DIRECT,1,category_scaled
+380,227.9_mat,379941.66633684206,227_mat,category_scale,$,"ref_227_9_mat, scale_n_crs",227.9,LPSR_DIRECT,1,category_scaled
+381,227.9_lab,3859771.400368421,227_lab,category_scale,$,"ref_227_9_lab, scale_n_crs",227.9,LPSR_DIRECT,1,category_scaled
+382,228_fac,0.0,22_fac,,$,,228,LPSR_DIRECT,1,collapsed_rollup_zero
+383,228_mat,7193434.601400001,22_mat,category_scale,$,ref_228_mat,228,LPSR_DIRECT,1,collapsed_category_scaled
+384,228_lab,13169656.351,22_lab,category_scale,$,ref_228_lab,228,LPSR_DIRECT,1,collapsed_category_scaled
+385,229_fac,0.0,22_fac,,$,,229,LPSR_DIRECT,1,collapsed_rollup_zero
+386,229_mat,0.0,22_mat,,$,,229,LPSR_DIRECT,1,collapsed_rollup_zero
+387,229_lab,0.0,22_lab,,$,,229,LPSR_DIRECT,1,collapsed_rollup_zero
+388,23_fac,390994355.4347473,2_fac,category_scale,$,"ref_23_fac, scale_elec_P",23,LPSR_DIRECT,1,collapsed_category_scaled
+389,23_mat,25120067.25584304,2_mat,category_scale,$,"ref_23_mat, scale_elec_P",23,LPSR_DIRECT,1,collapsed_category_scaled
+390,23_lab,165956705.163624,2_lab,category_scale,$,"ref_23_lab, scale_elec_P",23,LPSR_DIRECT,1,collapsed_category_scaled
+391,24_fac,29436588.96398727,2_fac,,$,,24,LPSR_DIRECT,1,rollup_from_subaccounts
+392,24_mat,26808881.84739582,2_mat,,$,,24,LPSR_DIRECT,1,rollup_from_subaccounts
+393,24_lab,89078027.15386322,2_lab,,$,,24,LPSR_DIRECT,1,rollup_from_subaccounts
+394,241_fac,13383265.041500611,24_fac,category_scale,$,"ref_241_fac, scale_tur_plant_equip_elec_P, f_elec_swgr",241,LPSR_DIRECT,1,collapsed_category_scaled
+395,241_mat,105054.74681666934,24_mat,category_scale,$,"ref_241_mat, scale_tur_plant_equip_elec_P, f_elec_swgr",241,LPSR_DIRECT,1,collapsed_category_scaled
+396,241_lab,731146.3223681122,24_lab,category_scale,$,"ref_241_lab, scale_tur_plant_equip_elec_P, f_elec_swgr",241,LPSR_DIRECT,1,collapsed_category_scaled
+397,242_fac,10635016.715895744,24_fac,category_scale,$,"ref_242_fac, scale_tur_plant_equip_elec_P, f_elec_st_serv",242,LPSR_DIRECT,1,collapsed_category_scaled
+398,242_mat,189558.1954428846,24_mat,category_scale,$,"ref_242_mat, scale_tur_plant_equip_elec_P, f_elec_st_serv",242,LPSR_DIRECT,1,collapsed_category_scaled
+399,242_lab,997429.9659796514,24_lab,category_scale,$,"ref_242_lab, scale_tur_plant_equip_elec_P, f_elec_st_serv",242,LPSR_DIRECT,1,collapsed_category_scaled
+400,243_fac,3088404.796542287,24_fac,category_scale,$,"ref_243_fac, scale_tur_plant_equip_elec_P, f_elec_switchboards",243,LPSR_DIRECT,1,collapsed_category_scaled
+401,243_mat,62329.08170593352,24_mat,category_scale,$,"ref_243_mat, scale_tur_plant_equip_elec_P, f_elec_switchboards",243,LPSR_DIRECT,1,collapsed_category_scaled
+402,243_lab,688103.6038249799,24_lab,category_scale,$,"ref_243_lab, scale_tur_plant_equip_elec_P, f_elec_switchboards",243,LPSR_DIRECT,1,collapsed_category_scaled
+403,244_fac,0.0,24_fac,,$,,244,LPSR_DIRECT,1,collapsed_rollup_zero
+404,244_mat,3873950.3324222136,24_mat,category_scale,$,"ref_244_mat, scale_tur_plant_equip_elec_P, f_elec_prot",244,LPSR_DIRECT,1,collapsed_category_scaled
+405,244_lab,7150832.4945418965,24_lab,category_scale,$,"ref_244_lab, scale_tur_plant_equip_elec_P, f_elec_prot",244,LPSR_DIRECT,1,collapsed_category_scaled
+406,245_fac,0.0,24_fac,,$,,245,LPSR_DIRECT,1,collapsed_rollup_zero
+407,245_mat,8515139.456262374,24_mat,category_scale,$,"ref_245_mat, scale_tur_plant_equip_elec_P, f_elec_str_wir_cont",245,LPSR_DIRECT,1,collapsed_category_scaled
+408,245_lab,50939192.372033656,24_lab,category_scale,$,"ref_245_lab, scale_tur_plant_equip_elec_P, f_elec_str_wir_cont",245,LPSR_DIRECT,1,collapsed_category_scaled
+409,246_fac,2329902.410048628,24_fac,category_scale,$,"ref_246_fac, scale_tur_plant_equip_elec_P, f_elec_P_ctrl_wir",246,LPSR_DIRECT,1,collapsed_category_scaled
+410,246_mat,14062850.034745743,24_mat,category_scale,$,"ref_246_mat, scale_tur_plant_equip_elec_P, f_elec_P_ctrl_wir",246,LPSR_DIRECT,1,collapsed_category_scaled
+411,246_lab,28571322.39511492,24_lab,category_scale,$,"ref_246_lab, scale_tur_plant_equip_elec_P, f_elec_P_ctrl_wir",246,LPSR_DIRECT,1,collapsed_category_scaled
+412,25_fac,38416698.32520889,2_fac,,$,,25,LPSR_DIRECT,1,rollup_from_subaccounts
+413,25_mat,11747093.468184102,2_mat,,$,,25,LPSR_DIRECT,1,rollup_from_subaccounts
+414,25_lab,80027526.34271017,2_lab,,$,,25,LPSR_DIRECT,1,rollup_from_subaccounts
+415,251_fac,11089163.658378892,25_fac,,$,,251,LPSR_DIRECT,1,rollup_from_subaccounts
+416,251_mat,259432.67340749945,25_mat,,$,,251,LPSR_DIRECT,1,rollup_from_subaccounts
+417,251_lab,2488193.091137278,25_lab,,$,,251,LPSR_DIRECT,1,rollup_from_subaccounts
+418,251.1_fac,11089163.658378892,251_fac,,$,,251.1,LPSR_DIRECT,1,rollup_from_subaccounts
+419,251.1_mat,259432.67340749945,251_mat,,$,,251.1,LPSR_DIRECT,1,rollup_from_subaccounts
+420,251.1_lab,2488193.091137278,251_lab,,$,,251.1,LPSR_DIRECT,1,rollup_from_subaccounts
+421,251.11_fac,3903693.019735131,251.1_fac,category_scale,$,"ref_251_11_fac, scale_P",251.11,LPSR_DIRECT,1,collapsed_category_scaled
+422,251.11_mat,63127.3794053202,251.1_mat,category_scale,$,"ref_251_11_mat, scale_P",251.11,LPSR_DIRECT,1,collapsed_category_scaled
+423,251.11_lab,605456.436651082,251.1_lab,category_scale,$,"ref_251_11_lab, scale_P",251.11,LPSR_DIRECT,1,collapsed_category_scaled
+424,251.12_fac,5576704.31390733,251.1_fac,category_scale,$,"ref_251_12_fac, scale_P",251.12,LPSR_DIRECT,1,category_scaled
+425,251.12_mat,126254.75877079969,251.1_mat,category_scale,$,"ref_251_12_mat, scale_P",251.12,LPSR_DIRECT,1,category_scaled
+426,251.12_lab,1210901.1673027962,251.1_lab,category_scale,$,"ref_251_12_lab, scale_P",251.12,LPSR_DIRECT,1,category_scaled
+427,251.16_fac,671880.0,251.1_fac,category_scale,$,ref_251_16_fac,251.16,LPSR_DIRECT,1,category_scaled
+428,251.16_mat,59651.36136,251.1_mat,category_scale,$,ref_251_16_mat,251.16,LPSR_DIRECT,1,category_scaled
+429,251.16_lab,572112.3209,251.1_lab,category_scale,$,ref_251_16_lab,251.16,LPSR_DIRECT,1,category_scaled
+430,251.17_fac,936886.3247364314,251.1_fac,category_scale,$,"ref_251_17_fac, scale_P",251.17,LPSR_DIRECT,1,category_scaled
+431,251.17_mat,10399.173871379557,251.1_mat,category_scale,$,"ref_251_17_mat, scale_P",251.17,LPSR_DIRECT,1,category_scaled
+432,251.17_lab,99723.16628339975,251.1_lab,category_scale,$,"ref_251_17_lab, scale_P",251.17,LPSR_DIRECT,1,category_scaled
+433,252_fac,18234671.28257056,25_fac,,$,,252,LPSR_DIRECT,1,rollup_from_subaccounts
+434,252_mat,9738804.697073834,25_mat,,$,,252,LPSR_DIRECT,1,rollup_from_subaccounts
+435,252_lab,63419707.86294556,25_lab,,$,,252,LPSR_DIRECT,1,rollup_from_subaccounts
+436,252.1_fac,3221068.4523098907,252_fac,category_scale,$,"ref_252_1_fac, scale_V_of_212_213_215_216_217",252.1,LPSR_DIRECT,1,collapsed_category_scaled
+437,252.1_mat,673761.8570905332,252_mat,category_scale,$,"ref_252_1_mat, scale_V_of_212_213_215_216_217",252.1,LPSR_DIRECT,1,collapsed_category_scaled
+438,252.1_lab,15837189.48628141,252_lab,category_scale,$,"ref_252_1_lab, scale_V_of_212_213_215_216_217",252.1,LPSR_DIRECT,1,collapsed_category_scaled
+439,252.2_fac,10315415.353044972,252_fac,category_scale,$,"ref_252_2_fac, scale_V_of_212_213_215_216_217",252.2,LPSR_DIRECT,1,collapsed_category_scaled
+440,252.2_mat,8361373.834305692,252_mat,category_scale,$,"ref_252_2_mat, scale_V_of_212_213_215_216_217",252.2,LPSR_DIRECT,1,collapsed_category_scaled
+441,252.2_lab,39774923.871399626,252_lab,category_scale,$,"ref_252_2_lab, scale_V_of_212_213_215_216_217",252.2,LPSR_DIRECT,1,collapsed_category_scaled
+442,252.3_fac,4698187.477215703,252_fac,category_scale,$,"ref_252_3_fac, scale_V_of_212_213_215_216_217",252.3,LPSR_DIRECT,1,collapsed_category_scaled
+443,252.3_mat,432800.98174760776,252_mat,category_scale,$,"ref_252_3_mat, scale_V_of_212_213_215_216_217",252.3,LPSR_DIRECT,1,collapsed_category_scaled
+444,252.3_lab,7323253.888364514,252_lab,category_scale,$,"ref_252_3_lab, scale_V_of_212_213_215_216_217",252.3,LPSR_DIRECT,1,collapsed_category_scaled
+445,252.4_fac,0.0,252_fac,,$,,252.4,LPSR_DIRECT,1,collapsed_rollup_zero
+446,252.4_mat,270868.02393,252_mat,category_scale,$,ref_252_4_mat,252.4,LPSR_DIRECT,1,collapsed_category_scaled
+447,252.4_lab,484340.6169,252_lab,category_scale,$,ref_252_4_lab,252.4,LPSR_DIRECT,1,collapsed_category_scaled
+448,253_fac,3460827.43404369,25_fac,category_scale,$,"ref_253_fac, scale_V_of_212_213_215_216_217",253,LPSR_DIRECT,1,collapsed_category_scaled
+449,253_mat,1165404.5140454122,25_mat,category_scale,$,"ref_253_mat, scale_V_of_212_213_215_216_217",253,LPSR_DIRECT,1,collapsed_category_scaled
+450,253_lab,8439054.116516044,25_lab,category_scale,$,"ref_253_lab, scale_V_of_212_213_215_216_217",253,LPSR_DIRECT,1,collapsed_category_scaled
+451,254_fac,3963181.950215752,25_fac,category_scale,$,"ref_254_fac, scale_V_of_212_213_215_216_217",254,LPSR_DIRECT,1,collapsed_category_scaled
+452,254_mat,130196.58375735312,25_mat,category_scale,$,"ref_254_mat, scale_V_of_212_213_215_216_217",254,LPSR_DIRECT,1,collapsed_category_scaled
+453,254_lab,1127418.773111296,25_lab,category_scale,$,"ref_254_lab, scale_V_of_212_213_215_216_217",254,LPSR_DIRECT,1,collapsed_category_scaled
+454,255_fac,1668854.0,25_fac,category_scale,$,ref_255_fac,255,LPSR_DIRECT,1,category_scaled
+455,255_mat,453254.9999,25_mat,category_scale,$,ref_255_mat,255,LPSR_DIRECT,1,category_scaled
+456,255_lab,4553152.499,25_lab,category_scale,$,ref_255_lab,255,LPSR_DIRECT,1,category_scaled
+457,26_fac,70104925.57582445,2_fac,,$,,26,LPSR_DIRECT,1,rollup_from_subaccounts
+458,26_mat,8565146.74783129,2_mat,,$,,26,LPSR_DIRECT,1,rollup_from_subaccounts
+459,26_lab,52487330.30253166,2_lab,,$,,26,LPSR_DIRECT,1,rollup_from_subaccounts
+460,261_fac,393999.2808784443,26_fac,category_scale,$,"ref_261_fac, scale_rej_th_P",261,LPSR_DIRECT,1,collapsed_category_scaled
+461,261_mat,3935091.3269656086,26_mat,category_scale,$,"ref_261_mat, scale_rej_th_P",261,LPSR_DIRECT,1,collapsed_category_scaled
+462,261_lab,9157392.084261214,26_lab,category_scale,$,"ref_261_lab, scale_rej_th_P",261,LPSR_DIRECT,1,collapsed_category_scaled
+463,262_fac,69710926.294946,26_fac,,$,,262,LPSR_DIRECT,1,rollup_from_subaccounts
+464,262_mat,4630055.420865682,26_mat,,$,,262,LPSR_DIRECT,1,rollup_from_subaccounts
+465,262_lab,43329938.21827044,26_lab,,$,,262,LPSR_DIRECT,1,rollup_from_subaccounts
+466,262.1_fac,69710926.294946,262_fac,,$,,262.1,LPSR_DIRECT,1,rollup_from_subaccounts
+467,262.1_mat,4630055.420865682,262_mat,,$,,262.1,LPSR_DIRECT,1,rollup_from_subaccounts
+468,262.1_lab,43329938.21827044,262_lab,,$,,262.1,LPSR_DIRECT,1,rollup_from_subaccounts
+469,262.11_fac,821716.7943638151,262.1_fac,category_scale,$,"ref_262_11_fac, scale_rej_th_P",262.11,LPSR_DIRECT,1,category_scaled
+470,262.11_mat,31498.703837626967,262.1_mat,category_scale,$,"ref_262_11_mat, scale_rej_th_P",262.11,LPSR_DIRECT,1,category_scaled
+471,262.11_lab,299903.0234635871,262.1_lab,category_scale,$,"ref_262_11_lab, scale_rej_th_P",262.11,LPSR_DIRECT,1,category_scaled
+472,262.12_fac,19786129.24,262.1_fac,category_scale,$,ref_262_12_fac,262.12,LPSR_DIRECT,1,category_scaled
+473,262.12_mat,2229912.276,262.1_mat,category_scale,$,ref_262_12_mat,262.12,LPSR_DIRECT,1,category_scaled
+474,262.12_lab,15368420.84,262.1_lab,category_scale,$,ref_262_12_lab,262.12,LPSR_DIRECT,1,category_scaled
+475,262.13_fac,46373708.0116178,262.1_fac,category_scale,$,"ref_262_13_fac, scale_rej_th_P",262.13,LPSR_DIRECT,1,category_scaled
+476,262.13_mat,2145876.2276741937,262.1_mat,category_scale,$,"ref_262_13_mat, scale_rej_th_P",262.13,LPSR_DIRECT,1,category_scaled
+477,262.13_lab,26981789.27575636,262.1_lab,category_scale,$,"ref_262_13_lab, scale_rej_th_P",262.13,LPSR_DIRECT,1,category_scaled
+478,262.14_fac,0.0,262.1_fac,,$,,262.14,LPSR_DIRECT,1,category_scaled
+479,262.14_mat,117794.90776448436,262.1_mat,category_scale,$,"ref_262_14_mat, scale_rej_th_P",262.14,LPSR_DIRECT,1,category_scaled
+480,262.14_lab,130629.59200136008,262.1_lab,category_scale,$,"ref_262_14_lab, scale_rej_th_P",262.14,LPSR_DIRECT,1,category_scaled
+481,262.15_fac,2729372.248964384,262.1_fac,category_scale,$,"ref_262_15_fac, scale_rej_th_P",262.15,LPSR_DIRECT,1,category_scaled
+482,262.15_mat,104973.30558937664,262.1_mat,category_scale,$,"ref_262_15_mat, scale_rej_th_P",262.15,LPSR_DIRECT,1,category_scaled
+483,262.15_lab,549195.4870491357,262.1_lab,category_scale,$,"ref_262_15_lab, scale_rej_th_P",262.15,LPSR_DIRECT,1,category_scaled
+484,219_fac,0.0,21_fac,,$,,219,LPSR_DIRECT,1,collapsed_rollup_zero
+485,219_mat,0.0,21_mat,,$,,219,LPSR_DIRECT,1,collapsed_rollup_zero
+486,219_lab,0.0,21_lab,,$,,219,LPSR_DIRECT,1,collapsed_rollup_zero

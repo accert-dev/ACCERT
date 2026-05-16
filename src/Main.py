@@ -532,6 +532,8 @@ class Accert:
         """
         if org_unit == new_unit:
             return False
+        elif {org_unit, new_unit} == {'dollar', '$'}:
+            return False
         elif org_unit == "N/A" or org_unit == "none" or org_unit == "None":
             print('[Note] Original unit is not available, no conversion needed')
             return False
@@ -1642,13 +1644,14 @@ class Accert:
             ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
 
     def _lpsr_processing(self, c, ut, accert):
-        self.roll_up_cost_elements(c)
+        for _ in range(4):
+            self.roll_up_cost_elements(c)
         self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
-        self.roll_up_account_table(c, from_level=2, to_level=0)
+        self.roll_up_account_table(c, from_level=4, to_level=0)
         print(' Generating results table for review '.center(100, '='))
         print('\n')
-        ut.print_leveled_accounts(c, all=True, cost_unit='million', level=2)
+        ut.print_leveled_accounts(c, all=True, cost_unit='million', level=4)
 
     def _no_cost_element_processing(self, c, ut, accert):
         """

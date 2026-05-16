@@ -2,18 +2,8 @@ accert{
     ref_model = "LPSR"
     use_gncoa = False
 
-    l0COA(2){
-        l1COA(21){
-            l2COA(212){
-                ce("212_fac"){
-                    alg("lpsr_scaled_cost"){
-                        var(k_212_fac){
-                            value = 3.0
-                            unit = 1
-                        }
-                    }
-                }
-            }
-        }
+    var(cont_D_D){
+        value = 45.0
+        unit = m
     }
 }

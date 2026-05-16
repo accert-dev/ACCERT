@@ -1,0 +1,959 @@
+ind,var_name,var_description,var_value,var_unit,var_alg,var_need,user_input,v_linked
+1,adm_bldg_bldg_vol,Building volume for 219.142,0.0,m^3,,,0,scale_adm_bldg_bldg_vol
+2,S,General Yardwork Area for 211.1,23.0,m^2,,,0,scale_S
+3,bldg_V,Structural & Miscellaneous Steel Building volume for 213.142,194392.0,m^3,,,0,scale_bldg_V
+4,cont_D_D,LPSR A.212.15 containment cylinder/dome diameter D,44.2,m,,,1,sup_str_S
+5,cont_hatch_ms_bldg_vol,Building volume for 219.142,0.0,m^3,,,0,scale_cont_hatch_ms_bldg_vol
+6,cont_H_H,LPSR A.212.15 containment cylinder height H,45.7,m,,,1,sup_str_S
+7,cont_V,Containment Spray System Containment volume for 223.4,86163.9381112316,m^3,,,0,scale_cont_V
+8,cr_dg_bldg_bldg_vol,Structural & Miscellaneous Steel Building volume for 218142,2660.0,m^3,,,0,scale_cr_dg_bldg_bldg_vol
+9,cr_dg_bldg_sub_S,Roofing & Flashing Substructure S for 218145,380.0,m^2,,,0,scale_cr_dg_bldg_sub_S
+10,cr_dg_bldg_sub_vol,Substructure Concrete Substructure volume for 21813,228.0,m^3,,,0,scale_cr_dg_bldg_sub_vol
+11,cr_dg_bldg_sup_S,Painting Superstructure S for 218149,546.0,m^2,,,0,scale_cr_dg_bldg_sup_S
+12,cr_dg_bldg_sup_vol,Concrete Work Superstructure volume for 218141,163.79999999999998,m^3,,,0,scale_cr_dg_bldg_sup_vol
+13,elec_P,"Input unit value for Electric power scale, source account 231.; also used for new_base_turbine_plant_equipment_elec_P",1117.0,MWe,,,0,scale_elec_P
+14,elec_tunnel_bldg_vol,Building volume for 219.142,0.0,m^3,,,0,scale_elec_tunnel_bldg_vol
+15,frm_flow,Fluid Circulation Drive System Flow rate for 222.11,5000.0,kg/s,,,0,scale_frm_flow
+16,frm_fuel_cask_cap,Spent Fuel Cask Crane Fuel cask capacity for 225.114,113.0,tonne,,,0,scale_frm_fuel_cask_cap
+17,frm_fuel_crane_cap,New & Spent Fuel Crane Fuel crane capacity for 225.111,2.0,tonne,,,0,scale_frm_fuel_crane_cap
+18,frm_ht_S,Steam Generator Equipment HT surface S for 222.13,11477.0,m^2,,,0,scale_frm_ht_S
+19,frm_prz_M,Pressurizing System Pressurizer mass for 222.14,106000.0,kg,,,0,scale_frm_prz_M
+20,frm_S,Passive cooling pool Surface S for 212.3,1000.0,m^2,,,0,scale_frm_S
+21,frm_S_9_71886e_06,Storage Pool Liner - S.S. Surface S for 217.3,480.0,m^2,,,0,scale_frm_S_9_71886e_06
+22,frm_vsl_M,Reactor Vessel + Accessory Vessel mass for 221.1,352000.0,kg,,,0,scale_frm_vsl_M
+23,fuel_stor_bldg_bldg_vol,Structural & Miscellaneous Steel Building volume for 217.142,18900.0,m^3,,,0,scale_fuel_stor_bldg_bldg_vol
+24,fuel_stor_bldg_sub_S,Roofing & Flashing Substructure S for 217.145,700.0,m^2,,,0,scale_fuel_stor_bldg_sub_S
+25,fuel_stor_bldg_sub_vol,Substructure Concrete Substructure volume for 217.13,420.0,m^3,,,0,scale_fuel_stor_bldg_sub_vol
+26,fuel_stor_bldg_sup_S,Painting Superstructure S for 217.149,2862.0,m^2,,,0,scale_fuel_stor_bldg_sup_S
+27,fuel_stor_bldg_sup_vol,Concrete Work Superstructure volume for 217.141,858.6,m^3,,,0,scale_fuel_stor_bldg_sup_vol
+28,mc_piping_M,Reactor Coolant Piping System MC piping mass for 222.12,77000.0,kg,,,0,scale_mc_piping_M
+29,non_ess_swgr_bldg_bldg_vol,Building volume for 219.142,0.0,m^3,,,0,scale_non_ess_swgr_bldg_bldg_vol
+30,n_crs,Reactor Control Devices Number of CRs for 221.2,69.0,,,,0,scale_n_crs
+31,pri_aux_bldg_bldg_vol,Structural & Miscellaneous Steel Building volume for 215.142,13357.0,m^3,,,0,scale_pri_aux_bldg_bldg_vol
+32,pri_aux_bldg_sub_S,Roofing & Flashing Substructure S for 215.145,703.0,m^2,,,0,scale_pri_aux_bldg_sub_S
+33,pri_aux_bldg_sub_vol,Substructure Concrete Substructure volume for 215.13,843.6,m^3,,,0,scale_pri_aux_bldg_sub_vol
+34,pri_aux_bldg_sup_S,Painting Superstructure S for 215.149,2128.0,m^2,,,0,scale_pri_aux_bldg_sup_S
+35,pri_aux_bldg_sup_vol,Concrete Work Superstructure volume for 215.141,1276.8,m^3,,,0,scale_pri_aux_bldg_sup_vol
+36,pri_flow,Liquid Waste System Primary flowrate for 224.1,19880.0,kg/s,,,0,scale_pri_flow
+37,rx_D,Vessel Internals Reactor diameter (m) for 221.3,4.5,m,,,0,scale_rx_D
+38,rej_th_P,Rejected thermal power for 261.1,2283.0,MWt,,,0,scale_rej_th_P
+39,rx_P,"Input unit value for Plant power scale, source account 212.22; also used for new_base_rx_P; also used for new_base_yardwork_rx_P",3400.0,MWt,,,0,scale_P
+40,sfp_V,"Fuel Storage, Cleaning, & Inspection Equipment SFP volume for 225.4",750.0,m^3,,,0,scale_sfp_V
+41,sub_str_S,Roof Deck Substructure S for 213.144,4136.0,m^2,,,0,scale_sub_str_S
+42,sub_str_V,Substructure Concrete Substructure volume for 212.13,4603.155803819373,m^3,,,0,scale_sub_str_V
+43,sup_const,Interior Concrete Building volume for 212.140,92728.01635916138,m^3,,,0,scale_sup_const
+44,sup_str_S,Calculated containment superstructure S for cylinder with dome: pi*D^2/2 + pi*D*H,9414.59920057175,m^2,cal_sup_str_S,"cont_D_D, cont_H_H",0,
+45,turb_gen_bldg_sub_vol,Substructure Concrete Substructure volume for 213.13,1240.8,m^3,,,0,scale_turb_gen_bldg_sub_vol
+46,turb_gen_bldg_sup_S,Exterior Walls Superstructure S for 213.143,12690.0,m^2,,,0,scale_turb_gen_bldg_sup_S
+47,turb_gen_bldg_sup_vol,Concrete Work Superstructure volume for 213.141,3807.0,m^3,,,0,scale_turb_gen_bldg_sup_vol
+48,uc_frm_flow,"Unit-cost coefficient for Flow rate scale, source account 222.11",9054.0,kg/s,,,0,scale_frm_flow
+49,uc_frm_fuel_cap,Unit cost coefficient for fuel cask and crane capacity direct formula scale,411796.0,$/tonne,,,0,"scale_frm_fuel_cask_cap, scale_frm_fuel_crane_cap"
+50,uc_frm_ht_S,"Unit-cost coefficient for HT surface S scale, source account 222.13",31688.0,m^2,,,0,scale_frm_ht_S
+51,uc_frm_prz_M,"Unit-cost coefficient for Pressurizer mass scale, source account 222.14",13128.0,kg,,,0,scale_frm_prz_M
+52,uc_frm_S,"Unit-cost coefficient for Surface S scale, source account 212.3",17866.0,m^2,,,0,scale_frm_S
+53,uc_frm_S_9_71886e_06,"Unit-cost coefficient for Surface S scale, source account 217.3",17866.0,m^2,,,0,scale_frm_S_9_71886e_06
+54,uc_frm_vsl_M,"Unit-cost coefficient for Vessel mass scale, source account 221.1",13128.0,kg,,,0,scale_frm_vsl_M
+55,V_of_212_213_215_216_217,"Fill & Backfill (Place/Comp) Volume of 212, 213, 215, 216, 217 for 211.712",336225.0163591613,m^3,,,0,scale_V_of_212_213_215_216_217
+56,waste_bldg_bldg_vol,Structural & Miscellaneous Steel Building volume for 216.142,16848.0,m^3,,,0,scale_waste_bldg_bldg_vol
+57,waste_bldg_sub_S,Roof Deck Substructure S for 216.144,1296.0,m^2,,,0,scale_waste_bldg_sub_S
+58,waste_bldg_sub_vol,Substructure Concrete Substructure volume for 216.13,1555.2,m^3,,,0,scale_waste_bldg_sub_vol
+59,waste_bldg_sup_S,Exterior Walls Superstructure S for 216.143,2028.0,m^2,,,0,scale_waste_bldg_sup_S
+60,waste_bldg_sup_vol,Concrete Work Superstructure volume for 216.141,1216.8,m^3,,,0,scale_waste_bldg_sup_vol
+61,wwt_bldg_bldg_vol,Building volume for 219.142,0.0,m^3,,,0,scale_wwt_bldg_bldg_vol
+62,adj_212_14112_lab,Adjustment factor for 212.14112_lab,0.1686319183939024,1,,1,0,
+63,adj_212_14122_lab,Adjustment factor for 212.14122_lab,0.4545732208217065,1,,1,0,
+64,adj_cont_mat_1_48,"Adjustment factor for 212.14112_mat, 212.14122_mat",1.48,1,,1,0,
+65,adj_half,"Adjustment factor for 222.132_fac, 222.132_lab, 222.132_mat, 222.139_fac, 222.139_lab, 222.139_mat",0.5,1,,1,0,
+66,adj_none,"Adjustment factor for 212.14111_lab, 212.14111_mat, 212.14117_lab, 212.14117_mat, 212.14121_lab, 212.14121_mat, 212.14127_lab, 212.14127_mat",0.0,1,,1,0,
+67,adj_rx_aux_0_25,"Adjustment factor for 222.111_fac, 222.111_lab, 222.111_mat, 222.119_fac, 222.119_lab, 222.119_mat",0.2499999999999999,1,,1,0,
+68,count_222_11,Count per plant for 222.11,4.0,1,,1,0,
+69,count_222_13,Count per plant for 222.13,2.0,1,,1,0,
+70,exp_lin,Linear scaling exponent used by unit-cost/geometry scale laws where exponent = 1,1.0,1,,,0,"scale_adm_bldg_bldg_vol, scale_S, scale_bldg_V, scale_cont_hatch_ms_bldg_vol, scale_cr_dg_bldg_bldg_vol, scale_elec_tunnel_bldg_vol, scale_fuel_stor_bldg_bldg_vol, scale_mc_piping_M, scale_n_crs, scale_pri_aux_bldg_bldg_vol, scale_turb_gen_bldg_sub_vol, scale_V_of_212_213_215_216_217, scale_waste_bldg_bldg_vol, scale_wwt_bldg_bldg_vol"
+71,exp_elec_P,"Exponent for Electric power scale, source account 231.",0.8,1,,,0,scale_elec_P
+72,exp_P,"Exponent for Plant power scale, source account 212.22; also used for exp_rej_th_P; also used for exp_rx_P; also used for exp_yardwork_rx_P",0.8,1,,,0,scale_P
+73,exp_pri_flow,"Exponent for Primary flowrate scale, source account 224.1",0.75,1,,,0,scale_pri_flow
+74,exp_rx_D,"Exponent for Reactor diameter (m) scale, source account 221.3",2.0,1,,,0,scale_rx_D
+75,exp_sfp_V,"Exponent for SFP volume scale, source account 225.4",0.75,1,,,0,scale_sfp_V
+76,exp_tur_plant_equip_elec_P,"Exponent for Electric power scale, source account 241.",0.6,1,,,0,scale_tur_plant_equip_elec_P
+77,f_elec_P_ctrl_wir,Passive safety factor: [Electrical] A.246 Power & Control Wiring,0.6050901652907004,1,,,0,"246_fac, 246_mat, 246_lab"
+78,f_elec_prot,Passive safety factor: [Electrical] A.244 Protective Equipment,1.0099306954615697,1,,,0,"244_mat, 244_lab"
+79,f_elec_st_serv,Passive safety factor: [Electrical] A.242 Station Service Equipment,0.2678830011089926,1,,,0,"242_fac, 242_mat, 242_lab"
+80,f_elec_str_wir_cont,Passive safety factor: [Electrical] A.245 Electrical Structures & Wiring Container,0.5783708145703973,1,,,0,"245_mat, 245_lab"
+81,f_elec_switchboards,Passive safety factor: [Electrical] A.243 Switchboards,0.9062342772269472,1,,,0,"243_fac, 243_mat, 243_lab"
+82,f_elec_swgr,Passive safety factor: [Electrical] A.241 Switchgear,0.548339438854262,1,,,0,"241_fac, 241_mat, 241_lab"
+83,f_simp_fuel_hndl,Design simplifications factor: [Simple] A.225 Fuel Handling & Storage,0.52,1,,,0,"225.111_fac, 225.111_mat, 225.111_lab, 225.112_fac, 225.112_mat, 225.112_lab, 225.113_fac, 225.113_mat, 225.113_lab, 225.114_fac, 225.114_mat, 225.114_lab, 225.12_fac, 225.12_mat, 225.12_lab, 225.13_fac, 225.13_mat, 225.13_lab, 225.3_fac, 225.3_mat, 225.3_lab, 225.4_fac, 225.4_mat, 225.4_lab"
+84,f_simp_other_rx_equip,Design simplifications factor: [Simple] A.226 Other Reactor Equipment,0.5,1,,,0,"226.1_fac, 226.1_mat, 226.1_lab, 226.3_fac, 226.3_mat, 226.3_lab, 226.4_fac, 226.4_mat, 226.4_lab, 226.6_fac, 226.6_mat, 226.6_lab, 226.71_fac, 226.71_mat, 226.71_lab, 226.72_fac, 226.72_mat, 226.72_lab, 226.8_fac, 226.8_mat, 226.8_lab, 226.9_fac, 226.9_mat, 226.9_lab"
+85,f_simp_radw,Design simplifications factor: [Simple] A.224 Radwaste Processing,0.76,1,,,0,"224.1_fac, 224.1_mat, 224.1_lab, 224.2_fac, 224.2_mat, 224.2_lab, 224.3_fac, 224.3_mat, 224.3_lab"
+86,f_simp_sfgd,Design simplifications factor: [Simple] A.223 Safeguards system,0.71,1,,,0,"223.1_fac, 223.1_mat, 223.1_lab, 223.3_fac, 223.3_mat, 223.3_lab, 223.4_fac, 223.4_mat, 223.4_lab, 223.5_fac, 223.5_mat, 223.5_lab"
+87,f_ss_cont_fac,Standalone steel containment factor: 212.15 Factory cost mult,3.25,1,,,0,212.15_fac
+88,f_ss_cont_lab,Standalone steel containment factor: 212.15 Labor cost mult,4.56,1,,,0,212.15_lab
+89,f_ss_cont_mat,Standalone steel containment factor: 212.15 Material cost mult,28.98,1,,,0,212.15_mat
+90,lrn_222_11_fac,Factory learning factor for 222.11 grouped accounts,0.996281,1,,,0,
+91,lrn_222_11_lab,Labor learning factor for 222.11 grouped accounts,0.856159,1,,,0,
+92,lrn_222_11_mat,Material learning factor for 222.11 grouped accounts,0.920467,1,,,0,
+93,lrn_222_13_fac,Factory learning factor for 222.13 grouped accounts,0.99875,1,,,0,
+94,lrn_222_13_lab,Labor learning factor for 222.13 grouped accounts,0.9345,1,,,0,
+95,lrn_222_13_mat,Material learning factor for 222.13 grouped accounts,0.9645,1,,,0,
+96,ref_211_1_fac,Reference factory equipment cost for 211.1,627151.8,$,,1,0,
+97,ref_211_1_lab,Reference site labor cost for 211.1,10886491.93,$,,1,0,
+98,ref_211_1_mat,Reference site material cost for 211.1,8218524.721,$,,1,0,
+99,ref_211_4_lab,Reference site labor cost for 211.4,4995516.913,$,,1,0,
+100,ref_211_4_mat,Reference site material cost for 211.4,3721250.597,$,,1,0,
+101,ref_211_711_lab,Aggregated reference lab cost for 211.711,15125864.0,$,,1,0,
+102,ref_211_711_mat,Aggregated reference mat cost for 211.711,4440332.0,$,,1,0,
+103,ref_211_712_fac,Reference factory equipment cost for 211.712,245650.0,$,,1,0,
+104,ref_211_712_lab,Reference site labor cost for 211.712,15646213.59,$,,1,0,
+105,ref_211_712_mat,Reference site material cost for 211.712,13402579.35,$,,1,0,
+106,ref_212_13_lab,Aggregated reference lab cost for 212.13,11129822.1873,$,,1,0,
+107,ref_212_13_mat,Aggregated reference mat cost for 212.13,8063843.09228,$,,1,0,
+108,ref_212_140_fac,Aggregated reference fac cost for 212.140,3367569.015,$,,1,0,
+109,ref_212_140_lab,Aggregated reference lab cost for 212.140,45289162.7362,$,,1,0,
+110,ref_212_140_mat,Aggregated reference mat cost for 212.140,13223212.03753,$,,1,0,
+111,ref_212_14111_lab,Reference site labor cost for 212.14111,6302007.272,$,,1,0,
+112,ref_212_14111_mat,Reference site material cost for 212.14111,524742.3561,$,,1,0,
+113,ref_212_14112_lab,Reference site labor cost for 212.14112,11084965.36,$,,1,0,
+114,ref_212_14112_mat,Reference site material cost for 212.14112,6765223.382,$,,1,0,
+115,ref_212_14113_lab,Reference site labor cost for 212.14113,3211170.735,$,,1,0,
+116,ref_212_14113_mat,Reference site material cost for 212.14113,1638426.483,$,,1,0,
+117,ref_212_14114_lab,Reference site labor cost for 212.14114,543039.3004,$,,1,0,
+118,ref_212_14114_mat,Reference site material cost for 212.14114,197744.5645,$,,1,0,
+119,ref_212_14115_lab,Reference site labor cost for 212.14115,445996.7844,$,,1,0,
+120,ref_212_14115_mat,Reference site material cost for 212.14115,26315.43756,$,,1,0,
+121,ref_212_14116_lab,Reference site labor cost for 212.14116,45146.76643,$,,1,0,
+122,ref_212_14116_mat,Reference site material cost for 212.14116,17199.01812,$,,1,0,
+123,ref_212_14117_lab,Reference site labor cost for 212.14117,3895733.578,$,,1,0,
+124,ref_212_14117_mat,Reference site material cost for 212.14117,1567178.29,$,,1,0,
+125,ref_212_14118_lab,Reference site labor cost for 212.14118,713911.3336,$,,1,0,
+126,ref_212_14118_mat,Reference site material cost for 212.14118,293260.4893,$,,1,0,
+127,ref_212_14121_lab,Reference site labor cost for 212.14121,1742460.39,$,,1,0,
+128,ref_212_14121_mat,Reference site material cost for 212.14121,152723.5216,$,,1,0,
+129,ref_212_14122_lab,Reference site labor cost for 212.14122,4112162.548,$,,1,0,
+130,ref_212_14122_mat,Reference site material cost for 212.14122,2509679.642,$,,1,0,
+131,ref_212_14123_lab,Reference site labor cost for 212.14123,1154019.463,$,,1,0,
+132,ref_212_14123_mat,Reference site material cost for 212.14123,588811.3045,$,,1,0,
+133,ref_212_14125_lab,Reference site labor cost for 212.14125,159284.254,$,,1,0,
+134,ref_212_14125_mat,Reference site material cost for 212.14125,9398.370557,$,,1,0,
+135,ref_212_14127_lab,Reference site labor cost for 212.14127,3161753.91,$,,1,0,
+136,ref_212_14127_mat,Reference site material cost for 212.14127,1271912.815,$,,1,0,
+137,ref_212_14128_lab,Reference site labor cost for 212.14128,141092.5413,$,,1,0,
+138,ref_212_14128_mat,Reference site material cost for 212.14128,57956.61844,$,,1,0,
+139,ref_212_1419_lab,Reference site labor cost for 212.1419,796421.27,$,,1,0,
+140,ref_212_1419_mat,Reference site material cost for 212.1419,232647.2648,$,,1,0,
+141,ref_212_142_lab,Aggregated reference lab cost for 212.142,2909128.75293,$,,1,0,
+142,ref_212_142_mat,Aggregated reference mat cost for 212.142,3818022.67745,$,,1,0,
+143,ref_212_149_lab,Reference site labor cost for 212.149,12549840.5,$,,1,0,
+144,ref_212_149_mat,Reference site material cost for 212.149,2458081.163,$,,1,0,
+145,ref_212_15_fac,Reference factory equipment cost for 212.15,26940552.12,$,,1,0,
+146,ref_212_15_lab,Reference site labor cost for 212.15,32653359.39,$,,1,0,
+147,ref_212_15_mat,Reference site material cost for 212.15,1254917.429,$,,1,0,
+148,ref_212_21_fac,Aggregated reference fac cost for 212.21,150540.9459,$,,1,0,
+149,ref_212_21_lab,Aggregated reference lab cost for 212.21,1048615.7536,$,,1,0,
+150,ref_212_21_mat,Aggregated reference mat cost for 212.21,205092.46699,$,,1,0,
+151,ref_212_22_fac,Aggregated reference fac cost for 212.22,241104.968599,$,,1,0,
+152,ref_212_22_lab,Aggregated reference lab cost for 212.22,67726.426102,$,,1,0,
+153,ref_212_22_mat,Aggregated reference mat cost for 212.22,7237.3718877,$,,1,0,
+154,ref_212_23_fac,Aggregated reference fac cost for 212.23,1058293.9284,$,,1,0,
+155,ref_212_23_lab,Aggregated reference lab cost for 212.23,3960991.54051,$,,1,0,
+156,ref_212_23_mat,Aggregated reference mat cost for 212.23,898681.3347659999,$,,1,0,
+157,ref_212_24_lab,Reference site labor cost for 212.24,3463484.69,$,,1,0,
+158,ref_212_24_mat,Reference site material cost for 212.24,1345201.309,$,,1,0,
+159,ref_212_25_fac,Reference factory equipment cost for 212.25,198384.6399,$,,1,0,
+160,ref_212_25_lab,Reference site labor cost for 212.25,112115.1431,$,,1,0,
+161,ref_212_25_mat,Reference site material cost for 212.25,9150.880133,$,,1,0,
+162,ref_212_3_lab,Reference site labor cost for 212.3,0.316078208,$,,1,0,
+163,ref_212_3_mat,Reference site material cost for 212.3,0.683921792,$,,1,0,
+164,ref_213_13_lab,Aggregated reference lab cost for 213.13,14910944.50129,$,,1,0,
+165,ref_213_13_mat,Aggregated reference mat cost for 213.13,6302087.867887,$,,1,0,
+166,ref_213_141_lab,Aggregated reference lab cost for 213.141,1639765.2804,$,,1,0,
+167,ref_213_141_mat,Aggregated reference mat cost for 213.141,635828.117868,$,,1,0,
+168,ref_213_142_lab,Aggregated reference lab cost for 213.142,15453101.32427,$,,1,0,
+169,ref_213_142_mat,Aggregated reference mat cost for 213.142,24471194.7413,$,,1,0,
+170,ref_213_143_lab,Aggregated reference lab cost for 213.143,2115226.0423,$,,1,0,
+171,ref_213_143_mat,Aggregated reference mat cost for 213.143,2442554.0654,$,,1,0,
+172,ref_213_144_lab,Aggregated reference lab cost for 213.144,892268.4508999999,$,,1,0,
+173,ref_213_144_mat,Aggregated reference mat cost for 213.144,925648.43823,$,,1,0,
+174,ref_213_145_lab,Aggregated reference lab cost for 213.145,472841.2125,$,,1,0,
+175,ref_213_145_mat,Aggregated reference mat cost for 213.145,438974.2566,$,,1,0,
+176,ref_213_146_lab,Aggregated reference lab cost for 213.146,444065.4916,$,,1,0,
+177,ref_213_146_mat,Aggregated reference mat cost for 213.146,284016.34398,$,,1,0,
+178,ref_213_147_lab,Aggregated reference lab cost for 213.147,643802.58411,$,,1,0,
+179,ref_213_147_mat,Aggregated reference mat cost for 213.147,985426.29479,$,,1,0,
+180,ref_213_149_lab,Reference site labor cost for 213.149,2200909.113,$,,1,0,
+181,ref_213_149_mat,Reference site material cost for 213.149,126843.2998,$,,1,0,
+182,ref_213_21_fac,Aggregated reference fac cost for 213.21,26947.48846,$,,1,0,
+183,ref_213_21_lab,Aggregated reference lab cost for 213.21,3854846.85311,$,,1,0,
+184,ref_213_21_mat,Aggregated reference mat cost for 213.21,945580.448013,$,,1,0,
+185,ref_213_22_fac,Aggregated reference fac cost for 213.22,1201173.23833,$,,1,0,
+186,ref_213_22_lab,Aggregated reference lab cost for 213.22,1721625.6382600002,$,,1,0,
+187,ref_213_22_mat,Aggregated reference mat cost for 213.22,285222.9706872,$,,1,0,
+188,ref_213_24_lab,Reference site labor cost for 213.24,1445761.913,$,,1,0,
+189,ref_213_24_mat,Reference site material cost for 213.24,579979.5412,$,,1,0,
+190,ref_213_25_fac,Aggregated reference fac cost for 213.25,227987.5151,$,,1,0,
+191,ref_213_25_lab,Aggregated reference lab cost for 213.25,98331.51715,$,,1,0,
+192,ref_213_25_mat,Aggregated reference mat cost for 213.25,9377.073373,$,,1,0,
+193,ref_214_fac,Aggregated reference fac cost for 214,171454.8001,$,,1,0,
+194,ref_214_lab,Aggregated reference lab cost for 214,3253960.2307,$,,1,0,
+195,ref_214_mat,Aggregated reference mat cost for 214,1107592.1165,$,,1,0,
+196,ref_215_13_lab,Aggregated reference lab cost for 215.13,1486017.87709,$,,1,0,
+197,ref_215_13_mat,Aggregated reference mat cost for 215.13,1063359.167139,$,,1,0,
+198,ref_215_141_lab,Aggregated reference lab cost for 215.141,27007537.62763,$,,1,0,
+199,ref_215_141_mat,Aggregated reference mat cost for 215.141,8497619.987044,$,,1,0,
+200,ref_215_142_lab,Aggregated reference lab cost for 215.142,1853103.9549,$,,1,0,
+201,ref_215_142_mat,Aggregated reference mat cost for 215.142,2944695.17141,$,,1,0,
+202,ref_215_145_lab,Aggregated reference lab cost for 215.145,76768.47522,$,,1,0,
+203,ref_215_145_mat,Aggregated reference mat cost for 215.145,71195.84809,$,,1,0,
+204,ref_215_146_lab,Aggregated reference lab cost for 215.146,239093.8907,$,,1,0,
+205,ref_215_146_mat,Aggregated reference mat cost for 215.146,218695.0725,$,,1,0,
+206,ref_215_147_lab,Aggregated reference lab cost for 215.147,81713.87408400001,$,,1,0,
+207,ref_215_147_mat,Aggregated reference mat cost for 215.147,88183.79654499999,$,,1,0,
+208,ref_215_149_lab,Reference site labor cost for 215.149,681097.8721,$,,1,0,
+209,ref_215_149_mat,Reference site material cost for 215.149,143973.4822,$,,1,0,
+210,ref_215_21_fac,Aggregated reference fac cost for 215.21,7810.607011,$,,1,0,
+211,ref_215_21_lab,Aggregated reference lab cost for 215.21,1525771.05875,$,,1,0,
+212,ref_215_21_mat,Aggregated reference mat cost for 215.21,359094.32621,$,,1,0,
+213,ref_215_221_fac,Reference factory equipment cost for 215.221,2531710.025,$,,1,0,
+214,ref_215_221_lab,Reference site labor cost for 215.221,336370.6056,$,,1,0,
+215,ref_215_221_mat,Reference site material cost for 215.221,28979.80565,$,,1,0,
+216,ref_215_222_fac,Reference factory equipment cost for 215.222,1936413.245,$,,1,0,
+217,ref_215_222_lab,Reference site labor cost for 215.222,330613.6164,$,,1,0,
+218,ref_215_222_mat,Reference site material cost for 215.222,28475.24377,$,,1,0,
+219,ref_215_223_fac,Reference factory equipment cost for 215.223,39410.05189,$,,1,0,
+220,ref_215_223_lab,Reference site labor cost for 215.223,30190.24938,$,,1,0,
+221,ref_215_223_mat,Reference site material cost for 215.223,2535.191287,$,,1,0,
+222,ref_215_224_fac,Reference factory equipment cost for 215.224,469880.2213,$,,1,0,
+223,ref_215_224_lab,Reference site labor cost for 215.224,91838.71282,$,,1,0,
+224,ref_215_224_mat,Reference site material cost for 215.224,7912.025553,$,,1,0,
+225,ref_215_225_fac,Reference factory equipment cost for 215.225,563080.5444,$,,1,0,
+226,ref_215_225_lab,Reference site labor cost for 215.225,5046207.644,$,,1,0,
+227,ref_215_225_mat,Reference site material cost for 215.225,1111705.045,$,,1,0,
+228,ref_215_226_fac,Reference factory equipment cost for 215.226,278882.4965,$,,1,0,
+229,ref_215_226_lab,Reference site labor cost for 215.226,109065.2075,$,,1,0,
+230,ref_215_226_mat,Reference site material cost for 215.226,9251.182873,$,,1,0,
+231,ref_215_227_fac,Reference factory equipment cost for 215.227,216644.9347,$,,1,0,
+232,ref_215_228_fac,Reference factory equipment cost for 215.228,27640.01302,$,,1,0,
+233,ref_215_228_lab,Reference site labor cost for 215.228,17549.12426,$,,1,0,
+234,ref_215_228_mat,Reference site material cost for 215.228,1492.017338,$,,1,0,
+235,ref_215_23_fac,Aggregated reference fac cost for 215.23,884219.7209,$,,1,0,
+236,ref_215_23_lab,Aggregated reference lab cost for 215.23,385833.83039,$,,1,0,
+237,ref_215_23_mat,Aggregated reference mat cost for 215.23,33063.408132,$,,1,0,
+238,ref_215_24_lab,Reference site labor cost for 215.24,1326729.092,$,,1,0,
+239,ref_215_24_mat,Reference site material cost for 215.24,465212.2443,$,,1,0,
+240,ref_215_25_fac,Reference factory equipment cost for 215.25,319933.1507,$,,1,0,
+241,ref_215_25_lab,Reference site labor cost for 215.25,156591.6954,$,,1,0,
+242,ref_215_25_mat,Reference site material cost for 215.25,14127.73264,$,,1,0,
+243,ref_216_13_lab,Aggregated reference lab cost for 216.13,3214628.4545400003,$,,1,0,
+244,ref_216_13_mat,Aggregated reference mat cost for 216.13,2101391.698654,$,,1,0,
+245,ref_216_141_lab,Aggregated reference lab cost for 216.141,24018213.09312,$,,1,0,
+246,ref_216_141_mat,Aggregated reference mat cost for 216.141,7145811.159576,$,,1,0,
+247,ref_216_142_lab,Aggregated reference lab cost for 216.142,2119078.08444,$,,1,0,
+248,ref_216_142_mat,Aggregated reference mat cost for 216.142,3438706.40915,$,,1,0,
+249,ref_216_143_lab,Aggregated reference lab cost for 216.143,486639.2798,$,,1,0,
+250,ref_216_143_mat,Aggregated reference mat cost for 216.143,585894.164,$,,1,0,
+251,ref_216_144_lab,Aggregated reference lab cost for 216.144,307576.92005,$,,1,0,
+252,ref_216_144_mat,Aggregated reference mat cost for 216.144,294801.07175,$,,1,0,
+253,ref_216_145_lab,Aggregated reference lab cost for 216.145,147358.83791,$,,1,0,
+254,ref_216_145_mat,Aggregated reference mat cost for 216.145,128467.43138,$,,1,0,
+255,ref_216_146_lab,Aggregated reference lab cost for 216.146,4599.644948,$,,1,0,
+256,ref_216_146_mat,Aggregated reference mat cost for 216.146,4245.149031,$,,1,0,
+257,ref_216_147_lab,Aggregated reference lab cost for 216.147,66380.321837,$,,1,0,
+258,ref_216_147_mat,Aggregated reference mat cost for 216.147,75023.07197,$,,1,0,
+259,ref_216_148_lab,Aggregated reference lab cost for 216.148,10525.09202,$,,1,0,
+260,ref_216_148_mat,Aggregated reference mat cost for 216.148,585.0991923,$,,1,0,
+261,ref_216_149_lab,Reference site labor cost for 216.149,558657.9279,$,,1,0,
+262,ref_216_149_mat,Reference site material cost for 216.149,92591.94718,$,,1,0,
+263,ref_216_21_lab,Aggregated reference lab cost for 216.21,1275085.66255,$,,1,0,
+264,ref_216_21_mat,Aggregated reference mat cost for 216.21,252355.59431,$,,1,0,
+265,ref_216_22_fac,Aggregated reference fac cost for 216.22,1134425.198653,$,,1,0,
+266,ref_216_22_lab,Aggregated reference lab cost for 216.22,2551554.280197,$,,1,0,
+267,ref_216_22_mat,Aggregated reference mat cost for 216.22,674600.376062,$,,1,0,
+268,ref_216_24_lab,Reference site labor cost for 216.24,900566.6295,$,,1,0,
+269,ref_216_24_mat,Reference site material cost for 216.24,341357.6804,$,,1,0,
+270,ref_216_25_fac,Aggregated reference fac cost for 216.25,356469.3827,$,,1,0,
+271,ref_216_25_lab,Aggregated reference lab cost for 216.25,174564.4207,$,,1,0,
+272,ref_216_25_mat,Aggregated reference mat cost for 216.25,16775.69577,$,,1,0,
+273,ref_217_13_lab,Aggregated reference lab cost for 217.13,1232836.386079,$,,1,0,
+274,ref_217_13_mat,Aggregated reference mat cost for 217.13,627561.8008828,$,,1,0,
+275,ref_217_141_lab,Aggregated reference lab cost for 217.141,9200530.16508,$,,1,0,
+276,ref_217_141_mat,Aggregated reference mat cost for 217.141,2452036.602684,$,,1,0,
+277,ref_217_142_lab,Aggregated reference lab cost for 217.142,633635.00593,$,,1,0,
+278,ref_217_142_mat,Aggregated reference mat cost for 217.142,893582.71994,$,,1,0,
+279,ref_217_145_lab,Aggregated reference lab cost for 217.145,57111.30589,$,,1,0,
+280,ref_217_145_mat,Aggregated reference mat cost for 217.145,46465.14193,$,,1,0,
+281,ref_217_147_lab,Aggregated reference lab cost for 217.147,24768.323956,$,,1,0,
+282,ref_217_147_mat,Aggregated reference mat cost for 217.147,32682.194583,$,,1,0,
+283,ref_217_149_lab,Reference site labor cost for 217.149,142759.9868,$,,1,0,
+284,ref_217_149_mat,Reference site material cost for 217.149,18023.85423,$,,1,0,
+285,ref_217_21_fac,Aggregated reference fac cost for 217.21,7511.892017,$,,1,0,
+286,ref_217_21_lab,Aggregated reference lab cost for 217.21,352553.670738,$,,1,0,
+287,ref_217_21_mat,Aggregated reference mat cost for 217.21,150303.6021081,$,,1,0,
+288,ref_217_22_fac,Aggregated reference fac cost for 217.22,193909.35968,$,,1,0,
+289,ref_217_22_lab,Aggregated reference lab cost for 217.22,1238929.99335,$,,1,0,
+290,ref_217_22_mat,Aggregated reference mat cost for 217.22,277171.759642,$,,1,0,
+291,ref_217_23_fac,Aggregated reference fac cost for 217.23,2014572.9974,$,,1,0,
+292,ref_217_23_lab,Aggregated reference lab cost for 217.23,140460.02199,$,,1,0,
+293,ref_217_23_mat,Aggregated reference mat cost for 217.23,10611.438864,$,,1,0,
+294,ref_217_24_lab,Reference site labor cost for 217.24,292416.1971,$,,1,0,
+295,ref_217_24_mat,Reference site material cost for 217.24,110230.206,$,,1,0,
+296,ref_217_3_lab,Reference site labor cost for 217.3,3071920.9,$,,1,0,
+297,ref_217_3_mat,Reference site material cost for 217.3,6646942.405,$,,1,0,
+298,ref_218A_13_lab,Aggregated reference lab cost for 218A.13,1340415.61944,$,,1,0,
+299,ref_218A_13_mat,Aggregated reference mat cost for 218A.13,770875.072923,$,,1,0,
+300,ref_218A_141_lab,Aggregated reference lab cost for 218A.141,28840436.40199,$,,1,0,
+301,ref_218A_141_mat,Aggregated reference mat cost for 218A.141,8429857.722799,$,,1,0,
+302,ref_218A_142_lab,Aggregated reference lab cost for 218A.142,3003877.75743,$,,1,0,
+303,ref_218A_142_mat,Aggregated reference mat cost for 218A.142,4757094.74969,$,,1,0,
+304,ref_218A_145_lab,Aggregated reference lab cost for 218A.145,152808.8951,$,,1,0,
+305,ref_218A_145_mat,Aggregated reference mat cost for 218A.145,136116.6424,$,,1,0,
+306,ref_218A_146_lab,Aggregated reference lab cost for 218A.146,2477305.33398,$,,1,0,
+307,ref_218A_146_mat,Aggregated reference mat cost for 218A.146,1820301.470124,$,,1,0,
+308,ref_218A_147_lab,Aggregated reference lab cost for 218A.147,95330.97808,$,,1,0,
+309,ref_218A_147_mat,Aggregated reference mat cost for 218A.147,96193.631163,$,,1,0,
+310,ref_218A_148_lab,Aggregated reference lab cost for 218A.148,252960.648296,$,,1,0,
+311,ref_218A_148_mat,Aggregated reference mat cost for 218A.148,121610.011216,$,,1,0,
+312,ref_218A_149_lab,Reference site labor cost for 218A.149,628859.4648,$,,1,0,
+313,ref_218A_149_mat,Reference site material cost for 218A.149,76797.00963,$,,1,0,
+314,ref_218A_21_lab,Aggregated reference lab cost for 218A.21,2360426.5826000003,$,,1,0,
+315,ref_218A_21_mat,Aggregated reference mat cost for 218A.21,658362.32472,$,,1,0,
+316,ref_218A_231_fac,Reference factory equipment cost for 218A.231,926649.8252,$,,1,0,
+317,ref_218A_231_lab,Reference site labor cost for 218A.231,114723.9584,$,,1,0,
+318,ref_218A_231_mat,Reference site material cost for 218A.231,9480.524141,$,,1,0,
+319,ref_218A_232_fac,Reference factory equipment cost for 218A.232,801211.4132,$,,1,0,
+320,ref_218A_232_lab,Reference site labor cost for 218A.232,193144.9921,$,,1,0,
+321,ref_218A_232_mat,Reference site material cost for 218A.232,15969.88507,$,,1,0,
+322,ref_218A_233_fac,Reference factory equipment cost for 218A.233,3070.170928,$,,1,0,
+323,ref_218A_233_lab,Reference site labor cost for 218A.233,8103.008536,$,,1,0,
+324,ref_218A_233_mat,Reference site material cost for 218A.233,653.3598834,$,,1,0,
+325,ref_218A_234_fac,Reference factory equipment cost for 218A.234,193498.1677,$,,1,0,
+326,ref_218A_234_lab,Reference site labor cost for 218A.234,75100.20088,$,,1,0,
+327,ref_218A_234_mat,Reference site material cost for 218A.234,6213.724724,$,,1,0,
+328,ref_218A_235_fac,Reference factory equipment cost for 218A.235,1240903.304,$,,1,0,
+329,ref_218A_235_lab,Reference site labor cost for 218A.235,7537476.269,$,,1,0,
+330,ref_218A_235_mat,Reference site material cost for 218A.235,1213347.277,$,,1,0,
+331,ref_218A_236_fac,Reference factory equipment cost for 218A.236,267144.7431,$,,1,0,
+332,ref_218A_236_lab,Reference site labor cost for 218A.236,168717.358,$,,1,0,
+333,ref_218A_236_mat,Reference site material cost for 218A.236,13831.86384,$,,1,0,
+334,ref_218A_237_fac,Reference factory equipment cost for 218A.237,34666.4281,$,,1,0,
+335,ref_218A_238_fac,Reference factory equipment cost for 218A.238,319916.9706,$,,1,0,
+336,ref_218A_238_lab,Reference site labor cost for 218A.238,65280.56113,$,,1,0,
+337,ref_218A_238_mat,Reference site material cost for 218A.238,2664.483275,$,,1,0,
+338,ref_218A_24_lab,Reference site labor cost for 218A.24,2024660.407,$,,1,0,
+339,ref_218A_24_mat,Reference site material cost for 218A.24,621004.9575,$,,1,0,
+340,ref_218B_22_fac,Aggregated reference fac cost for 218B.22,1866506.932348,$,,1,0,
+341,ref_218B_22_lab,Aggregated reference lab cost for 218B.22,3131658.99519,$,,1,0,
+342,ref_218B_22_mat,Aggregated reference mat cost for 218B.22,457290.8982603,$,,1,0,
+343,ref_218B_23_fac,Aggregated reference fac cost for 218B.23,23772.3181215,$,,1,0,
+344,ref_218B_23_lab,Aggregated reference lab cost for 218B.23,23161.106682,$,,1,0,
+345,ref_218B_23_mat,Aggregated reference mat cost for 218B.23,1732.6566528,$,,1,0,
+346,ref_218B_24_lab,Reference site labor cost for 218B.24,970307.7957,$,,1,0,
+347,ref_218B_24_mat,Reference site material cost for 218B.24,379587.355,$,,1,0,
+348,ref_218B_25_fac,Reference factory equipment cost for 218B.25,88303.82096,$,,1,0,
+349,ref_218B_25_lab,Reference site labor cost for 218B.25,45810.80044,$,,1,0,
+350,ref_218B_25_mat,Reference site material cost for 218B.25,3586.127801,$,,1,0,
+351,ref_218D_fac,Reference factory equipment cost for 218D,87852.60004,$,,1,0,
+352,ref_218D_lab,Reference site labor cost for 218D,784039.4097,$,,1,0,
+353,ref_218D_mat,Reference site material cost for 218D,353929.4,$,,1,0,
+354,ref_218E_fac,Aggregated reference fac cost for 218E,49512.3482421,$,,1,0,
+355,ref_218E_lab,Aggregated reference lab cost for 218E,95924.246122,$,,1,0,
+356,ref_218E_mat,Aggregated reference mat cost for 218E,18264.7292811,$,,1,0,
+357,ref_218F_lab,Reference site labor cost for 218F,1988491.89,$,,1,0,
+358,ref_218F_mat,Reference site material cost for 218F,643590.2,$,,1,0,
+359,ref_218G_fac,Reference factory equipment cost for 218G,24217.6,$,,1,0,
+360,ref_218G_lab,Reference site labor cost for 218G,121782.08,$,,1,0,
+361,ref_218G_mat,Reference site material cost for 218G,45674.19999,$,,1,0,
+362,ref_218H_fac,Reference factory equipment cost for 218H,43003.39998,$,,1,0,
+363,ref_218H_lab,Reference site labor cost for 218H,951888.6302,$,,1,0,
+364,ref_218H_mat,Reference site material cost for 218H,633998.2,$,,1,0,
+365,ref_218J_fac,Aggregated reference fac cost for 218J,77809.66993,$,,1,0,
+366,ref_218J_lab,Aggregated reference lab cost for 218J,477499.37046,$,,1,0,
+367,ref_218J_mat,Aggregated reference mat cost for 218J,52345.446996,$,,1,0,
+368,ref_218K_lab,Reference site labor cost for 218K,643823.0399,$,,1,0,
+369,ref_218K_mat,Reference site material cost for 218K,262017.8,$,,1,0,
+370,ref_218L_fac,Reference factory equipment cost for 218L,137163.4,$,,1,0,
+371,ref_218L_lab,Reference site labor cost for 218L,1478143.59,$,,1,0,
+372,ref_218L_mat,Reference site material cost for 218L,667730.7999,$,,1,0,
+373,ref_218P_lab,Reference site labor cost for 218P,439306.5601,$,,1,0,
+374,ref_218P_mat,Reference site material cost for 218P,127124.8,$,,1,0,
+375,ref_218S_fac,Reference factory equipment cost for 218S,18293.0,$,,1,0,
+376,ref_218S_lab,Reference site labor cost for 218S,1325719.33,$,,1,0,
+377,ref_218S_mat,Reference site material cost for 218S,668122.4,$,,1,0,
+378,ref_218T_fac,Aggregated reference fac cost for 218T,94454.799961,$,,1,0,
+379,ref_218T_lab,Aggregated reference lab cost for 218T,150357.879252,$,,1,0,
+380,ref_218T_mat,Aggregated reference mat cost for 218T,34382.9686994,$,,1,0,
+381,ref_218V_lab,Reference site labor cost for 218V,172589.34,$,,1,0,
+382,ref_218V_mat,Reference site material cost for 218V,67568.60003,$,,1,0,
+383,ref_221_1_fac,Aggregated reference fac cost for 221.1,54943623.46,$,,1,0,
+384,ref_221_1_lab,Aggregated reference lab cost for 221.1,6959303.009000001,$,,1,0,
+385,ref_221_1_mat,Aggregated reference mat cost for 221.1,13117014.5191,$,,1,0,
+386,ref_221_2_fac,Aggregated reference fac cost for 221.2,29518644.19,$,,1,0,
+387,ref_221_2_lab,Aggregated reference lab cost for 221.2,1128496.709,$,,1,0,
+388,ref_221_2_mat,Aggregated reference mat cost for 221.2,106736.278,$,,1,0,
+389,ref_221_3_fac,Reference factory equipment cost for 221.3,48271430.44,$,,1,0,
+390,ref_221_3_lab,Reference site labor cost for 221.3,1305834.897,$,,1,0,
+391,ref_221_3_mat,Reference site material cost for 221.3,121580.4158,$,,1,0,
+392,ref_222_111_fac,Reference factory equipment cost for 222.111,96235783.51,$,,1,0,
+393,ref_222_111_lab,Reference site labor cost for 222.111,3849475.091,$,,1,0,
+394,ref_222_111_mat,Reference site material cost for 222.111,389420.0622,$,,1,0,
+395,ref_222_119_fac,Reference factory equipment cost for 222.119,2899631.744,$,,1,0,
+396,ref_222_119_lab,Reference site labor cost for 222.119,4571014.442,$,,1,0,
+397,ref_222_119_mat,Reference site material cost for 222.119,456144.5743,$,,1,0,
+398,ref_222_12_fac,Aggregated reference fac cost for 222.12,12181696.7822,$,,1,0,
+399,ref_222_12_lab,Aggregated reference lab cost for 222.12,21860871.5365,$,,1,0,
+400,ref_222_12_mat,Aggregated reference mat cost for 222.12,2154574.6244,$,,1,0,
+401,ref_222_132_fac,Reference factory equipment cost for 222.132,115107954.9,$,,1,0,
+402,ref_222_132_lab,Reference site labor cost for 222.132,3379073.239,$,,1,0,
+403,ref_222_132_mat,Reference site material cost for 222.132,358033.9676,$,,1,0,
+404,ref_222_139_fac,Reference factory equipment cost for 222.139,57628.3032,$,,1,0,
+405,ref_222_139_lab,Reference site labor cost for 222.139,507890.4935,$,,1,0,
+406,ref_222_139_mat,Reference site material cost for 222.139,50682.73048,$,,1,0,
+407,ref_222_14_fac,Aggregated reference fac cost for 222.14,7810895.18558,$,,1,0,
+408,ref_222_14_lab,Aggregated reference lab cost for 222.14,554399.45973,$,,1,0,
+409,ref_222_14_mat,Aggregated reference mat cost for 222.14,54698.157812,$,,1,0,
+410,ref_223_1_fac,Aggregated reference fac cost for 223.1,9125519.8133,$,,1,0,
+411,ref_223_1_lab,Aggregated reference lab cost for 223.1,7673809.6359,$,,1,0,
+412,ref_223_1_mat,Aggregated reference mat cost for 223.1,643801.125867,$,,1,0,
+413,ref_223_3_fac,Aggregated reference fac cost for 223.3,17995520.495,$,,1,0,
+414,ref_223_3_lab,Aggregated reference lab cost for 223.3,12484140.12657,$,,1,0,
+415,ref_223_3_mat,Aggregated reference mat cost for 223.3,1849558.449168,$,,1,0,
+416,ref_223_4_fac,Aggregated reference fac cost for 223.4,7178727.713500001,$,,1,0,
+417,ref_223_4_lab,Aggregated reference lab cost for 223.4,12825487.28281,$,,1,0,
+418,ref_223_4_mat,Aggregated reference mat cost for 223.4,1137444.056296,$,,1,0,
+419,ref_223_5_fac,Aggregated reference fac cost for 223.5,2020969.93592,$,,1,0,
+420,ref_223_5_lab,Aggregated reference lab cost for 223.5,1237700.47984,$,,1,0,
+421,ref_223_5_mat,Aggregated reference mat cost for 223.5,107715.599041,$,,1,0,
+422,ref_224_1_fac,Aggregated reference fac cost for 224.1,17578043.84462,$,,1,0,
+423,ref_224_1_lab,Aggregated reference lab cost for 224.1,23504618.58384,$,,1,0,
+424,ref_224_1_mat,Aggregated reference mat cost for 224.1,2415803.7008854,$,,1,0,
+425,ref_224_2_fac,Aggregated reference fac cost for 224.2,3090436.715,$,,1,0,
+426,ref_224_2_lab,Aggregated reference lab cost for 224.2,1216147.837,$,,1,0,
+427,ref_224_2_mat,Aggregated reference mat cost for 224.2,75770.24729,$,,1,0,
+428,ref_224_3_fac,Aggregated reference fac cost for 224.3,17307453.167600002,$,,1,0,
+429,ref_224_3_lab,Aggregated reference lab cost for 224.3,3175748.8484,$,,1,0,
+430,ref_224_3_mat,Aggregated reference mat cost for 224.3,313011.354128,$,,1,0,
+431,ref_225_111_fac,Reference factory equipment cost for 225.111,237225.8382,$,,1,0,
+432,ref_225_111_lab,Reference site labor cost for 225.111,142693.1867,$,,1,0,
+433,ref_225_111_mat,Reference site material cost for 225.111,11385.05953,$,,1,0,
+434,ref_225_112_fac,Reference factory equipment cost for 225.112,31779.3104,$,,1,0,
+435,ref_225_112_lab,Reference site labor cost for 225.112,28538.63734,$,,1,0,
+436,ref_225_112_mat,Reference site material cost for 225.112,2275.585206,$,,1,0,
+437,ref_225_113_fac,Reference factory equipment cost for 225.113,78282.49207,$,,1,0,
+438,ref_225_113_lab,Reference site labor cost for 225.113,142693.1867,$,,1,0,
+439,ref_225_113_mat,Reference site material cost for 225.113,11281.55898,$,,1,0,
+440,ref_225_114_fac,Reference factory equipment cost for 225.114,1423355.029,$,,1,0,
+441,ref_225_114_lab,Reference site labor cost for 225.114,395150.3632,$,,1,0,
+442,ref_225_114_mat,Reference site material cost for 225.114,31522.91857,$,,1,0,
+443,ref_225_12_fac,Reference factory equipment cost for 225.12,311913.9315,$,,1,0,
+444,ref_225_12_lab,Reference site labor cost for 225.12,40279.58386,$,,1,0,
+445,ref_225_12_mat,Reference site material cost for 225.12,3213.639922,$,,1,0,
+446,ref_225_13_fac,Aggregated reference fac cost for 225.13,435399.74599,$,,1,0,
+447,ref_225_13_lab,Aggregated reference lab cost for 225.13,1025848.6056,$,,1,0,
+448,ref_225_13_mat,Aggregated reference mat cost for 225.13,77501.834251,$,,1,0,
+449,ref_225_3_fac,Aggregated reference fac cost for 225.3,227028.0975,$,,1,0,
+450,ref_225_3_lab,Aggregated reference lab cost for 225.3,143339.4107,$,,1,0,
+451,ref_225_3_mat,Aggregated reference mat cost for 225.3,10769.08215,$,,1,0,
+452,ref_225_4_fac,Aggregated reference fac cost for 225.4,4553380.16247,$,,1,0,
+453,ref_225_4_lab,Aggregated reference lab cost for 225.4,2057890.48916,$,,1,0,
+454,ref_225_4_mat,Aggregated reference mat cost for 225.4,226720.594276,$,,1,0,
+455,ref_226_1_fac,Aggregated reference fac cost for 226.1,1768563.444,$,,1,0,
+456,ref_226_1_lab,Aggregated reference lab cost for 226.1,2571525.626,$,,1,0,
+457,ref_226_1_mat,Aggregated reference mat cost for 226.1,200061.0012,$,,1,0,
+458,ref_226_3_fac,Aggregated reference fac cost for 226.3,2016124.88944,$,,1,0,
+459,ref_226_3_lab,Aggregated reference lab cost for 226.3,3000197.53557,$,,1,0,
+460,ref_226_3_mat,Aggregated reference mat cost for 226.3,628917.8974236,$,,1,0,
+461,ref_226_4_fac,Aggregated reference fac cost for 226.4,24729843.087,$,,1,0,
+462,ref_226_4_lab,Aggregated reference lab cost for 226.4,35691506.611,$,,1,0,
+463,ref_226_4_mat,Aggregated reference mat cost for 226.4,4098205.311,$,,1,0,
+464,ref_226_6_fac,Aggregated reference fac cost for 226.6,381757.8008,$,,1,0,
+465,ref_226_6_lab,Aggregated reference lab cost for 226.6,93253.8854,$,,1,0,
+466,ref_226_6_mat,Aggregated reference mat cost for 226.6,3658.72934,$,,1,0,
+467,ref_226_71_fac,Aggregated reference fac cost for 226.71,13497035.8998,$,,1,0,
+468,ref_226_71_lab,Aggregated reference lab cost for 226.71,29663437.3234,$,,1,0,
+469,ref_226_71_mat,Aggregated reference mat cost for 226.71,2285411.729199,$,,1,0,
+470,ref_226_72_fac,Aggregated reference fac cost for 226.72,12452416.7199,$,,1,0,
+471,ref_226_72_lab,Aggregated reference lab cost for 226.72,17484840.09237,$,,1,0,
+472,ref_226_72_mat,Aggregated reference mat cost for 226.72,1360292.762976,$,,1,0,
+473,ref_226_8_fac,Aggregated reference fac cost for 226.8,7867871.49,$,,1,0,
+474,ref_226_8_lab,Aggregated reference lab cost for 226.8,355003.30216,$,,1,0,
+475,ref_226_8_mat,Aggregated reference mat cost for 226.8,2008164.99365,$,,1,0,
+476,ref_226_9_fac,Aggregated reference fac cost for 226.9,895545.655225,$,,1,0,
+477,ref_226_9_lab,Aggregated reference lab cost for 226.9,1385536.3887,$,,1,0,
+478,ref_226_9_mat,Aggregated reference mat cost for 226.9,116782.23729,$,,1,0,
+479,ref_227_11_fac,Reference factory equipment cost for 227.11,2348124.118,$,,1,0,
+480,ref_227_11_lab,Reference site labor cost for 227.11,956553.3662,$,,1,0,
+481,ref_227_11_mat,Reference site material cost for 227.11,47080.64023,$,,1,0,
+482,ref_227_15_fac,Reference factory equipment cost for 227.15,201316.7982,$,,1,0,
+483,ref_227_15_lab,Reference site labor cost for 227.15,146670.7044,$,,1,0,
+484,ref_227_15_mat,Reference site material cost for 227.15,7611.624429,$,,1,0,
+485,ref_227_16_fac,Reference factory equipment cost for 227.16,841507.4498,$,,1,0,
+486,ref_227_16_lab,Reference site labor cost for 227.16,573931.4903,$,,1,0,
+487,ref_227_16_mat,Reference site material cost for 227.16,29789.75467,$,,1,0,
+488,ref_227_17_fac,Reference factory equipment cost for 227.17,805269.6058,$,,1,0,
+489,ref_227_17_lab,Reference site labor cost for 227.17,573931.4903,$,,1,0,
+490,ref_227_17_mat,Reference site material cost for 227.17,29789.75467,$,,1,0,
+491,ref_227_18_fac,Reference factory equipment cost for 227.18,1007976.135,$,,1,0,
+492,ref_227_18_lab,Reference site labor cost for 227.18,446391.7474,$,,1,0,
+493,ref_227_18_mat,Reference site material cost for 227.18,21971.66031,$,,1,0,
+494,ref_227_19_fac,Reference factory equipment cost for 227.19,543551.0205,$,,1,0,
+495,ref_227_19_lab,Reference site labor cost for 227.19,159427.3258,$,,1,0,
+496,ref_227_19_mat,Reference site material cost for 227.19,7845.90479,$,,1,0,
+497,ref_227_2_fac,Reference factory equipment cost for 227.2,6575350.648,$,,1,0,
+498,ref_227_2_lab,Reference site labor cost for 227.2,913902.4667,$,,1,0,
+499,ref_227_2_mat,Reference site material cost for 227.2,89960.81599,$,,1,0,
+500,ref_227_3_fac,Aggregated reference fac cost for 227.3,6821452.5089,$,,1,0,
+501,ref_227_3_lab,Aggregated reference lab cost for 227.3,2569941.70284,$,,1,0,
+502,ref_227_3_mat,Aggregated reference mat cost for 227.3,141557.216123,$,,1,0,
+503,ref_227_4_fac,Aggregated reference fac cost for 227.4,5434791.773,$,,1,0,
+504,ref_227_4_lab,Aggregated reference lab cost for 227.4,1944991.6681,$,,1,0,
+505,ref_227_4_mat,Aggregated reference mat cost for 227.4,191457.2748,$,,1,0,
+506,ref_227_5_fac,Reference factory equipment cost for 227.5,435585.8101,$,,1,0,
+507,ref_227_5_lab,Reference site labor cost for 227.5,8927819.064,$,,1,0,
+508,ref_227_5_mat,Reference site material cost for 227.5,870827.6585,$,,1,0,
+509,ref_227_9_fac,Reference factory equipment cost for 227.9,5218992.184,$,,1,0,
+510,ref_227_9_lab,Reference site labor cost for 227.9,3188506.809,$,,1,0,
+511,ref_227_9_mat,Reference site material cost for 227.9,313864.8548,$,,1,0,
+512,ref_228_lab,Aggregated reference lab cost for 228,13169656.351,$,,1,0,
+513,ref_228_mat,Aggregated reference mat cost for 228,7193434.6014,$,,1,0,
+514,ref_23_fac,Aggregated reference fac cost for 23,398537111.53,$,,1,0,
+515,ref_23_lab,Aggregated reference lab cost for 23,169158211.60999998,$,,1,0,
+516,ref_23_mat,Aggregated reference mat cost for 23,25604663.869,$,,1,0,
+517,ref_241_fac,Aggregated reference fac cost for 241,24759182.802,$,,1,0,
+518,ref_241_lab,Aggregated reference lab cost for 241,1352628.48,$,,1,0,
+519,ref_241_mat,Aggregated reference mat cost for 241,194352.4,$,,1,0,
+520,ref_242_fac,Aggregated reference fac cost for 242,40273254.999,$,,1,0,
+521,ref_242_lab,Aggregated reference lab cost for 242,3777121.6009,$,,1,0,
+522,ref_242_mat,Aggregated reference mat cost for 242,717829.2001,$,,1,0,
+523,ref_243_fac,Aggregated reference fac cost for 243,3457143.7988,$,,1,0,
+524,ref_243_lab,Aggregated reference lab cost for 243,770259.4911,$,,1,0,
+525,ref_243_mat,Aggregated reference mat cost for 243,69770.84044999999,$,,1,0,
+526,ref_244_lab,Aggregated reference lab cost for 244,7182716.802999999,$,,1,0,
+527,ref_244_mat,Aggregated reference mat cost for 244,3891223.5978,$,,1,0,
+528,ref_245_lab,Aggregated reference lab cost for 245,89344823.69,$,,1,0,
+529,ref_245_mat,Aggregated reference mat cost for 245,14935133.401,$,,1,0,
+530,ref_246_fac,Aggregated reference fac cost for 246,3906081.919,$,,1,0,
+531,ref_246_lab,Aggregated reference lab cost for 246,47899828.477,$,,1,0,
+532,ref_246_mat,Aggregated reference mat cost for 246,23576371.2735,$,,1,0,
+533,ref_251_11_fac,Aggregated reference fac cost for 251.11,3919300.0,$,,1,0,
+534,ref_251_11_lab,Aggregated reference lab cost for 251.11,607877.0538999999,$,,1,0,
+535,ref_251_11_mat,Aggregated reference mat cost for 251.11,63379.76292,$,,1,0,
+536,ref_251_12_fac,Reference factory equipment cost for 251.12,5599000.0,$,,1,0,
+537,ref_251_12_lab,Reference site labor cost for 251.12,1215742.355,$,,1,0,
+538,ref_251_12_mat,Reference site material cost for 251.12,126759.5258,$,,1,0,
+539,ref_251_16_fac,Reference factory equipment cost for 251.16,671880.0,$,,1,0,
+540,ref_251_16_lab,Reference site labor cost for 251.16,572112.3209,$,,1,0,
+541,ref_251_16_mat,Reference site material cost for 251.16,59651.36136,$,,1,0,
+542,ref_251_17_fac,Reference factory equipment cost for 251.17,940632.0,$,,1,0,
+543,ref_251_17_lab,Reference site labor cost for 251.17,100121.8599,$,,1,0,
+544,ref_251_17_mat,Reference site material cost for 251.17,10440.74981,$,,1,0,
+545,ref_252_1_fac,Aggregated reference fac cost for 252.1,3990340.548,$,,1,0,
+546,ref_252_1_lab,Aggregated reference lab cost for 252.1,19619508.343,$,,1,0,
+547,ref_252_1_mat,Aggregated reference mat cost for 252.1,834673.121,$,,1,0,
+548,ref_252_2_fac,Aggregated reference fac cost for 252.2,12778995.778,$,,1,0,
+549,ref_252_2_lab,Aggregated reference lab cost for 252.2,49274175.28300001,$,,1,0,
+550,ref_252_2_mat,Aggregated reference mat cost for 252.2,10358280.0372,$,,1,0,
+551,ref_252_3_fac,Aggregated reference fac cost for 252.3,5820232.71781,$,,1,0,
+552,ref_252_3_lab,Aggregated reference lab cost for 252.3,9072230.95898,$,,1,0,
+553,ref_252_3_mat,Aggregated reference mat cost for 252.3,536164.732992,$,,1,0,
+554,ref_252_4_lab,Aggregated reference lab cost for 252.4,484340.6169,$,,1,0,
+555,ref_252_4_mat,Aggregated reference mat cost for 252.4,270868.02393,$,,1,0,
+556,ref_253_fac,Aggregated reference fac cost for 253,4287360.0,$,,1,0,
+557,ref_253_lab,Aggregated reference lab cost for 253,10454512.323,$,,1,0,
+558,ref_253_mat,Aggregated reference mat cost for 253,1443732.4,$,,1,0,
+559,ref_254_fac,Aggregated reference fac cost for 254,4909689.3994,$,,1,0,
+560,ref_254_lab,Aggregated reference lab cost for 254,1396674.709504,$,,1,0,
+561,ref_254_mat,Aggregated reference mat cost for 254,161290.79995349998,$,,1,0,
+562,ref_255_fac,Reference factory equipment cost for 255,1668854.0,$,,1,0,
+563,ref_255_lab,Reference site labor cost for 255,4553152.499,$,,1,0,
+564,ref_255_mat,Reference site material cost for 255,453254.9999,$,,1,0,
+565,ref_261_fac,Aggregated reference fac cost for 261,392618.03808,$,,1,0,
+566,ref_261_lab,Aggregated reference lab cost for 261,9125289.026,$,,1,0,
+567,ref_261_mat,Aggregated reference mat cost for 261,3921296.0821,$,,1,0,
+568,ref_262_11_fac,Reference factory equipment cost for 262.11,818836.1028,$,,1,0,
+569,ref_262_11_lab,Reference site labor cost for 262.11,298851.6538,$,,1,0,
+570,ref_262_11_mat,Reference site material cost for 262.11,31388.27887,$,,1,0,
+571,ref_262_12_fac,Reference factory equipment cost for 262.12,19786129.24,$,,1,0,
+572,ref_262_12_lab,Reference site labor cost for 262.12,15368420.84,$,,1,0,
+573,ref_262_12_mat,Reference site material cost for 262.12,2229912.276,$,,1,0,
+574,ref_262_13_fac,Reference factory equipment cost for 262.13,46211135.76,$,,1,0,
+575,ref_262_13_lab,Reference site labor cost for 262.13,26887199.25,$,,1,0,
+576,ref_262_13_mat,Reference site material cost for 262.13,2138353.432,$,,1,0,
+577,ref_262_14_lab,Reference site labor cost for 262.14,130171.644,$,,1,0,
+578,ref_262_14_mat,Reference site material cost for 262.14,117381.9543,$,,1,0,
+579,ref_262_15_fac,Reference factory equipment cost for 262.15,2719803.892,$,,1,0,
+580,ref_262_15_lab,Reference site labor cost for 262.15,547270.1731,$,,1,0,
+581,ref_262_15_mat,Reference site material cost for 262.15,104605.3008,$,,1,0,
+582,ref_S,Reference Area for General Yardwork 211.1,62.0,m^2,,,0,scale_S
+583,ref_bldg_V,Reference Building volume for Structural & Miscellaneous Steel 213.142,212000.0,m^3,,,0,scale_bldg_V
+584,ref_cmn_bldg_vol,Reference common containment/auxiliary building volume,92268.0,m^3,,,0,scale_adm_bldg_bldg_vol
+585,ref_cr_dg_bldg_bldg_vol,Reference Building volume for Structural & Miscellaneous Steel 218142,48762.0,m^3,,,0,scale_cr_dg_bldg_bldg_vol
+586,ref_cr_dg_bldg_sub_S,Reference Substructure S for Roofing & Flashing 218145,1890.0,m^2,,,0,scale_cr_dg_bldg_sub_S
+587,ref_cr_dg_bldg_sub_vol,Reference Substructure volume for Substructure Concrete 21813,2268.0,m^3,,,0,scale_cr_dg_bldg_sub_vol
+588,ref_cr_dg_bldg_sup_S,Reference Superstructure S for Painting 218149,6258.0,m^2,,,0,scale_cr_dg_bldg_sup_S
+589,ref_cr_dg_bldg_sup_vol,Reference Superstructure volume for Concrete Work 218141,3755.0,m^3,,,0,scale_cr_dg_bldg_sup_vol
+590,ref_direct_cost_frm_flow,"Reference direct cost basis for Flow rate scale, source account 222.11",108401469.0,kg/s,,,0,scale_frm_flow
+591,ref_direct_cost_frm_fuel_cask_cap,"Reference direct cost basis for Fuel cask capacity scale, source account 225.114",1850028.0,tonne,,,0,scale_frm_fuel_cask_cap
+592,ref_direct_cost_frm_fuel_crane_cap,"Reference direct cost basis for Fuel crane capacity scale, source account 225.111",391304.0,tonne,,,0,scale_frm_fuel_crane_cap
+593,ref_direct_cost_frm_ht_S,"Reference direct cost basis for HT surface S scale, source account 222.13",119461264.0,m^2,,,0,scale_frm_ht_S
+594,ref_direct_cost_frm_prz_M,"Reference direct cost basis for Pressurizer mass scale, source account 222.14",8419993.0,kg,,,0,scale_frm_prz_M
+595,ref_direct_cost_frm_S,"Reference direct cost basis for Surface S scale, source account 212.3",1.0,m^2,,,0,scale_frm_S
+596,ref_direct_cost_frm_S_9_71886e_06,"Reference direct cost basis for Surface S scale, source account 217.3",9718863.0,m^2,,,0,scale_frm_S_9_71886e_06
+597,ref_direct_cost_frm_vsl_M,"Reference direct cost basis for Vessel mass scale, source account 221.1",75019941.0,kg,,,0,scale_frm_vsl_M
+598,ref_elec_P,Reference electric power used by electric-power scale laws,1144.0,MWe,,,0,scale_elec_P
+599,ref_fuel_stor_bldg_bldg_vol,Reference Building volume for Structural & Miscellaneous Steel 217.142,28800.0,m^3,,,0,scale_fuel_stor_bldg_bldg_vol
+600,ref_fuel_stor_bldg_sub_S,Reference Substructure S for Roofing & Flashing 217.145,900.0,m^2,,,0,scale_fuel_stor_bldg_sub_S
+601,ref_fuel_stor_bldg_sub_vol,Reference Substructure volume for Substructure Concrete 217.13,1080.0,m^3,,,0,scale_fuel_stor_bldg_sub_vol
+602,ref_fuel_stor_bldg_sup_S,Reference Superstructure S for Painting 217.149,3840.0,m^2,,,0,scale_fuel_stor_bldg_sup_S
+603,ref_fuel_stor_bldg_sup_vol,Reference Superstructure volume for Concrete Work 217.141,2304.0,m^3,,,0,scale_fuel_stor_bldg_sup_vol
+604,ref_mc_piping_M,Reference MC piping mass for Reactor Coolant Piping System 222.12,154000.0,kg,,,0,scale_mc_piping_M
+605,ref_n_crs,Reference Number of CRs for Reactor Control Devices 221.2,57.0,,,,0,scale_n_crs
+606,ref_pri_aux_bldg_bldg_vol,Reference Building volume for Structural & Miscellaneous Steel 215.142,36232.0,m^3,,,0,scale_pri_aux_bldg_bldg_vol
+607,ref_pri_aux_bldg_sub_S,Reference Substructure S for Roofing & Flashing 215.145,1294.0,m^2,,,0,scale_pri_aux_bldg_sub_S
+608,ref_pri_aux_bldg_sub_vol,Reference Substructure volume for Substructure Concrete 215.13,1553.0,m^3,,,0,scale_pri_aux_bldg_sub_vol
+609,ref_pri_aux_bldg_sup_S,Reference Superstructure S for Painting 215.149,5544.0,m^2,,,0,scale_pri_aux_bldg_sup_S
+610,ref_pri_aux_bldg_sup_vol,Reference Superstructure volume for Concrete Work 215.141,3326.0,m^3,,,0,scale_pri_aux_bldg_sup_vol
+611,ref_pri_flow,Reference Primary flowrate for Liquid Waste System 224.1,23872.0,kg/s,,,0,scale_pri_flow
+612,ref_rx_D,Reference Reactor diameter (m) for Vessel Internals 221.3,4.6,m,,,0,scale_rx_D
+613,ref_rej_th_P,Reference Rejected thermal power for 261.1,2273.0,MWt,,,0,scale_rej_th_P
+614,ref_rx_P,Reference reactor/plant thermal power used by RX/plant-power scale laws,3417.0,MWt,,,0,scale_P
+615,ref_sfp_V,"Reference SFP volume for Fuel Storage, Cleaning, & Inspection Equipment 225.4",1056.0,m^3,,,0,scale_sfp_V
+616,ref_sub_str_S,Reference Substructure S for Roof Deck 213.144,6100.0,m^2,,,0,scale_sub_str_S
+617,ref_sub_str_V,Reference Substructure volume for Substructure Concrete 212.13,4603.0,m^3,,,0,scale_sub_str_V
+618,ref_sup_str_S,Reference Superstructure S for Painting 212.149,9373.0,m^2,,,0,scale_sup_str_S
+619,ref_sup_str_V,Reference Superstructure volume for Concrete Work 212.141,11248.0,m^3,,,0,scale_sup_str_V
+620,ref_turb_gen_bldg_sub_vol,Reference Substructure volume for Substructure Concrete 213.13,1830.0,m^3,,,0,scale_turb_gen_bldg_sub_vol
+621,ref_turb_gen_bldg_sup_S,Reference Superstructure S for Exterior Walls 213.143,17040.0,m^2,,,0,scale_turb_gen_bldg_sup_S
+622,ref_turb_gen_bldg_sup_vol,Reference Superstructure volume for Concrete Work 213.141,5112.0,m^3,,,0,scale_turb_gen_bldg_sup_vol
+623,ref_V_of_212_213_215_216_217,"Reference Volume of 212, 213, 215, 216, 217 for Fill & Backfill (Place/Comp) 211.712",416524.0,m^3,,,0,scale_V_of_212_213_215_216_217
+624,ref_waste_bldg_bldg_vol,Reference Building volume for Structural & Miscellaneous Steel 216.142,53328.0,m^3,,,0,scale_waste_bldg_bldg_vol
+625,ref_waste_bldg_sub_S,Reference Substructure S for Roof Deck 216.144,1728.0,m^2,,,0,scale_waste_bldg_sub_S
+626,ref_waste_bldg_sub_vol,Reference Substructure volume for Substructure Concrete 216.13,2074.0,m^3,,,0,scale_waste_bldg_sub_vol
+627,ref_waste_bldg_sup_S,Reference Superstructure S for Exterior Walls 216.143,7380.0,m^2,,,0,scale_waste_bldg_sup_S
+628,ref_waste_bldg_sup_vol,Reference Superstructure volume for Concrete Work 216.141,4428.0,m^3,,,0,scale_waste_bldg_sup_vol
+629,scale_adm_bldg_bldg_vol,Admin Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.0,1,scale_law_admin_bldg,"adm_bldg_bldg_vol, ref_cmn_bldg_vol, exp_lin",0,"218B.24_lab, 218B.24_mat"
+630,scale_S,Site Area scale factor = (new base unit value / Reference unit value)^exponent.,0.3709677419354839,1,scale_law_site_S,"S, ref_S, exp_lin",0,"211.1_fac, 211.1_lab, 211.1_mat"
+631,scale_bldg_V,Building Volume scale factor = (new base unit value / Reference unit value)^exponent.,0.9169433962264152,1,scale_law_bldg_V,"bldg_V, ref_bldg_V, exp_lin",0,"213.142_lab, 213.142_mat, 213.146_lab, 213.146_mat, 213.147_lab, 213.147_mat, 213.21_fac, 213.21_lab, 213.21_mat, 213.24_lab, 213.24_mat"
+632,scale_cont_hatch_ms_bldg_vol,Containment scale factor = (new base unit value / Reference unit value)^exponent.,0.0,1,scale_law_containment,"cont_hatch_ms_bldg_vol, ref_cmn_bldg_vol, exp_lin",0,"218P_lab, 218P_mat"
+633,scale_cont_V,Containment scale factor = (new base unit value / Reference unit value)^exponent.,0.933844215884506,1,scale_law_containment,"cont_V, ref_cmn_bldg_vol, exp_lin",0,"223.4_fac, 223.4_lab, 223.4_mat, 223.5_fac, 223.5_lab, 223.5_mat"
+634,scale_cr_dg_bldg_bldg_vol,Control Dg Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.0545506747057134,1,scale_law_control_dg_bldg,"cr_dg_bldg_bldg_vol, ref_cr_dg_bldg_bldg_vol, exp_lin",0,"218A.142_lab, 218A.142_mat, 218A.146_lab, 218A.146_mat, 218A.147_lab, 218A.147_mat, 218A.148_lab, 218A.148_mat, 218A.21_lab, 218A.21_mat, 218A.235_fac, 218A.235_lab, 218A.235_mat, 218A.236_fac, 218A.236_lab, 218A.236_mat, 218A.237_fac, 218A.24_lab, 218A.24_mat"
+635,scale_cr_dg_bldg_sub_S,Control Dg Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.201058201058201,1,scale_law_control_dg_bldg,"cr_dg_bldg_sub_S, ref_cr_dg_bldg_sub_S, exp_lin",0,"218A.145_lab, 218A.145_mat"
+636,scale_cr_dg_bldg_sub_vol,Control Dg Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.1005291005291005,1,scale_law_control_dg_bldg,"cr_dg_bldg_sub_vol, ref_cr_dg_bldg_sub_vol, exp_lin",0,"218A.13_lab, 218A.13_mat"
+637,scale_cr_dg_bldg_sup_S,Control Dg Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.087248322147651,1,scale_law_control_dg_bldg,"cr_dg_bldg_sup_S, ref_cr_dg_bldg_sup_S, exp_lin",0,"218A.149_lab, 218A.149_mat"
+638,scale_cr_dg_bldg_sup_vol,Control Dg Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.0436218375499334,1,scale_law_control_dg_bldg,"cr_dg_bldg_sup_vol, ref_cr_dg_bldg_sup_vol, exp_lin",0,"218A.141_lab, 218A.141_mat"
+639,scale_elec_P,Electric Power scale factor = (new base unit value / Reference unit value)^exponent.,0.9810738928018627,1,scale_law_elec_P,"elec_P, ref_elec_P, exp_elec_P",0,"23_fac, 23_lab, 23_mat"
+640,scale_elec_tunnel_bldg_vol,Electrical Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.0,1,scale_law_electrical_bldg,"elec_tunnel_bldg_vol, ref_cmn_bldg_vol, exp_lin",0,"218G_fac, 218G_lab, 218G_mat"
+641,scale_frm_flow,Formula Flow Rate direct formula scale factor.,0.9285660117258324,1,formula_scale_flow_rate,"uc_frm_flow, frm_flow, ref_direct_cost_frm_flow",0,"222.111_fac, 222.111_lab, 222.111_mat, 222.119_fac, 222.119_lab, 222.119_mat"
+642,scale_frm_fuel_cask_cap,Formula Fuel Cask Capacity direct formula scale factor.,1.0032384136058523,1,formula_scale_fuel_cask_capacity,"uc_frm_fuel_cap, frm_fuel_cask_cap, ref_direct_cost_frm_fuel_cask_cap",0,"225.114_fac, 225.114_lab, 225.114_mat"
+643,scale_frm_fuel_crane_cap,Formula Fuel Crane Capacity direct formula scale factor.,1.0752528615939023,1,formula_scale_fuel_crane_capacity,"uc_frm_fuel_cap, frm_fuel_crane_cap, ref_direct_cost_frm_fuel_crane_cap",0,"225.111_fac, 225.111_lab, 225.111_mat"
+644,scale_frm_ht_S,Formula Ht Surface Area direct formula scale factor.,1.3013555355784228,1,formula_scale_ht_surface_S,"uc_frm_ht_S, frm_ht_S, ref_direct_cost_frm_ht_S",0,"222.132_fac, 222.132_lab, 222.132_mat, 222.139_fac, 222.139_lab, 222.139_mat"
+645,scale_frm_prz_M,Formula Pressurizer Mass direct formula scale factor.,1.1148404907542149,1,formula_scale_pressurizer_mass,"uc_frm_prz_M, frm_prz_M, ref_direct_cost_frm_prz_M",0,"222.14_fac, 222.14_lab, 222.14_mat"
+646,scale_frm_S,Formula Surface Area direct formula scale factor.,17866000.0,1,formula_scale_surface_S,"uc_frm_S, frm_S, ref_direct_cost_frm_S",0,"212.3_lab, 212.3_mat"
+647,scale_frm_S_9_71886e_06,Formula Surface Area 9 71886E 06 direct formula scale factor.,0.8823748210052966,1,formula_scale_surface_S_9_71886e_06,"uc_frm_S_9_71886e_06, frm_S_9_71886e_06, ref_direct_cost_frm_S_9_71886e_06",0,"217.3_lab, 217.3_mat"
+648,scale_frm_vsl_M,Formula Vessel Mass direct formula scale factor.,0.90910052524507,1,formula_scale_vessel_mass,"uc_frm_vsl_M, frm_vsl_M, ref_direct_cost_frm_vsl_M",0,"221.1_fac, 221.1_lab, 221.1_mat"
+649,scale_fuel_stor_bldg_bldg_vol,Fuel Storage scale factor = (new base unit value / Reference unit value)^exponent.,0.65625,1,scale_law_fuel_storage,"fuel_stor_bldg_bldg_vol, ref_fuel_stor_bldg_bldg_vol, exp_lin",0,"217.142_lab, 217.142_mat, 217.147_lab, 217.147_mat, 217.21_fac, 217.21_lab, 217.21_mat, 217.24_lab, 217.24_mat"
+650,scale_fuel_stor_bldg_sub_S,Fuel Storage scale factor = (new base unit value / Reference unit value)^exponent.,0.7777777777777778,1,scale_law_fuel_storage,"fuel_stor_bldg_sub_S, ref_fuel_stor_bldg_sub_S, exp_lin",0,"217.145_lab, 217.145_mat"
+651,scale_fuel_stor_bldg_sub_vol,Fuel Storage scale factor = (new base unit value / Reference unit value)^exponent.,0.3888888888888889,1,scale_law_fuel_storage,"fuel_stor_bldg_sub_vol, ref_fuel_stor_bldg_sub_vol, exp_lin",0,"217.13_lab, 217.13_mat"
+652,scale_fuel_stor_bldg_sup_S,Fuel Storage scale factor = (new base unit value / Reference unit value)^exponent.,0.7453125,1,scale_law_fuel_storage,"fuel_stor_bldg_sup_S, ref_fuel_stor_bldg_sup_S, exp_lin",0,"217.149_lab, 217.149_mat"
+653,scale_fuel_stor_bldg_sup_vol,Fuel Storage scale factor = (new base unit value / Reference unit value)^exponent.,0.37265625,1,scale_law_fuel_storage,"fuel_stor_bldg_sup_vol, ref_fuel_stor_bldg_sup_vol, exp_lin",0,"217.141_lab, 217.141_mat"
+654,scale_mc_piping_M,Piping Mass scale factor = (new base unit value / Reference unit value)^exponent.,0.5,1,scale_law_piping_mass,"mc_piping_M, ref_mc_piping_M, exp_lin",0,"222.12_fac, 222.12_lab, 222.12_mat"
+655,scale_non_ess_swgr_bldg_bldg_vol,Electrical Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.0,1,scale_law_electrical_bldg,"non_ess_swgr_bldg_bldg_vol, ref_cmn_bldg_vol, exp_lin",0,"218H_fac, 218H_lab, 218H_mat"
+656,scale_n_crs,Reactor Equipment scale factor = (new base unit value / Reference unit value)^exponent.,1.2105263157894737,1,scale_law_reactor_equipment,"n_crs, ref_n_crs, exp_lin",0,"221.2_fac, 221.2_lab, 221.2_mat, 227.19_fac, 227.19_lab, 227.19_mat, 227.4_fac, 227.4_lab, 227.4_mat, 227.5_fac, 227.5_lab, 227.5_mat, 227.9_fac, 227.9_lab, 227.9_mat"
+657,scale_P,Power scale factor for plant/reactor thermal power based direct-cost accounts,0.996017916397094,1,scale_law_power,"rx_P, ref_rx_P, exp_P",0,"212.22_fac, 212.22_lab, 212.22_mat, 212.23_fac, 212.23_lab, 212.23_mat, 213.22_fac, 213.22_lab, 213.22_mat, 215.221_fac, 215.221_lab, 215.221_mat, 215.222_fac, 215.222_lab, 215.222_mat, 215.223_fac, 215.223_lab, 215.223_mat, 215.224_fac, 215.224_lab, 215.224_mat, 215.228_fac, 215.228_lab, 215.228_mat, 215.23_fac, 215.23_lab, 215.23_mat, 216.22_fac, 216.22_lab, 216.22_mat, 217.22_fac, 217.22_lab, 217.22_mat, 217.23_fac, 217.23_lab, 217.23_mat, 218A.231_fac, 218A.231_lab, 218A.231_mat, 218A.232_fac, 218A.232_lab, 218A.232_mat, 218A.233_fac, 218A.233_lab, 218A.233_mat, 218A.234_fac, 218A.234_lab, 218A.234_mat, 218A.238_fac, 218A.238_lab, 218A.238_mat, 218B.22_fac, 218B.22_lab, 218B.22_mat, 218B.23_fac, 218B.23_lab, 218B.23_mat, 218E_fac, 218E_lab, 218E_mat, 218J_fac, 218J_lab, 218J_mat, 218T_fac, 218T_lab, 218T_mat, 223.1_fac, 223.1_lab, 223.1_mat, 223.3_fac, 223.3_lab, 223.3_mat, 224.3_fac, 224.3_lab, 224.3_mat, 211.4_lab, 211.4_mat, 211.711_lab, 211.711_mat, 218F_lab, 218F_mat, 218K_lab, 218K_mat, 251.11_fac, 251.11_lab, 251.11_mat, 251.12_fac, 251.12_lab, 251.12_mat, 251.17_fac, 251.17_lab, 251.17_mat, 226.71_fac, 226.71_lab, 226.71_mat"
+658,scale_pri_aux_bldg_bldg_vol,Primary Aux Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.368652020313535,1,scale_law_primary_aux_bldg,"pri_aux_bldg_bldg_vol, ref_pri_aux_bldg_bldg_vol, exp_lin",0,"215.142_lab, 215.142_mat, 215.146_lab, 215.146_mat, 215.147_lab, 215.147_mat, 215.21_fac, 215.21_lab, 215.21_mat, 215.225_fac, 215.225_lab, 215.225_mat, 215.226_fac, 215.226_lab, 215.226_mat, 215.227_fac, 215.24_lab, 215.24_mat"
+659,scale_pri_aux_bldg_sub_S,Primary Aux Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.5432766615146831,1,scale_law_primary_aux_bldg,"pri_aux_bldg_sub_S, ref_pri_aux_bldg_sub_S, exp_lin",0,"215.145_lab, 215.145_mat"
+660,scale_pri_aux_bldg_sub_vol,Primary Aux Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.5432066967160335,1,scale_law_primary_aux_bldg,"pri_aux_bldg_sub_vol, ref_pri_aux_bldg_sub_vol, exp_lin",0,"215.13_lab, 215.13_mat"
+661,scale_pri_aux_bldg_sup_S,Primary Aux Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.3838383838383838,1,scale_law_primary_aux_bldg,"pri_aux_bldg_sup_S, ref_pri_aux_bldg_sup_S, exp_lin",0,"215.149_lab, 215.149_mat"
+662,scale_pri_aux_bldg_sup_vol,Primary Aux Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.3838845460012026,1,scale_law_primary_aux_bldg,"pri_aux_bldg_sup_vol, ref_pri_aux_bldg_sup_vol, exp_lin",0,"215.141_lab, 215.141_mat"
+663,scale_pri_flow,Flow Rate scale factor = (new base unit value / Reference unit value)^exponent.,0.8717574764492064,1,scale_law_flow_rate,"pri_flow, ref_pri_flow, exp_pri_flow",0,"224.1_fac, 224.1_lab, 224.1_mat, 224.2_fac, 224.2_lab, 224.2_mat, 226.4_fac, 226.4_lab, 226.4_mat, 226.72_fac, 226.72_lab, 226.72_mat"
+664,scale_rx_D,Reactor Equipment scale factor = (new base unit value / Reference unit value)^exponent.,0.9569943289224956,1,scale_law_reactor_equipment,"rx_D, ref_rx_D, exp_rx_D",0,"221.3_fac, 221.3_lab, 221.3_mat"
+665,scale_rej_th_P,Heat Rejection scale factor = (new base unit value / Reference unit value)^exponent.,1.003518031940659,1,scale_law_heat_rejection,"rej_th_P, ref_rej_th_P, exp_P",0,"261_fac, 261_lab, 261_mat, 262.11_fac, 262.11_lab, 262.11_mat, 262.13_fac, 262.13_lab, 262.13_mat, 262.14_lab, 262.14_mat, 262.15_fac, 262.15_lab, 262.15_mat"
+666,scale_sfp_V,Fuel Storage scale factor = (new base unit value / Reference unit value)^exponent.,0.773656197537358,1,scale_law_fuel_storage,"sfp_V, ref_sfp_V, exp_sfp_V",0,"225.4_fac, 225.4_lab, 225.4_mat"
+667,scale_sub_str_S,Containment scale factor = (new base unit value / Reference unit value)^exponent.,0.6780327868852459,1,scale_law_containment,"sub_str_S, ref_sub_str_S, exp_lin",0,"213.144_lab, 213.144_mat, 213.145_lab, 213.145_mat"
+668,scale_sub_str_V,Containment scale factor = (new base unit value / Reference unit value)^exponent.,1.0000338483205242,1,scale_law_containment,"sub_str_V, ref_sub_str_V, exp_lin",0,"212.13_lab, 212.13_mat"
+669,scale_sup_const,Containment scale factor = (new base unit value / Reference unit value)^exponent.,1.0049856543889688,1,scale_law_containment,"sup_const, ref_cmn_bldg_vol, exp_lin",0,"212.140_fac, 212.140_lab, 212.140_mat, 212.142_lab, 212.142_mat, 212.21_fac, 212.21_lab, 212.21_mat, 212.24_lab, 212.24_mat"
+670,scale_sup_str_S,Containment scale factor = (new base unit value / Reference unit value)^exponent.,1.0044381948758936,1,scale_law_containment,"sup_str_S, ref_sup_str_S, exp_lin",0,"212.149_lab, 212.149_mat, 212.15_fac, 212.15_lab, 212.15_mat"
+671,scale_sup_str_V,Containment scale factor = (new base unit value / Reference unit value)^exponent.,0.837002062639736,1,scale_law_containment,"sup_str_S, ref_sup_str_V, exp_lin",0,"212.14111_lab, 212.14111_mat, 212.14112_lab, 212.14112_mat, 212.14113_lab, 212.14113_mat, 212.14114_lab, 212.14114_mat, 212.14115_lab, 212.14115_mat, 212.14116_lab, 212.14116_mat, 212.14117_lab, 212.14117_mat, 212.14118_lab, 212.14118_mat, 212.14121_lab, 212.14121_mat, 212.14122_lab, 212.14122_mat, 212.14123_lab, 212.14123_mat, 212.14125_lab, 212.14125_mat, 212.14127_lab, 212.14127_mat, 212.14128_lab, 212.14128_mat, 212.1419_lab, 212.1419_mat"
+672,scale_turb_gen_bldg_sub_vol,Turbine Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.6780327868852459,1,scale_law_turbine_bldg,"turb_gen_bldg_sub_vol, ref_turb_gen_bldg_sub_vol, exp_lin",0,"213.13_lab, 213.13_mat"
+673,scale_turb_gen_bldg_sup_S,Turbine Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.7447183098591549,1,scale_law_turbine_bldg,"turb_gen_bldg_sup_S, ref_turb_gen_bldg_sup_S, exp_lin",0,"213.143_lab, 213.143_mat, 213.149_lab, 213.149_mat"
+674,scale_turb_gen_bldg_sup_vol,Turbine Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.7447183098591549,1,scale_law_turbine_bldg,"turb_gen_bldg_sup_vol, ref_turb_gen_bldg_sup_vol, exp_lin",0,"213.141_lab, 213.141_mat"
+675,scale_tur_plant_equip_elec_P,Turbine Equipment scale factor = (new base unit value / Reference unit value)^exponent.,0.9857715709124324,1,scale_law_turbine_equipment,"elec_P, ref_elec_P, exp_tur_plant_equip_elec_P",0,"241_fac, 241_lab, 241_mat, 242_fac, 242_lab, 242_mat, 243_fac, 243_lab, 243_mat, 244_lab, 244_mat, 245_lab, 245_mat, 246_fac, 246_lab, 246_mat"
+676,scale_V_of_212_213_215_216_217,Volume Of 212 213 215 216 217 scale factor = (new base unit value / Reference unit value)^exponent.,0.8072164301676766,1,scale_law_V_of_212_213_215_216_217,"V_of_212_213_215_216_217, ref_V_of_212_213_215_216_217, exp_lin",0,"211.712_fac, 211.712_lab, 211.712_mat, 252.1_fac, 252.1_lab, 252.1_mat, 252.2_fac, 252.2_lab, 252.2_mat, 252.3_fac, 252.3_lab, 252.3_mat, 253_fac, 253_lab, 253_mat, 254_fac, 254_lab, 254_mat"
+677,scale_waste_bldg_bldg_vol,Waste Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.3159315931593159,1,scale_law_waste_bldg,"waste_bldg_bldg_vol, ref_waste_bldg_bldg_vol, exp_lin",0,"216.142_lab, 216.142_mat, 216.146_lab, 216.146_mat, 216.147_lab, 216.147_mat, 216.148_lab, 216.148_mat, 216.21_lab, 216.21_mat, 216.24_lab, 216.24_mat"
+678,scale_waste_bldg_sub_S,Waste Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.75,1,scale_law_waste_bldg,"waste_bldg_sub_S, ref_waste_bldg_sub_S, exp_lin",0,"216.144_lab, 216.144_mat, 216.145_lab, 216.145_mat"
+679,scale_waste_bldg_sub_vol,Waste Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.7498553519768564,1,scale_law_waste_bldg,"waste_bldg_sub_vol, ref_waste_bldg_sub_vol, exp_lin",0,"216.13_lab, 216.13_mat"
+680,scale_waste_bldg_sup_S,Waste Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.2747967479674796,1,scale_law_waste_bldg,"waste_bldg_sup_S, ref_waste_bldg_sup_S, exp_lin",0,"216.143_lab, 216.143_mat, 216.149_lab, 216.149_mat"
+681,scale_waste_bldg_sup_vol,Waste Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.2747967479674796,1,scale_law_waste_bldg,"waste_bldg_sup_vol, ref_waste_bldg_sup_vol, exp_lin",0,"216.141_lab, 216.141_mat"
+682,scale_wwt_bldg_bldg_vol,Wastewater Bldg scale factor = (new base unit value / Reference unit value)^exponent.,0.0,1,scale_law_wastewater_bldg,"wwt_bldg_bldg_vol, ref_cmn_bldg_vol, exp_lin",0,"218S_fac, 218S_lab, 218S_mat"
+683,ce_211_711_fac,Open Cut factory equipment cost for 211.711,0.0,$,,,0,211.71_fac
+684,ce_211_711_mat,Open Cut site material cost for 211.711,4422650.2267513415,$,category_scale,"ref_211_711_mat, scale_P",0,211.71_mat
+685,ce_211_711_lab,Open Cut site labor cost for 211.711,15065631.544985814,$,category_scale,"ref_211_711_lab, scale_P",0,211.71_lab
+686,ce_211_712_fac,Fill & Backfill (Place/Comp) factory equipment cost for 211.712,198292.71607068976,$,category_scale,"ref_211_712_fac, scale_V_of_212_213_215_216_217",0,211.71_fac
+687,ce_211_712_mat,Fill & Backfill (Place/Comp) site material cost for 211.712,10818782.25794602,$,category_scale,"ref_211_712_mat, scale_V_of_212_213_215_216_217",0,211.71_mat
+688,ce_211_712_lab,Fill & Backfill (Place/Comp) site labor cost for 211.712,12629880.679760788,$,category_scale,"ref_211_712_lab, scale_V_of_212_213_215_216_217",0,211.71_lab
+689,ce_212_141_fac,Concrete Work factory equipment cost for 212.141,0.0,$,sum_all,"ce_212_1411_fac, ce_212_1412_fac, ce_212_1419_fac",0,212.14_fac
+690,ce_212_141_mat,Concrete Work site material cost for 212.141,14052106.242877116,$,sum_all,"ce_212_1411_mat, ce_212_1412_mat, ce_212_1419_mat",0,212.14_mat
+691,ce_212_141_lab,Concrete Work site labor cost for 212.141,9164034.594639374,$,sum_all,"ce_212_1411_lab, ce_212_1412_lab, ce_212_1419_lab",0,212.14_lab
+692,ce_212_1411_fac,Containment Shell factory equipment cost for 212.1411,0.0,$,sum_all,"ce_212_14111_fac, ce_212_14112_fac, ce_212_14113_fac, ce_212_14114_fac, ce_212_14115_fac, ce_212_14116_fac, ce_212_14117_fac, ce_212_14118_fac",0,212.141_fac
+693,ce_212_1411_mat,Containment Shell site material cost for 212.1411,10199269.046640312,$,sum_all,"ce_212_14111_mat, ce_212_14112_mat, ce_212_14113_mat, ce_212_14114_mat, ce_212_14115_mat, ce_212_14116_mat, ce_212_14117_mat, ce_212_14118_mat",0,212.141_mat
+694,ce_212_1411_lab,Containment Shell site labor cost for 212.1411,5715505.323950599,$,sum_all,"ce_212_14111_lab, ce_212_14112_lab, ce_212_14113_lab, ce_212_14114_lab, ce_212_14115_lab, ce_212_14116_lab, ce_212_14117_lab, ce_212_14118_lab",0,212.141_lab
+695,ce_212_14111_fac,Formwork factory equipment cost for 212.14111,0.0,$,,,0,212.1411_fac
+696,ce_212_14111_mat,Formwork site material cost for 212.14111,0.0,$,category_scale,"ref_212_14111_mat, scale_sup_str_V, adj_none",0,212.1411_mat
+697,ce_212_14111_lab,Formwork site labor cost for 212.14111,0.0,$,category_scale,"ref_212_14111_lab, scale_sup_str_V, adj_none",0,212.1411_lab
+698,ce_212_14112_fac,Reinforcing Steel factory equipment cost for 212.14112,0.0,$,,,0,212.1411_fac
+699,ce_212_14112_mat,Reinforcing Steel site material cost for 212.14112,8380508.768929804,$,category_scale,"ref_212_14112_mat, scale_sup_str_V, adj_cont_mat_1_48",0,212.1411_mat
+700,ce_212_14112_lab,Reinforcing Steel site labor cost for 212.14112,1564590.3568760036,$,category_scale,"ref_212_14112_lab, scale_sup_str_V, adj_212_14112_lab",0,212.1411_lab
+701,ce_212_14113_fac,Concrete factory equipment cost for 212.14113,0.0,$,,,0,212.1411_fac
+702,ce_212_14113_mat,Concrete site material cost for 212.14113,1371366.3457545682,$,category_scale,"ref_212_14113_mat, scale_sup_str_V",0,212.1411_mat
+703,ce_212_14113_lab,Concrete site labor cost for 212.14113,2687756.528683357,$,category_scale,"ref_212_14113_lab, scale_sup_str_V",0,212.1411_lab
+704,ce_212_14114_fac,Embedded Steel factory equipment cost for 212.14114,0.0,$,,,0,212.1411_fac
+705,ce_212_14114_mat,Embedded Steel site material cost for 212.14114,165512.6083622963,$,category_scale,"ref_212_14114_mat, scale_sup_str_V",0,212.1411_mat
+706,ce_212_14114_lab,Embedded Steel site labor cost for 212.14114,454525.0145292392,$,category_scale,"ref_212_14114_lab, scale_sup_str_V",0,212.1411_lab
+707,ce_212_14115_fac,Rubbing Surfaces factory equipment cost for 212.14115,0.0,$,,,0,212.1411_fac
+708,ce_212_14115_mat,Rubbing Surfaces site material cost for 212.14115,22026.07551698718,$,category_scale,"ref_212_14115_mat, scale_sup_str_V",0,212.1411_mat
+709,ce_212_14115_lab,Rubbing Surfaces site labor cost for 212.14115,373300.2284734896,$,category_scale,"ref_212_14115_lab, scale_sup_str_V",0,212.1411_lab
+710,ce_212_14116_fac,Waterproofing factory equipment cost for 212.14116,0.0,$,,,0,212.1411_fac
+711,ce_212_14116_mat,Waterproofing site material cost for 212.14116,14395.613641818194,$,category_scale,"ref_212_14116_mat, scale_sup_str_V",0,212.1411_mat
+712,ce_212_14116_lab,Waterproofing site labor cost for 212.14116,37787.93662342439,$,category_scale,"ref_212_14116_lab, scale_sup_str_V",0,212.1411_lab
+713,ce_212_14117_fac,Cadwelds factory equipment cost for 212.14117,0.0,$,,,0,212.1411_fac
+714,ce_212_14117_mat,Cadwelds site material cost for 212.14117,0.0,$,category_scale,"ref_212_14117_mat, scale_sup_str_V, adj_none",0,212.1411_mat
+715,ce_212_14117_lab,Cadwelds site labor cost for 212.14117,0.0,$,category_scale,"ref_212_14117_lab, scale_sup_str_V, adj_none",0,212.1411_lab
+716,ce_212_14118_fac,Construction Joints factory equipment cost for 212.14118,0.0,$,,,0,212.1411_fac
+717,ce_212_14118_mat,Construction Joints site material cost for 212.14118,245459.63443483823,$,category_scale,"ref_212_14118_mat, scale_sup_str_V",0,212.1411_mat
+718,ce_212_14118_lab,Construction Joints site labor cost for 212.14118,597545.2587650847,$,category_scale,"ref_212_14118_lab, scale_sup_str_V",0,212.1411_lab
+719,ce_212_1412_fac,Containment Dome factory equipment cost for 212.1412,0.0,$,sum_all,"ce_212_14121_fac, ce_212_14122_fac, ce_212_14123_fac, ce_212_14125_fac, ce_212_14127_fac, ce_212_14128_fac",0,212.141_fac
+720,ce_212_1412_mat,Containment Dome site material cost for 212.1412,3658110.955731712,$,sum_all,"ce_212_14121_mat, ce_212_14122_mat, ce_212_14123_mat, ce_212_14125_mat, ce_212_14127_mat, ce_212_14128_mat",0,212.141_mat
+721,ce_212_1412_lab,Containment Dome site labor cost for 212.1412,2781923.024968618,$,sum_all,"ce_212_14121_lab, ce_212_14122_lab, ce_212_14123_lab, ce_212_14125_lab, ce_212_14127_lab, ce_212_14128_lab",0,212.141_lab
+722,ce_212_14121_fac,Formwork factory equipment cost for 212.14121,0.0,$,,,0,212.1412_fac
+723,ce_212_14121_mat,Formwork site material cost for 212.14121,0.0,$,category_scale,"ref_212_14121_mat, scale_sup_str_V, adj_none",0,212.1412_mat
+724,ce_212_14121_lab,Formwork site labor cost for 212.14121,0.0,$,category_scale,"ref_212_14121_lab, scale_sup_str_V, adj_none",0,212.1412_lab
+725,ce_212_14122_fac,Reinforcing Steel factory equipment cost for 212.14122,0.0,$,,,0,212.1412_fac
+726,ce_212_14122_mat,Reinforcing Steel site material cost for 212.14122,3108898.414640052,$,category_scale,"ref_212_14122_mat, scale_sup_str_V, adj_cont_mat_1_48",0,212.1412_mat
+727,ce_212_14122_lab,Reinforcing Steel site labor cost for 212.14122,1564590.3568760036,$,category_scale,"ref_212_14122_lab, scale_sup_str_V, adj_212_14122_lab",0,212.1412_lab
+728,ce_212_14123_fac,Concrete factory equipment cost for 212.14123,0.0,$,,,0,212.1412_fac
+729,ce_212_14123_mat,Concrete site material cost for 212.14123,492836.2763720937,$,category_scale,"ref_212_14123_mat, scale_sup_str_V",0,212.1412_mat
+730,ce_212_14123_lab,Concrete site labor cost for 212.14123,965916.6708574004,$,category_scale,"ref_212_14123_lab, scale_sup_str_V",0,212.1412_lab
+731,ce_212_14125_fac,Rubbing Surfaces factory equipment cost for 212.14125,0.0,$,,,0,212.1412_fac
+732,ce_212_14125_mat,Rubbing Surfaces site material cost for 212.14125,7866.455541661565,$,category_scale,"ref_212_14125_mat, scale_sup_str_V",0,212.1412_mat
+733,ce_212_14125_lab,Rubbing Surfaces site labor cost for 212.14125,133321.2491440316,$,category_scale,"ref_212_14125_lab, scale_sup_str_V",0,212.1412_lab
+734,ce_212_14127_fac,Cadwelds factory equipment cost for 212.14127,0.0,$,,,0,212.1412_fac
+735,ce_212_14127_mat,Cadwelds site material cost for 212.14127,0.0,$,category_scale,"ref_212_14127_mat, scale_sup_str_V, adj_none",0,212.1412_mat
+736,ce_212_14127_lab,Cadwelds site labor cost for 212.14127,0.0,$,category_scale,"ref_212_14127_lab, scale_sup_str_V, adj_none",0,212.1412_lab
+737,ce_212_14128_fac,Construction Joints factory equipment cost for 212.14128,0.0,$,,,0,212.1412_fac
+738,ce_212_14128_mat,Construction Joints site material cost for 212.14128,48509.80917790416,$,category_scale,"ref_212_14128_mat, scale_sup_str_V",0,212.1412_mat
+739,ce_212_14128_lab,Construction Joints site labor cost for 212.14128,118094.74809118216,$,category_scale,"ref_212_14128_lab, scale_sup_str_V",0,212.1412_lab
+740,ce_212_140_fac,Interior Concrete factory equipment cost for 212.140,3384358.55023979,$,category_scale,"ref_212_140_fac, scale_sup_const",0,212.14_fac
+741,ce_212_140_mat,Interior Concrete site material cost for 212.140,13289138.402661176,$,category_scale,"ref_212_140_mat, scale_sup_const",0,212.14_mat
+742,ce_212_140_lab,Interior Concrete site labor cost for 212.140,45514958.84916846,$,category_scale,"ref_212_140_lab, scale_sup_const",0,212.14_lab
+743,ce_212_1419_fac,Removable Plugs factory equipment cost for 212.1419,0.0,$,,,0,212.141_fac
+744,ce_212_1419_mat,Removable Plugs site material cost for 212.1419,194726.24050509284,$,category_scale,"ref_212_1419_mat, scale_sup_str_V",0,212.141_mat
+745,ce_212_1419_lab,Removable Plugs site labor cost for 212.1419,666606.2457201581,$,category_scale,"ref_212_1419_lab, scale_sup_str_V",0,212.141_lab
+746,ce_212_142_fac,Structural & Miscellaneous Steel factory equipment cost for 212.142,0.0,$,,,0,212.14_fac
+747,ce_212_142_mat,Structural & Miscellaneous Steel site material cost for 212.142,3837058.018969012,$,category_scale,"ref_212_142_mat, scale_sup_const",0,212.14_mat
+748,ce_212_142_lab,Structural & Miscellaneous Steel site labor cost for 212.142,2923632.663465121,$,category_scale,"ref_212_142_lab, scale_sup_const",0,212.14_lab
+749,ce_212_149_fac,Painting factory equipment cost for 212.149,0.0,$,,,0,212.14_fac
+750,ce_212_149_mat,Painting site material cost for 212.149,2468990.6062221574,$,category_scale,"ref_212_149_mat, scale_sup_str_S",0,212.14_mat
+751,ce_212_149_lab,Painting site labor cost for 212.149,12605539.137800382,$,category_scale,"ref_212_149_lab, scale_sup_str_S",0,212.14_lab
+752,ce_213_141_fac,Concrete Work factory equipment cost for 213.141,0.0,$,,,0,213.14_fac
+753,ce_213_141_mat,Concrete Work site material cost for 213.141,473512.8412995845,$,category_scale,"ref_213_141_mat, scale_turb_gen_bldg_sup_vol",0,213.14_mat
+754,ce_213_141_lab,Concrete Work site labor cost for 213.141,1221163.2281852113,$,category_scale,"ref_213_141_lab, scale_turb_gen_bldg_sup_vol",0,213.14_lab
+755,ce_213_142_fac,Structural & Miscellaneous Steel factory equipment cost for 213.142,0.0,$,,,0,213.14_fac
+756,ce_213_142_mat,Structural & Miscellaneous Steel site material cost for 213.142,22438700.415805608,$,category_scale,"ref_213_142_mat, scale_bldg_V",0,213.14_mat
+757,ce_213_142_lab,Structural & Miscellaneous Steel site labor cost for 213.142,14169619.210507048,$,category_scale,"ref_213_142_lab, scale_bldg_V",0,213.14_lab
+758,ce_213_143_fac,Exterior Walls factory equipment cost for 213.143,0.0,$,,,0,213.14_fac
+759,ce_213_143_mat,Exterior Walls site material cost for 213.143,1819014.735324296,$,category_scale,"ref_213_143_mat, scale_turb_gen_bldg_sup_S",0,213.14_mat
+760,ce_213_143_lab,Exterior Walls site labor cost for 213.143,1575247.5631917254,$,category_scale,"ref_213_143_lab, scale_turb_gen_bldg_sup_S",0,213.14_lab
+761,ce_213_144_fac,Roof Deck factory equipment cost for 213.144,0.0,$,,,0,213.14_fac
+762,ce_213_144_mat,Roof Deck site material cost for 213.144,627619.9902490623,$,category_scale,"ref_213_144_mat, scale_sub_str_S",0,213.14_mat
+763,ce_213_144_lab,Roof Deck site labor cost for 213.144,604987.2644135082,$,category_scale,"ref_213_144_lab, scale_sub_str_S",0,213.14_lab
+764,ce_213_145_fac,Roofing & Flashing factory equipment cost for 213.145,0.0,$,,,0,213.14_fac
+765,ce_213_145_mat,Roofing & Flashing site material cost for 213.145,297638.9385733771,$,category_scale,"ref_213_145_mat, scale_sub_str_S",0,213.14_mat
+766,ce_213_145_lab,Roofing & Flashing site labor cost for 213.145,320601.8450655738,$,category_scale,"ref_213_145_lab, scale_sub_str_S",0,213.14_lab
+767,ce_213_146_fac,Interior Walls & Partition factory equipment cost for 213.146,0.0,$,,,0,213.14_fac
+768,ce_213_146_mat,Interior Walls & Partition site material cost for 213.146,260426.9110328309,$,category_scale,"ref_213_146_mat, scale_bldg_V",0,213.14_mat
+769,ce_213_146_lab,Interior Walls & Partition site labor cost for 213.146,407182.9200146566,$,category_scale,"ref_213_146_lab, scale_bldg_V",0,213.14_lab
+770,ce_213_147_fac,Doors & Windows factory equipment cost for 213.147,0.0,$,,,0,213.14_fac
+771,ce_213_147_mat,Doors & Windows site material cost for 213.147,903580.1334755552,$,category_scale,"ref_213_147_mat, scale_bldg_V",0,213.14_mat
+772,ce_213_147_lab,Doors & Windows site labor cost for 213.147,590330.5279731657,$,category_scale,"ref_213_147_lab, scale_bldg_V",0,213.14_lab
+773,ce_213_149_fac,Painting factory equipment cost for 213.149,0.0,$,,,0,213.14_fac
+774,ce_213_149_mat,Painting site material cost for 213.149,94462.52784401408,$,category_scale,"ref_213_149_mat, scale_turb_gen_bldg_sup_S",0,213.14_mat
+775,ce_213_149_lab,Painting site labor cost for 213.149,1639057.3147869715,$,category_scale,"ref_213_149_lab, scale_turb_gen_bldg_sup_S",0,213.14_lab
+776,ce_215_141_fac,Concrete Work factory equipment cost for 215.141,0.0,$,,,0,215.14_fac
+777,ce_215_141_mat,Concrete Work site material cost for 215.141,3262104.990817132,$,category_scale,"ref_215_141_mat, scale_pri_aux_bldg_sup_vol",0,215.14_mat
+778,ce_215_141_lab,Concrete Work site labor cost for 215.141,10367776.320793144,$,category_scale,"ref_215_141_lab, scale_pri_aux_bldg_sup_vol",0,215.14_lab
+779,ce_215_142_fac,Structural & Miscellaneous Steel factory equipment cost for 215.142,0.0,$,,,0,215.14_fac
+780,ce_215_142_mat,Structural & Miscellaneous Steel site material cost for 215.142,1085567.8241478077,$,category_scale,"ref_215_142_mat, scale_pri_aux_bldg_bldg_vol",0,215.14_mat
+781,ce_215_142_lab,Structural & Miscellaneous Steel site labor cost for 215.142,683150.5168248869,$,category_scale,"ref_215_142_lab, scale_pri_aux_bldg_bldg_vol",0,215.14_lab
+782,ce_215_145_fac,Roofing & Flashing factory equipment cost for 215.145,0.0,$,,,0,215.14_fac
+783,ce_215_145_mat,Roofing & Flashing site material cost for 215.145,38679.04266404173,$,category_scale,"ref_215_145_mat, scale_pri_aux_bldg_sub_S",0,215.14_mat
+784,ce_215_145_lab,Roofing & Flashing site labor cost for 215.145,41706.52092709427,$,category_scale,"ref_215_145_lab, scale_pri_aux_bldg_sub_S",0,215.14_lab
+785,ce_215_146_fac,Interior Walls & Partition factory equipment cost for 215.146,0.0,$,,,0,215.14_fac
+786,ce_215_146_mat,Interior Walls & Partition site material cost for 215.146,80622.38030974001,$,category_scale,"ref_215_146_mat, scale_pri_aux_bldg_bldg_vol",0,215.14_mat
+787,ce_215_146_lab,Interior Walls & Partition site labor cost for 215.146,88142.44585117852,$,category_scale,"ref_215_146_lab, scale_pri_aux_bldg_bldg_vol",0,215.14_lab
+788,ce_215_147_fac,Doors & Windows factory equipment cost for 215.147,0.0,$,,,0,215.14_fac
+789,ce_215_147_mat,Doors & Windows site material cost for 215.147,32509.13475523197,$,category_scale,"ref_215_147_mat, scale_pri_aux_bldg_bldg_vol",0,215.14_mat
+790,ce_215_147_lab,Doors & Windows site labor cost for 215.147,30123.984768712413,$,category_scale,"ref_215_147_lab, scale_pri_aux_bldg_bldg_vol",0,215.14_lab
+791,ce_215_149_fac,Painting factory equipment cost for 215.149,0.0,$,,,0,215.14_fac
+792,ce_215_149_mat,Painting site material cost for 215.149,55262.54872323232,$,category_scale,"ref_215_149_mat, scale_pri_aux_bldg_sup_S",0,215.14_mat
+793,ce_215_149_lab,Painting site labor cost for 215.149,261431.50646262625,$,category_scale,"ref_215_149_lab, scale_pri_aux_bldg_sup_S",0,215.14_lab
+794,ce_215_221_fac,Rotating Machinery factory equipment cost for 215.221,2521628.5440221345,$,category_scale,"ref_215_221_fac, scale_P",0,215.22_fac
+795,ce_215_221_mat,Rotating Machinery site material cost for 215.221,28864.40564110573,$,category_scale,"ref_215_221_mat, scale_P",0,215.22_mat
+796,ce_215_221_lab,Rotating Machinery site labor cost for 215.221,335031.1497269407,$,category_scale,"ref_215_221_lab, scale_P",0,215.22_lab
+797,ce_215_222_fac,Heat Transfer Equipment factory equipment cost for 215.222,1928702.285568636,$,category_scale,"ref_215_222_fac, scale_P",0,215.22_fac
+798,ce_215_222_mat,Heat Transfer Equipment site material cost for 215.222,28361.852968694733,$,category_scale,"ref_215_222_mat, scale_P",0,215.22_mat
+799,ce_215_222_lab,Heat Transfer Equipment site labor cost for 215.222,329297.08533923613,$,category_scale,"ref_215_222_lab, scale_P",0,215.22_lab
+800,ce_215_223_fac,Tanks & Pressure Vessels factory equipment cost for 215.223,39253.11776857916,$,category_scale,"ref_215_223_fac, scale_P",0,215.22_fac
+801,ce_215_223_mat,Tanks & Pressure Vessels site material cost for 215.223,2525.0959433458074,$,category_scale,"ref_215_223_mat, scale_P",0,215.22_mat
+802,ce_215_223_lab,Tanks & Pressure Vessels site labor cost for 215.223,30070.029282976266,$,category_scale,"ref_215_223_lab, scale_P",0,215.22_lab
+803,ce_215_224_fac,Purification & Filtration Equipment factory equipment cost for 215.224,468009.1189754314,$,category_scale,"ref_215_224_fac, scale_P",0,215.22_fac
+804,ce_215_224_mat,Purification & Filtration Equipment site material cost for 215.224,7880.519205779626,$,category_scale,"ref_215_224_mat, scale_P",0,215.22_mat
+805,ce_215_224_lab,Purification & Filtration Equipment site labor cost for 215.224,91473.00338756749,$,category_scale,"ref_215_224_lab, scale_P",0,215.22_lab
+806,ce_215_225_fac,Piping & Ductwork factory equipment cost for 215.225,207580.7802923052,$,category_scale,"ref_215_225_fac, scale_pri_aux_bldg_bldg_vol",0,215.22_fac
+807,ce_215_225_mat,Piping & Ductwork site material cost for 215.225,409832.3108319993,$,category_scale,"ref_215_225_mat, scale_pri_aux_bldg_bldg_vol",0,215.22_mat
+808,ce_215_225_lab,Piping & Ductwork site labor cost for 215.225,1860294.642882204,$,category_scale,"ref_215_225_lab, scale_pri_aux_bldg_bldg_vol",0,215.22_lab
+809,ce_215_226_fac,Valves & Dampers factory equipment cost for 215.226,102810.59576480737,$,category_scale,"ref_215_226_fac, scale_pri_aux_bldg_bldg_vol",0,215.22_fac
+810,ce_215_226_mat,Valves & Dampers site material cost for 215.226,3410.467256421423,$,category_scale,"ref_215_226_mat, scale_pri_aux_bldg_bldg_vol",0,215.22_mat
+811,ce_215_226_lab,Valves & Dampers site labor cost for 215.226,40207.10909078991,$,category_scale,"ref_215_226_lab, scale_pri_aux_bldg_bldg_vol",0,215.22_lab
+812,ce_215_227_fac,Piping & Miscellaneous Items factory equipment cost for 215.227,79866.59286784887,$,category_scale,"ref_215_227_fac, scale_pri_aux_bldg_bldg_vol",0,215.22_fac
+813,ce_215_227_mat,Piping & Miscellaneous Items site material cost for 215.227,0.0,$,,,0,215.22_mat
+814,ce_215_227_lab,Piping & Miscellaneous Items site labor cost for 215.227,0.0,$,,,0,215.22_lab
+815,ce_215_228_fac,Instrumentation & Control factory equipment cost for 215.228,27529.948177368948,$,category_scale,"ref_215_228_fac, scale_P",0,215.22_fac
+816,ce_215_228_mat,Instrumentation & Control site material cost for 215.228,1486.0760002230988,$,category_scale,"ref_215_228_mat, scale_P",0,215.22_mat
+817,ce_215_228_lab,Instrumentation & Control site labor cost for 215.228,17479.242180038895,$,category_scale,"ref_215_228_lab, scale_P",0,215.22_lab
+818,ce_216_141_fac,Concrete Work factory equipment cost for 216.141,0.0,$,,,0,216.14_fac
+819,ce_216_141_mat,Concrete Work site material cost for 216.141,1963645.6682412096,$,category_scale,"ref_216_141_mat, scale_waste_bldg_sup_vol",0,216.14_mat
+820,ce_216_141_lab,Concrete Work site labor cost for 216.141,6600126.849979317,$,category_scale,"ref_216_141_lab, scale_waste_bldg_sup_vol",0,216.14_lab
+821,ce_216_142_fac,Structural & Miscellaneous Steel factory equipment cost for 216.142,0.0,$,,,0,216.14_fac
+822,ce_216_142_mat,Structural & Miscellaneous Steel site material cost for 216.142,1086395.99424991,$,category_scale,"ref_216_142_mat, scale_waste_bldg_bldg_vol",0,216.14_mat
+823,ce_216_142_lab,Structural & Miscellaneous Steel site labor cost for 216.142,669483.7152461205,$,category_scale,"ref_216_142_lab, scale_waste_bldg_bldg_vol",0,216.14_lab
+824,ce_216_143_fac,Exterior Walls factory equipment cost for 216.143,0.0,$,,,0,216.14_fac
+825,ce_216_143_mat,Exterior Walls site material cost for 216.143,161001.8109203252,$,category_scale,"ref_216_143_mat, scale_waste_bldg_sup_S",0,216.14_mat
+826,ce_216_143_lab,Exterior Walls site labor cost for 216.143,133726.89152227642,$,category_scale,"ref_216_143_lab, scale_waste_bldg_sup_S",0,216.14_lab
+827,ce_216_144_fac,Roof Deck factory equipment cost for 216.144,0.0,$,,,0,216.14_fac
+828,ce_216_144_mat,Roof Deck site material cost for 216.144,221100.8038125,$,category_scale,"ref_216_144_mat, scale_waste_bldg_sub_S",0,216.14_mat
+829,ce_216_144_lab,Roof Deck site labor cost for 216.144,230682.6900375,$,category_scale,"ref_216_144_lab, scale_waste_bldg_sub_S",0,216.14_lab
+830,ce_216_145_fac,Roofing & Flashing factory equipment cost for 216.145,0.0,$,,,0,216.14_fac
+831,ce_216_145_mat,Roofing & Flashing site material cost for 216.145,96350.573535,$,category_scale,"ref_216_145_mat, scale_waste_bldg_sub_S",0,216.14_mat
+832,ce_216_145_lab,Roofing & Flashing site labor cost for 216.145,110519.1284325,$,category_scale,"ref_216_145_lab, scale_waste_bldg_sub_S",0,216.14_lab
+833,ce_216_146_fac,Interior Walls & Partition factory equipment cost for 216.146,0.0,$,,,0,216.14_fac
+834,ce_216_146_mat,Interior Walls & Partition site material cost for 216.146,1341.176696562556,$,category_scale,"ref_216_146_mat, scale_waste_bldg_bldg_vol",0,216.14_mat
+835,ce_216_146_lab,Interior Walls & Partition site labor cost for 216.146,1453.1731563888388,$,category_scale,"ref_216_146_lab, scale_waste_bldg_bldg_vol",0,216.14_lab
+836,ce_216_147_fac,Doors & Windows factory equipment cost for 216.147,0.0,$,,,0,216.14_fac
+837,ce_216_147_mat,Doors & Windows site material cost for 216.147,23702.15865118812,$,category_scale,"ref_216_147_mat, scale_waste_bldg_bldg_vol",0,216.14_mat
+838,ce_216_147_lab,Doors & Windows site labor cost for 216.147,20971.64083239153,$,category_scale,"ref_216_147_lab, scale_waste_bldg_bldg_vol",0,216.14_lab
+839,ce_216_148_fac,"Wall, Floor, & Ceiling Finishing factory equipment cost for 216.148",0.0,$,,,0,216.14_fac
+840,ce_216_148_mat,"Wall, Floor, & Ceiling Finishing site material cost for 216.148",184.851319979568,$,category_scale,"ref_216_148_mat, scale_waste_bldg_bldg_vol",0,216.14_mat
+841,ce_216_148_lab,"Wall, Floor, & Ceiling Finishing site labor cost for 216.148",3325.2090900270023,$,category_scale,"ref_216_148_lab, scale_waste_bldg_bldg_vol",0,216.14_lab
+842,ce_216_149_fac,Painting factory equipment cost for 216.149,0.0,$,,,0,216.14_fac
+843,ce_216_149_mat,Painting site material cost for 216.149,25443.96597304065,$,category_scale,"ref_216_149_mat, scale_waste_bldg_sup_S",0,216.14_mat
+844,ce_216_149_lab,Painting site labor cost for 216.149,153517.38181317074,$,category_scale,"ref_216_149_lab, scale_waste_bldg_sup_S",0,216.14_lab
+845,ce_217_141_fac,Concrete Work factory equipment cost for 217.141,0.0,$,,,0,217.14_fac
+846,ce_217_141_mat,Concrete Work site material cost for 217.141,913766.7652189594,$,category_scale,"ref_217_141_mat, scale_fuel_stor_bldg_sup_vol",0,217.14_mat
+847,ce_217_141_lab,Concrete Work site labor cost for 217.141,3428635.069330594,$,category_scale,"ref_217_141_lab, scale_fuel_stor_bldg_sup_vol",0,217.14_lab
+848,ce_217_142_fac,Structural & Miscellaneous Steel factory equipment cost for 217.142,0.0,$,,,0,217.14_fac
+849,ce_217_142_mat,Structural & Miscellaneous Steel site material cost for 217.142,586413.659960625,$,category_scale,"ref_217_142_mat, scale_fuel_stor_bldg_bldg_vol",0,217.14_mat
+850,ce_217_142_lab,Structural & Miscellaneous Steel site labor cost for 217.142,415822.97264156246,$,category_scale,"ref_217_142_lab, scale_fuel_stor_bldg_bldg_vol",0,217.14_lab
+851,ce_217_145_fac,Roofing & Flashing factory equipment cost for 217.145,0.0,$,,,0,217.14_fac
+852,ce_217_145_mat,Roofing & Flashing site material cost for 217.145,36139.55483444445,$,category_scale,"ref_217_145_mat, scale_fuel_stor_bldg_sub_S",0,217.14_mat
+853,ce_217_145_lab,Roofing & Flashing site labor cost for 217.145,44419.90458111112,$,category_scale,"ref_217_145_lab, scale_fuel_stor_bldg_sub_S",0,217.14_lab
+854,ce_217_147_fac,Doors & Windows factory equipment cost for 217.147,0.0,$,,,0,217.14_fac
+855,ce_217_147_mat,Doors & Windows site material cost for 217.147,21447.69019509375,$,category_scale,"ref_217_147_mat, scale_fuel_stor_bldg_bldg_vol",0,217.14_mat
+856,ce_217_147_lab,Doors & Windows site labor cost for 217.147,16254.212596125,$,category_scale,"ref_217_147_lab, scale_fuel_stor_bldg_bldg_vol",0,217.14_lab
+857,ce_217_149_fac,Painting factory equipment cost for 217.149,0.0,$,,,0,217.14_fac
+858,ce_217_149_mat,Painting site material cost for 217.149,13433.403855796876,$,category_scale,"ref_217_149_mat, scale_fuel_stor_bldg_sup_S",0,217.14_mat
+859,ce_217_149_lab,Painting site labor cost for 217.149,106400.80266187502,$,category_scale,"ref_217_149_lab, scale_fuel_stor_bldg_sup_S",0,217.14_lab
+860,ce_218A_13_fac,Substructure Concrete factory equipment cost for 218A.13,0.0,$,,,0,218A.1_fac
+861,ce_218A_13_mat,Substructure Concrete site material cost for 218A.13,77495.37770125395,$,category_scale,"ref_218A_13_mat, scale_cr_dg_bldg_sub_vol",0,218A.1_mat
+862,ce_218A_13_lab,Substructure Concrete site labor cost for 218A.13,134750.7765574603,$,category_scale,"ref_218A_13_lab, scale_cr_dg_bldg_sub_vol",0,218A.1_lab
+863,ce_218A_14_fac,Superstructure factory equipment cost for 218A.14,0.0,$,sum_all,"ce_218A_141_fac, ce_218A_142_fac, ce_218A_145_fac, ce_218A_146_fac, ce_218A_147_fac, ce_218A_148_fac, ce_218A_149_fac",0,218A.1_fac
+864,ce_218A_14_mat,Superstructure site material cost for 218A.14,772476.3988869898,$,sum_all,"ce_218A_141_mat, ce_218A_142_mat, ce_218A_145_mat, ce_218A_146_mat, ce_218A_147_mat, ce_218A_148_mat, ce_218A_149_mat",0,218A.1_mat
+865,ce_218A_14_lab,Superstructure site labor cost for 218A.14,1661665.025356886,$,sum_all,"ce_218A_141_lab, ce_218A_142_lab, ce_218A_145_lab, ce_218A_146_lab, ce_218A_147_lab, ce_218A_148_lab, ce_218A_149_lab",0,218A.1_lab
+866,ce_218A_141_fac,Concrete Work factory equipment cost for 218A.141,0.0,$,,,0,218A.14_fac
+867,ce_218A_141_mat,Concrete Work site material cost for 218A.141,367725.8841529896,$,category_scale,"ref_218A_141_mat, scale_cr_dg_bldg_sup_vol",0,218A.14_mat
+868,ce_218A_141_lab,Concrete Work site labor cost for 218A.141,1258072.831596794,$,category_scale,"ref_218A_141_lab, scale_cr_dg_bldg_sup_vol",0,218A.14_lab
+869,ce_218A_142_fac,Structural & Miscellaneous Steel factory equipment cost for 218A.142,0.0,$,,,0,218A.14_fac
+870,ce_218A_142_mat,Structural & Miscellaneous Steel site material cost for 218A.142,259502.7282345966,$,category_scale,"ref_218A_142_mat, scale_cr_dg_bldg_bldg_vol",0,218A.14_mat
+871,ce_218A_142_lab,Structural & Miscellaneous Steel site labor cost for 218A.142,163863.558401292,$,category_scale,"ref_218A_142_lab, scale_cr_dg_bldg_bldg_vol",0,218A.14_lab
+872,ce_218A_145_fac,Roofing & Flashing factory equipment cost for 218A.145,0.0,$,,,0,218A.14_fac
+873,ce_218A_145_mat,Roofing & Flashing site material cost for 218A.145,27367.367255026456,$,category_scale,"ref_218A_145_mat, scale_cr_dg_bldg_sub_S",0,218A.14_mat
+874,ce_218A_145_lab,Roofing & Flashing site labor cost for 218A.145,30723.48155449735,$,category_scale,"ref_218A_145_lab, scale_cr_dg_bldg_sub_S",0,218A.14_lab
+875,ce_218A_146_fac,Interior Walls & Partition factory equipment cost for 218A.146,0.0,$,,,0,218A.14_fac
+876,ce_218A_146_mat,Interior Walls & Partition site material cost for 218A.146,99298.67336306634,$,category_scale,"ref_218A_146_mat, scale_cr_dg_bldg_bldg_vol",0,218A.14_mat
+877,ce_218A_146_lab,Interior Walls & Partition site labor cost for 218A.146,135138.67742067183,$,category_scale,"ref_218A_146_lab, scale_cr_dg_bldg_bldg_vol",0,218A.14_lab
+878,ce_218A_147_fac,Doors & Windows factory equipment cost for 218A.147,0.0,$,,,0,218A.14_fac
+879,ce_218A_147_mat,Doors & Windows site material cost for 218A.147,5247.427482334195,$,category_scale,"ref_218A_147_mat, scale_cr_dg_bldg_bldg_vol",0,218A.14_mat
+880,ce_218A_147_lab,Doors & Windows site labor cost for 218A.147,5200.369174619581,$,category_scale,"ref_218A_147_lab, scale_cr_dg_bldg_bldg_vol",0,218A.14_lab
+881,ce_218A_148_fac,"Wall, Floor, & Ceiling Finishing factory equipment cost for 218A.148",0.0,$,,,0,218A.14_fac
+882,ce_218A_148_mat,"Wall, Floor, & Ceiling Finishing site material cost for 218A.148",6633.908162802182,$,category_scale,"ref_218A_148_mat, scale_cr_dg_bldg_bldg_vol",0,218A.14_mat
+883,ce_218A_148_lab,"Wall, Floor, & Ceiling Finishing site labor cost for 218A.148",13799.17403854149,$,category_scale,"ref_218A_148_lab, scale_cr_dg_bldg_bldg_vol",0,218A.14_lab
+884,ce_218A_149_fac,Painting factory equipment cost for 218A.149,0.0,$,,,0,218A.14_fac
+885,ce_218A_149_mat,Painting site material cost for 218A.149,6700.410236174496,$,category_scale,"ref_218A_149_mat, scale_cr_dg_bldg_sup_S",0,218A.14_mat
+886,ce_218A_149_lab,Painting site labor cost for 218A.149,54866.9331704698,$,category_scale,"ref_218A_149_lab, scale_cr_dg_bldg_sup_S",0,218A.14_lab
+887,ce_218A_21_fac,Plumbing & Drains factory equipment cost for 218A.21,0.0,$,,,0,218A.2_fac
+888,ce_218A_21_mat,Plumbing & Drains site material cost for 218A.21,35914.109014298025,$,category_scale,"ref_218A_21_mat, scale_cr_dg_bldg_bldg_vol",0,218A.2_mat
+889,ce_218A_21_lab,Plumbing & Drains site labor cost for 218A.21,128762.8626741315,$,category_scale,"ref_218A_21_lab, scale_cr_dg_bldg_bldg_vol",0,218A.2_lab
+890,ce_218A_23_fac,Special HVAC (Safety Related) factory equipment cost for 218A.23,2319565.4875418823,$,sum_all,"ce_218A_231_fac, ce_218A_232_fac, ce_218A_233_fac, ce_218A_234_fac, ce_218A_235_fac, ce_218A_236_fac, ce_218A_237_fac, ce_218A_238_fac",0,218A.2_fac
+891,ce_218A_23_mat,Special HVAC (Safety Related) site material cost for 218A.23,101786.12605361892,$,sum_all,"ce_218A_231_mat, ce_218A_232_mat, ce_218A_233_mat, ce_218A_234_mat, ce_218A_235_mat, ce_218A_236_mat, ce_218A_237_mat, ce_218A_238_mat",0,218A.2_mat
+892,ce_218A_23_lab,Special HVAC (Safety Related) site labor cost for 218A.23,874913.5481241005,$,sum_all,"ce_218A_231_lab, ce_218A_232_lab, ce_218A_233_lab, ce_218A_234_lab, ce_218A_235_lab, ce_218A_236_lab, ce_218A_237_lab, ce_218A_238_lab",0,218A.2_lab
+893,ce_218A_231_fac,Rotating Machinery factory equipment cost for 218A.231,922959.8281254354,$,category_scale,"ref_218A_231_fac, scale_P",0,218A.23_fac
+894,ce_218A_231_mat,Rotating Machinery site material cost for 218A.231,9442.77190127117,$,category_scale,"ref_218A_231_mat, scale_P",0,218A.23_mat
+895,ce_218A_231_lab,Rotating Machinery site labor cost for 218A.231,114267.1180063949,$,category_scale,"ref_218A_231_lab, scale_P",0,218A.23_lab
+896,ce_218A_232_fac,Heat Transfer Equipment factory equipment cost for 218A.232,798020.9223690351,$,category_scale,"ref_218A_232_fac, scale_P",0,218A.23_fac
+897,ce_218A_232_mat,Heat Transfer Equipment site material cost for 218A.232,15906.29165252246,$,category_scale,"ref_218A_232_mat, scale_P",0,218A.23_mat
+898,ce_218A_232_lab,Heat Transfer Equipment site labor cost for 218A.232,192375.8725939752,$,category_scale,"ref_218A_232_lab, scale_P",0,218A.23_lab
+899,ce_218A_233_fac,Tanks & Pressure Vessels factory equipment cost for 218A.233,3057.9452506894927,$,category_scale,"ref_218A_233_fac, scale_P",0,218A.23_fac
+900,ce_218A_233_mat,Tanks & Pressure Vessels site material cost for 218A.233,650.7581497215162,$,category_scale,"ref_218A_233_mat, scale_P",0,218A.23_mat
+901,ce_218A_233_lab,Tanks & Pressure Vessels site labor cost for 218A.233,8070.741678574587,$,category_scale,"ref_218A_233_lab, scale_P",0,218A.23_lab
+902,ce_218A_234_fac,Purification & Filtration Equipment factory equipment cost for 218A.234,192727.64181920947,$,category_scale,"ref_218A_234_fac, scale_P",0,218A.23_fac
+903,ce_218A_234_mat,Purification & Filtration Equipment site material cost for 218A.234,6188.981152663588,$,category_scale,"ref_218A_234_mat, scale_P",0,218A.23_mat
+904,ce_218A_234_lab,Purification & Filtration Equipment site labor cost for 218A.234,74801.14560150082,$,category_scale,"ref_218A_234_lab, scale_P",0,218A.23_lab
+905,ce_218A_235_fac,Piping & Ductwork factory equipment cost for 218A.235,67692.11247774906,$,category_scale,"ref_218A_235_fac, scale_cr_dg_bldg_bldg_vol",0,218A.23_fac
+906,ce_218A_235_mat,Piping & Ductwork site material cost for 218A.235,66188.91261269021,$,category_scale,"ref_218A_235_mat, scale_cr_dg_bldg_bldg_vol",0,218A.23_mat
+907,ce_218A_235_lab,Piping & Ductwork site labor cost for 218A.235,411174.41605225386,$,category_scale,"ref_218A_235_lab, scale_cr_dg_bldg_bldg_vol",0,218A.23_lab
+908,ce_218A_236_fac,Valves & Dampers factory equipment cost for 218A.236,14572.925980189491,$,category_scale,"ref_218A_236_fac, scale_cr_dg_bldg_bldg_vol",0,218A.23_fac
+909,ce_218A_236_mat,Valves & Dampers site material cost for 218A.236,754.5375049095608,$,category_scale,"ref_218A_236_mat, scale_cr_dg_bldg_bldg_vol",0,218A.23_mat
+910,ce_218A_236_lab,Valves & Dampers site labor cost for 218A.236,9203.645713465405,$,category_scale,"ref_218A_236_lab, scale_cr_dg_bldg_bldg_vol",0,218A.23_lab
+911,ce_218A_237_fac,Piping & Miscellaneous Items factory equipment cost for 218A.237,1891.0770424921045,$,category_scale,"ref_218A_237_fac, scale_cr_dg_bldg_bldg_vol",0,218A.23_fac
+912,ce_218A_237_mat,Piping & Miscellaneous Items site material cost for 218A.237,0.0,$,,,0,218A.23_mat
+913,ce_218A_237_lab,Piping & Miscellaneous Items site labor cost for 218A.237,0.0,$,,,0,218A.23_lab
+914,ce_218A_238_fac,Instrumentation & Control factory equipment cost for 218A.238,318643.0344770824,$,category_scale,"ref_218A_238_fac, scale_P",0,218A.23_fac
+915,ce_218A_238_mat,Instrumentation & Control site material cost for 218A.238,2653.8730798404054,$,category_scale,"ref_218A_238_mat, scale_P",0,218A.23_mat
+916,ce_218A_238_lab,Instrumentation & Control site labor cost for 218A.238,65020.608477935726,$,category_scale,"ref_218A_238_lab, scale_P",0,218A.23_lab
+917,ce_218A_24_fac,Lighting & Service Power factory equipment cost for 218A.24,0.0,$,,,0,218A.2_fac
+918,ce_218A_24_mat,Lighting & Service Power site material cost for 218A.24,33876.239427217915,$,category_scale,"ref_218A_24_mat, scale_cr_dg_bldg_bldg_vol",0,218A.2_mat
+919,ce_218A_24_lab,Lighting & Service Power site labor cost for 218A.24,110446.59125179442,$,category_scale,"ref_218A_24_lab, scale_cr_dg_bldg_bldg_vol",0,218A.2_lab
+920,ce_218B_21_fac,Plumbing & Drains factory equipment cost for 218B.21,0.0,$,,,0,218B.2_fac
+921,ce_218B_21_mat,Plumbing & Drains site material cost for 218B.21,0.0,$,,,0,218B.2_mat
+922,ce_218B_21_lab,Plumbing & Drains site labor cost for 218B.21,0.0,$,,,0,218B.2_lab
+923,ce_218B_22_fac,"Heating, Ventilation, & Air Conditioning factory equipment cost for 218B.22",1859074.345697987,$,category_scale,"ref_218B_22_fac, scale_P",0,218B.2_fac
+924,ce_218B_22_mat,"Heating, Ventilation, & Air Conditioning site material cost for 218B.22",455469.92767257954,$,category_scale,"ref_218B_22_mat, scale_P",0,218B.2_mat
+925,ce_218B_22_lab,"Heating, Ventilation, & Air Conditioning site labor cost for 218B.22",3119188.467255361,$,category_scale,"ref_218B_22_lab, scale_P",0,218B.2_lab
+926,ce_218B_23_fac,Special HVAC (Safety Related) factory equipment cost for 218B.23,23677.654763305312,$,category_scale,"ref_218B_23_fac, scale_P",0,218B.2_fac
+927,ce_218B_23_mat,Special HVAC (Safety Related) site material cost for 218B.23,1725.7570691534193,$,category_scale,"ref_218B_23_mat, scale_P",0,218B.2_mat
+928,ce_218B_23_lab,Special HVAC (Safety Related) site labor cost for 218B.23,23068.87721885645,$,category_scale,"ref_218B_23_lab, scale_P",0,218B.2_lab
+929,ce_218B_24_fac,Lighting & Service Power factory equipment cost for 218B.24,0.0,$,,,0,218B.2_fac
+930,ce_218B_24_mat,Lighting & Service Power site material cost for 218B.24,0.0,$,category_scale,"ref_218B_24_mat, scale_adm_bldg_bldg_vol",0,218B.2_mat
+931,ce_218B_24_lab,Lighting & Service Power site labor cost for 218B.24,0.0,$,category_scale,"ref_218B_24_lab, scale_adm_bldg_bldg_vol",0,218B.2_lab
+932,ce_218B_25_fac,Elevator factory equipment cost for 218B.25,88303.82096,$,category_scale,ref_218B_25_fac,0,218B.2_fac
+933,ce_218B_25_mat,Elevator site material cost for 218B.25,3586.127801,$,category_scale,ref_218B_25_mat,0,218B.2_mat
+934,ce_218B_25_lab,Elevator site labor cost for 218B.25,45810.80044,$,category_scale,ref_218B_25_lab,0,218B.2_lab
+935,ce_222_111_fac,Rotating Machinery factory equipment cost for 222.111,89028940.41572173,$,category_scale,"ref_222_111_fac, scale_frm_flow, count_222_11, lrn_222_11_fac, adj_rx_aux_0_25",0,222.11_fac
+936,ce_222_111_mat,Rotating Machinery site material cost for 222.111,332843.02111349395,$,category_scale,"ref_222_111_mat, scale_frm_flow, count_222_11, lrn_222_11_mat, adj_rx_aux_0_25",0,222.11_mat
+937,ce_222_111_lab,Rotating Machinery site labor cost for 222.111,3060334.6829829933,$,category_scale,"ref_222_111_lab, scale_frm_flow, count_222_11, lrn_222_11_lab, adj_rx_aux_0_25",0,222.11_lab
+938,ce_222_119_fac,Foundations/Skids factory equipment cost for 222.119,2682485.9979166314,$,category_scale,"ref_222_119_fac, scale_frm_flow, count_222_11, lrn_222_11_fac, adj_rx_aux_0_25",0,222.11_fac
+939,ce_222_119_mat,Foundations/Skids site material cost for 222.119,389873.4372256505,$,category_scale,"ref_222_119_mat, scale_frm_flow, count_222_11, lrn_222_11_mat, adj_rx_aux_0_25",0,222.11_mat
+940,ce_222_119_lab,Foundations/Skids site labor cost for 222.119,3633958.8392127496,$,category_scale,"ref_222_119_lab, scale_frm_flow, count_222_11, lrn_222_11_lab, adj_rx_aux_0_25",0,222.11_lab
+941,ce_222_132_fac,Heat Transfer Equipment factory equipment cost for 222.132,149609146.48186994,$,category_scale,"ref_222_132_fac, scale_frm_ht_S, count_222_13, lrn_222_13_fac, adj_half",0,222.13_fac
+942,ce_222_132_mat,Heat Transfer Equipment site material cost for 222.132,449388.9889203872,$,category_scale,"ref_222_132_mat, scale_frm_ht_S, count_222_13, lrn_222_13_mat, adj_half",0,222.13_mat
+943,ce_222_132_lab,Heat Transfer Equipment site labor cost for 222.132,4109347.55865987,$,category_scale,"ref_222_132_lab, scale_frm_ht_S, count_222_13, lrn_222_13_lab, adj_half",0,222.13_lab
+944,ce_222_139_fac,Foundations/Skids factory equipment cost for 222.139,74901.1765732484,$,category_scale,"ref_222_139_fac, scale_frm_ht_S, count_222_13, lrn_222_13_fac, adj_half",0,222.13_fac
+945,ce_222_139_mat,Foundations/Skids site material cost for 222.139,63614.80492704986,$,category_scale,"ref_222_139_mat, scale_frm_ht_S, count_222_13, lrn_222_13_mat, adj_half",0,222.13_mat
+946,ce_222_139_lab,Foundations/Skids site labor cost for 222.139,617654.1352943376,$,category_scale,"ref_222_139_lab, scale_frm_ht_S, count_222_13, lrn_222_13_lab, adj_half",0,222.13_lab
+947,ce_225_111_fac,New & Spent Fuel Crane factory equipment cost for 225.111,132640.43591165225,$,category_scale,"ref_225_111_fac, scale_frm_fuel_crane_cap, f_simp_fuel_hndl",0,225.11_fac
+948,ce_225_111_mat,New & Spent Fuel Crane site material cost for 225.111,6365.745276305703,$,category_scale,"ref_225_111_mat, scale_frm_fuel_crane_cap, f_simp_fuel_hndl",0,225.11_mat
+949,ce_225_111_lab,New & Spent Fuel Crane site labor cost for 225.111,79784.25381114653,$,category_scale,"ref_225_111_lab, scale_frm_fuel_crane_cap, f_simp_fuel_hndl",0,225.11_lab
+950,ce_225_112_fac,Monorails & Hoists factory equipment cost for 225.112,16525.241407999998,$,category_scale,"ref_225_112_fac, f_simp_fuel_hndl",0,225.11_fac
+951,ce_225_112_mat,Monorails & Hoists site material cost for 225.112,1183.3043071200002,$,category_scale,"ref_225_112_mat, f_simp_fuel_hndl",0,225.11_mat
+952,ce_225_112_lab,Monorails & Hoists site labor cost for 225.112,14840.091416800002,$,category_scale,"ref_225_112_lab, f_simp_fuel_hndl",0,225.11_lab
+953,ce_225_113_fac,New Fuel Elevator factory equipment cost for 225.113,40706.8958764,$,category_scale,"ref_225_113_fac, f_simp_fuel_hndl",0,225.11_fac
+954,ce_225_113_mat,New Fuel Elevator site material cost for 225.113,5866.4106696,$,category_scale,"ref_225_113_mat, f_simp_fuel_hndl",0,225.11_mat
+955,ce_225_113_lab,New Fuel Elevator site labor cost for 225.113,74200.457084,$,category_scale,"ref_225_113_lab, f_simp_fuel_hndl",0,225.11_lab
+956,ce_225_114_fac,Spent Fuel Cask Crane factory equipment cost for 225.114,742541.5094717735,$,category_scale,"ref_225_114_fac, scale_frm_fuel_cask_cap, f_simp_fuel_hndl",0,225.11_fac
+957,ce_225_114_mat,Spent Fuel Cask Crane site material cost for 225.114,16445.0014655645,$,category_scale,"ref_225_114_mat, scale_frm_fuel_cask_cap, f_simp_fuel_hndl",0,225.11_mat
+958,ce_225_114_lab,Spent Fuel Cask Crane site labor cost for 225.114,206143.6122265231,$,category_scale,"ref_225_114_lab, scale_frm_fuel_cask_cap, f_simp_fuel_hndl",0,225.11_lab
