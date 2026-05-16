@@ -108,7 +108,7 @@ class Accert:
             self.acc_tabl = 'lpsr_account'
             self.cel_tabl = 'lpsr_cost_element'
             self.var_tabl = 'lpsr_variable'
-            self.alg_tabl = 'algorithm'
+            self.alg_tabl = 'lpsr_algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
         elif "lfr" in str(xml2obj.ref_model.value).lower():

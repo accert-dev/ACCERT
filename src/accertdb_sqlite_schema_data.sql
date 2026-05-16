@@ -3626,35 +3626,6 @@ INSERT INTO algorithm VALUES(64,'heat_exchangers_lab_cost','c','heat_exchangers_
 INSERT INTO algorithm VALUES(65,'heat_exchangers_fac_cost','c','heat_exchangers_fac_cost','PWRABRFunc','120000*number_of_heat_exchangers*heat_exchangers_mass','dollar','number_of_heat_exchangers, heat_exchangers_mass','120000');
 INSERT INTO algorithm VALUES(66,'instrumentation_contorl_cost','c','instrumentation_contorl_cost','PWRABRFunc','2000*number_of_IO_sensors+6500000','dollar','number_of_IO_sensors','2000');
 INSERT INTO algorithm VALUES(67,'turb_and_elec_sys_cost','c','turb_and_elec_sys_cost','PWRABRFunc','282553*mwth+ 213800000*(pow(mwe/1144, 0.4) + pow(mwth/3431, 0.8))','dollar','mwth, mwe','282553, 1144, 0.4, 3431, 0.8');
-INSERT INTO algorithm VALUES(1,'category_scale','c','Scale a reference cost by one scale factor and optional multipliers/count/adjustment factors.','LPSRDirectCostFunc','ref * scale * optional_multipliers','$','ref, scale, optional_multipliers',NULL);
-INSERT INTO algorithm VALUES(2,'cal_sup_str_S','v','Calculate cylinder-with-dome superstructure S for the containment structure.','LPSRDirectCostFunc','pi*D^2/2 + pi*D*H','m^2','cont_D_D, cont_H_H',NULL);
-INSERT INTO algorithm VALUES(3,'formula_scale_flow_rate','v','Flow Rate direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
-INSERT INTO algorithm VALUES(4,'formula_scale_fuel_cask_capacity','v','Fuel Cask Capacity direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
-INSERT INTO algorithm VALUES(5,'formula_scale_fuel_crane_capacity','v','Fuel Crane Capacity direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
-INSERT INTO algorithm VALUES(6,'formula_scale_ht_surface_S','v','Ht Surface Area direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
-INSERT INTO algorithm VALUES(7,'formula_scale_pressurizer_mass','v','Pressurizer Mass direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
-INSERT INTO algorithm VALUES(8,'formula_scale_surface_S','v','Surface Area direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
-INSERT INTO algorithm VALUES(9,'formula_scale_surface_S_9_71886e_06','v','Surface Area 9 71886E 06 direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
-INSERT INTO algorithm VALUES(10,'formula_scale_vessel_mass','v','Vessel Mass direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
-INSERT INTO algorithm VALUES(11,'scale_law_admin_bldg','v','Admin Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(12,'scale_law_bldg_V','v','Building Volume scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(13,'scale_law_containment','v','Containment scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(14,'scale_law_control_dg_bldg','v','Control Dg Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(15,'scale_law_elec_P','v','Electric Power scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(16,'scale_law_electrical_bldg','v','Electrical Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(17,'scale_law_flow_rate','v','Flow Rate scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(18,'scale_law_fuel_storage','v','Fuel Storage scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(19,'scale_law_heat_rejection','v','Heat Rejection scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(20,'scale_law_piping_mass','v','Piping Mass scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(21,'scale_law_primary_aux_bldg','v','Primary Aux Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(22,'scale_law_site_S','v','Site Area scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(23,'scale_law_turbine_bldg','v','Turbine Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(24,'scale_law_turbine_equipment','v','Turbine Equipment scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(25,'scale_law_V_of_212_213_215_216_217','v','Volume Of 212 213 215 216 217 scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(26,'scale_law_waste_bldg','v','Waste Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(27,'scale_law_wastewater_bldg','v','Wastewater Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(28,'scale_law_power','v','Power scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
-INSERT INTO algorithm VALUES(29,'sum_all','c/v','Sum all supplied child cost elements or intermediate variables.','LPSRDirectCostFunc','sum(values)','$','values',NULL);
 CREATE TABLE lpsr_account (ind INTEGER, code_of_account TEXT NOT NULL, account_description TEXT, total_cost REAL, level INTEGER, supaccount TEXT, review_status TEXT, prn REAL, gncoa TEXT, gn_level INTEGER, gn_supaccount TEXT, gn_ind INTEGER, PRIMARY KEY (code_of_account));
 INSERT INTO lpsr_account VALUES(1,'2','Total Direct Cost',2338310525.947884082,0,NULL,'Unchanged',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO lpsr_account VALUES(2,'21','Structures and Improvements',656326485.7153728009,1,'2','Unchanged',NULL,NULL,NULL,NULL,NULL);
@@ -5264,4 +5235,45 @@ INSERT INTO lpsr_variable VALUES(955,'ce_225_113_lab','New Fuel Elevator site la
 INSERT INTO lpsr_variable VALUES(956,'ce_225_114_fac','Spent Fuel Cask Crane factory equipment cost for 225.114',742541.5094717735191,'$','category_scale','ref_225_114_fac, scale_frm_fuel_cask_cap, f_simp_fuel_hndl','225.11_fac',0);
 INSERT INTO lpsr_variable VALUES(957,'ce_225_114_mat','Spent Fuel Cask Crane site material cost for 225.114',16445.00146556449908,'$','category_scale','ref_225_114_mat, scale_frm_fuel_cask_cap, f_simp_fuel_hndl','225.11_mat',0);
 INSERT INTO lpsr_variable VALUES(958,'ce_225_114_lab','Spent Fuel Cask Crane site labor cost for 225.114',206143.6122265231098,'$','category_scale','ref_225_114_lab, scale_frm_fuel_cask_cap, f_simp_fuel_hndl','225.11_lab',0);
+CREATE TABLE lpsr_algorithm (
+          ind INTEGER,
+          alg_name TEXT,
+          alg_for TEXT,
+          alg_description TEXT,
+          alg_python TEXT,
+          alg_formulation TEXT,
+          alg_units TEXT,
+          variables TEXT,
+          constants TEXT,
+          PRIMARY KEY (ind)
+        );
+INSERT INTO lpsr_algorithm VALUES(1,'category_scale','c','Scale a reference cost by one scale factor and optional multipliers/count/adjustment factors.','LPSRDirectCostFunc','ref * scale * optional_multipliers','$','ref, scale, optional_multipliers',NULL);
+INSERT INTO lpsr_algorithm VALUES(2,'cal_sup_str_S','v','Calculate cylinder-with-dome superstructure S for the containment structure.','LPSRDirectCostFunc','pi*D^2/2 + pi*D*H','m^2','cont_D_D, cont_H_H',NULL);
+INSERT INTO lpsr_algorithm VALUES(3,'formula_scale_flow_rate','v','Flow Rate direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
+INSERT INTO lpsr_algorithm VALUES(4,'formula_scale_fuel_cask_capacity','v','Fuel Cask Capacity direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
+INSERT INTO lpsr_algorithm VALUES(5,'formula_scale_fuel_crane_capacity','v','Fuel Crane Capacity direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
+INSERT INTO lpsr_algorithm VALUES(6,'formula_scale_ht_surface_S','v','Ht Surface Area direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
+INSERT INTO lpsr_algorithm VALUES(7,'formula_scale_pressurizer_mass','v','Pressurizer Mass direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
+INSERT INTO lpsr_algorithm VALUES(8,'formula_scale_surface_S','v','Surface Area direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
+INSERT INTO lpsr_algorithm VALUES(9,'formula_scale_surface_S_9_71886e_06','v','Surface Area 9 71886E 06 direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
+INSERT INTO lpsr_algorithm VALUES(10,'formula_scale_vessel_mass','v','Vessel Mass direct formula scale.','LPSRDirectCostFunc','unit_cost_coefficient * input_unit_value / reference_direct_cost','1','unit_cost_coefficient, input_unit_value, reference_direct_cost',NULL);
+INSERT INTO lpsr_algorithm VALUES(11,'scale_law_admin_bldg','v','Admin Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(12,'scale_law_bldg_V','v','Building Volume scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(13,'scale_law_containment','v','Containment scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(14,'scale_law_control_dg_bldg','v','Control Dg Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(15,'scale_law_elec_P','v','Electric Power scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(16,'scale_law_electrical_bldg','v','Electrical Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(17,'scale_law_flow_rate','v','Flow Rate scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(18,'scale_law_fuel_storage','v','Fuel Storage scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(19,'scale_law_heat_rejection','v','Heat Rejection scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(20,'scale_law_piping_mass','v','Piping Mass scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(21,'scale_law_primary_aux_bldg','v','Primary Aux Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(22,'scale_law_site_S','v','Site Area scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(23,'scale_law_turbine_bldg','v','Turbine Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(24,'scale_law_turbine_equipment','v','Turbine Equipment scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(25,'scale_law_V_of_212_213_215_216_217','v','Volume Of 212 213 215 216 217 scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(26,'scale_law_waste_bldg','v','Waste Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(27,'scale_law_wastewater_bldg','v','Wastewater Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(28,'scale_law_power','v','Power scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
+INSERT INTO lpsr_algorithm VALUES(29,'sum_all','c/v','Sum all supplied child cost elements or intermediate variables.','LPSRDirectCostFunc','sum(values)','$','values',NULL);
 COMMIT;

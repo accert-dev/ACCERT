@@ -69,6 +69,7 @@ TABLE_SPECS = {
 }
 
 ALGORITHM_FILE = "lpsr_direct_algorithms.csv"
+ALGORITHM_TABLE = "lpsr_algorithm"
 ALGORITHM_COLUMNS = [
     ("ind", "INTEGER"),
     ("alg_name", "TEXT"),
@@ -141,9 +142,26 @@ def _replace_table(
 def _replace_algorithms(conn: sqlite3.Connection, ref_dir: Path) -> int:
     rows = _read_csv(ref_dir / ALGORITHM_FILE)
     conn.execute("DELETE FROM algorithm WHERE alg_python IN ('LPSRFunc', 'LPSRDirectCostFunc')")
-    conn.executemany(
+    conn.execute(f"DROP TABLE IF EXISTS {ALGORITHM_TABLE}")
+    conn.execute(
+        f"""
+        CREATE TABLE {ALGORITHM_TABLE} (
+          ind INTEGER,
+          alg_name TEXT,
+          alg_for TEXT,
+          alg_description TEXT,
+          alg_python TEXT,
+          alg_formulation TEXT,
+          alg_units TEXT,
+          variables TEXT,
+          constants TEXT,
+          PRIMARY KEY (ind)
+        )
         """
-        INSERT INTO algorithm
+    )
+    conn.executemany(
+        f"""
+        INSERT INTO {ALGORITHM_TABLE}
         (ind, alg_name, alg_for, alg_description, alg_python, alg_formulation, alg_units, variables, constants)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
@@ -167,7 +185,7 @@ def load_lpsr_tables(db_path: Path, ref_dir: Path, algorithm_source: Path, algor
                 spec["columns"],
                 spec["primary_key"],
             )
-        counts["algorithm"] = _replace_algorithms(conn, ref_dir)
+        counts[ALGORITHM_TABLE] = _replace_algorithms(conn, ref_dir)
         conn.commit()
     finally:
         conn.close()
