@@ -368,7 +368,7 @@ def roll_up_cost_elements_by_level(conn: sqlite3.Connection, table_name: str, fr
         GROUP BY parent.cost_element
     """)
     for ce, total in rows:
-        _execute(conn, f"UPDATE {table} SET cost_2017 = ?, updated = 1 WHERE cost_element = ?", (total, ce))
+        _execute(conn, f"UPDATE {table} SET cost_2017 = ? WHERE cost_element = ?", (total, ce))
 
 
 def roll_up_lmt_account_2C(conn: sqlite3.Connection, acc_tabl_name: str) -> None:

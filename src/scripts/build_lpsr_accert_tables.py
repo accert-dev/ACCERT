@@ -107,6 +107,10 @@ def _normalize_row(table_name: str, row: dict[str, str]) -> dict[str, str]:
         # In ACCERT, user_input is a run-time dirty flag. The reference database
         # should always start clean; SON inputs set this flag during a run.
         normalized["user_input"] = "0"
+    if table_name == "lpsr_cost_element":
+        # In ACCERT, updated is a run-time dirty flag. The reference database
+        # should start clean so only recalculated cost elements are reported.
+        normalized["updated"] = "0"
     return normalized
 
 

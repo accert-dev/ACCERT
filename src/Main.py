@@ -14,6 +14,7 @@ import sys
 import pandas.io.sql as sql
 import pandas as pd
 import warnings
+from datetime import datetime
 from typing import Union
 
 warnings.filterwarnings('ignore')
@@ -64,6 +65,7 @@ class Accert:
         self.fac_tabl = None
         self.use_gncoa = False
         self.gncoa_map = 'gncoamapping'
+        self.output_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     def setup_table_names(self,xml2obj):
         """Setup different table names in the database.
@@ -420,9 +422,12 @@ class Accert:
         var_id : str
             Variable ID.
         """
+        var_id = str(var_id).strip()
         c.callproc('update_super_variable',(self.var_tabl, self.alg_tabl, var_id))
         for row in c.stored_results():
             result = row.fetchone()
+        if result is None:
+            return None
         ### results is a tuple
         sup_var_name = result[1]
         org_var_value = result[2]
@@ -900,7 +905,7 @@ class Accert:
         print('[Updated]  Account table updated from cost elements\n')
         return None
 
-    def roll_up_cost_elements(self, c):
+    def roll_up_cost_elements(self, c, passes=1):
         """
         Rolls up cost elements from level 3 to 0 for pwr. Only rolls up level 3 to 2 for ABR.
 
@@ -911,14 +916,17 @@ class Accert:
         """
         print(' Roll up cost elements '.center(100,'='))
         print('\n')
-        self.roll_up_cost_elements_by_level(c,3,2)
-        if self.ref_model=="pwr12-be":
-            self.roll_up_cost_elements_by_level(c,2,1)
-            self.roll_up_cost_elements_by_level(c,1,0)
+        for pass_no in range(passes):
+            if passes > 1:
+                print('[Updating] Roll up cost element hierarchy pass {} of {}'.format(pass_no + 1, passes))
+            self.roll_up_cost_elements_by_level(c,3,2, quiet=passes > 1)
+            if self.ref_model=="pwr12-be":
+                self.roll_up_cost_elements_by_level(c,2,1)
+                self.roll_up_cost_elements_by_level(c,1,0)
         print('[Updated] Cost elements rolled up\n')
         return None
 
-    def roll_up_cost_elements_by_level(self, c,from_level,to_level):
+    def roll_up_cost_elements_by_level(self, c,from_level,to_level, quiet=False):
         """
         Rolls up cost elements from an input lower level to a higher level.
 
@@ -932,7 +940,8 @@ class Accert:
             Roll up to a given level.
         """
         c.callproc('roll_up_cost_elements_by_level',(self.cel_tabl,from_level,to_level))
-        print('[Updating] Roll up cost elements from level {} to level {}'.format(from_level,to_level))
+        if not quiet:
+            print('[Updating] Roll up cost elements from level {} to level {}'.format(from_level,to_level))
         return None
 
     def roll_up_account_table(self, c, from_level=3, to_level=0, gncoa=False):
@@ -1237,7 +1246,7 @@ class Accert:
                 self.update_super_variable(c, sup_val)
                 new_sup_val = self.extract_super_val(c, sup_val)
                 if new_sup_val:
-                    sup_val_lst.extend(new_sup_val.split(','))
+                    sup_val_lst.extend([x.strip() for x in new_sup_val.split(',')])
                     
     def process_COA(self, c, accert):
         """
@@ -1519,7 +1528,8 @@ class Accert:
             ut.extract_affected_cost_elements(c)
             self.update_new_cost_elements(c)
             ut.print_updated_cost_elements(c)
-            self.roll_up_cost_elements(c)
+            if self.ref_model != "lpsr":
+                self.roll_up_cost_elements(c)
         else:
             # if the model is fusion or user assigned model without cost elements
             # then the update_new_accounts will be executed otherwise the update_new_cost_elements should be executed
@@ -1644,8 +1654,7 @@ class Accert:
             ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
 
     def _lpsr_processing(self, c, ut, accert):
-        for _ in range(4):
-            self.roll_up_cost_elements(c)
+        self.roll_up_cost_elements(c, passes=4)
         self.update_account_table_by_cost_elements(c)
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c, from_level=4, to_level=0)
@@ -1686,20 +1695,20 @@ class Accert:
             Level of the account.
         """
 
-        self._generate_excel(c, '_variable_affected_cost_elements.xlsx', 'extract_affected_cost_elements_w_dis', self.cel_tabl, self.var_tabl)
-        self._generate_excel(c, '_updated_cost_element.xlsx', 'print_updated_cost_elements', self.cel_tabl, remove_last_col=True)
+        self._generate_csv(c, 'aff_ce', 'extract_affected_cost_elements_w_dis', self.cel_tabl, self.var_tabl)
+        self._generate_csv(c, 'upd_ce', 'print_updated_cost_elements', self.cel_tabl, remove_last_col=True)
 
-    def _generate_excel(self, c, filename_suffix, proc_name,  *args, remove_last_col=False):
+    def _generate_csv(self, c, output_name, proc_name,  *args, remove_last_col=False):
         """
-        Generate an Excel file from procedure results.
+        Generate a timestamped CSV file from procedure results.
         
         Parameters:
         c : SQLiteCursorAdapter
             SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         proc_name : str
             Name of the procedure.
-        filename_suffix : str
-            Suffix of the filename.
+        output_name : str
+            Short output filename label.
         args : tuple
             Arguments for the procedure.
         remove_last_col : bool
@@ -1712,16 +1721,16 @@ class Accert:
         df = pd.DataFrame(results, columns=field_names)
         if remove_last_col:
             df = df.iloc[:, :-1]  # Remove the last column if required
-        filename = str(self.ref_model) + filename_suffix
-        df.to_excel(filename, index=False)
-        print(f"Successfully created excel file {filename}")
+        filename = "{}_{}_{}.csv".format(self.ref_model, output_name, self.output_timestamp)
+        df.to_csv(filename, index=False)
+        print(f"Successfully created CSV file {filename}")
 
 
     def generate_results_table(self, c, conn, level=3):
         """
         Generates the results tables.
         """
-        self._generate_excel(c, '_updated_account.xlsx', 'print_leveled_accounts_simple', self.acc_tabl, level)
+        self._generate_csv(c, 'upd_acc', 'print_leveled_accounts_simple', self.acc_tabl, level)
 
 if __name__ == "__main__":
     """
