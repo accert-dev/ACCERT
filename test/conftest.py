@@ -40,6 +40,7 @@ def prepare_environment():
         "*_upd_acc_*.csv",
         "*_upd_ce_*.csv",
         "*_aff_ce_*.csv",
+        "*_post_*.csv",
         "*_updated_account.xlsx",
         "*_updated_cost_element.xlsx",
         "*_variable_affected_cost_elements.xlsx",

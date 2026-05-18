@@ -119,4 +119,5 @@ def test_integration_with_lpsr_son(prepare_environment,csv_patterns):
     assert result.returncode == 0, f"ACCERT LPSR run failed: {result.stderr}"
     output_content = (TEST_DIR / "output.out").read_text()
     assert 'Reference model is "LPSR"' in output_content
-    check_csv_files(["lpsr_upd_acc_*.csv", "lpsr_upd_ce_*.csv", "lpsr_aff_ce_*.csv"])
+    assert "Total OCC" in output_content
+    check_csv_files(["lpsr_upd_acc_*.csv", "lpsr_upd_ce_*.csv", "lpsr_aff_ce_*.csv", "lpsr_post_*.csv"])

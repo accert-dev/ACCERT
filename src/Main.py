@@ -8,6 +8,7 @@ import configparser
 import xml2obj
 from utility_accert import Utility_methods
 from Algorithm import Algorithm
+from post_process_accert import AccertPostProcessor
 import importlib
 import numpy as np
 import sys
@@ -93,6 +94,7 @@ class Accert:
         self.use_gncoa = False
         self.gncoa_map = 'gncoamapping'
         self.output_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.post_processor = AccertPostProcessor()
     
     def setup_table_names(self,xml2obj):
         """Setup different table names in the database.
@@ -1535,9 +1537,31 @@ class Accert:
         if model:
             # generate results for the models in the future we can add more models
             self._generate_common_results(c, ut, accert, model)
+            self.post_process_results(c, accert)
             if self.cel_tabl:
                 self.generate_results_table_with_cost_elements(c, conn, level=3)
         self.generate_results_table(c, conn, level=3)
+
+    def post_process_results(self, c, accert):
+        if not self._post_process_occ_enabled(accert):
+            return None
+
+        results = self.post_processor.calculate_occ(c, self.acc_tabl)
+        self.post_processor.print_occ_summary(results)
+        self.post_processor.write_occ_csv(results, self.ref_model, self.output_timestamp)
+        return results.as_dict()
+
+    def _post_process_occ_enabled(self, accert):
+        post_process = getattr(accert, "post_process", None)
+        if not post_process:
+            return False
+        occ = getattr(post_process, "occ", None)
+        if occ is None:
+            return True
+        return str(occ.value).lower() == "true"
+
+    def calculate_occ_post_process(self, c):
+        return self.post_processor.calculate_occ(c, self.acc_tabl).as_dict()
 
     def _generate_common_results(self, c, ut, accert, model):
         """

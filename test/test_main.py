@@ -265,6 +265,21 @@ def test_cal_direct_cost_elements(cursor,conn):
     for i in range(3):
         assert round(real_ouput[i],-6)==round((852973431.1169341, 382841817.9556325, 183971968.309387)[i],-6)
 
+def test_calculate_occ_post_process(cursor):
+    """Test ACCERT OCC post-processing formulas."""
+    accert.acc_tabl = 'account'
+    results = accert.calculate_occ_post_process(cursor)
+    cursor.execute("""SELECT total_cost
+                    FROM account
+                    WHERE code_of_account = ?;""", ("2",))
+    total_calculated_direct_cost = cursor.fetchone()[0]
+    assert results["total_calculated_direct_cost"] == pytest.approx(total_calculated_direct_cost)
+    assert results["total_direct_cost"] == pytest.approx(total_calculated_direct_cost / 0.834)
+    assert results["total_indirect_costs"] == pytest.approx(total_calculated_direct_cost * 0.609 / 0.834)
+    assert results["total_cost_without_owner"] == pytest.approx(total_calculated_direct_cost * 1.609 / 0.834)
+    assert results["owner_cost"] == pytest.approx(total_calculated_direct_cost * 1.609 * 0.2 / 0.834)
+    assert results["total_OCC"] == pytest.approx(total_calculated_direct_cost * 1.609 * 1.2 / 0.834)
+
 def test_generate_results_table(cursor,conn):
     """ test function generate_results_table, this function will generate the results table for 
     each cost element. This function will update the cost element table for PWR12BE. Also, this

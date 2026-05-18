@@ -22,6 +22,22 @@ accert{
         ValEnums=[true false]
         InputDefault=false
     }
+
+    post_process{
+        Description = "[optional] post-process ACCERT results"
+        MinOccurs = 0
+        MaxOccurs = 1
+        InputTmpl = "post_process"
+        occ{
+            Description = "[optional] calculate ACCERT OCC summary"
+            MinOccurs = 0
+            MaxOccurs = 1
+            InputType=String
+            InputTmpl="flagtypes"
+            ValEnums=[true false]
+            InputDefault=true
+        }
+    }
     
     power{
         Description = "[required] User input power"

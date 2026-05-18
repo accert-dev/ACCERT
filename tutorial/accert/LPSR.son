@@ -2,6 +2,10 @@ accert{
     ref_model = "LPSR"
     use_gncoa = False
 
+    post_process {
+        occ = true
+    }
+
     var(cont_D_D){
         value = 45.0
         unit = m
