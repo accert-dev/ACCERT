@@ -4289,7 +4289,7 @@ INSERT INTO lpsr_variable VALUES(9,'cr_dg_bldg_sub_S','Roofing & Flashing Substr
 INSERT INTO lpsr_variable VALUES(10,'cr_dg_bldg_sub_vol','Substructure Concrete Substructure volume for 21813',228.0,'m^3',NULL,NULL,'scale_cr_dg_bldg_sub_vol',0);
 INSERT INTO lpsr_variable VALUES(11,'cr_dg_bldg_sup_S','Painting Superstructure S for 218149',546.0,'m^2',NULL,NULL,'scale_cr_dg_bldg_sup_S',0);
 INSERT INTO lpsr_variable VALUES(12,'cr_dg_bldg_sup_vol','Concrete Work Superstructure volume for 218141',163.7999999999999829,'m^3',NULL,NULL,'scale_cr_dg_bldg_sup_vol',0);
-INSERT INTO lpsr_variable VALUES(13,'elec_P','Input unit value for Electric power scale, source account 231.; also used for new_base_turbine_plant_equipment_elec_P',1117.0,'MWe',NULL,NULL,'scale_elec_P, scale_tur_plant_equip_elec_P',0);
+INSERT INTO lpsr_variable VALUES(13,'elec_P','Input unit value for Electric power scale, source account 231.; also used for new_base_turbine_plant_equipment_elec_P',1117.0,'MWe',NULL,NULL,'rej_th_P, scale_elec_P, scale_tur_plant_equip_elec_P',0);
 INSERT INTO lpsr_variable VALUES(14,'elec_tunnel_bldg_vol','Building volume for 219.142',0.0,'m^3',NULL,NULL,'scale_elec_tunnel_bldg_vol',0);
 INSERT INTO lpsr_variable VALUES(15,'frm_flow','Fluid Circulation Drive System Flow rate for 222.11',5000.0,'kg/s',NULL,NULL,'scale_frm_flow',0);
 INSERT INTO lpsr_variable VALUES(16,'frm_fuel_cask_cap','Spent Fuel Cask Crane Fuel cask capacity for 225.114',113.0,'tonne',NULL,NULL,'scale_frm_fuel_cask_cap',0);
@@ -4314,8 +4314,8 @@ INSERT INTO lpsr_variable VALUES(34,'pri_aux_bldg_sup_S','Painting Superstructur
 INSERT INTO lpsr_variable VALUES(35,'pri_aux_bldg_sup_vol','Concrete Work Superstructure volume for 215.141',1276.799999999999955,'m^3',NULL,NULL,'scale_pri_aux_bldg_sup_vol',0);
 INSERT INTO lpsr_variable VALUES(36,'pri_flow','Liquid Waste System Primary flowrate for 224.1',19880.0,'kg/s',NULL,NULL,'scale_pri_flow',0);
 INSERT INTO lpsr_variable VALUES(37,'rx_D','Vessel Internals Reactor diameter (m) for 221.3',4.5,'m',NULL,NULL,'scale_rx_D',0);
-INSERT INTO lpsr_variable VALUES(38,'rej_th_P','Rejected thermal power for 261.1',2283.0,'MWt',NULL,NULL,'scale_rej_th_P',0);
-INSERT INTO lpsr_variable VALUES(39,'rx_P','Input unit value for Plant power scale, source account 212.22; also used for new_base_rx_P; also used for new_base_yardwork_rx_P',3400.0,'MWt',NULL,NULL,'scale_P',0);
+INSERT INTO lpsr_variable VALUES(38,'rej_th_P','Rejected thermal power for 261.1',2283.0,'MWt','calc_rej_th_P','rx_P, elec_P','scale_rej_th_P',0);
+INSERT INTO lpsr_variable VALUES(39,'rx_P','Input unit value for Plant power scale, source account 212.22; also used for new_base_rx_P; also used for new_base_yardwork_rx_P',3400.0,'MWt',NULL,NULL,'rej_th_P, scale_P',0);
 INSERT INTO lpsr_variable VALUES(40,'sfp_V','Fuel Storage, Cleaning, & Inspection Equipment SFP volume for 225.4',750.0,'m^3',NULL,NULL,'scale_sfp_V',0);
 INSERT INTO lpsr_variable VALUES(41,'sub_str_S','Roof Deck Substructure S for 213.144',4136.0,'m^2',NULL,NULL,'scale_sub_str_S',0);
 INSERT INTO lpsr_variable VALUES(42,'sub_str_V','Substructure Concrete Substructure volume for 212.13',4603.155803819373432,'m^3',NULL,NULL,'scale_sub_str_V',0);
@@ -5277,4 +5277,5 @@ INSERT INTO lpsr_algorithm VALUES(27,'scale_law_waste_bldg','v','Waste Bldg scal
 INSERT INTO lpsr_algorithm VALUES(28,'scale_law_wastewater_bldg','v','Wastewater Bldg scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
 INSERT INTO lpsr_algorithm VALUES(29,'scale_law_power','v','Power scale law.','LPSRDirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
 INSERT INTO lpsr_algorithm VALUES(30,'sum_all','c/v','Sum all supplied child cost elements or intermediate variables.','LPSRDirectCostFunc','sum(values)','$','values',NULL);
+INSERT INTO lpsr_algorithm VALUES(31,'calc_rej_th_P','v','Rejected thermal power = thermal power - electric power.','LPSRDirectCostFunc','rx_P - elec_P','MWt','rx_P, elec_P',NULL);
 COMMIT;

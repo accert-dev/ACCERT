@@ -6,6 +6,16 @@ accert{
         occ = true
     }
 
+    power(Thermal){
+        value = 3400
+        unit = MW
+    }
+
+    power(Electric){
+        value = 1117
+        unit = MW
+    }
+
     var(cont_D_D){
         value = 45.0
         unit = m

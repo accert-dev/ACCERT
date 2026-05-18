@@ -2,6 +2,7 @@ import sys
 import os
 import glob
 from pathlib import Path
+from types import SimpleNamespace
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TEST_DIR = Path(__file__).resolve().parent
@@ -279,6 +280,34 @@ def test_calculate_occ_post_process(cursor):
     assert results["total_cost_without_owner"] == pytest.approx(total_calculated_direct_cost * 1.609 / 0.834)
     assert results["owner_cost"] == pytest.approx(total_calculated_direct_cost * 1.609 * 0.2 / 0.834)
     assert results["total_OCC"] == pytest.approx(total_calculated_direct_cost * 1.609 * 1.2 / 0.834)
+
+def test_lpsr_occ_post_process_includes_per_kw(cursor):
+    """Test LPSR OCC post-processing includes $/kW using elec_P."""
+    accert.ref_model = 'lpsr'
+    accert.acc_tabl = 'lpsr_account'
+    accert.var_tabl = 'lpsr_variable'
+    results = accert.post_processor.calculate_occ(cursor, accert.acc_tabl, accert._electric_power_mw(cursor))
+    rows = {row["metric"]: row for row in results.as_rows()}
+    assert rows["total_OCC"]["value_dollar_per_kw"] == pytest.approx(results.total_OCC / (1117 * 1000))
+
+def test_lpsr_power_defaults_update_rejected_heat(cursor):
+    """LPSR defaults power inputs and calculates rejected thermal power."""
+    accert.ref_model = 'lpsr'
+    accert.var_tabl = 'lpsr_variable'
+    accert.alg_tabl = 'lpsr_algorithm'
+    accert.cel_tabl = 'lpsr_cost_element'
+    accert.process_power_inputs(cursor, SimpleNamespace(power=None))
+    cursor.execute("""SELECT var_name, var_value, var_unit
+                    FROM lpsr_variable
+                    WHERE var_name IN (?, ?, ?)
+                    ORDER BY var_name;""", ("elec_P", "rej_th_P", "rx_P"))
+    values = {name: (value, unit) for name, value, unit in cursor.fetchall()}
+    assert values["elec_P"][0] == pytest.approx(1117.0)
+    assert values["elec_P"][1] == "MWe"
+    assert values["rx_P"][0] == pytest.approx(3400.0)
+    assert values["rx_P"][1] == "MWt"
+    assert values["rej_th_P"][0] == pytest.approx(2283.0)
+    assert values["rej_th_P"][1] == "MWt"
 
 def test_generate_results_table(cursor,conn):
     """ test function generate_results_table, this function will generate the results table for 

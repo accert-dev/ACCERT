@@ -29,3 +29,4 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units,variab
 28,scale_law_wastewater_bldg,v,Wastewater Bldg scale law.,LPSRDirectCostFunc,(input_unit_value / reference_unit_value)^exponent,1,"input_unit_value, reference_unit_value, exponent",
 29,scale_law_power,v,Power scale law.,LPSRDirectCostFunc,(input_unit_value / reference_unit_value)^exponent,1,"input_unit_value, reference_unit_value, exponent",
 30,sum_all,c/v,Sum all supplied child cost elements or intermediate variables.,LPSRDirectCostFunc,sum(values),$,values,
+31,calc_rej_th_P,v,Rejected thermal power = thermal power - electric power.,LPSRDirectCostFunc,rx_P - elec_P,MWt,"rx_P, elec_P",

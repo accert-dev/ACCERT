@@ -1175,16 +1175,63 @@ class Accert:
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
 
-        if accert.power:
-            for inp in accert.power:
-                print('[USER_INPUT]', str(inp.id), 'power is', str(inp.value.value), str(inp.unit.value), '\n')
-                var_id = 'mwth' if str(inp.id) == 'Thermal' else 'mwe' if str(inp.id) == 'Electric' else None
+        power_inputs = self._power_inputs_by_type(accert)
+        if self.ref_model == "lpsr":
+            power_inputs = self._apply_lpsr_default_power_inputs(power_inputs)
+
+        if power_inputs:
+            for power_type, power_input in power_inputs.items():
+                var_id, var_unit = self._power_variable_for_model(power_type)
                 if var_id:
-                    self.update_variable_info_on_name(c, var_id, str(inp.value.value), str(inp.unit.value))
+                    if power_input.get("is_default"):
+                        continue
+                    print('[USER_INPUT]', power_type, 'power is', power_input["value"], power_input["input_unit"], '\n')
+                    self.update_variable_info_on_name(c, var_id, power_input["value"], var_unit)
                     self.process_super_values(c, var_id)
         else:
             # warning
-            print('WARNING: No power input found in the user input file\n')            
+            print('WARNING: No power input found in the user input file\n')
+
+    def _power_inputs_by_type(self, accert):
+        power_inputs = {}
+        if accert.power:
+            for inp in accert.power:
+                power_type = str(inp.id)
+                power_inputs[power_type] = {
+                    "value": float(str(inp.value.value)),
+                    "input_unit": str(inp.unit.value),
+                    "is_default": False,
+                }
+        return power_inputs
+
+    def _apply_lpsr_default_power_inputs(self, power_inputs):
+        defaults = {
+            "Thermal": {"value": 3400.0, "input_unit": "MW", "is_default": True},
+            "Electric": {"value": 1117.0, "input_unit": "MW", "is_default": True},
+        }
+        resolved = dict(power_inputs)
+        for power_type, default in defaults.items():
+            if power_type not in resolved:
+                resolved[power_type] = default
+                print('[Default] LPSR {} power was not provided; using {} {}'.format(
+                    power_type,
+                    default["value"],
+                    default["input_unit"],
+                ))
+        return resolved
+
+    def _power_variable_for_model(self, power_type):
+        if self.ref_model == "lpsr":
+            if power_type == "Thermal":
+                return "rx_P", "MWt"
+            if power_type == "Electric":
+                return "elec_P", "MWe"
+            return None, None
+        if power_type == "Thermal":
+            return "mwth", "MW"
+        if power_type == "Electric":
+            return "mwe", "MW"
+        return None, None
 
     def process_variables(self, c, accert):
         """
@@ -1546,7 +1593,7 @@ class Accert:
         if not self._post_process_occ_enabled(accert):
             return None
 
-        results = self.post_processor.calculate_occ(c, self.acc_tabl)
+        results = self.post_processor.calculate_occ(c, self.acc_tabl, self._electric_power_mw(c))
         self.post_processor.print_occ_summary(results)
         self.post_processor.write_occ_csv(results, self.ref_model, self.output_timestamp)
         return results.as_dict()
@@ -1561,7 +1608,15 @@ class Accert:
         return str(occ.value).lower() == "true"
 
     def calculate_occ_post_process(self, c):
-        return self.post_processor.calculate_occ(c, self.acc_tabl).as_dict()
+        return self.post_processor.calculate_occ(c, self.acc_tabl, self._electric_power_mw(c)).as_dict()
+
+    def _electric_power_mw(self, c):
+        var_name = "elec_P" if self.ref_model == "lpsr" else "mwe"
+        try:
+            value = self.get_var_value_by_name(c, var_name)
+        except Exception:
+            return None
+        return float(value) if value is not None else None
 
     def _generate_common_results(self, c, ut, accert, model):
         """

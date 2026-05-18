@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pandas as pd
 from prettytable import PrettyTable
@@ -8,6 +8,7 @@ from prettytable import PrettyTable
 @dataclass(frozen=True)
 class AccertOCCResults:
     total_calculated_direct_cost: float
+    electric_power_mw: Optional[float] = None
     direct_cost_fraction: float = 0.834
     indirect_cost_factor: float = 0.609
     owner_cost_fraction: float = 0.2
@@ -32,6 +33,11 @@ class AccertOCCResults:
     def total_OCC(self) -> float:
         return self.total_cost_without_owner * (1 + self.owner_cost_fraction)
 
+    def _per_kw(self, value: float) -> float:
+        if self.electric_power_mw is None or self.electric_power_mw <= 0:
+            return None
+        return value / (self.electric_power_mw * 1000)
+
     def as_dict(self) -> Dict[str, float]:
         return {
             "total_calculated_direct_cost": self.total_calculated_direct_cost,
@@ -48,13 +54,14 @@ class AccertOCCResults:
                 "metric": metric,
                 "value_dollar": value,
                 "value_million_dollar": value / 1_000_000,
+                "value_dollar_per_kw": self._per_kw(value),
             }
             for metric, value in self.as_dict().items()
         ]
 
 
 class AccertPostProcessor:
-    def calculate_occ(self, c, account_table: str) -> AccertOCCResults:
+    def calculate_occ(self, c, account_table: str, electric_power_mw: float = None) -> AccertOCCResults:
         account_table = self._validate_table_name(account_table)
         c.execute("""SELECT total_cost
                     FROM {}
@@ -70,13 +77,16 @@ class AccertPostProcessor:
             row = c.fetchone()
         if row is None:
             raise ValueError("Cannot calculate ACCERT OCC because the account table is empty")
-        return AccertOCCResults(total_calculated_direct_cost=float(row[0]))
+        return AccertOCCResults(
+            total_calculated_direct_cost=float(row[0]),
+            electric_power_mw=float(electric_power_mw) if electric_power_mw is not None else None,
+        )
 
     def print_occ_summary(self, results: AccertOCCResults) -> None:
         print(' ACCERT post processing '.center(100, '='))
         print('\n')
         table = PrettyTable()
-        table.field_names = ["Metric", "Value ($)", "Value (million $)"]
+        table.field_names = ["Metric", "Value ($)", "Value (million $)", "Value ($/kW)"]
         for label, key in (
             ("Total calculated direct cost", "total_calculated_direct_cost"),
             ("Total direct cost", "total_direct_cost"),
@@ -86,7 +96,13 @@ class AccertPostProcessor:
             ("Total OCC", "total_OCC"),
         ):
             value = results.as_dict()[key]
-            table.add_row([label, f"{value:,.2f}", f"{value / 1_000_000:,.2f}"])
+            per_kw = results._per_kw(value)
+            table.add_row([
+                label,
+                f"{value:,.2f}",
+                f"{value / 1_000_000:,.2f}",
+                f"{per_kw:,.2f}" if per_kw is not None else "N/A",
+            ])
         print(table)
         print('\n')
 

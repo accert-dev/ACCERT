@@ -64,6 +64,11 @@ class LPSRDirectCostFunc(Algorithm):
         return np.pi * np.power(D, 2) / 2 + np.pi * D * H
 
     @staticmethod
+    def calc_rej_th_P(*values):
+        rx_P, elec_P = values
+        return rx_P - elec_P
+
+    @staticmethod
     def formula_scale_flow_rate(*values):
         return LPSRDirectCostFunc._formula_scale(*values)
 
@@ -188,4 +193,3 @@ class LPSRDirectCostFunc(Algorithm):
     @staticmethod
     def sum_all(*values):
         return sum(values)
-

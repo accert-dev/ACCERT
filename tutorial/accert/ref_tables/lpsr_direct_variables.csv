@@ -11,7 +11,7 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,user_input,v_li
 10,cr_dg_bldg_sub_vol,Substructure Concrete Substructure volume for 21813,228.0,m^3,,,0,scale_cr_dg_bldg_sub_vol
 11,cr_dg_bldg_sup_S,Painting Superstructure S for 218149,546.0,m^2,,,0,scale_cr_dg_bldg_sup_S
 12,cr_dg_bldg_sup_vol,Concrete Work Superstructure volume for 218141,163.79999999999998,m^3,,,0,scale_cr_dg_bldg_sup_vol
-13,elec_P,"Input unit value for Electric power scale, source account 231.; also used for new_base_turbine_plant_equipment_elec_P",1117.0,MWe,,,0,"scale_elec_P, scale_tur_plant_equip_elec_P"
+13,elec_P,"Input unit value for Electric power scale, source account 231.; also used for new_base_turbine_plant_equipment_elec_P",1117.0,MWe,,,0,"rej_th_P, scale_elec_P, scale_tur_plant_equip_elec_P"
 14,elec_tunnel_bldg_vol,Building volume for 219.142,0.0,m^3,,,0,scale_elec_tunnel_bldg_vol
 15,frm_flow,Fluid Circulation Drive System Flow rate for 222.11,5000.0,kg/s,,,0,scale_frm_flow
 16,frm_fuel_cask_cap,Spent Fuel Cask Crane Fuel cask capacity for 225.114,113.0,tonne,,,0,scale_frm_fuel_cask_cap
@@ -36,8 +36,8 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,user_input,v_li
 35,pri_aux_bldg_sup_vol,Concrete Work Superstructure volume for 215.141,1276.8,m^3,,,0,scale_pri_aux_bldg_sup_vol
 36,pri_flow,Liquid Waste System Primary flowrate for 224.1,19880.0,kg/s,,,0,scale_pri_flow
 37,rx_D,Vessel Internals Reactor diameter (m) for 221.3,4.5,m,,,0,scale_rx_D
-38,rej_th_P,Rejected thermal power for 261.1,2283.0,MWt,,,0,scale_rej_th_P
-39,rx_P,"Input unit value for Plant power scale, source account 212.22; also used for new_base_rx_P; also used for new_base_yardwork_rx_P",3400.0,MWt,,,0,scale_P
+38,rej_th_P,Rejected thermal power for 261.1,2283.0,MWt,calc_rej_th_P,"rx_P, elec_P",0,scale_rej_th_P
+39,rx_P,"Input unit value for Plant power scale, source account 212.22; also used for new_base_rx_P; also used for new_base_yardwork_rx_P",3400.0,MWt,,,0,"rej_th_P, scale_P"
 40,sfp_V,"Fuel Storage, Cleaning, & Inspection Equipment SFP volume for 225.4",750.0,m^3,,,0,scale_sfp_V
 41,sub_str_S,Roof Deck Substructure S for 213.144,4136.0,m^2,,,0,scale_sub_str_S
 42,sub_str_V,Substructure Concrete Substructure volume for 212.13,4603.155803819373,m^3,,,0,scale_sub_str_V
