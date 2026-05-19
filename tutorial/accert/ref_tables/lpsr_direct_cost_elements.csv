@@ -1,4 +1,4 @@
-ind,cost_element,cost_2017,sup_cost_ele,alg_name,fun_unit,variables,account,algno,updated,source_row_type
+ind,cost_element,cost_2018,sup_cost_ele,alg_name,fun_unit,variables,account,algno,updated,source_row_type
 1,2_fac,1144477414.301749,,,$,,2,LPSR_DIRECT,0,rollup_from_subaccounts
 2,2_mat,278289575.6553897,,,$,,2,LPSR_DIRECT,0,rollup_from_subaccounts
 3,2_lab,915543535.9907448,,,$,,2,LPSR_DIRECT,0,rollup_from_subaccounts

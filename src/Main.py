@@ -9,6 +9,7 @@ import xml2obj
 from utility_accert import Utility_methods
 from Algorithm import Algorithm
 from post_process_accert import AccertPostProcessor
+from cost_escalation import TARGET_DOLLAR_YEAR, cpi_escalation_factor, model_cost_year
 import importlib
 import numpy as np
 import sys
@@ -95,6 +96,7 @@ class Accert:
         self.gncoa_map = 'gncoamapping'
         self.output_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.post_processor = AccertPostProcessor()
+        self.target_dollar_year = TARGET_DOLLAR_YEAR
     
     def setup_table_names(self,xml2obj):
         """Setup different table names in the database.
@@ -140,6 +142,14 @@ class Accert:
             self.cel_tabl = 'lpsr_cost_element'
             self.var_tabl = 'lpsr_variable'
             self.alg_tabl = 'lpsr_algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
+        elif "ap1000" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'ap1000'
+            self.acc_tabl = 'ap1000_account'
+            self.cel_tabl = 'ap1000_cost_element'
+            self.var_tabl = 'ap1000_variable'
+            self.alg_tabl = 'ap1000_algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
         elif "lfr" in str(xml2obj.ref_model.value).lower():
@@ -1157,6 +1167,11 @@ class Accert:
         print('[USER_INPUT]', 'Reference model is', str(accert.ref_model.value), '\n')
         self.setup_table_names(accert)
         ut.setup_table_names(c, Accert)
+        ut.setup_cost_escalation(
+            model_cost_year(self.ref_model),
+            self.target_dollar_year,
+            self._cost_escalation_factor(),
+        )
         # if ref.model is not fusion or user defined then process cost elements:
         if self.cel_tabl:
             ut.print_user_request_parameter(c)
@@ -1176,18 +1191,24 @@ class Accert:
         """
 
         power_inputs = self._power_inputs_by_type(accert)
-        if self.ref_model == "lpsr":
-            power_inputs = self._apply_lpsr_default_power_inputs(power_inputs)
+        if self.ref_model in ("lpsr", "ap1000"):
+            power_inputs = self._apply_direct_default_power_inputs(power_inputs)
 
         if power_inputs:
+            changed_vars = []
             for power_type, power_input in power_inputs.items():
                 var_id, var_unit = self._power_variable_for_model(power_type)
                 if var_id:
                     if power_input.get("is_default"):
                         continue
                     print('[USER_INPUT]', power_type, 'power is', power_input["value"], power_input["input_unit"], '\n')
+                    if not self._variable_value_changed(c, var_id, power_input["value"]):
+                        print('[Unchanged] {} is the same as the reference value; dependent variables will not be recalculated\n'.format(var_id))
+                        continue
                     self.update_variable_info_on_name(c, var_id, power_input["value"], var_unit)
-                    self.process_super_values(c, var_id)
+                    changed_vars.append(var_id)
+            if changed_vars:
+                self.process_super_values(c, changed_vars)
         else:
             # warning
             print('WARNING: No power input found in the user input file\n')
@@ -1204,16 +1225,23 @@ class Accert:
                 }
         return power_inputs
 
-    def _apply_lpsr_default_power_inputs(self, power_inputs):
-        defaults = {
-            "Thermal": {"value": 3400.0, "input_unit": "MW", "is_default": True},
-            "Electric": {"value": 1117.0, "input_unit": "MW", "is_default": True},
-        }
+    def _apply_direct_default_power_inputs(self, power_inputs):
+        if self.ref_model == "ap1000":
+            defaults = {
+                "Thermal": {"value": 6800.0, "input_unit": "MW", "is_default": True},
+                "Electric": {"value": 2234.0, "input_unit": "MW", "is_default": True},
+            }
+        else:
+            defaults = {
+                "Thermal": {"value": 3400.0, "input_unit": "MW", "is_default": True},
+                "Electric": {"value": 1117.0, "input_unit": "MW", "is_default": True},
+            }
         resolved = dict(power_inputs)
         for power_type, default in defaults.items():
             if power_type not in resolved:
                 resolved[power_type] = default
-                print('[Default] LPSR {} power was not provided; using {} {}'.format(
+                print('[Default] {} {} power was not provided; using {} {}'.format(
+                    self.ref_model.upper(),
                     power_type,
                     default["value"],
                     default["input_unit"],
@@ -1221,7 +1249,7 @@ class Accert:
         return resolved
 
     def _power_variable_for_model(self, power_type):
-        if self.ref_model == "lpsr":
+        if self.ref_model in ("lpsr", "ap1000"):
             if power_type == "Thermal":
                 return "rx_P", "MWt"
             if power_type == "Electric":
@@ -1232,6 +1260,15 @@ class Accert:
         if power_type == "Electric":
             return "mwe", "MW"
         return None, None
+
+    def _variable_value_changed(self, c, var_id, new_value):
+        c.execute("""SELECT var_value
+                    FROM {}
+                    WHERE var_name = ?;""".format(self.var_tabl), (var_id,))
+        row = c.fetchone()
+        if row is None or row[0] is None:
+            return True
+        return abs(float(row[0]) - float(new_value)) > 1e-9
 
     def process_variables(self, c, accert):
         """
@@ -1263,21 +1300,27 @@ class Accert:
         var_id : str
             Variable ID.
         """
-        var_id = str(var_id).replace('"', '').replace("'", "")
-        sup_val_lst = self.extract_super_val(c, var_id)
+        var_ids = var_id if isinstance(var_id, (list, tuple, set)) else [var_id]
+        sup_val_lst = []
+        for single_var_id in var_ids:
+            single_var_id = str(single_var_id).replace('"', '').replace("'", "")
+            linked = self.extract_super_val(c, single_var_id)
+            if linked:
+                sup_val_lst.extend([x.strip() for x in linked.split(',')])
+        sup_val_lst = list(dict.fromkeys([x for x in sup_val_lst if x]))
         if sup_val_lst:
-            sup_val_lst = sup_val_lst.split(',')
-            # also remove the space after the comma
-            sup_val_lst = [x.strip() for x in sup_val_lst]
-        if sup_val_lst:
-            print('[Updating] Other variable(s) should be updated based on {} are {} \n'.format(var_id, sup_val_lst))
+            print('[Updating] Other variable(s) should be updated based on {} are {} \n'.format(var_ids, sup_val_lst))
+        processed = set()
         while sup_val_lst:
             sup_val = sup_val_lst.pop(0)
-            if sup_val:
+            if sup_val and sup_val not in processed:
+                processed.add(sup_val)
                 self.update_super_variable(c, sup_val)
                 new_sup_val = self.extract_super_val(c, sup_val)
                 if new_sup_val:
-                    sup_val_lst.extend([x.strip() for x in new_sup_val.split(',')])
+                    for linked in [x.strip() for x in new_sup_val.split(',') if x.strip()]:
+                        if linked not in processed and linked not in sup_val_lst:
+                            sup_val_lst.append(linked)
                     
     def process_COA(self, c, accert):
         """
@@ -1559,7 +1602,7 @@ class Accert:
             ut.extract_affected_cost_elements(c)
             self.update_new_cost_elements(c)
             ut.print_updated_cost_elements(c)
-            if self.ref_model != "lpsr":
+            if self.ref_model not in ("lpsr", "ap1000"):
                 self.roll_up_cost_elements(c)
         else:
             # if the model is fusion or user assigned model without cost elements
@@ -1593,7 +1636,13 @@ class Accert:
         if not self._post_process_occ_enabled(accert):
             return None
 
-        results = self.post_processor.calculate_occ(c, self.acc_tabl, self._electric_power_mw(c))
+        results = self.post_processor.calculate_occ(
+            c,
+            self.acc_tabl,
+            self._electric_power_mw(c),
+            self.ref_model,
+            self._cost_escalation_factor(),
+        )
         self.post_processor.print_occ_summary(results)
         self.post_processor.write_occ_csv(results, self.ref_model, self.output_timestamp)
         return results.as_dict()
@@ -1608,15 +1657,24 @@ class Accert:
         return str(occ.value).lower() == "true"
 
     def calculate_occ_post_process(self, c):
-        return self.post_processor.calculate_occ(c, self.acc_tabl, self._electric_power_mw(c)).as_dict()
+        return self.post_processor.calculate_occ(
+            c,
+            self.acc_tabl,
+            self._electric_power_mw(c),
+            self.ref_model,
+            self._cost_escalation_factor(),
+        ).as_dict()
 
     def _electric_power_mw(self, c):
-        var_name = "elec_P" if self.ref_model == "lpsr" else "mwe"
+        var_name = "elec_P" if self.ref_model in ("lpsr", "ap1000") else "mwe"
         try:
             value = self.get_var_value_by_name(c, var_name)
         except Exception:
             return None
         return float(value) if value is not None else None
+
+    def _cost_escalation_factor(self):
+        return cpi_escalation_factor(model_cost_year(self.ref_model), self.target_dollar_year)
 
     def _generate_common_results(self, c, ut, accert, model):
         """
@@ -1638,7 +1696,7 @@ class Accert:
             fac, lab, mat = self.cal_direct_cost_elements(c)
             all_flag = model != "lfr"
             self._print_results(ut, c, fac, lab, mat, all_flag)
-        elif model == "lpsr":
+        elif model in ("lpsr", "ap1000"):
             self._lpsr_processing(c, ut, accert)
         elif model == "pwr12-be":
             self._pwr12be_processing(c, ut, accert)
@@ -1682,6 +1740,7 @@ class Accert:
             Flag to print all accounts.
         """
         print(' Generating results table for review '.center(100, '='))
+        self._print_cost_basis_note()
         print('\n')    
         if self.use_gncoa:
             ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
@@ -1706,11 +1765,13 @@ class Accert:
         if self.use_gncoa:
             self.roll_up_account_table_GNCOA(c)
             print(' Generating results table for review '.center(100, '='))   
+            self._print_cost_basis_note()
             print('\n')
             ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
         else:
             self.roll_up_account_table(c, from_level=3, to_level=0)
             print(' Generating results table for review '.center(100, '='))   
+            self._print_cost_basis_note()
             print('\n') 
             ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
 
@@ -1720,6 +1781,7 @@ class Accert:
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c, from_level=4, to_level=0)
         print(' Generating results table for review '.center(100, '='))
+        self._print_cost_basis_note()
         print('\n')
         ut.print_leveled_accounts(c, all=True, cost_unit='million', level=4)
 
@@ -1739,8 +1801,15 @@ class Accert:
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c, from_level=4, to_level=0)
         print(' Generating results table for review '.center(100, '='))
+        self._print_cost_basis_note()
         print('\n')
         ut.print_leveled_accounts(c, all=False, cost_unit='million', level=4)
+
+    def _print_cost_basis_note(self):
+        print('[Note] Reference costs are in {} dollars. Displayed account costs are escalated to {} dollars using CPI-U.\n'.format(
+            model_cost_year(self.ref_model),
+            self.target_dollar_year,
+        ))
 
     def generate_results_table_with_cost_elements(self, c, conn, level=3):
         """
@@ -1782,9 +1851,17 @@ class Accert:
         df = pd.DataFrame(results, columns=field_names)
         if remove_last_col:
             df = df.iloc[:, :-1]  # Remove the last column if required
+        df = self._add_2024_cost_columns(df)
         filename = "{}_{}_{}.csv".format(self.ref_model, output_name, self.output_timestamp)
         df.to_csv(filename, index=False)
         print(f"Successfully created CSV file {filename}")
+
+    def _add_2024_cost_columns(self, df):
+        factor = self._cost_escalation_factor()
+        cost_columns = [column for column in df.columns if column in ("total_cost", "cost_2017", "cost_2018")]
+        for column in cost_columns:
+            df[f"{column}_2024"] = pd.to_numeric(df[column], errors="coerce") * factor
+        return df
 
 
     def generate_results_table(self, c, conn, level=3):

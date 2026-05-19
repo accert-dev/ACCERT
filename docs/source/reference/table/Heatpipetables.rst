@@ -40,7 +40,7 @@ The table includes the following columns:
 
    - **ind**: unique identifier for each cost element
    - **cost_element**: cost element name
-   - **cost_2017**: cost of the element in 2017 dollars
+   - **cost_2017**: cost of the element in 2018 dollars
    - **sup_cost_ele**: superior cost element
    - **alg_name**: algorithm name
    - **fun_unit**: algorithm function output unit

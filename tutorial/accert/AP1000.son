@@ -1,5 +1,5 @@
 accert{
-    ref_model = "LPSR"
+    ref_model = "AP1000"
     use_gncoa = False
 
     post_process {
@@ -7,18 +7,12 @@ accert{
     }
 
     power(Thermal){
-        value = 6800 %3400
+        value = 6800
         unit = MW
     }
 
     power(Electric){
-        value = 2234  %1117
+        value = 2234
         unit = MW
     }
-
-    var(cont_D_D){
-        value = 45.0
-        unit = m
-    }
-    
 }

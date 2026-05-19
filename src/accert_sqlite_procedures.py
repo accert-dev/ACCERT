@@ -67,6 +67,12 @@ def _has_column(conn: sqlite3.Connection, table_name: str, column: str) -> bool:
     return column in _table_columns(conn, table_name)
 
 
+def _cost_column(conn: sqlite3.Connection, table_name: str) -> str:
+    if _has_column(conn, table_name, "cost_2018"):
+        return "cost_2018"
+    return "cost_2017"
+
+
 @dataclass
 class StoredResult:
     rows: list[tuple]
@@ -129,6 +135,7 @@ class SQLiteCursorAdapter:
 
 def cal_direct_cost_elements(conn: sqlite3.Connection, acc_table: str, cel_table: str) -> list[tuple]:
     acc = qident(acc_table); cel = qident(cel_table)
+    cost_col = qident(_cost_column(conn, cel_table))
     row = _fetchone(conn, f"""
         SELECT COALESCE(SUM(t1.prn), 0)
         FROM {acc} AS t1
@@ -141,7 +148,7 @@ def cal_direct_cost_elements(conn: sqlite3.Connection, acc_table: str, cel_table
         return [(None, None, None)]
     vals = {}
     for kind in ("fac", "lab", "mat"):
-        r = _fetchone(conn, f"SELECT cost_2017 / ? FROM {cel} WHERE account='2' AND lower(cost_element)=?", (tprn, f"2c_{kind}"))
+        r = _fetchone(conn, f"SELECT {cost_col} / ? FROM {cel} WHERE account='2' AND lower(cost_element)=?", (tprn, f"2c_{kind}"))
         vals[kind] = r[0] if r else None
     return [(vals["fac"], vals["lab"], vals["mat"])]
 
@@ -176,7 +183,8 @@ def extract_affected_cost_elements_w_dis(conn: sqlite3.Connection, cel_table: st
 
 
 def extract_changed_cost_elements(conn: sqlite3.Connection, cel_table: str) -> list[tuple]:
-    return _fetchall(conn, f"SELECT cost_element, cost_2017 FROM {qident(cel_table)} WHERE updated != 0 ORDER BY account, cost_element")
+    cost_col = qident(_cost_column(conn, cel_table))
+    return _fetchall(conn, f"SELECT cost_element, {cost_col} FROM {qident(cel_table)} WHERE updated != 0 ORDER BY account, cost_element")
 
 
 def extract_super_val(conn: sqlite3.Connection, table_name: str, var_name: str) -> list[tuple]:
@@ -232,6 +240,7 @@ def print_account_simple(conn: sqlite3.Connection, table_name: str, level: int) 
 
 def print_leveled_accounts_all(conn: sqlite3.Connection, acc_table: str, cel_table: str, level: int) -> list[tuple]:
     cost_expr = "cost_elements" if _has_column(conn, acc_table, "cost_elements") else "NULL AS cost_elements"
+    cost_col = qident(_cost_column(conn, cel_table))
     rows = _fetchall(conn, f"""
         SELECT level, code_of_account, account_description, total_cost, review_status, {cost_expr}
         FROM {qident(acc_table)}
@@ -243,9 +252,9 @@ def print_leveled_accounts_all(conn: sqlite3.Connection, acc_table: str, cel_tab
         names = _split_csv(cost_elements) or [f"{coa}_fac", f"{coa}_lab", f"{coa}_mat"]
         values = []
         for name in names[:3]:
-            row = _fetchone(conn, f"SELECT cost_2017 FROM {qident(cel_table)} WHERE cost_element = ?", (name,))
+            row = _fetchone(conn, f"SELECT {cost_col} FROM {qident(cel_table)} WHERE cost_element = ?", (name,))
             if row is None:
-                row = _fetchone(conn, f"SELECT cost_2017 FROM {qident(cel_table)} WHERE cost_element = ?", (name.lower(),))
+                row = _fetchone(conn, f"SELECT {cost_col} FROM {qident(cel_table)} WHERE cost_element = ?", (name.lower(),))
             values.append(row[0] if row else None)
         values.extend([None] * (3 - len(values)))
         out.append((acc_level, f"{' ' * int(acc_level)}{coa}", desc, values[0], values[1], values[2], total, status))
@@ -269,6 +278,7 @@ def print_leveled_accounts_gn(conn: sqlite3.Connection, acc_table: str, map_tabl
 
 def print_leveled_accounts_gn_all(conn: sqlite3.Connection, acc_table: str, cel_table: str, level: int) -> list[tuple]:
     cost_expr = "cost_elements" if _has_column(conn, acc_table, "cost_elements") else "NULL AS cost_elements"
+    cost_col = qident(_cost_column(conn, cel_table))
     rows = _fetchall(conn, f"""
         SELECT gn_level, gncoa, account_description, total_cost, review_status, {cost_expr}
         FROM {qident(acc_table)}
@@ -280,9 +290,9 @@ def print_leveled_accounts_gn_all(conn: sqlite3.Connection, acc_table: str, cel_
         names = _split_csv(cost_elements) or [f"{gncoa}_fac", f"{gncoa}_lab", f"{gncoa}_mat"]
         values = []
         for name in names[:3]:
-            row = _fetchone(conn, f"SELECT cost_2017 FROM {qident(cel_table)} WHERE cost_element = ?", (name,))
+            row = _fetchone(conn, f"SELECT {cost_col} FROM {qident(cel_table)} WHERE cost_element = ?", (name,))
             if row is None:
-                row = _fetchone(conn, f"SELECT cost_2017 FROM {qident(cel_table)} WHERE cost_element = ?", (name.lower(),))
+                row = _fetchone(conn, f"SELECT {cost_col} FROM {qident(cel_table)} WHERE cost_element = ?", (name.lower(),))
             values.append(row[0] if row else None)
         values.extend([None] * (3 - len(values)))
         out.append((gn_level, f"{' ' * int(gn_level)}{gncoa}", desc, values[0], values[1], values[2], total, status))
@@ -307,8 +317,10 @@ def print_table(conn: sqlite3.Connection, table_name: str) -> list[tuple]:
 
 
 def print_updated_cost_elements(conn: sqlite3.Connection, cel_table: str) -> list[tuple]:
-    return _fetchall(conn, f"""
-        SELECT ind, cost_element, ROUND(cost_2017, 5), sup_cost_ele, account, updated
+    cost_name = _cost_column(conn, cel_table)
+    cost_col = qident(cost_name)
+    return conn.execute(f"""
+        SELECT ind, cost_element, ROUND({cost_col}, 5) AS {qident(cost_name)}, sup_cost_ele, account, updated
         FROM {qident(cel_table)} WHERE updated = 1
     """)
 
@@ -359,16 +371,17 @@ def roll_up_account_table_by_level(conn: sqlite3.Connection, table_name: str, fr
 
 def roll_up_cost_elements_by_level(conn: sqlite3.Connection, table_name: str, from_level: int, to_level: int) -> None:
     table = qident(table_name)
+    cost_col = qident(_cost_column(conn, table_name))
     # The original procedure joins the global account table. For model-specific
     # tables, infer parent cost elements directly from sup_cost_ele.
     rows = _fetchall(conn, f"""
-        SELECT parent.cost_element, COALESCE(SUM(child.cost_2017), 0)
+        SELECT parent.cost_element, COALESCE(SUM(child.{cost_col}), 0)
         FROM {table} AS child
         JOIN {table} AS parent ON child.sup_cost_ele = parent.cost_element
         GROUP BY parent.cost_element
     """)
     for ce, total in rows:
-        _execute(conn, f"UPDATE {table} SET cost_2017 = ? WHERE cost_element = ?", (total, ce))
+        _execute(conn, f"UPDATE {table} SET {cost_col} = ? WHERE cost_element = ?", (total, ce))
 
 
 def roll_up_lmt_account_2C(conn: sqlite3.Connection, acc_tabl_name: str) -> None:
@@ -392,8 +405,9 @@ def roll_up_lmt_direct_cost(conn: sqlite3.Connection, acc_tabl_name: str) -> Non
 
 def _sum_cost_elements_2c(conn: sqlite3.Connection, cel_tabl_name: str, acc_tabl_name: str, suffix: str) -> list[tuple]:
     acc = qident(acc_tabl_name); cel = qident(cel_tabl_name)
+    cost_col = qident(_cost_column(conn, cel_tabl_name))
     return _fetchall(conn, f"""
-        SELECT SUM(ce.cost_2017)
+        SELECT SUM(ce.{cost_col})
         FROM (
             SELECT t1.code_of_account, t1.code_of_account || ? AS ce_name
             FROM {acc} AS t1
@@ -435,14 +449,16 @@ def update_account_before_insert(conn: sqlite3.Connection, table_name: str, min_
 
 def update_account_table_by_cost_elements(conn: sqlite3.Connection, acc_tabl_name: str, cel_tabl_name: str) -> None:
     acc = qident(acc_tabl_name); cel = qident(cel_tabl_name)
-    rows = _fetchall(conn, f"SELECT account, SUM(cost_2017), SUM(updated) FROM {cel} GROUP BY account")
+    cost_col = qident(_cost_column(conn, cel_tabl_name))
+    rows = _fetchall(conn, f"SELECT account, SUM({cost_col}), SUM(updated) FROM {cel} GROUP BY account")
     for account, total_cost, updated in rows:
         if updated and updated > 0:
             _execute(conn, f"UPDATE {acc} SET total_cost = ?, review_status = 'Ready for Review' WHERE code_of_account = ?", (total_cost, account))
 
 
 def update_cost_element_on_name(conn: sqlite3.Connection, table_name: str, ce_name: str, alg_value: float) -> None:
-    _execute(conn, f"UPDATE {qident(table_name)} SET cost_2017 = ?, updated = 1 WHERE cost_element = ?", (alg_value, ce_name))
+    cost_col = qident(_cost_column(conn, table_name))
+    _execute(conn, f"UPDATE {qident(table_name)} SET {cost_col} = ?, updated = 1 WHERE cost_element = ?", (alg_value, ce_name))
 
 
 def update_new_accounts(conn: sqlite3.Connection, acc_tabl_name: str, var_tabl_name: str, alg_tabl_name: str) -> list[tuple]:
@@ -457,8 +473,9 @@ def update_new_accounts(conn: sqlite3.Connection, acc_tabl_name: str, var_tabl_n
 
 
 def update_new_cost_elements(conn: sqlite3.Connection, cel_tabl_name: str, var_tabl_name: str, alg_tabl_name: str) -> list[tuple]:
+    cost_col = qident(_cost_column(conn, cel_tabl_name))
     ce_rows = _fetchall(conn, f"""
-        SELECT ce.ind, ce.cost_element, ce.cost_2017, ce.alg_name, ce.variables, ce.algno,
+        SELECT ce.ind, ce.cost_element, ce.{cost_col}, ce.alg_name, ce.variables, ce.algno,
                alg.alg_python, alg.alg_formulation, alg.alg_units
         FROM {qident(cel_tabl_name)} AS ce
         JOIN {qident(alg_tabl_name)} AS alg ON ce.alg_name = alg.alg_name

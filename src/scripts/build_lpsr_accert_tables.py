@@ -39,7 +39,7 @@ TABLE_SPECS = {
         "columns": [
             ("ind", "INTEGER NOT NULL"),
             ("cost_element", "TEXT"),
-            ("cost_2017", "REAL"),
+            ("cost_2018", "REAL"),
             ("sup_cost_ele", "TEXT"),
             ("alg_name", "TEXT"),
             ("fun_unit", "TEXT"),
@@ -83,7 +83,7 @@ ALGORITHM_COLUMNS = [
 ]
 
 INTEGER_COLUMNS = {"ind", "level", "gn_level", "gn_ind", "updated", "user_input"}
-REAL_COLUMNS = {"total_cost", "prn", "cost_2017", "var_value"}
+REAL_COLUMNS = {"total_cost", "prn", "cost_2017", "cost_2018", "var_value"}
 
 
 def _read_csv(path: Path) -> list[dict[str, str]]:

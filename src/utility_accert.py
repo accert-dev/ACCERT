@@ -14,7 +14,23 @@ class Utility_methods:
         self.alg_tabl = None
         self.esc_tabl = None
         self.fac_tabl = None        
-        pass
+        self.reference_dollar_year = None
+        self.target_dollar_year = None
+        self.cost_escalation_factor = 1.0
+
+    def setup_cost_escalation(self, reference_dollar_year, target_dollar_year, escalation_factor):
+        self.reference_dollar_year = reference_dollar_year
+        self.target_dollar_year = target_dollar_year
+        self.cost_escalation_factor = escalation_factor
+        return None
+
+    def _cost_header_suffix(self):
+        if self.target_dollar_year:
+            return f" ({self.target_dollar_year} million $)"
+        return " (million $)"
+
+    def _format_million_cost(self, value):
+        return '{:,.2f}'.format((value or 0) * self.cost_escalation_factor / 1000000)
     
     def setup_table_names(self,c,Accert):
         self.acc_tabl = Accert.acc_tabl
@@ -103,6 +119,7 @@ class Utility_methods:
             for row in c.stored_results():
                 results = row.fetchall()
                 field_names = [i[0] for i in row.description]
+            field_names = [f"{name}{self._cost_header_suffix()}" if name in ("total_cost", "fac_cost", "lab_cost", "mat_cost") else name for name in field_names]
             # results = c.fetchall()
             # columns = c.description
             # field_names = [i[0] for i in c.description]
@@ -110,8 +127,8 @@ class Utility_methods:
             for row in results:
                 row = list(row)
             # NOTE the index of the row need to have a function
-                row[3]= '{:,.3f}'.format(row[3]/1000000)
-                row[4]= 'million'
+                row[3]= self._format_million_cost(row[3])
+                row[4]= f"{self.target_dollar_year} million $"
                 x.add_row(row)
             if align_key:
                 for i,k in enumerate(align_key):
@@ -167,6 +184,7 @@ class Utility_methods:
             for row in c.stored_results():
                 results = row.fetchall()
                 field_names = [i[0] for i in row.description]
+            field_names = [f"{name}{self._cost_header_suffix()}" if name in ("total_cost", "fac_cost", "lab_cost", "mat_cost") else name for name in field_names]
             # results = c.fetchall()
             # columns = c.description
             # field_names = [i[0] for i in c.description]
@@ -177,16 +195,16 @@ class Utility_methods:
                     # if index is 0, and tol_fac, tol_lab, tol_mat are not None, format the values
                     if idx == 0 and tol_fac and tol_lab and tol_mat:
                         # First row special formatting
-                        row[3] = "{:,.2f}".format(tol_fac / 1000000)
-                        row[4] = "{:,.2f}".format(tol_lab / 1000000)
-                        row[5] = "{:,.2f}".format(tol_mat / 1000000)
-                        row[6] = "{:,.2f}".format(row[6] / 1000000)
+                        row[3] = self._format_million_cost(tol_fac)
+                        row[4] = self._format_million_cost(tol_lab)
+                        row[5] = self._format_million_cost(tol_mat)
+                        row[6] = self._format_million_cost(row[6])
                     else:
                         # Format other rows or print 0 if value is None
-                        row[3:7] = ['{:,.2f}'.format(x / 1000000) if x else '0' for x in row[3:7]]
+                        row[3:7] = [self._format_million_cost(x) if x else '0' for x in row[3:7]]
                 else:
                     # Format only the third column for other cases
-                    row[2] = '{:,.2f}'.format(row[2] / 1000000)
+                    row[2] = self._format_million_cost(row[2])
                 
                 x.add_row(row)
 
@@ -228,6 +246,7 @@ class Utility_methods:
             for row in c.stored_results():
                 results = row.fetchall()
                 field_names = [i[0] for i in row.description]
+            field_names = [f"{name}{self._cost_header_suffix()}" if name == "total_cost" else name for name in field_names]
             x = PrettyTable(field_names)
             for idx, row in enumerate(results):
                 row = list(row)
@@ -245,7 +264,7 @@ class Utility_methods:
                 else:
                     # Format only the third column for other cases
                     if row[2]:
-                        row[2] = '{:,.2f}'.format(row[2] / 1000000)
+                        row[2] = self._format_million_cost(row[2])
                     else:
                         row[2] = 0
 

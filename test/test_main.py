@@ -275,20 +275,20 @@ def test_calculate_occ_post_process(cursor):
                     WHERE code_of_account = ?;""", ("2",))
     total_calculated_direct_cost = cursor.fetchone()[0]
     assert results["total_calculated_direct_cost"] == pytest.approx(total_calculated_direct_cost)
-    assert results["total_direct_cost"] == pytest.approx(total_calculated_direct_cost / 0.834)
-    assert results["total_indirect_costs"] == pytest.approx(total_calculated_direct_cost * 0.609 / 0.834)
-    assert results["total_cost_without_owner"] == pytest.approx(total_calculated_direct_cost * 1.609 / 0.834)
-    assert results["owner_cost"] == pytest.approx(total_calculated_direct_cost * 1.609 * 0.2 / 0.834)
-    assert results["total_OCC"] == pytest.approx(total_calculated_direct_cost * 1.609 * 1.2 / 0.834)
+    assert results["total_direct_cost"] == pytest.approx(total_calculated_direct_cost)
+    assert results["total_indirect_costs"] == pytest.approx(total_calculated_direct_cost * 0.609)
+    assert results["total_cost_without_owner"] == pytest.approx(total_calculated_direct_cost * 1.609)
+    assert results["owner_cost"] == pytest.approx(total_calculated_direct_cost * 1.609 * 0.2)
+    assert results["total_OCC"] == pytest.approx(total_calculated_direct_cost * 1.609 * 1.2)
 
 def test_lpsr_occ_post_process_includes_per_kw(cursor):
     """Test LPSR OCC post-processing includes $/kW using elec_P."""
     accert.ref_model = 'lpsr'
     accert.acc_tabl = 'lpsr_account'
     accert.var_tabl = 'lpsr_variable'
-    results = accert.post_processor.calculate_occ(cursor, accert.acc_tabl, accert._electric_power_mw(cursor))
+    results = accert.post_processor.calculate_occ(cursor, accert.acc_tabl, accert._electric_power_mw(cursor), accert.ref_model, accert._cost_escalation_factor())
     rows = {row["metric"]: row for row in results.as_rows()}
-    assert rows["total_OCC"]["value_dollar_per_kw"] == pytest.approx(results.total_OCC / (1117 * 1000))
+    assert rows["total_OCC"]["value_2024_dollar_per_kw"] == pytest.approx(results.total_OCC * accert._cost_escalation_factor() / (1117 * 1000))
 
 def test_lpsr_power_defaults_update_rejected_heat(cursor):
     """LPSR defaults power inputs and calculates rejected thermal power."""
@@ -308,6 +308,40 @@ def test_lpsr_power_defaults_update_rejected_heat(cursor):
     assert values["rx_P"][1] == "MWt"
     assert values["rej_th_P"][0] == pytest.approx(2283.0)
     assert values["rej_th_P"][1] == "MWt"
+
+def test_ap1000_reference_tables_match_target_direct_cost(cursor):
+    """AP1000 mirrors LPSR structure at the 2234 MWe direct-cost basis."""
+    cursor.execute("""SELECT total_cost
+                    FROM ap1000_account
+                    WHERE code_of_account = ?;""", ("2",))
+    assert cursor.fetchone()[0] == pytest.approx(6673722963.402768347)
+    cursor.execute("""SELECT var_name, var_value, var_unit
+                    FROM ap1000_variable
+                    WHERE var_name IN (?, ?, ?)
+                    ORDER BY var_name;""", ("elec_P", "rej_th_P", "rx_P"))
+    values = {name: (value, unit) for name, value, unit in cursor.fetchall()}
+    assert values["elec_P"][0] == pytest.approx(2234.0)
+    assert values["elec_P"][1] == "MWe"
+    assert values["rx_P"][0] == pytest.approx(6800.0)
+    assert values["rx_P"][1] == "MWt"
+    assert values["rej_th_P"][0] == pytest.approx(4566.0)
+    assert values["rej_th_P"][1] == "MWt"
+
+def test_lpsr_same_power_input_does_not_recalculate_rejected_heat(cursor):
+    """LPSR skips rejected heat recalculation when power inputs match defaults."""
+    accert.ref_model = 'lpsr'
+    accert.var_tabl = 'lpsr_variable'
+    accert.alg_tabl = 'lpsr_algorithm'
+    accert.cel_tabl = 'lpsr_cost_element'
+    power = [
+        SimpleNamespace(id="Thermal", value=SimpleNamespace(value=3400), unit=SimpleNamespace(value="MW")),
+        SimpleNamespace(id="Electric", value=SimpleNamespace(value=1117), unit=SimpleNamespace(value="MW")),
+    ]
+    accert.process_power_inputs(cursor, SimpleNamespace(power=power))
+    cursor.execute("""SELECT user_input
+                    FROM lpsr_variable
+                    WHERE var_name = ?;""", ("rej_th_P",))
+    assert cursor.fetchone()[0] == 0
 
 def test_generate_results_table(cursor,conn):
     """ test function generate_results_table, this function will generate the results table for 

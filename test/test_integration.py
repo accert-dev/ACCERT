@@ -120,5 +120,22 @@ def test_integration_with_lpsr_son(prepare_environment,csv_patterns):
     output_content = (TEST_DIR / "output.out").read_text()
     assert 'Reference model is "LPSR"' in output_content
     assert "Total OCC" in output_content
-    assert "Value ($/kW)" in output_content
+    assert "2024 ($/kW)" in output_content
     check_csv_files(["lpsr_upd_acc_*.csv", "lpsr_upd_ce_*.csv", "lpsr_aff_ce_*.csv", "lpsr_post_*.csv"])
+
+
+def test_integration_with_ap1000_son(prepare_environment):
+    """Test ACCERT with the AP1000 tutorial input."""
+    command = [sys.executable, str(PROJECT_ROOT / "src" / "Main.py"), "-i", str(PROJECT_ROOT / "tutorial" / "accert" / "AP1000.son")]
+    test_db = Path(tempfile.mkdtemp()) / "accertdb.sqlite"
+    shutil.copy2(PROJECT_ROOT / "src" / "accertdb.sqlite", test_db)
+    env = os.environ.copy()
+    env["ACCERT_SQLITE_DB"] = str(test_db)
+
+    result = subprocess.run(command, cwd=TEST_DIR, env=env, capture_output=True, text=True)
+    assert result.returncode == 0, f"ACCERT AP1000 run failed: {result.stderr}"
+    output_content = (TEST_DIR / "output.out").read_text()
+    assert 'Reference model is "AP1000"' in output_content
+    assert "Total OCC" in output_content
+    assert "2024 ($/kW)" in output_content
+    check_csv_files(["ap1000_upd_acc_*.csv", "ap1000_upd_ce_*.csv", "ap1000_aff_ce_*.csv", "ap1000_post_*.csv"])
