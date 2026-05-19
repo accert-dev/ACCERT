@@ -20,6 +20,7 @@ cost-reduction levers.
        "f_22": 250_000_000,
        "f_2321": 150_000_000,
        "land_cost_per_acre_0": 22_000,
+       "construction_duration_0": 76,
        "startup_0": 28,
        "staggering_ratio": 0.75,
    }
@@ -93,13 +94,15 @@ Configuration
    * - ``reactor_type``
      - Built-in Cost Reduction Framework baseline: ``AP1000``, ``SFR``, or ``HTGR``.
    * - ``baseline_csv``
-     - Optional CSV path used instead of the built-in reactor baseline. This is useful when passing an International Adjustment Tool output into CRF. If the CSV contains International Adjustment Tool (IAT) adjusted columns, CRF uses those adjusted costs as the baseline and leaves the packaged baseline in ``src/crf/data`` unchanged.
+     - Optional CSV path used instead of the built-in reactor baseline. This is useful when passing an International Adjustment Tool output or an ACCERT-derived baseline into CRF. If the CSV contains International Adjustment Tool (IAT) adjusted columns, CRF uses those adjusted costs as the baseline and leaves the packaged baseline in ``src/crf/data`` unchanged.
    * - ``f_22``
      - Reactor building cost adjustment.
    * - ``f_2321``
      - Turbine generator cost adjustment.
    * - ``land_cost_per_acre_0``
      - Baseline land cost per acre.
+   * - ``construction_duration_0``
+     - Optional reference construction duration in months. If omitted, CRF uses the built-in duration for the selected reactor type; the current AP1000 base case uses ``76`` months.
    * - ``startup_0``
      - First-unit startup duration in months.
    * - ``staggering_ratio``
@@ -145,6 +148,72 @@ inputs use ``0`` or ``1`` and are converted internally to model labels.
      - ``0`` for nuclear-grade BOP, ``1`` for non-nuclear-grade BOP.
    * - ``rb_grade_code``
      - ``0`` for nuclear-grade reactor building, ``1`` for non-nuclear-grade reactor building.
+
+Using ACCERT Output as a Baseline
+---------------------------------
+
+ACCERT updated-account CSV files, such as ``ap1000_upd_acc_*.csv``, contain
+account totals but not the CRF category split or labor-hour inputs. Use
+``accert_output_to_crf_baseline`` to convert that ACCERT output into the same
+CSV shape as ``AP1000_baseline.csv``. The converter maps ACCERT accounts into
+the CRF/IAT account structure, uses the selected CRF base case to allocate
+factory, material, and labor cost shares, and distributes a user-provided total
+20s labor-hour value using the selected CRF base case labor-hour proportions.
+
+The AP1000 mapping is:
+
+.. list-table::
+   :header-rows: 1
+
+   * - ACCERT output account
+     - CRF/IAT input account
+   * - ``211``
+     - ``211``
+   * - ``212``
+     - ``212``
+   * - ``213``
+     - ``213``
+   * - ``214``
+     - ``216``
+   * - ``215``
+     - ``214``
+   * - ``216``
+     - ``215``
+   * - ``217``
+     - ``214``
+   * - ``218A`` through ``218V``
+     - ``214``
+   * - ``22``
+     - ``22``
+   * - ``23``
+     - ``232.1``
+   * - ``24``
+     - ``24``
+   * - ``25``
+     - ``26``
+   * - ``26``
+     - ``233``
+
+.. code-block:: python
+
+   from crf import accert_output_to_crf_baseline, run_one_scenario
+
+   converted = accert_output_to_crf_baseline(
+       "ap1000_upd_acc_20260518_215922.csv",
+       "ap1000_accert_for_crf_iat.csv",
+       reactor_type="AP1000",
+       total_20s_labor_hours=28_902_455.46,
+   )
+
+   result = run_one_scenario(
+       {**config, "baseline_csv": "ap1000_accert_for_crf_iat.csv"},
+       levers,
+   )
+
+The same converted CSV can be passed to IAT as ``input_csv`` because it has the
+standard ``Account``, ``Title``, ``Total Cost (USD)``, ``Factory Equipment
+Cost``, ``Site Labor Hours``, ``Site Labor Cost``, and ``Site Material Cost``
+columns.
 
 Sampling from Excel
 -------------------
@@ -213,6 +282,14 @@ CSV and then passes that CSV to CRF without modifying ``src/crf/data``:
 .. code-block:: bash
 
    python tutorial/combined/crf_iat_ap1000_china_example.py
+
+The ACCERT-to-CRF/IAT example first runs the AP1000 ACCERT tutorial, converts
+the generated ``ap1000_upd_acc_*.csv`` file into a CRF/IAT baseline, then runs
+both CRF and IAT from that converted file:
+
+.. code-block:: bash
+
+   python tutorial/combined/accert_output_to_crf_iat_example.py
 
 To use the local GUI for CRF, IAT, or the connected IAT-then-CRF workflow, run:
 

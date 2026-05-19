@@ -70,7 +70,9 @@ def add_land_cost(df: pd.DataFrame, land_cost_per_acre: float, power: float):
     return update_high_level_costs(db, power)[COLS].copy()
 
 
-def _grade_ref_duration(reactor_type: str) -> float:
+def _grade_ref_duration(reactor_type: str, construction_duration_0: float | None = None) -> float:
+    if construction_duration_0 is not None:
+        return float(construction_duration_0)
     if reactor_type == "HTGR":
         return 125
     if reactor_type == "SFR":
@@ -227,6 +229,7 @@ def add_reworking_productivity(
     power: float,
     prev_cons_duration: float,
     baseline_lab_hours,
+    ref_duration: float | None = None,
     trace=None
 ):
     if n_th == 1:
@@ -242,13 +245,13 @@ def add_reworking_productivity(
 
     if reactor_type == "HTGR":
         rework = (-0.69 * design_completion + 1.69) * (-0.125 * ae_exp + 1.25) * (-0.125 * ce_exp + 1.25)
-        ref_duration = 125
+        ref_duration = 125 if ref_duration is None else ref_duration
     elif reactor_type == "SFR":
         rework = (-0.9 * design_completion + 1.9) * (-0.15 * ae_exp + 1.3) * (-0.15 * ce_exp + 1.3)
-        ref_duration = 80
+        ref_duration = 80 if ref_duration is None else ref_duration
     elif reactor_type == "AP1000":
         rework = (-0.69 * design_completion + 1.69) * (-0.125 * ae_exp + 1.25) * (-0.125 * ce_exp + 1.25)
-        ref_duration = 76
+        ref_duration = 76 if ref_duration is None else ref_duration
     else:
         raise ValueError(f"Unknown reactor type: {reactor_type}")
     db = df.copy()
@@ -289,6 +292,7 @@ def update_direct_cost(
     ce_exp_0: float,
     N_cons: float,
     mod_0: str,
+    construction_duration_0: float | None = None,
     trace=None
 ):
     reactor_df, power = store.get_baseline(reactor_type)
@@ -301,12 +305,13 @@ def update_direct_cost(
     before_grades = db.copy()
     db = add_commercial_bop(db, BOP_grade_0, power, reactor_type, n_th, trace=trace)
     db = add_non_safety_related_rb(db, RB_grade_0, power, trace=trace)
-    prev_dur = update_cons_duration(before_grades, db, _grade_ref_duration(reactor_type))
+    ref_duration = _grade_ref_duration(reactor_type, construction_duration_0)
+    prev_dur = update_cons_duration(before_grades, db, ref_duration)
     db, prev_dur = add_modular_civil_construction(db, power, reactor_type, n_th, mod_0, prev_dur, trace=trace)
     db = add_bulk_ordering(db, num_orders, f_22, f_2321, power, reactor_type, trace=trace)
     db, dur_no_delay = add_reworking_productivity(
         db, reactor_type, n_th,
         design_completion_0, ae_exp_0, N_AE, ce_exp_0, N_cons,
-        power, prev_dur, baseline_lab_hours, trace=trace
+        power, prev_dur, baseline_lab_hours, ref_duration=ref_duration, trace=trace
     )
     return db, dur_no_delay

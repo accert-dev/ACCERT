@@ -21,6 +21,7 @@ config = {
     "f_22": 250_000_000,
     "f_2321": 150_000_000,
     "land_cost_per_acre_0": 22_000,
+    "construction_duration_0": 76,
     "startup_0": 28,
     "staggering_ratio": 0.75,
 }

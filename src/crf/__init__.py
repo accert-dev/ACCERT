@@ -10,6 +10,7 @@ from .api import (
     run_sampling_from_excel,
     print_scenario_result,
 )
+from .accert_bridge import accert_output_to_crf_baseline
 from .visualization import (
     occ_reduction_from_foak_to_noak,
     tci_reduction_from_foak_to_noak,
@@ -27,6 +28,7 @@ __all__ = [
     "calculate_tci_waterfall",
     "run_sampling_from_excel",
     "print_scenario_result",
+    "accert_output_to_crf_baseline",
     "occ_reduction_from_foak_to_noak",
     "tci_reduction_from_foak_to_noak",
     "levers_to_dataframe",

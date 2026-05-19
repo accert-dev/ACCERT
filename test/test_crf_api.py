@@ -8,6 +8,7 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 from crf import (
+    accert_output_to_crf_baseline,
     levers_to_dataframe,
     occ_reduction_from_foak_to_noak,
     results_to_dataframe,
@@ -18,6 +19,7 @@ from crf import (
     waterfall_to_dataframe,
 )
 from crf.api import normalize_levers
+from crf.io.excel_inputs import InputStore
 from crf.model.schedule import build_schedule_timeline
 from crf.sampling.lever_schema import EXCEL_NAME_TO_ID_ORDERED
 
@@ -28,6 +30,7 @@ def _config():
         "f_22": 250_000_000,
         "f_2321": 150_000_000,
         "land_cost_per_acre_0": 22_000,
+        "construction_duration_0": 76,
         "startup_0": 28,
         "staggering_ratio": 0.75,
     }
@@ -156,7 +159,7 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
 
 
 def test_run_one_scenario_can_use_iat_adjusted_baseline_csv(tmp_path):
-    baseline = pd.read_csv(REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv")
+    baseline, _ = InputStore().get_baseline("AP1000")
     adjusted = baseline.copy()
     adjusted["Adjusted Total Cost"] = adjusted["Total Cost (USD)"] * 0.5
     adjusted["Adjusted Factory Equipment Cost"] = adjusted["Factory Equipment Cost"] * 0.5
@@ -173,6 +176,60 @@ def test_run_one_scenario_can_use_iat_adjusted_baseline_csv(tmp_path):
 
     assert adjusted_result["OCC_1"] < default_result["OCC_1"]
     assert adjusted_result["D20s_1"] < default_result["D20s_1"]
+
+
+def test_accert_output_can_be_converted_to_crf_baseline_and_run(tmp_path):
+    baseline, _ = InputStore().get_baseline("AP1000")
+    accert_like = baseline.rename(
+        columns={
+            "Account": "code_of_account",
+            "Title": "account_description",
+            "Total Cost (USD)": "total_cost",
+        }
+    )[["code_of_account", "account_description", "total_cost"]]
+    accert_path = tmp_path / "ap1000_upd_acc_example.csv"
+    output_path = tmp_path / "ap1000_accert_for_crf.csv"
+    accert_like.to_csv(accert_path, index=False)
+
+    total_hours = float(
+        baseline.loc[
+            baseline["Account"].astype(str).isin(["21", "22", "23", "24", "26"]),
+            "Site Labor Hours",
+        ].sum()
+    )
+    converted = accert_output_to_crf_baseline(
+        accert_path,
+        output_path,
+        reactor_type="AP1000",
+        total_20s_labor_hours=total_hours,
+    )
+    converted_direct = converted.loc[
+        converted["Account"].astype(str).isin(["21", "22", "23", "24", "26"]),
+        "Site Labor Hours",
+    ].sum()
+
+    assert output_path.exists()
+    assert converted_direct == pytest.approx(total_hours)
+    converted_totals = converted.set_index("Account")["Total Cost (USD)"]
+    baseline_totals = baseline.set_index("Account")["Total Cost (USD)"]
+    assert converted_totals.loc["214"] == pytest.approx(
+        baseline_totals.loc[["215", "217"]].sum()
+    )
+    assert converted_totals.loc["215"] == pytest.approx(baseline_totals.loc["216"])
+    assert converted_totals.loc["216"] == pytest.approx(baseline_totals.loc["214"])
+    assert converted_totals.loc["232.1"] == pytest.approx(baseline_totals.loc["23"])
+    assert converted_totals.loc["233"] == pytest.approx(baseline_totals.loc["26"])
+    assert converted_totals.loc["26"] == pytest.approx(baseline_totals.loc["25"])
+
+    default_result = run_one_scenario(_config(), _levers())
+    converted_result = run_one_scenario(
+        {**_config(), "baseline_csv": str(output_path)},
+        _levers(),
+    )
+    assert converted_result["OCC_1"] > 0
+    assert converted_result["TCI_1"] > 0
+    assert converted_result["OCC_1"] == pytest.approx(default_result["OCC_1"], rel=0.1)
+    assert converted_result["TCI_1"] == pytest.approx(default_result["TCI_1"], rel=0.1)
 
 
 def test_visualization_helpers_create_dashboard(tmp_path):

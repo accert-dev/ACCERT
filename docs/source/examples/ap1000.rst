@@ -1,0 +1,82 @@
+AP1000
+======
+
+The AP1000 ACCERT example is in ``tutorial/accert/AP1000.son``. It uses the
+AP1000 reference table family, which follows the LPSR direct-cost table
+structure but is scaled to a 2234 MWe two-unit AP1000 case.
+
+.. code-block:: son
+
+   accert{
+       ref_model = "AP1000"
+       use_gncoa = False
+
+       post_process {
+           occ = true
+       }
+
+       power(Thermal){
+           value = 6800
+           unit = MW
+       }
+
+       power(Electric){
+           value = 2234
+           unit = MW
+       }
+   }
+
+The AP1000 direct-account total is represented by account ``2`` and is
+``6,673,722,963.402768`` in 2018 dollars. ACCERT prints account-review tables
+in 2024 dollars using CPI-U escalation, and the generated CSV files retain the
+reference-year cost columns with additional ``*_2024`` columns.
+
+Running the Example
+-------------------
+
+Run from the ACCERT repository root:
+
+.. code-block:: bash
+
+   python src/Main.py -i tutorial/accert/AP1000.son
+
+ACCERT writes timestamped CSV outputs such as ``ap1000_upd_acc_*.csv``,
+``ap1000_upd_ce_*.csv``, and ``ap1000_post_*.csv`` in the current working
+directory.
+
+Using AP1000 Output in CRF or IAT
+---------------------------------
+
+To use the AP1000 ACCERT output as a CRF or IAT baseline, convert the
+``ap1000_upd_acc_*.csv`` file with ``accert_output_to_crf_baseline`` and provide
+the total 20s labor hours that should be assigned to the case:
+
+.. code-block:: python
+
+   from crf import accert_output_to_crf_baseline
+
+   accert_output_to_crf_baseline(
+       "ap1000_upd_acc_20260518_215922.csv",
+       "ap1000_accert_for_crf_iat.csv",
+       reactor_type="AP1000",
+       total_20s_labor_hours=28_902_455.46,
+   )
+
+The converter keeps ACCERT direct-account costs and uses the selected CRF base
+case, such as AP1000, SFR, or HTGR, to distribute factory cost, material cost,
+labor cost, and labor-hour proportions. The converted CSV can be passed to CRF
+with ``config["baseline_csv"]`` or to IAT with ``input_csv``. For the current
+AP1000 CRF base case, use ``construction_duration_0 = 76`` months in the CRF
+configuration.
+
+The AP1000 bridge maps ACCERT accounts to CRF/IAT accounts as follows:
+``211`` to ``211``, ``212`` to ``212``, ``213`` to ``213``, ``214`` to ``216``,
+``215`` to ``214``, ``216`` to ``215``, ``217`` and ``218A`` through ``218V``
+to ``214``, ``22`` to ``22``, ``23`` to ``232.1``, ``24`` to ``24``, ``25`` to
+``26``, and ``26`` to ``233``.
+
+The full workflow is available in:
+
+.. code-block:: bash
+
+   python tutorial/combined/accert_output_to_crf_iat_example.py

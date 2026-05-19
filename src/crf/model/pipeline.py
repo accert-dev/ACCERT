@@ -27,6 +27,7 @@ def calculate_final_result(config: dict, inp: dict, store, n_th: int, trace=None
         ce_exp_0=inp["ce_exp_0"],
         N_cons=inp["N_cons"],
         mod_0=inp["mod_0"],
+        construction_duration_0=config.get("construction_duration_0"),
         trace=trace,
     )
     # duration: add delay + learning

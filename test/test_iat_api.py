@@ -5,6 +5,8 @@ import pytest
 
 from iat import available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
+from crf import accert_output_to_crf_baseline
+from crf.io.excel_inputs import InputStore
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AP1000_BASELINE = REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv"
@@ -226,6 +228,44 @@ def test_iat_runs_on_packaged_ap1000_baseline():
     ]
     assert coa_20["Original Total Cost"] == pytest.approx(leaf_20s["Original Total Cost"].sum())
     assert coa_20["Adjusted Total Cost"] == pytest.approx(leaf_20s["Adjusted Total Cost"].sum())
+
+
+def test_iat_runs_on_accert_converted_baseline(tmp_path):
+    baseline, _ = InputStore().get_baseline("AP1000")
+    accert_like = baseline.rename(
+        columns={
+            "Account": "code_of_account",
+            "Title": "account_description",
+            "Total Cost (USD)": "total_cost",
+        }
+    )[["code_of_account", "account_description", "total_cost"]]
+    accert_path = tmp_path / "ap1000_upd_acc_example.csv"
+    converted_path = tmp_path / "ap1000_accert_for_iat.csv"
+    accert_like.to_csv(accert_path, index=False)
+    total_hours = float(
+        baseline.loc[
+            baseline["Account"].astype(str).isin(["21", "22", "23", "24", "26"]),
+            "Site Labor Hours",
+        ].sum()
+    )
+    accert_output_to_crf_baseline(
+        accert_path,
+        converted_path,
+        reactor_type="AP1000",
+        total_20s_labor_hours=total_hours,
+    )
+
+    result = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "China",
+            "year_dollar": 2024,
+            "input_csv": converted_path,
+        }
+    )
+    assert result["reactor_family"] == "LR"
+    assert result["input_occ"] > 0
+    assert result["adjusted_occ"] > 0
 
 
 def test_iat_level_account_summary_includes_level_1_and_2():
