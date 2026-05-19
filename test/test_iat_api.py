@@ -83,6 +83,40 @@ def test_iat_china_account_22_formula(tmp_path):
     assert result["adjusted_total"] == pytest.approx(expected_equipment + expected_labor + expected_material)
 
 
+def test_level_account_summary_includes_cost_category_breakdown(tmp_path):
+    csv_path = tmp_path / "baseline.csv"
+    pd.DataFrame(
+        [
+            {
+                "Account": "22",
+                "Title": "Reactor System",
+                "Total Cost (USD)": 1_000.0,
+                "Factory Equipment Cost": 100.0,
+                "Site Labor Hours": 0.0,
+                "Site Labor Cost": 300.0,
+                "Site Material Cost": 600.0,
+            }
+        ]
+    ).to_csv(csv_path, index=False)
+
+    result = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "China",
+            "year_dollar": 2024,
+            "input_csv": csv_path,
+        }
+    )
+    summary = level_account_summary(result["adjusted_costs"], max_level=2).set_index("COA")
+
+    assert summary.loc["20", "Original Equipment Cost"] == pytest.approx(100.0)
+    assert summary.loc["20", "Original Material Cost"] == pytest.approx(600.0)
+    assert summary.loc["20", "Original Labor Cost"] == pytest.approx(300.0)
+    assert summary.loc["20", "Adjusted Equipment Cost"] > 0.0
+    assert summary.loc["20", "Adjusted Material Cost"] > 0.0
+    assert summary.loc["20", "Adjusted Labor Cost"] > 0.0
+
+
 def test_iat_china_account_211_inherits_account_21_localization(tmp_path):
     csv_path = tmp_path / "accert_output.csv"
     pd.DataFrame(

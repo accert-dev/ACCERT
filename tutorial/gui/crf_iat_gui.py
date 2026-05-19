@@ -28,13 +28,29 @@ SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from crf import results_to_dataframe, run_one_scenario, save_dashboard, waterfall_to_dataframe
+from crf import (
+    accert_output_to_crf_baseline,
+    results_to_dataframe,
+    run_one_scenario,
+    save_dashboard,
+    waterfall_to_dataframe,
+)
 from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
 
 
 HOST = "127.0.0.1"
 PORT = 8765
 OUTPUT_DIR = REPO_ROOT / "tutorial" / "gui_outputs"
+DEFAULT_CONSTRUCTION_DURATIONS = {
+    "AP1000": 76.0,
+    "SFR": 80.0,
+    "HTGR": 125.0,
+}
+DEFAULT_20S_LABOR_HOURS = {
+    "AP1000": 51_112_635.470753975,
+    "SFR": 10_402_590.638988608,
+    "HTGR": 37_288_941.04573331,
+}
 
 
 HTML = r"""<!doctype html>
@@ -635,6 +651,10 @@ HTML = r"""<!doctype html>
           <div><label for="startup">Startup months</label><input id="startup" type="number" value="28"></div>
           <div><label for="staggering">Staggering ratio</label><input id="staggering" type="number" step="0.01" value="0.75"></div>
         </div>
+        <div class="row">
+          <div><label for="constructionDuration">Construction duration months</label><input id="constructionDuration" type="number" min="1" step="1" value="76"></div>
+          <div><label for="total20sLaborHours">20s labor hours</label><input id="total20sLaborHours" type="number" min="0" step="1" value="51112635.470754"></div>
+        </div>
         <div class="inline"><input id="showLevers" type="checkbox"> Include lever table in dashboard image</div>
       </fieldset>
 
@@ -693,6 +713,13 @@ HTML = r"""<!doctype html>
     let _csvFilePath = null;
     let _crfFileContent = null;
     let _crfFilePath = null;
+    let _lastCrfReactorType = null;
+    const defaultConstructionDuration = {AP1000: 76, SFR: 80, HTGR: 125};
+    const default20sLaborHours = {
+      AP1000: 51112635.470754,
+      SFR: 10402590.638989,
+      HTGR: 37288941.045733
+    };
 
     function numberValue(id) {
       const value = $(id).value.trim();
@@ -733,8 +760,10 @@ HTML = r"""<!doctype html>
       $("electricOutputMwe").value = rt === "SMR" ? "310.8" : "2234";
     }
 
-    function updateCrfDefaults() {
+    function updateCrfDefaults(force = false) {
       const rt = $("crfReactorType").value;
+      if (!force && _lastCrfReactorType === rt) return;
+      _lastCrfReactorType = rt;
       if (rt === "AP1000") {
         $("startup").value = "25";
         $("bopGrade").value = "0";
@@ -744,6 +773,8 @@ HTML = r"""<!doctype html>
         $("bopGrade").value = "1";
         $("modularity").value = "1";
       }
+      $("constructionDuration").value = String(defaultConstructionDuration[rt] || 76);
+      $("total20sLaborHours").value = String(default20sLaborHours[rt] || default20sLaborHours.AP1000);
     }
 
     function apiReactorType() {
@@ -778,6 +809,8 @@ HTML = r"""<!doctype html>
           f_2321: numberValue("f2321"),
           land_cost_per_acre_0: numberValue("landCost"),
           startup_0: numberValue("startup"),
+          construction_duration_0: numberValue("constructionDuration"),
+          total_20s_labor_hours: numberValue("total20sLaborHours"),
           staggering_ratio: numberValue("staggering"),
           show_levers: $("showLevers").checked
         },
@@ -864,6 +897,8 @@ HTML = r"""<!doctype html>
         f2321: "Turbine-generator equipment cost input used by the CRF baseline calculations.",
         landCost: "Land cost per acre for preconstruction land accounts.",
         startup: "FOAK startup duration in months.",
+        constructionDuration: "Reference FOAK construction duration in months. Defaults are AP1000 76, SFR 80, and HTGR 125.",
+        total20sLaborHours: "Total labor hours assigned across 20s direct accounts when a raw ACCERT account CSV is converted into a CRF/IAT baseline.",
         staggering: "Fractional overlap used for the sequential construction timeline.",
         numOrders: "Number of firm orders: This determines the size of the order book for a given reactor concept. It directly impacts equipment costs for all plants within the order (including the first).",
         numNoak: "NOAK unit: plant number used for the FOAK-to-NOAK comparison. Range: 1 to firm orders.",
@@ -964,6 +999,22 @@ HTML = r"""<!doctype html>
         return `$${(number / 1e6).toLocaleString(undefined, {maximumFractionDigits: 2})}M`;
       }
       return `$${(number / 1e9).toLocaleString(undefined, {maximumFractionDigits: 3})}B`;
+    }
+
+    function iatCostColumns(formatter) {
+      return [
+        {key: "COA", label: "COA"},
+        {key: "Title", label: "Title"},
+        {key: "Original Equipment Cost", label: "Orig factory", format: formatter},
+        {key: "Original Material Cost", label: "Orig material", format: formatter},
+        {key: "Original Labor Cost", label: "Orig labor", format: formatter},
+        {key: "Original Total Cost", label: "Orig total", format: formatter},
+        {key: "Adjusted Equipment Cost", label: "Adj factory", format: formatter},
+        {key: "Adjusted Material Cost", label: "Adj material", format: formatter},
+        {key: "Adjusted Labor Cost", label: "Adj labor", format: formatter},
+        {key: "Adjusted Total Cost", label: "Adj total", format: formatter},
+        {key: "Adjustment Ratio", label: "Ratio", format: fmt}
+      ];
     }
 
     function links(files) {
@@ -1263,22 +1314,11 @@ HTML = r"""<!doctype html>
       ]);
       const isStandalone = !iat.power_kwe || iat.power_kwe === 1.0;
       if (isStandalone) {
-        html += coaTable(iat.comparison, [
-          {key: "COA", label: "COA"},
-          {key: "Title", label: "Title"},
-          {key: "Original Total Cost", label: "Original ($/kWe)", format: v => fmtKwe(v)},
-          {key: "Adjusted Total Cost", label: "Adjusted ($/kWe)", format: v => fmtKwe(v)},
-          {key: "Adjustment Ratio", label: "Ratio", format: fmt}
-        ], 1.0, false);
+        html += coaTable(iat.comparison, iatCostColumns(v => fmtKwe(v)), 1.0, false);
       } else {
         const unitLabel = coaUnit === "perkw" ? "$/kWe" : coaUnit === "million" ? "M USD" : "B USD";
-        html += coaTable(iat.comparison, [
-          {key: "COA", label: "COA"},
-          {key: "Title", label: "Title"},
-          {key: "Original Total Cost", label: `Original (${unitLabel})`, format: (v, row, kwe) => moneyCell(v, row, kwe)},
-          {key: "Adjusted Total Cost", label: `Adjusted (${unitLabel})`, format: (v, row, kwe) => moneyCell(v, row, kwe)},
-          {key: "Adjustment Ratio", label: "Ratio", format: fmt}
-        ], iat.power_kwe, true);
+        html += `<div class="cell-sub">COA cost columns shown as ${unitLabel}; factory, material, and labor are included for each row.</div>`;
+        html += coaTable(iat.comparison, iatCostColumns((v, row, kwe) => moneyCell(v, row, kwe)), iat.power_kwe, true);
       }
       return title ? `${html}</div>` : html;
     }
@@ -1594,7 +1634,7 @@ HTML = r"""<!doctype html>
       reader.onload = e => { _crfFileContent = e.target.result; };
       reader.readAsText(file);
     });
-    $("crfReactorType").addEventListener("change", updateCrfDefaults);
+    $("crfReactorType").addEventListener("change", () => updateCrfDefaults(true));
     $("runBtn").addEventListener("click", runWorkflow);
     $("resetBtn").addEventListener("click", () => location.reload());
     enhanceLabels();
@@ -1617,6 +1657,53 @@ def _resolve_path(value: str | None) -> Path | None:
     if not path.is_absolute():
         path = REPO_ROOT / path
     return path
+
+
+def _write_uploaded_csv(prefix: str, filename: str | None, content: str) -> Path:
+    csv_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", filename or "upload.csv")
+    tmp_path = OUTPUT_DIR / f"{prefix}{csv_name}"
+    tmp_path.write_text(content)
+    return tmp_path
+
+
+def _is_accert_account_output(path: Path) -> bool:
+    columns = set(pd.read_csv(path, nrows=0).columns)
+    return {"code_of_account", "account_description", "total_cost"}.issubset(columns)
+
+
+def _prepare_iat_input_csv(payload: dict) -> Path:
+    iat = payload["iat"]
+    prepared = iat.get("_prepared_input_csv")
+    if prepared:
+        return Path(prepared)
+
+    csv_content = iat.get("csv_content")
+    if csv_content:
+        input_csv = _write_uploaded_csv("_upload_", iat.get("csv_filename"), csv_content)
+    else:
+        input_csv = _resolve_path(iat.get("input_csv"))
+        if input_csv is None:
+            raise ValueError("IAT CSV input path or uploaded file is required")
+
+    if _is_accert_account_output(input_csv):
+        name = _safe_name(payload.get("output_name", "accert_gui_run"))
+        converted_csv = OUTPUT_DIR / f"{name}_accert_baseline_for_iat_crf.csv"
+        crf = payload.get("crf", {})
+        accert_output_to_crf_baseline(
+            input_csv,
+            converted_csv,
+            reactor_type=crf.get("reactor_type", "AP1000"),
+            total_20s_labor_hours=_num(
+                crf.get("total_20s_labor_hours"),
+                DEFAULT_20S_LABOR_HOURS.get(crf.get("reactor_type", "AP1000"), DEFAULT_20S_LABOR_HOURS["AP1000"]),
+            ),
+        )
+        iat["_prepared_from_accert_csv"] = str(input_csv)
+        iat["_prepared_input_csv"] = str(converted_csv)
+        return converted_csv
+
+    iat["_prepared_input_csv"] = str(input_csv)
+    return input_csv
 
 
 def _num(value, default=None):
@@ -1752,18 +1839,7 @@ def _iat_config(payload: dict, output_csv: Path | None = None, country: str | No
         config["occ_values"] = _parse_occ_values(iat["occ_values"])
         return config
 
-    csv_content = iat.get("csv_content")
-    if csv_content:
-        csv_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", iat.get("csv_filename") or "upload.csv")
-        tmp_path = OUTPUT_DIR / f"_upload_{csv_name}"
-        tmp_path.write_text(csv_content)
-        config["input_csv"] = tmp_path
-        return config
-
-    input_csv = _resolve_path(iat.get("input_csv"))
-    if input_csv is None:
-        raise ValueError("IAT CSV input path or uploaded file is required")
-    config["input_csv"] = input_csv
+    config["input_csv"] = _prepare_iat_input_csv(payload)
     return config
 
 
@@ -1775,6 +1851,10 @@ def _crf_config(payload: dict, baseline_csv: Path | None = None) -> dict:
         "f_2321": _num(crf["f_2321"], 0.0),
         "land_cost_per_acre_0": _num(crf["land_cost_per_acre_0"], 22_000.0),
         "startup_0": _num(crf["startup_0"], 28.0),
+        "construction_duration_0": _num(
+            crf.get("construction_duration_0"),
+            DEFAULT_CONSTRUCTION_DURATIONS.get(crf.get("reactor_type", "AP1000"), 76.0),
+        ),
         "staggering_ratio": _num(crf["staggering_ratio"], 0.75),
     }
     if baseline_csv is not None:
@@ -1944,6 +2024,9 @@ def run_workflow(payload: dict) -> dict:
                     })
             else:
                 result = run_adjustment(config)
+                if iat.get("_prepared_from_accert_csv") and "Converted ACCERT baseline" not in files:
+                    files["Converted ACCERT baseline"] = _file_info(Path(iat["_prepared_input_csv"]))
+                    notes.append("The raw ACCERT account CSV was converted to CRF/IAT baseline format before IAT was run.")
                 summary = _summarize_iat_result(result, power_kwe)
                 comparison_chart.append({
                     "country": "Base case",
@@ -1990,6 +2073,9 @@ def run_workflow(payload: dict) -> dict:
         iat_payload = json.loads(json.dumps(payload))
         iat_payload["iat"]["input_mode"] = "csv"
         iat_result = run_adjustment(_iat_config(iat_payload, iat_csv))
+        if iat_payload["iat"].get("_prepared_from_accert_csv"):
+            files["Converted ACCERT baseline"] = _file_info(Path(iat_payload["iat"]["_prepared_input_csv"]))
+            notes.append("The raw ACCERT account CSV was converted to CRF/IAT baseline format before IAT and CRF were run.")
         crf_result = run_one_scenario(_crf_config(payload, baseline_csv=iat_csv), _levers(payload))
         _crf_countries = payload["iat"].get("countries") or [payload["iat"].get("country", "")]
         save_dashboard(

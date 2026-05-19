@@ -42,8 +42,11 @@ In the ``IAT Inputs`` panel:
 * Set ``Country`` to the destination country, such as ``China``, ``Korea``, or
   ``UAE``.
 * Set ``Year dollar`` to the cost year, such as ``2024``.
-* Set ``ACCERT CSV file`` to the input CSV path. For the packaged AP1000 CRF
-  baseline, use ``src/crf/data/AP1000_baseline.csv``.
+* Set ``ACCERT CSV file`` to the input CSV path. This can be either a
+  CRF/IAT-ready baseline such as ``src/crf/data/AP1000_baseline.csv`` or a raw
+  ACCERT updated-account CSV such as ``ap1000_upd_acc_*.csv``. When a raw
+  ACCERT account CSV is selected, the GUI automatically converts it to the
+  CRF/IAT baseline format before running IAT.
 * Set ``Electric output (MWe)`` to the plant electric output used for
   ``$/kWe`` displays.
 
@@ -60,7 +63,11 @@ In the ``CRF Fixed Inputs`` panel:
 * Leave ``Optional CRF baseline CSV`` blank for the combined workflow. The GUI
   automatically passes the IAT output CSV to CRF.
 * Set fixed project values such as ``f_22``, ``f_2321``, ``Land $/acre``,
-  ``Startup months``, and ``Staggering ratio``.
+  ``Startup months``, ``Construction duration months``, ``20s labor hours``,
+  and ``Staggering ratio``.
+* ``Construction duration months`` defaults to ``76`` for AP1000, ``80`` for
+  SFR, and ``125`` for HTGR. ``20s labor hours`` is used when converting a raw
+  ACCERT account CSV into a CRF/IAT baseline.
 * Keep ``Include lever table in dashboard image`` unchecked for a compact
   dashboard image, or check it when you want the lever table included in the
   exported PNG.
@@ -91,7 +98,8 @@ Run and Read the Results
 Click ``Run workflow``. The result area will show:
 
 * An IAT result table comparing the original U.S. OCC baseline with the
-  adjusted country OCC result.
+  adjusted country OCC result, including factory, material, and labor cost
+  category breakdowns for each displayed COA row.
 * A CRF result summary with FOAK, NOAK, average OCC, average TCI, construction
   duration, and reduction percentage metrics.
 * Interactive plots for capital cost, reduction levers, construction duration,
