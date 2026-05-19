@@ -291,6 +291,12 @@ both CRF and IAT from that converted file:
 
    python tutorial/combined/accert_output_to_crf_iat_example.py
 
+The same workflow is also available as a Jupyter notebook:
+
+.. code-block:: bash
+
+   jupyter notebook tutorial/combined/accert_ap1000_iat_crf_workflow.ipynb
+
 To use the local GUI for CRF, IAT, or the connected IAT-then-CRF workflow, run:
 
 .. code-block:: bash

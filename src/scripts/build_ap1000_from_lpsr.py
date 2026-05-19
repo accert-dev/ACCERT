@@ -15,6 +15,7 @@ TARGET_DIRECT_COST = 6673722963.402768347
 REFERENCE_ELECTRIC_POWER = 2234.0
 REFERENCE_THERMAL_POWER = 6800.0
 REFERENCE_REJECTED_POWER = REFERENCE_THERMAL_POWER - REFERENCE_ELECTRIC_POWER
+AP1000_SCALE_VARIABLE = "scale_ap1000"
 
 
 TABLES = {
@@ -56,9 +57,64 @@ def _clone_table(conn: sqlite3.Connection, source_table: str, target_table: str)
 def _scale_ap1000_tables(conn: sqlite3.Connection, scale: float) -> None:
     conn.execute("UPDATE ap1000_account SET total_cost = total_cost * ? WHERE total_cost IS NOT NULL", (scale,))
     conn.execute("UPDATE ap1000_cost_element SET cost_2018 = cost_2018 * ? WHERE cost_2018 IS NOT NULL", (scale,))
+    conn.execute(
+        """
+        UPDATE ap1000_cost_element
+        SET variables = CASE
+            WHEN variables IS NULL OR TRIM(variables) = '' THEN ?
+            WHEN INSTR(',' || REPLACE(variables, ' ', '') || ',', ',' || ? || ',') > 0 THEN variables
+            ELSE variables || ', ' || ?
+        END
+        WHERE alg_name = 'category_scale'
+          AND variables IS NOT NULL
+          AND TRIM(variables) != ''
+        """,
+        (AP1000_SCALE_VARIABLE, AP1000_SCALE_VARIABLE, AP1000_SCALE_VARIABLE),
+    )
     conn.execute("UPDATE ap1000_account SET review_status = 'Unchanged'")
     conn.execute("UPDATE ap1000_cost_element SET updated = 0")
     conn.execute("UPDATE ap1000_variable SET user_input = 0")
+    conn.execute(
+        """
+        UPDATE ap1000_variable
+        SET var_need = CASE
+            WHEN var_need IS NULL OR TRIM(var_need) = '' THEN ?
+            WHEN INSTR(',' || REPLACE(var_need, ' ', '') || ',', ',' || ? || ',') > 0 THEN var_need
+            ELSE var_need || ', ' || ?
+        END
+        WHERE var_alg = 'category_scale'
+          AND var_need IS NOT NULL
+          AND TRIM(var_need) != ''
+        """,
+        (AP1000_SCALE_VARIABLE, AP1000_SCALE_VARIABLE, AP1000_SCALE_VARIABLE),
+    )
+    next_ind = conn.execute("SELECT COALESCE(MAX(ind), 0) + 1 FROM ap1000_variable").fetchone()[0]
+    linked_rows = conn.execute(
+        """
+        SELECT var_name
+        FROM ap1000_variable
+        WHERE var_alg = 'category_scale'
+          AND var_need IS NOT NULL
+          AND TRIM(var_need) != ''
+        ORDER BY ind
+        """
+    ).fetchall()
+    linked_variables = ", ".join(row[0] for row in linked_rows)
+    conn.execute(
+        """
+        INSERT INTO ap1000_variable
+        (ind, var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked, user_input)
+        VALUES (?, ?, ?, ?, ?, NULL, NULL, ?, 0)
+        """,
+        (
+            next_ind,
+            AP1000_SCALE_VARIABLE,
+            "AP1000 reference calibration factor applied to calculated direct cost elements",
+            scale,
+            "1",
+            linked_variables,
+        ),
+    )
     conn.execute(
         "UPDATE ap1000_variable SET var_value = ? WHERE var_name = 'elec_P'",
         (REFERENCE_ELECTRIC_POWER,),

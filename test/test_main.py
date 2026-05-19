@@ -1,6 +1,8 @@
 import sys
 import os
 import glob
+import contextlib
+import io
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -326,6 +328,31 @@ def test_ap1000_reference_tables_match_target_direct_cost(cursor):
     assert values["rx_P"][1] == "MWt"
     assert values["rej_th_P"][0] == pytest.approx(4566.0)
     assert values["rej_th_P"][1] == "MWt"
+    cursor.execute("""SELECT var_value
+                    FROM ap1000_variable
+                    WHERE var_name = ?;""", ("scale_ap1000",))
+    assert cursor.fetchone()[0] == pytest.approx(2.8540789982106554)
+
+def test_ap1000_recalculation_reproduces_reference_direct_cost(cursor):
+    """AP1000 recalculates to its scaled reference when baseline inputs are unchanged."""
+    accert.ref_model = 'ap1000'
+    accert.acc_tabl = 'ap1000_account'
+    accert.cel_tabl = 'ap1000_cost_element'
+    accert.var_tabl = 'ap1000_variable'
+    accert.alg_tabl = 'ap1000_algorithm'
+    cursor.execute("""UPDATE ap1000_variable
+                    SET user_input = 1
+                    WHERE var_name = ?;""", ("scale_ap1000",))
+    with contextlib.redirect_stdout(io.StringIO()):
+        accert.process_super_values(cursor, "scale_ap1000")
+        accert.update_new_cost_elements(cursor)
+        accert.roll_up_cost_elements(cursor, passes=4)
+        accert.update_account_table_by_cost_elements(cursor)
+        accert.roll_up_account_table(cursor, from_level=4, to_level=0)
+    cursor.execute("""SELECT total_cost
+                    FROM ap1000_account
+                    WHERE code_of_account = ?;""", ("2",))
+    assert cursor.fetchone()[0] == pytest.approx(6673722963.402768347, rel=1e-7)
 
 def test_lpsr_same_power_input_does_not_recalculate_rejected_heat(cursor):
     """LPSR skips rejected heat recalculation when power inputs match defaults."""
