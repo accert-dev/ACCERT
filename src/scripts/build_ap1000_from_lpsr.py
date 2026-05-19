@@ -1,4 +1,4 @@
-"""Create AP1000 ACCERT reference tables from the LPSR table structure."""
+"""Create AP1000 ACCERT reference tables from the TIMCAT direct-cost structure."""
 from __future__ import annotations
 
 import argparse
@@ -15,6 +15,11 @@ TARGET_DIRECT_COST = 6673722963.402768347
 REFERENCE_ELECTRIC_POWER = 2234.0
 REFERENCE_THERMAL_POWER = 6800.0
 REFERENCE_REJECTED_POWER = REFERENCE_THERMAL_POWER - REFERENCE_ELECTRIC_POWER
+SCALING_REFERENCE_ELECTRIC_POWER = 2288.0
+SCALING_REFERENCE_THERMAL_POWER = 6834.0
+SCALING_REFERENCE_REJECTED_POWER = (
+    SCALING_REFERENCE_THERMAL_POWER - SCALING_REFERENCE_ELECTRIC_POWER
+)
 AP1000_SCALE_VARIABLE = "scale_ap1000"
 
 
@@ -35,7 +40,7 @@ def _scale_factor(conn: sqlite3.Connection) -> float:
         "SELECT total_cost FROM lpsr_account WHERE code_of_account = '2'"
     ).fetchone()
     if row is None or row[0] in (None, 0):
-        raise ValueError("Could not find a nonzero LPSR account 2 total_cost")
+        raise ValueError("Could not find a nonzero source account 2 total_cost")
     return TARGET_DIRECT_COST / float(row[0])
 
 
@@ -73,6 +78,11 @@ def _scale_ap1000_tables(conn: sqlite3.Connection, scale: float) -> None:
     )
     conn.execute("UPDATE ap1000_account SET review_status = 'Unchanged'")
     conn.execute("UPDATE ap1000_cost_element SET updated = 0")
+    conn.execute("UPDATE ap1000_cost_element SET algno = REPLACE(algno, 'LPSR', 'AP1000') WHERE algno IS NOT NULL")
+    conn.execute("UPDATE ap1000_cost_element SET source_row_type = REPLACE(source_row_type, 'lpsr', 'ap1000') WHERE source_row_type IS NOT NULL")
+    conn.execute("UPDATE ap1000_cost_element SET source_row_type = REPLACE(source_row_type, 'LPSR', 'AP1000') WHERE source_row_type IS NOT NULL")
+    conn.execute("UPDATE ap1000_algorithm SET alg_python = 'AP1000DirectCostFunc' WHERE alg_python = 'LPSRDirectCostFunc'")
+    conn.execute("UPDATE ap1000_variable SET var_description = REPLACE(var_description, 'LPSR', 'AP1000') WHERE var_description IS NOT NULL")
     conn.execute("UPDATE ap1000_variable SET user_input = 0")
     conn.execute(
         """
@@ -127,6 +137,18 @@ def _scale_ap1000_tables(conn: sqlite3.Connection, scale: float) -> None:
         "UPDATE ap1000_variable SET var_value = ? WHERE var_name = 'rej_th_P'",
         (REFERENCE_REJECTED_POWER,),
     )
+    conn.execute(
+        "UPDATE ap1000_variable SET var_value = ? WHERE var_name = 'ref_elec_P'",
+        (SCALING_REFERENCE_ELECTRIC_POWER,),
+    )
+    conn.execute(
+        "UPDATE ap1000_variable SET var_value = ? WHERE var_name = 'ref_rx_P'",
+        (SCALING_REFERENCE_THERMAL_POWER,),
+    )
+    conn.execute(
+        "UPDATE ap1000_variable SET var_value = ? WHERE var_name = 'ref_rej_th_P'",
+        (SCALING_REFERENCE_REJECTED_POWER,),
+    )
 
 
 def _write_csv(conn: sqlite3.Connection, table_name: str, path: Path) -> int:
@@ -154,7 +176,7 @@ def build_ap1000_tables(db_path: Path, ref_dir: Path) -> None:
             count = _write_csv(conn, target_table, ref_dir / file_name)
             print(f"Wrote {count} {target_table} rows.")
         print(f"AP1000 account 2 direct cost target: {TARGET_DIRECT_COST:.12f}")
-        print(f"LPSR-to-AP1000 scale factor: {scale:.12f}")
+        print(f"TIMCAT-to-AP1000 scale factor: {scale:.12f}")
     finally:
         conn.close()
 

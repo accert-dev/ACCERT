@@ -287,6 +287,12 @@ The ACCERT-to-CRF/IAT example first runs the AP1000 ACCERT tutorial, converts
 the generated ``ap1000_upd_acc_*.csv`` file into a CRF/IAT baseline, then runs
 both CRF and IAT from that converted file:
 
+The AP1000 and LPSR ACCERT direct-cost basis used by this workflow follows
+Stewart W.R. and Shirvan K., "Capital cost estimation for advanced nuclear
+power plants," *Renewable and Sustainable Energy Reviews*, Nov. 2021, 111880,
+https://doi.org/10.1016/j.rser.2021.111880, and the TIMCAT reference
+implementation at https://github.com/mit-crpg/TIMCAT.
+
 .. code-block:: bash
 
    python tutorial/combined/accert_output_to_crf_iat_example.py

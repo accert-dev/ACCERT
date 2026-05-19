@@ -2,8 +2,14 @@ AP1000
 ======
 
 The AP1000 ACCERT example is in ``tutorial/accert/AP1000.son``. It uses the
-AP1000 reference table family, which follows the LPSR direct-cost table
-structure but is scaled to a 2234 MWe two-unit AP1000 case.
+AP1000 reference table family, which follows the TIMCAT direct-cost table
+structure and is scaled to a 2234 MWe two-unit AP1000 case.
+
+The AP1000 and LPSR direct-cost basis follows Stewart W.R. and Shirvan K.,
+"Capital cost estimation for advanced nuclear power plants," *Renewable and
+Sustainable Energy Reviews*, Nov. 2021, 111880,
+https://doi.org/10.1016/j.rser.2021.111880, and the TIMCAT reference
+implementation at https://github.com/mit-crpg/TIMCAT.
 
 .. code-block:: son
 

@@ -15,4 +15,8 @@ accert{
         value = 2234
         unit = MW
     }
+    var(mc_piping_M){
+        value = 77001
+        unit = kg
+    }
 }

@@ -2,9 +2,9 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 1,adm_bldg_bldg_vol,Building volume for 219.142,0.0,m^3,,,scale_adm_bldg_bldg_vol,0
 2,S,General Yardwork Area for 211.1,23.0,m^2,,,scale_S,0
 3,bldg_V,Structural & Miscellaneous Steel Building volume for 213.142,194392.0,m^3,,,scale_bldg_V,0
-4,cont_D_D,LPSR A.212.15 containment cylinder/dome diameter D,44.2,m,,,sup_str_S,0
+4,cont_D_D,AP1000 A.212.15 containment cylinder/dome diameter D,44.2,m,,,sup_str_S,0
 5,cont_hatch_ms_bldg_vol,Building volume for 219.142,0.0,m^3,,,scale_cont_hatch_ms_bldg_vol,0
-6,cont_H_H,LPSR A.212.15 containment cylinder height H,45.7,m,,,sup_str_S,0
+6,cont_H_H,AP1000 A.212.15 containment cylinder height H,45.7,m,,,sup_str_S,0
 7,cont_V,Containment Spray System Containment volume for 223.4,86163.9381112316,m^3,,,scale_cont_V,0
 8,cr_dg_bldg_bldg_vol,Structural & Miscellaneous Steel Building volume for 218142,2660.0,m^3,,,scale_cr_dg_bldg_bldg_vol,0
 9,cr_dg_bldg_sub_S,Roofing & Flashing Substructure S for 218145,380.0,m^2,,,scale_cr_dg_bldg_sub_S,0
@@ -596,7 +596,7 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 595,ref_direct_cost_frm_S,"Reference direct cost basis for Surface S scale, source account 212.3",1.0,m^2,,,scale_frm_S,0
 596,ref_direct_cost_frm_S_9_71886e_06,"Reference direct cost basis for Surface S scale, source account 217.3",9718863.0,m^2,,,scale_frm_S_9_71886e_06,0
 597,ref_direct_cost_frm_vsl_M,"Reference direct cost basis for Vessel mass scale, source account 221.1",75019941.0,kg,,,scale_frm_vsl_M,0
-598,ref_elec_P,Reference electric power used by electric-power scale laws,1144.0,MWe,,,"scale_elec_P, scale_tur_plant_equip_elec_P",0
+598,ref_elec_P,Reference electric power used by electric-power scale laws,2288.0,MWe,,,"scale_elec_P, scale_tur_plant_equip_elec_P",0
 599,ref_fuel_stor_bldg_bldg_vol,Reference Building volume for Structural & Miscellaneous Steel 217.142,28800.0,m^3,,,scale_fuel_stor_bldg_bldg_vol,0
 600,ref_fuel_stor_bldg_sub_S,Reference Substructure S for Roofing & Flashing 217.145,900.0,m^2,,,scale_fuel_stor_bldg_sub_S,0
 601,ref_fuel_stor_bldg_sub_vol,Reference Substructure volume for Substructure Concrete 217.13,1080.0,m^3,,,scale_fuel_stor_bldg_sub_vol,0
@@ -611,8 +611,8 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 610,ref_pri_aux_bldg_sup_vol,Reference Superstructure volume for Concrete Work 215.141,3326.0,m^3,,,scale_pri_aux_bldg_sup_vol,0
 611,ref_pri_flow,Reference Primary flowrate for Liquid Waste System 224.1,23872.0,kg/s,,,scale_pri_flow,0
 612,ref_rx_D,Reference Reactor diameter (m) for Vessel Internals 221.3,4.6,m,,,scale_rx_D,0
-613,ref_rej_th_P,Reference Rejected thermal power for 261.1,2273.0,MWt,,,scale_rej_th_P,0
-614,ref_rx_P,Reference reactor/plant thermal power used by RX/plant-power scale laws,3417.0,MWt,,,scale_P,0
+613,ref_rej_th_P,Reference Rejected thermal power for 261.1,4546.0,MWt,,,scale_rej_th_P,0
+614,ref_rx_P,Reference reactor/plant thermal power used by RX/plant-power scale laws,6834.0,MWt,,,scale_P,0
 615,ref_sfp_V,"Reference SFP volume for Fuel Storage, Cleaning, & Inspection Equipment 225.4",1056.0,m^3,,,scale_sfp_V,0
 616,ref_sub_str_S,Reference Substructure S for Roof Deck 213.144,6100.0,m^2,,,scale_sub_str_S,0
 617,ref_sub_str_V,Reference Substructure volume for Substructure Concrete 212.13,4603.0,m^3,,,scale_sub_str_V,0
