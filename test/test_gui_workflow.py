@@ -74,7 +74,39 @@ def test_gui_iat_crf_converts_raw_accert_account_csv(monkeypatch, tmp_path):
     converted_df = pd.read_csv(converted)
     assert {"Account", "Title", "Total Cost (USD)", "Factory Equipment Cost", "Site Labor Cost", "Site Material Cost"}.issubset(converted_df.columns)
     assert "Converted ACCERT baseline" in result["files"]
+    assert "CRF results CSV" in result["files"]
+    assert (tmp_path / "pytest_gui_accert_iat_crf_crf_results.csv").exists()
+    assert result["base_case"]["comparison"]
+    assert result["base_case"]["comparison"][0]["Total Cost"] > 0
     assert result["iat"]["comparison"]
     assert result["crf"]["plants"]
+    assert result["crf"]["num_noak"] == 2
+    assert result["crf"]["num_orders"] == 2
+    assert result["crf"]["years_to_noak"] > 0
+    assert result["crf"]["years_to_orderbook"] > 0
     assert crf_iat_gui._crf_config(_gui_payload(raw_accert.to_csv(index=False)))["construction_duration_0"] == pytest.approx(76)
     assert result["crf"]["plants"][0]["Construction duration"] > 0
+
+
+def test_gui_crf_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
+    raw_accert = pd.DataFrame(
+        [
+            {"code_of_account": "211", "account_description": "Yardwork", "total_cost": 1_000_000.0},
+            {"code_of_account": "212", "account_description": "Reactor building", "total_cost": 2_000_000.0},
+            {"code_of_account": "22", "account_description": "Reactor plant equipment", "total_cost": 3_000_000.0},
+            {"code_of_account": "23", "account_description": "Turbine plant equipment", "total_cost": 4_000_000.0},
+        ]
+    )
+    payload = _gui_payload("")
+    payload["workflow"] = "crf_only"
+    payload["crf"]["baseline_csv_content"] = raw_accert.to_csv(index=False)
+    payload["crf"]["baseline_csv_filename"] = "ap1000_upd_acc_test.csv"
+    monkeypatch.setattr(crf_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crf_iat_gui.run_workflow(payload)
+
+    assert (tmp_path / "pytest_gui_accert_iat_crf_accert_baseline_for_crf.csv").exists()
+    assert "Converted ACCERT baseline" in result["files"]
+    assert "CRF results CSV" in result["files"]
+    assert result["base_case"]["comparison"]
+    assert result["crf"]["plants"]

@@ -35,6 +35,7 @@ from crf import (
     save_dashboard,
     waterfall_to_dataframe,
 )
+from crf.io.excel_inputs import InputStore
 from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
 
 
@@ -50,6 +51,13 @@ DEFAULT_20S_LABOR_HOURS = {
     "AP1000": 51_112_635.470753975,
     "SFR": 10_402_590.638988608,
     "HTGR": 37_288_941.04573331,
+}
+BASE_GROUP_TITLES = {
+    "10": "Capitalized Pre-Construction Costs",
+    "20": "Capitalized Direct Costs",
+    "30": "Capitalized Indirect Services Costs",
+    "50": "Capitalized Supplementary Costs",
+    "60": "Capitalized Financial Costs",
 }
 
 
@@ -166,6 +174,14 @@ HTML = r"""<!doctype html>
       font: inherit;
       background: #f7fbff;
       color: var(--ink);
+    }
+    .readonly-note {
+      border: 1px solid rgba(144,185,203,0.45);
+      border-radius: 5px;
+      padding: 8px 9px;
+      background: rgba(247,251,255,0.28);
+      color: #eef7fb;
+      font-weight: 700;
     }
     input[type="checkbox"] {
       width: auto;
@@ -514,9 +530,26 @@ HTML = r"""<!doctype html>
       padding: 12px;
       margin: 12px 0 16px;
     }
+    .base-case {
+      border: 1px solid #bfd5df;
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+      margin: 0 0 16px;
+      box-shadow: 0 2px 8px rgba(25, 47, 70, 0.06);
+    }
     .scenario-card h4 {
       margin: 0 0 8px;
       font-size: 16px;
+    }
+    .result-note {
+      border-left: 4px solid var(--accent);
+      background: #fff;
+      color: var(--muted);
+      padding: 10px 12px;
+      margin: 8px 0 12px;
+      font-weight: 700;
+      line-height: 1.42;
     }
     img.dashboard {
       max-width: 100%;
@@ -601,8 +634,8 @@ HTML = r"""<!doctype html>
             </div>
           </div>
           <div>
-            <label for="yearDollar">Year dollar</label>
-            <input id="yearDollar" type="number" value="2024">
+            <label>Year dollar</label>
+            <div class="readonly-note">2024 CPI-U basis</div>
           </div>
         </div>
         <div id="iatCsvGroup" class="hidden">
@@ -653,7 +686,7 @@ HTML = r"""<!doctype html>
         </div>
         <div class="row">
           <div><label for="constructionDuration">Construction duration months</label><input id="constructionDuration" type="number" min="1" step="1" value="76"></div>
-          <div><label for="total20sLaborHours">20s labor hours</label><input id="total20sLaborHours" type="number" min="0" step="1" value="51112635.470754"></div>
+          <div><label for="total20sLaborHours">20s labor hours</label><input id="total20sLaborHours" type="number" min="0" step="1" value="51112635"></div>
         </div>
         <div class="inline"><input id="showLevers" type="checkbox"> Include lever table in dashboard image</div>
       </fieldset>
@@ -716,9 +749,9 @@ HTML = r"""<!doctype html>
     let _lastCrfReactorType = null;
     const defaultConstructionDuration = {AP1000: 76, SFR: 80, HTGR: 125};
     const default20sLaborHours = {
-      AP1000: 51112635.470754,
-      SFR: 10402590.638989,
-      HTGR: 37288941.045733
+      AP1000: 51112635,
+      SFR: 10402591,
+      HTGR: 37288941
     };
 
     function numberValue(id) {
@@ -774,7 +807,7 @@ HTML = r"""<!doctype html>
         $("modularity").value = "1";
       }
       $("constructionDuration").value = String(defaultConstructionDuration[rt] || 76);
-      $("total20sLaborHours").value = String(default20sLaborHours[rt] || default20sLaborHours.AP1000);
+      $("total20sLaborHours").value = String(Math.round(default20sLaborHours[rt] || default20sLaborHours.AP1000));
     }
 
     function apiReactorType() {
@@ -792,7 +825,7 @@ HTML = r"""<!doctype html>
           input_mode: $("iatInputMode").value,
           reactor_type: apiReactorType(),
           countries: selectedCountries(),
-          year_dollar: numberValue("yearDollar"),
+          year_dollar: 2024,
           input_csv: _csvFilePath,
           csv_content: _csvFileContent,
           csv_filename: _csvFileContent ? $("iatCsvName").value : null,
@@ -885,7 +918,6 @@ HTML = r"""<!doctype html>
         iatInputMode: "ACCERT CSV uses a COA cost file. Standalone OCC builds a cost structure from the localization shares.",
         iatReactorType: "Large reactor or SMR localization basis. ACCERT output options use the input COA file.",
         country: "Country where localization and adjustment factors are applied.",
-        yearDollar: "Dollar year label for the IAT run.",
         iatCsv: "Input ACCERT/COA CSV. Relative paths are resolved from the ACCERT repository root.",
         scenarioCount: "Standalone IAT scenario count. Choose 1 to 3 OCC scenarios.",
         occValue1: "Scenario 1 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
@@ -1001,19 +1033,62 @@ HTML = r"""<!doctype html>
       return `$${(number / 1e9).toLocaleString(undefined, {maximumFractionDigits: 3})}B`;
     }
 
-    function iatCostColumns(formatter) {
+    function iatResultColumns(formatter) {
       return [
         {key: "COA", label: "COA"},
         {key: "Title", label: "Title"},
-        {key: "Original Equipment Cost", label: "Orig factory", format: formatter},
-        {key: "Original Material Cost", label: "Orig material", format: formatter},
-        {key: "Original Labor Cost", label: "Orig labor", format: formatter},
-        {key: "Original Total Cost", label: "Orig total", format: formatter},
+        {key: "Adjustment Ratio", label: "Ratio", format: fmt},
         {key: "Adjusted Equipment Cost", label: "Adj factory", format: formatter},
         {key: "Adjusted Material Cost", label: "Adj material", format: formatter},
         {key: "Adjusted Labor Cost", label: "Adj labor", format: formatter},
-        {key: "Adjusted Total Cost", label: "Adj total", format: formatter},
-        {key: "Adjustment Ratio", label: "Ratio", format: fmt}
+        {key: "Adjusted Total Cost", label: "Adj total", format: formatter}
+      ];
+    }
+
+    function baseCostColumns(formatter) {
+      return [
+        {key: "COA", label: "COA"},
+        {key: "Title", label: "Title"},
+        {key: "Equipment Cost", label: "Factory", format: formatter},
+        {key: "Material Cost", label: "Material", format: formatter},
+        {key: "Labor Cost", label: "Labor", format: formatter},
+        {key: "Total Cost", label: "Total", format: formatter}
+      ];
+    }
+
+    function baseCaseBlock(baseCase) {
+      if (!baseCase || !baseCase.comparison || !baseCase.comparison.length) return "";
+      const isStandalone = !baseCase.power_kwe || baseCase.power_kwe === 1.0;
+      if (isStandalone) {
+        return `<div class="base-case">
+          <h3>Base Case</h3>
+          <div class="cell-sub">${esc(baseCase.source || "Baseline")} shown as $/kWe; factory, material, and labor categories are included.</div>
+          ${coaTable(baseCase.comparison, baseCostColumns(v => fmtKwe(v)), 1.0, false)}
+        </div>`;
+      }
+      const unitLabel = coaUnit === "perkw" ? "$/kWe" : coaUnit === "million" ? "M USD" : "B USD";
+      return `<div class="base-case">
+        <h3>Base Case</h3>
+        <div class="cell-sub">${esc(baseCase.source || "Baseline")} shown as ${unitLabel}; factory, material, and labor categories are included.</div>
+        ${coaTable(baseCase.comparison, baseCostColumns((v, row, kwe) => moneyCell(v, row, kwe)), baseCase.power_kwe, true)}
+      </div>`;
+    }
+
+    function crfResultsColumns() {
+      return [
+        {key: "Plant number", label: "Plant"},
+        {key: "OCC", label: "OCC ($/kW)", format: fmt},
+        {key: "TCI", label: "TCI ($/kW)", format: fmt},
+        {key: "Construction duration", label: "Construction mo.", format: fmt},
+        {key: "Startup duration", label: "Startup mo.", format: fmt},
+        {key: "Preconstruction costs", label: "10s", format: fmt},
+        {key: "Direct costs", label: "20s", format: fmt},
+        {key: "Direct costs: equipment", label: "20s factory", format: fmt},
+        {key: "Direct costs: material", label: "20s material", format: fmt},
+        {key: "Direct costs: labor", label: "20s labor", format: fmt},
+        {key: "Indirect costs", label: "30s", format: fmt},
+        {key: "Supplementary costs", label: "50s", format: fmt},
+        {key: "Financing costs", label: "60s", format: fmt}
       ];
     }
 
@@ -1301,24 +1376,24 @@ HTML = r"""<!doctype html>
     }
 
     function fmtKwe(value) {
-      return value != null ? `$${fmt(value)}/kWe` : "";
+      return value != null ? `$${fmtInt(value)}/kWe` : "";
     }
 
     function iatBlock(iat, title = "") {
       let html = title ? `<div class="scenario-card"><h4>${title}</h4>` : "";
       html += metrics([
-        {label: "Input OCC ($/kWe)", value: fmtKwe(iat.input_occ_per_kw)},
-        {label: "Adjusted OCC ($/kWe)", value: fmtKwe(iat.adjusted_occ_per_kw)},
+        {label: "Base case OCC", value: fmtKwe(iat.input_occ_per_kw)},
+        {label: "WE-FOAK OCC ($/kWe)", value: fmtKwe(iat.adjusted_occ_per_kw)},
         {label: "OCC adjustment factor", value: fmt(iat.occ_adjustment_factor)},
         {label: "Country", value: iat.country}
       ]);
       const isStandalone = !iat.power_kwe || iat.power_kwe === 1.0;
       if (isStandalone) {
-        html += coaTable(iat.comparison, iatCostColumns(v => fmtKwe(v)), 1.0, false);
+        html += coaTable(iat.comparison, iatResultColumns(v => fmtKwe(v)), 1.0, false);
       } else {
         const unitLabel = coaUnit === "perkw" ? "$/kWe" : coaUnit === "million" ? "M USD" : "B USD";
-        html += `<div class="cell-sub">COA cost columns shown as ${unitLabel}; factory, material, and labor are included for each row.</div>`;
-        html += coaTable(iat.comparison, iatCostColumns((v, row, kwe) => moneyCell(v, row, kwe)), iat.power_kwe, true);
+        html += `<div class="cell-sub">Adjusted COA cost columns shown as ${unitLabel}; original values are shown in the Base Case section.</div>`;
+        html += coaTable(iat.comparison, iatResultColumns((v, row, kwe) => moneyCell(v, row, kwe)), iat.power_kwe, true);
       }
       return title ? `${html}</div>` : html;
     }
@@ -1428,6 +1503,7 @@ HTML = r"""<!doctype html>
       if (!isStandaloneMultiCountryIat) {
         html += links(data.files);
       }
+      html += baseCaseBlock(data.base_case);
       if (data.iat) {
         if (data.iat.country_results && data.iat.country_results.length) {
           if (isStandaloneMultiCountryIat) {
@@ -1496,17 +1572,22 @@ HTML = r"""<!doctype html>
       }
       if (data.crf) {
         html += `<h3>CRF Result</h3>`;
+        html += `<div class="result-note">The IAT value above is the internationally adjusted WE-FOAK OCC baseline. CRF recalculates FOAK from that baseline using the CRF fixed inputs and first-unit project effects, including factory-equipment inputs, land, construction/startup duration, financing, design completion, and FOAK execution assumptions, so the CRF FOAK OCC can differ from the WE-FOAK OCC.</div>`;
         html += metrics([
-          {label: "FOAK OCC ($/kW)", value: fmt(data.crf.occ_1)},
-          {label: "NOAK OCC ($/kW)", value: fmt(data.crf.occ_noak)},
-          {label: "FOAK TCI ($/kW)", value: fmt(data.crf.tci_1)},
-          {label: "NOAK TCI ($/kW)", value: fmt(data.crf.tci_noak)}
+          {label: "FOAK OCC ($/kW)", value: fmtInt(data.crf.occ_1)},
+          {label: "NOAK OCC ($/kW)", value: fmtInt(data.crf.occ_noak)},
+          {label: "Average OCC ($/kW)", value: fmtInt(data.crf.avg_occ)},
+          {label: "OCC reduction (%)", value: fmtInt(data.crf.occ_reduction_percent)}
         ]);
         html += metrics([
-          {label: "Average OCC ($/kW)", value: fmt(data.crf.avg_occ)},
-          {label: "Average TCI ($/kW)", value: fmt(data.crf.avg_tci)},
-          {label: "Average duration (months)", value: fmtInt(data.crf.avg_duration)},
-          {label: "OCC reduction (%)", value: fmt(data.crf.occ_reduction_percent)}
+          {label: "FOAK TCI ($/kW)", value: fmtInt(data.crf.tci_1)},
+          {label: "NOAK TCI ($/kW)", value: fmtInt(data.crf.tci_noak)},
+          {label: "Average TCI ($/kW)", value: fmtInt(data.crf.avg_tci)},
+          {label: "Average duration (months)", value: fmtInt(data.crf.avg_duration)}
+        ]);
+        html += metrics([
+          {label: `Years to build ${fmtInt(data.crf.num_noak)} plants`, value: `${fmtInt(data.crf.years_to_noak)} years`},
+          {label: `Years to build ${fmtInt(data.crf.num_orders)} plants`, value: `${fmtInt(data.crf.years_to_orderbook)} years`}
         ]);
         html += `<div class="tabs">
           <button class="active" data-tab="capital">Capital Cost</button>
@@ -1514,6 +1595,7 @@ HTML = r"""<!doctype html>
           <button data-tab="durations">Construction Durations</button>
           <button data-tab="breakdown">Cost Breakdown</button>
           <button data-tab="dashboard">Dashboard Image</button>
+          <button data-tab="results">Results Table</button>
         </div>`;
         html += `<div id="tab-capital" class="tab-panel active"><div class="chart-grid">
           <div class="chart-panel"><h3>Capital Cost: OCC and TCI</h3><div id="capitalChart"></div></div>
@@ -1535,6 +1617,10 @@ HTML = r"""<!doctype html>
           html += `<img class="dashboard" src="${dashUrl}" alt="CRF dashboard">`;
         }
         html += `</div>`;
+        html += `<div id="tab-results" class="tab-panel">
+          ${fileLink("Download CRF results CSV", data.files && data.files["CRF results CSV"])}
+          ${table(data.crf.plants, crfResultsColumns())}
+        </div>`;
       }
       if (data.notes && data.notes.length) {
         html += `<h3>Notes</h3><ul>${data.notes.map(n => `<li>${n}</li>`).join("")}</ul>`;
@@ -1706,6 +1792,40 @@ def _prepare_iat_input_csv(payload: dict) -> Path:
     return input_csv
 
 
+def _prepare_crf_baseline_csv(payload: dict) -> Path | None:
+    crf = payload["crf"]
+    prepared = crf.get("_prepared_baseline_csv")
+    if prepared:
+        return Path(prepared)
+
+    csv_content = crf.get("baseline_csv_content")
+    if csv_content:
+        input_csv = _write_uploaded_csv("_crf_upload_", crf.get("baseline_csv_filename"), csv_content)
+    else:
+        input_csv = _resolve_path(crf.get("baseline_csv"))
+        if input_csv is None:
+            return None
+
+    if _is_accert_account_output(input_csv):
+        name = _safe_name(payload.get("output_name", "accert_gui_run"))
+        converted_csv = OUTPUT_DIR / f"{name}_accert_baseline_for_crf.csv"
+        accert_output_to_crf_baseline(
+            input_csv,
+            converted_csv,
+            reactor_type=crf.get("reactor_type", "AP1000"),
+            total_20s_labor_hours=_num(
+                crf.get("total_20s_labor_hours"),
+                DEFAULT_20S_LABOR_HOURS.get(crf.get("reactor_type", "AP1000"), DEFAULT_20S_LABOR_HOURS["AP1000"]),
+            ),
+        )
+        crf["_prepared_from_accert_csv"] = str(input_csv)
+        crf["_prepared_baseline_csv"] = str(converted_csv)
+        return converted_csv
+
+    crf["_prepared_baseline_csv"] = str(input_csv)
+    return input_csv
+
+
 def _num(value, default=None):
     if value in (None, ""):
         return default
@@ -1860,14 +1980,7 @@ def _crf_config(payload: dict, baseline_csv: Path | None = None) -> dict:
     if baseline_csv is not None:
         config["baseline_csv"] = baseline_csv
         return config
-    csv_content = crf.get("baseline_csv_content")
-    if csv_content:
-        csv_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", crf.get("baseline_csv_filename") or "crf_upload.csv")
-        tmp_path = OUTPUT_DIR / f"_crf_upload_{csv_name}"
-        tmp_path.write_text(csv_content)
-        config["baseline_csv"] = tmp_path
-        return config
-    path = _resolve_path(crf.get("baseline_csv"))
+    path = _prepare_crf_baseline_csv(payload)
     if path is not None:
         config["baseline_csv"] = path
     return config
@@ -1907,6 +2020,29 @@ def _summarize_iat_result(result: dict, power_kwe: float) -> dict:
     }
 
 
+def _base_case_from_iat_result(result: dict, power_kwe: float) -> dict:
+    metrics = _iat_metrics(result["adjusted_costs"], power_kwe)
+    comparison = []
+    for row in metrics["comparison"]:
+        comparison.append(
+            {
+                "COA": row.get("COA"),
+                "Title": row.get("Title"),
+                "Equipment Cost": row.get("Original Equipment Cost", 0.0),
+                "Material Cost": row.get("Original Material Cost", 0.0),
+                "Labor Cost": row.get("Original Labor Cost", 0.0),
+                "Land Cost": row.get("Original Land Cost", 0.0),
+                "Catch-All Cost": row.get("Original Catch-All Cost", 0.0),
+                "Total Cost": row.get("Original Total Cost", 0.0),
+            }
+        )
+    return {
+        "source": result.get("input_source", "IAT input baseline"),
+        "power_kwe": power_kwe,
+        "comparison": comparison,
+    }
+
+
 def _summarize_occ_result(result: dict, power_kwe: float) -> dict:
     first = result["scenario_results"][0]
     metrics = _iat_metrics(first["adjusted_costs"], power_kwe)
@@ -1934,8 +2070,87 @@ def _summarize_occ_result(result: dict, power_kwe: float) -> dict:
     }
 
 
+def _normalize_accounts(series: pd.Series) -> pd.Series:
+    return series.astype(str).str.strip().str.replace(r"\.0$", "", regex=True)
+
+
+def _leaf_mask(accounts: pd.Series) -> pd.Series:
+    values = accounts.astype(str).tolist()
+    return pd.Series(
+        [
+            not any(other != account and other.startswith(account) for other in values)
+            for account in values
+        ],
+        index=accounts.index,
+    )
+
+
+def _base_case_summary_from_dataframe(df: pd.DataFrame, power_kwe: float, source: str) -> dict:
+    data = df.copy()
+    data["Account"] = _normalize_accounts(data["Account"])
+    for column in [
+        "Total Cost (USD)",
+        "Factory Equipment Cost",
+        "Site Material Cost",
+        "Site Labor Cost",
+        "Land Cost",
+        "Catch-All Cost",
+    ]:
+        if column not in data.columns:
+            data[column] = 0.0
+        data[column] = pd.to_numeric(
+            data[column].astype(str).str.replace(",", "", regex=False),
+            errors="coerce",
+        ).fillna(0.0)
+    accounts = data["Account"].astype(str)
+    leaf = data.loc[_leaf_mask(accounts)].copy()
+    leaf_accounts = leaf["Account"].astype(str)
+    rows = []
+
+    def add_row(code: str, title: str, subset: pd.DataFrame) -> None:
+        if subset.empty:
+            return
+        rows.append(
+            {
+                "COA": code,
+                "Title": title,
+                "Equipment Cost": float(subset["Factory Equipment Cost"].sum()),
+                "Material Cost": float(subset["Site Material Cost"].sum()),
+                "Labor Cost": float(subset["Site Labor Cost"].sum()),
+                "Land Cost": float(subset["Land Cost"].sum()),
+                "Catch-All Cost": float(subset["Catch-All Cost"].sum()),
+                "Total Cost": float(subset["Total Cost (USD)"].sum()),
+            }
+        )
+
+    for group in sorted({account[0] for account in leaf_accounts if account and account[0].isdigit()}):
+        add_row(f"{group}0", BASE_GROUP_TITLES.get(f"{group}0", ""), leaf.loc[leaf_accounts.str.startswith(group)])
+    level_2_codes = sorted({account[:2] for account in accounts if len(account) >= 2 and account[:2].isdigit()})
+    for code in level_2_codes:
+        subset = leaf.loc[leaf_accounts.str.startswith(code)]
+        if subset.empty:
+            continue
+        title_rows = data.loc[data["Account"].eq(code), "Title"]
+        add_row(code, str(title_rows.iloc[0]) if not title_rows.empty else "", subset)
+    return {
+        "source": source,
+        "power_kwe": power_kwe,
+        "comparison": rows,
+    }
+
+
+def _base_case_from_crf_config(config: dict) -> dict:
+    df, power = InputStore(
+        data_dir=config.get("data_dir"),
+        baseline_csv=config.get("baseline_csv"),
+    ).get_baseline(config["reactor_type"])
+    source = str(config.get("baseline_csv") or f"{config['reactor_type']} built-in baseline")
+    return _base_case_summary_from_dataframe(df, power, source)
+
+
 def _summarize_crf_result(result: dict) -> dict:
     noak = int(result.get("num_NOAK", result.get("Num_orders", 1)))
+    num_orders = int(result.get("Num_orders", result.get("num_orders", noak)))
     plant_columns = [
         "Plant number",
         "OCC",
@@ -1953,7 +2168,14 @@ def _summarize_crf_result(result: dict) -> dict:
     ]
     plants = results_to_dataframe(result)
     available = [column for column in plant_columns if column in plants.columns]
+    timeline = _timeline_records(
+        plants,
+        float(result.get("effective_staggering_ratio", result.get("staggering_ratio", 0.75))),
+    )
+    years_by_plant = {int(row["plant"]): float(row["startup_end_year"]) for row in timeline}
     return {
+        "num_noak": noak,
+        "num_orders": num_orders,
         "occ_1": result.get("OCC_1"),
         "occ_noak": result.get(f"OCC_{noak}"),
         "tci_1": result.get("TCI_1"),
@@ -1962,11 +2184,20 @@ def _summarize_crf_result(result: dict) -> dict:
         "avg_tci": result.get("avg_TCI"),
         "avg_duration": result.get("avg_duration"),
         "occ_reduction_percent": result.get("occ_reduction_from_FOAK_to_NOAK_percent"),
+        "years_to_noak": years_by_plant.get(noak),
+        "years_to_orderbook": years_by_plant.get(num_orders),
         "show_levers": False,
         "plants": _records(plants[available]),
-        "timeline": _timeline_records(plants, float(result.get("effective_staggering_ratio", result.get("staggering_ratio", 0.75)))),
+        "timeline": timeline,
         "waterfall": _records(waterfall_to_dataframe(result)),
     }
+
+
+def _write_crf_results_csv(result: dict, path: Path) -> pd.DataFrame:
+    plants = results_to_dataframe(result)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    plants.to_csv(path, index=False)
+    return plants
 
 
 def run_workflow(payload: dict) -> dict:
@@ -2002,6 +2233,8 @@ def run_workflow(payload: dict) -> dict:
             if iat["input_mode"] == "occ":
                 result = run_occ_scenarios(config)
                 summary = _summarize_occ_result(result, power_kwe)
+                if "base_case" not in response and result["scenario_results"]:
+                    response["base_case"] = _base_case_from_iat_result(result["scenario_results"][0], power_kwe)
                 for scenario in summary["scenarios"]:
                     scenario_name = scenario.get("scenario", "")
                     if scenario_name not in base_scenarios_added:
@@ -2028,6 +2261,8 @@ def run_workflow(payload: dict) -> dict:
                     files["Converted ACCERT baseline"] = _file_info(Path(iat["_prepared_input_csv"]))
                     notes.append("The raw ACCERT account CSV was converted to CRF/IAT baseline format before IAT was run.")
                 summary = _summarize_iat_result(result, power_kwe)
+                if "base_case" not in response:
+                    response["base_case"] = _base_case_from_iat_result(result, power_kwe)
                 comparison_chart.append({
                     "country": "Base case",
                     "scenario": "Original OCC",
@@ -2054,7 +2289,14 @@ def run_workflow(payload: dict) -> dict:
 
     if workflow == "crf_only":
         dashboard = OUTPUT_DIR / f"{name}_crf_dashboard.png"
-        result = run_one_scenario(_crf_config(payload), _levers(payload))
+        results_csv = OUTPUT_DIR / f"{name}_crf_results.csv"
+        config = _crf_config(payload)
+        if payload["crf"].get("_prepared_from_accert_csv"):
+            files["Converted ACCERT baseline"] = _file_info(Path(payload["crf"]["_prepared_baseline_csv"]))
+            notes.append("The raw ACCERT account CSV was converted to CRF baseline format before CRF was run.")
+        response["base_case"] = _base_case_from_crf_config(config)
+        result = run_one_scenario(config, _levers(payload))
+        _write_crf_results_csv(result, results_csv)
         save_dashboard(
             result,
             dashboard,
@@ -2064,19 +2306,23 @@ def run_workflow(payload: dict) -> dict:
         response["crf"] = _summarize_crf_result(result)
         response["crf"]["show_levers"] = bool(payload["crf"].get("show_levers", True))
         response["crf"]["dashboard_url"] = _file_info(dashboard)["url"]
+        files["CRF results CSV"] = _file_info(results_csv)
         files["CRF dashboard"] = _file_info(dashboard)
         return response
 
     if workflow == "iat_crf":
         iat_csv = OUTPUT_DIR / f"{name}_iat_adjusted_for_crf.csv"
         dashboard = OUTPUT_DIR / f"{name}_crf_dashboard.png"
+        results_csv = OUTPUT_DIR / f"{name}_crf_results.csv"
         iat_payload = json.loads(json.dumps(payload))
         iat_payload["iat"]["input_mode"] = "csv"
         iat_result = run_adjustment(_iat_config(iat_payload, iat_csv))
+        response["base_case"] = _base_case_from_iat_result(iat_result, _reactor_power_kwe(payload))
         if iat_payload["iat"].get("_prepared_from_accert_csv"):
             files["Converted ACCERT baseline"] = _file_info(Path(iat_payload["iat"]["_prepared_input_csv"]))
             notes.append("The raw ACCERT account CSV was converted to CRF/IAT baseline format before IAT and CRF were run.")
         crf_result = run_one_scenario(_crf_config(payload, baseline_csv=iat_csv), _levers(payload))
+        _write_crf_results_csv(crf_result, results_csv)
         _crf_countries = payload["iat"].get("countries") or [payload["iat"].get("country", "")]
         save_dashboard(
             crf_result,
@@ -2089,6 +2335,7 @@ def run_workflow(payload: dict) -> dict:
         response["crf"]["show_levers"] = bool(payload["crf"].get("show_levers", True))
         response["crf"]["dashboard_url"] = _file_info(dashboard)["url"]
         files["IAT adjusted CSV"] = _file_info(iat_csv)
+        files["CRF results CSV"] = _file_info(results_csv)
         files["CRF dashboard"] = _file_info(dashboard)
         notes.append("The original CRF baseline CSV was not modified; CRF used the IAT output through baseline_csv.")
         return response

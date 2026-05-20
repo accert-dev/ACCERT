@@ -41,7 +41,8 @@ In the ``IAT Inputs`` panel:
   COA inputs, or ``SMR`` for SMR-style inputs.
 * Set ``Country`` to the destination country, such as ``China``, ``Korea``, or
   ``UAE``.
-* Set ``Year dollar`` to the cost year, such as ``2024``.
+* ``Year dollar`` is shown as a fixed message. The GUI reports the workflow on
+  a ``2024`` CPI-U basis.
 * Set ``ACCERT CSV file`` to the input CSV path. This can be either a
   CRF/IAT-ready baseline such as ``src/crf/data/AP1000_baseline.csv`` or a raw
   ACCERT updated-account CSV such as ``ap1000_upd_acc_*.csv``. When a raw
@@ -66,8 +67,8 @@ In the ``CRF Fixed Inputs`` panel:
   ``Startup months``, ``Construction duration months``, ``20s labor hours``,
   and ``Staggering ratio``.
 * ``Construction duration months`` defaults to ``76`` for AP1000, ``80`` for
-  SFR, and ``125`` for HTGR. ``20s labor hours`` is used when converting a raw
-  ACCERT account CSV into a CRF/IAT baseline.
+  SFR, and ``125`` for HTGR. ``20s labor hours`` is an integer input used when
+  converting a raw ACCERT account CSV into a CRF/IAT baseline.
 * Keep ``Include lever table in dashboard image`` unchecked for a compact
   dashboard image, or check it when you want the lever table included in the
   exported PNG.
@@ -97,16 +98,21 @@ Run and Read the Results
 
 Click ``Run workflow``. The result area will show:
 
+* A ``Base Case`` section at the top with the original baseline COA table and
+  factory, material, and labor cost-category columns.
 * An IAT result table comparing the original U.S. OCC baseline with the
   adjusted country OCC result, including factory, material, and labor cost
   category breakdowns for each displayed COA row.
 * A CRF result summary with FOAK, NOAK, average OCC, average TCI, construction
   duration, and reduction percentage metrics.
+* A note explaining that the IAT value is the internationally adjusted WE-FOAK
+  OCC baseline, while CRF recalculates FOAK OCC using the CRF fixed inputs and
+  first-unit project effects.
 * Interactive plots for capital cost, reduction levers, construction duration,
-  cost breakdown, and the dashboard image.
+  cost breakdown, a results-table tab, and the dashboard image.
 
 Hover over bars and chart points to see exact values. Use the result buttons to
-download the generated IAT CSV and CRF dashboard PNG.
+download the generated IAT CSV, CRF results CSV, and CRF dashboard PNG.
 
 Generated Outputs
 -----------------
@@ -115,6 +121,7 @@ The GUI writes generated files under ``tutorial/gui_outputs``. For the combined
 workflow, the important outputs are:
 
 * The IAT-adjusted CSV, which becomes the CRF baseline for this run.
+* The CRF results CSV shown in the GUI results-table tab.
 * The CRF dashboard PNG.
 * Any additional CSV or image outputs linked in the result panel.
 
