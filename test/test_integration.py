@@ -45,28 +45,28 @@ def check_excel_files(excel_patterns):
 # Test functions
 def test_integration_with_fusion_son(prepare_environment):
     """Test ACCERT with fusion.son input."""
-    run_accert_and_check_output("../tutorial/Fusion.son", "gold/output.fusion.out")
+    run_accert_and_check_output("../tutorial/accert/Fusion.son", "gold/output.fusion.out")
     
     # For fusion.son, only check for the updated_account.xlsx file
     check_excel_files(["*_updated_account.xlsx"])
 
 def test_integration_with_pwr_son(prepare_environment,excel_patterns):
     """Test ACCERT with pwr.son input."""
-    run_accert_and_check_output("../tutorial/PWR12-BE.son", "gold/output.pwr12be.out")
+    run_accert_and_check_output("../tutorial/accert/PWR12-BE.son", "gold/output.pwr12be.out")
     
     # Check all three relevant Excel files
     check_excel_files(excel_patterns)
 
 def test_integration_with_abr_son(prepare_environment,excel_patterns):
     """Test ACCERT with abr.son input."""
-    run_accert_and_check_output("../tutorial/ABR1000.son", "gold/output.abr1000.out")
+    run_accert_and_check_output("../tutorial/accert/ABR1000.son", "gold/output.abr1000.out")
     
     # Check all three relevant Excel files
     check_excel_files(excel_patterns)
 
 def test_integration_with_heatpipe_son(prepare_environment,excel_patterns):
     """Test ACCERT with heatpipe.son input."""
-    run_accert_and_check_output("../tutorial/heatpipe.son", "gold/output.heatpipe.out")
+    run_accert_and_check_output("../tutorial/accert/heatpipe.son", "gold/output.heatpipe.out")
     
     # Check all three relevant Excel files
     check_excel_files(excel_patterns)

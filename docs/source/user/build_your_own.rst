@@ -1,5 +1,5 @@
 Build Your Own Reference Model
-=====================
+==============================
 
 ACCERT now accept user-defined model with user defined code of account structure. 
 
@@ -21,23 +21,25 @@ Create a raw_account.csv file, that table should includes with the following col
 
 .. csv-table:: [Example account Table]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/raw_account_example.csv
+   :file: ../../../tutorial/accert/user_defined/raw_account_example.csv
    :widths: auto
    :class: normal-table
 
 Make sure that all the hierarchy accounts can be connected from the top level to the bottom level. And for each account, the supaccount should be the code_of_account of its parent account. If any algorithm is applied to the account, the alg_name should be specified. The fun_unit is the unit of the algorithm function. The variables are the variables that are used in the algorithm. Total cost is the in the unit of dollar.
 
-Run the following command to generate the user-defined account table.
+Run the following commands from the repository root to generate the
+user-defined account table.
 
 .. code-block:: bash
 
-    python ACCERT/src/scripts/gen_user_defined.py
+    cd tutorial/accert/user_defined
+    python ../../../src/scripts/gen_user_defined.py
 
 The script will generate a `user_defined_account.csv` file in the same directory, and also generate a `raw_variable_automated_generated.csv` file. The `user_defined_account.csv` file will be used in the next step to generate the user-defined algorithm table. The `raw_variable_automated_generated.csv` file will be filled in by the user to provide the values of the variables used in the algorithm.
 
 .. csv-table:: [Generated account Table with added review_status and prn columns]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/user_defined_account.csv
+   :file: ../../../tutorial/accert/user_defined/user_defined_account.csv
    :widths: auto
    :class: normal-table
 
@@ -49,7 +51,7 @@ The `raw_variable_automated_generated.csv` file will be filled in by the user to
 
 .. csv-table:: [Generated variable Table]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/raw_variable_automated_generated.csv
+   :file: ../../../tutorial/accert/user_defined/raw_variable_automated_generated.csv
    :widths: auto
    :class: normal-table
 
@@ -61,18 +63,20 @@ If some variables are calculated from other variables, the user can fill in the 
 
 .. csv-table:: [Example filled in variable Table]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/raw_variable_example.csv
+   :file: ../../../tutorial/accert/user_defined/raw_variable_example.csv
    :widths: auto
    :class: normal-table
 
 Fill in your own algorithm
 ---------------------------
 
-Save the filled in variable file as `raw_variable.csv`, run the command again to generate the algorithm table, databse sql file and the algorithm python file.
+Save the filled in variable file as `raw_variable.csv`, then run the command
+again from ``tutorial/accert/user_defined`` to generate the algorithm table,
+database SQL file, and algorithm Python file.
 
 .. code-block:: bash
 
-    python ACCERT/src/scripts/gen_user_defined.py
+    python ../../../src/scripts/gen_user_defined.py
 
 The script will generate 3 files:
 - `user_defined_algorithm.csv` will a reference table.
@@ -81,7 +85,7 @@ The script will generate 3 files:
 
 .. csv-table:: [Generated algorithm Table]
    :header-rows: 1
-   :file: ../../../tutorial/user_defined/user_defined_algorithm.csv
+   :file: ../../../tutorial/accert/user_defined/user_defined_algorithm.csv
    :widths: auto
    :class: normal-table
 
@@ -89,13 +93,13 @@ This table will be used to create the database table. the column `alg_for` is th
 
 And the `user_defined_func.py` file will be used to calculate the total cost of each account. User can modify the `user_defined_func.py` file to implement the algorithm. Each algorithm function will have the notes to explain the algorithm with the needed variables.
 
-.. include:: ../../../tutorial/user_defined/user_defined_func_generated.py
+.. include:: ../../../tutorial/accert/user_defined/user_defined_func_generated.py
    :literal:
 
 
 After filled in the algorithm function, it should be saved as `user_defined_func.py` in the same directory. Here is an example of the filled in algorithm function.
 
-.. include:: ../../../tutorial/user_defined/user_defined_func.py
+.. include:: ../../../tutorial/accert/user_defined/user_defined_func.py
    :literal:
 
 
@@ -106,7 +110,7 @@ In the same folder a `user_defined_algorithm.sql` file will be generated. Run th
 
 .. code-block:: bash
 
-    python ACCERT/src/scripts/run_sql.py 
+    python ../../../src/scripts/run_sql.py
 
 The script will create the database table and insert the data from the `user_defined_account.csv`, `user_defined_variable.csv` and `user_defined_algorithm.csv` files into the database.
 
@@ -138,27 +142,26 @@ After the database table is created, you can start preparing the input file for 
 
 .. code-block:: bash
 
-    python ACCERT/src/scripts/prepared_input.py
+    python ../../../src/scripts/prepared_input.py
 
 The script will generate a list of accepted values for the user-defined reference model. The user can fill in the input file with the accepted values. The input file should be in the son format. Here is an example of the input file.
 
-.. include:: ../../../tutorial/user_defined/user_defined_input.son
+.. include:: ../../../tutorial/accert/user_defined/user_defined_input.son
    :literal:
 
 Run your own reference model
----------------------------
+----------------------------
 
 After the input file is prepared, you can run the reference model with the following command.
 
 .. code-block:: bash
 
-    python ACCERT/src/Main.py -i user_defined_input.son
+    python ../../../src/Main.py -i user_defined_input.son
 
 The script will generate the output file in the same directory. The output file will be in the son format. Here is an example of the output file, that just created.
 
-.. include:: ../../../tutorial/user_defined/output.out
+.. include:: ../../../tutorial/accert/user_defined/output.out
    :literal:
 
 
     
-

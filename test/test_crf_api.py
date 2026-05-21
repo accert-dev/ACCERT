@@ -1,8 +1,11 @@
 import csv
 import pickle
+from pathlib import Path
 
 import pandas as pd
 import pytest
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 from crf import (
     levers_to_dataframe,
@@ -11,6 +14,7 @@ from crf import (
     run_one_scenario,
     run_sampling_from_excel,
     save_dashboard,
+    tci_reduction_from_foak_to_noak,
     waterfall_to_dataframe,
 )
 from crf.api import normalize_levers
@@ -110,6 +114,7 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
     assert result["occ_reduction_from_FOAK_to_NOAK_percent"] == pytest.approx(
         (result["OCC_1"] - result["OCC_2"]) / result["OCC_1"] * 100
     )
+    assert result["tci_waterfall"]
     waterfall = waterfall_to_dataframe(result)
     assert waterfall["label"].tolist() == [
         "FOAK \n(no firm orders)",
@@ -123,16 +128,16 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
         "Non safety-related Reactor Building",
         "NOAK \n(firm orders)",
     ]
-    assert waterfall.iloc[0]["cumulative_occ"] == pytest.approx(result["OCC_1"])
-    assert waterfall.iloc[-1]["cumulative_occ"] == pytest.approx(result["OCC_2"])
+    assert waterfall.iloc[0]["cumulative_tci"] == pytest.approx(result["TCI_1"])
+    assert waterfall.iloc[-1]["cumulative_tci"] == pytest.approx(result["TCI_2"])
     assert waterfall.iloc[1:-1]["absolute_change"].sum() == pytest.approx(
-        result["OCC_2"] - result["OCC_1"]
+        result["TCI_2"] - result["TCI_1"]
     )
     supplychain_delta = waterfall.loc[
         waterfall["label"].eq("Supplychain efficiency"),
         "absolute_change",
     ].iloc[0]
-    assert abs(supplychain_delta) < abs(result["OCC_2"] - result["OCC_1"]) * 0.1
+    assert abs(supplychain_delta) < abs(result["TCI_2"] - result["TCI_1"]) * 0.1
 
     timeline = build_schedule_timeline(
         {**_config(), "staggering_ratio": result["staggering_ratio"]},
@@ -150,6 +155,26 @@ def test_run_one_scenario_returns_static_inputs_and_unit_results():
     assert levers.loc[1, "Cross Site Standardization"] == "80%"
 
 
+def test_run_one_scenario_can_use_iat_adjusted_baseline_csv(tmp_path):
+    baseline = pd.read_csv(REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv")
+    adjusted = baseline.copy()
+    adjusted["Adjusted Total Cost"] = adjusted["Total Cost (USD)"] * 0.5
+    adjusted["Adjusted Factory Equipment Cost"] = adjusted["Factory Equipment Cost"] * 0.5
+    adjusted["Adjusted Site Labor Cost"] = adjusted["Site Labor Cost"] * 0.5
+    adjusted["Adjusted Site Material Cost"] = adjusted["Site Material Cost"] * 0.5
+    adjusted_path = tmp_path / "iat_adjusted_ap1000.csv"
+    adjusted.to_csv(adjusted_path, index=False)
+
+    default_result = run_one_scenario(_config(), _levers())
+    adjusted_result = run_one_scenario(
+        {**_config(), "baseline_csv": str(adjusted_path)},
+        _levers(),
+    )
+
+    assert adjusted_result["OCC_1"] < default_result["OCC_1"]
+    assert adjusted_result["D20s_1"] < default_result["D20s_1"]
+
+
 def test_visualization_helpers_create_dashboard(tmp_path):
     result = run_one_scenario(_config(), _levers())
     frame = results_to_dataframe(result)
@@ -159,6 +184,9 @@ def test_visualization_helpers_create_dashboard(tmp_path):
     assert list(frame["Plant number"]) == [1, 2]
     assert frame.loc[1, "OCC reduction from FOAK"] == pytest.approx(
         occ_reduction_from_foak_to_noak(result)
+    )
+    assert frame.loc[1, "TCI reduction from FOAK"] == pytest.approx(
+        tci_reduction_from_foak_to_noak(result)
     )
 
     save_dashboard(result, str(out_png), title="Cost Reduction Framework Test")

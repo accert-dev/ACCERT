@@ -24,7 +24,7 @@ New Features
 General Input Structure
 ------------------------
 
-The input file for the fusion model is located at ``accert/tutorial/stellarator.son``.
+The input file for the stellarator model is located at ``accert/tutorial/accert/stellarator.son``.
 
 .. code-block:: json
 
@@ -55,13 +55,13 @@ To run the fusion example with Python, execute the following command:
 
 .. code-block:: console
 
-    > cd ACCERT/tutorial
-    > python ../src/Main.pi -i stellarator.son 
+    > cd ACCERT/tutorial/accert
+    > python ../../src/Main.py -i stellarator.son
 
 Interpreting the Results
 ------------------------
 
-The output will be generated in the ``tutorial`` directory, as ``output.out``, which contains screen outputs and the following Excel files: 
+The output will be generated in the ``tutorial/accert`` directory, as ``output.out``, which contains screen outputs and the following Excel files:
 
 - **stellarator_updated_account.xlsx**: Contains the updated cost breakdown for the stellarator model.
 - **stellarator_LCOE_results.xlsx**: Contains the LCOE analysis results specific to the stellarator configuration.

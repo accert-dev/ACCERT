@@ -5,12 +5,14 @@ ACCERT Submodule
 
 from .api import (
     calculate_occ_waterfall,
+    calculate_tci_waterfall,
     run_one_scenario,
     run_sampling_from_excel,
     print_scenario_result,
 )
 from .visualization import (
     occ_reduction_from_foak_to_noak,
+    tci_reduction_from_foak_to_noak,
     levers_to_dataframe,
     plot_dashboard,
     results_to_dataframe,
@@ -22,9 +24,11 @@ from .visualization import (
 __all__ = [
     "run_one_scenario",
     "calculate_occ_waterfall",
+    "calculate_tci_waterfall",
     "run_sampling_from_excel",
     "print_scenario_result",
     "occ_reduction_from_foak_to_noak",
+    "tci_reduction_from_foak_to_noak",
     "levers_to_dataframe",
     "plot_dashboard",
     "results_to_dataframe",

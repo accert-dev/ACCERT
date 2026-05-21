@@ -58,8 +58,9 @@ Visualization
 Use ``save_dashboard`` to generate dashboard-style capital-cost figures from a
 scenario result. The dashboard includes a lever input table, OCC, TCI,
 construction duration, cost breakdowns, a staggered construction timeline, and
-the FOAK-to-NOAK OCC reduction waterfall by lever. Set ``show_levers=False`` to
-omit the lever input table and generate the compact chart-only dashboard.
+the FOAK-to-NOAK Total Capital Investment (TCI) reduction waterfall by lever. 
+Set ``show_levers=False`` to omit the lever input table and generate the 
+compact chart-only dashboard.
 
 .. code-block:: python
 
@@ -76,8 +77,8 @@ omit the lever input table and generate the compact chart-only dashboard.
 For downstream analysis, ``results_to_dataframe`` converts the scenario result
 to a chart-ready ``pandas.DataFrame`` with one row per plant, while
 ``levers_to_dataframe`` returns the lever table and ``waterfall_to_dataframe``
-returns the FOAK-to-NOAK waterfall values using the lever labels from the Excel
-dashboard.
+returns the FOAK-to-NOAK TCI waterfall values using the lever labels from the
+Excel dashboard.
 
 Configuration
 -------------
@@ -91,6 +92,8 @@ Configuration
      - Description
    * - ``reactor_type``
      - Built-in Cost Reduction Framework baseline: ``AP1000``, ``SFR``, or ``HTGR``.
+   * - ``baseline_csv``
+     - Optional CSV path used instead of the built-in reactor baseline. This is useful when passing an International Adjustment Tool output into CRF. If the CSV contains International Adjustment Tool (IAT) adjusted columns, CRF uses those adjusted costs as the baseline and leaves the packaged baseline in ``src/crf/data`` unchanged.
    * - ``f_22``
      - Reactor building cost adjustment.
    * - ``f_2321``
@@ -190,5 +193,31 @@ because several rows share the same display name:
    Commercial BOP
    Non-safety-related RB
 
-Runnable deterministic examples are available in ``tutorial/crf_ap1000_example.py``,
-``tutorial/crf_htgr_example.py``, and ``tutorial/crf_sfr_example.py``.
+Running Examples
+----------------
+
+The tutorial scripts are designed to run from the ACCERT repository root. They
+add ``src`` to ``sys.path`` themselves, so you do not need to set
+``PYTHONPATH`` for these examples.
+
+.. code-block:: bash
+
+   cd ACCERT
+   python tutorial/crf/crf_ap1000_example.py
+   python tutorial/crf/crf_htgr_example.py
+   python tutorial/crf/crf_sfr_example.py
+
+The connected IAT-to-CRF example first creates an IAT-adjusted AP1000 China
+CSV and then passes that CSV to CRF without modifying ``src/crf/data``:
+
+.. code-block:: bash
+
+   python tutorial/combined/crf_iat_ap1000_china_example.py
+
+To use the local GUI for CRF, IAT, or the connected IAT-then-CRF workflow, run:
+
+.. code-block:: bash
+
+   python tutorial/gui/crf_iat_gui.py
+
+Then open ``http://127.0.0.1:8765/`` in a browser.

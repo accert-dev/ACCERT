@@ -60,14 +60,16 @@ def results_to_dataframe(result: dict) -> pd.DataFrame:
 
     rows = []
     foak_occ = float(result[f"OCC_{plant_numbers[0]}"])
+    foak_tci = float(result[f"TCI_{plant_numbers[0]}"]) if f"TCI_{plant_numbers[0]}" in result else np.nan
     for plant_number in plant_numbers:
         occ = float(result[f"OCC_{plant_number}"])
+        tci = result.get(f"TCI_{plant_number}", np.nan)
         rows.append(
             {
                 "Plant number": plant_number,
                 "OCC": occ,
                 "Net OCC": result.get(f"NETOCC_{plant_number}", np.nan),
-                "TCI": result.get(f"TCI_{plant_number}", np.nan),
+                "TCI": tci,
                 "NCI": result.get(f"NCI_{plant_number}", np.nan),
                 "Construction duration": result.get(f"duration_{plant_number}", np.nan),
                 "Startup duration": result.get(f"STAUP_{plant_number}", np.nan),
@@ -80,6 +82,7 @@ def results_to_dataframe(result: dict) -> pd.DataFrame:
                 "Supplementary costs": result.get(f"D50s_{plant_number}", np.nan),
                 "Financing costs": result.get(f"D60s_{plant_number}", np.nan),
                 "OCC reduction from FOAK": (foak_occ - occ) / foak_occ * 100.0,
+                "TCI reduction from FOAK": (foak_tci - float(tci)) / foak_tci * 100.0 if not pd.isna(foak_tci) and not pd.isna(tci) else np.nan,
             }
         )
 
@@ -97,11 +100,19 @@ def occ_reduction_from_foak_to_noak(result: dict) -> float:
     return (foak_occ - noak_occ) / foak_occ * 100.0
 
 
+def tci_reduction_from_foak_to_noak(result: dict) -> float:
+    """Return percent TCI reduction from the FOAK unit to the NOAK unit."""
+    noak_unit = int(result.get("num_NOAK", max(_ordered_suffixes(result, "TCI_"))))
+    foak_tci = float(result["TCI_1"])
+    noak_tci = float(result[f"TCI_{noak_unit}"])
+    return (foak_tci - noak_tci) / foak_tci * 100.0
+
+
 def waterfall_to_dataframe(result: dict) -> pd.DataFrame:
-    """Return the FOAK-to-NOAK OCC waterfall rows saved by the API."""
-    rows = result.get("occ_waterfall")
+    """Return the FOAK-to-NOAK TCI waterfall rows saved by the API."""
+    rows = result.get("tci_waterfall") or result.get("occ_waterfall")
     if not rows:
-        raise ValueError("result does not contain occ_waterfall data")
+        raise ValueError("result does not contain waterfall data")
     return pd.DataFrame(rows)
 
 
@@ -157,15 +168,15 @@ def plot_dashboard(
 
     The layout mirrors the capital-cost charts in the Excel dashboard: capital
     costs, construction duration, cost breakdowns, build timeline, and the
-    percent OCC reduction from FOAK to NOAK.
+    percent TCI reduction from FOAK to NOAK.
     """
     df = results_to_dataframe(result)
     noak_unit = int(result.get("num_NOAK", result.get("Num_orders", df["Plant number"].max())))
     noak_unit = min(max(noak_unit, int(df["Plant number"].min())), int(df["Plant number"].max()))
-    noak_reduction = occ_reduction_from_foak_to_noak(result)
+    noak_reduction = tci_reduction_from_foak_to_noak(result)
 
     if figsize is None:
-        figsize = (18, 16) if show_levers else (16, 12)
+        figsize = (24, 18) if show_levers else (22, 13)
 
     fig = plt.figure(figsize=figsize, constrained_layout=True)
     if show_levers:
@@ -188,7 +199,7 @@ def plot_dashboard(
                 [fig.add_subplot(gs[2, 0]), fig.add_subplot(gs[2, 1])],
             ]
         )
-    fig.suptitle(title or "Cost Reduction Framework Dashboard", fontsize=16, fontweight="bold")
+    fig.suptitle(title or "Cost Reduction Framework Dashboard", fontsize=18, fontweight="bold")
 
     x = df["Plant number"]
 
@@ -202,7 +213,7 @@ def plot_dashboard(
     ax.set_title("Capital Cost: OCC and TCI")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("$/kWe")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
 
     ax = axes[0, 1]
     ax.bar(x, df["Construction duration"], label="Construction", color=CAPITAL_COLORS["duration"])
@@ -217,7 +228,7 @@ def plot_dashboard(
     ax.set_title("Total Construction Duration")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("Months")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
 
     ax = axes[1, 0]
     breakdown = [
@@ -231,7 +242,7 @@ def plot_dashboard(
     ax.set_title("10-60 - TCI Breakdown")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("$/kWe")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
 
     ax = axes[1, 1]
     _plot_build_timeline(ax, result, df)
@@ -248,10 +259,10 @@ def plot_dashboard(
     ax.set_title("10-50 - OCC Components")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("$/kWe")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=10)
 
     ax = axes[2, 1]
-    _plot_occ_waterfall(ax, result, noak_reduction)
+    _plot_tci_waterfall(ax, result, noak_reduction)
 
     for ax in axes.flat:
         ax.spines["top"].set_visible(False)
@@ -265,7 +276,7 @@ def save_dashboard(
     result: dict,
     out_path: str,
     title: Optional[str] = None,
-    dpi: int = 180,
+    dpi: int = 150,
     show_levers: bool = True,
 ) -> str:
     """Save the dashboard figure and return the output path."""
@@ -315,8 +326,8 @@ def _plot_lever_table(ax, result: dict) -> None:
         colLoc="center",
     )
     table.auto_set_font_size(False)
-    table.set_fontsize(7.2)
-    table.scale(1.0, 1.18)
+    table.set_fontsize(8.5)
+    table.scale(1.0, 1.25)
 
     header_color = "#17647f"
     highlight = "#bfe7f3"
@@ -339,7 +350,7 @@ def _plot_lever_table(ax, result: dict) -> None:
         f"Lever Inputs: {int(result['Num_orders'])} firm orders, "
         f"{int(result['n_ITC'])} reactors claiming ITC, ITC {float(result['ITC']):.0f}%",
         loc="left",
-        fontsize=11,
+        fontsize=13,
         fontweight="bold",
         color=header_color,
         pad=6,
@@ -394,11 +405,13 @@ def _plot_build_timeline(ax, result: dict, df: pd.DataFrame) -> None:
     ax.legend(loc="upper right", ncol=2, fontsize=8)
 
 
-def _plot_occ_waterfall(ax, result: dict, noak_reduction: float) -> None:
+def _plot_tci_waterfall(ax, result: dict, noak_reduction: float) -> None:
     waterfall = waterfall_to_dataframe(result)
     labels = [_wrap_label(label) for label in waterfall["label"].tolist()]
     x_pos = np.arange(len(waterfall))
-    foak_occ = float(waterfall.iloc[0]["cumulative_occ"])
+    cumulative_col = "cumulative_tci" if "cumulative_tci" in waterfall.columns else "cumulative_occ"
+    metric = "TCI" if cumulative_col == "cumulative_tci" else "OCC"
+    foak_value = float(waterfall.iloc[0][cumulative_col])
 
     colors = []
     bottoms = []
@@ -407,7 +420,7 @@ def _plot_occ_waterfall(ax, result: dict, noak_reduction: float) -> None:
     for _, row in waterfall.iterrows():
         if row["kind"] == "total":
             bottoms.append(0.0)
-            total = float(row["cumulative_occ"])
+            total = float(row[cumulative_col])
             heights.append(total)
             if row.name == 0:
                 pct_labels.append("100%")
@@ -415,10 +428,10 @@ def _plot_occ_waterfall(ax, result: dict, noak_reduction: float) -> None:
                 pct_labels.append(f"{noak_reduction:.1f}% lower")
             colors.append("#4c78a8")
         else:
-            current = float(row["cumulative_occ"])
+            current = float(row[cumulative_col])
             change = float(row["absolute_change"])
             previous = current - change
-            change_pct = change / foak_occ * 100.0 if foak_occ else 0.0
+            change_pct = change / foak_value * 100.0 if foak_value else 0.0
             if change >= 0:
                 bottoms.append(previous)
                 heights.append(change)
@@ -431,10 +444,10 @@ def _plot_occ_waterfall(ax, result: dict, noak_reduction: float) -> None:
 
     ax.bar(x_pos, heights, bottom=bottoms, color=colors, width=0.72)
     for idx in range(len(waterfall) - 1):
-        y = float(waterfall.iloc[idx]["cumulative_occ"])
+        y = float(waterfall.iloc[idx][cumulative_col])
         ax.plot([idx + 0.36, idx + 1 - 0.36], [y, y], color="#777777", linewidth=0.8)
 
-    y_span = max([bottom + height for bottom, height in zip(bottoms, heights)] + [foak_occ]) * 0.08
+    y_span = max([bottom + height for bottom, height in zip(bottoms, heights)] + [foak_value]) * 0.08
     for idx, (bottom, height, label) in enumerate(zip(bottoms, heights, pct_labels)):
         if not height:
             continue
@@ -451,26 +464,26 @@ def _plot_occ_waterfall(ax, result: dict, noak_reduction: float) -> None:
             label,
             ha="center",
             va=va,
-            fontsize=8,
+            fontsize=9,
             fontweight="bold",
             color=color,
             rotation=90 if len(label) > 7 else 0,
         )
 
-    ax.set_title("% OCC Reduction from FOAK to NOAK")
-    ax.set_ylabel("OCC ($/kWe)")
+    ax.set_title(f"% {metric} Reduction from FOAK to NOAK")
+    ax.set_ylabel(f"{metric} ($/kWe)")
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(labels, rotation=0, ha="center", fontsize=7)
+    ax.set_xticklabels(labels, rotation=0, ha="center", fontsize=9)
     ax.grid(True, axis="y", alpha=0.25)
-    ax.set_ylim(0, max([bottom + height for bottom, height in zip(bottoms, heights)] + [foak_occ]) * 1.14)
+    ax.set_ylim(0, max([bottom + height for bottom, height in zip(bottoms, heights)] + [foak_value]) * 1.14)
     ax.text(
         0.98,
         0.95,
-        f"FOAK to NOAK reduction: {noak_reduction:.1f}%",
+        f"FOAK to NOAK {metric} reduction: {noak_reduction:.1f}%",
         transform=ax.transAxes,
         ha="right",
         va="top",
-        fontsize=9,
+        fontsize=11,
         bbox={"facecolor": "white", "edgecolor": "#cccccc", "alpha": 0.9},
     )
 
@@ -491,7 +504,7 @@ def _stacked_bars(ax, x: Iterable[int], df: pd.DataFrame, columns: list[tuple[st
         bottom += clean_values
 
 
-def _wrap_label(label: str, width: int = 13) -> str:
+def _wrap_label(label: str, width: int = 16) -> str:
     compact = " ".join(str(label).split())
     return "\n".join(textwrap.wrap(compact, width=width))
 
