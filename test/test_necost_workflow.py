@@ -68,3 +68,17 @@ def test_eg23_uses_report_driver_blanket_mass_fractions():
     }
 
     assert reactors == {"FR_DRIVER": pytest.approx(0.8), "FR_BLANKET": pytest.approx(0.2)}
+
+
+@pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
+def test_eg13_uses_report_energy_fractions():
+    parsed = parse_son_input(
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG13.son"),
+        str(PROJECT_ROOT),
+    )
+    reactors = {
+        row["reactor"]: row["energy_fraction"]
+        for row in parsed["fuel_cycles"][0]["reactors"]
+    }
+
+    assert reactors == {"PWR_UOX": pytest.approx(0.902), "PWR_MOX": pytest.approx(0.098)}

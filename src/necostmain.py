@@ -263,6 +263,8 @@ def _reactor_weight_map(res):
             reactor_id = reactor["reactor"]
             if reactor.get("fleet_energy") is not None:
                 weights[reactor_id] = float(reactor["fleet_energy"])
+            elif reactor.get("energy_fraction") is not None:
+                weights[reactor_id] = float(reactor["energy_fraction"])
             elif reactor.get("mass_fraction") is not None:
                 weights[reactor_id] = float(reactor["mass_fraction"])
             else:

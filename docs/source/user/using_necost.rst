@@ -32,7 +32,7 @@ Using NE-COST via Python
    Example input files are provided in ``tutorial/necost``:
 
    * ``EG01.son``: once-through PWR UOX reference case.
-   * ``EG13.son``: two-stage PWR UOX and PWR MOX case.
+   * ``EG13.son``: two-stage PWR UOX and PWR MOX case with report energy-fraction LCAE weighting.
    * ``EG23.son``: fast-reactor driver and blanket case with two explicit islands.
    * ``AP1000_ACCERT_NECost.son``: runs ACCERT first, reads the ACCERT OCC post-process CSV, and uses that OCC as the NEcost capital cost input.
 
@@ -67,6 +67,7 @@ Using NE-COST via Python
    The output file 'NECOST_results.csv' will contain the LCAE and other relevant information.
    Multi-reactor cases also write ``NECOST_reactor_results.csv`` with the per-reactor details before the weighted cycle result is calculated.
 
+   ``EG13.son`` follows the report's two-island LCAE weighting. The UOX LWR island uses ``energy_fraction = 0.902`` and the MOX PWR island uses ``energy_fraction = 0.098``.
    ``EG23.son`` follows the report's two-island structure. The driver island uses ``mass_fraction = 0.8`` and the blanket island uses ``mass_fraction = 0.2``. The report table's low/mode/high values are represented in each ``distribution`` block, while the table's mean suggested defaults are retained in ``cost_value`` where the schema supports that field.
 
 ACCERT to NEcost coupling

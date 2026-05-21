@@ -231,8 +231,11 @@ def parse_fuel_cycles(cycle: Dict):
         "reactors": parse_list_of_items(
             cycle["reactor"], lambda x: {
                 "reactor": x["id"]["#text"],
-                "fleet_capacity": float(getval(x["fleet_capacity"])),
+                "fleet_capacity": None
+                if "fleet_capacity" not in x
+                else float(getval(x["fleet_capacity"])),
                 "fleet_energy": None if "fleet_energy" not in x else float(getval(x["fleet_energy"])),
+                "energy_fraction": None if "energy_fraction" not in x else float(getval(x["energy_fraction"])),
                 "mass_fraction": None if "mass_fraction" not in x else float(getval(x["mass_fraction"])),
             }
         )
