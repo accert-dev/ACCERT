@@ -33,7 +33,7 @@ Using NE-COST via Python
 
    * ``EG01.OT01A.son``: once-through PWR UOX reference case.
    * ``EG02.OT01B.son``: HTGR LEU once-through case with report comments and a single-island 175 MWe weighting basis.
-   * ``EG03.OT01C.son`` through ``EG40.MC12.son``: report-table examples generated from Appendix A of FCRD-FCO-2013-000196. These use the original NE-COST line-number inputs in ``legacy_inputs`` blocks.
+   * ``EG03.OT01C.son`` through ``EG40.MC12.son``: structured examples generated from Appendix A of FCRD-FCO-2013-000196, with normal ``fuel_cycles``, ``reactors``, ``capital_costs``, ``om_costs``, ``fuel_costs``, and ``fuels`` sections.
    * ``AP1000.ACCERT.NECost.son``: runs ACCERT first, reads the ACCERT OCC post-process CSV, and uses that OCC as the NEcost capital cost input.
    * ``Example.OnceThrough.TwoStageEnrichment.son``: compact legacy syntax example for a single once-through island with two-stage enrichment.
 
@@ -74,7 +74,7 @@ Using NE-COST via Python
    The output file 'NECOST_results.csv' will contain the LCAE and other relevant information.
    Multi-reactor cases also write ``NECOST_reactor_results.csv`` with the per-reactor details before the weighted cycle result is calculated.
 
-   The report-generated examples preserve each table row as ``legacy_inputs/case/input`` with the original NE-COST line number, low/nominal/high values, distribution type, and variable description. Multi-island cases use ``energy_fraction`` in each legacy case to reproduce the report's weighted LCAE setup.
+   The report-generated examples keep the report preparer/reviewer, fuel-cycle description, LCAE report values, and multi-island ``energy_fraction`` comments while exposing the inputs through the same structured blocks used by ``EG01`` and ``EG23``.
 
    In a ``fuel_cycles`` reactor block, ``fleet_capacity`` is the reactor island's electric capacity in MWe. It is calculated from the reactor power block as ``reference_thermal * net_thermal_efficiency / 100 / 1e6`` when the reactor is specified by thermal power, or from ``reference_net_electrical / 1e6`` when the reactor is specified by net electrical power. ``fleet_capacity`` is optional when ``fleet_energy``, ``energy_fraction``, or ``mass_fraction`` is supplied. If ``fleet_capacity`` is supplied together with ``energy_fraction`` or ``mass_fraction``, ACCERT checks that the MWe value is consistent with the reactor power block.
 

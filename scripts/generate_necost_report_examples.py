@@ -1,4 +1,4 @@
-"""Generate NEcost EG03-EG40 SON examples from the LCAE report tables."""
+"""Generate structured NEcost EG03-EG40 SON examples from the LCAE report."""
 
 from __future__ import annotations
 
@@ -187,6 +187,79 @@ def weights_for(eg: str, n_cases: int):
     return [1.0 / n_cases] * n_cases
 
 
+def entry_map(entries):
+    return {item["line"]: item for item in entries}
+
+
+def get_entry(entries, line, low=None, nominal=None, high=None, distribution=0, description=""):
+    found = entry_map(entries).get(line)
+    if found:
+        return found
+    value = 0 if nominal is None else nominal
+    return {
+        "line": line,
+        "low": value if low is None else low,
+        "nominal": value,
+        "high": value if high is None else high,
+        "distribution": distribution,
+        "description": description,
+    }
+
+
+def dist_type(code: int) -> str:
+    return "uniform" if int(code) == 2 else "triangular"
+
+
+def distribution_values(entry):
+    low = entry["low"]
+    nominal = entry["nominal"]
+    high = entry["high"]
+    if int(entry["distribution"]) == 1 and not low <= nominal <= high:
+        low, high = min(low, nominal, high), max(low, nominal, high)
+    return low, nominal, high
+
+
+def cost_item_block(
+    indent,
+    item_id,
+    entry,
+    cost_type=None,
+    expenditure_time=None,
+    lead_time=None,
+    value_key="cost_value",
+):
+    pad = " " * indent
+    lines = [f"{pad}item({item_id}) {{"]
+    if cost_type:
+        lines.append(f"{pad}    cost_type = {cost_type}")
+    if expenditure_time is not None:
+        lines.append(f"{pad}    expenditure_time = {fmt(expenditure_time)}")
+    if value_key:
+        lines.append(f"{pad}    {value_key} = {fmt(entry['nominal'])}")
+    if lead_time is not None:
+        lines.append(f"{pad}    lead_time = {fmt(lead_time)}")
+    low, nominal, high = distribution_values(entry)
+    lines.append(
+        f"{pad}    distribution {{ type = {dist_type(entry['distribution'])} "
+        f"low = {fmt(low)} high = {fmt(high)} "
+        f"nominal = {fmt(nominal)} }}"
+    )
+    lines.append(f"{pad}}}")
+    return lines
+
+
+def named(entries, line, fallback):
+    return get_entry(entries, line, nominal=fallback)
+
+
+def reactor_id(eg, table_count, idx):
+    return eg if table_count == 1 else f"{eg}_ISLAND_{idx}"
+
+
+def fuel_id(eg, table_count, idx):
+    return f"{reactor_id(eg, table_count, idx)}_FUEL"
+
+
 def render_son(title, notes, tables, results):
     eg, code = option_code(title)
     weights = weights_for(eg, len(tables))
@@ -194,6 +267,7 @@ def render_son(title, notes, tables, results):
         "necost {",
         f"    % {title}",
         "    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.",
+        "    % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.",
     ]
     for note in notes:
         lines.append(f"    % {note}")
@@ -211,23 +285,147 @@ def render_son(title, notes, tables, results):
             "    operations_interest_rate = 0.05",
             "    sample_size = 2000",
             "",
-            "    legacy_inputs {",
+            "    fuel_cycles {",
+            f"        cycle({eg}) {{",
         ]
     )
+    for idx, entries in enumerate(tables, start=1):
+        rid = reactor_id(eg, len(tables), idx)
+        lines.append(f"            reactor({rid}) {{")
+        if len(tables) > 1:
+            lines.append(f"                % Report LCAE energy weight for this island.")
+        else:
+            lines.append(f"                % Single NE-COST island, so the LCAE weight is 100%.")
+        lines.append(f"                energy_fraction = {fmt(weights[idx - 1])}")
+        lines.append("            }")
+    lines.extend(["        }", "    }", "", "    reactors {"])
 
     for idx, entries in enumerate(tables, start=1):
-        case_id = eg if len(tables) == 1 else f"{eg}_ISLAND_{idx}"
-        lines.append(f"        case({case_id}) {{")
-        lines.append(f"            % Report LCAE weight for this input table.")
-        lines.append(f"            energy_fraction = {fmt(weights[idx - 1])}")
-        for entry in entries:
-            lines.append(f"            input({entry['line']}) {{")
-            lines.append(f"                low = {fmt(entry['low'])}")
-            lines.append(f"                nominal = {fmt(entry['nominal'])}")
-            lines.append(f"                high = {fmt(entry['high'])}")
-            lines.append(f"                distribution = {entry['distribution']}")
-            lines.append(f"                description = {son_string(entry['description'])}")
-            lines.append("            }")
+        rid = reactor_id(eg, len(tables), idx)
+        fid = fuel_id(eg, len(tables), idx)
+        ref_power = named(entries, 1, 3.0e9)
+        efficiency = named(entries, 3, 33)
+        hm_mass = named(entries, 4, 88.23)
+        capacity = named(entries, 21, 0.9)
+        lines.extend(
+            [
+                f"        reactor({rid}) {{",
+                f"            capacity_factor = {fmt(capacity['nominal'])}",
+                "            cycle_length = 1.5",
+                "            lifetime_years = 60",
+                f"            power_level {{ reference_thermal = {fmt(ref_power['nominal'])} net_thermal_efficiency = {fmt(efficiency['nominal'])} }}",
+                "            capital_costs { scaling_factor(capital_cost) = 1 }",
+                "            om_costs {",
+                "                scaling_factor(OM_per_year) = 1",
+                "                scaling_factor(OM_per_MWh) = 1",
+                "            }",
+                "            fuel_reloads {",
+                f"                quantity({fid}) {{ heavy_metal_mass = {fmt(hm_mass['nominal'])} fuel_fraction = 1 }}",
+                "            }",
+                "        }",
+            ]
+        )
+    lines.extend(["    }", "", "    capital_costs {"])
+
+    cap = get_entry(tables[0], 13, low=2300, nominal=4000, high=5800, distribution=1)
+    construction = get_entry(tables[0], 19, nominal=5)
+    lines.extend(cost_item_block(8, "capital_cost", cap, cost_type="s_curve", expenditure_time=construction["nominal"]))
+    lines.extend(["    }", "", "    om_costs {"])
+
+    om_year = get_entry(tables[0], 27, low=58, nominal=70, high=84, distribution=1)
+    om_mwh = get_entry(tables[0], 28, low=0.84, nominal=1.9, high=2.6, distribution=1)
+    lines.extend(cost_item_block(8, "OM_per_year", om_year, cost_type="fixed", value_key="nominal_value"))
+    lines.extend(cost_item_block(8, "OM_per_MWh", om_mwh, cost_type="variable", value_key="nominal_value"))
+    lines.extend(["    }", "", "    fuel_costs {"])
+
+    fuel_cost_lines = [
+        ("cost_U", 40, "lead_time_purchase", 36, 110),
+        ("cost_SWU", 41, "lead_time_nrchmt", 38, 100),
+        ("cost_fuel_fab", 42, "lead_time_fab", 39, 350),
+        ("cost_conv", 45, "lead_time_conv", 37, 12),
+        ("cost_deconv", 46, None, None, 6),
+        ("cost_SNF_cond", 48, None, None, 100),
+        ("cost_rprocsng", 60, "lead_time_rprocsng", 64, 1850),
+        ("cost_MOX_fab", 61, "lead_time_refab", 65, 3200),
+        ("cost_FP_cond", 62, "lead_time_FP_cond", 66, 5000),
+        ("cost_FP_geologic", 63, "lead_time_FP_disposal", 67, 6500),
+        ("cost_conv_rec", 71, "lead_time_conv_rec", 73, 11),
+        ("cost_nrchmt_rec", 72, "lead_time_nrchmt_rec", 74, 110),
+        ("cost_geologic_disposal", 81, "lead_time_FP_disposal", 67, 550),
+        ("cost_ec_rprocsng", 82, "lead_time_rprocsng", 64, 6000),
+        ("cost_Th", 89, None, None, 75),
+        ("cost_RU_disposal", 94, "lead_time_FP_disposal", 67, 0),
+        ("cost_DU_disposal", 96, None, None, 4),
+    ]
+    first = tables[0]
+    for item_id, line_no, _lead_name, lead_line, fallback in fuel_cost_lines:
+        cost = get_entry(first, line_no, nominal=fallback)
+        lead = get_entry(first, lead_line, nominal=0)["nominal"] if lead_line else None
+        lines.extend(cost_item_block(8, item_id, cost, lead_time=lead))
+
+    lines.extend(["    }", "", "    fuels {"])
+    for idx, entries in enumerate(tables, start=1):
+        fid = fuel_id(eg, len(tables), idx)
+        burnup = get_entry(entries, 11, nominal=50)
+        batches = get_entry(entries, 12, nominal=3)
+        product = get_entry(entries, 33, nominal=4.2)
+        feed = get_entry(entries, 34, nominal=0.711)
+        tails = get_entry(entries, 35, nominal=0.25)
+        fab_loss = get_entry(entries, 49, nominal=0.2)
+        conv_loss = get_entry(entries, 50, nominal=0)
+        reproc_loss = get_entry(entries, 51, nominal=1)
+        recovered_fraction = get_entry(entries, 53, nominal=0)["nominal"]
+        primary_fissile = get_entry(entries, 54, nominal=1)
+        pu_new = get_entry(entries, 55, nominal=0.098)
+        ma_new = get_entry(entries, 56, nominal=0.04)
+        pu_prev = get_entry(entries, 57, nominal=0.012)
+        ma_prev = get_entry(entries, 58, nominal=0.002)
+        fp_prev = get_entry(entries, 59, nominal=0.053)
+        rec_product = get_entry(entries, 68, nominal=4.95)
+        rec_tails = get_entry(entries, 69, nominal=0.3)
+        rec_feed = get_entry(entries, 70, nominal=1.5)
+        lines.extend(
+            [
+                f"        fuel({fid}) {{",
+                f"            avg_discharge_burnup = {fmt(burnup['nominal'])}",
+                f"            num_batches = {fmt(batches['nominal'])}",
+                "            avg_specific_power = 1",
+                "            fresh_fuel {",
+                f"                fabrication {{ loss_fraction = {fmt(max(fab_loss['nominal'] / 100, 1e-12))} costs = [cost_fuel_fab] }}",
+                "                EU { fuel_fraction = 1 costs = [cost_U] }",
+                "            }",
+                "            spent_fuel {",
+                "                costs = [cost_SNF_cond cost_geologic_disposal]",
+                "            }",
+                "            EU {",
+                f"                conversion {{ loss_fraction = {fmt(max(conv_loss['nominal'] / 100, 1e-12))} costs = [cost_conv] }}",
+                "                enrichment {",
+                "                    type = one_stage",
+                "                    loss_fraction = 0.01",
+                f"                    stage_1 {{ feed = {fmt(feed['nominal'])} product = {fmt(product['nominal'])} tails = {fmt(tails['nominal'])} }}",
+                "                    SWU_costs = [cost_SWU]",
+                "                    NU_costs = [cost_U]",
+                "                    DU_costs = [cost_DU_disposal]",
+                "                }",
+                "            }",
+            ]
+        )
+        if recovered_fraction > 0:
+            lines.extend(
+                [
+                    "            RU {",
+                    f"                reprocess {{ loss_fraction = {fmt(max(reproc_loss['nominal'] / 100, 1e-12))} costs = [cost_rprocsng] }}",
+                    f"                conversion {{ loss_fraction = {fmt(max(conv_loss['nominal'] / 100, 1e-12))} costs = [cost_conv_rec] }}",
+                    "                reenrichment {",
+                    "                    loss_fraction = 0.01",
+                    f"                    stage_1 {{ feed = {fmt(rec_feed['nominal'])} product = {fmt(rec_product['nominal'])} tails = {fmt(rec_tails['nominal'])} }}",
+                    "                    SWU_costs = [cost_nrchmt_rec]",
+                    "                    DU_costs = [cost_DU_disposal]",
+                    "                }",
+                    "            }",
+                    f"            % Reprocessed stream details from report: primary_fissile={fmt(primary_fissile['nominal'])}, Pu_new={fmt(pu_new['nominal'])}, MA_new={fmt(ma_new['nominal'])}, Pu_prev={fmt(pu_prev['nominal'])}, MA_prev={fmt(ma_prev['nominal'])}, FP_prev={fmt(fp_prev['nominal'])}.",
+                ]
+            )
         lines.append("        }")
 
     lines.extend(["    }", "}"])

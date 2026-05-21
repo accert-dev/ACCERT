@@ -317,35 +317,6 @@ def _default_inputs(code_folder):
     return pd.read_csv(f"{code_folder}/necost/default_input.csv").set_index("var_name").transpose()
 
 
-def _legacy_line_map(code_folder):
-    default_rows = pd.read_csv(f"{code_folder}/necost/default_input.csv")
-    return {idx + 1: row["var_name"] for idx, row in default_rows.iterrows()}
-
-
-def _apply_legacy_inputs(default_inputs, legacy_case, line_map):
-    for item in legacy_case.get("inputs", []):
-        column = line_map.get(int(item["line"]))
-        if not column:
-            raise ValueError(f"Unknown NEcost legacy input line {item['line']}")
-        default_inputs.loc["low", column] = item["low"]
-        default_inputs.loc["nominal", column] = item["nominal"]
-        default_inputs.loc["high", column] = item["high"]
-        default_inputs.loc["distribution", column] = item["distribution"]
-    return default_inputs
-
-
-def _run_legacy_case(legacy_case, code_folder, discount_rate, sample_size):
-    default_inputs = _default_inputs(code_folder)
-    default_inputs = _apply_legacy_inputs(default_inputs, legacy_case, _legacy_line_map(code_folder))
-    monte_carlo_data = generate_monte_carlo_samples(
-        params_data=default_inputs,
-        sampling_amount=sample_size,
-        discount_rate=discount_rate * 100,
-    )
-    results = NECost(data=monte_carlo_data, **default_params).run()
-    return results.drop(columns=["HM_mass_direct_spec", "t_cyc", "L_direct_spec"], errors="ignore")
-
-
 def _run_single_reactor(res, reactor, code_folder, discount_rate, sample_size):
     default_inputs = _default_inputs(code_folder)
     fuel_ids = {reload["id"] for reload in (reactor.get("fuel_reloads") or [])}
@@ -380,18 +351,6 @@ def _weighted_cycle_results(reactor_results, weights):
     return combined
 
 
-def _legacy_weight_map(legacy_cases):
-    weights = {}
-    for legacy_case in legacy_cases:
-        if legacy_case.get("energy_fraction") is not None:
-            weights[legacy_case["id"]] = float(legacy_case["energy_fraction"])
-        elif legacy_case.get("mass_fraction") is not None:
-            weights[legacy_case["id"]] = float(legacy_case["mass_fraction"])
-        else:
-            weights[legacy_case["id"]] = 1.0
-    return weights
-
-
 def run_necost(input_path, output_dir=None, make_plot=True):
     code_folder = os.path.dirname(os.path.abspath(__file__))
     necost_path = os.path.abspath(os.path.join(code_folder, os.pardir))
@@ -408,26 +367,15 @@ def run_necost(input_path, output_dir=None, make_plot=True):
     print(f"Sample size: {sample_size}")
 
     reactor_results = {}
-    legacy_cases = res.get("legacy_inputs") or []
-    if legacy_cases:
-        for legacy_case in legacy_cases:
-            reactor_results[legacy_case["id"]] = _run_legacy_case(
-                legacy_case,
-                code_folder,
-                discount_rate,
-                sample_size,
-            )
-        weights = _legacy_weight_map(legacy_cases)
-    else:
-        for reactor in res.get("reactors", []):
-            reactor_results[reactor["id"]] = _run_single_reactor(
-                res,
-                reactor,
-                code_folder,
-                discount_rate,
-                sample_size,
-            )
-        weights = _reactor_weight_map(res)
+    for reactor in res.get("reactors", []):
+        reactor_results[reactor["id"]] = _run_single_reactor(
+            res,
+            reactor,
+            code_folder,
+            discount_rate,
+            sample_size,
+        )
+    weights = _reactor_weight_map(res)
     results = _weighted_cycle_results(reactor_results, weights)
     reactor_detail = pd.concat(
         [df.assign(reactor_id=reactor_id) for reactor_id, df in reactor_results.items()],
