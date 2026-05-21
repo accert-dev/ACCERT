@@ -1,34 +1,42 @@
 necost {
+    % EG01/OT01A - Commercial PWR UOX once through
+    % NE-COST input preparer: Francesco Ganda (INL) Technical Reviewer: Kent Williams (Consultant)
+    %
+    % Fuel cycle option description:
+    % This is the PWR once-through reference case used as a basis for
+    % comparison with other fuel-cycle options. Low-enriched uranium oxide
+    % fuel, enriched to 4.2% U-235 with 3-batch management, is irradiated once
+    % in a standard PWR and then sent to geologic disposal.
+
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05
-    sample_size = 1000
-
-    accert_coupling {
-        accert_input = "../accert/AP1000.son"
-        capital_cost_id = "capital_cost"
-        occ_metric = "total_OCC"
-        uncertainty_fraction = 0.0
-    }
+    sample_size = 2000
 
     fuel_cycles {
-        cycle(AP1000_ACCERT) {
-            reactor(AP1000) { fleet_capacity = 2234 }
+        cycle(EG01) {
+            % Single NE-COST island, so the LCAE weight is 100%.
+            % fleet_capacity is the physical electric capacity in MWe:
+            % 3000 MWt reference thermal power * 33% efficiency = 990 MWe.
+            reactor(PWR_UOX) {
+                fleet_capacity = 990
+                energy_fraction = 1
+            }
         }
     }
 
     reactors {
-        reactor(AP1000) {
+        reactor(PWR_UOX) {
             capacity_factor = 0.9
             cycle_length = 1.5
             lifetime_years = 60
-            power_level { reference_thermal = 6.8E9 net_thermal_efficiency = 32.8529 }
+            power_level { reference_thermal = 3E9 net_thermal_efficiency = 33 }
             capital_costs { scaling_factor(capital_cost) = 1 }
             om_costs {
                 scaling_factor(OM_per_year) = 1
                 scaling_factor(OM_per_MWh) = 1
             }
             fuel_reloads {
-                quantity(UOX) { heavy_metal_mass = 176.46 fuel_fraction = 1 }
+                quantity(UOX) { heavy_metal_mass = 88.23 fuel_fraction = 1 }
             }
         }
     }
@@ -37,7 +45,7 @@ necost {
         item(capital_cost) {
             cost_type = s_curve
             expenditure_time = 5
-            distribution { type = triangular low = 7000 high = 7000 nominal = 7000 }
+            distribution { type = triangular low = 2300 high = 5800 nominal = 4000 }
         }
     }
 

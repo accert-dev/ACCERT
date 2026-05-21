@@ -1,4 +1,15 @@
 necost {
+    % EG23/SC05 - Continuous Pu Recycle in SFR
+    % NE-COST input preparer: Ed Hoffman (ANL) Technical Reviewer: Francesco Ganda (INL)
+    %
+    % Fuel cycle option description:
+    % This two-island SFR case continuously recycles Pu and U in a metal-fueled
+    % sodium-cooled fast reactor with driver and blanket regions. Driver fuel is
+    % sent to separations after irradiation, recovered U/Pu is recycled into new
+    % driver fuel, and recovered blanket Pu plus a fraction of recovered U are
+    % used as makeup for driver and blanket fuel. MA, FP, and separation losses
+    % are disposed as HLW.
+
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05
     sample_size = 2000

@@ -1,10 +1,25 @@
 necost {
+    % Generic once-through NEcost example with two-stage enrichment
+    %
+    % This file is a compact non-report tutorial input retained from the older
+    % NECost-OT example. It uses a single PWR-like once-through island and a
+    % two-stage enrichment setup to demonstrate schema syntax and cost table
+    % mapping. For report-backed cases, prefer EG01.OT01A.son or EG02.OT01B.son.
+
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05
     sample_size = 5000
     
     fuel_cycles {
-        cycle(initial_cycle) {reactor(PWR) { fleet_capacity=1000 }}
+        cycle(initial_cycle) {
+            % Single island, so the LCAE weight is 100%.
+            % fleet_capacity is the physical electric capacity in MWe:
+            % 3000 MWt * 33% efficiency = 990 MWe.
+            reactor(PWR) {
+                fleet_capacity = 990
+                energy_fraction = 1
+            }
+        }
     }
 
     reactors {

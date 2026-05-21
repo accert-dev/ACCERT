@@ -1,27 +1,47 @@
 necost {
+    % AP1000 ACCERT-to-NEcost coupled example
+    %
+    % This tutorial first uses the ACCERT AP1000 OCC post-process result as the
+    % NEcost reactor capital cost input. The fuel-cycle structure is a
+    % once-through UOX PWR case, and the ACCERT output supplies the island OCC
+    % instead of relying only on NEcost's internal capital-cost distribution.
+
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05
-    sample_size = 2000
+    sample_size = 1000
+
+    accert_coupling {
+        accert_input = "../accert/AP1000.son"
+        capital_cost_id = "capital_cost"
+        occ_metric = "total_OCC"
+        uncertainty_fraction = 0.0
+    }
 
     fuel_cycles {
-        cycle(EG01) {
-            reactor(PWR_UOX) { fleet_capacity = 1000 }
+        cycle(AP1000_ACCERT) {
+            % Single NE-COST island, so the LCAE weight is 100%.
+            % fleet_capacity is the physical electric capacity in MWe:
+            % 6800 MWt * 32.8529% efficiency = about 2234 MWe.
+            reactor(AP1000) {
+                fleet_capacity = 2234
+                energy_fraction = 1
+            }
         }
     }
 
     reactors {
-        reactor(PWR_UOX) {
+        reactor(AP1000) {
             capacity_factor = 0.9
             cycle_length = 1.5
             lifetime_years = 60
-            power_level { reference_thermal = 3E9 net_thermal_efficiency = 33 }
+            power_level { reference_thermal = 6.8E9 net_thermal_efficiency = 32.8529 }
             capital_costs { scaling_factor(capital_cost) = 1 }
             om_costs {
                 scaling_factor(OM_per_year) = 1
                 scaling_factor(OM_per_MWh) = 1
             }
             fuel_reloads {
-                quantity(UOX) { heavy_metal_mass = 88.23 fuel_fraction = 1 }
+                quantity(UOX) { heavy_metal_mass = 176.46 fuel_fraction = 1 }
             }
         }
     }
@@ -30,7 +50,7 @@ necost {
         item(capital_cost) {
             cost_type = s_curve
             expenditure_time = 5
-            distribution { type = triangular low = 2300 high = 5800 nominal = 4000 }
+            distribution { type = triangular low = 7000 high = 7000 nominal = 7000 }
         }
     }
 

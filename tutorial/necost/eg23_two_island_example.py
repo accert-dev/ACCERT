@@ -13,7 +13,7 @@ from necostmain import run_necost
 
 
 def main():
-    input_path = Path(__file__).with_name("EG23.son")
+    input_path = Path(__file__).with_name("EG23.SC05.son")
     output_dir = Path(__file__).with_name("outputs") / "eg23_two_island"
     results = run_necost(input_path, output_dir=output_dir)
 

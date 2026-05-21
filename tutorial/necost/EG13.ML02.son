@@ -1,12 +1,24 @@
 necost {
+    % EG13/ML02 - Recover Pu from PWR and limited recycle in PWR (PWR-UOX to PWR-MOX)
+    % NE-COST input preparer: Francesco Ganda (INL) Technical Reviewer: Kent Williams (Consultant)
+    %
+    % Fuel cycle option description:
+    % This two-stage case uses standard UOX PWRs in island 1 and full MOX PWRs
+    % in island 2. Pu and U co-extracted from the UOX spent fuel are fabricated
+    % into MOX fuel; DU, surplus RU, minor actinides, and fission products are
+    % sent to geologic disposal. The reprocessing and MOX fuel fabrication
+    % facilities are modeled in island 2.
+
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05
     sample_size = 2000
 
     fuel_cycles {
         cycle(EG13) {
-            % EG13 LCAE is weighted by fractional energy generated:
-            % 90.2% UOX LWR island and 9.8% MOX PWR island.
+            % The report gives the LCAE weights as fractional energy:
+            % 90.2% from the UOX LWR island and 9.8% from the MOX PWR island.
+            % fleet_capacity is omitted because the report weighting is not
+            % based on physical MWe in this two-island case.
             reactor(PWR_UOX) {
                 energy_fraction = 0.902
             }

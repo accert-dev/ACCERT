@@ -11,7 +11,7 @@ from necostmain import run_necost
 
 
 def main():
-    input_path = Path(__file__).with_name("AP1000_ACCERT_NECost.son")
+    input_path = Path(__file__).with_name("AP1000.ACCERT.NECost.son")
     output_dir = Path(__file__).with_name("outputs") / "ap1000_accert_necost"
     results = run_necost(input_path, output_dir=output_dir)
     summary = results[["Capital", "O&M", "FCC", "LCOE"]].mean().round(2)
