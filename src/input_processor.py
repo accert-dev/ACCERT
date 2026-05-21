@@ -132,16 +132,23 @@ def parse_son_input(input_path: str, necost_path: str) -> Dict:
     xml_dict = xml_tree_to_dict(ElementTree.fromstring(xml_str))
     result = xml_dict["document"]["necost"]
     return {
-        "construction_interest_rate": float(getval(result["construction_interest_rate"])),
-        "operations_interest_rate": float(getval(result["operations_interest_rate"])),
-        "sample_size": int(getval(result["sample_size"])),
+        "construction_interest_rate": float(get_optional_val(result, "construction_interest_rate", 0.05)),
+        "operations_interest_rate": float(get_optional_val(result, "operations_interest_rate", 0.05)),
+        "sample_size": int(float(get_optional_val(result, "sample_size", 40000))),
         "accert_coupling": parse_accert_coupling(result.get("accert_coupling")),
-        "fuel_cycles": parse_list_of_items(result["fuel_cycles"]["cycle"], parse_fuel_cycles),
-        "reactors": parse_list_of_items(result["reactors"]["reactor"], parse_reactor),
-        "capital_costs": parse_list_of_items(result["capital_costs"]["item"], parse_capital_cost_items),
-        "om_costs": parse_list_of_items(result["om_costs"]["item"], parse_om_cost_items),
-        "fuel_costs": parse_list_of_items(result["fuel_costs"]["item"], parse_fuel_cost_items),
-        "fuels": parse_list_of_items(result["fuels"]["fuel"], parse_fuels),
+        "legacy_inputs": parse_legacy_inputs(result.get("legacy_inputs")),
+        "fuel_cycles": parse_list_of_items(result["fuel_cycles"]["cycle"], parse_fuel_cycles)
+        if result.get("fuel_cycles") and result["fuel_cycles"].get("cycle") else [],
+        "reactors": parse_list_of_items(result["reactors"]["reactor"], parse_reactor)
+        if result.get("reactors") and result["reactors"].get("reactor") else [],
+        "capital_costs": parse_list_of_items(result["capital_costs"]["item"], parse_capital_cost_items)
+        if result.get("capital_costs") and result["capital_costs"].get("item") else [],
+        "om_costs": parse_list_of_items(result["om_costs"]["item"], parse_om_cost_items)
+        if result.get("om_costs") and result["om_costs"].get("item") else [],
+        "fuel_costs": parse_list_of_items(result["fuel_costs"]["item"], parse_fuel_cost_items)
+        if result.get("fuel_costs") and result["fuel_costs"].get("item") else [],
+        "fuels": parse_list_of_items(result["fuels"]["fuel"], parse_fuels)
+        if result.get("fuels") and result["fuels"].get("fuel") else [],
     }
 
 
@@ -207,6 +214,37 @@ def parse_accert_coupling(coupling: Dict):
         "occ_metric": get_optional_val(coupling, "occ_metric", "total_OCC"),
         "uncertainty_fraction": float(get_optional_val(coupling, "uncertainty_fraction", 0.0)),
     }
+
+
+def parse_legacy_inputs(legacy_inputs: Dict):
+    if not legacy_inputs or "case" not in legacy_inputs:
+        return []
+
+    def parse_line(line: Dict):
+        return {
+            "line": int(line["id"]["#text"]),
+            "low": float(getval(line["low"])),
+            "nominal": float(getval(line["nominal"])),
+            "high": float(getval(line["high"])),
+            "distribution": int(float(getval(line["distribution"]))),
+            "description": get_optional_val(line, "description", ""),
+        }
+
+    def parse_case(case: Dict):
+        return {
+            "id": case["id"]["#text"],
+            "energy_fraction": None
+            if "energy_fraction" not in case
+            else float(getval(case["energy_fraction"])),
+            "mass_fraction": None
+            if "mass_fraction" not in case
+            else float(getval(case["mass_fraction"])),
+            "inputs": parse_list_of_items(case["input"], parse_line)
+            if case.get("input")
+            else [],
+        }
+
+    return parse_list_of_items(legacy_inputs["case"], parse_case)
 
 
 def parse_fuel_cycles(cycle: Dict):

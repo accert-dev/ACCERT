@@ -1,0 +1,435 @@
+necost {
+    % EG20/SC02 Continuous TRU recycle in HWR
+    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % NE-COST input preparer: Francesco Ganda (INL)
+    % Technical Reviewer: Kent Williams (Consultant)
+    % In fuel cycle option EG20/SC02 (Figure 69) Continuous TRU recycle in HWR the entire amount of discharged Pu and MA (minus reprocessing and re-fabrication losses) is recycled in the HWR core, with equal parts of RU and NU as makeup materials. The Burnup is 7.5 GWD/MT. The un-used RU and fission products (FP) are conditioned and permanently disposed-of.
+    % This option is modeled using a single NE-COST island with continuous recycling, using the aqueous reprocessing front-end route 2 (line 53 set to 1), which can account separately for reprocessing and re-fabrication as separate costs. The FP and RU disposal costs are also accounted for through front-end route 2, while no cost is included through the back-end costing functionality of NE-COST (i.e. input line 75 set to 1 and input lines 76 to 79 set to 0).
+    % Report LCAE at 3% discount rate: mean 143.9 mills/kWh, std 23.9 mills/kWh.
+    % Report LCAE at 5% discount rate: mean 159.9 mills/kWh, std 26.8 mills/kWh.
+    % Report LCAE at 10% discount rate: mean 210.1 mills/kWh, std 35.8 mills/kWh.
+
+    construction_interest_rate = 0.05
+    operations_interest_rate = 0.05
+    sample_size = 2000
+
+    legacy_inputs {
+        case(EG20) {
+            % Report LCAE weight for this input table.
+            energy_fraction = 1
+            input(1) {
+                low = 2.08e+09
+                nominal = 2.08e+09
+                high = 2.08e+09
+                distribution = 0
+                description = "Reference core thermal power (W)"
+            }
+            input(2) {
+                low = 1
+                nominal = 1
+                high = 1
+                distribution = 0
+                description = "Core thermal power as a fraction of reference (1=100%)"
+            }
+            input(3) {
+                low = 33
+                nominal = 33
+                high = 33
+                distribution = 0
+                description = "Thermal efficiency (%) (100=100%)"
+            }
+            input(4) {
+                low = 86.8
+                nominal = 86.8
+                high = 86.8
+                distribution = 0
+                description = "Direct specification of core HM mass (MTiHM)."
+            }
+            input(11) {
+                low = 7.6
+                nominal = 7.6
+                high = 7.6
+                distribution = 0
+                description = "Average discharge burnup (GWD/MTiHM)"
+            }
+            input(13) {
+                low = 2200
+                nominal = 3900
+                high = 5600
+                distribution = 1
+                description = "Overnight reactor capital cost ($/kWe)"
+            }
+            input(15) {
+                low = 0.05
+                nominal = 0.05
+                high = 0.05
+                distribution = 0
+                description = "Discount rate (1=100%)"
+            }
+            input(16) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Escalation rate for front end costs (%/year) (1=100%)"
+            }
+            input(17) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Escalation rate for back end costs (%/year) (1=100%)"
+            }
+            input(18) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Escalation rate for reactor O & M costs (%/year) (1=100%)"
+            }
+            input(19) {
+                low = 5
+                nominal = 5
+                high = 5
+                distribution = 1
+                description = "Years for reactor construction"
+            }
+            input(20) {
+                low = 0.05
+                nominal = 0.05
+                high = 0.05
+                distribution = 0
+                description = "Annual interest rate during construction, compounded quarterly (1=100%)"
+            }
+            input(21) {
+                low = 0.9
+                nominal = 0.9
+                high = 0.9
+                distribution = 0
+                description = "Direct specification of capacity factor (1=100%)"
+            }
+            input(27) {
+                low = 58
+                nominal = 70
+                high = 84
+                distribution = 1
+                description = "Direct specification of fixed O&M costs [$/kWe-y]"
+            }
+            input(28) {
+                low = 0.84
+                nominal = 1.9
+                high = 2.6
+                distribution = 1
+                description = "O&M variable cost (mills/kWh)"
+            }
+            input(33) {
+                low = 0.711
+                nominal = 0.711
+                high = 0.711
+                distribution = 0
+                description = "Enrichment for fresh uranium fuel (%) (100=100%)"
+            }
+            input(34) {
+                low = 0.711
+                nominal = 0.711
+                high = 0.711
+                distribution = 0
+                description = "Feed enrichment for fresh uranium fuel (%) (100=100%)"
+            }
+            input(36) {
+                low = 2
+                nominal = 2
+                high = 2
+                distribution = 0
+                description = "Lead time for purchase for fresh uranium fuel (y)"
+            }
+            input(37) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Lead time for conversion for fresh uranium fuel (y)"
+            }
+            input(38) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Lead time for enrichment for fresh uranium fuel (y)"
+            }
+            input(40) {
+                low = 65
+                nominal = 110
+                high = 230
+                distribution = 1
+                description = "Cost of U ($/kgU as U3O8)"
+            }
+            input(41) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Cost of SWU ($/kg_SWU)"
+            }
+            input(45) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Cost of Conversion ($/kg_U product as UF6)"
+            }
+            input(46) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Cost of De-Conversion of depleted uranium hexafluoride ($/kgDU as DU3O8 product)"
+            }
+            input(47) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Cost of off-site wet storage ($/kg_HM)"
+            }
+            input(48) {
+                low = 50
+                nominal = 100
+                high = 130
+                distribution = 1
+                description = "Cost of SNF conditioning before shipping to reprocessing plant ($/kg_HM)"
+            }
+            input(49) {
+                low = 0.2
+                nominal = 0.2
+                high = 0.2
+                distribution = 0
+                description = "Fabrication loss for fresh uranium fuel (%) (100=100%)"
+            }
+            input(50) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Conversion loss for fresh uranium fuel (%) (100=100%)"
+            }
+            input(51) {
+                low = 1
+                nominal = 1
+                high = 1
+                distribution = 0
+                description = "Losses at the reprocessing plant (%) (100=100%)"
+            }
+            input(52) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Fraction of the core loaded with natural/enriched uranium (1=100%)"
+            }
+            input(53) {
+                low = 1
+                nominal = 1
+                high = 1
+                distribution = 0
+                description = "Fraction of the core loaded with reprocessed material (1=100%)"
+            }
+            input(54) {
+                low = 4
+                nominal = 4
+                high = 4
+                distribution = 0
+                description = "Primary fissile for reprocessed stream (coming from previous island): 1: Pu; 2: U (possibly re-enriched); 3: MA; 4: TRU"
+            }
+            input(55) {
+                low = 0.0114
+                nominal = 0.0114
+                high = 0.0114
+                distribution = 0
+                description = "Fraction of Pu in new refabricated fuel (1=100%)"
+            }
+            input(56) {
+                low = 0.0021
+                nominal = 0.0021
+                high = 0.0021
+                distribution = 0
+                description = "Fraction of MA in new refabricated fuel (1=100%)"
+            }
+            input(57) {
+                low = 0.0114
+                nominal = 0.0114
+                high = 0.0114
+                distribution = 0
+                description = "Fraction of Pu content in the fuel before separation (1=100%)"
+            }
+            input(58) {
+                low = 0.0021
+                nominal = 0.0021
+                high = 0.0021
+                distribution = 0
+                description = "Fraction of MA content in the fuel before separation (1=100%)"
+            }
+            input(59) {
+                low = 0.0179
+                nominal = 0.0179
+                high = 0.0179
+                distribution = 0
+                description = "Fraction of FP content in the fuel before separation (1=100%)"
+            }
+            input(60) {
+                low = 903
+                nominal = 1120
+                high = 1339
+                distribution = 1
+                description = "Cost of reprocessing ($/kgHM)"
+            }
+            input(61) {
+                low = 2097
+                nominal = 4880
+                high = 7661
+                distribution = 1
+                description = "Cost of fabrication of reprocessed fuel ($/kgHM"
+            }
+            input(62) {
+                low = 2200
+                nominal = 5000
+                high = 6600
+                distribution = 1
+                description = "Cost of FP conditioning before storage/disposal ($/kgFP)"
+            }
+            input(63) {
+                low = 1377
+                nominal = 5500
+                high = 6880
+                distribution = 1
+                description = "Cost of FP geologic disposal ($/kgFP)"
+            }
+            input(64) {
+                low = 2
+                nominal = 2
+                high = 2
+                distribution = 0
+                description = "Lead time for reprocessing (y)"
+            }
+            input(65) {
+                low = 2
+                nominal = 2
+                high = 2
+                distribution = 0
+                description = "Lead time for re-fabrication (y)"
+            }
+            input(66) {
+                low = 2
+                nominal = 2
+                high = 2
+                distribution = 0
+                description = "Lead time for FP conditioning (y)"
+            }
+            input(67) {
+                low = 2
+                nominal = 2
+                high = 2
+                distribution = 0
+                description = "Lead time for FP disposal (y)"
+            }
+            input(75) {
+                low = 1
+                nominal = 1
+                high = 1
+                distribution = 0
+                description = "(1=100%) Fraction of Back-end route - 1: Do nothing"
+            }
+            input(76) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "(1=100%) Fraction of Back-end route - 2: Geol. disposal"
+            }
+            input(77) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "(1=100%) Fraction of Back-end route - 3: Dry storage + Geol. disposal"
+            }
+            input(78) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "(1=100%) Fraction of Back-end route - 4: 1 mills/kWh"
+            }
+            input(79) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "(1=100%) Fraction of Back-end route - 5: Reprocessing within the island"
+            }
+            input(80) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Specific cost of SNF dry storage ($/kgHM)"
+            }
+            input(81) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 1
+                description = "Specific cost of SNF geologic disposal ($/kgHM)"
+            }
+            input(87) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Lead time for dry-storage (y)"
+            }
+            input(90) {
+                low = 0.494
+                nominal = 0.494
+                high = 0.494
+                distribution = 0
+                description = "Fraction of NU (kg/kg of new fuel) in newly refab fuel after reprocessing (line 60) (1=100%)"
+            }
+            input(91) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Fraction of DU (kg/kg of new fuel) in newly refab fuel after reprocessing (line 60) (1=100%)"
+            }
+            input(92) {
+                low = 0
+                nominal = 0
+                high = 0
+                distribution = 0
+                description = "Fraction of Th (kg/kg of new fuel) in newly refab fuel after reprocessing (line 60) (1=100%)"
+            }
+            input(93) {
+                low = 0.969
+                nominal = 0.969
+                high = 0.969
+                distribution = 0
+                description = "U content in the previous island fuel before reprocessing (1=100%)"
+            }
+            input(94) {
+                low = 61
+                nominal = 72
+                high = 93
+                distribution = 0
+                description = "Cost of geologic RU disposal ($/kgHM)"
+            }
+            input(95) {
+                low = 0.474
+                nominal = 0.474
+                high = 0.474
+                distribution = 0
+                description = "Fraction of RU to be discarded (kgRU/kg of reprocessed fuel) (1=100%)"
+            }
+        }
+    }
+}

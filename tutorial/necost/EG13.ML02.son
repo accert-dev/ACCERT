@@ -8,6 +8,9 @@ necost {
     % into MOX fuel; DU, surplus RU, minor actinides, and fission products are
     % sent to geologic disposal. The reprocessing and MOX fuel fabrication
     % facilities are modeled in island 2.
+    % Report LCAE at 3% discount rate: mean 42.4 mills/kWh, std 3.7 mills/kWh.
+    % Report LCAE at 5% discount rate: mean 53.6 mills/kWh, std 5.6 mills/kWh.
+    % Report LCAE at 10% discount rate: mean 91.0 mills/kWh, std 11.9 mills/kWh.
 
     construction_interest_rate = 0.05
     operations_interest_rate = 0.05

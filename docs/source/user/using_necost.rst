@@ -33,8 +33,7 @@ Using NE-COST via Python
 
    * ``EG01.OT01A.son``: once-through PWR UOX reference case.
    * ``EG02.OT01B.son``: HTGR LEU once-through case with report comments and a single-island 175 MWe weighting basis.
-   * ``EG13.ML02.son``: two-stage PWR UOX and PWR MOX case with report energy-fraction LCAE weighting.
-   * ``EG23.SC05.son``: fast-reactor driver and blanket case with two explicit islands.
+   * ``EG03.OT01C.son`` through ``EG40.MC12.son``: report-table examples generated from Appendix A of FCRD-FCO-2013-000196. These use the original NE-COST line-number inputs in ``legacy_inputs`` blocks.
    * ``AP1000.ACCERT.NECost.son``: runs ACCERT first, reads the ACCERT OCC post-process CSV, and uses that OCC as the NEcost capital cost input.
    * ``Example.OnceThrough.TwoStageEnrichment.son``: compact legacy syntax example for a single once-through island with two-stage enrichment.
 
@@ -66,13 +65,21 @@ Using NE-COST via Python
 
       $ python tutorial/necost/eg23_two_island_example.py
 
+   To run the generated EG03-EG40 examples and compare the 5% discount-rate mean LCAE against the report comments:
+
+   .. code-block:: shell
+
+      $ python tutorial/necost/check_report_examples.py
+
    The output file 'NECOST_results.csv' will contain the LCAE and other relevant information.
    Multi-reactor cases also write ``NECOST_reactor_results.csv`` with the per-reactor details before the weighted cycle result is calculated.
+
+   The report-generated examples preserve each table row as ``legacy_inputs/case/input`` with the original NE-COST line number, low/nominal/high values, distribution type, and variable description. Multi-island cases use ``energy_fraction`` in each legacy case to reproduce the report's weighted LCAE setup.
 
    In a ``fuel_cycles`` reactor block, ``fleet_capacity`` is the reactor island's electric capacity in MWe. It is calculated from the reactor power block as ``reference_thermal * net_thermal_efficiency / 100 / 1e6`` when the reactor is specified by thermal power, or from ``reference_net_electrical / 1e6`` when the reactor is specified by net electrical power. ``fleet_capacity`` is optional when ``fleet_energy``, ``energy_fraction``, or ``mass_fraction`` is supplied. If ``fleet_capacity`` is supplied together with ``energy_fraction`` or ``mass_fraction``, ACCERT checks that the MWe value is consistent with the reactor power block.
 
    ``EG13.ML02.son`` follows the report's two-island LCAE weighting. The UOX LWR island uses ``energy_fraction = 0.902`` and the MOX PWR island uses ``energy_fraction = 0.098``.
-   ``EG23.SC05.son`` follows the report's two-island structure. The driver island uses ``energy_fraction = 0.954`` and the blanket island uses ``energy_fraction = 0.046`` for the weighted LCAE calculation. The supporting report mass fractions are retained as ``mass_fraction = 0.8`` for driver fuel and ``mass_fraction = 0.2`` for blanket fuel. Its ``fleet_capacity`` values are derived from the report's thermal power and efficiency: driver ``9.54E8 Wt * 40% / 1e6 = 381.6 MWe`` and blanket ``4.57E7 Wt * 40% / 1e6 = 18.28 MWe``. The report table's low/mode/high values are represented in each ``distribution`` block, while the table's mean suggested defaults are retained in ``cost_value`` where the schema supports that field.
+   ``EG23.SC05.son`` follows the report's two-island structure. The driver island uses ``energy_fraction = 0.954`` and the blanket island uses ``energy_fraction = 0.046`` for the weighted LCAE calculation.
 
 ACCERT to NEcost coupling
 -------------------------
