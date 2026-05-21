@@ -1,10 +1,4 @@
-fresh_fuel{
-    fabrication{ loss_fraction = VALUE costs = [fuel_cost_item_id]}
-    DU{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
-    NU{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
-    EU{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
-    RU{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
-    Th{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
-    TRU{fuel_fraction = VALUE costs = [fuel_cost_item_id]}
-    FP{ fuel_fraction = VALUE costs = [fuel_cost_item_id]}
+fresh_fuel {
+    fabrication { loss_fraction = 0.002 costs = [cost_fuel_fab] }
+    EU { fuel_fraction = 1 costs = [cost_U] }
 }

@@ -1,28 +1,34 @@
 accert {
-    ref_model = REF_MODEL
+    ref_model = "AP1000"
+    use_gncoa = False
 
-    % Power entries
-    % For each power in POWERS
-    power ( Thermal/Electric ) {
-        value = VALUE
-        unit = UNIT
+    post_process {
+        occ = true
     }
-    % End of power entries
 
-    % Variable entries
-    % For each var in VARS
-    var ( ID ) {
-        value = VALUE
-        unit = UNIT
+    power(Thermal) {
+        value = 6800
+        unit = MW
     }
-    % End of variable entries
 
-    % Level 0 COA entries
-    % For each l0coa in L0COAS
-    l0COA( ID ) {
-        % Include Level 1 COAs
-        % For each l1coa in l0coa.L1COAS
-        % Include L1COA template
+    power(Electric) {
+        value = 2234
+        unit = MW
     }
-    % End of Level 0 COA entries
+
+    var(mc_piping_M) {
+        value = 77001
+        unit = kg
+    }
+
+    l0COA(2) {
+        l1COA(21) {
+            l2COA(211) {
+                total_cost {
+                    value = 1
+                    unit = million
+                }
+            }
+        }
+    }
 }

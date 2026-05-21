@@ -1,3 +1,10 @@
-item( fuel_cost_item_id ) {cost_value = VALUE  lead_time = OPTIONAL   
-    distribution{ type = triangular 
-                    low = VALUE   high = VALUE  nominal = VALUE } }
+item(cost_U) {
+    cost_value = 110
+    lead_time = 2
+    distribution {
+        type = triangular
+        low = 65
+        high = 230
+        nominal = 110
+    }
+}

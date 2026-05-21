@@ -1,5 +1,7 @@
 fuel_costs {
-    item( fuel_cost_item_id ) {cost_value = VALUE  lead_time = OPTIONAL   
-        distribution{ type = triangular 
-                      low = VALUE   high = VALUE  nominal = VALUE } }
-    }
+    item(cost_U) { cost_value = 110 lead_time = 2 distribution { type = triangular low = 65 high = 230 nominal = 110 } }
+    item(cost_SWU) { cost_value = 100 lead_time = 2 distribution { type = triangular low = 70 high = 120 nominal = 100 } }
+    item(cost_fuel_fab) { cost_value = 350 lead_time = 0.5 distribution { type = triangular low = 200 high = 500 nominal = 350 } }
+    item(cost_conv) { cost_value = 12 lead_time = 2 distribution { type = triangular low = 6 high = 18 nominal = 12 } }
+    item(cost_DU_disposal) { cost_value = 4 distribution { type = triangular low = 2 high = 22 nominal = 4 } }
+}

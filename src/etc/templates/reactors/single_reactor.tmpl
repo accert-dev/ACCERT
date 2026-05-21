@@ -1,22 +1,14 @@
-reactor( reactor_id) {
-    capacity_factor = 1
-    cycle_length = 1
-    lifetime_years = 1
-
-    power_level {
-        reference_net_electrical = 1
-        net_thermal_efficiency = 1
-    }
-
-    capital_costs {
-        scaling_factor( capital_cost_item_id ) = 1
-    }
-
+reactor(PWR_UOX) {
+    capacity_factor = 0.9
+    cycle_length = 1.5
+    lifetime_years = 60
+    power_level { reference_thermal = 3.0E9 net_thermal_efficiency = 33 }
+    capital_costs { scaling_factor(capital_cost) = 1 }
     om_costs {
-        scaling_factor( om_cost_item_id ) = 1
+        scaling_factor(OM_per_year) = 1
+        scaling_factor(OM_per_MWh) = 1
     }
-
     fuel_reloads {
-        quantity( fuel_id ) { heavy_metal_mass = 1 }
+        quantity(UOX) { heavy_metal_mass = 88.23 fuel_fraction = 1 }
     }
 }

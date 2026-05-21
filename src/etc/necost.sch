@@ -720,7 +720,7 @@ necost {
                     Description = "Depleted uranium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/fcc_depleted_uranium"
+                    InputTmpl="fuels/ffc_depleted_uranium"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the depleted uranium unit in 1"
@@ -899,7 +899,7 @@ necost {
                     Description = "Recovered thorium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_thorium_fraction"
+                    InputTmpl="fuels/ffc_recovered_thorium_fraction"
 
                     lead_time {
                         Description = "Lead time for the recovered thorium in years"
@@ -1022,7 +1022,7 @@ necost {
                     Description = "Fission products parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_natural_uranium"
+                    InputTmpl="fuels/ffc_fission_products"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the fission products unit in 1"
@@ -1084,7 +1084,7 @@ necost {
                     Description = "Fission products parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_natural_uranium"
+                    InputTmpl="fuels/ffc_fission_products"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the fission products unit in 1"
@@ -1126,7 +1126,7 @@ necost {
                 Description = "Enriched uranium parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="fuels/EU"
+                InputTmpl="fuels/ffc_EU"
 
                 conversion {
                     Description = "Conversion parameters and characteristics"
@@ -1311,7 +1311,7 @@ necost {
                 Description = "Recovered uranium parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="fuels/RU"
+                InputTmpl="fuels/ffc_RU"
 
                 reprocess{
                     Description = "Reprocessing parameters and characteristics"

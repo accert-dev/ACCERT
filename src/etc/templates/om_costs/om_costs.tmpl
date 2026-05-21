@@ -1,8 +1,12 @@
 om_costs {
-    item( om_cost_item_id ) {
-            cost_type = single
-            expenditure_time = 1
-            nominal_value = 1
-        }
+    item(OM_per_year) {
+        cost_type = fixed
+        nominal_value = 70
+        distribution { type = triangular low = 58 high = 84 nominal = 70 }
+    }
+    item(OM_per_MWh) {
+        cost_type = variable
+        nominal_value = 1.9
+        distribution { type = triangular low = 0.84 high = 2.6 nominal = 1.9 }
     }
 }

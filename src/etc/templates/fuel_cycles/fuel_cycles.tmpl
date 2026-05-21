@@ -1,5 +1,7 @@
 fuel_cycles {
-    cycle( cycle_id ) {
-        reactor( reactor_id ) { fleet_capacity=1  }
+    cycle(EG_TEMPLATE) {
+        reactor(PWR_UOX) {
+            energy_fraction = 1
+        }
     }
 }
