@@ -45,7 +45,7 @@ def test_read_accert_occ_for_necost(tmp_path):
 @pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
 def test_necost_eg13_tutorial_runs(tmp_path):
     results = run_necost(
-        PROJECT_ROOT / "tutorial" / "necost" / "EG13.son",
+        PROJECT_ROOT / "tutorial" / "necost" / "EG13.ML02.son",
         output_dir=tmp_path,
         make_plot=False,
     )
@@ -57,9 +57,34 @@ def test_necost_eg13_tutorial_runs(tmp_path):
 
 
 @pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
+def test_necost_eg02_ot01b_tutorial_runs(tmp_path):
+    results = run_necost(
+        PROJECT_ROOT / "tutorial" / "necost" / "EG02.OT01B.son",
+        output_dir=tmp_path,
+        make_plot=False,
+    )
+
+    assert (tmp_path / "NECOST_results.csv").exists()
+    assert results["reactor_id"].eq("HTGR_LEU").all()
+
+
+@pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
+def test_eg02_ot01b_uses_report_capacity_and_weight():
+    parsed = parse_son_input(
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG02.OT01B.son"),
+        str(PROJECT_ROOT),
+    )
+    reactor = parsed["fuel_cycles"][0]["reactors"][0]
+
+    assert reactor["fleet_capacity"] == pytest.approx(175)
+    assert reactor["energy_fraction"] == pytest.approx(1)
+    _validate_cycle_weight_inputs(parsed)
+
+
+@pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
 def test_eg23_uses_report_driver_blanket_energy_fractions():
     parsed = parse_son_input(
-        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.son"),
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.SC05.son"),
         str(PROJECT_ROOT),
     )
     reactors = {
@@ -73,7 +98,7 @@ def test_eg23_uses_report_driver_blanket_energy_fractions():
 @pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
 def test_eg23_retains_report_driver_blanket_mass_fractions():
     parsed = parse_son_input(
-        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.son"),
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.SC05.son"),
         str(PROJECT_ROOT),
     )
     reactors = {
@@ -87,7 +112,7 @@ def test_eg23_retains_report_driver_blanket_mass_fractions():
 @pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
 def test_eg23_fleet_capacity_matches_power_block():
     parsed = parse_son_input(
-        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.son"),
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.SC05.son"),
         str(PROJECT_ROOT),
     )
 
@@ -128,7 +153,7 @@ def test_fleet_capacity_sanity_check_rejects_inconsistent_mwe():
 @pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
 def test_eg13_uses_report_energy_fractions():
     parsed = parse_son_input(
-        str(PROJECT_ROOT / "tutorial" / "necost" / "EG13.son"),
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG13.ML02.son"),
         str(PROJECT_ROOT),
     )
     reactors = {

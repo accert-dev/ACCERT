@@ -31,10 +31,12 @@ Using NE-COST via Python
 
    Example input files are provided in ``tutorial/necost``:
 
-   * ``EG01.son``: once-through PWR UOX reference case.
-   * ``EG13.son``: two-stage PWR UOX and PWR MOX case with report energy-fraction LCAE weighting.
-   * ``EG23.son``: fast-reactor driver and blanket case with two explicit islands.
-   * ``AP1000_ACCERT_NECost.son``: runs ACCERT first, reads the ACCERT OCC post-process CSV, and uses that OCC as the NEcost capital cost input.
+   * ``EG01.OT01A.son``: once-through PWR UOX reference case.
+   * ``EG02.OT01B.son``: HTGR LEU once-through case with report comments and a single-island 175 MWe weighting basis.
+   * ``EG13.ML02.son``: two-stage PWR UOX and PWR MOX case with report energy-fraction LCAE weighting.
+   * ``EG23.SC05.son``: fast-reactor driver and blanket case with two explicit islands.
+   * ``AP1000.ACCERT.NECost.son``: runs ACCERT first, reads the ACCERT OCC post-process CSV, and uses that OCC as the NEcost capital cost input.
+   * ``Example.OnceThrough.TwoStageEnrichment.son``: compact legacy syntax example for a single once-through island with two-stage enrichment.
 
 3. Run NECOST
    
@@ -42,15 +44,15 @@ Using NE-COST via Python
 
    .. code-block:: shell
 
-      $ python src/necostmain.py -i tutorial/necost/EG01.son
-      $ python src/necostmain.py -i tutorial/necost/EG13.son
-      $ python src/necostmain.py -i tutorial/necost/EG23.son
+      $ python src/necostmain.py -i tutorial/necost/EG01.OT01A.son
+      $ python src/necostmain.py -i tutorial/necost/EG13.ML02.son
+      $ python src/necostmain.py -i tutorial/necost/EG23.SC05.son
 
    To run ACCERT and NEcost together:
 
    .. code-block:: shell
 
-      $ python src/necostmain.py -i tutorial/necost/AP1000_ACCERT_NECost.son
+      $ python src/necostmain.py -i tutorial/necost/AP1000.ACCERT.NECost.son
 
    You can also run the Python workflow driver:
 
@@ -69,8 +71,8 @@ Using NE-COST via Python
 
    In a ``fuel_cycles`` reactor block, ``fleet_capacity`` is the reactor island's electric capacity in MWe. It is calculated from the reactor power block as ``reference_thermal * net_thermal_efficiency / 100 / 1e6`` when the reactor is specified by thermal power, or from ``reference_net_electrical / 1e6`` when the reactor is specified by net electrical power. ``fleet_capacity`` is optional when ``fleet_energy``, ``energy_fraction``, or ``mass_fraction`` is supplied. If ``fleet_capacity`` is supplied together with ``energy_fraction`` or ``mass_fraction``, ACCERT checks that the MWe value is consistent with the reactor power block.
 
-   ``EG13.son`` follows the report's two-island LCAE weighting. The UOX LWR island uses ``energy_fraction = 0.902`` and the MOX PWR island uses ``energy_fraction = 0.098``.
-   ``EG23.son`` follows the report's two-island structure. The driver island uses ``energy_fraction = 0.954`` and the blanket island uses ``energy_fraction = 0.046`` for the weighted LCAE calculation. The supporting report mass fractions are retained as ``mass_fraction = 0.8`` for driver fuel and ``mass_fraction = 0.2`` for blanket fuel. Its ``fleet_capacity`` values are derived from the report's thermal power and efficiency: driver ``9.54E8 Wt * 40% / 1e6 = 381.6 MWe`` and blanket ``4.57E7 Wt * 40% / 1e6 = 18.28 MWe``. The report table's low/mode/high values are represented in each ``distribution`` block, while the table's mean suggested defaults are retained in ``cost_value`` where the schema supports that field.
+   ``EG13.ML02.son`` follows the report's two-island LCAE weighting. The UOX LWR island uses ``energy_fraction = 0.902`` and the MOX PWR island uses ``energy_fraction = 0.098``.
+   ``EG23.SC05.son`` follows the report's two-island structure. The driver island uses ``energy_fraction = 0.954`` and the blanket island uses ``energy_fraction = 0.046`` for the weighted LCAE calculation. The supporting report mass fractions are retained as ``mass_fraction = 0.8`` for driver fuel and ``mass_fraction = 0.2`` for blanket fuel. Its ``fleet_capacity`` values are derived from the report's thermal power and efficiency: driver ``9.54E8 Wt * 40% / 1e6 = 381.6 MWe`` and blanket ``4.57E7 Wt * 40% / 1e6 = 18.28 MWe``. The report table's low/mode/high values are represented in each ``distribution`` block, while the table's mean suggested defaults are retained in ``cost_value`` where the schema supports that field.
 
 ACCERT to NEcost coupling
 -------------------------

@@ -38,6 +38,22 @@ default_params = {
 }
 
 # Adjust the function to update named rows
+def _distribution_code(distribution):
+    if distribution == "triangular":
+        return 1
+    if distribution == "uniform":
+        return 2
+    return 0
+
+
+def _apply_distribution(default_inputs, column, item):
+    dist_code = _distribution_code(item.get("distribution"))
+    default_inputs.loc["low", column] = float(item.get("min", item.get("cost_value", 0)))
+    default_inputs.loc["nominal", column] = float(item.get("nominal", item.get("cost_value", 0)))
+    default_inputs.loc["high", column] = float(item.get("max", item.get("cost_value", 0)))
+    default_inputs.loc["distribution", column] = dist_code
+
+
 def update_default_inputs_reactor(default_inputs, res, mapping):
     for reactor in res.get("reactors", []):
         for key, column in mapping.items():
@@ -70,20 +86,10 @@ def update_default_inputs_reactor(default_inputs, res, mapping):
                         if isinstance(column, dict):
                             for key, sub_column in column.items():
                                 if matched_entry and key == matched_entry["id"]:
-                                    dist = matched_entry["distribution"]
-                                    if dist == "triangular":
-                                        default_inputs.loc["low",sub_column] = float(matched_entry.get("min", 0))
-                                        default_inputs.loc["nominal",sub_column] = float(matched_entry.get("nominal", 0))
-                                        default_inputs.loc["high",sub_column] = float(matched_entry.get("max", 0))
-                                        default_inputs.loc["distribution",sub_column] = 1
+                                    _apply_distribution(default_inputs, sub_column, matched_entry)
 
                         elif matched_entry and "distribution" in matched_entry:
-                            dist = matched_entry["distribution"]
-                            if dist == "triangular":
-                                default_inputs.loc["low",column] = float(matched_entry.get("min", 0))  # Low
-                                default_inputs.loc["nominal",column] = float(matched_entry.get("nominal", 0))  # Nominal
-                                default_inputs.loc["high",column] = float(matched_entry.get("max", 0))  # High
-                                default_inputs.loc["distribution",column] = 1  # Triangular Distribution
+                            _apply_distribution(default_inputs, column, matched_entry)
             elif value is not None:  # Handle standard fields without distribution
                 default_inputs.loc["low",column] = value  # Low
                 default_inputs.loc["nominal",column] = value  # Nominal
@@ -92,12 +98,8 @@ def update_default_inputs_reactor(default_inputs, res, mapping):
 
     for fuel_cost in res.get("fuel_costs", []):
         fuel_cost_id = fuel_cost["id"]
-        dist = fuel_cost["distribution"]
-        if dist == "triangular":
-            default_inputs.loc["low", fuel_cost_id] = float(fuel_cost.get("min", 0))
-            default_inputs.loc["nominal", fuel_cost_id] = float(fuel_cost.get("nominal", 0))
-            default_inputs.loc["high", fuel_cost_id] = float(fuel_cost.get("max", 0))
-            default_inputs.loc["distribution", fuel_cost_id] = 1
+        if fuel_cost_id in default_inputs.columns:
+            _apply_distribution(default_inputs, fuel_cost_id, fuel_cost)
         lead_time_id = mapping["fuel_costs_lead_time"].get(fuel_cost_id)
         if lead_time_id:
             lead_time = float(fuel_cost.get("lead_time", 0))
