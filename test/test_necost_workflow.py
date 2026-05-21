@@ -11,6 +11,7 @@ SRC = PROJECT_ROOT / "src"
 sys.path.insert(0, str(SRC))
 
 from necost import generate_monte_carlo_samples
+from input_processor import parse_son_input
 from necostmain import _read_accert_occ_per_kw, run_necost
 
 
@@ -53,3 +54,17 @@ def test_necost_eg13_tutorial_runs(tmp_path):
     assert (tmp_path / "NECOST_reactor_results.csv").exists()
     assert set(["Capital", "O&M", "FCC", "LCOE"]).issubset(results.columns)
     assert results["reactor_id"].eq("weighted_cycle").all()
+
+
+@pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
+def test_eg23_uses_report_driver_blanket_mass_fractions():
+    parsed = parse_son_input(
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.son"),
+        str(PROJECT_ROOT),
+    )
+    reactors = {
+        row["reactor"]: row["mass_fraction"]
+        for row in parsed["fuel_cycles"][0]["reactors"]
+    }
+
+    assert reactors == {"FR_DRIVER": pytest.approx(0.8), "FR_BLANKET": pytest.approx(0.2)}

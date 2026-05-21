@@ -140,6 +140,16 @@ necost {
                     %SumOver("../..") = 1
                     InputTmpl="flagtypes"
                 }
+
+                mass_fraction {
+                    Description = "Mass fraction for this reactor island in a multi-island fuel-cycle case. For example, EG23 uses 0.8 driver and 0.2 blanket."
+                    MinOccurs = 0
+                    MaxOccurs = 1
+                    ValType = Real
+                    MinValInc=0
+                    MaxValInc=1
+                    InputTmpl="flagtypes"
+                }
             }
         }
     }

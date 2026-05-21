@@ -5,8 +5,16 @@ necost {
 
     fuel_cycles {
         cycle(EG23) {
-            reactor(FR_DRIVER) { fleet_capacity = 954 }
-            reactor(FR_BLANKET) { fleet_capacity = 46 }
+            % EG23 has two fuel-cycle islands. The cycle result is weighted by
+            % the report mass fractions: 80% driver fuel and 20% blanket fuel.
+            reactor(FR_DRIVER) {
+                fleet_capacity = 381.6
+                mass_fraction = 0.8
+            }
+            reactor(FR_BLANKET) {
+                fleet_capacity = 18.28
+                mass_fraction = 0.2
+            }
         }
     }
 
@@ -43,8 +51,8 @@ necost {
     }
 
     capital_costs {
-        item(capital_cost_driver) { cost_type = s_curve expenditure_time = 5 distribution { type = triangular low = 2200 high = 7000 nominal = 3800 } }
-        item(capital_cost_blanket) { cost_type = s_curve expenditure_time = 5 distribution { type = triangular low = 2200 high = 7000 nominal = 3800 } }
+        item(capital_cost_driver) { cost_value = 4333 cost_type = s_curve expenditure_time = 5 distribution { type = triangular low = 2200 high = 7000 nominal = 3800 } }
+        item(capital_cost_blanket) { cost_value = 4333 cost_type = s_curve expenditure_time = 5 distribution { type = triangular low = 2200 high = 7000 nominal = 3800 } }
     }
 
     om_costs {
@@ -55,10 +63,10 @@ necost {
     }
 
     fuel_costs {
-        item(cost_U) { cost_value = 110 lead_time = 2 distribution { type = triangular low = 65 high = 230 nominal = 110 } }
+        item(cost_U) { cost_value = 135 lead_time = 2 distribution { type = triangular low = 65 high = 230 nominal = 110 } }
         item(cost_SWU) { cost_value = 100 lead_time = 2 distribution { type = triangular low = 70 high = 120 nominal = 100 } }
-        item(cost_driver_fab) { cost_value = 3500 lead_time = 0.5 distribution { type = triangular low = 1750 high = 6000 nominal = 3500 } }
-        item(cost_blanket_fab) { cost_value = 450 lead_time = 0.5 distribution { type = triangular low = 250 high = 630 nominal = 450 } }
+        item(cost_driver_fab) { cost_value = 3750 lead_time = 0.5 distribution { type = triangular low = 1750 high = 6000 nominal = 3500 } }
+        item(cost_blanket_fab) { cost_value = 443 lead_time = 0.5 distribution { type = triangular low = 250 high = 630 nominal = 450 } }
         item(cost_conv) { cost_value = 12 lead_time = 2 distribution { type = triangular low = 6 high = 18 nominal = 12 } }
         item(cost_deconv) { cost_value = 6 lead_time = 2 distribution { type = triangular low = 4 high = 8 nominal = 6 } }
         item(cost_DU_disposal) { cost_value = 4 lead_time = 2 distribution { type = triangular low = 2 high = 22 nominal = 4 } }

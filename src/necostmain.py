@@ -263,6 +263,8 @@ def _reactor_weight_map(res):
             reactor_id = reactor["reactor"]
             if reactor.get("fleet_energy") is not None:
                 weights[reactor_id] = float(reactor["fleet_energy"])
+            elif reactor.get("mass_fraction") is not None:
+                weights[reactor_id] = float(reactor["mass_fraction"])
             else:
                 weights[reactor_id] = float(reactor.get("fleet_capacity") or 1.0)
     return weights
@@ -343,6 +345,9 @@ def run_necost(input_path, output_dir=None, make_plot=True):
     reactor_detail.to_csv(detail_csv, index=False)
 
     if make_plot:
+        mpl_config = output_dir / ".mplconfig"
+        mpl_config.mkdir(exist_ok=True)
+        os.environ.setdefault("MPLCONFIGDIR", str(mpl_config))
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
