@@ -12,7 +12,7 @@ sys.path.insert(0, str(SRC))
 
 from necost import generate_monte_carlo_samples
 from input_processor import parse_son_input
-from necostmain import _read_accert_occ_per_kw, run_necost
+from necostmain import _read_accert_occ_per_kw, _validate_cycle_weight_inputs, run_necost
 
 
 def _has_sonvalidxml():
@@ -57,7 +57,21 @@ def test_necost_eg13_tutorial_runs(tmp_path):
 
 
 @pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
-def test_eg23_uses_report_driver_blanket_mass_fractions():
+def test_eg23_uses_report_driver_blanket_energy_fractions():
+    parsed = parse_son_input(
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.son"),
+        str(PROJECT_ROOT),
+    )
+    reactors = {
+        row["reactor"]: row["energy_fraction"]
+        for row in parsed["fuel_cycles"][0]["reactors"]
+    }
+
+    assert reactors == {"FR_DRIVER": pytest.approx(0.954), "FR_BLANKET": pytest.approx(0.046)}
+
+
+@pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
+def test_eg23_retains_report_driver_blanket_mass_fractions():
     parsed = parse_son_input(
         str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.son"),
         str(PROJECT_ROOT),
@@ -68,6 +82,47 @@ def test_eg23_uses_report_driver_blanket_mass_fractions():
     }
 
     assert reactors == {"FR_DRIVER": pytest.approx(0.8), "FR_BLANKET": pytest.approx(0.2)}
+
+
+@pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")
+def test_eg23_fleet_capacity_matches_power_block():
+    parsed = parse_son_input(
+        str(PROJECT_ROOT / "tutorial" / "necost" / "EG23.son"),
+        str(PROJECT_ROOT),
+    )
+
+    _validate_cycle_weight_inputs(parsed)
+
+
+def test_fleet_capacity_sanity_check_rejects_inconsistent_mwe():
+    parsed = {
+        "fuel_cycles": [
+            {
+                "cycle": "test",
+                "reactors": [
+                    {
+                        "reactor": "R1",
+                        "fleet_capacity": 381.6,
+                        "energy_fraction": 0.954,
+                        "mass_fraction": 0.8,
+                    }
+                ],
+            }
+        ],
+        "reactors": [
+            {
+                "id": "R1",
+                "power_level": {
+                    "reference_thermal": 4.57e7,
+                    "reference_net_electrical": None,
+                    "net_thermal_efficiency": 40,
+                },
+            }
+        ],
+    }
+
+    with pytest.raises(ValueError, match="fleet_capacity"):
+        _validate_cycle_weight_inputs(parsed)
 
 
 @pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")

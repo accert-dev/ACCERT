@@ -8,11 +8,9 @@ necost {
             % EG13 LCAE is weighted by fractional energy generated:
             % 90.2% UOX LWR island and 9.8% MOX PWR island.
             reactor(PWR_UOX) {
-                fleet_capacity = 902
                 energy_fraction = 0.902
             }
             reactor(PWR_MOX) {
-                fleet_capacity = 98
                 energy_fraction = 0.098
             }
         }

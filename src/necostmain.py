@@ -272,6 +272,45 @@ def _reactor_weight_map(res):
     return weights
 
 
+def _reference_capacity_mwe(reactor):
+    power_level = reactor.get("power_level") or {}
+    if power_level.get("reference_net_electrical") is not None:
+        return float(power_level["reference_net_electrical"]) / 1e6
+    if power_level.get("reference_thermal") is None:
+        return None
+    efficiency = float(power_level.get("net_thermal_efficiency") or 0.0)
+    return float(power_level["reference_thermal"]) * efficiency / 100.0 / 1e6
+
+
+def _validate_cycle_weight_inputs(res, tolerance=1e-3):
+    reactors_by_id = {reactor["id"]: reactor for reactor in res.get("reactors", [])}
+    for cycle in res.get("fuel_cycles", []):
+        for cycle_reactor in cycle.get("reactors", []):
+            if (
+                cycle_reactor.get("fleet_capacity") is None
+                or (
+                    cycle_reactor.get("energy_fraction") is None
+                    and cycle_reactor.get("mass_fraction") is None
+                )
+            ):
+                continue
+
+            reactor_id = cycle_reactor["reactor"]
+            expected = _reference_capacity_mwe(reactors_by_id.get(reactor_id, {}))
+            if expected is None or expected == 0:
+                continue
+
+            supplied = float(cycle_reactor["fleet_capacity"])
+            rel_error = abs(supplied - expected) / expected
+            if rel_error > tolerance:
+                raise ValueError(
+                    f"fleet_capacity for {reactor_id} is {supplied:g} MWe, but the "
+                    f"reactor power block implies {expected:g} MWe. If an "
+                    "energy_fraction or mass_fraction is provided, fleet_capacity is "
+                    "optional; omit it unless it is the physical MWe capacity."
+                )
+
+
 def _default_inputs(code_folder):
     return pd.read_csv(f"{code_folder}/necost/default_input.csv").set_index("var_name").transpose()
 
@@ -318,6 +357,7 @@ def run_necost(input_path, output_dir=None, make_plot=True):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     res = parse_son_input(str(input_path), necost_path)
+    _validate_cycle_weight_inputs(res)
     coupling_summary = _apply_accert_coupling(res, input_path, output_dir)
     discount_rate = res.get("operations_interest_rate", 0.05)
     sample_size = res.get("sample_size", 40000)

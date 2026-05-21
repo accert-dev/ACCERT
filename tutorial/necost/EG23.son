@@ -5,14 +5,17 @@ necost {
 
     fuel_cycles {
         cycle(EG23) {
-            % EG23 has two fuel-cycle islands. The cycle result is weighted by
-            % the report mass fractions: 80% driver fuel and 20% blanket fuel.
+            % EG23 has two fuel-cycle islands. The report derives the energy
+            % weights from 80% driver / 20% blanket mass fractions, giving
+            % 95.4% driver energy and 4.6% blanket energy.
             reactor(FR_DRIVER) {
                 fleet_capacity = 381.6
+                energy_fraction = 0.954
                 mass_fraction = 0.8
             }
             reactor(FR_BLANKET) {
                 fleet_capacity = 18.28
+                energy_fraction = 0.046
                 mass_fraction = 0.2
             }
         }
