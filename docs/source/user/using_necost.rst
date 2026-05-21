@@ -29,7 +29,12 @@ Using NE-COST via Python
    fuel_costs
    fuel_inputs
 
-   An example input file is provided in the tutorial directory `necost.son`.
+   Example input files are provided in ``tutorial/necost``:
+
+   * ``EG01.son``: once-through PWR UOX reference case.
+   * ``EG13.son``: two-stage PWR UOX and PWR MOX case.
+   * ``EG23.son``: fast-reactor driver and blanket case.
+   * ``AP1000_ACCERT_NECost.son``: runs ACCERT first, reads the ACCERT OCC post-process CSV, and uses that OCC as the NEcost capital cost input.
 
 3. Run NECOST
    
@@ -37,9 +42,41 @@ Using NE-COST via Python
 
    .. code-block:: shell
 
-      $ python necostmain.py -i <input_file> 
+      $ python src/necostmain.py -i tutorial/necost/EG01.son
+      $ python src/necostmain.py -i tutorial/necost/EG13.son
+      $ python src/necostmain.py -i tutorial/necost/EG23.son
+
+   To run ACCERT and NEcost together:
+
+   .. code-block:: shell
+
+      $ python src/necostmain.py -i tutorial/necost/AP1000_ACCERT_NECost.son
+
+   You can also run the Python workflow driver:
+
+   .. code-block:: shell
+
+      $ python tutorial/necost/accert_necost_workflow.py
 
    The output file 'NECOST_results.csv' will contain the LCAE and other relevant information.
+   Multi-reactor cases also write ``NECOST_reactor_results.csv`` with the per-reactor details before the weighted cycle result is calculated.
+
+ACCERT to NEcost coupling
+-------------------------
+
+The optional ``accert_coupling`` block lets a NEcost SON file use ACCERT's total OCC as the NEcost ``capital_cost`` input.
+The bridge reads ACCERT post-processing metric ``total_OCC`` from ``value_2024_dollar_per_kw`` and writes it into the selected NEcost capital cost item in ``$/kWe``.
+
+.. code-block:: son
+
+   accert_coupling {
+      accert_input = "../accert/AP1000.son"
+      capital_cost_id = "capital_cost"
+      occ_metric = "total_OCC"
+      uncertainty_fraction = 0.0
+   }
+
+If ``accert_post_csv`` is provided instead of ``accert_input``, NEcost uses the existing ACCERT post-process CSV without rerunning ACCERT.
 
 4. Analyze the Results
    
@@ -88,7 +125,7 @@ Using NE-COST via NEAMS Workbench
 
    - Navigate to `Workbench` > `Configurations`.
    - Click `Add` and select `Necost` from the list of available configurations.
-   - Set the **Executable** path to `Main.py` located in the `ACCERT/src/` directory.
+   - Set the **Executable** path to ``necostmain.py`` located in the ``ACCERT/src/`` directory.
    - Load the grammar by clicking `Load Grammar`.
 
    .. admonition:: Windows Users!
@@ -97,7 +134,6 @@ Using NE-COST via NEAMS Workbench
 
 3. **Run Necost**
 
-   - Open your input file within the Workbench environment.
+   - Open one of the ``tutorial/necost/*.son`` input files within the Workbench environment.
    - Click the `Run` button to execute Necost.
    - Review the results in `NECOST_results.csv` directly within Workbench.
-

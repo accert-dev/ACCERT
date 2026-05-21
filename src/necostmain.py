@@ -1,6 +1,9 @@
 import os
 import sys
 import json
+import argparse
+import subprocess
+from pathlib import Path
 import pandas as pd
 
 from input_processor import parse_son_input
@@ -163,60 +166,221 @@ mapping_with_distribution = {
 
 
 
-# Apply the enhanced update function
+def _input_dir(input_path):
+    return Path(input_path).resolve().parent
 
 
+def _resolve_path(path, base_dir):
+    if not path:
+        return None
+    candidate = Path(path)
+    if candidate.is_absolute():
+        return candidate
+    return Path(base_dir, candidate).resolve()
 
-if __name__ == "__main__":
+
+def _read_accert_occ_per_kw(post_csv, metric="total_OCC"):
+    post = pd.read_csv(post_csv)
+    row = post.loc[post["metric"].astype(str).eq(metric)]
+    if row.empty:
+        raise ValueError(f"Could not find ACCERT post-process metric '{metric}' in {post_csv}")
+    if "value_2024_dollar_per_kw" in row.columns and pd.notna(row["value_2024_dollar_per_kw"].iloc[0]):
+        return float(row["value_2024_dollar_per_kw"].iloc[0])
+    if "value_dollar_per_kw" in row.columns and pd.notna(row["value_dollar_per_kw"].iloc[0]):
+        return float(row["value_dollar_per_kw"].iloc[0])
+    raise ValueError(f"ACCERT post-process file {post_csv} does not include an OCC $/kW column")
+
+
+def _run_accert(input_path, output_dir):
+    main_path = Path(__file__).resolve().parent / "Main.py"
+    before = {p.resolve() for p in Path(output_dir).glob("*_post_*.csv")}
+    subprocess.run(
+        [sys.executable, str(main_path), "-i", str(input_path)],
+        cwd=output_dir,
+        check=True,
+    )
+    candidates = [p for p in Path(output_dir).glob("*_post_*.csv") if p.resolve() not in before]
+    if not candidates:
+        candidates = list(Path(output_dir).glob("*_post_*.csv"))
+    if not candidates:
+        raise FileNotFoundError("ACCERT run did not produce a *_post_*.csv file")
+    return max(candidates, key=lambda p: p.stat().st_mtime)
+
+
+def _apply_accert_coupling(res, input_path, output_dir):
+    coupling = res.get("accert_coupling")
+    if not coupling:
+        return None
+
+    base_dir = _input_dir(input_path)
+    post_csv = _resolve_path(coupling.get("accert_post_csv"), base_dir)
+    if post_csv is None:
+        accert_input = _resolve_path(coupling.get("accert_input"), base_dir)
+        if accert_input is None:
+            raise ValueError("accert_coupling requires either accert_input or accert_post_csv")
+        post_csv = _run_accert(accert_input, output_dir)
+
+    occ_metric = coupling.get("occ_metric", "total_OCC")
+    occ_per_kw = _read_accert_occ_per_kw(post_csv, metric=occ_metric)
+    uncertainty = float(coupling.get("uncertainty_fraction", 0.0) or 0.0)
+    cost_id = coupling.get("capital_cost_id", "capital_cost")
+    low = occ_per_kw * (1 - uncertainty)
+    high = occ_per_kw * (1 + uncertainty)
+
+    matched = False
+    for item in res.get("capital_costs", []):
+        if item.get("id") == cost_id:
+            item.update({
+                "distribution": "triangular",
+                "min": low,
+                "nominal": occ_per_kw,
+                "max": high,
+            })
+            matched = True
+    if not matched:
+        res.setdefault("capital_costs", []).append({
+            "id": cost_id,
+            "cost_type": "s_curve",
+            "expenditure_time": 5,
+            "distribution": "triangular",
+            "min": low,
+            "nominal": occ_per_kw,
+            "max": high,
+        })
+
+    return {
+        "accert_post_csv": str(post_csv),
+        "capital_cost_id": cost_id,
+        "occ_metric": occ_metric,
+        "occ_2024_dollar_per_kw": occ_per_kw,
+    }
+
+
+def _reactor_weight_map(res):
+    weights = {}
+    for cycle in res.get("fuel_cycles", []):
+        for reactor in cycle.get("reactors", []):
+            reactor_id = reactor["reactor"]
+            if reactor.get("fleet_energy") is not None:
+                weights[reactor_id] = float(reactor["fleet_energy"])
+            else:
+                weights[reactor_id] = float(reactor.get("fleet_capacity") or 1.0)
+    return weights
+
+
+def _default_inputs(code_folder):
+    return pd.read_csv(f"{code_folder}/necost/default_input.csv").set_index("var_name").transpose()
+
+
+def _run_single_reactor(res, reactor, code_folder, discount_rate, sample_size):
+    default_inputs = _default_inputs(code_folder)
+    fuel_ids = {reload["id"] for reload in (reactor.get("fuel_reloads") or [])}
+    fuels = [fuel for fuel in res.get("fuels", []) if not fuel_ids or fuel.get("id") in fuel_ids]
+    reactor_res = {**res, "reactors": [reactor], "fuels": fuels}
+    default_inputs = update_default_inputs_reactor(default_inputs, reactor_res, mapping_with_distribution)
+    monte_carlo_data = generate_monte_carlo_samples(
+        params_data=default_inputs,
+        sampling_amount=sample_size,
+        discount_rate=discount_rate * 100,
+    )
+    results = NECost(data=monte_carlo_data, **default_params).run()
+    return results.drop(columns=["HM_mass_direct_spec", "t_cyc", "L_direct_spec"], errors="ignore")
+
+
+def _weighted_cycle_results(reactor_results, weights):
+    if len(reactor_results) == 1:
+        reactor_id, results = next(iter(reactor_results.items()))
+        out = results.copy()
+        out.insert(0, "reactor_id", reactor_id)
+        return out
+
+    weight_sum = sum(weights.get(reactor_id, 1.0) for reactor_id in reactor_results)
+    if weight_sum <= 0:
+        weight_sum = float(len(reactor_results))
+    combined = None
+    for reactor_id, results in reactor_results.items():
+        frac = weights.get(reactor_id, 1.0) / weight_sum
+        numeric = results[["Capital", "LCOE", "O&M", "FCC"]] * frac
+        combined = numeric if combined is None else combined.add(numeric, fill_value=0)
+    combined.insert(0, "reactor_id", "weighted_cycle")
+    return combined
+
+
+def run_necost(input_path, output_dir=None, make_plot=True):
     code_folder = os.path.dirname(os.path.abspath(__file__))
     necost_path = os.path.abspath(os.path.join(code_folder, os.pardir))
-    user_input = sys.argv[2]
+    input_path = Path(input_path).resolve()
+    output_dir = Path(output_dir or os.getcwd()).resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    if os.path.exists(user_input):
-        input_path = os.path.abspath(user_input)
-    else:
-        print('NE-COST did not find the input file {}'.format(user_input))
-        raise SystemExit
-
-    # Parse the input (str->dict)
-    res = parse_son_input(input_path, necost_path)
-    # read the default input file
-    default_inputs = pd.read_csv(f"{code_folder}/necost/default_input.csv").set_index("var_name").transpose()
-    # default_inputs= update_transposed_dataframe(default_inputs, res, key_to_var_name)
-    default_inputs = update_default_inputs_reactor(default_inputs, res, mapping_with_distribution)
-    # save new default inputs to a file
-    default_inputs.to_csv("default_inputs_new.csv")
+    res = parse_son_input(str(input_path), necost_path)
+    coupling_summary = _apply_accert_coupling(res, input_path, output_dir)
     discount_rate = res.get("operations_interest_rate", 0.05)
     sample_size = res.get("sample_size", 40000)
     print(f"Discount rate: {discount_rate}")
     print(f"Sample size: {sample_size}")
-    monte_carlo_data = generate_monte_carlo_samples(
-        params_data=default_inputs,
-        sampling_amount=sample_size,
-        discount_rate=discount_rate*100
-    )
-    necost_cal = NECost(data=monte_carlo_data, **default_params)
-    # save the results to a file
-    results = necost_cal.run()
-    # plot the results the results is a dataframe, plot it
-    # remove HM_mass_direct_spec	t_cyc	L_direct_spec in results
-    results = results.drop(columns=['HM_mass_direct_spec','t_cyc','L_direct_spec'])
-    import matplotlib.pyplot as plt
-    # plot is like a KDE plot fill in the gaps
-    bin_num = int(sample_size/10)
-    
-    results.plot(kind='hist', bins=bin_num, alpha=0.5)
-    plt.title("NECOST Results")
-    plt.xlabel("levelized cost ($/MWh)")
-    plt.show()
-    # save the plot to a file
-    plt.savefig("NECOST_results.png")
 
-    # print the results and save them to a file
-    # the results is a dataframe, save it to a file
-    results.to_csv("NECOST_results.csv")
-    # Save output to file (for verification only)
-    json_formatted_str = json.dumps(res, indent=4)
-    with open("output.json", "w") as f:
-        f.write(json_formatted_str)
-    
+    reactor_results = {}
+    for reactor in res.get("reactors", []):
+        reactor_results[reactor["id"]] = _run_single_reactor(
+            res,
+            reactor,
+            code_folder,
+            discount_rate,
+            sample_size,
+        )
+
+    weights = _reactor_weight_map(res)
+    results = _weighted_cycle_results(reactor_results, weights)
+    reactor_detail = pd.concat(
+        [df.assign(reactor_id=reactor_id) for reactor_id, df in reactor_results.items()],
+        ignore_index=True,
+    )
+
+    results_csv = output_dir / "NECOST_results.csv"
+    detail_csv = output_dir / "NECOST_reactor_results.csv"
+    results.to_csv(results_csv, index=False)
+    reactor_detail.to_csv(detail_csv, index=False)
+
+    if make_plot:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
+        plot_data = results.drop(columns=["reactor_id"], errors="ignore")
+        bin_num = max(10, int(sample_size / 10))
+        plot_data.plot(kind="hist", bins=bin_num, alpha=0.5)
+        plt.title("NECOST Results")
+        plt.xlabel("levelized cost ($/MWh)")
+        plt.tight_layout()
+        plt.savefig(output_dir / "NECOST_results.png")
+        plt.close()
+
+    with open(output_dir / "output.json", "w") as f:
+        json.dump({"input": res, "accert_coupling": coupling_summary}, f, indent=4)
+
+    print(f"Saved NEcost results to {results_csv}")
+    if len(reactor_results) > 1:
+        print(f"Saved per-reactor NEcost details to {detail_csv}")
+    if coupling_summary:
+        print(
+            "ACCERT OCC coupling: "
+            f"{coupling_summary['occ_2024_dollar_per_kw']:.2f} $/kWe "
+            f"from {coupling_summary['accert_post_csv']}"
+        )
+    return results
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run NEcost from a SON input file.")
+    parser.add_argument("-i", "--input", required=True, help="NEcost SON input file")
+    parser.add_argument("-o", "--output-dir", default=os.getcwd(), help="Directory for NEcost outputs")
+    parser.add_argument("--no-plot", action="store_true", help="Skip NECOST_results.png generation")
+    args = parser.parse_args()
+
+    if os.path.exists(args.input):
+        run_necost(args.input, output_dir=args.output_dir, make_plot=not args.no_plot)
+    else:
+        print('NE-COST did not find the input file {}'.format(args.input))
+        raise SystemExit

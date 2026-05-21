@@ -36,6 +36,56 @@ necost {
         % TODO: What are min-max values for this?
     }
 
+    accert_coupling {
+        Description = "Optional ACCERT-to-NEcost coupling. Use either an ACCERT SON input or an ACCERT post-process CSV to replace a NEcost capital cost item with ACCERT OCC in $/kWe."
+        MinOccurs = 0
+        MaxOccurs = 1
+        InputTmpl = "sonobject"
+
+        accert_input {
+            Description = "ACCERT SON input to run before NEcost. The ACCERT post-process total OCC $/kW is used as NEcost capital_cost."
+            MinOccurs = 0
+            MaxOccurs = 1
+            ValType = String
+            InputTmpl="flagtypes"
+        }
+
+        accert_post_csv {
+            Description = "Existing ACCERT post-process CSV. If provided, NEcost reads OCC from this file instead of running ACCERT."
+            MinOccurs = 0
+            MaxOccurs = 1
+            ValType = String
+            InputTmpl="flagtypes"
+        }
+
+        capital_cost_id {
+            Description = "NEcost capital cost item id to replace with ACCERT OCC."
+            MinOccurs = 0
+            MaxOccurs = 1
+            ValType = String
+            ExistsIn = [ "/necost/capital_costs/item/id" ]
+            InputTmpl="flagtypes"
+        }
+
+        occ_metric {
+            Description = "ACCERT post-process metric to use as the overnight capital cost."
+            MinOccurs = 0
+            MaxOccurs = 1
+            ValType = String
+            ValEnums = [total_OCC total_cost_without_owner total_direct_cost total_calculated_direct_cost]
+            InputTmpl="flagtypes"
+        }
+
+        uncertainty_fraction {
+            Description = "Symmetric uncertainty fraction around the ACCERT OCC. For example, 0.1 creates low and high values at +/-10%."
+            MinOccurs = 0
+            MaxOccurs = 1
+            MinValInc = 0
+            ValType = Real
+            InputTmpl="flagtypes"
+        }
+    }
+
     fuel_cycles {
         Description = "Fuel cycle parameters for the reactors"
         MinOccurs = 0

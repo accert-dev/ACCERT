@@ -135,6 +135,7 @@ def parse_son_input(input_path: str, necost_path: str) -> Dict:
         "construction_interest_rate": float(getval(result["construction_interest_rate"])),
         "operations_interest_rate": float(getval(result["operations_interest_rate"])),
         "sample_size": int(getval(result["sample_size"])),
+        "accert_coupling": parse_accert_coupling(result.get("accert_coupling")),
         "fuel_cycles": parse_list_of_items(result["fuel_cycles"]["cycle"], parse_fuel_cycles),
         "reactors": parse_list_of_items(result["reactors"]["reactor"], parse_reactor),
         "capital_costs": parse_list_of_items(result["capital_costs"]["item"], parse_capital_cost_items),
@@ -185,6 +186,27 @@ def getval(x: Dict) -> str:
         The value extracted from the nested dictionary.
     """
     return x["value"]["#text"]
+
+
+def get_optional_val(parent: Dict, key: str, default=None):
+    if not parent or key not in parent:
+        return default
+    value = getval(parent[key])
+    if isinstance(value, str) and len(value) >= 2 and value[0] == value[-1] == '"':
+        return value[1:-1]
+    return value
+
+
+def parse_accert_coupling(coupling: Dict):
+    if not coupling:
+        return None
+    return {
+        "accert_input": get_optional_val(coupling, "accert_input"),
+        "accert_post_csv": get_optional_val(coupling, "accert_post_csv"),
+        "capital_cost_id": get_optional_val(coupling, "capital_cost_id", "capital_cost"),
+        "occ_metric": get_optional_val(coupling, "occ_metric", "total_OCC"),
+        "uncertainty_fraction": float(get_optional_val(coupling, "uncertainty_fraction", 0.0)),
+    }
 
 
 def parse_fuel_cycles(cycle: Dict):
@@ -273,8 +295,8 @@ def parse_reactor(reactor: Dict):
             "reference_thermal": reference_thermal,
         },
         "capacity_factor": float(getval(reactor["capacity_factor"])),
-        "cycle_length": float(getval(reactor["capacity_factor"])),
-        "lifetime_years": float(getval(reactor["capacity_factor"])),
+        "cycle_length": float(getval(reactor["cycle_length"])),
+        "lifetime_years": float(getval(reactor["lifetime_years"])),
         "capital_costs": capital_costs,
         "om_costs": om_costs,
         "fuel_reloads": fuel_reloads

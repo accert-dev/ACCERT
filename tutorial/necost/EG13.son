@@ -1,0 +1,110 @@
+necost {
+    construction_interest_rate = 0.05
+    operations_interest_rate = 0.05
+    sample_size = 2000
+
+    fuel_cycles {
+        cycle(EG13) {
+            reactor(PWR_UOX) { fleet_capacity = 902 }
+            reactor(PWR_MOX) { fleet_capacity = 98 }
+        }
+    }
+
+    reactors {
+        reactor(PWR_UOX) {
+            capacity_factor = 0.9
+            cycle_length = 1.5
+            lifetime_years = 60
+            power_level { reference_thermal = 3E9 net_thermal_efficiency = 33 }
+            capital_costs { scaling_factor(capital_cost_uox) = 1 }
+            om_costs {
+                scaling_factor(OM_per_year_uox) = 1
+                scaling_factor(OM_per_MWh_uox) = 1
+            }
+            fuel_reloads {
+                quantity(UOX) { heavy_metal_mass = 89 fuel_fraction = 1 }
+            }
+        }
+
+        reactor(PWR_MOX) {
+            capacity_factor = 0.9
+            cycle_length = 1.5
+            lifetime_years = 60
+            power_level { reference_thermal = 3E9 net_thermal_efficiency = 33 }
+            capital_costs { scaling_factor(capital_cost_mox) = 1 }
+            om_costs {
+                scaling_factor(OM_per_year_mox) = 1
+                scaling_factor(OM_per_MWh_mox) = 1
+            }
+            fuel_reloads {
+                quantity(MOX) { heavy_metal_mass = 89 fuel_fraction = 1 }
+            }
+        }
+    }
+
+    capital_costs {
+        item(capital_cost_uox) { cost_type = s_curve expenditure_time = 5 distribution { type = triangular low = 2300 high = 5800 nominal = 4000 } }
+        item(capital_cost_mox) { cost_type = s_curve expenditure_time = 5 distribution { type = triangular low = 2300 high = 5800 nominal = 4000 } }
+    }
+
+    om_costs {
+        item(OM_per_year_uox) { cost_type = fixed distribution { type = triangular low = 58 high = 84 nominal = 70 } }
+        item(OM_per_MWh_uox) { cost_type = variable distribution { type = triangular low = 0.84 high = 2.6 nominal = 1.9 } }
+        item(OM_per_year_mox) { cost_type = fixed distribution { type = triangular low = 58 high = 84 nominal = 70 } }
+        item(OM_per_MWh_mox) { cost_type = variable distribution { type = triangular low = 0.84 high = 2.6 nominal = 1.9 } }
+    }
+
+    fuel_costs {
+        item(cost_U) { cost_value = 110 lead_time = 2 distribution { type = triangular low = 65 high = 230 nominal = 110 } }
+        item(cost_SWU) { cost_value = 100 lead_time = 2 distribution { type = triangular low = 70 high = 120 nominal = 100 } }
+        item(cost_fuel_fab) { cost_value = 350 lead_time = 0.5 distribution { type = triangular low = 200 high = 500 nominal = 350 } }
+        item(cost_conv) { cost_value = 12 lead_time = 2 distribution { type = triangular low = 6 high = 18 nominal = 12 } }
+        item(cost_deconv) { cost_value = 6 lead_time = 2 distribution { type = triangular low = 4 high = 8 nominal = 6 } }
+        item(cost_DU_disposal) { cost_value = 4 lead_time = 2 distribution { type = triangular low = 2 high = 22 nominal = 4 } }
+        item(cost_mox_fab) { cost_value = 3500 lead_time = 0.5 distribution { type = triangular low = 1750 high = 6000 nominal = 3500 } }
+    }
+
+    fuels {
+        fuel(UOX) {
+            avg_discharge_burnup = 50
+            num_batches = 3
+            avg_specific_power = 1
+            fresh_fuel {
+                fabrication { loss_fraction = 0.01 costs = [cost_fuel_fab] }
+                EU { fuel_fraction = 1 costs = [cost_U] }
+            }
+            EU {
+                conversion { loss_fraction = 0.01 costs = [cost_conv cost_deconv] }
+                enrichment {
+                    type = one_stage
+                    loss_fraction = 0.01
+                    stage_1 { feed = 0.711 product = 4.21 tails = 0.25 }
+                    SWU_costs = [cost_SWU]
+                    NU_costs = [cost_U]
+                    DU_costs = [cost_DU_disposal]
+                }
+            }
+        }
+
+        fuel(MOX) {
+            avg_discharge_burnup = 50
+            num_batches = 3
+            avg_specific_power = 1
+            fresh_fuel {
+                fabrication { loss_fraction = 0.01 costs = [cost_mox_fab] }
+                EU { fuel_fraction = 1 costs = [cost_U] }
+            }
+            EU {
+                conversion { loss_fraction = 0.01 costs = [cost_conv cost_deconv] }
+                enrichment {
+                    type = one_stage
+                    loss_fraction = 0.01
+                    stage_1 { feed = 0.711 product = 4.2 tails = 0.25 }
+                    SWU_costs = [cost_SWU]
+                    NU_costs = [cost_U]
+                    DU_costs = [cost_DU_disposal]
+                }
+            }
+        }
+    }
+}
