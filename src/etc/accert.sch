@@ -3,12 +3,12 @@ accert{
     Description = "[optional] for accert calculations"
     MinOccurs = 0
     MaxOccurs = 1
-    InputTmpl = "accert"
+    InputTmpl = "accert/accert"
     ref_model{
         Description = "[required] User input reference model"
         MinOccurs = 1
         MaxOccurs = 1
-        InputTmpl = "ref_model"
+        InputTmpl = "accert/ref_model"
         ValType = String
         ValEnums = [ REF:user_defined_names  REF:ref_models]
         }            
@@ -18,7 +18,7 @@ accert{
         MinOccurs = 0
         MaxOccurs = 1
         InputType=String
-        InputTmpl="flagtypes"
+        InputTmpl = "common/flagtypes"
         ValEnums=[true false]
         InputDefault=false
     }
@@ -27,13 +27,13 @@ accert{
         Description = "[optional] post-process ACCERT results"
         MinOccurs = 0
         MaxOccurs = 1
-        InputTmpl = "post_process"
+        InputTmpl = "accert/post_process"
         occ{
             Description = "[optional] calculate ACCERT OCC summary"
             MinOccurs = 0
             MaxOccurs = 1
             InputType=String
-            InputTmpl="flagtypes"
+            InputTmpl = "common/flagtypes"
             ValEnums=[true false]
             InputDefault=true
         }
@@ -43,7 +43,7 @@ accert{
         Description = "[required] User input power"
         MinOccurs = 0
         MaxOccurs = NoLimit
-        InputTmpl = "power"
+        InputTmpl = "accert/power"
         id{
             MinOccurs = 1
             MaxOccurs = 1
@@ -70,7 +70,7 @@ accert{
         Description = "changed variable value"
         MinOccurs = 0
         MaxOccurs = NoLimit
-        InputTmpl = "var"
+        InputTmpl = "accert/var"
         id{
             MinOccurs = 1
             MaxOccurs = 1
@@ -95,7 +95,7 @@ accert{
         Description = "level 0 code of account"
         MinOccurs = 0
         MaxOccurs = NoLimit
-        InputTmpl = "L0COA"
+        InputTmpl = "accert/L0COA"
         id{
             MinOccurs = 0
             MaxOccurs = 1
@@ -106,7 +106,7 @@ accert{
         	Description = "level 1 code of account"
         	MinOccurs = 0
         	MaxOccurs = NoLimit
-        	InputTmpl = "L1COA" % TODO: add template
+        	InputTmpl = "accert/L1COA" % TODO: add template
             id{
                 MinOccurs = 0
                 MaxOccurs = 1
@@ -117,7 +117,7 @@ accert{
                 Description = "total cost value"
                 MinOccurs = 0
                 MaxOccurs = NoLimit
-                InputTmpl = "total_cost" % TODO: Add template
+                InputTmpl = "accert/total_cost" % TODO: Add template
                 value{
                     MinOccurs = 1
                     MaxOccurs = 1
@@ -137,7 +137,7 @@ accert{
         		Description = "level 2 code of account"
         		MinOccurs = 0
         		MaxOccurs = NoLimit
-        		InputTmpl = "L2COA" % TODO: add template
+        		InputTmpl = "accert/L2COA" % TODO: add template
                 id{
                     MinOccurs = 0
                     MaxOccurs = 1
@@ -148,7 +148,7 @@ accert{
                     Description = "total cost value"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
-                    InputTmpl = "total_cost"
+                    InputTmpl = "accert/total_cost"
                     value{
                         MinOccurs = 1
                         MaxOccurs = 1
@@ -167,7 +167,7 @@ accert{
         			Description = "???" % needs to be added
         			MinOccurs = 0
         			MaxOccurs = NoLimit
-        			InputTmpl = "ce" % TODO: add template
+        			InputTmpl = "accert/ce" % TODO: add template
                     id{
                         MinOccurs = 0
                         MaxOccurs = 1
@@ -178,7 +178,7 @@ accert{
         				Description = "???" % needs to be added
         				MinOccurs = 0
         				MaxOccurs = NoLimit
-        				InputTmpl = "alg" % TODO: add template
+        				InputTmpl = "accert/alg" % TODO: add template
                         id{
                             MinOccurs = 0
                             MaxOccurs = 1
@@ -189,7 +189,7 @@ accert{
                             Description = "changed variable value"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
-                            InputTmpl = "alg_var"  % TODO add template
+                            InputTmpl = "accert/alg_var"  % TODO add template
                             id{
                                 MinOccurs = 1
                                 MaxOccurs = 1
@@ -216,7 +216,7 @@ accert{
                                 Description = "valriable algorithm"
                                 MinOccurs = 0
                                 MaxOccurs = 1
-                                InputTmpl = "alg_var_alg" % ???
+                                InputTmpl = "accert/alg_var_alg" % ???
                                 id{
                                     MinOccurs = 1
                                     MaxOccurs = 1
@@ -227,7 +227,7 @@ accert{
                                     Description = "changed variable value"
                                     MinOccurs = 1
                                     MaxOccurs = NoLimit
-                                    InputTmpl = "alg_var_alg_var" % ???
+                                    InputTmpl = "accert/alg_var_alg_var" % ???
                                     id{
                                         MinOccurs = 1
                                         MaxOccurs = 1
@@ -493,7 +493,7 @@ accert{
                     Description = "new code of account"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
-                    InputTmpl = "newCOA" % TODO: add template
+                    InputTmpl = "accert/newCOA" % TODO: add template
                     id{
                         MinOccurs = 0
                         MaxOccurs = 1

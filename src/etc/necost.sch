@@ -4,7 +4,7 @@ necost {
     Description = "Input parameters for LCAE Calculations"
     MinOccurs = 0
     MaxOccurs = 1
-    InputTmpl = "necost"
+    InputTmpl = "necost/necost"
 
     construction_interest_rate {
         Description = "Construction interest rate for the project" 
@@ -12,7 +12,7 @@ necost {
         MaxOccurs = 1
         MinValInc = 0
         ValType = Real
-        InputTmpl="flagtypes"
+        InputTmpl = "common/flagtypes"
         % TODO: What are min-max values for this?
     }
 
@@ -22,7 +22,7 @@ necost {
         MaxOccurs = 1
         MinValInc = 0
         ValType = Real
-        InputTmpl="flagtypes"
+        InputTmpl = "common/flagtypes"
         % TODO: What are min-max values for this?
     }
 
@@ -32,7 +32,7 @@ necost {
         MaxOccurs = 1
         MinValExc = 0
         ValType = Real
-        InputTmpl="flagtypes"
+        InputTmpl = "common/flagtypes"
         % TODO: What are min-max values for this?
     }
 
@@ -40,14 +40,14 @@ necost {
         Description = "Optional ACCERT-to-NEcost coupling. Use either an ACCERT SON input or an ACCERT post-process CSV to replace a NEcost capital cost item with ACCERT OCC in $/kWe."
         MinOccurs = 0
         MaxOccurs = 1
-        InputTmpl = "sonobject"
+        InputTmpl = "common/sonobject"
 
         accert_input {
             Description = "ACCERT SON input to run before NEcost. The ACCERT post-process total OCC $/kW is used as NEcost capital_cost."
             MinOccurs = 0
             MaxOccurs = 1
             ValType = String
-            InputTmpl="flagtypes"
+            InputTmpl = "common/flagtypes"
         }
 
         accert_post_csv {
@@ -55,7 +55,7 @@ necost {
             MinOccurs = 0
             MaxOccurs = 1
             ValType = String
-            InputTmpl="flagtypes"
+            InputTmpl = "common/flagtypes"
         }
 
         capital_cost_id {
@@ -64,7 +64,7 @@ necost {
             MaxOccurs = 1
             ValType = String
             ExistsIn = [ "/necost/capital_costs/item/id" ]
-            InputTmpl="flagtypes"
+            InputTmpl = "common/flagtypes"
         }
 
         occ_metric {
@@ -73,7 +73,7 @@ necost {
             MaxOccurs = 1
             ValType = String
             ValEnums = [total_OCC total_cost_without_owner total_direct_cost total_calculated_direct_cost]
-            InputTmpl="flagtypes"
+            InputTmpl = "common/flagtypes"
         }
 
         uncertainty_fraction {
@@ -82,7 +82,7 @@ necost {
             MaxOccurs = 1
             MinValInc = 0
             ValType = Real
-            InputTmpl="flagtypes"
+            InputTmpl = "common/flagtypes"
         }
     }
 
@@ -91,14 +91,14 @@ necost {
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["cycle/id"]
-        InputTmpl = "fuel_cycles/fuel_cycles"
+        InputTmpl = "necost/fuel_cycles/fuel_cycles"
 
         cycle {
             Description = "Fuel cycle parameters for the reactors"
             MinOccurs = 0
             MaxOccurs = NoLimit
             ChildUniqueness = ["reactor/id"]
-            InputTmpl = "fuel_cycles/cycle"
+            InputTmpl = "necost/fuel_cycles/cycle"
 
             id {
                 MinOccurs = 0
@@ -110,7 +110,7 @@ necost {
                 Description = "Reactor parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = NoLimit
-                InputTmpl="fuel_cycles/cycle_reactor"
+                InputTmpl = "necost/fuel_cycles/cycle_reactor"
 
                 id {
                     MinOccurs = 0
@@ -127,7 +127,7 @@ necost {
                     MinValInc=0 % TODO: Should we allow 0? (if so, change to MinValInc=0)
                     %MaxValInc=1
                     %SumOver("../..") = 1
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                 }
 
                 fleet_energy {
@@ -138,7 +138,7 @@ necost {
                     MinValInc=0 % TODO: Should we allow 0? (if so, change to MinValInc=0)
                     %MaxValInc=1
                     %SumOver("../..") = 1
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                 }
 
                 energy_fraction {
@@ -148,7 +148,7 @@ necost {
                     ValType = Real
                     MinValInc=0
                     MaxValInc=1
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                 }
 
                 mass_fraction {
@@ -158,7 +158,7 @@ necost {
                     ValType = Real
                     MinValInc=0
                     MaxValInc=1
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                 }
             }
         }
@@ -169,13 +169,13 @@ necost {
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["reactor/id"]
-        InputTmpl="reactors/reactors"
+        InputTmpl = "necost/reactors/reactors"
 
         reactor {
             Description = "Reactor parameters and characteristics"
             MinOccurs = 0
             MaxOccurs = NoLimit
-            InputTmpl="reactors/single_reactor"
+            InputTmpl = "necost/reactors/single_reactor"
 
             id {
                 MinOccurs = 0
@@ -187,7 +187,7 @@ necost {
                 Description = "Power level of the reactor"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="reactors/power_level"
+                InputTmpl = "necost/reactors/power_level"
                 ChildExactlyOne=[reference_net_electrical reference_thermal]
 
                 reference_net_electrical {
@@ -195,7 +195,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
 
@@ -204,7 +204,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
 
@@ -213,7 +213,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
             }
@@ -223,7 +223,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -232,7 +232,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -241,7 +241,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -250,14 +250,14 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ChildUniqueness = ["scaling_factor/id"]
-                InputTmpl="reactors/capital_costs"
+                InputTmpl = "necost/reactors/capital_costs"
 
                 scaling_factor {
                     Description = "Simple scaling factor for the capital costs item"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
                     ValType = Real
-                    InputTmpl="reactors/scaling_factor"
+                    InputTmpl = "necost/reactors/scaling_factor"
                     % TODO: What are min-max values for this?
 
                     id {
@@ -274,14 +274,14 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ChildUniqueness = ["scaling_factor/id"]
-                InputTmpl="reactors/om_costs"
+                InputTmpl = "necost/reactors/om_costs"
 
                 scaling_factor {
                     Description = "Simple scaling factor for the operating and maintenance costs item"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
                     ValType = Real
-                    InputTmpl="reactors/scaling_factor"
+                    InputTmpl = "necost/reactors/scaling_factor"
                     % TODO: What are min-max values for this?
 
                     id {
@@ -298,14 +298,14 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ChildUniqueness = ["quantity_of_fuel/id"]
-                InputTmpl="reactors/fuel_reloads"
+                InputTmpl = "necost/reactors/fuel_reloads"
 
                 quantity {
                     Description = "Quantity of fuel reloads for the reactors, will select the fuel from fuels section"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
                     ChildExactlyOne=[heavy_metal_mass thermal_power_fraction]
-                    InputTmpl="reactors/fuel_reloads_quantity"
+                    InputTmpl = "necost/reactors/fuel_reloads_quantity"
 
                     id {
                         MinOccurs = 0
@@ -319,7 +319,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -328,7 +328,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -337,7 +337,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValInc = 0
                         MaxValInc = 1
                     }
@@ -351,14 +351,14 @@ necost {
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["item/id"]
-        InputTmpl="capital_costs/capital_costs"
+        InputTmpl = "necost/capital_costs/capital_costs"
 
         item {
             Description = "Capital costs items for the reactors"
             MinOccurs = 0
             MaxOccurs = NoLimit
             ChildExactlyOne=[nominal_value distribution]
-            InputTmpl="capital_costs/cost_item"
+            InputTmpl = "necost/capital_costs/cost_item"
 
             id {
                 MinOccurs = 0
@@ -371,7 +371,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -381,7 +381,7 @@ necost {
                 MaxOccurs = 1
                 ValType = String
                 ValEnums = [single s_curve]
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
             }
 
             expenditure_time {
@@ -389,7 +389,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -397,7 +397,7 @@ necost {
                 Description = "Distribution for the capital costs"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="cost_distribution"
+                InputTmpl = "necost/cost_distribution"
 
                 type {
                     Description = "Choose the type of distribution for the capital costs"
@@ -405,7 +405,7 @@ necost {
                     MaxOccurs = 1
                     ValType = String
                     ValEnums = [triangular uniform]
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                 }
 
                 low {
@@ -413,7 +413,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
 
@@ -422,7 +422,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
 
@@ -431,7 +431,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
             }
@@ -443,14 +443,14 @@ necost {
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["item/id"]
-        InputTmpl="om_costs/om_costs"
+        InputTmpl = "necost/om_costs/om_costs"
 
         item {
             Description = "Operating and maintenance costs items for the reactors"
             MinOccurs = 0
             MaxOccurs = NoLimit
             ChildAtMostOne=[expenditure_time cost_type=variable cost_type=fixed]
-            InputTmpl="om_costs/cost_item"
+            InputTmpl = "necost/om_costs/cost_item"
 
             id {
                 MinOccurs = 0
@@ -464,7 +464,7 @@ necost {
                 MaxOccurs = 1
                 ValType = String
                 ValEnums = [variable fixed single periodic]
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
             }
 
             expenditure_time {
@@ -472,7 +472,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -481,7 +481,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -489,7 +489,7 @@ necost {
                 Description = "Distribution for the operating and maintenance costs"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="cost_distribution"
+                InputTmpl = "necost/cost_distribution"
 
                 type {
                     Description = "Choose the type of distribution for the operating and maintenance costs"
@@ -497,7 +497,7 @@ necost {
                     MaxOccurs = 1
                     ValType = String
                     ValEnums = [triangular uniform]
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                 }
 
                 low {
@@ -505,7 +505,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
 
@@ -514,7 +514,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
 
@@ -523,7 +523,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
             }
@@ -535,13 +535,13 @@ necost {
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["item/id"]
-        InputTmpl="fuels/fuel_costs"
+        InputTmpl = "necost/fuels/fuel_costs"
 
         item {
             Description = "Fuel costs items"
             MinOccurs = 0
             MaxOccurs = NoLimit
-            InputTmpl="fuels/cost_item"
+            InputTmpl = "necost/fuels/cost_item"
 
             id {
                 MinOccurs = 0
@@ -554,7 +554,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -563,7 +563,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -571,7 +571,7 @@ necost {
                 Description = "Distribution for the fuel costs"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="cost_distribution"
+                InputTmpl = "necost/cost_distribution"
 
                 type {
                     Description = "Choose the type of distribution for the fuel costs"
@@ -579,7 +579,7 @@ necost {
                     MaxOccurs = 1
                     ValType = String
                     ValEnums = [triangular uniform]
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                 }
 
                 low {
@@ -587,7 +587,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
 
@@ -596,7 +596,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
 
@@ -605,7 +605,7 @@ necost {
                     MinOccurs = 0
                     MaxOccurs = 1
                     ValType = Real
-                    InputTmpl="flagtypes"
+                    InputTmpl = "common/flagtypes"
                     % TODO: What are min-max values for this?
                 }
             }
@@ -617,7 +617,7 @@ necost {
         MinOccurs = 0
         MaxOccurs = 1
         ChildUniqueness = ["fuel/id"]
-        InputTmpl="fuels/fuels"
+        InputTmpl = "necost/fuels/fuels"
 
         fuel {
             Description = "Fuel parameters and characteristics"
@@ -625,7 +625,7 @@ necost {
             MaxOccurs = NoLimit
             % ChildUniqueness = ["backend_system_parameters/fuel_id"]
             ChildExactlyOne=[avg_discharge_burnup avg_fuel_residence_time]
-            InputTmpl="fuels/single_fuel"
+            InputTmpl = "necost/fuels/single_fuel"
 
             id {
                 MinOccurs = 0
@@ -638,7 +638,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -647,7 +647,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -656,7 +656,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -665,7 +665,7 @@ necost {
                 MinOccurs = 0
                 MaxOccurs = 1
                 ValType = Real
-                InputTmpl="flagtypes"
+                InputTmpl = "common/flagtypes"
                 % TODO: What are min-max values for this?
             }
 
@@ -673,20 +673,20 @@ necost {
                 Description = "Fresh fuel parameters and characteristics"
                 MinOccurs = 1
                 MaxOccurs = 1
-                InputTmpl="fuels/fresh_fuel_composition"
+                InputTmpl = "necost/fuels/fresh_fuel_composition"
 
                 fabrication {
                     Description = "fabrication parameters and characteristics"
                     MinOccurs = 1
                     MaxOccurs = 1
-                    InputTmpl="fuels/fabrication"
+                    InputTmpl = "necost/fuels/fabrication"
 
                     lead_time {
                         Description = "Lead time for the fresh fuel fabrication in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -695,7 +695,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -704,7 +704,7 @@ necost {
                         Description = "Costs for the fresh fuel fabrication"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the fresh fuel fabrication, choose the cost item from the fuel_costs section"
@@ -720,14 +720,14 @@ necost {
                     Description = "Depleted uranium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_depleted_uranium"
+                    InputTmpl = "necost/fuels/ffc_depleted_uranium"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the depleted uranium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -737,7 +737,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -745,7 +745,7 @@ necost {
                         Description = "Costs for the depleted uranium"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the depleted uranium, choose the cost item from the fuel_costs section"
@@ -766,7 +766,7 @@ necost {
                             MinOccurs = 0
                             MaxOccurs = NoLimit
                             ValType = String
-                            InputTmpl="sonarray"
+                            InputTmpl = "common/sonarray"
                             ExistsIn = [ "/necost/fuel_costs/item/id" ]
                         }
                     }
@@ -776,14 +776,14 @@ necost {
                     Description = "Natural uranium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_natural_uranium"
+                    InputTmpl = "necost/fuels/ffc_natural_uranium"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the natural uranium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -793,7 +793,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -801,7 +801,7 @@ necost {
                         Description = "Costs for the natural uranium"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the natural uranium, choose the cost item from the fuel_costs section"
@@ -817,14 +817,14 @@ necost {
                     Description = "Enriched uranium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_enriched_uranium"
+                    InputTmpl = "necost/fuels/ffc_enriched_uranium"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the enriched uranium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -834,7 +834,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -842,7 +842,7 @@ necost {
                         Description = "Costs for the enriched uranium"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the enriched uranium, choose the cost item from the fuel_costs section"
@@ -858,14 +858,14 @@ necost {
                     Description = "Thorium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_thorium_fraction"
+                    InputTmpl = "necost/fuels/ffc_thorium_fraction"
 
                     lead_time {
                         Description = "Lead time for the thorium in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -874,7 +874,7 @@ necost {
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -883,7 +883,7 @@ necost {
                         Description = "Costs for the thorium"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the thorium, choose the cost item from the fuel_costs section"
@@ -899,14 +899,14 @@ necost {
                     Description = "Recovered thorium parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_recovered_thorium_fraction"
+                    InputTmpl = "necost/fuels/ffc_recovered_thorium_fraction"
 
                     lead_time {
                         Description = "Lead time for the recovered thorium in years"
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -915,7 +915,7 @@ necost {
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -924,7 +924,7 @@ necost {
                         Description = "Costs for the recovered thorium"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the recovered thorium, choose the cost item from the fuel_costs section"
@@ -944,14 +944,14 @@ necost {
                     ChildCountEqual(EvenNone)=[tails is_reenrichment=yes]
                     ChildCountEqual(EvenNone)=[loss_fraction is_reenrichment=yes]
                     ChildCountEqual(EvenNone)=[losses is_reenrichment=yes]
-                    InputTmpl="fuels/ffc_recovered_uranium_fraction"
+                    InputTmpl = "necost/fuels/ffc_recovered_uranium_fraction"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the recovered uranium unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                     }
 
                     lead_time {
@@ -959,7 +959,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -967,7 +967,7 @@ necost {
                         Description = "Costs for the recovered uranium"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
                         
                         value {
                             Description = "Costs for the recovered uranium, choose the cost item from the fuel_costs section"
@@ -983,14 +983,14 @@ necost {
                     Description = "Transuranic parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_recovered_tru_fraction"
+                    InputTmpl = "necost/fuels/ffc_recovered_tru_fraction"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the transuranic unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                     }
 
                     lead_time {
@@ -998,7 +998,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -1006,7 +1006,7 @@ necost {
                         Description = "Costs for the transuranic"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
                         
                         value {
                             Description = "Costs for the transuranic, choose the cost item from the fuel_costs section"
@@ -1022,14 +1022,14 @@ necost {
                     Description = "Fission products parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_fission_products"
+                    InputTmpl = "necost/fuels/ffc_fission_products"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the fission products unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -1039,7 +1039,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -1047,7 +1047,7 @@ necost {
                         Description = "Costs for the fission products"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the fission products, choose the cost item from the fuel_costs section"
@@ -1064,13 +1064,13 @@ necost {
                 Description = "Spent fuel parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="fuels/spent_fuel_composition"
+                InputTmpl = "necost/fuels/spent_fuel_composition"
 
                 costs {
                     Description = "Costs for the spent fuel"
                     MinOccurs = 1
                     MaxOccurs = 1
-                    InputTmpl="sonarray"
+                    InputTmpl = "common/sonarray"
 
                     value {
                         Description = "Costs for the spent fuel, choose the cost item from the fuel_costs section"
@@ -1084,14 +1084,14 @@ necost {
                     Description = "Fission products parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_fission_products"
+                    InputTmpl = "necost/fuels/ffc_fission_products"
 
                     fuel_fraction {
                         Description = "Fuel fraction of the fission products unit in 1"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -1101,7 +1101,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -1109,7 +1109,7 @@ necost {
                         Description = "Costs for the fission products"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the fission products, choose the cost item from the fuel_costs section"
@@ -1126,7 +1126,7 @@ necost {
                 Description = "Enriched uranium parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="fuels/ffc_EU"
+                InputTmpl = "necost/fuels/ffc_EU"
 
                 conversion {
                     Description = "Conversion parameters and characteristics"
@@ -1139,7 +1139,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -1148,7 +1148,7 @@ necost {
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -1157,7 +1157,7 @@ necost {
                         Description = "Costs for the conversion"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the conversion, choose the cost item from the fuel_costs section"
@@ -1172,7 +1172,7 @@ necost {
                     Description = "Enrichment parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="fuels/ffc_enriched_uranium"
+                    InputTmpl = "necost/fuels/ffc_enriched_uranium"
                     ChildCountEqual(EvenNone)=[stage_2 type=two_stage]
 
                     type {
@@ -1181,7 +1181,7 @@ necost {
                         MaxOccurs = 1
                         ValType = String
                         ValEnums = [one_stage two_stage]
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                     }
                     
                     loss_fraction {
@@ -1189,7 +1189,7 @@ necost {
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -1198,13 +1198,13 @@ necost {
                         Description = "Stage 1 parameters and characteristics"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="fuels/ffc_enriched_uranium_two_stage_params"
+                        InputTmpl = "necost/fuels/ffc_enriched_uranium_two_stage_params"
                         feed {
                             Description = "Feed enrichment"
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         }
 
@@ -1213,7 +1213,7 @@ necost {
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         }
 
@@ -1222,7 +1222,7 @@ necost {
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         } 
                     }
@@ -1231,13 +1231,13 @@ necost {
                         Description = "Stage 2 parameters and characteristics"
                         MinOccurs = 0
                         MaxOccurs = 1
-                        InputTmpl="fuels/ffc_enriched_uranium_two_stage_params"
+                        InputTmpl = "necost/fuels/ffc_enriched_uranium_two_stage_params"
                         feed {
                             Description = "Feed enrichment"
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         }
 
@@ -1246,7 +1246,7 @@ necost {
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         }
 
@@ -1255,7 +1255,7 @@ necost {
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         } 
                     }
@@ -1264,7 +1264,7 @@ necost {
                         Description = "Enrichment costs"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Enrichment costs, choose the cost item from the fuel_costs section"
@@ -1279,7 +1279,7 @@ necost {
                         Description = "Natural uranium costs"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Natural uranium costs, choose the cost item from the fuel_costs section"
@@ -1294,7 +1294,7 @@ necost {
                         Description = "Depleted uranium costs"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Depleted uranium costs, choose the cost item from the fuel_costs section"
@@ -1311,7 +1311,7 @@ necost {
                 Description = "Recovered uranium parameters and characteristics"
                 MinOccurs = 0
                 MaxOccurs = 1
-                InputTmpl="fuels/ffc_RU"
+                InputTmpl = "necost/fuels/ffc_RU"
 
                 reprocess{
                     Description = "Reprocessing parameters and characteristics"
@@ -1323,7 +1323,7 @@ necost {
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -1331,7 +1331,7 @@ necost {
                         Description = "Costs for the reprocessing"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Costs for the reprocessing, choose the cost item from the fuel_costs section"
@@ -1346,14 +1346,14 @@ necost {
                     Description = "Conversion parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="sonarray"
+                    InputTmpl = "common/sonarray"
 
                     loss_fraction {
                         Description = "Loss fraction of the recovered uranium during conversion"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                     }
 
                     lead_time {
@@ -1361,7 +1361,7 @@ necost {
                         MinOccurs = 0
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         % TODO: What are min-max values for this?
                     }
 
@@ -1369,7 +1369,7 @@ necost {
                         Description = "Costs for the conversion"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
                         
                         value {
                             Description = "Costs for the conversion, choose the cost item from the fuel_costs section"
@@ -1385,14 +1385,14 @@ necost {
                     Description = "Reenrichment parameters and characteristics"
                     MinOccurs = 0
                     MaxOccurs = 1
-                    InputTmpl="sonarray"
+                    InputTmpl = "common/sonarray"
 
                     loss_fraction {
                         Description = "Loss fraction of the recovered uranium during reenrichment"
                         MinOccurs = 1
                         MaxOccurs = 1
                         ValType = Real
-                        InputTmpl="flagtypes"
+                        InputTmpl = "common/flagtypes"
                         MinValExc = 0
                         MaxValInc = 1
                     }
@@ -1401,14 +1401,14 @@ necost {
                         Description = "Stage 1 parameters and characteristics"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="fuels/ffc_enriched_uranium_two_stage_params"
+                        InputTmpl = "necost/fuels/ffc_enriched_uranium_two_stage_params"
 
                         feed {
                             Description = "Feed enrichment"
                             MinOccurs = 0
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         }
 
@@ -1417,7 +1417,7 @@ necost {
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         }
 
@@ -1426,7 +1426,7 @@ necost {
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = Real
-                            InputTmpl="flagtypes"
+                            InputTmpl = "common/flagtypes"
                             % TODO: What are min-max values for this?
                         } 
                     }
@@ -1435,7 +1435,7 @@ necost {
                         Description = "Enrichment costs"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Enrichment costs, choose the cost item from the fuel_costs section"
@@ -1450,7 +1450,7 @@ necost {
                         Description = "Depleted uranium costs"
                         MinOccurs = 1
                         MaxOccurs = 1
-                        InputTmpl="sonarray"
+                        InputTmpl = "common/sonarray"
 
                         value {
                             Description = "Depleted uranium costs, choose the cost item from the fuel_costs section"
