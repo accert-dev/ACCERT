@@ -6,28 +6,15 @@ accert {
         occ = true
     }
 
-    power(Thermal) {
-        value = 6800
-        unit = MW
-    }
+    power(Thermal) { value = 6800 unit = MW }
+    power(Electric) { value = 2234 unit = MW }
 
-    power(Electric) {
-        value = 2234
-        unit = MW
-    }
-
-    var(mc_piping_M) {
-        value = 77001
-        unit = kg
-    }
+    var(mc_piping_M) { value = 77001 unit = kg }
 
     l0COA(2) {
         l1COA(21) {
             l2COA(211) {
-                total_cost {
-                    value = 1
-                    unit = million
-                }
+                total_cost { value = 1 unit = million }
             }
         }
     }

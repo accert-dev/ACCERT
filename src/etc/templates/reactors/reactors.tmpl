@@ -1,16 +1,9 @@
 reactors {
     reactor(PWR_UOX) {
-        capacity_factor = 0.9
-        cycle_length = 1.5
-        lifetime_years = 60
+        capacity_factor = 0.9 cycle_length = 1.5 lifetime_years = 60
         power_level { reference_thermal = 3.0E9 net_thermal_efficiency = 33 }
         capital_costs { scaling_factor(capital_cost) = 1 }
-        om_costs {
-            scaling_factor(OM_per_year) = 1
-            scaling_factor(OM_per_MWh) = 1
-        }
-        fuel_reloads {
-            quantity(UOX) { heavy_metal_mass = 88.23 fuel_fraction = 1 }
-        }
+        om_costs { scaling_factor(OM_per_year) = 1 scaling_factor(OM_per_MWh) = 1 }
+        fuel_reloads { quantity(UOX) { heavy_metal_mass = 88.23 fuel_fraction = 1 } }
     }
 }
