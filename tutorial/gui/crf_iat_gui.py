@@ -1005,13 +1005,14 @@ HTML = r"""<!doctype html>
     function coaTable(rows, columns, powerKwe, showToolbar = true) {
       if (!rows || !rows.length) return "";
       const kept = rows.filter(row => !String(row.COA || "").startsWith("6"));
+      const ordered = orderCoaRows(kept);
       const toolbar = showToolbar ? `<div class="table-toolbar"><span>Show cost as</span><select class="coaUnit">
         <option value="billion"${coaUnit === "billion" ? " selected" : ""}>Billion USD</option>
         <option value="million"${coaUnit === "million" ? " selected" : ""}>Million USD</option>
         <option value="perkw"${coaUnit === "perkw" ? " selected" : ""}>$/kWe</option>
       </select></div>` : "";
       return `${toolbar}<table class="coa-table"><thead><tr>${columns.map(c => `<th>${c.label}</th>`).join("")}</tr></thead><tbody>
-        ${kept.map(row => {
+        ${ordered.map(row => {
           const coa = String(row.COA || "");
           const isParent = coa.length === 2 && coa.endsWith("0");
           const parent = `${coa[0]}0`;
@@ -1020,6 +1021,39 @@ HTML = r"""<!doctype html>
           return `<tr class="${cls}" ${attrs}>${columns.map(c => `<td>${c.format ? c.format(row[c.key], row, powerKwe) : (row[c.key] ?? "")}</td>`).join("")}</tr>`;
         }).join("")}
       </tbody></table>`;
+    }
+
+    function coaSortKey(row) {
+      const coa = String(row.COA || "");
+      const numeric = Number(coa);
+      return Number.isFinite(numeric) ? numeric : Number.MAX_SAFE_INTEGER;
+    }
+
+    function orderCoaRows(rows) {
+      const parents = rows.filter(row => {
+        const coa = String(row.COA || "");
+        return coa.length === 2 && coa.endsWith("0");
+      }).sort((a, b) => coaSortKey(a) - coaSortKey(b));
+      const parentIds = new Set(parents.map(row => String(row.COA || "")));
+      const childrenByParent = new Map();
+      const standalone = [];
+      rows.forEach(row => {
+        const coa = String(row.COA || "");
+        const parent = `${coa[0]}0`;
+        if (parentIds.has(parent) && coa !== parent) {
+          if (!childrenByParent.has(parent)) childrenByParent.set(parent, []);
+          childrenByParent.get(parent).push(row);
+        } else if (!parentIds.has(coa)) {
+          standalone.push(row);
+        }
+      });
+      const ordered = [];
+      parents.forEach(parent => {
+        const coa = String(parent.COA || "");
+        ordered.push(parent);
+        ordered.push(...(childrenByParent.get(coa) || []).sort((a, b) => coaSortKey(a) - coaSortKey(b)));
+      });
+      return ordered.concat(standalone.sort((a, b) => coaSortKey(a) - coaSortKey(b)));
     }
 
     function moneyCell(value, row, powerKwe) {
@@ -2123,15 +2157,15 @@ def _base_case_summary_from_dataframe(df: pd.DataFrame, power_kwe: float, source
             }
         )
 
+    level_2_codes = sorted({account[:2] for account in accounts if len(account) >= 2 and account[:2].isdigit()})
     for group in sorted({account[0] for account in leaf_accounts if account and account[0].isdigit()}):
         add_row(f"{group}0", BASE_GROUP_TITLES.get(f"{group}0", ""), leaf.loc[leaf_accounts.str.startswith(group)])
-    level_2_codes = sorted({account[:2] for account in accounts if len(account) >= 2 and account[:2].isdigit()})
-    for code in level_2_codes:
-        subset = leaf.loc[leaf_accounts.str.startswith(code)]
-        if subset.empty:
-            continue
-        title_rows = data.loc[data["Account"].eq(code), "Title"]
-        add_row(code, str(title_rows.iloc[0]) if not title_rows.empty else "", subset)
+        for code in [code for code in level_2_codes if code.startswith(group) and code != f"{group}0"]:
+            subset = leaf.loc[leaf_accounts.str.startswith(code)]
+            if subset.empty:
+                continue
+            title_rows = data.loc[data["Account"].eq(code), "Title"]
+            add_row(code, str(title_rows.iloc[0]) if not title_rows.empty else "", subset)
     return {
         "source": source,
         "power_kwe": power_kwe,

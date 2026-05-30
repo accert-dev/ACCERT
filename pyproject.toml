@@ -12,6 +12,16 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.7"
 license = { file = "LICENSE" }
+dependencies = [
+    "configparser",
+    "matplotlib",
+    "numpy>=1.26,<2.0",
+    "openpyxl",
+    "pandas",
+    "pandoc",
+    "prettytable==3.4.0",
+    "scipy",
+]
 
 keywords = ["ACCERT"]
 classifiers = [

@@ -110,3 +110,6 @@ def test_gui_crf_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
     assert "CRF results CSV" in result["files"]
     assert result["base_case"]["comparison"]
     assert result["crf"]["plants"]
+    base_coas = [row["COA"] for row in result["base_case"]["comparison"]]
+    assert base_coas.index("21") == base_coas.index("20") + 1
+    assert base_coas.index("22") == base_coas.index("21") + 1

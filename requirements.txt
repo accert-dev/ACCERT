@@ -4,6 +4,6 @@ openpyxl
 pandoc
 pytest
 pandas
-numpy==1.26.4
+numpy>=1.26,<2.0
 matplotlib
 scipy
