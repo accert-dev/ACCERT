@@ -35,8 +35,8 @@ Packaged Assumptions
 
 The packaged assumptions are stored as CSV files in ``src/iat/data``:
 
-* ``adjustment_factors.csv`` contains country-level adjustment factors and
-  import tariffs for Korea, China, and UAE.
+* ``adjustment_factors.csv`` contains IAT v4.5 country-level adjustment
+  factors and import tariffs for Korea, China, UAE, Poland, and El Salvador.
 * ``lr_localization.csv`` contains large-reactor COA shares, cost-category
   shares, and localization shares.
 * ``smr_localization.csv`` contains SMR COA shares, cost-category shares, and
@@ -56,12 +56,17 @@ the U.S.-based cost structure before applying localization.
 Calculation Logic
 -----------------
 
-For each cost category, IAT combines the imported and localized portions:
+For each cost category, IAT combines the imported and localized portions. In
+the packaged IAT v4.5 assumptions, the import tariff is applied to imported
+equipment cost only:
 
 .. code-block:: text
 
-   adjusted = imported_share * base_cost * (1 + import_tariff)
-            + localized_share * base_cost * country_adjustment_factor
+   equipment = imported_share * base_cost * (1 + import_tariff)
+             + localized_share * base_cost * country_adjustment_factor
+
+   other categories = imported_share * base_cost
+                    + localized_share * base_cost * country_adjustment_factor
 
 The cost categories are equipment, material, labor, land, and catch-all.
 Land uses an adjustment factor of ``1.0``. Financial cost accounts in the
@@ -107,7 +112,7 @@ Use ``run_occ_scenarios`` when the input is one or more OCC totals rather than
 an ACCERT output CSV.
 
 The packaged standalone example runs large-reactor OCC scenarios for China,
-Korea, and UAE:
+Korea, UAE, Poland, and El Salvador:
 
 .. code-block:: bash
 
@@ -129,7 +134,7 @@ Korea, and UAE:
    )
    print(result["summary"])
 
-Runnable standalone examples for China, Korea, and UAE are in
+Runnable standalone examples for China, Korea, UAE, Poland, and El Salvador are in
 ``tutorial/iat/iat_lr_occ_china_example.py``.
 
 Connecting IAT to the Cost Reduction Framework

@@ -621,15 +621,19 @@ HTML = r"""<!doctype html>
               <option value="China">China</option>
               <option value="Korea">Korea</option>
               <option value="UAE">UAE</option>
+              <option value="Poland">Poland</option>
+              <option value="El Salvador">El Salvador</option>
             </select>
             <div id="countryMulti" class="country-dropdown">
               <button type="button" class="country-dropdown-btn" id="countryDropdownBtn">
-                <span id="countryDropdownLabel">Korea, China, UAE</span><span>▾</span>
+                <span id="countryDropdownLabel">Korea, China, UAE, Poland, El Salvador</span><span>▾</span>
               </button>
               <div class="country-dropdown-menu hidden" id="countryDropdownMenu">
                 <label class="country-option"><input type="checkbox" value="Korea" checked> Korea</label>
                 <label class="country-option"><input type="checkbox" value="China" checked> China</label>
                 <label class="country-option"><input type="checkbox" value="UAE" checked> UAE</label>
+                <label class="country-option"><input type="checkbox" value="Poland" checked> Poland</label>
+                <label class="country-option"><input type="checkbox" value="El Salvador" checked> El Salvador</label>
               </div>
             </div>
           </div>
@@ -1521,7 +1525,7 @@ HTML = r"""<!doctype html>
         svg += `<text x="${x + barW / 2}" y="${h - 78}" text-anchor="middle" fill="#41566d" font-size="12" font-weight="700">${esc(country)}</text>`;
       });
       svg += `<rect x="${m.left}" y="${h - 28}" width="14" height="14" fill="#4e79a7"></rect><text x="${m.left + 22}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Local (domestically sourced)</text>`;
-      svg += `<rect x="${m.left + 280}" y="${h - 28}" width="14" height="14" fill="#9c755f"></rect><text x="${m.left + 302}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Foreign (imported, with tariff)</text>`;
+      svg += `<rect x="${m.left + 280}" y="${h - 28}" width="14" height="14" fill="#9c755f"></rect><text x="${m.left + 302}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Foreign / imported</text>`;
       svg += `</svg>`;
       return svg;
     }

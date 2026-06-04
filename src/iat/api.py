@@ -197,6 +197,8 @@ def occ_cost_dataframe(assumptions: dict[str, Any], family: str, occ_value: floa
             continue
         total = float(occ_value) * coa_share
         shares = record.get("category_shares", {})
+        if not any(float(shares.get(category, 0.0)) > 0.0 for category in COST_CATEGORIES):
+            continue
         category_costs = {
             category: total * float(shares.get(category, 0.0))
             for category in COST_CATEGORIES
@@ -266,7 +268,7 @@ def adjust_cost_dataframe(
                     amount=original[category],
                     local_share=float(localization.get(category, 0.0)),
                     factor=float(factors[category]),
-                    tariff=float(factors["import_tariff"]),
+                    tariff=float(factors["import_tariff"]) if category == "equipment" else 0.0,
                 )
                 adjusted[category] = f + l
                 foreign[category] = f

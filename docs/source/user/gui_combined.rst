@@ -39,8 +39,8 @@ In the ``IAT Inputs`` panel:
 * Set ``Input type`` to ``ACCERT output``.
 * Set ``Reactor type`` to ``Large Reactor`` for AP1000-style large-reactor
   COA inputs, or ``SMR`` for SMR-style inputs.
-* Set ``Country`` to the destination country, such as ``China``, ``Korea``, or
-  ``UAE``.
+* Set ``Country`` to the destination country, such as ``China``, ``Korea``,
+  ``UAE``, ``Poland``, or ``El Salvador``.
 * ``Year dollar`` is shown as a fixed message. The GUI reports the workflow on
   a ``2024`` CPI-U basis.
 * Set ``ACCERT CSV file`` to the input CSV path. This can be either a
