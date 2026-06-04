@@ -1,17 +1,21 @@
 """Run AP1000 LCOE scenarios used in the EMANES 6 report.
 
 The cases use the local NE-COST AP1000 once-through UOX setup and vary the
-capital-cost and O&M assumptions for the three report scenarios:
+capital-cost and O&M assumptions for the main report scenarios:
 
 1. U.S. AP1000 baseline
 2. China-calibrated localization and learning case
 3. U.S. fast-learning case
+4. South Korea IAT validation point
+5. UAE IAT validation point
 
 Fuel-cycle assumptions are kept consistent with the AP1000 once-through PWR
 setup. O&M targets are based on the O&M framework's large-reactor 2023
 historical total of 18.81 $/MWh. The China-calibrated case applies only the
-China LF_O&M localization factor from Table 3-2 (0.87). The U.S. fast-learning
-case retains the U.S. base O&M cost unless a separate O&M learning assumption is
+China LF_O&M localization factor from Table 3-2 (0.87). South Korea and UAE are
+included only as IAT-based validation points; they do not include CRF learning
+or country-specific project-delivery calibration. The U.S. fast-learning case
+retains the U.S. base O&M cost unless a separate O&M learning assumption is
 explicitly justified in future work.
 """
 
@@ -89,6 +93,8 @@ def get_iat_factor(workbook: Path, country: str, factor_name: str) -> float:
 
 def build_scenarios(iat_workbook: Path) -> list[Scenario]:
     china_om_factor = get_iat_factor(iat_workbook, "China", "Labor O&M")
+    korea_om_factor = get_iat_factor(iat_workbook, "Korea", "Labor O&M")
+    uae_om_factor = get_iat_factor(iat_workbook, "UAE", "Labor O&M")
     return [
         Scenario(
             key="us_baseline",
@@ -105,6 +111,26 @@ def build_scenarios(iat_workbook: Path) -> list[Scenario]:
             description=(
                 "China IAT localization plus China-calibrated CRF endpoint; "
                 f"O&M applies China Labor O&M factor = {china_om_factor:.4f} from IAT-v4.5."
+            ),
+        ),
+        Scenario(
+            key="korea_iat_validation",
+            label="South Korea IAT validation point",
+            occ_per_kw=5766.0,
+            om_target=OM_TARGET_US_BASELINE * korea_om_factor,
+            description=(
+                "South Korea IAT-localized OCC from the report comparison table; "
+                f"O&M applies South Korea Labor O&M factor = {korea_om_factor:.4f} from IAT-v4.5."
+            ),
+        ),
+        Scenario(
+            key="uae_iat_validation",
+            label="UAE IAT validation point",
+            occ_per_kw=7021.0,
+            om_target=OM_TARGET_US_BASELINE * uae_om_factor,
+            description=(
+                "UAE IAT-localized OCC from the report comparison table; "
+                f"O&M applies UAE Labor O&M factor = {uae_om_factor:.4f} from IAT-v4.5."
             ),
         ),
         Scenario(
