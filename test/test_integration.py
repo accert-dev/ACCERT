@@ -56,6 +56,12 @@ def run_accert_and_check_output(input_file, expected_output_file):
 def normalize_output(output):
     """Normalize timestamped CSV and legacy Excel output lines."""
     output = re.sub(
+        r"^\[Note\] Reference costs are in .* dollars\. Displayed account costs are escalated to .* dollars using CPI-U\.\n\n?",
+        "",
+        output,
+        flags=re.MULTILINE,
+    )
+    output = re.sub(
         r"Successfully created CSV file .+_(aff_ce|upd_ce|upd_acc)_\d{8}_\d{6}\.csv",
         r"Successfully created output file \1",
         output,

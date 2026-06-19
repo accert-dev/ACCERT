@@ -1201,7 +1201,14 @@ class Accert:
                 if var_id:
                     if power_input.get("is_default"):
                         continue
-                    print('[USER_INPUT]', power_type, 'power is', power_input["value"], power_input["input_unit"], '\n')
+                    print(
+                        '[USER_INPUT]',
+                        power_type,
+                        'power is',
+                        self._format_user_number(power_input["value"]),
+                        power_input["input_unit"],
+                        '\n',
+                    )
                     if not self._variable_value_changed(c, var_id, power_input["value"]):
                         print('[Unchanged] {} is the same as the reference value; dependent variables will not be recalculated\n'.format(var_id))
                         continue
@@ -1212,6 +1219,13 @@ class Accert:
         else:
             # warning
             print('WARNING: No power input found in the user input file\n')
+
+    @staticmethod
+    def _format_user_number(value):
+        number = float(value)
+        if number.is_integer():
+            return str(int(number))
+        return "{:g}".format(number)
 
     def _power_inputs_by_type(self, accert):
         power_inputs = {}
@@ -1309,7 +1323,8 @@ class Accert:
                 sup_val_lst.extend([x.strip() for x in linked.split(',')])
         sup_val_lst = list(dict.fromkeys([x for x in sup_val_lst if x]))
         if sup_val_lst:
-            print('[Updating] Other variable(s) should be updated based on {} are {} \n'.format(var_ids, sup_val_lst))
+            display_var_ids = var_ids[0] if len(var_ids) == 1 else var_ids
+            print('[Updating] Other variable(s) should be updated based on {} are {} \n'.format(display_var_ids, sup_val_lst))
         processed = set()
         while sup_val_lst:
             sup_val = sup_val_lst.pop(0)
