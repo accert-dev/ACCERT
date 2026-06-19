@@ -1,8 +1,8 @@
-"""Local GUI for IAT, CRF, and connected IAT-to-CRF workflows.
+"""Local GUI for IAT, CRT, and connected IAT-to-CRT workflows.
 
 Run from the repository root with:
 
-    python tutorial/gui/crf_iat_gui.py
+    python tutorial/gui/crt_iat_gui.py
 
 Then open:
 
@@ -28,14 +28,14 @@ SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from crf import (
-    accert_output_to_crf_baseline,
+from crt import (
+    accert_output_to_crt_baseline,
     results_to_dataframe,
     run_one_scenario,
     save_dashboard,
     waterfall_to_dataframe,
 )
-from crf.io.excel_inputs import InputStore
+from crt.io.excel_inputs import InputStore
 from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
 
 
@@ -66,7 +66,7 @@ HTML = r"""<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ACCERT IAT and CRF GUI</title>
+  <title>ACCERT IAT and CRT GUI</title>
   <style>
     :root {
       --ink: #172331;
@@ -574,7 +574,7 @@ HTML = r"""<!doctype html>
 </head>
 <body>
   <header>
-    <h1>ACCERT IAT and CRF GUI</h1>
+    <h1>ACCERT IAT and CRT GUI</h1>
     <div class="status" id="status">Ready</div>
   </header>
   <main>
@@ -589,8 +589,8 @@ HTML = r"""<!doctype html>
         <label for="workflow">Mode</label>
         <select id="workflow">
           <option value="iat_only">IAT only</option>
-          <option value="crf_only">CRF only</option>
-          <option value="iat_crf" selected>IAT then CRF</option>
+          <option value="crt_only">CRT only</option>
+          <option value="iat_crt" selected>IAT then CRT</option>
         </select>
         <label for="outputName">Output name</label>
         <input id="outputName" value="ap1000_china_gui">
@@ -665,19 +665,19 @@ HTML = r"""<!doctype html>
         </div>
       </fieldset>
 
-      <fieldset id="crfPanel">
-        <legend>CRF Fixed Inputs</legend>
-        <label for="crfReactorType">Reactor type</label>
-        <select id="crfReactorType">
+      <fieldset id="crtPanel">
+        <legend>CRT Fixed Inputs</legend>
+        <label for="crtReactorType">Reactor type</label>
+        <select id="crtReactorType">
           <option selected>AP1000</option>
           <option>HTGR</option>
           <option>SFR</option>
         </select>
-        <label for="crfCsvName">Optional CRF baseline CSV</label>
+        <label for="crtCsvName">Optional CRT baseline CSV</label>
         <div class="file-input-row">
-          <input type="text" id="crfCsvName" readonly placeholder="Leave blank for built-in baseline">
-          <button type="button" id="crfBrowseBtn">Browse…</button>
-          <input id="crfCsvFile" type="file" accept=".csv" class="hidden">
+          <input type="text" id="crtCsvName" readonly placeholder="Leave blank for built-in baseline">
+          <button type="button" id="crtBrowseBtn">Browse…</button>
+          <input id="crtCsvFile" type="file" accept=".csv" class="hidden">
         </div>
         <div class="triple">
           <div><label for="f22">f_22</label><input id="f22" type="number" value="250000000"></div>
@@ -696,7 +696,7 @@ HTML = r"""<!doctype html>
       </fieldset>
 
       <fieldset id="leverPanel">
-        <legend>CRF Levers</legend>
+        <legend>CRT Levers</legend>
         <div class="triple">
           <div><label for="numOrders">Firm orders</label><input id="numOrders" type="number" value="10"></div>
           <div><label for="itcPercent">ITC %</label><input id="itcPercent" type="number" value="0"></div>
@@ -748,9 +748,9 @@ HTML = r"""<!doctype html>
 
     let _csvFileContent = null;
     let _csvFilePath = null;
-    let _crfFileContent = null;
-    let _crfFilePath = null;
-    let _lastCrfReactorType = null;
+    let _crtFileContent = null;
+    let _crtFilePath = null;
+    let _lastCrtReactorType = null;
     const defaultConstructionDuration = {AP1000: 76, SFR: 80, HTGR: 125};
     const default20sLaborHours = {
       AP1000: 51112635,
@@ -771,7 +771,7 @@ HTML = r"""<!doctype html>
     }
 
     function selectedCountries() {
-      const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crf";
+      const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crt";
       if (isCsvMode) return [$("countrySingle").value];
       return Array.from(document.querySelectorAll("#countryDropdownMenu input[type='checkbox']:checked"))
         .map(cb => cb.value);
@@ -787,7 +787,7 @@ HTML = r"""<!doctype html>
     function updateDefaultCsvPath() {
       if (_csvFileContent) return;
       const rt = $("iatReactorType").value;
-      const path = rt === "SMR" ? "src/crf/data/SFR_baseline.csv" : "src/crf/data/AP1000_baseline.csv";
+      const path = rt === "SMR" ? "src/crt/data/SFR_baseline.csv" : "src/crt/data/AP1000_baseline.csv";
       _csvFilePath = path;
       $("iatCsvName").value = path;
     }
@@ -797,10 +797,10 @@ HTML = r"""<!doctype html>
       $("electricOutputMwe").value = rt === "SMR" ? "310.8" : "2234";
     }
 
-    function updateCrfDefaults(force = false) {
-      const rt = $("crfReactorType").value;
-      if (!force && _lastCrfReactorType === rt) return;
-      _lastCrfReactorType = rt;
+    function updateCrtDefaults(force = false) {
+      const rt = $("crtReactorType").value;
+      if (!force && _lastCrtReactorType === rt) return;
+      _lastCrtReactorType = rt;
       if (rt === "AP1000") {
         $("startup").value = "25";
         $("bopGrade").value = "0";
@@ -837,11 +837,11 @@ HTML = r"""<!doctype html>
           scenario_count: numberValue("scenarioCount"),
           occ_values: occScenarioValues()
         },
-        crf: {
-          reactor_type: $("crfReactorType").value,
-          baseline_csv: _crfFilePath,
-          baseline_csv_content: _crfFileContent,
-          baseline_csv_filename: _crfFileContent ? $("crfCsvName").value : null,
+        crt: {
+          reactor_type: $("crtReactorType").value,
+          baseline_csv: _crtFilePath,
+          baseline_csv_content: _crtFileContent,
+          baseline_csv_filename: _crtFileContent ? $("crtCsvName").value : null,
           f_22: numberValue("f22"),
           f_2321: numberValue("f2321"),
           land_cost_per_acre_0: numberValue("landCost"),
@@ -875,12 +875,12 @@ HTML = r"""<!doctype html>
 
     function updatePanels() {
       const workflow = $("workflow").value;
-      $("iatPanel").classList.toggle("hidden", workflow === "crf_only");
-      $("crfPanel").classList.toggle("hidden", workflow === "iat_only");
+      $("iatPanel").classList.toggle("hidden", workflow === "crt_only");
+      $("crtPanel").classList.toggle("hidden", workflow === "iat_only");
       $("leverPanel").classList.toggle("hidden", workflow === "iat_only");
       const inputMode = $("iatInputMode").value;
-      const isCsvMode = inputMode === "csv" || workflow === "iat_crf";
-      if (workflow === "iat_crf") {
+      const isCsvMode = inputMode === "csv" || workflow === "iat_crt";
+      if (workflow === "iat_crt") {
         $("iatInputMode").value = "csv";
         $("iatCsvGroup").classList.remove("hidden");
         $("occScenarioGroup").classList.add("hidden");
@@ -897,7 +897,7 @@ HTML = r"""<!doctype html>
         updateElectricOutputDefault();
       }
       updateScenarioInputs();
-      updateCrfDefaults();
+      updateCrtDefaults();
       const maxOrders = Math.max(0, Number($("numOrders").value || 0));
       ["nProc", "nCons", "nAe", "nItc", "numNoak"].forEach(id => {
         $(id).max = maxOrders;
@@ -917,7 +917,7 @@ HTML = r"""<!doctype html>
 
     function enhanceLabels() {
       const helpText = {
-        workflow: "Choose whether to run IAT only, CRF only, or pass IAT-adjusted costs into CRF.",
+        workflow: "Choose whether to run IAT only, CRT only, or pass IAT-adjusted costs into CRT.",
         outputName: "Base filename for CSV and dashboard outputs saved in tutorial/gui_outputs.",
         iatInputMode: "ACCERT CSV uses a COA cost file. Standalone OCC builds a cost structure from the localization shares.",
         iatReactorType: "Large reactor or SMR localization basis. ACCERT output options use the input COA file.",
@@ -927,14 +927,14 @@ HTML = r"""<!doctype html>
         occValue1: "Scenario 1 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
         occValue2: "Scenario 2 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
         occValue3: "Scenario 3 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
-        crfReactorType: "CRF reactor case to run.",
-        crfCsvName: "Optional CSV baseline for CRF. Connected IAT-to-CRF runs fill this automatically.",
-        f22: "Factory equipment cost input used by the CRF baseline calculations.",
-        f2321: "Turbine-generator equipment cost input used by the CRF baseline calculations.",
+        crtReactorType: "CRT reactor case to run.",
+        crtCsvName: "Optional CSV baseline for CRT. Connected IAT-to-CRT runs fill this automatically.",
+        f22: "Factory equipment cost input used by the CRT baseline calculations.",
+        f2321: "Turbine-generator equipment cost input used by the CRT baseline calculations.",
         landCost: "Land cost per acre for preconstruction land accounts.",
         startup: "FOAK startup duration in months.",
         constructionDuration: "Reference FOAK construction duration in months. Defaults are AP1000 76, SFR 80, and HTGR 125.",
-        total20sLaborHours: "Total labor hours assigned across 20s direct accounts when a raw ACCERT account CSV is converted into a CRF/IAT baseline.",
+        total20sLaborHours: "Total labor hours assigned across 20s direct accounts when a raw ACCERT account CSV is converted into a CRT/IAT baseline.",
         staggering: "Fractional overlap used for the sequential construction timeline.",
         numOrders: "Number of firm orders: This determines the size of the order book for a given reactor concept. It directly impacts equipment costs for all plants within the order (including the first).",
         numNoak: "NOAK unit: plant number used for the FOAK-to-NOAK comparison. Range: 1 to firm orders.",
@@ -1112,7 +1112,7 @@ HTML = r"""<!doctype html>
       </div>`;
     }
 
-    function crfResultsColumns() {
+    function crtResultsColumns() {
       return [
         {key: "Plant number", label: "Plant"},
         {key: "OCC", label: "OCC ($/kW)", format: fmt},
@@ -1608,24 +1608,24 @@ HTML = r"""<!doctype html>
           }
         }
       }
-      if (data.crf) {
-        html += `<h3>CRF Result</h3>`;
-        html += `<div class="result-note">The IAT value above is the internationally adjusted WE-FOAK OCC baseline. CRF recalculates FOAK from that baseline using the CRF fixed inputs and first-unit project effects, including factory-equipment inputs, land, construction/startup duration, financing, design completion, and FOAK execution assumptions, so the CRF FOAK OCC can differ from the WE-FOAK OCC.</div>`;
+      if (data.crt) {
+        html += `<h3>CRT Result</h3>`;
+        html += `<div class="result-note">The IAT value above is the internationally adjusted WE-FOAK OCC baseline. CRT recalculates FOAK from that baseline using the CRT fixed inputs and first-unit project effects, including factory-equipment inputs, land, construction/startup duration, financing, design completion, and FOAK execution assumptions, so the CRT FOAK OCC can differ from the WE-FOAK OCC.</div>`;
         html += metrics([
-          {label: "FOAK OCC ($/kW)", value: fmtInt(data.crf.occ_1)},
-          {label: "NOAK OCC ($/kW)", value: fmtInt(data.crf.occ_noak)},
-          {label: "Average OCC ($/kW)", value: fmtInt(data.crf.avg_occ)},
-          {label: "OCC reduction (%)", value: fmtInt(data.crf.occ_reduction_percent)}
+          {label: "FOAK OCC ($/kW)", value: fmtInt(data.crt.occ_1)},
+          {label: "NOAK OCC ($/kW)", value: fmtInt(data.crt.occ_noak)},
+          {label: "Average OCC ($/kW)", value: fmtInt(data.crt.avg_occ)},
+          {label: "OCC reduction (%)", value: fmtInt(data.crt.occ_reduction_percent)}
         ]);
         html += metrics([
-          {label: "FOAK TCI ($/kW)", value: fmtInt(data.crf.tci_1)},
-          {label: "NOAK TCI ($/kW)", value: fmtInt(data.crf.tci_noak)},
-          {label: "Average TCI ($/kW)", value: fmtInt(data.crf.avg_tci)},
-          {label: "Average duration (months)", value: fmtInt(data.crf.avg_duration)}
+          {label: "FOAK TCI ($/kW)", value: fmtInt(data.crt.tci_1)},
+          {label: "NOAK TCI ($/kW)", value: fmtInt(data.crt.tci_noak)},
+          {label: "Average TCI ($/kW)", value: fmtInt(data.crt.avg_tci)},
+          {label: "Average duration (months)", value: fmtInt(data.crt.avg_duration)}
         ]);
         html += metrics([
-          {label: `Years to build ${fmtInt(data.crf.num_noak)} plants`, value: `${fmtInt(data.crf.years_to_noak)} years`},
-          {label: `Years to build ${fmtInt(data.crf.num_orders)} plants`, value: `${fmtInt(data.crf.years_to_orderbook)} years`}
+          {label: `Years to build ${fmtInt(data.crt.num_noak)} plants`, value: `${fmtInt(data.crt.years_to_noak)} years`},
+          {label: `Years to build ${fmtInt(data.crt.num_orders)} plants`, value: `${fmtInt(data.crt.years_to_orderbook)} years`}
         ]);
         html += `<div class="tabs">
           <button class="active" data-tab="capital">Capital Cost</button>
@@ -1649,15 +1649,15 @@ HTML = r"""<!doctype html>
           <div class="chart-panel"><h3>10-50 - OCC Components</h3><div id="breakdownOccChart"></div></div>
         </div></div>`;
         html += `<div id="tab-dashboard" class="tab-panel">`;
-        if (data.crf.dashboard_url) {
-          const dashUrl = `${data.crf.dashboard_url}?t=${Date.now()}`;
-          html += `<div class="download-bar"><span>Dashboard image${data.crf.show_levers ? " with lever table" : " without lever table"}</span><a href="${dashUrl}" target="_blank">Download PNG</a></div>`;
-          html += `<img class="dashboard" src="${dashUrl}" alt="CRF dashboard">`;
+        if (data.crt.dashboard_url) {
+          const dashUrl = `${data.crt.dashboard_url}?t=${Date.now()}`;
+          html += `<div class="download-bar"><span>Dashboard image${data.crt.show_levers ? " with lever table" : " without lever table"}</span><a href="${dashUrl}" target="_blank">Download PNG</a></div>`;
+          html += `<img class="dashboard" src="${dashUrl}" alt="CRT dashboard">`;
         }
         html += `</div>`;
         html += `<div id="tab-results" class="tab-panel">
-          ${fileLink("Download CRF results CSV", data.files && data.files["CRF results CSV"])}
-          ${table(data.crf.plants, crfResultsColumns())}
+          ${fileLink("Download CRT results CSV", data.files && data.files["CRT results CSV"])}
+          ${table(data.crt.plants, crtResultsColumns())}
         </div>`;
       }
       if (data.notes && data.notes.length) {
@@ -1670,14 +1670,14 @@ HTML = r"""<!doctype html>
           render(lastData);
         });
       });
-      if (data.crf) {
-        $("capitalChart").innerHTML = capitalChart(data.crf.plants);
-        $("breakdownPreview").innerHTML = breakdownChart(data.crf.plants, "tci");
-        $("waterfallChart").innerHTML = waterfallChart(data.crf.waterfall);
-        $("durationChart").innerHTML = durationChart(data.crf.plants);
-        $("timelineChart").innerHTML = timelineChart(data.crf.timeline);
-        $("breakdownTciChart").innerHTML = breakdownChart(data.crf.plants, "tci");
-        $("breakdownOccChart").innerHTML = breakdownChart(data.crf.plants, "occ");
+      if (data.crt) {
+        $("capitalChart").innerHTML = capitalChart(data.crt.plants);
+        $("breakdownPreview").innerHTML = breakdownChart(data.crt.plants, "tci");
+        $("waterfallChart").innerHTML = waterfallChart(data.crt.waterfall);
+        $("durationChart").innerHTML = durationChart(data.crt.plants);
+        $("timelineChart").innerHTML = timelineChart(data.crt.timeline);
+        $("breakdownTciChart").innerHTML = breakdownChart(data.crt.plants, "tci");
+        $("breakdownOccChart").innerHTML = breakdownChart(data.crt.plants, "occ");
         setupTabs();
         setupCoaTables();
         bindTips(result);
@@ -1718,7 +1718,7 @@ HTML = r"""<!doctype html>
     $("workflow").addEventListener("change", updatePanels);
     $("iatInputMode").addEventListener("change", updatePanels);
     $("iatReactorType").addEventListener("change", () => {
-      const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crf";
+      const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crt";
       if (isCsvMode) {
         if (!_csvFileContent) updateDefaultCsvPath();
         updateElectricOutputDefault();
@@ -1748,17 +1748,17 @@ HTML = r"""<!doctype html>
       reader.onload = e => { _csvFileContent = e.target.result; };
       reader.readAsText(file);
     });
-    $("crfBrowseBtn").addEventListener("click", () => $("crfCsvFile").click());
-    $("crfCsvFile").addEventListener("change", () => {
-      const file = $("crfCsvFile").files[0];
+    $("crtBrowseBtn").addEventListener("click", () => $("crtCsvFile").click());
+    $("crtCsvFile").addEventListener("change", () => {
+      const file = $("crtCsvFile").files[0];
       if (!file) return;
-      _crfFilePath = null;
-      $("crfCsvName").value = file.name;
+      _crtFilePath = null;
+      $("crtCsvName").value = file.name;
       const reader = new FileReader();
-      reader.onload = e => { _crfFileContent = e.target.result; };
+      reader.onload = e => { _crtFileContent = e.target.result; };
       reader.readAsText(file);
     });
-    $("crfReactorType").addEventListener("change", () => updateCrfDefaults(true));
+    $("crtReactorType").addEventListener("change", () => updateCrtDefaults(true));
     $("runBtn").addEventListener("click", runWorkflow);
     $("resetBtn").addEventListener("click", () => location.reload());
     enhanceLabels();
@@ -1811,15 +1811,15 @@ def _prepare_iat_input_csv(payload: dict) -> Path:
 
     if _is_accert_account_output(input_csv):
         name = _safe_name(payload.get("output_name", "accert_gui_run"))
-        converted_csv = OUTPUT_DIR / f"{name}_accert_baseline_for_iat_crf.csv"
-        crf = payload.get("crf", {})
-        accert_output_to_crf_baseline(
+        converted_csv = OUTPUT_DIR / f"{name}_accert_baseline_for_iat_crt.csv"
+        crt = payload.get("crt", {})
+        accert_output_to_crt_baseline(
             input_csv,
             converted_csv,
-            reactor_type=crf.get("reactor_type", "AP1000"),
+            reactor_type=crt.get("reactor_type", "AP1000"),
             total_20s_labor_hours=_num(
-                crf.get("total_20s_labor_hours"),
-                DEFAULT_20S_LABOR_HOURS.get(crf.get("reactor_type", "AP1000"), DEFAULT_20S_LABOR_HOURS["AP1000"]),
+                crt.get("total_20s_labor_hours"),
+                DEFAULT_20S_LABOR_HOURS.get(crt.get("reactor_type", "AP1000"), DEFAULT_20S_LABOR_HOURS["AP1000"]),
             ),
         )
         iat["_prepared_from_accert_csv"] = str(input_csv)
@@ -1830,37 +1830,37 @@ def _prepare_iat_input_csv(payload: dict) -> Path:
     return input_csv
 
 
-def _prepare_crf_baseline_csv(payload: dict) -> Path | None:
-    crf = payload["crf"]
-    prepared = crf.get("_prepared_baseline_csv")
+def _prepare_crt_baseline_csv(payload: dict) -> Path | None:
+    crt = payload["crt"]
+    prepared = crt.get("_prepared_baseline_csv")
     if prepared:
         return Path(prepared)
 
-    csv_content = crf.get("baseline_csv_content")
+    csv_content = crt.get("baseline_csv_content")
     if csv_content:
-        input_csv = _write_uploaded_csv("_crf_upload_", crf.get("baseline_csv_filename"), csv_content)
+        input_csv = _write_uploaded_csv("_crt_upload_", crt.get("baseline_csv_filename"), csv_content)
     else:
-        input_csv = _resolve_path(crf.get("baseline_csv"))
+        input_csv = _resolve_path(crt.get("baseline_csv"))
         if input_csv is None:
             return None
 
     if _is_accert_account_output(input_csv):
         name = _safe_name(payload.get("output_name", "accert_gui_run"))
-        converted_csv = OUTPUT_DIR / f"{name}_accert_baseline_for_crf.csv"
-        accert_output_to_crf_baseline(
+        converted_csv = OUTPUT_DIR / f"{name}_accert_baseline_for_crt.csv"
+        accert_output_to_crt_baseline(
             input_csv,
             converted_csv,
-            reactor_type=crf.get("reactor_type", "AP1000"),
+            reactor_type=crt.get("reactor_type", "AP1000"),
             total_20s_labor_hours=_num(
-                crf.get("total_20s_labor_hours"),
-                DEFAULT_20S_LABOR_HOURS.get(crf.get("reactor_type", "AP1000"), DEFAULT_20S_LABOR_HOURS["AP1000"]),
+                crt.get("total_20s_labor_hours"),
+                DEFAULT_20S_LABOR_HOURS.get(crt.get("reactor_type", "AP1000"), DEFAULT_20S_LABOR_HOURS["AP1000"]),
             ),
         )
-        crf["_prepared_from_accert_csv"] = str(input_csv)
-        crf["_prepared_baseline_csv"] = str(converted_csv)
+        crt["_prepared_from_accert_csv"] = str(input_csv)
+        crt["_prepared_baseline_csv"] = str(converted_csv)
         return converted_csv
 
-    crf["_prepared_baseline_csv"] = str(input_csv)
+    crt["_prepared_baseline_csv"] = str(input_csv)
     return input_csv
 
 
@@ -2001,24 +2001,24 @@ def _iat_config(payload: dict, output_csv: Path | None = None, country: str | No
     return config
 
 
-def _crf_config(payload: dict, baseline_csv: Path | None = None) -> dict:
-    crf = payload["crf"]
+def _crt_config(payload: dict, baseline_csv: Path | None = None) -> dict:
+    crt = payload["crt"]
     config = {
-        "reactor_type": crf["reactor_type"],
-        "f_22": _num(crf["f_22"], 0.0),
-        "f_2321": _num(crf["f_2321"], 0.0),
-        "land_cost_per_acre_0": _num(crf["land_cost_per_acre_0"], 22_000.0),
-        "startup_0": _num(crf["startup_0"], 28.0),
+        "reactor_type": crt["reactor_type"],
+        "f_22": _num(crt["f_22"], 0.0),
+        "f_2321": _num(crt["f_2321"], 0.0),
+        "land_cost_per_acre_0": _num(crt["land_cost_per_acre_0"], 22_000.0),
+        "startup_0": _num(crt["startup_0"], 28.0),
         "construction_duration_0": _num(
-            crf.get("construction_duration_0"),
-            DEFAULT_CONSTRUCTION_DURATIONS.get(crf.get("reactor_type", "AP1000"), 76.0),
+            crt.get("construction_duration_0"),
+            DEFAULT_CONSTRUCTION_DURATIONS.get(crt.get("reactor_type", "AP1000"), 76.0),
         ),
-        "staggering_ratio": _num(crf["staggering_ratio"], 0.75),
+        "staggering_ratio": _num(crt["staggering_ratio"], 0.75),
     }
     if baseline_csv is not None:
         config["baseline_csv"] = baseline_csv
         return config
-    path = _prepare_crf_baseline_csv(payload)
+    path = _prepare_crt_baseline_csv(payload)
     if path is not None:
         config["baseline_csv"] = path
     return config
@@ -2177,7 +2177,7 @@ def _base_case_summary_from_dataframe(df: pd.DataFrame, power_kwe: float, source
     }
 
 
-def _base_case_from_crf_config(config: dict) -> dict:
+def _base_case_from_crt_config(config: dict) -> dict:
     df, power = InputStore(
         data_dir=config.get("data_dir"),
         baseline_csv=config.get("baseline_csv"),
@@ -2186,7 +2186,7 @@ def _base_case_from_crf_config(config: dict) -> dict:
     return _base_case_summary_from_dataframe(df, power, source)
 
 
-def _summarize_crf_result(result: dict) -> dict:
+def _summarize_crt_result(result: dict) -> dict:
     noak = int(result.get("num_NOAK", result.get("Num_orders", 1)))
     num_orders = int(result.get("Num_orders", result.get("num_orders", noak)))
     plant_columns = [
@@ -2231,7 +2231,7 @@ def _summarize_crf_result(result: dict) -> dict:
     }
 
 
-def _write_crf_results_csv(result: dict, path: Path) -> pd.DataFrame:
+def _write_crt_results_csv(result: dict, path: Path) -> pd.DataFrame:
     plants = results_to_dataframe(result)
     path.parent.mkdir(parents=True, exist_ok=True)
     plants.to_csv(path, index=False)
@@ -2248,8 +2248,8 @@ def run_workflow(payload: dict) -> dict:
         "workflow": workflow,
         "workflow_label": {
             "iat_only": "IAT Only",
-            "crf_only": "CRF Only",
-            "iat_crf": "IAT then CRF",
+            "crt_only": "CRT Only",
+            "iat_crt": "IAT then CRT",
         }.get(workflow, workflow),
         "files": files,
         "notes": notes,
@@ -2297,7 +2297,7 @@ def run_workflow(payload: dict) -> dict:
                 result = run_adjustment(config)
                 if iat.get("_prepared_from_accert_csv") and "Converted ACCERT baseline" not in files:
                     files["Converted ACCERT baseline"] = _file_info(Path(iat["_prepared_input_csv"]))
-                    notes.append("The raw ACCERT account CSV was converted to CRF/IAT baseline format before IAT was run.")
+                    notes.append("The raw ACCERT account CSV was converted to CRT/IAT baseline format before IAT was run.")
                 summary = _summarize_iat_result(result, power_kwe)
                 if "base_case" not in response:
                     response["base_case"] = _base_case_from_iat_result(result, power_kwe)
@@ -2325,57 +2325,57 @@ def run_workflow(payload: dict) -> dict:
         }
         return response
 
-    if workflow == "crf_only":
-        dashboard = OUTPUT_DIR / f"{name}_crf_dashboard.png"
-        results_csv = OUTPUT_DIR / f"{name}_crf_results.csv"
-        config = _crf_config(payload)
-        if payload["crf"].get("_prepared_from_accert_csv"):
-            files["Converted ACCERT baseline"] = _file_info(Path(payload["crf"]["_prepared_baseline_csv"]))
-            notes.append("The raw ACCERT account CSV was converted to CRF baseline format before CRF was run.")
-        response["base_case"] = _base_case_from_crf_config(config)
+    if workflow == "crt_only":
+        dashboard = OUTPUT_DIR / f"{name}_crt_dashboard.png"
+        results_csv = OUTPUT_DIR / f"{name}_crt_results.csv"
+        config = _crt_config(payload)
+        if payload["crt"].get("_prepared_from_accert_csv"):
+            files["Converted ACCERT baseline"] = _file_info(Path(payload["crt"]["_prepared_baseline_csv"]))
+            notes.append("The raw ACCERT account CSV was converted to CRT baseline format before CRT was run.")
+        response["base_case"] = _base_case_from_crt_config(config)
         result = run_one_scenario(config, _levers(payload))
-        _write_crf_results_csv(result, results_csv)
+        _write_crt_results_csv(result, results_csv)
         save_dashboard(
             result,
             dashboard,
-            title=f"{payload['crf']['reactor_type']} Cost Reduction Framework",
-            show_levers=bool(payload["crf"].get("show_levers", True)),
+            title=f"{payload['crt']['reactor_type']} Cost Reduction Framework Tool",
+            show_levers=bool(payload["crt"].get("show_levers", True)),
         )
-        response["crf"] = _summarize_crf_result(result)
-        response["crf"]["show_levers"] = bool(payload["crf"].get("show_levers", True))
-        response["crf"]["dashboard_url"] = _file_info(dashboard)["url"]
-        files["CRF results CSV"] = _file_info(results_csv)
-        files["CRF dashboard"] = _file_info(dashboard)
+        response["crt"] = _summarize_crt_result(result)
+        response["crt"]["show_levers"] = bool(payload["crt"].get("show_levers", True))
+        response["crt"]["dashboard_url"] = _file_info(dashboard)["url"]
+        files["CRT results CSV"] = _file_info(results_csv)
+        files["CRT dashboard"] = _file_info(dashboard)
         return response
 
-    if workflow == "iat_crf":
-        iat_csv = OUTPUT_DIR / f"{name}_iat_adjusted_for_crf.csv"
-        dashboard = OUTPUT_DIR / f"{name}_crf_dashboard.png"
-        results_csv = OUTPUT_DIR / f"{name}_crf_results.csv"
+    if workflow == "iat_crt":
+        iat_csv = OUTPUT_DIR / f"{name}_iat_adjusted_for_crt.csv"
+        dashboard = OUTPUT_DIR / f"{name}_crt_dashboard.png"
+        results_csv = OUTPUT_DIR / f"{name}_crt_results.csv"
         iat_payload = json.loads(json.dumps(payload))
         iat_payload["iat"]["input_mode"] = "csv"
         iat_result = run_adjustment(_iat_config(iat_payload, iat_csv))
         response["base_case"] = _base_case_from_iat_result(iat_result, _reactor_power_kwe(payload))
         if iat_payload["iat"].get("_prepared_from_accert_csv"):
             files["Converted ACCERT baseline"] = _file_info(Path(iat_payload["iat"]["_prepared_input_csv"]))
-            notes.append("The raw ACCERT account CSV was converted to CRF/IAT baseline format before IAT and CRF were run.")
-        crf_result = run_one_scenario(_crf_config(payload, baseline_csv=iat_csv), _levers(payload))
-        _write_crf_results_csv(crf_result, results_csv)
-        _crf_countries = payload["iat"].get("countries") or [payload["iat"].get("country", "")]
+            notes.append("The raw ACCERT account CSV was converted to CRT/IAT baseline format before IAT and CRT were run.")
+        crt_result = run_one_scenario(_crt_config(payload, baseline_csv=iat_csv), _levers(payload))
+        _write_crt_results_csv(crt_result, results_csv)
+        _crt_countries = payload["iat"].get("countries") or [payload["iat"].get("country", "")]
         save_dashboard(
-            crf_result,
+            crt_result,
             dashboard,
-            title=f"{payload['crf']['reactor_type']} {_crf_countries[0]} Cost Reduction Framework",
-            show_levers=bool(payload["crf"].get("show_levers", True)),
+            title=f"{payload['crt']['reactor_type']} {_crt_countries[0]} Cost Reduction Framework Tool",
+            show_levers=bool(payload["crt"].get("show_levers", True)),
         )
         response["iat"] = _summarize_iat_result(iat_result, _reactor_power_kwe(payload))
-        response["crf"] = _summarize_crf_result(crf_result)
-        response["crf"]["show_levers"] = bool(payload["crf"].get("show_levers", True))
-        response["crf"]["dashboard_url"] = _file_info(dashboard)["url"]
+        response["crt"] = _summarize_crt_result(crt_result)
+        response["crt"]["show_levers"] = bool(payload["crt"].get("show_levers", True))
+        response["crt"]["dashboard_url"] = _file_info(dashboard)["url"]
         files["IAT adjusted CSV"] = _file_info(iat_csv)
-        files["CRF results CSV"] = _file_info(results_csv)
-        files["CRF dashboard"] = _file_info(dashboard)
-        notes.append("The original CRF baseline CSV was not modified; CRF used the IAT output through baseline_csv.")
+        files["CRT results CSV"] = _file_info(results_csv)
+        files["CRT dashboard"] = _file_info(dashboard)
+        notes.append("The original CRT baseline CSV was not modified; CRT used the IAT output through baseline_csv.")
         return response
 
     raise ValueError(f"Unknown workflow: {workflow}")
@@ -2429,7 +2429,7 @@ def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     server = ThreadingHTTPServer((HOST, PORT), Handler)
     url = f"http://{HOST}:{PORT}"
-    print(f"ACCERT IAT and CRF GUI running at {url}")
+    print(f"ACCERT IAT and CRT GUI running at {url}")
     print(f"Outputs will be written to {OUTPUT_DIR}")
     if "--open" in sys.argv:
         try:

@@ -1,4 +1,4 @@
-# src/crf/model/direct_cost.py
+# src/crt/model/direct_cost.py
 # Direct-cost pipeline:
 #   add_factory_cost -> add_land_cost -> add_commercial_bop
 #   -> add_non_safety_related_rb -> add_modular_civil_construction
@@ -159,7 +159,9 @@ def add_modular_civil_construction(
     if reactor_type in ["HTGR", "SFR"]:
         mod = mod_0 if n_th == 1 else "modularized"    
     elif reactor_type == "AP1000":
-        mod = mod_0 if n_th == 1 else "non_modularized"
+        # mod = mod_0 if n_th == 1 else "non_modularized"
+        mod = mod_0 if n_th == 1 else "modularized"
+
 
     mod_factor = 0.8 if mod == "modularized" else 1.0 # NOTE see excel Relationship sheet D4
     # NOTE in excel tool HTGR does nothing here, SFR factory cost of 21 with the 20% reduction 

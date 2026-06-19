@@ -1,5 +1,5 @@
 """
-CRF Excel I/O
+CRT Excel I/O
 """
 
 from .excel_inputs import InputStore

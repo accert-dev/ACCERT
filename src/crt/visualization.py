@@ -1,4 +1,4 @@
-"""Visualization helpers for Cost Reduction Framework results."""
+"""Visualization helpers for Cost Reduction Framework Tool results."""
 
 from __future__ import annotations
 
@@ -164,7 +164,7 @@ def plot_dashboard(
     figsize: Optional[tuple[float, float]] = None,
     show_levers: bool = True,
 ):
-    """Create a dashboard-style figure from Cost Reduction Framework output.
+    """Create a dashboard-style figure from Cost Reduction Framework Tool output.
 
     The layout mirrors the capital-cost charts in the Excel dashboard: capital
     costs, construction duration, cost breakdowns, build timeline, and the
@@ -199,7 +199,7 @@ def plot_dashboard(
                 [fig.add_subplot(gs[2, 0]), fig.add_subplot(gs[2, 1])],
             ]
         )
-    fig.suptitle(title or "Cost Reduction Framework Dashboard", fontsize=18, fontweight="bold")
+    fig.suptitle(title or "Cost Reduction Framework Tool Dashboard", fontsize=18, fontweight="bold")
 
     x = df["Plant number"]
 
@@ -288,7 +288,7 @@ def save_dashboard(
     return str(path)
 
 
-def save_figures(result: dict, output_dir: str, prefix: str = "cost_reduction_framework") -> Dict[str, str]:
+def save_figures(result: dict, output_dir: str, prefix: str = "cost_reduction_tool") -> Dict[str, str]:
     """Save the dashboard and individual dashboard figures as PNG files."""
     out_dir = Path(output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

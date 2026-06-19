@@ -13,6 +13,6 @@ User's Guide
    output_structure
    build_your_own
    using_necost
-   crf
+   crt
    iat
    gui_combined

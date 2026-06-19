@@ -1,4 +1,4 @@
-# src/crf/model/learning.py
+# src/crt/model/learning.py
 # Learning effects:
 #  - learning_effect (cost learning by doing on direct accounts)
 #  - act_cons_duration_plus_delay (supply chain delay model)
@@ -145,7 +145,7 @@ def act_cons_duration_plus_delay(
     else:
         raise ValueError(f"Unknown reactor type: {reactor_type}")
     # NOTE Ryan mentioned that the supply chain delay need to be adjusted
-    # and I am waiting for the final version of CRF of the AP1000
+    # and I am waiting for the final version of CRT of the AP1000
     B_21 = 42.1 * task_length_multiplier
     B_22 = 60.2 * task_length_multiplier
     B_23 = 14.8 * task_length_multiplier

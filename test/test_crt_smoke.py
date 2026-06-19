@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 src_path = os.path.abspath(os.path.join(os.pardir, 'src'))
 sys.path.insert(0, src_path)
-from crf import run_one_scenario, print_scenario_result
+from crt import run_one_scenario, print_scenario_result
 
 
 def main():

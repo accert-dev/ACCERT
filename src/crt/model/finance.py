@@ -1,4 +1,4 @@
-# src/crf/model/finance.py
+# src/crt/model/finance.py
 # Insurance, interest, ITC application
 
 import numpy as np

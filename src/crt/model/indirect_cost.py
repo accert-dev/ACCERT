@@ -1,4 +1,4 @@
-# src/crf/model/indirect_cost.py
+# src/crt/model/indirect_cost.py
 # Indirect costs accounts 31–35, unchanged equations
 
 import pandas as pd

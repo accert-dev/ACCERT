@@ -1,13 +1,13 @@
 import pandas as pd
 import pytest
 
-from tutorial.gui import crf_iat_gui
+from tutorial.gui import crt_iat_gui
 
 
 def _gui_payload(csv_content: str) -> dict:
     return {
-        "workflow": "iat_crf",
-        "output_name": "pytest_gui_accert_iat_crf",
+        "workflow": "iat_crt",
+        "output_name": "pytest_gui_accert_iat_crt",
         "iat": {
             "input_mode": "csv",
             "reactor_type": "ACCERT output-LR",
@@ -20,7 +20,7 @@ def _gui_payload(csv_content: str) -> dict:
             "scenario_count": 1,
             "occ_values": [5750],
         },
-        "crf": {
+        "crt": {
             "reactor_type": "AP1000",
             "baseline_csv": None,
             "baseline_csv_content": None,
@@ -56,7 +56,7 @@ def _gui_payload(csv_content: str) -> dict:
     }
 
 
-def test_gui_iat_crf_converts_raw_accert_account_csv(monkeypatch, tmp_path):
+def test_gui_iat_crt_converts_raw_accert_account_csv(monkeypatch, tmp_path):
     raw_accert = pd.DataFrame(
         [
             {"code_of_account": "211", "account_description": "Yardwork", "total_cost": 1_000_000.0},
@@ -65,30 +65,30 @@ def test_gui_iat_crf_converts_raw_accert_account_csv(monkeypatch, tmp_path):
             {"code_of_account": "23", "account_description": "Turbine plant equipment", "total_cost": 4_000_000.0},
         ]
     )
-    monkeypatch.setattr(crf_iat_gui, "OUTPUT_DIR", tmp_path)
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
 
-    result = crf_iat_gui.run_workflow(_gui_payload(raw_accert.to_csv(index=False)))
+    result = crt_iat_gui.run_workflow(_gui_payload(raw_accert.to_csv(index=False)))
 
-    converted = tmp_path / "pytest_gui_accert_iat_crf_accert_baseline_for_iat_crf.csv"
+    converted = tmp_path / "pytest_gui_accert_iat_crt_accert_baseline_for_iat_crt.csv"
     assert converted.exists()
     converted_df = pd.read_csv(converted)
     assert {"Account", "Title", "Total Cost (USD)", "Factory Equipment Cost", "Site Labor Cost", "Site Material Cost"}.issubset(converted_df.columns)
     assert "Converted ACCERT baseline" in result["files"]
-    assert "CRF results CSV" in result["files"]
-    assert (tmp_path / "pytest_gui_accert_iat_crf_crf_results.csv").exists()
+    assert "CRT results CSV" in result["files"]
+    assert (tmp_path / "pytest_gui_accert_iat_crt_crt_results.csv").exists()
     assert result["base_case"]["comparison"]
     assert result["base_case"]["comparison"][0]["Total Cost"] > 0
     assert result["iat"]["comparison"]
-    assert result["crf"]["plants"]
-    assert result["crf"]["num_noak"] == 2
-    assert result["crf"]["num_orders"] == 2
-    assert result["crf"]["years_to_noak"] > 0
-    assert result["crf"]["years_to_orderbook"] > 0
-    assert crf_iat_gui._crf_config(_gui_payload(raw_accert.to_csv(index=False)))["construction_duration_0"] == pytest.approx(76)
-    assert result["crf"]["plants"][0]["Construction duration"] > 0
+    assert result["crt"]["plants"]
+    assert result["crt"]["num_noak"] == 2
+    assert result["crt"]["num_orders"] == 2
+    assert result["crt"]["years_to_noak"] > 0
+    assert result["crt"]["years_to_orderbook"] > 0
+    assert crt_iat_gui._crt_config(_gui_payload(raw_accert.to_csv(index=False)))["construction_duration_0"] == pytest.approx(76)
+    assert result["crt"]["plants"][0]["Construction duration"] > 0
 
 
-def test_gui_crf_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
+def test_gui_crt_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
     raw_accert = pd.DataFrame(
         [
             {"code_of_account": "211", "account_description": "Yardwork", "total_cost": 1_000_000.0},
@@ -98,18 +98,18 @@ def test_gui_crf_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
         ]
     )
     payload = _gui_payload("")
-    payload["workflow"] = "crf_only"
-    payload["crf"]["baseline_csv_content"] = raw_accert.to_csv(index=False)
-    payload["crf"]["baseline_csv_filename"] = "ap1000_upd_acc_test.csv"
-    monkeypatch.setattr(crf_iat_gui, "OUTPUT_DIR", tmp_path)
+    payload["workflow"] = "crt_only"
+    payload["crt"]["baseline_csv_content"] = raw_accert.to_csv(index=False)
+    payload["crt"]["baseline_csv_filename"] = "ap1000_upd_acc_test.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
 
-    result = crf_iat_gui.run_workflow(payload)
+    result = crt_iat_gui.run_workflow(payload)
 
-    assert (tmp_path / "pytest_gui_accert_iat_crf_accert_baseline_for_crf.csv").exists()
+    assert (tmp_path / "pytest_gui_accert_iat_crt_accert_baseline_for_crt.csv").exists()
     assert "Converted ACCERT baseline" in result["files"]
-    assert "CRF results CSV" in result["files"]
+    assert "CRT results CSV" in result["files"]
     assert result["base_case"]["comparison"]
-    assert result["crf"]["plants"]
+    assert result["crt"]["plants"]
     base_coas = [row["COA"] for row in result["base_case"]["comparison"]]
     assert base_coas.index("21") == base_coas.index("20") + 1
     assert base_coas.index("22") == base_coas.index("21") + 1

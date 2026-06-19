@@ -5,11 +5,11 @@ import pytest
 
 from iat import available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
-from crf import accert_output_to_crf_baseline
-from crf.io.excel_inputs import InputStore
+from crt import accert_output_to_crt_baseline
+from crt.io.excel_inputs import InputStore
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-AP1000_BASELINE = REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv"
+AP1000_BASELINE = REPO_ROOT / "src" / "crt" / "data" / "AP1000_baseline.csv"
 
 
 def test_iat_available_countries():
@@ -282,7 +282,7 @@ def test_iat_runs_on_accert_converted_baseline(tmp_path):
             "Site Labor Hours",
         ].sum()
     )
-    accert_output_to_crf_baseline(
+    accert_output_to_crt_baseline(
         accert_path,
         converted_path,
         reactor_type="AP1000",

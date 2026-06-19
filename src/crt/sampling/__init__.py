@@ -1,5 +1,5 @@
 """
-CRF Sampling Module
+CRT Sampling Module
 """
 
 from .sampler import sample_levers

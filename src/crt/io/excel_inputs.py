@@ -91,7 +91,7 @@ class InputStore:
 
 
 def _coerce_adjusted_baseline_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Use IAT adjusted costs when an IAT output CSV is passed as a CRF baseline."""
+    """Use IAT adjusted costs when an IAT output CSV is passed as a CRT baseline."""
     out = df.copy()
     for target_col, adjusted_col in ADJUSTED_COLUMN_MAP.items():
         if adjusted_col in out.columns:

@@ -1,4 +1,4 @@
-# src/crf/sampling/sampler.py
+# src/crt/sampling/sampler.py
 from typing import Optional
 
 import numpy as np

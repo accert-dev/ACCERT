@@ -15,7 +15,7 @@ ACCERT_ACCOUNT_COLUMNS = {
 }
 
 DIRECT_TOTAL_ACCOUNTS = ["21", "22", "23", "24", "25", "26", "28"]
-ACCERT_TO_CRF_DIRECT_ACCOUNT_MAP = {
+ACCERT_TO_CRT_DIRECT_ACCOUNT_MAP = {
     "211": "211",
     "212": "212",
     "213": "213",
@@ -32,7 +32,7 @@ ACCERT_TO_CRF_DIRECT_ACCOUNT_MAP = {
 ACCOUNT_218_LETTERS = tuple("ABCDEFGHIJKLMNOPQRSTUV")
 
 
-def accert_output_to_crf_baseline(
+def accert_output_to_crt_baseline(
     accert_csv: str | Path,
     output_csv: str | Path | None = None,
     *,
@@ -41,13 +41,13 @@ def accert_output_to_crf_baseline(
     data_dir: str | Path | None = None,
     template_baseline_csv: str | Path | None = None,
 ) -> pd.DataFrame:
-    """Convert an ACCERT updated-account CSV into a CRF/IAT baseline CSV.
+    """Convert an ACCERT updated-account CSV into a CRT/IAT baseline CSV.
 
-    ACCERT account outputs contain account totals but not the CRF category split
+    ACCERT account outputs contain account totals but not the CRT category split
     or labor-hour inputs. This bridge keeps the ACCERT direct-account totals,
-    uses the selected CRF baseline's cost-category proportions for factory,
+    uses the selected CRT baseline's cost-category proportions for factory,
     labor, and material dollars, and distributes the user-provided total 20s
-    labor hours using the selected CRF baseline's labor-hour proportions.
+    labor hours using the selected CRT baseline's labor-hour proportions.
     """
     template, power = InputStore(
         data_dir=str(data_dir) if data_dir else None,
@@ -56,7 +56,7 @@ def accert_output_to_crf_baseline(
     accert_accounts = _read_accert_account_output(accert_csv)
 
     converted = template.copy()
-    totals = _crf_direct_totals_from_accert(accert_accounts)
+    totals = _crt_direct_totals_from_accert(accert_accounts)
     _apply_direct_totals(converted, totals, template)
     _apply_labor_hours(converted, float(total_20s_labor_hours), template)
 
@@ -92,10 +92,10 @@ def _value_by_account(df: pd.DataFrame, account: str) -> float:
     return float(matches.iloc[0])
 
 
-def _crf_direct_totals_from_accert(accert_accounts: pd.DataFrame) -> dict[str, float]:
+def _crt_direct_totals_from_accert(accert_accounts: pd.DataFrame) -> dict[str, float]:
     totals = {account: 0.0 for account in DIRECT_TOTAL_ACCOUNTS}
-    for accert_account, crf_account in ACCERT_TO_CRF_DIRECT_ACCOUNT_MAP.items():
-        totals[crf_account] = totals.get(crf_account, 0.0) + _value_by_account(accert_accounts, accert_account)
+    for accert_account, crt_account in ACCERT_TO_CRT_DIRECT_ACCOUNT_MAP.items():
+        totals[crt_account] = totals.get(crt_account, 0.0) + _value_by_account(accert_accounts, accert_account)
     totals["214"] = totals.get("214", 0.0) + _sum_218_letter_accounts(accert_accounts)
     return totals
 

@@ -1,8 +1,8 @@
-"""Use an ACCERT updated-account CSV as a CRF and IAT baseline.
+"""Use an ACCERT updated-account CSV as a CRT and IAT baseline.
 
 Run from the repository root with:
 
-    python tutorial/combined/accert_output_to_crf_iat_example.py
+    python tutorial/combined/accert_output_to_crt_iat_example.py
 """
 
 from pathlib import Path
@@ -17,14 +17,14 @@ SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from crf import accert_output_to_crf_baseline, print_scenario_result, run_one_scenario
-from crf.io.excel_inputs import InputStore
+from crt import accert_output_to_crt_baseline, print_scenario_result, run_one_scenario
+from crt.io.excel_inputs import InputStore
 from iat import level_account_summary, run_adjustment
 
 
 OUTPUT_DIR = REPO_ROOT / "tutorial" / "combined" / "outputs"
 ACCERT_INPUT = REPO_ROOT / "tutorial" / "accert" / "AP1000.son"
-CONVERTED_BASELINE = OUTPUT_DIR / "ap1000_accert_for_crf_iat.csv"
+CONVERTED_BASELINE = OUTPUT_DIR / "ap1000_accert_for_crt_iat.csv"
 IAT_OUTPUT = OUTPUT_DIR / "ap1000_accert_china_iat.csv"
 
 
@@ -88,9 +88,9 @@ if __name__ == "__main__":
     accert_csv = run_accert_ap1000()
     print(f"ACCERT account CSV: {accert_csv}")
 
-    print("\nStep 2: Convert ACCERT output to CRF/IAT baseline shape")
+    print("\nStep 2: Convert ACCERT output to CRT/IAT baseline shape")
     total_hours = ap1000_total_20s_labor_hours()
-    accert_output_to_crf_baseline(
+    accert_output_to_crt_baseline(
         accert_csv,
         CONVERTED_BASELINE,
         reactor_type="AP1000",
@@ -99,9 +99,9 @@ if __name__ == "__main__":
     print(f"Converted baseline: {CONVERTED_BASELINE}")
     print(f"Assigned total 20s labor hours: {total_hours:,.2f}")
 
-    print("\nStep 3: Run CRF with the ACCERT-derived baseline")
-    crf_result = run_one_scenario({**config, "baseline_csv": str(CONVERTED_BASELINE)}, levers)
-    print_scenario_result(crf_result)
+    print("\nStep 3: Run CRT with the ACCERT-derived baseline")
+    crt_result = run_one_scenario({**config, "baseline_csv": str(CONVERTED_BASELINE)}, levers)
+    print_scenario_result(crt_result)
 
     print("\nStep 4: Run IAT with the same ACCERT-derived baseline")
     iat_result = run_adjustment(

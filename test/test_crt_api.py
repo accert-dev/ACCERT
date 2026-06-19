@@ -7,8 +7,8 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-from crf import (
-    accert_output_to_crf_baseline,
+from crt import (
+    accert_output_to_crt_baseline,
     levers_to_dataframe,
     occ_reduction_from_foak_to_noak,
     results_to_dataframe,
@@ -18,10 +18,10 @@ from crf import (
     tci_reduction_from_foak_to_noak,
     waterfall_to_dataframe,
 )
-from crf.api import normalize_levers
-from crf.io.excel_inputs import InputStore
-from crf.model.schedule import build_schedule_timeline
-from crf.sampling.lever_schema import EXCEL_NAME_TO_ID_ORDERED
+from crt.api import normalize_levers
+from crt.io.excel_inputs import InputStore
+from crt.model.schedule import build_schedule_timeline
+from crt.sampling.lever_schema import EXCEL_NAME_TO_ID_ORDERED
 
 
 def _config():
@@ -178,7 +178,7 @@ def test_run_one_scenario_can_use_iat_adjusted_baseline_csv(tmp_path):
     assert adjusted_result["D20s_1"] < default_result["D20s_1"]
 
 
-def test_accert_output_can_be_converted_to_crf_baseline_and_run(tmp_path):
+def test_accert_output_can_be_converted_to_crt_baseline_and_run(tmp_path):
     baseline, _ = InputStore().get_baseline("AP1000")
     accert_like = baseline.rename(
         columns={
@@ -188,7 +188,7 @@ def test_accert_output_can_be_converted_to_crf_baseline_and_run(tmp_path):
         }
     )[["code_of_account", "account_description", "total_cost"]]
     accert_path = tmp_path / "ap1000_upd_acc_example.csv"
-    output_path = tmp_path / "ap1000_accert_for_crf.csv"
+    output_path = tmp_path / "ap1000_accert_for_crt.csv"
     accert_like.to_csv(accert_path, index=False)
 
     total_hours = float(
@@ -197,7 +197,7 @@ def test_accert_output_can_be_converted_to_crf_baseline_and_run(tmp_path):
             "Site Labor Hours",
         ].sum()
     )
-    converted = accert_output_to_crf_baseline(
+    converted = accert_output_to_crt_baseline(
         accert_path,
         output_path,
         reactor_type="AP1000",
@@ -235,8 +235,8 @@ def test_accert_output_can_be_converted_to_crf_baseline_and_run(tmp_path):
 def test_visualization_helpers_create_dashboard(tmp_path):
     result = run_one_scenario(_config(), _levers())
     frame = results_to_dataframe(result)
-    out_png = tmp_path / "cost_reduction_framework_dashboard.png"
-    compact_png = tmp_path / "cost_reduction_framework_compact_dashboard.png"
+    out_png = tmp_path / "cost_reduction_tool_dashboard.png"
+    compact_png = tmp_path / "cost_reduction_tool_compact_dashboard.png"
 
     assert list(frame["Plant number"]) == [1, 2]
     assert frame.loc[1, "OCC reduction from FOAK"] == pytest.approx(
@@ -246,11 +246,11 @@ def test_visualization_helpers_create_dashboard(tmp_path):
         tci_reduction_from_foak_to_noak(result)
     )
 
-    save_dashboard(result, str(out_png), title="Cost Reduction Framework Test")
+    save_dashboard(result, str(out_png), title="Cost Reduction Framework Tool Test")
     save_dashboard(
         result,
         str(compact_png),
-        title="Cost Reduction Framework Test",
+        title="Cost Reduction Framework Tool Test",
         show_levers=False,
     )
 
@@ -261,9 +261,9 @@ def test_visualization_helpers_create_dashboard(tmp_path):
 
 
 def test_run_sampling_from_excel_writes_csv_and_pickle_outputs(tmp_path):
-    levers_xlsx = tmp_path / "crf_levers.xlsx"
-    out_csv = tmp_path / "crf_samples.csv"
-    out_pkl = tmp_path / "crf_samples.pkl"
+    levers_xlsx = tmp_path / "crt_levers.xlsx"
+    out_csv = tmp_path / "crt_samples.csv"
+    out_pkl = tmp_path / "crt_samples.pkl"
     _lever_workbook(levers_xlsx)
 
     run_sampling_from_excel(

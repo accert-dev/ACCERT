@@ -167,7 +167,7 @@ def run_occ_scenarios(config: dict[str, Any]) -> dict[str, Any]:
 
 
 def read_accert_cost_csv(path: str | Path) -> pd.DataFrame:
-    """Read an ACCERT/CRF-style COA CSV and normalize numeric cost columns."""
+    """Read an ACCERT/CRT-style COA CSV and normalize numeric cost columns."""
     df = pd.read_csv(path)
     missing = {"Account", "Title"} - set(df.columns)
     if missing:

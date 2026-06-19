@@ -6,7 +6,7 @@ SRC_PATH = REPO_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from crf import print_scenario_result, run_one_scenario, save_dashboard
+from crt import print_scenario_result, run_one_scenario, save_dashboard
 
 
 config = {
@@ -45,11 +45,11 @@ if __name__ == "__main__":
     result = run_one_scenario(config, levers)
     print_scenario_result(result)
 
-    output_path = Path("cost_reduction_framework_sfr_dashboard.png")
+    output_path = Path("cost_reduction_tool_sfr_dashboard.png")
     save_dashboard(
         result,
         output_path,
-        title="SFR Cost Reduction Framework",
+        title="SFR Cost Reduction Framework Tool",
         show_levers=show_lever_table,
     )
     print(f"\nSaved dashboard figure to: {output_path.resolve()}")

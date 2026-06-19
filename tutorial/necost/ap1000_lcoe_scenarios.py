@@ -13,7 +13,7 @@ Fuel-cycle assumptions are kept consistent with the AP1000 once-through PWR
 setup. O&M targets are based on the O&M framework's large-reactor 2023
 historical total of 18.81 $/MWh. The China-calibrated case applies only the
 China LF_O&M localization factor from Table 3-2 (0.87). South Korea and UAE are
-included only as IAT-based validation points; they do not include CRF learning
+included only as IAT-based validation points; they do not include CRT learning
 or country-specific project-delivery calibration. The U.S. fast-learning case
 retains the U.S. base O&M cost unless a separate O&M learning assumption is
 explicitly justified in future work.
@@ -109,7 +109,7 @@ def build_scenarios(iat_workbook: Path) -> list[Scenario]:
             occ_per_kw=2989.0,
             om_target=OM_TARGET_US_BASELINE * china_om_factor,
             description=(
-                "China IAT localization plus China-calibrated CRF endpoint; "
+                "China IAT localization plus China-calibrated CRT endpoint; "
                 f"O&M applies China Labor O&M factor = {china_om_factor:.4f} from IAT-v4.5."
             ),
         ),
@@ -138,7 +138,7 @@ def build_scenarios(iat_workbook: Path) -> list[Scenario]:
             label="U.S. fast-learning case",
             occ_per_kw=4448.0,
             om_target=OM_TARGET_US_BASELINE,
-            description="U.S. cost structure with fast-learning CRF endpoint; U.S. base O&M retained.",
+            description="U.S. cost structure with fast-learning CRT endpoint; U.S. base O&M retained.",
         ),
     ]
 

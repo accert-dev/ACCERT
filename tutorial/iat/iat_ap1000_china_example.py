@@ -21,7 +21,7 @@ config = {
     "reactor_type": "ACCERT output-LR",
     "country": "China",
     "year_dollar": 2024,
-    "input_csv": REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv",
+    "input_csv": REPO_ROOT / "src" / "crt" / "data" / "AP1000_baseline.csv",
     "output_csv": REPO_ROOT / "tutorial" / "iat" / "outputs" / "iat_ap1000_china_adjusted.csv",
 }
 
