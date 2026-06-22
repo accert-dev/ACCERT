@@ -202,10 +202,15 @@ class Accert:
         """    
 
         import subprocess
-        sonvalidxml = os.path.join(accert_path, "bin", "sonvalidxml")
-        schema = os.path.join(accert_path, "src", "etc", "accert.sch")
-        cmd = ' '.join([sonvalidxml, schema, input_path])
-        xmlresult = subprocess.check_output(cmd, shell=True)
+        # sonvalidxml = os.path.join(accert_path, "bin", "sonvalidxml")
+        # schema = os.path.join(accert_path, "src", "etc", "accert.sch")
+        cmd = [
+            os.path.join(accert_path, "bin", "sonvalidxml"),
+            os.path.join(accert_path, "src", "etc", "accert.sch"),
+            input_path,
+        ]
+
+        xmlresult = subprocess.check_output(cmd)
         ### obtain pieces of input by name for convenience
         # from .wasppy import xml2obj
         return xml2obj.xml2obj(xmlresult)
