@@ -167,7 +167,7 @@ def run_occ_scenarios(config: dict[str, Any]) -> dict[str, Any]:
 
 
 def read_accert_cost_csv(path: str | Path) -> pd.DataFrame:
-    """Read an ACCERT/CRF-style COA CSV and normalize numeric cost columns."""
+    """Read an ACCERT/CRT-style COA CSV and normalize numeric cost columns."""
     df = pd.read_csv(path)
     missing = {"Account", "Title"} - set(df.columns)
     if missing:
@@ -197,6 +197,8 @@ def occ_cost_dataframe(assumptions: dict[str, Any], family: str, occ_value: floa
             continue
         total = float(occ_value) * coa_share
         shares = record.get("category_shares", {})
+        if not any(float(shares.get(category, 0.0)) > 0.0 for category in COST_CATEGORIES):
+            continue
         category_costs = {
             category: total * float(shares.get(category, 0.0))
             for category in COST_CATEGORIES
@@ -266,7 +268,7 @@ def adjust_cost_dataframe(
                     amount=original[category],
                     local_share=float(localization.get(category, 0.0)),
                     factor=float(factors[category]),
-                    tariff=float(factors["import_tariff"]),
+                    tariff=float(factors["import_tariff"]) if category == "equipment" else 0.0,
                 )
                 adjusted[category] = f + l
                 foreign[category] = f
@@ -479,7 +481,17 @@ def _summary_row(code: str, title: str, level: int, df: pd.DataFrame) -> dict[st
         "COA": code,
         "Level": level,
         "Title": title,
+        "Original Equipment Cost": float(df["Original Equipment Cost"].sum()),
+        "Original Material Cost": float(df["Original Material Cost"].sum()),
+        "Original Labor Cost": float(df["Original Labor Cost"].sum()),
+        "Original Land Cost": float(df["Original Land Cost"].sum()),
+        "Original Catch-All Cost": float(df["Original Catch-All Cost"].sum()),
         "Original Total Cost": original,
+        "Adjusted Equipment Cost": float(df["Adjusted Factory Equipment Cost"].sum()),
+        "Adjusted Material Cost": float(df["Adjusted Site Material Cost"].sum()),
+        "Adjusted Labor Cost": float(df["Adjusted Site Labor Cost"].sum()),
+        "Adjusted Land Cost": float(df["Adjusted Land Cost"].sum()),
+        "Adjusted Catch-All Cost": float(df["Adjusted Catch-All Cost"].sum()),
         "Adjusted Total Cost": adjusted,
         "Difference": adjusted - original,
         "Adjustment Ratio": adjusted / original if original else 0.0,

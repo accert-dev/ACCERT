@@ -37,6 +37,7 @@ Central to ACCERT is the **Code of Accounts (COA)** system, which offers a stand
 
    .. admonition:: Important
       :class: important
+
       ACCERT now allows cost estimates without cost categories, providing flexibility for users to customize their cost breakdowns.
 
 Using ACCERT with NEAMS Workbench
@@ -73,4 +74,4 @@ New Features
 
    - Redundant tables and columns have been eliminated to streamline the database structure.
    - Fusion algorithms have been segregated from the main `accert_algorithm.csv` file, reducing clutter and improving code organization.
-   - Unnecessary stored procedures have been removed, simplifying database operations and improving performance.
+   - Unnecessary database procedures have been removed, simplifying database operations and improving performance.

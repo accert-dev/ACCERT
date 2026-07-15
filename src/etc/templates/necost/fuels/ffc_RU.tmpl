@@ -1,0 +1,8 @@
+RU {
+    reprocess { loss_fraction = 0.01 costs = [cost_reprocessing] }
+    conversion { loss_fraction = 1e-12 costs = [cost_conv] }
+    reenrichment {
+        loss_fraction = 0.01 stage_1 { feed = 0.9 product = 4.2 tails = 0.25 }
+        SWU_costs = [cost_SWU] DU_costs = [cost_DU_disposal]
+    }
+}

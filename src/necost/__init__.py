@@ -77,11 +77,10 @@ class NECost:
         self.data["outage_duration_uprates"] *= 30.48
 
     def run(self):
-        self.data["HM_mass_direct_spec"].mask(
-            cond=self.data["HM_mass_direct_spec"] <= 0,
-            other=self.nrods_core * self.data["ass_length"] * np.pi * (self.data["fuel_D"] / 2) ** 2 * (
-                self.data["fuel_density"] * self.data["HM_weight_percent"]),
-            inplace=True
+        self.data["HM_mass_direct_spec"] = self.data["HM_mass_direct_spec"].mask(
+            self.data["HM_mass_direct_spec"] <= 0,
+            self.nrods_core * self.data["ass_length"] * np.pi * (self.data["fuel_D"] / 2) ** 2 * (
+                self.data["fuel_density"] * self.data["HM_weight_percent"])
         )
         # reference core specific power W/gHM.
         mass_hm_core_ref = self.number_rods_ref * self.l_h_ref * np.pi * (

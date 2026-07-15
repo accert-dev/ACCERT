@@ -8,7 +8,7 @@ country adjustment factors, and import tariffs. It is available as the
 
 IAT can run in two modes:
 
-* ACCERT output mode, where the input is an ACCERT/CRF-style COA CSV.
+* ACCERT output mode, where the input is an ACCERT/CRT-style COA CSV.
 * Standalone OCC mode, where the input is one or more overnight capital cost
   values and IAT allocates the total using packaged COA and cost-category
   shares.
@@ -35,8 +35,8 @@ Packaged Assumptions
 
 The packaged assumptions are stored as CSV files in ``src/iat/data``:
 
-* ``adjustment_factors.csv`` contains country-level adjustment factors and
-  import tariffs for Korea, China, and UAE.
+* ``adjustment_factors.csv`` contains IAT v4.5 country-level adjustment
+  factors and import tariffs for Korea, China, UAE, Poland, and El Salvador.
 * ``lr_localization.csv`` contains large-reactor COA shares, cost-category
   shares, and localization shares.
 * ``smr_localization.csv`` contains SMR COA shares, cost-category shares, and
@@ -56,12 +56,17 @@ the U.S.-based cost structure before applying localization.
 Calculation Logic
 -----------------
 
-For each cost category, IAT combines the imported and localized portions:
+For each cost category, IAT combines the imported and localized portions. In
+the packaged IAT v4.5 assumptions, the import tariff is applied to imported
+equipment cost only:
 
 .. code-block:: text
 
-   adjusted = imported_share * base_cost * (1 + import_tariff)
-            + localized_share * base_cost * country_adjustment_factor
+   equipment = imported_share * base_cost * (1 + import_tariff)
+             + localized_share * base_cost * country_adjustment_factor
+
+   other categories = imported_share * base_cost
+                    + localized_share * base_cost * country_adjustment_factor
 
 The cost categories are equipment, material, labor, land, and catch-all.
 Land uses an adjustment factor of ``1.0``. Financial cost accounts in the
@@ -71,7 +76,7 @@ outside IAT by the country-specific project finance assumptions.
 ACCERT CSV Input
 ----------------
 
-Use ``run_adjustment`` with ``input_csv`` when the input is an ACCERT or CRF
+Use ``run_adjustment`` with ``input_csv`` when the input is an ACCERT or CRT
 baseline CSV.
 
 The packaged AP1000 example can be run from the repository root with:
@@ -90,7 +95,7 @@ The packaged AP1000 example can be run from the repository root with:
            "reactor_type": "ACCERT output-LR",
            "country": "China",
            "year_dollar": 2024,
-           "input_csv": Path("src/crf/data/AP1000_baseline.csv"),
+           "input_csv": Path("src/crt/data/AP1000_baseline.csv"),
            "output_csv": Path("tutorial/iat/outputs/iat_ap1000_china_adjusted.csv"),
        }
    )
@@ -107,7 +112,7 @@ Use ``run_occ_scenarios`` when the input is one or more OCC totals rather than
 an ACCERT output CSV.
 
 The packaged standalone example runs large-reactor OCC scenarios for China,
-Korea, and UAE:
+Korea, UAE, Poland, and El Salvador:
 
 .. code-block:: bash
 
@@ -129,19 +134,19 @@ Korea, and UAE:
    )
    print(result["summary"])
 
-Runnable standalone examples for China, Korea, and UAE are in
+Runnable standalone examples for China, Korea, UAE, Poland, and El Salvador are in
 ``tutorial/iat/iat_lr_occ_china_example.py``.
 
-Connecting IAT to the Cost Reduction Framework
+Connecting IAT to the Cost Reduction Framework Tool
 ----------------------------------------------
 
-The IAT output can be used as a CRF baseline without modifying the original
-baseline CSV in ``src/crf/data``. Pass the IAT output path to CRF with the
+The IAT output can be used as a CRT baseline without modifying the original
+baseline CSV in ``src/crt/data``. Pass the IAT output path to CRT with the
 ``baseline_csv`` config key.
 
 .. code-block:: python
 
-   from crf import run_one_scenario
+   from crt import run_one_scenario
    from iat import run_adjustment
 
    iat_result = run_adjustment(
@@ -149,14 +154,14 @@ baseline CSV in ``src/crf/data``. Pass the IAT output path to CRF with the
            "reactor_type": "ACCERT output-LR",
            "country": "China",
            "year_dollar": 2024,
-           "input_csv": "src/crf/data/AP1000_baseline.csv",
-           "output_csv": "tutorial/combined/iat_ap1000_china_for_crf.csv",
+           "input_csv": "src/crt/data/AP1000_baseline.csv",
+           "output_csv": "tutorial/combined/iat_ap1000_china_for_crt.csv",
        }
    )
 
-   crf_config = {
+   crt_config = {
        "reactor_type": "AP1000",
-       "baseline_csv": "tutorial/combined/iat_ap1000_china_for_crf.csv",
+       "baseline_csv": "tutorial/combined/iat_ap1000_china_for_crt.csv",
        "f_22": 250_000_000,
        "f_2321": 150_000_000,
        "land_cost_per_acre_0": 22_000,
@@ -164,30 +169,30 @@ baseline CSV in ``src/crf/data``. Pass the IAT output path to CRF with the
        "staggering_ratio": 0.75,
    }
 
-   crf_result = run_one_scenario(crf_config, levers)
+   crt_result = run_one_scenario(crt_config, levers)
 
-When CRF sees an IAT output CSV, it uses the adjusted total, equipment,
+When CRT sees an IAT output CSV, it uses the adjusted total, equipment,
 material, and labor columns as the starting baseline. The original AP1000 CSV
 is left unchanged.
 
 The connected runnable example is
-``tutorial/combined/crf_iat_ap1000_china_example.py``.
+``tutorial/combined/crt_iat_ap1000_china_example.py``.
 
 Run it from the repository root with:
 
 .. code-block:: bash
 
-   python tutorial/combined/crf_iat_ap1000_china_example.py
+   python tutorial/combined/crt_iat_ap1000_china_example.py
 
 Running the GUI
 ---------------
 
-The IAT and Cost Reduction Framework can also be run through the local GUI:
+The IAT and Cost Reduction Framework Tool can also be run through the local GUI:
 
 .. code-block:: bash
 
    cd ACCERT
-   python tutorial/gui/crf_iat_gui.py
+   python tutorial/gui/crt_iat_gui.py
 
 Then open ``http://127.0.0.1:8765/`` in a browser. The GUI supports three
 workflows:
@@ -195,11 +200,11 @@ workflows:
 * ``IAT only`` applies international adjustment to either an ACCERT output CSV
   or standalone OCC values. In standalone mode, enter the scenario count and
   then one OCC value for each scenario.
-* ``CRF only`` runs the Cost Reduction Framework using a built-in reactor
+* ``CRT only`` runs the Cost Reduction Framework Tool using a built-in reactor
   baseline or an optional user-provided baseline CSV.
-* ``IAT then CRF`` first writes an IAT-adjusted CSV and then passes that CSV to
-  CRF through ``baseline_csv``. This does not modify the packaged baseline CSVs
-  in ``src/crf/data``.
+* ``IAT then CRT`` first writes an IAT-adjusted CSV and then passes that CSV to
+  CRT through ``baseline_csv``. This does not modify the packaged baseline CSVs
+  in ``src/crt/data``.
 
 The GUI writes generated CSV files and dashboard images under
 ``tutorial/gui_outputs``. Interactive charts show exact values on hover, and

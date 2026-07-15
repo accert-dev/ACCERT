@@ -1,0 +1,174 @@
+necost {
+    % EG05/OT03 - High-Conversion HTGR (graphite-moderated, He-cooled) with LEU and Th fuel
+    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.
+    % NE-COST input preparer: Francesco Ganda (INL)
+    % Technical Reviewer: Kent Williams (Consultant)
+    % Fuel cycle option EG05/OT03 (Figure 18) High-Conversion HTGR (graphite-moderated, He-cooled) with LEU and Th fuel is an HTGR with Th homogeneously mixed with Uin compacts with 19.9% enriched uranium. The reference design is the General Atomic MHTGR.
+    % This option is modeled using a single NE-COST island. The presence of Th adds a complication to the calculation. The total HM mass is that of uranium and of thorium in the fuel compacts. For the purpose of the calculation of the front end costs, Th is considered as an added cost during fabrication, in the proportion of 41% of total HM [Ref 1], such that U/Th=1.46. However, the HM is assumed to be that of the uranium only for the cost of ore, milling, U3O8 to UF6 conversion and enrichment. Since the 19.9% enriched U is 59% of the HM, the specific costs (i.e. in $/kgHM) of uranium ore, of conversion, of enrichment and of depleted uranium de-conversion and disposal are reduced to 59% of the nominal value. In this way, the total costs in $ are correctly computed and normalized (per kg of total HM) for the enriched uranium purchase part of the front-end costs. Fabrication costs are not reduced: in this way it is assumed that the fabrication cost per unit of fuel volume, with or without thorium, is at the reference value. On top of the standard cost of fabrication, the added cost of thorium purchase is included in the front-end fuel cycle cost calculation.
+    % Report LCAE at 3% discount rate: mean 55.2 mills/kWh, std 7.4 mills/kWh.
+    % Report LCAE at 5% discount rate: mean 70.0 mills/kWh, std 9.9 mills/kWh.
+    % Report LCAE at 10% discount rate: mean 118.9 mills/kWh, std 19.5 mills/kWh.
+
+    construction_interest_rate = 0.05
+    operations_interest_rate = 0.05
+    sample_size = 2000
+
+    fuel_cycles {
+        cycle(EG05) {
+            reactor(EG05) {
+                % Single NE-COST island, so the LCAE weight is 100%.
+                energy_fraction = 1
+            }
+        }
+    }
+
+    reactors {
+        reactor(EG05) {
+            capacity_factor = 0.9
+            cycle_length = 1.5
+            lifetime_years = 60
+            power_level { reference_thermal = 3.5e+08 net_thermal_efficiency = 50 }
+            capital_costs { scaling_factor(capital_cost) = 1 }
+            om_costs {
+                scaling_factor(OM_per_year) = 1
+                scaling_factor(OM_per_MWh) = 1
+            }
+            fuel_reloads {
+                quantity(EG05_FUEL) { heavy_metal_mass = 3.5 fuel_fraction = 1 }
+            }
+        }
+    }
+
+    capital_costs {
+        item(capital_cost) {
+            cost_type = s_curve
+            expenditure_time = 5
+            cost_value = 5000
+            distribution { type = triangular low = 2500 high = 8000 nominal = 5000 }
+        }
+    }
+
+    om_costs {
+        item(OM_per_year) {
+            cost_type = fixed
+            nominal_value = 70
+            distribution { type = triangular low = 58 high = 84 nominal = 70 }
+        }
+        item(OM_per_MWh) {
+            cost_type = variable
+            nominal_value = 1.9
+            distribution { type = triangular low = 0.84 high = 2.6 nominal = 1.9 }
+        }
+    }
+
+    fuel_costs {
+        item(cost_U) {
+            cost_value = 65
+            lead_time = 2
+            distribution { type = triangular low = 38 high = 136 nominal = 65 }
+        }
+        item(cost_SWU) {
+            cost_value = 59
+            lead_time = 2
+            distribution { type = uniform low = 41 high = 71 nominal = 59 }
+        }
+        item(cost_fuel_fab) {
+            cost_value = 10000
+            lead_time = 2
+            distribution { type = triangular low = 3000 high = 27000 nominal = 10000 }
+        }
+        item(cost_conv) {
+            cost_value = 7
+            lead_time = 2
+            distribution { type = uniform low = 4 high = 11 nominal = 7 }
+        }
+        item(cost_deconv) {
+            cost_value = 4
+            distribution { type = triangular low = 2 high = 5 nominal = 4 }
+        }
+        item(cost_SNF_cond) {
+            cost_value = 100
+            distribution { type = triangular low = 50 high = 130 nominal = 100 }
+        }
+        item(cost_rprocsng) {
+            cost_value = 1850
+            lead_time = 0
+            distribution { type = triangular low = 1850 high = 1850 nominal = 1850 }
+        }
+        item(cost_MOX_fab) {
+            cost_value = 3200
+            lead_time = 0
+            distribution { type = triangular low = 3200 high = 3200 nominal = 3200 }
+        }
+        item(cost_FP_cond) {
+            cost_value = 5000
+            lead_time = 0
+            distribution { type = triangular low = 5000 high = 5000 nominal = 5000 }
+        }
+        item(cost_FP_geologic) {
+            cost_value = 6500
+            lead_time = 0
+            distribution { type = triangular low = 6500 high = 6500 nominal = 6500 }
+        }
+        item(cost_conv_rec) {
+            cost_value = 11
+            lead_time = 0
+            distribution { type = triangular low = 11 high = 11 nominal = 11 }
+        }
+        item(cost_nrchmt_rec) {
+            cost_value = 110
+            lead_time = 0
+            distribution { type = triangular low = 110 high = 110 nominal = 110 }
+        }
+        item(cost_geologic_disposal) {
+            cost_value = 550
+            lead_time = 0
+            distribution { type = triangular low = 265 high = 801 nominal = 550 }
+        }
+        item(cost_ec_rprocsng) {
+            cost_value = 6000
+            lead_time = 0
+            distribution { type = triangular low = 6000 high = 6000 nominal = 6000 }
+        }
+        item(cost_Th) {
+            cost_value = 75
+            distribution { type = triangular low = 75 high = 75 nominal = 75 }
+        }
+        item(cost_RU_disposal) {
+            cost_value = 0
+            lead_time = 0
+            distribution { type = triangular low = 0 high = 0 nominal = 0 }
+        }
+        item(cost_DU_disposal) {
+            cost_value = 2
+            distribution { type = triangular low = 1 high = 13 nominal = 2 }
+        }
+    }
+
+    fuels {
+        fuel(EG05_FUEL) {
+            avg_discharge_burnup = 97
+            num_batches = 3
+            avg_specific_power = 1
+            fresh_fuel {
+                fabrication { loss_fraction = 0.002 costs = [cost_fuel_fab] }
+                EU { fuel_fraction = 1 costs = [cost_U] }
+            }
+            spent_fuel {
+                costs = [cost_SNF_cond cost_geologic_disposal]
+            }
+            EU {
+                conversion { loss_fraction = 1e-12 costs = [cost_conv] }
+                enrichment {
+                    type = one_stage
+                    loss_fraction = 0.01
+                    stage_1 { feed = 0.711 product = 19.9 tails = 0.25 }
+                    SWU_costs = [cost_SWU]
+                    NU_costs = [cost_U]
+                    DU_costs = [cost_DU_disposal]
+                }
+            }
+        }
+    }
+}

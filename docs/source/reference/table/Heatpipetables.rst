@@ -27,37 +27,37 @@ The table includes the following columns:
 
 .. csv-table:: [Heatpipe Account Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/heatpipe_account.csv
+   :file: ../../../../tutorial/accert/ref_tables/heatpipe_account.csv
    :widths: auto
    :class: normal-table
 
 
 Heatpipe Cost Element Table
 ----------------------------
-This table contains the cost element information for the Heat pipe microreactor model. Most entities in the account table are divided into 3 main cost categories: Factory Equipment Costs, Labor Costs, and Material Costs. Some accounts might only have one or two of these categories. The cost element table is associated with a unique identifier, which is used to track and categorize costs. The table is connected to the account table through the `account` column, which links each cost element to a specific account. It is also connected to the variable table through the `variables` column, and the algorithm table through the `alg_name` column.
+This table contains the cost element information for the Heat pipe microreactor model. Most entities in the account table are divided into 3 main cost categories: Factory Equipment Costs, Labor Costs, and Material Costs. Some accounts might only have one or two of these categories. The cost element table is associated with a unique identifier, which is used to track and categorize costs. The table is connected to the account table through the `account` column, which links each cost element to a specific account. It is also connected to the variable table through the `variables` column, and the Python algorithm registry through the `alg_name` column.
 
 The table includes the following columns:
 
    - **ind**: unique identifier for each cost element
    - **cost_element**: cost element name
-   - **cost_2017**: cost of the element in 2017 dollars
+   - **cost_2017**: cost of the element in 2018 dollars
    - **sup_cost_ele**: superior cost element
    - **alg_name**: algorithm name
    - **fun_unit**: algorithm function output unit
    - **variables**: variables used in the algorithm
    - **account**: account associated with the cost element
-   - **algno**: algorithm number in the algorithm table
+   - **algno**: legacy algorithm identifier
    - **updated**: updated status of the cost element, 0 for unchanged and 1 for updated, note that the default value should always be 0
 
 .. csv-table:: [Heatpipe Cost Element Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/heatpipe_cost_element.csv
+   :file: ../../../../tutorial/accert/ref_tables/heatpipe_cost_element.csv
    :widths: auto
    :class: normal-table
 
 Heatpipe Variable Table
 --------------------------
-This table contains the variable information for the Heat pipe microreactor model. All variables are needed to calculate the cost of the cost element or a super variable. Some variables are connected to the algorithm table through the `var_alg` column, which links each variable to a specific algorithm. The table is also connected to itself through the `v_linked` and `var_needed` column, which links each variable to a superior variable and the variables needed to calculate it.
+This table contains the variable information for the Heat pipe microreactor model. All variables are needed to calculate the cost of the cost element or a super variable. Some variables are connected to the Python algorithm registry through the ``var_alg`` column, which links each variable to a specific algorithm. The table is also connected to itself through the ``v_linked`` and ``var_needed`` column, which links each variable to a superior variable and the variables needed to calculate it.
 
 The table includes the following columns:
 
@@ -71,8 +71,5 @@ The table includes the following columns:
    - **v_linked**: superior variable if any
    - **user_input**: user input status of the variable, 0 for not user input and 1 for user input, note that the default value should always be 0
 
-.. csv-table:: [Heatpipe Variable Table]
-   :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/heatpipe_variable.csv
-   :widths: auto
-   :class: wide-table
+.. literalinclude:: ../../../../tutorial/accert/ref_tables/heatpipe_variable.csv
+   :language: text
