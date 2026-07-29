@@ -3,6 +3,7 @@ from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+import re
 
 import pandas as pd
 
@@ -25,6 +26,11 @@ COUNTRY_ALIASES = {
     "chn": "China",
     "uae": "UAE",
     "united arab emirates": "UAE",
+    "poland": "Poland",
+    "pol": "Poland",
+    "el salvador": "El Salvador",
+    "elsalvador": "El Salvador",
+    "slv": "El Salvador",
 }
 
 _DATA_DIR = Path(__file__).resolve().parent / "data"
@@ -42,9 +48,12 @@ def normalize_country(value: str) -> str:
     if key in COUNTRY_ALIASES:
         return COUNTRY_ALIASES[key]
     text = str(value).strip()
-    if text in {"Korea", "China", "UAE"}:
+    available = sorted(load_assumptions()["adjustment_factors"])
+    if text in available:
         return text
-    raise ValueError(f"Unsupported country {value!r}; expected Korea, China, or UAE")
+    raise ValueError(
+        f"Unsupported country {value!r}; expected one of {', '.join(available)}"
+    )
 
 
 def reactor_family_from_type(reactor_type: str) -> str:
@@ -62,11 +71,13 @@ def reactor_family_from_type(reactor_type: str) -> str:
 @lru_cache(maxsize=4)
 def load_assumptions(path: str | None = None) -> dict[str, Any]:
     data_dir = Path(path) if path else _DATA_DIR
+    adjustment_factors = _read_adjustment_factors(data_dir / "adjustment_factors.csv")
+    countries = list(adjustment_factors)
     return {
-        "adjustment_factors": _read_adjustment_factors(data_dir / "adjustment_factors.csv"),
+        "adjustment_factors": adjustment_factors,
         "families": {
-            "LR": _read_family_records(data_dir / "lr_localization.csv"),
-            "SMR": _read_family_records(data_dir / "smr_localization.csv"),
+            "LR": _read_family_records(data_dir / "lr_localization.csv", countries),
+            "SMR": _read_family_records(data_dir / "smr_localization.csv", countries),
         },
         "input_is_occ": {
             "LR": True,
@@ -94,7 +105,7 @@ def _read_adjustment_factors(path: Path) -> dict[str, dict[str, float]]:
     return factors
 
 
-def _read_family_records(path: Path) -> list[dict[str, Any]]:
+def _read_family_records(path: Path, countries: list[str]) -> list[dict[str, Any]]:
     df = pd.read_csv(path)
     records: list[dict[str, Any]] = []
     for _, row in df.iterrows():
@@ -104,8 +115,8 @@ def _read_family_records(path: Path) -> list[dict[str, Any]]:
             continue
 
         localization: dict[str, dict[str, float]] = {}
-        for country in ["Korea", "China", "UAE"]:
-            prefix = country.lower()
+        for country in countries:
+            prefix = _country_column_prefix(country)
             localization[country] = {
                 category: _num(row.get(f"{prefix}_localization_{category}"))
                 for category in COST_CATEGORIES
@@ -126,6 +137,10 @@ def _read_family_records(path: Path) -> list[dict[str, Any]]:
             }
         )
     return records
+
+
+def _country_column_prefix(country: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", country.strip().lower()).strip("_")
 
 
 def _num(value: Any) -> float:

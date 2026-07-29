@@ -1,0 +1,174 @@
+necost {
+    % EG06/OT04 Thermal Spectrum FFH(Th) to DF
+    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.
+    % NE-COST input preparer: Francesco Ganda (INL)
+    % Technical Reviewer: Edward Hoffman (ANL)
+    % Fuel cycle option EG06/OT04 (Figure 20) Thermal Spectrum FFH(Th) to DF is composed of a single stage: An inertial confinement fusion (ICF) system is used to produce thermal power and DT neutrons. A subcritical blanket surrounding the ICF system contains Thorium (Th) molten salt fuel, breeding and fissioning 233U at equilibrium, moderated by graphite to produce a thermal neutron spectrum.
+    % This option is modeled using a single NE-COST island. The fuel procurement costs are computed using front-end path 1. The discharged fuel is than prepared for shipment and disposal and then disposed.
+    % Report LCAE at 3% discount rate: mean 91.1 mills/kWh, std 13.3 mills/kWh.
+    % Report LCAE at 5% discount rate: mean 115.1 mills/kWh, std 16.8 mills/kWh.
+    % Report LCAE at 10% discount rate: mean 195.8 mills/kWh, std 31.2 mills/kWh.
+
+    construction_interest_rate = 0.05
+    operations_interest_rate = 0.05
+    sample_size = 2000
+
+    fuel_cycles {
+        cycle(EG06) {
+            reactor(EG06) {
+                % Single NE-COST island, so the LCAE weight is 100%.
+                energy_fraction = 1
+            }
+        }
+    }
+
+    reactors {
+        reactor(EG06) {
+            capacity_factor = 0.9
+            cycle_length = 1.5
+            lifetime_years = 60
+            power_level { reference_thermal = 1.94e+09 net_thermal_efficiency = 45.79 }
+            capital_costs { scaling_factor(capital_cost) = 1 }
+            om_costs {
+                scaling_factor(OM_per_year) = 1
+                scaling_factor(OM_per_MWh) = 1
+            }
+            fuel_reloads {
+                quantity(EG06_FUEL) { heavy_metal_mass = 19.9 fuel_fraction = 1 }
+            }
+        }
+    }
+
+    capital_costs {
+        item(capital_cost) {
+            cost_type = s_curve
+            expenditure_time = 5
+            cost_value = 9371
+            distribution { type = triangular low = 4783 high = 13689 nominal = 9371 }
+        }
+    }
+
+    om_costs {
+        item(OM_per_year) {
+            cost_type = fixed
+            nominal_value = 311
+            distribution { type = triangular low = 129 high = 516 nominal = 311 }
+        }
+        item(OM_per_MWh) {
+            cost_type = variable
+            nominal_value = 6
+            distribution { type = triangular low = 3 high = 8.1 nominal = 6 }
+        }
+    }
+
+    fuel_costs {
+        item(cost_U) {
+            cost_value = 110
+            lead_time = 0
+            distribution { type = triangular low = 110 high = 110 nominal = 110 }
+        }
+        item(cost_SWU) {
+            cost_value = 100
+            lead_time = 0
+            distribution { type = triangular low = 100 high = 100 nominal = 100 }
+        }
+        item(cost_fuel_fab) {
+            cost_value = 0
+            lead_time = 0
+            distribution { type = triangular low = 0 high = 0 nominal = 0 }
+        }
+        item(cost_conv) {
+            cost_value = 12
+            lead_time = 0
+            distribution { type = triangular low = 12 high = 12 nominal = 12 }
+        }
+        item(cost_deconv) {
+            cost_value = 6
+            distribution { type = triangular low = 6 high = 6 nominal = 6 }
+        }
+        item(cost_SNF_cond) {
+            cost_value = 100
+            distribution { type = triangular low = 50 high = 130 nominal = 100 }
+        }
+        item(cost_rprocsng) {
+            cost_value = 1850
+            lead_time = 0
+            distribution { type = triangular low = 1850 high = 1850 nominal = 1850 }
+        }
+        item(cost_MOX_fab) {
+            cost_value = 3200
+            lead_time = 0
+            distribution { type = triangular low = 3200 high = 3200 nominal = 3200 }
+        }
+        item(cost_FP_cond) {
+            cost_value = 5000
+            lead_time = 0
+            distribution { type = triangular low = 5000 high = 5000 nominal = 5000 }
+        }
+        item(cost_FP_geologic) {
+            cost_value = 6500
+            lead_time = 0
+            distribution { type = triangular low = 6500 high = 6500 nominal = 6500 }
+        }
+        item(cost_conv_rec) {
+            cost_value = 11
+            lead_time = 0
+            distribution { type = triangular low = 11 high = 11 nominal = 11 }
+        }
+        item(cost_nrchmt_rec) {
+            cost_value = 110
+            lead_time = 0
+            distribution { type = triangular low = 110 high = 110 nominal = 110 }
+        }
+        item(cost_geologic_disposal) {
+            cost_value = 550
+            lead_time = 0
+            distribution { type = triangular low = 265 high = 801 nominal = 550 }
+        }
+        item(cost_ec_rprocsng) {
+            cost_value = 6000
+            lead_time = 0
+            distribution { type = triangular low = 6000 high = 6000 nominal = 6000 }
+        }
+        item(cost_Th) {
+            cost_value = 75
+            distribution { type = triangular low = 75 high = 75 nominal = 75 }
+        }
+        item(cost_RU_disposal) {
+            cost_value = 0
+            lead_time = 0
+            distribution { type = triangular low = 0 high = 0 nominal = 0 }
+        }
+        item(cost_DU_disposal) {
+            cost_value = 4
+            distribution { type = triangular low = 4 high = 4 nominal = 4 }
+        }
+    }
+
+    fuels {
+        fuel(EG06_FUEL) {
+            avg_discharge_burnup = 117.71
+            num_batches = 3
+            avg_specific_power = 1
+            fresh_fuel {
+                fabrication { loss_fraction = 0.002 costs = [cost_fuel_fab] }
+                EU { fuel_fraction = 1 costs = [cost_U] }
+            }
+            spent_fuel {
+                costs = [cost_SNF_cond cost_geologic_disposal]
+            }
+            EU {
+                conversion { loss_fraction = 1e-12 costs = [cost_conv] }
+                enrichment {
+                    type = one_stage
+                    loss_fraction = 0.01
+                    stage_1 { feed = 0.711 product = 4.2 tails = 0.25 }
+                    SWU_costs = [cost_SWU]
+                    NU_costs = [cost_U]
+                    DU_costs = [cost_DU_disposal]
+                }
+            }
+        }
+    }
+}

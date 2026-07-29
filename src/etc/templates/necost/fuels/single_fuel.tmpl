@@ -1,0 +1,13 @@
+fuel(UOX) {
+    avg_discharge_burnup = 50 num_batches = 3 avg_specific_power = 1
+    fresh_fuel { fabrication { loss_fraction = 0.002 costs = [cost_fuel_fab] } EU { fuel_fraction = 1 costs = [cost_U] } }
+    spent_fuel { costs = [cost_SNF_cond cost_geologic_disposal] }
+    EU {
+        conversion { loss_fraction = 1e-12 costs = [cost_conv] }
+        enrichment {
+            type = one_stage loss_fraction = 0.01
+            stage_1 { feed = 0.711 product = 4.2 tails = 0.25 }
+            SWU_costs = [cost_SWU] NU_costs = [cost_U] DU_costs = [cost_DU_disposal]
+        }
+    }
+}

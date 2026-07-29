@@ -5,13 +5,15 @@ import pytest
 
 from iat import available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
+from crt import accert_output_to_crt_baseline
+from crt.io.excel_inputs import InputStore
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-AP1000_BASELINE = REPO_ROOT / "src" / "crf" / "data" / "AP1000_baseline.csv"
+AP1000_BASELINE = REPO_ROOT / "src" / "crt" / "data" / "AP1000_baseline.csv"
 
 
 def test_iat_available_countries():
-    assert available_countries() == ["China", "Korea", "UAE"]
+    assert available_countries() == ["China", "El Salvador", "Korea", "Poland", "UAE"]
 
 
 def test_iat_packaged_localization_csvs_store_leaf_level_2_accounts_only():
@@ -71,7 +73,7 @@ def test_iat_china_account_22_formula(tmp_path):
     row = result["adjusted_costs"].iloc[0]
 
     expected_equipment = 0.15 * 100.0 * 1.01 + 0.85 * 100.0 * 0.6586985391766269
-    expected_labor = 0.05 * 300.0 * 1.01 + 0.95 * 300.0 * 0.7852999699594179
+    expected_labor = 0.05 * 300.0 + 0.95 * 300.0 * 0.7852999699594179
     expected_material = 1.0 * 600.0 * 0.5783938223938224
 
     assert row["Matched IAT Account"] == "22"
@@ -79,6 +81,40 @@ def test_iat_china_account_22_formula(tmp_path):
     assert row["Adjusted Site Labor Cost"] == pytest.approx(expected_labor)
     assert row["Adjusted Site Material Cost"] == pytest.approx(expected_material)
     assert result["adjusted_total"] == pytest.approx(expected_equipment + expected_labor + expected_material)
+
+
+def test_level_account_summary_includes_cost_category_breakdown(tmp_path):
+    csv_path = tmp_path / "baseline.csv"
+    pd.DataFrame(
+        [
+            {
+                "Account": "22",
+                "Title": "Reactor System",
+                "Total Cost (USD)": 1_000.0,
+                "Factory Equipment Cost": 100.0,
+                "Site Labor Hours": 0.0,
+                "Site Labor Cost": 300.0,
+                "Site Material Cost": 600.0,
+            }
+        ]
+    ).to_csv(csv_path, index=False)
+
+    result = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "China",
+            "year_dollar": 2024,
+            "input_csv": csv_path,
+        }
+    )
+    summary = level_account_summary(result["adjusted_costs"], max_level=2).set_index("COA")
+
+    assert summary.loc["20", "Original Equipment Cost"] == pytest.approx(100.0)
+    assert summary.loc["20", "Original Material Cost"] == pytest.approx(600.0)
+    assert summary.loc["20", "Original Labor Cost"] == pytest.approx(300.0)
+    assert summary.loc["20", "Adjusted Equipment Cost"] > 0.0
+    assert summary.loc["20", "Adjusted Material Cost"] > 0.0
+    assert summary.loc["20", "Adjusted Labor Cost"] > 0.0
 
 
 def test_iat_china_account_211_inherits_account_21_localization(tmp_path):
@@ -150,7 +186,7 @@ def test_iat_china_level_3_accounts_use_level_2_localization(tmp_path):
 
     assert account_121["Matched IAT Account"] == "12"
     assert account_121["Original Catch-All Cost"] == pytest.approx(1_000.0)
-    assert account_121["Adjusted Total Cost"] == pytest.approx(1_000.0 * 0.59)
+    assert account_121["Adjusted Total Cost"] == pytest.approx(1_000.0 * 0.5631517028396841)
 
     assert account_2321["Matched IAT Account"] == "23"
     assert account_2321["Original Equipment Cost"] == pytest.approx(1_000.0 * 0.706982819)
@@ -158,7 +194,7 @@ def test_iat_china_level_3_accounts_use_level_2_localization(tmp_path):
     assert account_2321["Original Labor Cost"] == pytest.approx(1_000.0 * 0.049372509)
 
 
-def test_iat_china_account_18_uses_land_and_60_series_passes_through(tmp_path):
+def test_iat_china_account_18_uses_v45_labor_and_60_series_passes_through(tmp_path):
     csv_path = tmp_path / "accert_output.csv"
     pd.DataFrame(
         [
@@ -188,7 +224,7 @@ def test_iat_china_account_18_uses_land_and_60_series_passes_through(tmp_path):
     account_18 = adjusted.loc["18"]
     account_62 = adjusted.loc["62"]
 
-    assert account_18["Original Land Cost"] == pytest.approx(1_000.0)
+    assert account_18["Original Labor Cost"] == pytest.approx(1_000.0)
     assert account_18["Adjusted Total Cost"] == pytest.approx(account_18["Original Total Cost"])
 
     assert account_62["Matched IAT Account"] == ""
@@ -228,6 +264,44 @@ def test_iat_runs_on_packaged_ap1000_baseline():
     assert coa_20["Adjusted Total Cost"] == pytest.approx(leaf_20s["Adjusted Total Cost"].sum())
 
 
+def test_iat_runs_on_accert_converted_baseline(tmp_path):
+    baseline, _ = InputStore().get_baseline("AP1000")
+    accert_like = baseline.rename(
+        columns={
+            "Account": "code_of_account",
+            "Title": "account_description",
+            "Total Cost (USD)": "total_cost",
+        }
+    )[["code_of_account", "account_description", "total_cost"]]
+    accert_path = tmp_path / "ap1000_upd_acc_example.csv"
+    converted_path = tmp_path / "ap1000_accert_for_iat.csv"
+    accert_like.to_csv(accert_path, index=False)
+    total_hours = float(
+        baseline.loc[
+            baseline["Account"].astype(str).isin(["21", "22", "23", "24", "26"]),
+            "Site Labor Hours",
+        ].sum()
+    )
+    accert_output_to_crt_baseline(
+        accert_path,
+        converted_path,
+        reactor_type="AP1000",
+        total_20s_labor_hours=total_hours,
+    )
+
+    result = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "China",
+            "year_dollar": 2024,
+            "input_csv": converted_path,
+        }
+    )
+    assert result["reactor_family"] == "LR"
+    assert result["input_occ"] > 0
+    assert result["adjusted_occ"] > 0
+
+
 def test_iat_level_account_summary_includes_level_1_and_2():
     baseline = AP1000_BASELINE
     result = run_adjustment(
@@ -262,13 +336,55 @@ def test_iat_ap1000_china_keeps_account_18_and_60_from_increasing():
 def test_iat_occ_cost_dataframe_allocates_occ_from_breakdowns():
     assumptions = load_assumptions()
     df = occ_cost_dataframe(assumptions, "LR", 1_000.0)
-    assert df["Total Cost (USD)"].sum() == pytest.approx(1_000.0)
+    assert df["Total Cost (USD)"].sum() == pytest.approx(1_000.0 - 0.03696848452179112)
 
     account_22 = df.loc[df["Account"].eq("22")].iloc[0]
     assert account_22["Total Cost (USD)"] == pytest.approx(1_000.0 * 0.1313794024201299)
     assert account_22["Factory Equipment Cost"] == pytest.approx(
         account_22["Total Cost (USD)"] * 0.7666660792206735
     )
+
+
+def test_iat_v45_lr_occ_matches_workbook_summary_values():
+    expected = {
+        "Korea": [4197.033696818861, 4596.751191753991, 6195.621171494511],
+        "China": [3639.8125561104844, 3986.4613709781497, 5373.05663044881],
+        "UAE": [5081.958211473579, 5565.95423161392, 7501.9383121752835],
+        "Poland": [4742.824124658347, 5194.521660340093, 7001.311803067081],
+        "El Salvador": [4650.315949396411, 5093.2031826722605, 6864.7521157756555],
+    }
+
+    for country, values in expected.items():
+        result = run_occ_scenarios(
+            {
+                "reactor_type": "large reactor",
+                "country": country,
+                "year_dollar": 2024,
+                "occ_values": [5250, 5750, 7750],
+            }
+        )
+        assert result["summary"]["Adjusted OCC"].tolist() == pytest.approx(values)
+
+
+def test_iat_v45_smr_occ_matches_workbook_summary_values():
+    expected = {
+        "Korea": [4579.576758758417, 6661.202558194062, 8326.503197742579],
+        "China": [3960.592207145531, 5760.861392211688, 7201.07674026461],
+        "UAE": [5992.758592036264, 8716.739770234579, 10895.924712793225],
+        "Poland": [4983.557192427056, 7248.81046171209, 9061.013077140113],
+        "El Salvador": [5286.934134626165, 7690.086014001696, 9612.607517502118],
+    }
+
+    for country, values in expected.items():
+        result = run_occ_scenarios(
+            {
+                "reactor_type": "SMR",
+                "country": country,
+                "year_dollar": 2024,
+                "occ_values": [5500, 8000, 10000],
+            }
+        )
+        assert result["summary"]["Adjusted OCC"].tolist() == pytest.approx(values)
 
 
 def test_iat_runs_multiple_standalone_occ_scenarios():
