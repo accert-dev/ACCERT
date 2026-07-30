@@ -1,6 +1,7 @@
 necost {
     % EG37/MC09 - Stages 1 and 3 are PWRs, while stage 2 is SFR. Recycle recovered TRU in stage 2 and burn recovered U3 from stage 2 in stage 3.
-    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % Source: Energy Systems (E&S) fuel-cycle evaluation study,
+    % FCRD-FCO-2013-000196, Appendix A report input tables.
     % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.
     % NE-COST input preparer: Francesco Ganda (INL)
     % Technical Reviewer: Kent Williams (consultant)

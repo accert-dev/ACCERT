@@ -71,7 +71,13 @@ Generating the Results Table
 
 The final section of the output presents a comprehensive summary table. This table displays the rolled-up costs, including:
 
-ACCERT prints the account-result table in 2024 million dollars using CPI-U escalation. The underlying reference tables remain in their model-specific base years: 2017 dollars for PWR12-BE, ABR1000, and LFR; 2018 dollars for Heatpipe and LPSR; and 2015 dollars for Fusion and Stellarator. CSV outputs retain the reference-year cost column and add a ``*_2024`` column for the escalated value.
+ACCERT prints the account-result table in the configured target dollar year
+using CPI-U escalation. The underlying reference tables remain in their
+model-specific base years: 2017 dollars for PWR12-BE, ABR1000, and LFR; 2018
+dollars for Heatpipe, AP1000, and LPSR; and 2015 dollars for Fusion and
+Stellarator. Account and cost-element CSV outputs retain their reference-year
+cost columns. The separate post-process summary CSV records the target dollar
+year, escalated OCC totals, and ``$/kW`` values.
 
 - **Code of Account**: The identifier for each account.
 - **Account Description**: A brief description of the account (e.g., turbine plant equipment).

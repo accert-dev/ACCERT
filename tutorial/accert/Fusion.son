@@ -2,6 +2,9 @@
 % Author: J. Zhou (jia.zhou@anl.gov)
 % Last updated: 08/08/2024
 
+% Fusion reference model for TETRA (Tokamak Engineering Test Reactor
+% Analysis), a large tokamak fusion reactor cost model based on UKAEA PROCESS:
+% https://github.com/ukaea/PROCESS.
 
 accert{
     ref_model = "fusion"

@@ -10,15 +10,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - **Stellarator model** for fusion cost estimation, adding stellarator-specific algorithms, variables, and LCOE evaluation. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 - **Example:** new tutorial `docs/source/example/stellarator.rst` showing input structure and run steps. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
+- SQLite-backed ACCERT database workflow and CSV result generation.
+- CRT and IAT workflow APIs, examples, GUI integration, and regression tests.
+- Expanded NEcost tutorial examples and validation/report-check inputs.
 
 ### Changed
  - **Fusion output naming** standardized across reactor types. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 
  - **Database variable entries** updated for consistency and unit handling. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
+- Reorganized Workbench templates into ACCERT, NEcost, and common template namespaces.
+- Renamed CRF workflow references to CRT.
+- ACCERT post-process OCC summaries now use generic ``value_escalated_*``
+  column names tied to the configured target dollar year.
 
 ### Fixed
 - Minor aggregation errors in fusion LCOE calculations. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 - Variable quotation issue for reading the input.([#47](https://github.com/accert-dev/ACCERT/pull/47))
+- Windows test import paths and refreshed integration gold outputs.
+
+### Removed
+- Legacy MySQL workflow/test pieces.
+- Old generated documentation and obsolete template locations.
 
 ## [1.0.0]
 

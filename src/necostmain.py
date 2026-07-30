@@ -186,6 +186,8 @@ def _read_accert_occ_per_kw(post_csv, metric="total_OCC"):
     row = post.loc[post["metric"].astype(str).eq(metric)]
     if row.empty:
         raise ValueError(f"Could not find ACCERT post-process metric '{metric}' in {post_csv}")
+    if "value_escalated_dollar_per_kw" in row.columns and pd.notna(row["value_escalated_dollar_per_kw"].iloc[0]):
+        return float(row["value_escalated_dollar_per_kw"].iloc[0])
     if "value_2024_dollar_per_kw" in row.columns and pd.notna(row["value_2024_dollar_per_kw"].iloc[0]):
         return float(row["value_2024_dollar_per_kw"].iloc[0])
     if "value_dollar_per_kw" in row.columns and pd.notna(row["value_dollar_per_kw"].iloc[0]):
@@ -254,7 +256,7 @@ def _apply_accert_coupling(res, input_path, output_dir):
         "accert_post_csv": str(post_csv),
         "capital_cost_id": cost_id,
         "occ_metric": occ_metric,
-        "occ_2024_dollar_per_kw": occ_per_kw,
+        "occ_escalated_dollar_per_kw": occ_per_kw,
     }
 
 
@@ -413,7 +415,7 @@ def run_necost(input_path, output_dir=None, make_plot=True):
     if coupling_summary:
         print(
             "ACCERT OCC coupling: "
-            f"{coupling_summary['occ_2024_dollar_per_kw']:.2f} $/kWe "
+            f"{coupling_summary['occ_escalated_dollar_per_kw']:.2f} $/kWe "
             f"from {coupling_summary['accert_post_csv']}"
         )
     return results

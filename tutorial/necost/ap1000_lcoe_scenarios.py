@@ -1,7 +1,9 @@
-"""Run AP1000 LCOE scenarios used in the EMANES 6 report.
+"""Run AP1000 LCOE scenarios used in the EMANES6 ACCERT framework report.
 
 The cases use the local NE-COST AP1000 once-through UOX setup and vary the
-capital-cost and O&M assumptions for the main report scenarios:
+capital-cost and O&M assumptions for the Chapter 4 scenarios in
+"International Nuclear Cost Comparison Using an Integrated ACCERT Framework"
+by J. Zhou et al.:
 
 1. U.S. AP1000 baseline
 2. China-calibrated localization and learning case
@@ -250,7 +252,7 @@ def summarize(results: pd.DataFrame, scenario: Scenario) -> dict[str, float | st
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run AP1000 NE-COST scenarios for the EMANES 6 Chapter 4 cases.")
+    parser = argparse.ArgumentParser(description="Run AP1000 NE-COST scenarios for International Nuclear Cost Comparison Using an Integrated ACCERT Framework.")
     parser.add_argument("--iat-workbook", type=Path, default=DEFAULT_IAT_WORKBOOK, help="IAT workbook used for localization factors.")
     args = parser.parse_args()
 

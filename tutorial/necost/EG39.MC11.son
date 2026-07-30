@@ -1,6 +1,7 @@
 necost {
     % EG39/MC11 - Recycle recovered U3 from stage 1 in stage 2 (both PWRs), while burn TRU in ADS
-    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % Source: Energy Systems (E&S) fuel-cycle evaluation study,
+    % FCRD-FCO-2013-000196, Appendix A report input tables.
     % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.
     % NE-COST input preparer: Edward Hoffman (ANL)
     % Technical Reviewer: Francesco Ganda (INL)

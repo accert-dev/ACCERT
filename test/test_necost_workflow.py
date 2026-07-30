@@ -34,12 +34,22 @@ def test_read_accert_occ_for_necost(tmp_path):
     post_csv = tmp_path / "ap1000_post.csv"
     pd.DataFrame(
         [
-            {"metric": "total_direct_cost", "value_2024_dollar_per_kw": 3731.86},
-            {"metric": "total_OCC", "value_2024_dollar_per_kw": 7205.48},
+            {"metric": "total_direct_cost", "value_escalated_dollar_per_kw": 3731.86},
+            {"metric": "total_OCC", "value_escalated_dollar_per_kw": 7205.48},
         ]
     ).to_csv(post_csv, index=False)
 
     assert _read_accert_occ_per_kw(post_csv) == pytest.approx(7205.48)
+
+    legacy_post_csv = tmp_path / "ap1000_post_legacy.csv"
+    pd.DataFrame(
+        [
+            {"metric": "total_direct_cost", "value_2024_dollar_per_kw": 3731.86},
+            {"metric": "total_OCC", "value_2024_dollar_per_kw": 7205.48},
+        ]
+    ).to_csv(legacy_post_csv, index=False)
+
+    assert _read_accert_occ_per_kw(legacy_post_csv) == pytest.approx(7205.48)
 
 
 @pytest.mark.skipif(not _has_sonvalidxml(), reason="NEcost SON validation requires Workbench sonvalidxml")

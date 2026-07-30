@@ -15,9 +15,10 @@ CPI_U_ANNUAL_AVERAGE = {
     2017: 245.120,
     2018: 251.107,
     2024: 313.689,
+    2025: 321.943,
 }
 
-TARGET_DOLLAR_YEAR = 2024
+TARGET_DOLLAR_YEAR = 2025
 
 
 def model_cost_year(ref_model: str) -> int:

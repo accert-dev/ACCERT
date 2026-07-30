@@ -81,6 +81,26 @@ ref_model
 
 - `<ref_model>` is a string indicating the reactor model, e.g., `PWR12-BE`, `ABR1000`, `LFR`.
 
+target_dollar_year
+~~~~~~~~~~~~~~~~~~
+
+**Purpose**: Selects the CPI-U target year used for displayed account-review
+tables and ACCERT post-process OCC summary values.
+
+**Syntax**::
+
+    target_dollar_year = <year>
+
+**Example**::
+
+    target_dollar_year = 2025
+
+**Notes**:
+
+- If omitted, ACCERT uses the default target year defined in
+  ``src/cost_escalation.py``.
+- The target year must be present in ACCERT's CPI-U table.
+
 power
 ~~~~~
 
@@ -473,4 +493,3 @@ Notes and Best Practices
 - **Extensibility**: Use `newCOA` to add new Codes of Accounts when the predefined ones do not cover all necessary aspects.
 
 - **Validation**: It's recommended to validate the input file using NEAMS Workbench against the ACCERT schema to ensure correctness before processing.
-

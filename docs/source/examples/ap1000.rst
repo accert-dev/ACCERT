@@ -1,9 +1,9 @@
 AP1000
 ======
 
-The AP1000 ACCERT example is in ``tutorial/accert/AP1000.son``. It uses the
-AP1000 reference table family, which follows the TIMCAT direct-cost table
-structure and is scaled to a 2234 MWe two-unit AP1000 case.
+The AP1000 ACCERT example is in ``tutorial/accert/AP1000.son``. It represents
+the overnight capital cost basis for a two-unit AP1000 plant, with total
+electric output of 2234 MWe (2 x 1117 MWe).
 
 The AP1000 and LPSR direct-cost basis follows Stewart W.R. and Shirvan K.,
 "Capital cost estimation for advanced nuclear power plants," *Renewable and
@@ -16,26 +16,21 @@ implementation at https://github.com/mit-crpg/TIMCAT.
    accert{
        ref_model = "AP1000"
        use_gncoa = False
+       target_dollar_year = 2025
 
-       post_process {
-           occ = true
-       }
+       post_process { occ = true }
 
-       power(Thermal){
-           value = 6800
-           unit = MW
-       }
-
-       power(Electric){
-           value = 2234
-           unit = MW
-       }
+       power(Thermal){ value = 6800 unit = MW }
+       power(Electric){ value = 2234 unit = MW }
    }
 
 The AP1000 direct-account total is represented by account ``2`` and is
 ``6,673,722,963.402768`` in 2018 dollars. ACCERT prints account-review tables
-in 2024 dollars using CPI-U escalation, and the generated CSV files retain the
-reference-year cost columns with additional ``*_2024`` columns.
+in the configured target dollar year using CPI-U escalation. Set
+``target_dollar_year`` in the ACCERT input to choose a supported CPI-U target
+year. The timestamped account and cost-element CSV files retain their
+reference-year cost columns; the separate ``*_post_*.csv`` summary records the
+target year, escalated OCC totals, and ``$/kW`` values.
 
 Running the Example
 -------------------

@@ -377,103 +377,103 @@ variable "lsa" affects account(s):
 [Updated]  Account table rolled up
 
 =============================== Generating results table for review ================================
-[Note] Reference costs are in 2015 dollars. Displayed account costs are escalated to 2024 dollars using CPI-U.
+[Note] Reference costs are in 2015 dollars. Displayed account costs are escalated to 2025 dollars using CPI-U.
 
 
 
 +-----------------+--------------------------------------------------+-----------------------------+-------+---------------+
-| code_of_account |               account_description                | total_cost (2024 million $) | level | review_status |
+| code_of_account |               account_description                | total_cost (2025 million $) | level | review_status |
 +-----------------+--------------------------------------------------+-----------------------------+-------+---------------+
-| 2               | Plant direct cost                                |           7,310.20          |   0   |    Updated    |
-|  21             | Total account 21 cost                            |           1,030.53          |   1   |    Updated    |
-|   211           | Site improvements, facilities, land              |            46.59            |   2   |   User Input  |
-|   212           | Reactor building cost                            |            598.43           |   2   |   User Input  |
-|   213           | Turbine building cost                            |            50.29            |   2   |   User Input  |
-|   214           | Reactor maintenance and warm shop buildings cost |            212.70           |   2   |    Updated    |
-|    2141         | Reactor maintenance building cost                |            136.41           |   3   |   User Input  |
-|    2142         | Warm shop cost                                   |            76.29            |   3   |   User Input  |
-|   215           | Tritium building cost                            |            19.59            |   2   |   User Input  |
-|   216           | Electrical equipment building cost               |            26.08            |   2   |   User Input  |
-|   217           | Other buildings cost                             |            76.86            |   2   |    Updated    |
-|    2171         | Additional buildings cost                        |            23.82            |   3   |   User Input  |
-|    2172         | Control room buildings cost                      |            27.79            |   3   |   User Input  |
-|    2173         | Shop and warehouses cost                         |            15.22            |   3   |   User Input  |
-|    2174         | Cryogenic building cost                          |            10.02            |   3   |   User Input  |
-|  22             | Total account 22 cost                            |           5,890.15          |   1   |    Updated    |
-|   221           | Total account 221 cost                           |           1,869.51          |   2   |    Updated    |
-|    2211         | First wall cost                                  |            252.52           |   3   |   User Input  |
-|    2212         | Blanket total cost                               |           1,299.22          |   3   |    Updated    |
-|     22121       | Blanket beryllium cost                           |            345.55           |   4   |   User Input  |
-|     22122       | Blanket breeder material cost                    |            846.83           |   4   |   User Input  |
-|     22123       | Blanket stainless steel cost                     |            106.84           |   4   |   User Input  |
+| 2               | Plant direct cost                                |           7,502.55          |   0   |    Updated    |
+|  21             | Total account 21 cost                            |           1,057.65          |   1   |    Updated    |
+|   211           | Site improvements, facilities, land              |            47.81            |   2   |   User Input  |
+|   212           | Reactor building cost                            |            614.18           |   2   |   User Input  |
+|   213           | Turbine building cost                            |            51.62            |   2   |   User Input  |
+|   214           | Reactor maintenance and warm shop buildings cost |            218.29           |   2   |    Updated    |
+|    2141         | Reactor maintenance building cost                |            140.00           |   3   |   User Input  |
+|    2142         | Warm shop cost                                   |            78.29            |   3   |   User Input  |
+|   215           | Tritium building cost                            |            20.10            |   2   |   User Input  |
+|   216           | Electrical equipment building cost               |            26.77            |   2   |   User Input  |
+|   217           | Other buildings cost                             |            78.88            |   2   |    Updated    |
+|    2171         | Additional buildings cost                        |            24.45            |   3   |   User Input  |
+|    2172         | Control room buildings cost                      |            28.52            |   3   |   User Input  |
+|    2173         | Shop and warehouses cost                         |            15.62            |   3   |   User Input  |
+|    2174         | Cryogenic building cost                          |            10.28            |   3   |   User Input  |
+|  22             | Total account 22 cost                            |           6,045.13          |   1   |    Updated    |
+|   221           | Total account 221 cost                           |           1,918.70          |   2   |    Updated    |
+|    2211         | First wall cost                                  |            259.17           |   3   |   User Input  |
+|    2212         | Blanket total cost                               |           1,333.41          |   3   |    Updated    |
+|     22121       | Blanket beryllium cost                           |            354.65           |   4   |   User Input  |
+|     22122       | Blanket breeder material cost                    |            869.11           |   4   |   User Input  |
+|     22123       | Blanket stainless steel cost                     |            109.65           |   4   |   User Input  |
 |     22124       | Blanket vanadium cost                            |             0.00            |   4   |   User Input  |
-|    2213         | Total shield cost                                |            207.51           |   3   |    Updated    |
-|     22131       | Bulk shield cost                                 |            103.75           |   4   |   User Input  |
-|     22132       | Penetration shielding cost                       |            103.75           |   4   |   User Input  |
-|    2214         | Total support structure cost                     |            55.12            |   3   |   User Input  |
-|    2215         | Divertor cost                                    |            55.14            |   3   |   Unchanged   |
-|   222           | Total account 222 cost                           |           2,323.24          |   2   |    Updated    |
-|    2221         | TF magnet assemblies cost                        |           1,085.99          |   3   |    Updated    |
-|     22211       | TF coil conductor cost                           |            172.39           |   4   |   User Input  |
-|     22212       | TF coil winding cost                             |            73.72            |   4   |   User Input  |
-|     22213       | TF coil case cost                                |            581.15           |   4   |   User Input  |
-|     22214       | TF intercoil structure cost                      |            198.58           |   4   |   User Input  |
-|     22215       | TF coil gravity support structure                |            60.14            |   4   |   User Input  |
-|    2222         | PF magnet assemblies cost                        |            901.03           |   3   |    Updated    |
-|     22221       | PF coil conductor cost                           |            616.84           |   4   |   User Input  |
-|     22222       | PF coil winding cost                             |            102.08           |   4   |   User Input  |
-|     22223       | PF coil case cost                                |            171.46           |   4   |   User Input  |
-|     22224       | PF coil support structure cost                   |            10.65            |   4   |   User Input  |
-|    2223         | Vacuum vessel assembly cost                      |            336.22           |   3   |   User Input  |
-|   223           | Total account 223 cost                           |            319.02           |   2   |    Updated    |
-|    2231         | ECH system cost                                  |            319.02           |   3   |   Unchanged   |
+|    2213         | Total shield cost                                |            212.97           |   3   |    Updated    |
+|     22131       | Bulk shield cost                                 |            106.48           |   4   |   User Input  |
+|     22132       | Penetration shielding cost                       |            106.48           |   4   |   User Input  |
+|    2214         | Total support structure cost                     |            56.57            |   3   |   User Input  |
+|    2215         | Divertor cost                                    |            56.59            |   3   |   Unchanged   |
+|   222           | Total account 222 cost                           |           2,384.37          |   2   |    Updated    |
+|    2221         | TF magnet assemblies cost                        |           1,114.56          |   3   |    Updated    |
+|     22211       | TF coil conductor cost                           |            176.93           |   4   |   User Input  |
+|     22212       | TF coil winding cost                             |            75.66            |   4   |   User Input  |
+|     22213       | TF coil case cost                                |            596.44           |   4   |   User Input  |
+|     22214       | TF intercoil structure cost                      |            203.81           |   4   |   User Input  |
+|     22215       | TF coil gravity support structure                |            61.72            |   4   |   User Input  |
+|    2222         | PF magnet assemblies cost                        |            924.74           |   3   |    Updated    |
+|     22221       | PF coil conductor cost                           |            633.07           |   4   |   User Input  |
+|     22222       | PF coil winding cost                             |            104.77           |   4   |   User Input  |
+|     22223       | PF coil case cost                                |            175.97           |   4   |   User Input  |
+|     22224       | PF coil support structure cost                   |            10.93            |   4   |   User Input  |
+|    2223         | Vacuum vessel assembly cost                      |            345.07           |   3   |   User Input  |
+|   223           | Total account 223 cost                           |            327.42           |   2   |    Updated    |
+|    2231         | ECH system cost                                  |            327.42           |   3   |   Unchanged   |
 |    2232         | Lower hybrid system cost                         |             0.00            |   3   |   Unchanged   |
 |    2233         | Neutral beam system cost                         |             0.00            |   3   |   Unchanged   |
-|   224           | Total account 224 cost                           |            35.65            |   2   |    Updated    |
-|    2241         | High vacuum pumps cost                           |            16.52            |   3   |   Unchanged   |
-|    2242         | Backing pumps cost                               |             6.19            |   3   |   Unchanged   |
-|    2243         | Vacuum duct cost                                 |             3.43            |   3   |   Unchanged   |
-|    2244         | Valves cost                                      |             7.79            |   3   |   Unchanged   |
+|   224           | Total account 224 cost                           |            36.59            |   2   |    Updated    |
+|    2241         | High vacuum pumps cost                           |            16.95            |   3   |   Unchanged   |
+|    2242         | Backing pumps cost                               |             6.36            |   3   |   Unchanged   |
+|    2243         | Vacuum duct cost                                 |             3.52            |   3   |   Unchanged   |
+|    2244         | Valves cost                                      |             7.99            |   3   |   Unchanged   |
 |    2245         | Duct shielding cost                              |             0.00            |   3   |   Unchanged   |
-|    2246         | Instrumentation cost                             |             1.72            |   3   |   Unchanged   |
-|   225           | Total account 225 cost                           |            204.98           |   2   |    Updated    |
-|    2251         | Total, TF coil power costs                       |            129.98           |   3   |    Updated    |
-|     22511       | TF coil power supplies cost                      |             5.25            |   4   |   Unchanged   |
-|     22512       | TF coil breakers cost                            |            45.15            |   4   |   Unchanged   |
-|     22513       | TF coil dump resistors cost                      |            27.96            |   4   |   Unchanged   |
-|     22514       | TF coil instrumentation and control              |             6.35            |   4   |   Unchanged   |
-|     22515       | TF coil bussing cost                             |            45.27            |   4   |   Unchanged   |
-|    2252         | Total, PF coil power costs                       |            52.63            |   3   |    Updated    |
-|     22521       | PF coil power supplies cost                      |             3.88            |   4   |   Unchanged   |
-|     22522       | PF coil instrumentation and control              |             4.76            |   4   |   Unchanged   |
-|     22523       | PF coil bussing cost                             |            15.88            |   4   |   Unchanged   |
-|     22524       | PF coil burn power supplies cost                 |             1.68            |   4   |   Unchanged   |
-|     22525       | PF coil breakers cost                            |            19.47            |   4   |   Unchanged   |
-|     22526       | PF coil dump resistors cost                      |             5.78            |   4   |   Unchanged   |
-|     22527       | PF coil ac breakers cost                         |             1.19            |   4   |   Unchanged   |
-|    2253         | Total, energy storage cost                       |            22.37            |   3   |   Unchanged   |
-|   226           | Total account 226 cost                           |            439.56           |   2   |    Updated    |
-|    2261         | Total, reactor cooling system cost               |            144.89           |   3   |    Updated    |
-|     22611       | Pumps and piping system cost                     |            49.15            |   4   |   Unchanged   |
-|     22612       | Primary heat exchanger cost                      |            95.74            |   4   |   Unchanged   |
-|    2262         | Pumps, piping cost                               |            38.78            |   3   |   User Input  |
-|    2263         | Total, cryogenic system cost                     |            255.90           |   3   |   User Input  |
-|   227           | Total account 227 cost                           |            334.23           |   2   |    Updated    |
-|    2271         | Fuelling system cost                             |            29.51            |   3   |   Unchanged   |
-|    2272         | Fuel processing and purification cost            |            136.32           |   3   |   Unchanged   |
-|    2273         | Atmospheric recovery systems cost                |            76.84            |   3   |   Unchanged   |
-|    2274         | Nuclear building ventilation cost                |            91.55            |   3   |   Unchanged   |
-|   228           | Instrumentation and control cost                 |            198.52           |   2   |   Unchanged   |
-|   229           | Maintenance equipment cost                       |            165.44           |   2   |   Unchanged   |
-|  23             | Turbine plant equipment cost                     |            235.60           |   1   |   Unchanged   |
-|  24             | Total account 24 cost                            |            53.97            |   1   |    Updated    |
-|   241           | Switchyard equipment cost                        |            24.35            |   2   |   User Input  |
-|   242           | Transformers cost                                |             9.92            |   2   |   User Input  |
-|   243           | Low voltage equipment cost                       |             8.71            |   2   |   User Input  |
-|   244           | Diesel backup equipment cost                     |             9.00            |   2   |   User Input  |
-|   245           | Auxiliary facilities cost                        |             1.99            |   2   |   User Input  |
-|  25             | Miscellaneous plant equipment cost               |            33.09            |   1   |   User Input  |
-|  26             | Heat rejection system cost                       |            66.87            |   1   |   User Input  |
+|    2246         | Instrumentation cost                             |             1.77            |   3   |   Unchanged   |
+|   225           | Total account 225 cost                           |            210.37           |   2   |    Updated    |
+|    2251         | Total, TF coil power costs                       |            133.40           |   3   |    Updated    |
+|     22511       | TF coil power supplies cost                      |             5.39            |   4   |   Unchanged   |
+|     22512       | TF coil breakers cost                            |            46.34            |   4   |   Unchanged   |
+|     22513       | TF coil dump resistors cost                      |            28.70            |   4   |   Unchanged   |
+|     22514       | TF coil instrumentation and control              |             6.52            |   4   |   Unchanged   |
+|     22515       | TF coil bussing cost                             |            46.46            |   4   |   Unchanged   |
+|    2252         | Total, PF coil power costs                       |            54.02            |   3   |    Updated    |
+|     22521       | PF coil power supplies cost                      |             3.98            |   4   |   Unchanged   |
+|     22522       | PF coil instrumentation and control              |             4.89            |   4   |   Unchanged   |
+|     22523       | PF coil bussing cost                             |            16.29            |   4   |   Unchanged   |
+|     22524       | PF coil burn power supplies cost                 |             1.72            |   4   |   Unchanged   |
+|     22525       | PF coil breakers cost                            |            19.98            |   4   |   Unchanged   |
+|     22526       | PF coil dump resistors cost                      |             5.93            |   4   |   Unchanged   |
+|     22527       | PF coil ac breakers cost                         |             1.22            |   4   |   Unchanged   |
+|    2253         | Total, energy storage cost                       |            22.95            |   3   |   Unchanged   |
+|   226           | Total account 226 cost                           |            451.12           |   2   |    Updated    |
+|    2261         | Total, reactor cooling system cost               |            148.70           |   3   |    Updated    |
+|     22611       | Pumps and piping system cost                     |            50.44            |   4   |   Unchanged   |
+|     22612       | Primary heat exchanger cost                      |            98.26            |   4   |   Unchanged   |
+|    2262         | Pumps, piping cost                               |            39.80            |   3   |   User Input  |
+|    2263         | Total, cryogenic system cost                     |            262.63           |   3   |   User Input  |
+|   227           | Total account 227 cost                           |            343.03           |   2   |    Updated    |
+|    2271         | Fuelling system cost                             |            30.29            |   3   |   Unchanged   |
+|    2272         | Fuel processing and purification cost            |            139.91           |   3   |   Unchanged   |
+|    2273         | Atmospheric recovery systems cost                |            78.87            |   3   |   Unchanged   |
+|    2274         | Nuclear building ventilation cost                |            93.96            |   3   |   Unchanged   |
+|   228           | Instrumentation and control cost                 |            203.75           |   2   |   Unchanged   |
+|   229           | Maintenance equipment cost                       |            169.79           |   2   |   Unchanged   |
+|  23             | Turbine plant equipment cost                     |            241.80           |   1   |   Unchanged   |
+|  24             | Total account 24 cost                            |            55.39            |   1   |    Updated    |
+|   241           | Switchyard equipment cost                        |            24.99            |   2   |   User Input  |
+|   242           | Transformers cost                                |            10.18            |   2   |   User Input  |
+|   243           | Low voltage equipment cost                       |             8.94            |   2   |   User Input  |
+|   244           | Diesel backup equipment cost                     |             9.24            |   2   |   User Input  |
+|   245           | Auxiliary facilities cost                        |             2.04            |   2   |   User Input  |
+|  25             | Miscellaneous plant equipment cost               |            33.96            |   1   |   User Input  |
+|  26             | Heat rejection system cost                       |            68.63            |   1   |   User Input  |
 +-----------------+--------------------------------------------------+-----------------------------+-------+---------------+
-Successfully created CSV file fusion_upd_acc_20260619_095423.csv
+Successfully created CSV file fusion_upd_acc_20260730_145812.csv
 Successfully created excel file fusion_LCOE_results.xlsx

@@ -1,22 +1,17 @@
+% AP1000 two-unit plant example with total electric output of 2234 MWe.
+% Direct-cost reference basis: Stewart W.R. and Shirvan K.,
+% "Capital cost estimation for advanced nuclear power plants,"
+% Renewable and Sustainable Energy Reviews, 2021, 111880,
+% https://doi.org/10.1016/j.rser.2021.111880; TIMCAT reference
+% implementation: https://github.com/mit-crpg/TIMCAT.
 accert{
     ref_model = "AP1000"
     use_gncoa = False
+    target_dollar_year = 2025
 
-    post_process {
-        occ = true
-    }
+    post_process { occ = true }
 
-    power(Thermal){
-        value = 6800
-        unit = MW
-    }
-
-    power(Electric){
-        value = 2234
-        unit = MW
-    }
-    var(mc_piping_M){
-        value = 77001
-        unit = kg
-    }
+    power(Thermal){ value = 6800 unit = MW }
+    power(Electric){ value = 2234 unit = MW }
+    var(mc_piping_M){ value = 77001 unit = kg }
 }

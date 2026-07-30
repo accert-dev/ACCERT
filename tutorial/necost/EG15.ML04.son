@@ -1,6 +1,7 @@
 necost {
     % EG15/ML04 - Recover Pu from PWR and Recycle in SFR
-    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % Source: Energy Systems (E&S) fuel-cycle evaluation study,
+    % FCRD-FCO-2013-000196, Appendix A report input tables.
     % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.
     % NE-COST input preparer: Francesco Ganda (INL)
     % Technical Reviewer: Kent Williams (consultant)

@@ -23,6 +23,16 @@ accert{
         InputDefault=false
     }
 
+    target_dollar_year{
+        Description = "[optional] CPI-U target dollar year for displayed results and post-process summaries"
+        MinOccurs = 0
+        MaxOccurs = 1
+        ValType = Int
+        MinValInc = 2015
+        MaxValExc = NoLimit
+        InputDefault = 2025
+    }
+
     post_process{
         Description = "[optional] post-process ACCERT results"
         MinOccurs = 0

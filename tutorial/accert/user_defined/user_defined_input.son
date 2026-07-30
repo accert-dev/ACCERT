@@ -2,6 +2,8 @@
 % Author: J. Zhou (jia.zhou@anl.gov)
 % Last updated: 08/08/2024
 
+% User-defined ACCERT example showing how to supply custom accounts,
+% variables, and algorithms without using one of the packaged reactor models.
 
 accert{
     ref_model = "user_defined"

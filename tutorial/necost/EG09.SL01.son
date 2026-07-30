@@ -1,6 +1,7 @@
 necost {
     % EG09/SL01 SFR Breed and Burn with Fuel Reconditioning
-    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % Source: Energy Systems (E&S) fuel-cycle evaluation study,
+    % FCRD-FCO-2013-000196, Appendix A report input tables.
     % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.
     % NE-COST input preparer: Olga Livingston (PNNL)
     % Technical Reviewer: Edward Hoffman (ANL)

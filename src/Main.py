@@ -112,6 +112,7 @@ class Accert:
         """
         if xml2obj.use_gncoa is not None:
             self.use_gncoa = str(xml2obj.use_gncoa.value).lower() == 'true'
+        self.target_dollar_year = self._target_dollar_year_from_input(xml2obj)
         if "abr1000" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'abr1000'
             self.acc_tabl = 'abr_account'
@@ -1662,6 +1663,7 @@ class Accert:
             self._electric_power_mw(c),
             self.ref_model,
             self._cost_escalation_factor(),
+            self.target_dollar_year,
         )
         self.post_processor.print_occ_summary(results)
         self.post_processor.write_occ_csv(results, self.ref_model, self.output_timestamp)
@@ -1683,6 +1685,7 @@ class Accert:
             self._electric_power_mw(c),
             self.ref_model,
             self._cost_escalation_factor(),
+            self.target_dollar_year,
         ).as_dict()
 
     def _electric_power_mw(self, c):
@@ -1695,6 +1698,17 @@ class Accert:
 
     def _cost_escalation_factor(self):
         return cpi_escalation_factor(model_cost_year(self.ref_model), self.target_dollar_year)
+
+    def _target_dollar_year_from_input(self, accert):
+        for field in ("target_dollar_year", "escalated_dollar_year"):
+            node = getattr(accert, field, None)
+            if node is None:
+                continue
+            value = getattr(node, "value", node)
+            value = getattr(value, "value", value)
+            if value is not None:
+                return int(value)
+        return TARGET_DOLLAR_YEAR
 
     def _generate_common_results(self, c, ut, accert, model):
         """
@@ -1871,17 +1885,9 @@ class Accert:
         df = pd.DataFrame(results, columns=field_names)
         if remove_last_col:
             df = df.iloc[:, :-1]  # Remove the last column if required
-        df = self._add_2024_cost_columns(df)
         filename = "{}_{}_{}.csv".format(self.ref_model, output_name, self.output_timestamp)
         df.to_csv(filename, index=False)
         print(f"Successfully created CSV file {filename}")
-
-    def _add_2024_cost_columns(self, df):
-        factor = self._cost_escalation_factor()
-        cost_columns = [column for column in df.columns if column in ("total_cost", "cost_2017", "cost_2018")]
-        for column in cost_columns:
-            df[f"{column}_2024"] = pd.to_numeric(df[column], errors="coerce") * factor
-        return df
 
 
     def generate_results_table(self, c, conn, level=3):

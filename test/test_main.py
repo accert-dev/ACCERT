@@ -288,9 +288,10 @@ def test_lpsr_occ_post_process_includes_per_kw(cursor):
     accert.ref_model = 'lpsr'
     accert.acc_tabl = 'lpsr_account'
     accert.var_tabl = 'lpsr_variable'
-    results = accert.post_processor.calculate_occ(cursor, accert.acc_tabl, accert._electric_power_mw(cursor), accert.ref_model, accert._cost_escalation_factor())
+    results = accert.post_processor.calculate_occ(cursor, accert.acc_tabl, accert._electric_power_mw(cursor), accert.ref_model, accert._cost_escalation_factor(), accert.target_dollar_year)
     rows = {row["metric"]: row for row in results.as_rows()}
-    assert rows["total_OCC"]["value_2024_dollar_per_kw"] == pytest.approx(results.total_OCC * accert._cost_escalation_factor() / (1117 * 1000))
+    assert rows["total_OCC"]["value_escalated_dollar_per_kw"] == pytest.approx(results.total_OCC * accert._cost_escalation_factor() / (1117 * 1000))
+    assert rows["total_OCC"]["escalated_dollar_year"] == accert.target_dollar_year
 
 def test_lpsr_power_defaults_update_rejected_heat(cursor):
     """LPSR defaults power inputs and calculates rejected thermal power."""

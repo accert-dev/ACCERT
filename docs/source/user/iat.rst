@@ -53,6 +53,13 @@ The localization CSVs do not store scenario 1/2/3 U.S. costs. Standalone IAT
 uses the user-provided OCC value and the packaged percentage shares to build
 the U.S.-based cost structure before applying localization.
 
+Supported Countries
+-------------------
+
+The packaged IAT assumptions currently support Korea, China, UAE, Poland, and
+El Salvador. The examples below refer back to this packaged country list rather
+than restating it in each workflow section.
+
 Calculation Logic
 -----------------
 
@@ -111,8 +118,8 @@ Standalone OCC Input
 Use ``run_occ_scenarios`` when the input is one or more OCC totals rather than
 an ACCERT output CSV.
 
-The packaged standalone example runs large-reactor OCC scenarios for China,
-Korea, UAE, Poland, and El Salvador:
+The packaged standalone example runs large-reactor OCC scenarios for the
+supported countries listed above:
 
 .. code-block:: bash
 
@@ -134,7 +141,7 @@ Korea, UAE, Poland, and El Salvador:
    )
    print(result["summary"])
 
-Runnable standalone examples for China, Korea, UAE, Poland, and El Salvador are in
+Runnable standalone examples for the supported countries are in
 ``tutorial/iat/iat_lr_occ_china_example.py``.
 
 Connecting IAT to the Cost Reduction Framework Tool

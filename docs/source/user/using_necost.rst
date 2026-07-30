@@ -85,7 +85,10 @@ ACCERT to NEcost coupling
 -------------------------
 
 The optional ``accert_coupling`` block lets a NEcost SON file use ACCERT's total OCC as the NEcost ``capital_cost`` input.
-The bridge reads ACCERT post-processing metric ``total_OCC`` from ``value_2024_dollar_per_kw`` and writes it into the selected NEcost capital cost item in ``$/kWe``.
+The bridge reads ACCERT post-processing metric ``total_OCC`` from
+``value_escalated_dollar_per_kw`` and writes it into the selected NEcost
+capital cost item in ``$/kWe``. Older ACCERT post-process CSV files with
+``value_2024_dollar_per_kw`` are still accepted for compatibility.
 
 .. code-block:: son
 

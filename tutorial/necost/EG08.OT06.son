@@ -1,6 +1,7 @@
 necost {
     % EG08/OT06 - Subcritical Thorium Blanket Driven by an ICF Neutron Source
-    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % Source: Energy Systems (E&S) fuel-cycle evaluation study,
+    % FCRD-FCO-2013-000196, Appendix A report input tables.
     % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.
     % NE-COST input preparer: Edward Hoffman (ANL)
     % Technical Reviewer: Francesco Ganda (INL)

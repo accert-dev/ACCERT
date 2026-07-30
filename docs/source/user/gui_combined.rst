@@ -42,7 +42,7 @@ In the ``IAT Inputs`` panel:
 * Set ``Country`` to the destination country, such as ``China``, ``Korea``,
   ``UAE``, ``Poland``, or ``El Salvador``.
 * ``Year dollar`` is shown as a fixed message. The GUI reports the workflow on
-  a ``2024`` CPI-U basis.
+  the configured CPI-U target-dollar basis.
 * Set ``ACCERT CSV file`` to the input CSV path. This can be either a
   CRT/IAT-ready baseline such as ``src/crt/data/AP1000_baseline.csv`` or a raw
   ACCERT updated-account CSV such as ``ap1000_upd_acc_*.csv``. When a raw

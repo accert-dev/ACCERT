@@ -37,11 +37,13 @@ from crt import (
 )
 from crt.io.excel_inputs import InputStore
 from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
+from cost_escalation import TARGET_DOLLAR_YEAR
 
 
 HOST = "127.0.0.1"
 PORT = 8765
 OUTPUT_DIR = REPO_ROOT / "tutorial" / "gui_outputs"
+DEFAULT_IAT_YEAR_DOLLAR = TARGET_DOLLAR_YEAR
 DEFAULT_CONSTRUCTION_DURATIONS = {
     "AP1000": 76.0,
     "SFR": 80.0,
@@ -639,7 +641,7 @@ HTML = r"""<!doctype html>
           </div>
           <div>
             <label>Year dollar</label>
-            <div class="readonly-note">2024 CPI-U basis</div>
+            <div class="readonly-note">{{IAT_YEAR_DOLLAR}} CPI-U basis</div>
           </div>
         </div>
         <div id="iatCsvGroup" class="hidden">
@@ -751,6 +753,7 @@ HTML = r"""<!doctype html>
     let _crtFileContent = null;
     let _crtFilePath = null;
     let _lastCrtReactorType = null;
+    const defaultIatYearDollar = Number("{{IAT_YEAR_DOLLAR}}");
     const defaultConstructionDuration = {AP1000: 76, SFR: 80, HTGR: 125};
     const default20sLaborHours = {
       AP1000: 51112635,
@@ -829,7 +832,7 @@ HTML = r"""<!doctype html>
           input_mode: $("iatInputMode").value,
           reactor_type: apiReactorType(),
           countries: selectedCountries(),
-          year_dollar: 2024,
+          year_dollar: defaultIatYearDollar,
           input_csv: _csvFilePath,
           csv_content: _csvFileContent,
           csv_filename: _csvFileContent ? $("iatCsvName").value : null,
@@ -1989,7 +1992,7 @@ def _iat_config(payload: dict, output_csv: Path | None = None, country: str | No
     config = {
         "reactor_type": iat["reactor_type"],
         "country": country,
-        "year_dollar": _int(iat["year_dollar"], 2024),
+        "year_dollar": _int(iat["year_dollar"], DEFAULT_IAT_YEAR_DOLLAR),
     }
     if output_csv is not None:
         config["output_csv"] = output_csv
@@ -2394,7 +2397,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         if self.path in {"/", "/index.html"}:
-            self._send(200, HTML.encode("utf-8"), "text/html; charset=utf-8")
+            html = HTML.replace("{{IAT_YEAR_DOLLAR}}", str(DEFAULT_IAT_YEAR_DOLLAR))
+            self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
             return
         if self.path.startswith("/outputs/"):
             raw = self.path.split("/outputs/", 1)[1].split("?", 1)[0]

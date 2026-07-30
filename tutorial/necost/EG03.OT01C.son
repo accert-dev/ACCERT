@@ -1,6 +1,7 @@
 necost {
     % EG03/OT01/C - Once Through Heavy Water Reactor with Natural Uranium
-    % Source: FCRD-FCO-2013-000196, Appendix A report input tables.
+    % Source: Energy Systems (E&S) fuel-cycle evaluation study,
+    % FCRD-FCO-2013-000196, Appendix A report input tables.
     % Structured from the report into fuel_cycles, reactors, cost tables, and fuels.
     % NE-COST input preparer: Mark Weimar (PNNL)
     % Technical Reviewer: Ed Hoffman (ANL)

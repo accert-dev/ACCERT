@@ -5,12 +5,15 @@
 
 % This test input file is used to test the
 % assign costs functionality.
+% LFR reference case from "Technoeconomic Design Optimization for Fast
+% Reactors. Part I: Workflow Development and Case Study for Small LFR District
+% Energy Application": https://www.osti.gov/biblio/3016125.
 
 
 accert{
     ref_model = "LFR"
-    power( Thermal ){ value = 1000   unit = MW } 
-    power( Electric ){ value = 380   unit = MW } 
+    power(Thermal){ value = 1000 unit = MW }
+    power(Electric){ value = 380 unit = MW }
 
 %    var(Cont_H_wall_m){ value = 20  unit = m }
 %    var(c_pump_ap1000){ value = 30  unit = million }
