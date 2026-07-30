@@ -1,4 +1,5 @@
 import subprocess
+import csv
 import os
 import glob
 import shutil
@@ -84,6 +85,13 @@ def check_csv_files(csv_patterns):
         files = glob.glob(str(TEST_DIR / pattern))
         assert len(files) > 0, f"No CSV files matching {pattern} were generated"
 
+def latest_csv_columns(pattern):
+    """Return columns from the most recently generated CSV matching pattern."""
+    files = sorted(glob.glob(str(TEST_DIR / pattern)), key=os.path.getmtime)
+    assert files, f"No CSV files matching {pattern} were generated"
+    with open(files[-1], newline="") as csv_file:
+        return next(csv.reader(csv_file))
+
 # Test functions
 def test_integration_with_fusion_son(prepare_environment):
     """Test ACCERT with fusion.son input."""
@@ -145,3 +153,10 @@ def test_integration_with_ap1000_son(prepare_environment):
     assert "Total OCC" in output_content
     assert "2025 ($/kW)" in output_content
     check_csv_files(["ap1000_upd_acc_*.csv", "ap1000_upd_ce_*.csv", "ap1000_aff_ce_*.csv", "ap1000_post_*.csv"])
+    upd_acc_columns = latest_csv_columns("ap1000_upd_acc_*.csv")
+    upd_ce_columns = latest_csv_columns("ap1000_upd_ce_*.csv")
+    post_columns = latest_csv_columns("ap1000_post_*.csv")
+    assert not any("escalated" in column for column in upd_acc_columns)
+    assert not any("escalated" in column for column in upd_ce_columns)
+    assert "value_escalated_dollar_per_kw" in post_columns
+    assert "escalated_dollar_year" in post_columns

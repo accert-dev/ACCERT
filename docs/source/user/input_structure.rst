@@ -101,6 +101,33 @@ tables and ACCERT post-process OCC summary values.
   ``src/cost_escalation.py``.
 - The target year must be present in ACCERT's CPI-U table.
 
+post_process
+~~~~~~~~~~~~
+
+**Purpose**: Enables optional post-processing summaries after ACCERT updates
+the account and cost-element tables. The current post-process option is an OCC
+summary.
+
+**Syntax**::
+
+    post_process { occ = true }
+
+**Example**::
+
+    accert {
+        ref_model = "AP1000"
+        target_dollar_year = 2025
+        post_process { occ = true }
+    }
+
+**Notes**:
+
+- If the ``post_process`` block is omitted, ACCERT only writes the detailed
+  account and cost-element CSV files.
+- When OCC post-processing is enabled, ACCERT writes a separate
+  ``*_post_*.csv`` summary with reference-year OCC values, target-year
+  escalated OCC values, and the target dollar year used for escalation.
+
 power
 ~~~~~
 
