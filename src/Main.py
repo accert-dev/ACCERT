@@ -1841,11 +1841,22 @@ class Accert:
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
         self.check_and_process_total_cost(c, accert)
-        self.roll_up_account_table(c, from_level=4, to_level=0)
+        if self._has_account_changes_to_roll_up(c):
+            self.roll_up_account_table(c, from_level=4, to_level=0)
         print(' Generating results table for review '.center(100, '='))
         self._print_cost_basis_note()
         print('\n')
         ut.print_leveled_accounts(c, all=False, cost_unit='million', level=4)
+
+    def _has_account_changes_to_roll_up(self, c):
+        c.execute(
+            f"""
+            SELECT COUNT(*)
+            FROM {self.acc_tabl}
+            WHERE review_status IN ('User Input', 'Added')
+            """
+        )
+        return c.fetchone()[0] > 0
 
     def _print_cost_basis_note(self):
         print('[Note] Reference costs are in {} dollars. Displayed account costs are escalated to {} dollars using CPI-U.\n'.format(

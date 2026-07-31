@@ -224,6 +224,12 @@ def _mirror_parent_code(code_of_account: str, level: int) -> str:
     return ""
 
 
+def _dollar_value(value: str | float | int | None) -> float | None:
+    if value in (None, ""):
+        return None
+    return float(str(value).replace("$", ""))
+
+
 def _account_method_dependencies(algorithm_source: Path) -> dict[str, tuple[list[str], list[str]]]:
     module = ast.parse(algorithm_source.read_text(encoding="utf-8"))
     klass = next(node for node in module.body if isinstance(node, ast.ClassDef) and node.name == "MirrorFunc")
@@ -265,7 +271,7 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
     )
     rows = conn.execute(
         """
-        SELECT ind, code_of_account, account_description, total_cost, level,
+        SELECT ind, code_of_account, account_description, total_cost_dollars, level,
                prn, fun_unit
         FROM mirror_acco_raw
         ORDER BY ind
@@ -291,7 +297,7 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
                 ind,
                 code,
                 description,
-                total_cost,
+                _dollar_value(total_cost),
                 level,
                 _mirror_parent_code(raw_code, int(level or 0)),
                 "Unchanged",

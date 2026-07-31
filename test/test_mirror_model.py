@@ -60,6 +60,30 @@ def test_mirror_variable_update_uses_reference_table(cursor):
     assert cursor.fetchone() == (2.0, "m", 1)
 
 
+def test_mirror_unlinked_variable_does_not_change_accounts(cursor):
+    accert = Accert.__new__(Accert)
+    accert.acc_tabl = "mirror_acco"
+    accert.var_tabl = "mirror_var"
+    accert.alg_tabl = "mirror_alg"
+
+    cursor.execute("SELECT total_cost FROM mirror_acco WHERE code_of_account = ?", ("OCC",))
+    original_occ = cursor.fetchone()[0]
+
+    assert accert.update_input_variable(cursor, "r_magnet", 2.0, "m") is None
+    assert accert.update_new_accounts(cursor) is None
+    assert not accert._has_account_changes_to_roll_up(cursor)
+
+    cursor.execute(
+        """
+        SELECT total_cost, review_status
+        FROM mirror_acco
+        WHERE code_of_account = ?;
+        """,
+        ("OCC",),
+    )
+    assert cursor.fetchone() == (original_occ, "Unchanged")
+
+
 def test_mirror_accounts_use_fusion_style_structure(cursor):
     cursor.execute(
         """
@@ -70,6 +94,16 @@ def test_mirror_accounts_use_fusion_style_structure(cursor):
         ("211",),
     )
     assert cursor.fetchone() == ("211", "21", "Account_C21_1", "P_egross")
+
+    cursor.execute(
+        """
+        SELECT total_cost
+        FROM mirror_acco
+        WHERE code_of_account = ?;
+        """,
+        ("OCC",),
+    )
+    assert cursor.fetchone()[0] == 1587572359.0
 
 
 def test_mirror_variable_links_are_reversed_from_var_need(cursor):
