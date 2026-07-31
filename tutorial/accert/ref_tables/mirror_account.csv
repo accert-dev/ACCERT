@@ -42,7 +42,7 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 41,2215,Primary_Structure_and_Support,0.0,3,221,Unchanged,0.0,Account_C22_1_5,million,
 42,2216,Vacuum_System,2031827.2570000002,3,221,Unchanged,0.00039381535432011556,Account_C22_1_6,million,rollup
 43,22162,Vessel_Refrigerators,0.0,4,2216,Unchanged,0.0,Account_C22_1_6_2,million,
-44,22163,Primary_Vacuum_Pumps,1689827.257,4,2216,Unchanged,0.0003275278041785045,Account_C22_1_6_3,million,V_vac
+44,22163,Primary_Vacuum_Pumps,1689827.257,4,2216,Unchanged,0.0003275278041785045,Account_C22_1_6_3,million,"cost_pump, no_vpumps"
 45,22164,Backing_Vacuum_Pumps,342000.0,4,2216,Unchanged,6.628755014161104e-05,Account_C22_1_6_4,million,
 46,2217,Power_Supplies,0.0,3,221,Unchanged,0.0,Account_C22_1_7,million,
 47,2218,Divertor,0.0,3,221,Unchanged,0.0,Account_C22_1_8,million,

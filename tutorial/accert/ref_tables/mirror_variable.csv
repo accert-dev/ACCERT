@@ -19,9 +19,9 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 18,central_cell_cylindrical_part_cost,str,,1,central_cell_cylindrical_part,,,
 19,total_cost,str,,1,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result",,,
 20,cost_factor,str,,1,"inputs, np",,,
-21,cost_pump,int,40000.0,1,,,,
-22,vpump_cap,str,,1,,,,
-23,no_vpumps,str,,1,"inputs, vpump_cap",,,
+21,cost_pump,"Cost of one vacuum pump, scaled from 1985 dollars",40000.0,dollar/pump,,,,0
+22,vpump_cap,Vacuum volume pumped by one vacuum pump in one second,4.166666666666667,m3/pump,,,no_vpumps,0
+23,no_vpumps,Number of vacuum pumps required to pump the full vacuum in one second,2.2619467105846507,1,cal_no_vpumps,"V_vac, vpump_cap",,0
 24,axis_t,str,,1,"inputs, np",,,
 25,axis_ir,str,,1,axis_t,,,
 26,lr,str,,1,,,,
@@ -73,7 +73,7 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 72,L_CC,str,-1.0,m,cal_L_CC,"P_f_CC, P_f_L","CF_magnet_number, L",0
 73,L_CF,float,1.0,m,cal_L_CF,,CF_magnet_number,0
 74,L,str,3.0,m,cal_L,"L_CC, L_EP, L_EC",V_vac,0
-75,V_vac,str,9.42477796076938,m3,cal_V_vac,"L, a_EC",,0
+75,V_vac,str,9.42477796076938,m3,cal_V_vac,"L, a_EC",no_vpumps,0
 76,P_alpha,str,0.20011370096645825,MW,cal_P_alpha,"E_DT, E_alpha, P_f","P_DEC, P_n",0
 77,P_n,str,0.7998862990335418,MW,cal_P_n,"P_f, P_alpha","P_pump, P_th",0
 78,P_ine,str,6.0,MW,cal_P_ine,"P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH","P_enet, Q_eng",0

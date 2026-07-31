@@ -82,6 +82,10 @@ class MirrorFunc(Algorithm):
         return L * np.pi * a_EC**2
 
     @staticmethod
+    def cal_no_vpumps(V_vac, vpump_cap):
+        return V_vac / vpump_cap
+
+    @staticmethod
     def cal_P_alpha(E_DT, E_alpha, P_f):
         return P_f * E_alpha / E_DT
 
@@ -447,13 +451,7 @@ class MirrorFunc(Algorithm):
     def Account_C22_1_6_3(inputs):
 
         #VACUUM PUMPING 22.1.6.3
-        #assume 1 second vac rate
-        #cost of 1 vacuum pump, scaled from 1985 dollars
-        cost_pump = 40000
-        #48 pumps needed for 200^3 system
-        vpump_cap = 200/48 #m^3 capable of beign pumped by 1 pump
-        no_vpumps = inputs['V_vac']/vpump_cap#Number of vacuum pumps required to pump the full vacuum in 1 second
-        return(no_vpumps*cost_pump/1e6)
+        return(inputs['no_vpumps'] * inputs['cost_pump'] / 1e6)
         
 
     @staticmethod

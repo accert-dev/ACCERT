@@ -6979,7 +6979,7 @@ INSERT INTO mirror_alg VALUES(35,'Account_C22_1_4_3','c','Account C22143 Rollup'
 INSERT INTO mirror_alg VALUES(36,'Account_C22_1_5','c','Account C2215 Rollup','MirrorFunc','reference value','million');
 INSERT INTO mirror_alg VALUES(37,'Account_C22_1_6','c','Account C2216 Rollup','MirrorFunc','rollup','million');
 INSERT INTO mirror_alg VALUES(38,'Account_C22_1_6_2','c','Account C22162 Rollup','MirrorFunc','reference value','million');
-INSERT INTO mirror_alg VALUES(39,'Account_C22_1_6_3','c','Account C22163 Rollup','MirrorFunc','V_vac','million');
+INSERT INTO mirror_alg VALUES(39,'Account_C22_1_6_3','c','Account C22163 Rollup','MirrorFunc','cost_pump, no_vpumps','million');
 INSERT INTO mirror_alg VALUES(40,'Account_C22_1_6_4','c','Account C22164 Rollup','MirrorFunc','reference value','million');
 INSERT INTO mirror_alg VALUES(41,'Account_C22_1_7','c','Account C2217 Rollup','MirrorFunc','reference value','million');
 INSERT INTO mirror_alg VALUES(42,'Account_C22_1_8','c','Account C2218 Rollup','MirrorFunc','reference value','million');
@@ -7026,25 +7026,26 @@ INSERT INTO mirror_alg VALUES(82,'cal_L_CC','v','Mirror generated variable calcu
 INSERT INTO mirror_alg VALUES(83,'cal_L_CF','v','Mirror generated variable calculation for L_CF','MirrorFunc','L_CF = 1.0','m');
 INSERT INTO mirror_alg VALUES(84,'cal_L','v','Mirror generated variable calculation for L','MirrorFunc','L = L_CC + 2 * L_EP + 2 * L_EC','m');
 INSERT INTO mirror_alg VALUES(85,'cal_V_vac','v','Mirror generated variable calculation for V_vac','MirrorFunc','V_vac = L * pi * a_EC**2','m3');
-INSERT INTO mirror_alg VALUES(86,'cal_P_alpha','v','Mirror generated variable calculation for P_alpha','MirrorFunc','P_alpha = P_f * E_alpha / E_DT','MW');
-INSERT INTO mirror_alg VALUES(87,'cal_P_n','v','Mirror generated variable calculation for P_n','MirrorFunc','P_n = P_f - P_alpha','MW');
-INSERT INTO mirror_alg VALUES(88,'cal_P_ine','v','Mirror generated variable calculation for P_ine','MirrorFunc','P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH','MW');
-INSERT INTO mirror_alg VALUES(89,'cal_P_pump','v','Mirror generated variable calculation for P_pump','MirrorFunc','P_pump = f_pump * M_n * P_n','MW');
-INSERT INTO mirror_alg VALUES(90,'cal_P_sub_cont','v','Mirror generated variable calculation for P_sub_cont','MirrorFunc','P_sub_cont = f_sub * P_f','MW');
-INSERT INTO mirror_alg VALUES(91,'cal_P_cryo','v','Mirror generated variable calculation for P_cryo','MirrorFunc','P_cryo = f_cryo * P_f','MW');
-INSERT INTO mirror_alg VALUES(92,'cal_P_other','v','Mirror generated variable calculation for P_other','MirrorFunc','P_other = P_pump + P_sub_cont + P_cryo','MW');
-INSERT INTO mirror_alg VALUES(93,'cal_P_in','v','Mirror generated variable calculation for P_in','MirrorFunc','P_in = P_NBI + P_ICRH + P_ECH','MW');
-INSERT INTO mirror_alg VALUES(94,'cal_P_th','v','Mirror generated variable calculation for P_th','MirrorFunc','P_th = M_n * P_n + eta_pump * P_pump','MW');
-INSERT INTO mirror_alg VALUES(95,'cal_P_the','v','Mirror generated variable calculation for P_the','MirrorFunc','P_the = eta_th * P_th','MW');
-INSERT INTO mirror_alg VALUES(96,'cal_P_DEC','v','Mirror generated variable calculation for P_DEC','MirrorFunc','P_DEC = P_in + P_alpha','MW');
-INSERT INTO mirror_alg VALUES(97,'cal_P_DECe','v','Mirror generated variable calculation for P_DECe','MirrorFunc','P_DECe = eta_DEC * P_DEC','MW');
-INSERT INTO mirror_alg VALUES(98,'cal_P_egross','v','Mirror generated variable calculation for P_egross','MirrorFunc','P_egross = P_DECe + P_the if application == ''electricity'' else P_DECe','MW');
-INSERT INTO mirror_alg VALUES(99,'cal_P_enet','v','Mirror generated variable calculation for P_enet','MirrorFunc','P_enet = P_egross - (P_ine + P_other)','MW');
-INSERT INTO mirror_alg VALUES(100,'cal_f_aux','v','Mirror generated variable calculation for f_aux','MirrorFunc','f_aux = P_aux / P_egross','1');
-INSERT INTO mirror_alg VALUES(101,'cal_Q_sci','v','Mirror generated variable calculation for Q_sci','MirrorFunc','Q_sci = P_f / P_in','1');
-INSERT INTO mirror_alg VALUES(102,'cal_Q_eng','v','Mirror generated variable calculation for Q_eng','MirrorFunc','Q_eng = P_egross / (P_ine + P_other)','1');
-INSERT INTO mirror_alg VALUES(103,'cal_f_refrac','v','Mirror generated variable calculation for f_refrac','MirrorFunc','f_refrac = 1 / Q_eng','1');
-INSERT INTO mirror_alg VALUES(104,'cal_CF_magnet_number','v','Mirror generated variable calculation for CF_magnet_number','MirrorFunc','CF_magnet_number = L_CC / L_CF','1');
+INSERT INTO mirror_alg VALUES(86,'cal_no_vpumps','v','Mirror generated variable calculation for no_vpumps','MirrorFunc','no_vpumps = V_vac / vpump_cap','1');
+INSERT INTO mirror_alg VALUES(87,'cal_P_alpha','v','Mirror generated variable calculation for P_alpha','MirrorFunc','P_alpha = P_f * E_alpha / E_DT','MW');
+INSERT INTO mirror_alg VALUES(88,'cal_P_n','v','Mirror generated variable calculation for P_n','MirrorFunc','P_n = P_f - P_alpha','MW');
+INSERT INTO mirror_alg VALUES(89,'cal_P_ine','v','Mirror generated variable calculation for P_ine','MirrorFunc','P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH','MW');
+INSERT INTO mirror_alg VALUES(90,'cal_P_pump','v','Mirror generated variable calculation for P_pump','MirrorFunc','P_pump = f_pump * M_n * P_n','MW');
+INSERT INTO mirror_alg VALUES(91,'cal_P_sub_cont','v','Mirror generated variable calculation for P_sub_cont','MirrorFunc','P_sub_cont = f_sub * P_f','MW');
+INSERT INTO mirror_alg VALUES(92,'cal_P_cryo','v','Mirror generated variable calculation for P_cryo','MirrorFunc','P_cryo = f_cryo * P_f','MW');
+INSERT INTO mirror_alg VALUES(93,'cal_P_other','v','Mirror generated variable calculation for P_other','MirrorFunc','P_other = P_pump + P_sub_cont + P_cryo','MW');
+INSERT INTO mirror_alg VALUES(94,'cal_P_in','v','Mirror generated variable calculation for P_in','MirrorFunc','P_in = P_NBI + P_ICRH + P_ECH','MW');
+INSERT INTO mirror_alg VALUES(95,'cal_P_th','v','Mirror generated variable calculation for P_th','MirrorFunc','P_th = M_n * P_n + eta_pump * P_pump','MW');
+INSERT INTO mirror_alg VALUES(96,'cal_P_the','v','Mirror generated variable calculation for P_the','MirrorFunc','P_the = eta_th * P_th','MW');
+INSERT INTO mirror_alg VALUES(97,'cal_P_DEC','v','Mirror generated variable calculation for P_DEC','MirrorFunc','P_DEC = P_in + P_alpha','MW');
+INSERT INTO mirror_alg VALUES(98,'cal_P_DECe','v','Mirror generated variable calculation for P_DECe','MirrorFunc','P_DECe = eta_DEC * P_DEC','MW');
+INSERT INTO mirror_alg VALUES(99,'cal_P_egross','v','Mirror generated variable calculation for P_egross','MirrorFunc','P_egross = P_DECe + P_the if application == ''electricity'' else P_DECe','MW');
+INSERT INTO mirror_alg VALUES(100,'cal_P_enet','v','Mirror generated variable calculation for P_enet','MirrorFunc','P_enet = P_egross - (P_ine + P_other)','MW');
+INSERT INTO mirror_alg VALUES(101,'cal_f_aux','v','Mirror generated variable calculation for f_aux','MirrorFunc','f_aux = P_aux / P_egross','1');
+INSERT INTO mirror_alg VALUES(102,'cal_Q_sci','v','Mirror generated variable calculation for Q_sci','MirrorFunc','Q_sci = P_f / P_in','1');
+INSERT INTO mirror_alg VALUES(103,'cal_Q_eng','v','Mirror generated variable calculation for Q_eng','MirrorFunc','Q_eng = P_egross / (P_ine + P_other)','1');
+INSERT INTO mirror_alg VALUES(104,'cal_f_refrac','v','Mirror generated variable calculation for f_refrac','MirrorFunc','f_refrac = 1 / Q_eng','1');
+INSERT INTO mirror_alg VALUES(105,'cal_CF_magnet_number','v','Mirror generated variable calculation for CF_magnet_number','MirrorFunc','CF_magnet_number = L_CC / L_CF','1');
 CREATE TABLE mirror_var (
   ind INTEGER DEFAULT NULL,
   var_name TEXT NOT NULL,
@@ -7077,9 +7078,9 @@ INSERT INTO mirror_var VALUES(17,'central_cell_cylindrical_part','str','','1','c
 INSERT INTO mirror_var VALUES(18,'central_cell_cylindrical_part_cost','str','','1','central_cell_cylindrical_part','','','');
 INSERT INTO mirror_var VALUES(19,'total_cost','str','','1','central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result','','','');
 INSERT INTO mirror_var VALUES(20,'cost_factor','str','','1','inputs, np','','','');
-INSERT INTO mirror_var VALUES(21,'cost_pump','int',40000.0,'1','','','','');
-INSERT INTO mirror_var VALUES(22,'vpump_cap','str','','1','','','','');
-INSERT INTO mirror_var VALUES(23,'no_vpumps','str','','1','inputs, vpump_cap','','','');
+INSERT INTO mirror_var VALUES(21,'cost_pump','Cost of one vacuum pump, scaled from 1985 dollars',40000.0,'dollar/pump','','','',0);
+INSERT INTO mirror_var VALUES(22,'vpump_cap','Vacuum volume pumped by one vacuum pump in one second',4.166666666666666963,'m3/pump','','','no_vpumps',0);
+INSERT INTO mirror_var VALUES(23,'no_vpumps','Number of vacuum pumps required to pump the full vacuum in one second',2.261946710584650689,'1','cal_no_vpumps','V_vac, vpump_cap','',0);
 INSERT INTO mirror_var VALUES(24,'axis_t','str','','1','inputs, np','','','');
 INSERT INTO mirror_var VALUES(25,'axis_ir','str','','1','axis_t','','','');
 INSERT INTO mirror_var VALUES(26,'lr','str','','1','','','','');
@@ -7131,7 +7132,7 @@ INSERT INTO mirror_var VALUES(71,'P_f_CC','str',-1.0,'MW','cal_P_f_CC','P_f, P_f
 INSERT INTO mirror_var VALUES(72,'L_CC','str',-1.0,'m','cal_L_CC','P_f_CC, P_f_L','CF_magnet_number, L',0);
 INSERT INTO mirror_var VALUES(73,'L_CF','float',1.0,'m','cal_L_CF','','CF_magnet_number',0);
 INSERT INTO mirror_var VALUES(74,'L','str',3.0,'m','cal_L','L_CC, L_EP, L_EC','V_vac',0);
-INSERT INTO mirror_var VALUES(75,'V_vac','str',9.42477796076937935,'m3','cal_V_vac','L, a_EC','',0);
+INSERT INTO mirror_var VALUES(75,'V_vac','str',9.42477796076937935,'m3','cal_V_vac','L, a_EC','no_vpumps',0);
 INSERT INTO mirror_var VALUES(76,'P_alpha','str',0.2001137009664582522,'MW','cal_P_alpha','E_DT, E_alpha, P_f','P_DEC, P_n',0);
 INSERT INTO mirror_var VALUES(77,'P_n','str',0.7998862990335418033,'MW','cal_P_n','P_f, P_alpha','P_pump, P_th',0);
 INSERT INTO mirror_var VALUES(78,'P_ine','str',6.0,'MW','cal_P_ine','P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH','P_enet, Q_eng',0);
@@ -7296,7 +7297,7 @@ INSERT INTO mirror_acco VALUES(40,'22143','ECH',80000000.0,4,'2214','Unchanged',
 INSERT INTO mirror_acco VALUES(41,'2215','Primary_Structure_and_Support',0.0,3,'221','Unchanged',0.0,'Account_C22_1_5','million','');
 INSERT INTO mirror_acco VALUES(42,'2216','Vacuum_System',2031827.257000000217,3,'221','Unchanged',0.0003938153543201155615,'Account_C22_1_6','million','rollup');
 INSERT INTO mirror_acco VALUES(43,'22162','Vessel_Refrigerators',0.0,4,'2216','Unchanged',0.0,'Account_C22_1_6_2','million','');
-INSERT INTO mirror_acco VALUES(44,'22163','Primary_Vacuum_Pumps',1689827.256999999984,4,'2216','Unchanged',0.0003275278041785044783,'Account_C22_1_6_3','million','V_vac');
+INSERT INTO mirror_acco VALUES(44,'22163','Primary_Vacuum_Pumps',1689827.256999999984,4,'2216','Unchanged',0.0003275278041785044783,'Account_C22_1_6_3','million','cost_pump, no_vpumps');
 INSERT INTO mirror_acco VALUES(45,'22164','Backing_Vacuum_Pumps',342000.0,4,'2216','Unchanged',6.628755014161104265e-05,'Account_C22_1_6_4','million','');
 INSERT INTO mirror_acco VALUES(46,'2217','Power_Supplies',0.0,3,'221','Unchanged',0.0,'Account_C22_1_7','million','');
 INSERT INTO mirror_acco VALUES(47,'2218','Divertor',0.0,3,'221','Unchanged',0.0,'Account_C22_1_8','million','');

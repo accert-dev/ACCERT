@@ -125,6 +125,7 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "L_CF": "",
     "L": "L_CC, L_EP, L_EC",
     "V_vac": "L, a_EC",
+    "no_vpumps": "V_vac, vpump_cap",
     "P_alpha": "E_DT, E_alpha, P_f",
     "P_n": "P_f, P_alpha",
     "P_ine": "P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH",
@@ -152,6 +153,7 @@ MIRROR_GENERATED_VAR_FORMULAS = {
     "L_CF": ("L_CF = 1.0", "m"),
     "L": ("L = L_CC + 2 * L_EP + 2 * L_EC", "m"),
     "V_vac": ("V_vac = L * pi * a_EC**2", "m3"),
+    "no_vpumps": ("no_vpumps = V_vac / vpump_cap", "1"),
     "P_alpha": ("P_alpha = P_f * E_alpha / E_DT", "MW"),
     "P_n": ("P_n = P_f - P_alpha", "MW"),
     "P_ine": ("P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH", "MW"),
@@ -179,6 +181,24 @@ MIRROR_GENERATED_VAR_FORMULAS = {
 MIRROR_CONSTANT_DEFAULTS = {
     "E_DT": (17.59e6 * 1.60218e-19, "J"),
     "E_alpha": (3.52e6 * 1.60218e-19, "J"),
+}
+
+MIRROR_VARIABLE_OVERRIDES = {
+    "cost_pump": (
+        "Cost of one vacuum pump, scaled from 1985 dollars",
+        40000,
+        "dollar/pump",
+    ),
+    "vpump_cap": (
+        "Vacuum volume pumped by one vacuum pump in one second",
+        200 / 48,
+        "m3/pump",
+    ),
+    "no_vpumps": (
+        "Number of vacuum pumps required to pump the full vacuum in one second",
+        None,
+        "1",
+    ),
 }
 
 TYPE_REPLACEMENTS = (
@@ -338,6 +358,8 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     generated["L_CF"] = 1.0
     generated["L"] = generated["L_CC"] + 2 * values["L_EP"] + 2 * values["L_EC"]
     generated["V_vac"] = generated["L"] * 3.141592653589793 * values["a_EC"] ** 2
+    values["vpump_cap"] = MIRROR_VARIABLE_OVERRIDES["vpump_cap"][1]
+    generated["no_vpumps"] = generated["V_vac"] / values["vpump_cap"]
     generated["P_alpha"] = values["P_f"] * values["E_alpha"] / values["E_DT"]
     generated["P_n"] = values["P_f"] - generated["P_alpha"]
     generated["P_ine"] = (
@@ -479,6 +501,37 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
             conn.execute(
                 "UPDATE mirror_var SET var_value = ?, var_unit = ?, user_input = 0 WHERE var_name = ?",
                 (value, unit, var_name),
+            )
+
+    for var_name, (description, value, unit) in MIRROR_VARIABLE_OVERRIDES.items():
+        if not conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():
+            next_ind = conn.execute("SELECT COALESCE(MAX(ind), 0) + 1 FROM mirror_var").fetchone()[0]
+            conn.execute(
+                """
+                INSERT INTO mirror_var
+                (ind, var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked, user_input)
+                VALUES (?, ?, ?, ?, ?, '', '', '', 0)
+                """,
+                (next_ind, var_name, description, value, unit),
+            )
+            continue
+        if value is None:
+            conn.execute(
+                """
+                UPDATE mirror_var
+                SET var_description = ?, var_unit = ?, user_input = 0
+                WHERE var_name = ?
+                """,
+                (description, unit, var_name),
+            )
+        else:
+            conn.execute(
+                """
+                UPDATE mirror_var
+                SET var_description = ?, var_value = ?, var_unit = ?, user_input = 0
+                WHERE var_name = ?
+                """,
+                (description, value, unit, var_name),
             )
 
     reverse_links: dict[str, list[str]] = {}

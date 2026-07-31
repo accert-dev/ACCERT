@@ -216,6 +216,84 @@ def test_mirror_account_algorithms_use_accert_variable_names():
     assert alg.run({"P_egross": 158.12094932835822}) == pytest.approx(42.37641442)
 
 
+def test_mirror_vacuum_pump_account_uses_deeper_variables(cursor):
+    cursor.execute(
+        """
+        SELECT variables
+        FROM mirror_acco
+        WHERE code_of_account = ?;
+        """,
+        ("22163",),
+    )
+    assert cursor.fetchone()[0] == "cost_pump, no_vpumps"
+
+    cursor.execute(
+        """
+        SELECT var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked
+        FROM mirror_var
+        WHERE var_name IN (?, ?, ?, ?)
+        ORDER BY var_name;
+        """,
+        ("V_vac", "cost_pump", "no_vpumps", "vpump_cap"),
+    )
+    rows = {row[0]: row[1:] for row in cursor.fetchall()}
+
+    assert rows["cost_pump"] == (
+        "Cost of one vacuum pump, scaled from 1985 dollars",
+        40000.0,
+        "dollar/pump",
+        "",
+        "",
+        "",
+    )
+    assert rows["vpump_cap"] == (
+        "Vacuum volume pumped by one vacuum pump in one second",
+        pytest.approx(200 / 48),
+        "m3/pump",
+        "",
+        "",
+        "no_vpumps",
+    )
+    assert rows["no_vpumps"] == (
+        "Number of vacuum pumps required to pump the full vacuum in one second",
+        pytest.approx(9.42477796076938 / (200 / 48)),
+        "1",
+        "cal_no_vpumps",
+        "V_vac, vpump_cap",
+        "",
+    )
+    assert rows["V_vac"][5] == "no_vpumps"
+
+    cursor.execute(
+        """
+        SELECT alg_for, alg_python, alg_formulation, alg_units
+        FROM mirror_alg
+        WHERE alg_name = ?;
+        """,
+        ("cal_no_vpumps",),
+    )
+    assert cursor.fetchone() == (
+        "v",
+        "MirrorFunc",
+        "no_vpumps = V_vac / vpump_cap",
+        "1",
+    )
+
+    alg = MirrorFunc(
+        ind=1,
+        alg_name="Account_C22_1_6_3",
+        alg_for="c",
+        alg_description="",
+        alg_formulation="",
+        alg_units="million",
+        variables="cost_pump,no_vpumps",
+        constants="",
+    )
+    assert alg.run({"cost_pump": 40000, "no_vpumps": 2.2619467105846507}) == pytest.approx(
+        0.09047786842338603
+    )
+
+
 def test_mirror_generated_variable_algorithm_can_recalculate(cursor):
     accert = Accert.__new__(Accert)
     accert.var_tabl = "mirror_var"
