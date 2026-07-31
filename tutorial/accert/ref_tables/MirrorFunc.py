@@ -87,6 +87,104 @@ class MirrorFunc(Algorithm):
             return algorithm(*variables)
         except AttributeError:
             raise ValueError(f"Algorithm {alg_name} not found")
+
+    @staticmethod
+    def cal_P_f_CC(P_f, P_f_EP):
+        return P_f - 2 * P_f_EP
+
+    @staticmethod
+    def cal_L_CC(P_f_CC, P_f_L):
+        return P_f_CC / P_f_L
+
+    @staticmethod
+    def cal_L_CF():
+        return 1.0
+
+    @staticmethod
+    def cal_L(L_CC, L_EP, L_EC):
+        return L_CC + 2 * L_EP + 2 * L_EC
+
+    @staticmethod
+    def cal_V_vac(L, a_EC):
+        return L * np.pi * a_EC**2
+
+    @staticmethod
+    def cal_P_alpha(E_DT, E_alpha, P_f):
+        return P_f * E_alpha / E_DT
+
+    @staticmethod
+    def cal_P_n(P_f, P_alpha):
+        return P_f - P_alpha
+
+    @staticmethod
+    def cal_P_ine(P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH):
+        return P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH
+
+    @staticmethod
+    def cal_P_pump(f_pump, M_n, P_n):
+        return f_pump * M_n * P_n
+
+    @staticmethod
+    def cal_P_sub_cont(f_sub, P_f):
+        return f_sub * P_f
+
+    @staticmethod
+    def cal_P_cryo(f_cryo, P_f):
+        return f_cryo * P_f
+
+    @staticmethod
+    def cal_P_other(P_pump, P_sub_cont, P_cryo):
+        return P_pump + P_sub_cont + P_cryo
+
+    @staticmethod
+    def cal_P_in(P_NBI, P_ICRH, P_ECH):
+        return P_NBI + P_ICRH + P_ECH
+
+    @staticmethod
+    def cal_P_th(M_n, P_n, P_pump, eta_pump):
+        return M_n * P_n + eta_pump * P_pump
+
+    @staticmethod
+    def cal_P_the(eta_th, P_th):
+        return eta_th * P_th
+
+    @staticmethod
+    def cal_P_DEC(P_in, P_alpha):
+        return P_in + P_alpha
+
+    @staticmethod
+    def cal_P_DECe(eta_DEC, P_DEC):
+        return eta_DEC * P_DEC
+
+    @staticmethod
+    def cal_P_egross(application, P_DECe, P_the):
+        if str(application).lower() == "electricity":
+            return P_DECe + P_the
+        return P_DECe
+
+    @staticmethod
+    def cal_P_enet(P_egross, P_ine, P_other):
+        return P_egross - (P_ine + P_other)
+
+    @staticmethod
+    def cal_f_aux(P_aux, P_egross):
+        return P_aux / P_egross
+
+    @staticmethod
+    def cal_Q_sci(P_f, P_in):
+        return P_f / P_in
+
+    @staticmethod
+    def cal_Q_eng(P_egross, P_ine, P_other):
+        return P_egross / (P_ine + P_other)
+
+    @staticmethod
+    def cal_f_refrac(Q_eng):
+        return 1 / Q_eng
+
+    @staticmethod
+    def cal_CF_magnet_number(L_CC, L_CF):
+        return L_CC / L_CF
     
     ### Account Methods: ### 
     @staticmethod

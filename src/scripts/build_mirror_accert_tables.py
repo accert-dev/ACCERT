@@ -138,6 +138,41 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "CF_magnet_number": "L_CC, L_CF",
 }
 
+MIRROR_GENERATED_VAR_FORMULAS = {
+    "P_f_CC": ("P_f_CC = P_f - 2 * P_f_EP", "MW"),
+    "L_CC": ("L_CC = P_f_CC / P_f_L", "m"),
+    "L_CF": ("L_CF = 1.0", "m"),
+    "L": ("L = L_CC + 2 * L_EP + 2 * L_EC", "m"),
+    "V_vac": ("V_vac = L * pi * a_EC**2", "m3"),
+    "P_alpha": ("P_alpha = P_f * E_alpha / E_DT", "MW"),
+    "P_n": ("P_n = P_f - P_alpha", "MW"),
+    "P_ine": ("P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH", "MW"),
+    "P_pump": ("P_pump = f_pump * M_n * P_n", "MW"),
+    "P_sub_cont": ("P_sub_cont = f_sub * P_f", "MW"),
+    "P_cryo": ("P_cryo = f_cryo * P_f", "MW"),
+    "P_other": ("P_other = P_pump + P_sub_cont + P_cryo", "MW"),
+    "P_in": ("P_in = P_NBI + P_ICRH + P_ECH", "MW"),
+    "P_th": ("P_th = M_n * P_n + eta_pump * P_pump", "MW"),
+    "P_the": ("P_the = eta_th * P_th", "MW"),
+    "P_DEC": ("P_DEC = P_in + P_alpha", "MW"),
+    "P_DECe": ("P_DECe = eta_DEC * P_DEC", "MW"),
+    "P_egross": (
+        "P_egross = P_DECe + P_the if application == 'electricity' else P_DECe",
+        "MW",
+    ),
+    "P_enet": ("P_enet = P_egross - (P_ine + P_other)", "MW"),
+    "f_aux": ("f_aux = P_aux / P_egross", "1"),
+    "Q_sci": ("Q_sci = P_f / P_in", "1"),
+    "Q_eng": ("Q_eng = P_egross / (P_ine + P_other)", "1"),
+    "f_refrac": ("f_refrac = 1 / Q_eng", "1"),
+    "CF_magnet_number": ("CF_magnet_number = L_CC / L_CF", "1"),
+}
+
+MIRROR_CONSTANT_DEFAULTS = {
+    "E_DT": (17.59e6 * 1.60218e-19, "J"),
+    "E_alpha": (3.52e6 * 1.60218e-19, "J"),
+}
+
 TYPE_REPLACEMENTS = (
     (re.compile(r"varchar\(\d+\)", re.IGNORECASE), "TEXT"),
     (re.compile(r"\bint\b", re.IGNORECASE), "INTEGER"),
@@ -279,6 +314,45 @@ def _generate_inputs_defaults(algorithm_source: Path) -> dict[str, tuple[object,
     return values
 
 
+def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) -> dict[str, float]:
+    values = {name: value for name, (value, _unit) in input_defaults.items()}
+    values.update({name: value for name, (value, _unit) in MIRROR_CONSTANT_DEFAULTS.items()})
+    generated = {}
+
+    generated["P_f_CC"] = values["P_f"] - 2 * values["P_f_EP"]
+    generated["L_CC"] = generated["P_f_CC"] / values["P_f_L"]
+    generated["L_CF"] = 1.0
+    generated["L"] = generated["L_CC"] + 2 * values["L_EP"] + 2 * values["L_EC"]
+    generated["V_vac"] = generated["L"] * 3.141592653589793 * values["a_EC"] ** 2
+    generated["P_alpha"] = values["P_f"] * values["E_alpha"] / values["E_DT"]
+    generated["P_n"] = values["P_f"] - generated["P_alpha"]
+    generated["P_ine"] = (
+        values["P_NBI"] / values["eta_NBI"]
+        + values["P_ICRH"] / values["eta_ICRH"]
+        + values["P_ECH"] / values["eta_ECH"]
+    )
+    generated["P_pump"] = values["f_pump"] * values["M_n"] * generated["P_n"]
+    generated["P_sub_cont"] = values["f_sub"] * values["P_f"]
+    generated["P_cryo"] = values["f_cryo"] * values["P_f"]
+    generated["P_other"] = generated["P_pump"] + generated["P_sub_cont"] + generated["P_cryo"]
+    generated["P_in"] = values["P_NBI"] + values["P_ICRH"] + values["P_ECH"]
+    generated["P_th"] = values["M_n"] * generated["P_n"] + values["eta_pump"] * generated["P_pump"]
+    generated["P_the"] = values["eta_th"] * generated["P_th"]
+    generated["P_DEC"] = generated["P_in"] + generated["P_alpha"]
+    generated["P_DECe"] = values["eta_DEC"] * generated["P_DEC"]
+    if str(values["application"]).lower() == "electricity":
+        generated["P_egross"] = generated["P_DECe"] + generated["P_the"]
+    else:
+        generated["P_egross"] = generated["P_DECe"]
+    generated["P_enet"] = generated["P_egross"] - (generated["P_ine"] + generated["P_other"])
+    generated["f_aux"] = values["P_aux"] / generated["P_egross"]
+    generated["Q_sci"] = values["P_f"] / generated["P_in"]
+    generated["Q_eng"] = generated["P_egross"] / (generated["P_ine"] + generated["P_other"])
+    generated["f_refrac"] = 1 / generated["Q_eng"]
+    generated["CF_magnet_number"] = generated["L_CC"] / generated["L_CF"]
+    return generated
+
+
 def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     dependencies = _account_method_dependencies(algorithm_source)
     methods = set(dependencies)
@@ -336,12 +410,14 @@ def _split_vars(value: str | None) -> list[str]:
 
 
 def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
+    input_defaults = _generate_inputs_defaults(algorithm_source)
+    generated_values = _mirror_generated_var_values(input_defaults)
     conn.execute("UPDATE mirror_var SET var_alg = '' WHERE var_alg = 'TODO'")
     conn.execute("UPDATE mirror_var SET var_need = '' WHERE var_need = 'TODO'")
     conn.execute("UPDATE mirror_var SET v_linked = '' WHERE v_linked = 'TODO'")
     conn.execute("UPDATE mirror_var SET var_unit = '1' WHERE var_unit = 'TODO'")
     conn.execute("UPDATE mirror_var SET var_unit = 'm' WHERE var_name = 'r_magnet'")
-    for var_name, (value, unit) in _generate_inputs_defaults(algorithm_source).items():
+    for var_name, (value, unit) in input_defaults.items():
         if conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():
             continue
         next_ind = conn.execute("SELECT COALESCE(MAX(ind), 0) + 1 FROM mirror_var").fetchone()[0]
@@ -365,6 +441,32 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
                 (next_ind, var_name, "Mirror generated parameter", var_need),
             )
         conn.execute("UPDATE mirror_var SET var_need = ? WHERE var_name = ?", (var_need, var_name))
+        _formulation, unit = MIRROR_GENERATED_VAR_FORMULAS.get(var_name, ("", "1"))
+        conn.execute(
+            """
+            UPDATE mirror_var
+            SET var_value = ?, var_alg = ?, var_unit = ?, user_input = 0
+            WHERE var_name = ?
+            """,
+            (generated_values.get(var_name), f"cal_{var_name}", unit, var_name),
+        )
+
+    for var_name, (value, unit) in MIRROR_CONSTANT_DEFAULTS.items():
+        if not conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():
+            next_ind = conn.execute("SELECT COALESCE(MAX(ind), 0) + 1 FROM mirror_var").fetchone()[0]
+            conn.execute(
+                """
+                INSERT INTO mirror_var
+                (ind, var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked, user_input)
+                VALUES (?, ?, ?, ?, ?, '', '', '', 0)
+                """,
+                (next_ind, var_name, "Mirror physical constant", value, unit),
+            )
+        else:
+            conn.execute(
+                "UPDATE mirror_var SET var_value = ?, var_unit = ?, user_input = 0 WHERE var_name = ?",
+                (value, unit, var_name),
+            )
 
     reverse_links: dict[str, list[str]] = {}
     for var_name, var_need in conn.execute("SELECT var_name, var_need FROM mirror_var"):
@@ -401,6 +503,39 @@ def _normalize_mirror_algorithm_table(conn: sqlite3.Connection, algorithm_source
             "UPDATE mirror_alg SET alg_formulation = ?, alg_units = 'million' WHERE alg_name = ?",
             (variables or "reference value", alg_name),
         )
+    next_ind = conn.execute("SELECT COALESCE(MAX(ind), 0) + 1 FROM mirror_alg").fetchone()[0]
+    for var_name, (formulation, unit) in MIRROR_GENERATED_VAR_FORMULAS.items():
+        alg_name = f"cal_{var_name}"
+        existing = conn.execute("SELECT ind FROM mirror_alg WHERE alg_name = ?", (alg_name,)).fetchone()
+        if existing:
+            conn.execute(
+                """
+                UPDATE mirror_alg
+                SET alg_for = 'v',
+                    alg_description = ?,
+                    alg_python = 'MirrorFunc',
+                    alg_formulation = ?,
+                    alg_units = ?
+                WHERE alg_name = ?
+                """,
+                (f"Mirror generated variable calculation for {var_name}", formulation, unit, alg_name),
+            )
+            continue
+        conn.execute(
+            """
+            INSERT INTO mirror_alg
+            (ind, alg_name, alg_for, alg_description, alg_python, alg_formulation, alg_units)
+            VALUES (?, ?, 'v', ?, 'MirrorFunc', ?, ?)
+            """,
+            (
+                next_ind,
+                alg_name,
+                f"Mirror generated variable calculation for {var_name}",
+                formulation,
+                unit,
+            ),
+        )
+        next_ind += 1
 
 
 def load_mirror_tables(

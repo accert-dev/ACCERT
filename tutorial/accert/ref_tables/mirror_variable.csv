@@ -1,6 +1,6 @@
 ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_input
-1,E_DT,str,,1,,,P_alpha,
-2,E_alpha,str,,1,,,P_alpha,
+1,E_DT,str,2.8182346199999998e-12,J,,,P_alpha,0
+2,E_alpha,str,5.6396736e-13,J,,,P_alpha,0
 3,E_n,str,,1,"E_DT, E_alpha",,,
 4,m_T,str,,1,,,,
 5,m_D,str,,1,,,,
@@ -69,29 +69,29 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 68,f_Pb,str,,1,f_Li,,,
 69,P_Li,str,,1,"Li_price, f_6Li",,,
 70,P_PbLi,str,,1,"P_Li, P_Pb, f_Li, f_Pb",,,
-71,P_f_CC,str,,1,"P_f, P_f_EP","P_f, P_f_EP",L_CC,
-72,L_CC,str,,1,"P_f_CC, P_f_L","P_f_CC, P_f_L","CF_magnet_number, L",
-73,L_CF,float,1.0,1,,,CF_magnet_number,
-74,L,str,,1,"L_CC, L_EC, L_EP","L_CC, L_EP, L_EC",V_vac,
-75,V_vac,str,,1,"L, a_EC, np","L, a_EC",,
-76,P_alpha,str,,1,"E_DT, E_alpha, P_f","E_DT, E_alpha, P_f","P_DEC, P_n",
-77,P_n,str,,1,"P_alpha, P_f","P_f, P_alpha","P_pump, P_th",
-78,P_ine,str,,1,"P_ECH, P_ICRH, P_NBI, eta_ECH, eta_ICRH, eta_NBI","P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH","P_enet, Q_eng",
-79,P_pump,str,,1,"M_n, P_n, f_pump","f_pump, M_n, P_n","P_other, P_th",
-80,P_sub_cont,str,,1,"P_f, f_sub","f_sub, P_f",P_other,
-81,P_cryo,str,,1,"P_f, f_cryo","f_cryo, P_f",P_other,
-82,P_other,str,,1,"P_cryo, P_pump, P_sub_cont","P_pump, P_sub_cont, P_cryo","P_enet, Q_eng",
-83,P_in,str,,1,"P_ECH, P_ICRH, P_NBI","P_NBI, P_ICRH, P_ECH","P_DEC, Q_sci",
-84,P_th,str,,1,"M_n, P_n, P_pump, eta_pump","M_n, P_n, P_pump, eta_pump",P_the,
-85,P_the,str,,1,"P_th, eta_th","eta_th, P_th",P_egross,
-86,P_DEC,str,,1,"P_alpha, P_in","P_in, P_alpha",P_DECe,
-87,P_DECe,str,,1,"P_DEC, eta_DEC","eta_DEC, P_DEC",P_egross,
-88,P_egross,str,,1,"P_DECe, P_the","application, P_DECe, P_the","P_enet, Q_eng, f_aux",
-89,P_enet,str,,1,"P_egross, P_ine, P_other","P_egross, P_ine, P_other",,
-90,f_aux,str,,1,"P_aux, P_egross","P_aux, P_egross",,
-91,Q_sci,str,,1,"P_f, P_in","P_f, P_in",,
-92,Q_eng,str,,1,"P_egross, P_ine, P_other","P_egross, P_ine, P_other",f_refrac,
-93,f_refrac,str,,1,Q_eng,Q_eng,,
+71,P_f_CC,str,-1.0,MW,cal_P_f_CC,"P_f, P_f_EP",L_CC,0
+72,L_CC,str,-1.0,m,cal_L_CC,"P_f_CC, P_f_L","CF_magnet_number, L",0
+73,L_CF,float,1.0,m,cal_L_CF,,CF_magnet_number,0
+74,L,str,3.0,m,cal_L,"L_CC, L_EP, L_EC",V_vac,0
+75,V_vac,str,9.42477796076938,m3,cal_V_vac,"L, a_EC",,0
+76,P_alpha,str,0.20011370096645825,MW,cal_P_alpha,"E_DT, E_alpha, P_f","P_DEC, P_n",0
+77,P_n,str,0.7998862990335418,MW,cal_P_n,"P_f, P_alpha","P_pump, P_th",0
+78,P_ine,str,6.0,MW,cal_P_ine,"P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH","P_enet, Q_eng",0
+79,P_pump,str,0.02639624786810688,MW,cal_P_pump,"f_pump, M_n, P_n","P_other, P_th",0
+80,P_sub_cont,str,0.04,MW,cal_P_sub_cont,"f_sub, P_f",P_other,0
+81,P_cryo,str,0.01,MW,cal_P_cryo,"f_cryo, P_f",P_other,0
+82,P_other,str,0.07639624786810688,MW,cal_P_other,"P_pump, P_sub_cont, P_cryo","P_enet, Q_eng",0
+83,P_in,str,3.0,MW,cal_P_in,"P_NBI, P_ICRH, P_ECH","P_DEC, Q_sci",0
+84,P_th,str,0.9057432518476407,MW,cal_P_th,"M_n, P_n, P_pump, eta_pump",P_the,0
+85,P_the,str,0.45287162592382035,MW,cal_P_the,"eta_th, P_th",P_egross,0
+86,P_DEC,str,3.200113700966458,MW,cal_P_DEC,"P_in, P_alpha",P_DECe,0
+87,P_DECe,str,2.8801023308698124,MW,cal_P_DECe,"eta_DEC, P_DEC",P_egross,0
+88,P_egross,str,2.8801023308698124,MW,cal_P_egross,"application, P_DECe, P_the","P_enet, Q_eng, f_aux",0
+89,P_enet,str,-3.196293916998295,MW,cal_P_enet,"P_egross, P_ine, P_other",,0
+90,f_aux,str,0.3472098853161209,1,cal_f_aux,"P_aux, P_egross",,0
+91,Q_sci,str,0.3333333333333333,1,cal_Q_sci,"P_f, P_in",,0
+92,Q_eng,str,0.4739819809941281,1,cal_Q_eng,"P_egross, P_ine, P_other",f_refrac,0
+93,f_refrac,str,2.1097848443575926,1,cal_f_refrac,Q_eng,,0
 94,run_name,str,,1,"P_f, float",,,
 95,cost_file_full,str,,1,"cost_file, pkg_resources",,,
 96,new_data,str,,1,"f_vol, material, name, pd, thickness",,,
@@ -193,4 +193,4 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 192,a_EP,Mirror input parameter,1.0,m,,,,0
 193,HF_magnet_number,Mirror input parameter,4.0,1,,,,0
 194,LF_magnet_number,Mirror input parameter,2.0,1,,,,0
-195,CF_magnet_number,Mirror generated parameter,,1,,"L_CC, L_CF",,0
+195,CF_magnet_number,Mirror generated parameter,-1.0,1,cal_CF_magnet_number,"L_CC, L_CF",,0

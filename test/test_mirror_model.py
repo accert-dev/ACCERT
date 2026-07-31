@@ -2,6 +2,8 @@ import csv
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 from Main import Accert
 
 
@@ -134,6 +136,75 @@ def test_mirror_variable_links_are_reversed_from_var_need(cursor):
         "application, P_DECe, P_the",
         "P_enet, Q_eng, f_aux",
     )
+
+
+def test_mirror_generated_variable_algorithms_are_loaded(cursor):
+    cursor.execute(
+        """
+        SELECT var_alg, var_need, var_unit
+        FROM mirror_var
+        WHERE var_name = ?;
+        """,
+        ("P_DECe",),
+    )
+    assert cursor.fetchone() == ("cal_P_DECe", "eta_DEC, P_DEC", "MW")
+
+    cursor.execute(
+        """
+        SELECT alg_for, alg_python, alg_formulation, alg_units
+        FROM mirror_alg
+        WHERE alg_name = ?;
+        """,
+        ("cal_P_DECe",),
+    )
+    assert cursor.fetchone() == (
+        "v",
+        "MirrorFunc",
+        "P_DECe = eta_DEC * P_DEC",
+        "MW",
+    )
+
+    cursor.execute(
+        """
+        SELECT var_name, var_value, var_unit, v_linked
+        FROM mirror_var
+        WHERE var_name IN (?, ?)
+        ORDER BY var_name;
+        """,
+        ("P_DEC", "eta_DEC"),
+    )
+    rows = cursor.fetchall()
+    assert rows[0][0] == "P_DEC"
+    assert rows[0][1] == pytest.approx(3.20011370096646)
+    assert rows[0][2:] == ("MW", "P_DECe")
+    assert rows[1] == ("eta_DEC", 0.9, "1", "P_DECe")
+
+
+def test_mirror_generated_variable_algorithm_can_recalculate(cursor):
+    accert = Accert.__new__(Accert)
+    accert.var_tabl = "mirror_var"
+    accert.alg_tabl = "mirror_alg"
+    accert.cel_tabl = None
+
+    cursor.execute(
+        """
+        UPDATE mirror_var
+        SET var_value = ?
+        WHERE var_name = ?;
+        """,
+        (10.0, "P_DEC"),
+    )
+
+    assert accert.update_super_variable(cursor, "P_DECe") is None
+    cursor.execute(
+        """
+        SELECT var_value, var_unit, user_input
+        FROM mirror_var
+        WHERE var_name = ?;
+        """,
+        ("P_DECe",),
+    )
+    assert cursor.fetchone() == (9.0, "MW", 1)
 
 
 def test_mirror_account_recalculation_uses_accert_variables(cursor):
