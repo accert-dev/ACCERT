@@ -3,6 +3,7 @@ import pandas as pd
 import scipy
 import json
 import math
+import inspect
 import pkg_resources
 from .Algorithm import Algorithm
 
@@ -42,7 +43,10 @@ class MirrorFunc(Algorithm):
             algorithm = getattr(self, alg_name)
         except AttributeError:
             raise ValueError(f"Algorithm {alg_name} not found")
-        return algorithm(variables)
+        parameters = list(inspect.signature(algorithm).parameters)
+        if parameters == ["inputs"]:
+            return algorithm(variables)
+        return algorithm(*[variables[var] for var in parameters])
 
     def _run_algorithm(self, alg_name: str, variables: list) -> float:
         """
@@ -88,6 +92,18 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def cal_cost_factor(n_unit):
         return 0.80 ** (np.log(n_unit) / np.log(2))
+
+    @staticmethod
+    def cal_HF_magnet_cost(n_unit, HF_magnet_number):
+        return MirrorFunc.HF_magnet_cost(n_unit, HF_magnet_number)
+
+    @staticmethod
+    def cal_LF_magnet_cost(n_unit, LF_magnet_number):
+        return MirrorFunc.LF_magnet_cost(n_unit, LF_magnet_number)
+
+    @staticmethod
+    def cal_CF_magnet_cost(n_unit, CF_magnet_number):
+        return MirrorFunc.CF_magnet_cost(n_unit, CF_magnet_number)
 
     @staticmethod
     def cal_P_alpha(E_DT, E_alpha, P_f):
@@ -369,30 +385,30 @@ class MirrorFunc(Algorithm):
         # Coils
         # Rollup
         return(
-            MirrorFunc.Account_C22_1_3_1(inputs) +
-            MirrorFunc.Account_C22_1_3_2(inputs) +
-            MirrorFunc.Account_C22_1_3_3(inputs)
+            MirrorFunc.Account_C22_1_3_1(inputs['HF_magnet_number'], inputs['HF_magnet_cost']) +
+            MirrorFunc.Account_C22_1_3_2(inputs['LF_magnet_number'], inputs['LF_magnet_cost']) +
+            MirrorFunc.Account_C22_1_3_3(inputs['CF_magnet_number'], inputs['CF_magnet_cost'])
             )
 
-    # @staticmethod
-    def Account_C22_1_3_1(inputs):
+    @staticmethod
+    def Account_C22_1_3_1(HF_magnet_number, HF_magnet_cost):
         # HF Coils - Quantity 4
         # 2 per end cell
         # 2 end cells per tandem
-        return(inputs['HF_magnet_number'] * MirrorFunc.HF_magnet_cost(inputs))
+        return(HF_magnet_number * HF_magnet_cost)
 
     @staticmethod
-    def Account_C22_1_3_2(inputs):
+    def Account_C22_1_3_2(LF_magnet_number, LF_magnet_cost):
         # LF Coils - Quantity 8
         # 4 per end cell
         # 2 end cells per tandem
-        return(inputs['LF_magnet_number'] * MirrorFunc.LF_magnet_cost(inputs))
+        return(LF_magnet_number * LF_magnet_cost)
 
     @staticmethod
-    def Account_C22_1_3_3(inputs):
+    def Account_C22_1_3_3(CF_magnet_number, CF_magnet_cost):
         # CF Coils
         # One coil every L_CF m of Central Cell
-        return(inputs['CF_magnet_number'] * MirrorFunc.CF_magnet_cost(inputs))
+        return(CF_magnet_number * CF_magnet_cost)
 
     @staticmethod
     def Account_C22_1_4(inputs):
@@ -1623,31 +1639,31 @@ class MirrorFunc(Algorithm):
 
 
     @staticmethod
-    def HF_magnet_cost(inputs, HF_field=25.0, inner_rad=50):
+    def HF_magnet_cost(n_unit, HF_magnet_number, HF_field=25.0, inner_rad=50):
         # This is the HF cost per magnet [MUSD], not for all four
 
         # cost = 29.10 # Assuming ARPA number for WHAM magnet cost, 5x width, using PROCESS J_crit
         cost = MirrorFunc.HTS_storedEnergy(HF_field, inner_rad)
-        cost_factor = (0.70)**(np.log((inputs['n_unit']-1)*inputs['HF_magnet_number'] + 1)/np.log(2))
+        cost_factor = (0.70)**(np.log((n_unit - 1) * HF_magnet_number + 1)/np.log(2))
         
         return(cost * cost_factor)
 
     @staticmethod
-    def LF_magnet_cost(inputs, LF_field=10.0, inner_rad=50):
+    def LF_magnet_cost(n_unit, LF_magnet_number, LF_field=10.0, inner_rad=50):
         # This is the LF cost per magnet [MUSD]
 
         cost = MirrorFunc.HTS_storedEnergy(LF_field, inner_rad)
-        cost_factor = (0.70)**(np.log((inputs['n_unit']-1)*inputs['LF_magnet_number'] + 1)/np.log(2))
+        cost_factor = (0.70)**(np.log((n_unit - 1) * LF_magnet_number + 1)/np.log(2))
         
         return(cost * cost_factor)
 
     @staticmethod
-    def CF_magnet_cost(inputs, CF_field=3.0):
+    def CF_magnet_cost(n_unit, CF_magnet_number, CF_field=3.0):
         # This is the CF cost per magnet [MUSD]
         
         convert_to_currentDollar = 1.31
         cost = 0.7*CF_field*convert_to_currentDollar # Assuming 700k/Tesla in 2016 dollars with 3T LTS
-        cost_factor = (0.70)**(np.log((inputs['n_unit']-1)*inputs['CF_magnet_number'] + 1)/np.log(2))
+        cost_factor = (0.70)**(np.log((n_unit - 1) * CF_magnet_number + 1)/np.log(2))
         
         return(cost * cost_factor)
 

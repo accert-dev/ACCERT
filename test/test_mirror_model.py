@@ -318,7 +318,13 @@ def test_mirror_nbi_account_uses_cost_factor_variable(cursor):
 
     assert rows["P_NBI"] == (15.0, "MW", "", "", "P_in, P_ine")
     assert rows["cost_factor"] == (1.0, "1", "cal_cost_factor", "n_unit", "")
-    assert rows["n_unit"] == (1.0, "1", "", "", "cost_factor")
+    assert rows["n_unit"] == (
+        1.0,
+        "1",
+        "",
+        "",
+        "CF_magnet_cost, HF_magnet_cost, LF_magnet_cost, cost_factor",
+    )
 
     cursor.execute(
         """
@@ -346,6 +352,83 @@ def test_mirror_nbi_account_uses_cost_factor_variable(cursor):
         constants="",
     )
     assert alg.run({"P_NBI": 15.0, "cost_factor": 1.0}) == pytest.approx(105.963)
+
+
+def test_mirror_magnet_accounts_use_explicit_cost_variables(cursor):
+    cursor.execute(
+        """
+        SELECT code_of_account, variables
+        FROM mirror_acco
+        WHERE code_of_account IN (?, ?, ?)
+        ORDER BY code_of_account;
+        """,
+        ("22131", "22132", "22133"),
+    )
+    assert cursor.fetchall() == [
+        ("22131", "HF_magnet_number, HF_magnet_cost"),
+        ("22132", "LF_magnet_number, LF_magnet_cost"),
+        ("22133", "CF_magnet_number, CF_magnet_cost"),
+    ]
+
+    cursor.execute(
+        """
+        SELECT var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked
+        FROM mirror_var
+        WHERE var_name IN (?, ?, ?, ?, ?, ?, ?)
+        ORDER BY var_name;
+        """,
+        (
+            "CF_magnet_cost",
+            "CF_magnet_number",
+            "HF_magnet_cost",
+            "HF_magnet_number",
+            "LF_magnet_cost",
+            "LF_magnet_number",
+            "n_unit",
+        ),
+    )
+    rows = {row[0]: row[1:] for row in cursor.fetchall()}
+
+    assert rows["HF_magnet_cost"] == (
+        "HF cost per magnet, not for all four",
+        29.1,
+        "million",
+        "cal_HF_magnet_cost",
+        "n_unit, HF_magnet_number",
+        "",
+    )
+    assert rows["LF_magnet_cost"] == (
+        "LF cost per magnet",
+        6.25262,
+        "million",
+        "cal_LF_magnet_cost",
+        "n_unit, LF_magnet_number",
+        "",
+    )
+    assert rows["CF_magnet_cost"] == (
+        "CF cost per magnet",
+        2.751,
+        "million",
+        "cal_CF_magnet_cost",
+        "n_unit, CF_magnet_number",
+        "",
+    )
+    assert rows["HF_magnet_number"][5] == "HF_magnet_cost"
+    assert rows["LF_magnet_number"][5] == "LF_magnet_cost"
+    assert rows["CF_magnet_number"][5] == "CF_magnet_cost"
+    assert rows["n_unit"][5] == "CF_magnet_cost, HF_magnet_cost, LF_magnet_cost, cost_factor"
+
+    alg = MirrorFunc(
+        ind=1,
+        alg_name="Account_C22_1_3_1",
+        alg_for="c",
+        alg_description="",
+        alg_formulation="",
+        alg_units="million",
+        variables="HF_magnet_number,HF_magnet_cost",
+        constants="",
+    )
+    assert alg.run({"HF_magnet_number": 4.0, "HF_magnet_cost": 29.1}) == pytest.approx(116.4)
 
 
 def test_mirror_generated_variable_algorithm_can_recalculate(cursor):

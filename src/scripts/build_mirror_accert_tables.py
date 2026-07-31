@@ -73,6 +73,10 @@ MIRROR_REFERENCE_VAR_OVERRIDES = {
     "P_NBI": (15, "MW"),
     "P_ICRH": (10, "MW"),
     "P_ECH": (10, "MW"),
+    "HF_magnet_cost": (29.1, "million"),
+    "LF_magnet_cost": (6.25262, "million"),
+    "CF_magnet_cost": (2.751, "million"),
+    "CF_magnet_number": (52.0300751726645, "1"),
     "P_egross": (158.12094932835822, "MW"),
     "P_DECe": (63.01790788032513, "MW"),
     "P_DEC": (70.0198976448057, "MW"),
@@ -132,6 +136,9 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "V_vac": "L, a_EC",
     "no_vpumps": "V_vac, vpump_cap",
     "cost_factor": "n_unit",
+    "HF_magnet_cost": "n_unit, HF_magnet_number",
+    "LF_magnet_cost": "n_unit, LF_magnet_number",
+    "CF_magnet_cost": "n_unit, CF_magnet_number",
     "P_alpha": "E_DT, E_alpha, P_f",
     "P_n": "P_f, P_alpha",
     "P_ine": "P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH",
@@ -161,6 +168,18 @@ MIRROR_GENERATED_VAR_FORMULAS = {
     "V_vac": ("V_vac = L * pi * a_EC**2", "m3"),
     "no_vpumps": ("no_vpumps = V_vac / vpump_cap", "1"),
     "cost_factor": ("cost_factor = 0.80 ** (log(n_unit) / log(2))", "1"),
+    "HF_magnet_cost": (
+        "HF_magnet_cost = HTS_storedEnergy(25.0, 50) * 0.70 ** (log((n_unit - 1) * HF_magnet_number + 1) / log(2))",
+        "million",
+    ),
+    "LF_magnet_cost": (
+        "LF_magnet_cost = HTS_storedEnergy(10.0, 50) * 0.70 ** (log((n_unit - 1) * LF_magnet_number + 1) / log(2))",
+        "million",
+    ),
+    "CF_magnet_cost": (
+        "CF_magnet_cost = 0.7 * 3.0 * 1.31 * 0.70 ** (log((n_unit - 1) * CF_magnet_number + 1) / log(2))",
+        "million",
+    ),
     "P_alpha": ("P_alpha = P_f * E_alpha / E_DT", "MW"),
     "P_n": ("P_n = P_f - P_alpha", "MW"),
     "P_ine": ("P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH", "MW"),
@@ -208,6 +227,26 @@ MIRROR_VARIABLE_OVERRIDES = {
     ),
     "cost_factor": (
         "Cost scaling factor calculated from the unit number using an 0.80 learning factor",
+        None,
+        "1",
+    ),
+    "HF_magnet_cost": (
+        "HF cost per magnet, not for all four",
+        None,
+        "million",
+    ),
+    "LF_magnet_cost": (
+        "LF cost per magnet",
+        None,
+        "million",
+    ),
+    "CF_magnet_cost": (
+        "CF cost per magnet",
+        None,
+        "million",
+    ),
+    "CF_magnet_number": (
+        "One CF coil every L_CF m of central cell",
         None,
         "1",
     ),
@@ -307,6 +346,11 @@ def _account_method_dependencies(algorithm_source: Path) -> dict[str, tuple[list
             continue
         input_keys = set()
         account_calls = set()
+        explicit_args = [
+            arg.arg
+            for arg in node.args.args
+            if arg.arg not in {"self", "inputs"}
+        ]
         for child in ast.walk(node):
             if (
                 isinstance(child, ast.Subscript)
@@ -324,7 +368,7 @@ def _account_method_dependencies(algorithm_source: Path) -> dict[str, tuple[list
                 and child.func.attr.startswith("Account_")
             ):
                 account_calls.add(child.func.attr)
-        dependencies[node.name] = (sorted(input_keys), sorted(account_calls))
+        dependencies[node.name] = (explicit_args or sorted(input_keys), sorted(account_calls))
     return dependencies
 
 
@@ -374,6 +418,15 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     values["vpump_cap"] = MIRROR_VARIABLE_OVERRIDES["vpump_cap"][1]
     generated["no_vpumps"] = generated["V_vac"] / values["vpump_cap"]
     generated["cost_factor"] = 0.80 ** (math.log(values["n_unit"]) / math.log(2))
+    generated["HF_magnet_cost"] = 29.1 * 0.70 ** (
+        math.log((values["n_unit"] - 1) * values["HF_magnet_number"] + 1) / math.log(2)
+    )
+    generated["LF_magnet_cost"] = 6.25262 * 0.70 ** (
+        math.log((values["n_unit"] - 1) * values["LF_magnet_number"] + 1) / math.log(2)
+    )
+    generated["CF_magnet_cost"] = 2.751 * 0.70 ** (
+        math.log((values["n_unit"] - 1) * values["CF_magnet_number"] + 1) / math.log(2)
+    )
     generated["P_alpha"] = values["P_f"] * values["E_alpha"] / values["E_DT"]
     generated["P_n"] = values["P_f"] - generated["P_alpha"]
     generated["P_ine"] = (

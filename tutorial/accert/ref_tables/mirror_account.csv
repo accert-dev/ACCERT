@@ -32,9 +32,9 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 31,2211,First_Wall_and_Blanket,43193434.21,3,221,Unchanged,0.008371891625683487,Account_C22_1_1,million,"L_CC, L_EP"
 32,2212,Magnet_Radiation_Shield,94736955.74,3,221,Unchanged,0.01836222428034747,Account_C22_1_2,million,
 33,2213,Coils,272039976.79999995,3,221,Unchanged,0.05272767135278568,Account_C22_1_3,million,rollup
-34,22131,HF_Coils,116400000.0,4,2213,Unchanged,0.022561025837671125,Account_C22_1_3_1,million,HF_magnet_number
-35,22132,LF_Coils,12505240.0,4,2213,Unchanged,0.0024238062091604677,Account_C22_1_3_2,million,LF_magnet_number
-36,22133,CC_Coils,143134736.8,4,2213,Unchanged,0.02774283930595409,Account_C22_1_3_3,million,CF_magnet_number
+34,22131,HF_Coils,116400000.0,4,2213,Unchanged,0.022561025837671125,Account_C22_1_3_1,million,"HF_magnet_number, HF_magnet_cost"
+35,22132,LF_Coils,12505240.0,4,2213,Unchanged,0.0024238062091604677,Account_C22_1_3_2,million,"LF_magnet_number, LF_magnet_cost"
+36,22133,CC_Coils,143134736.8,4,2213,Unchanged,0.02774283930595409,Account_C22_1_3_3,million,"CF_magnet_number, CF_magnet_cost"
 37,2214,Supplemental_Heating,227453000.0,3,221,Unchanged,0.04408567877882998,Account_C22_1_4,million,rollup
 38,22141,NBI,105963000.0,4,2214,Unchanged,0.02053809261887582,Account_C22_1_4_1,million,"P_NBI, cost_factor"
 39,22142,ICRH,41490000.0,4,2214,Unchanged,0.008041726477705971,Account_C22_1_4_2,million,"P_ICRH, cost_factor"
