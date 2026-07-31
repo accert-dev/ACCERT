@@ -31,9 +31,9 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 30,Account_C22_1_3_2,c,Account C22132 Rollup,MirrorFunc,LF_magnet_number,million
 31,Account_C22_1_3_3,c,Account C22133 Rollup,MirrorFunc,CF_magnet_number,million
 32,Account_C22_1_4,c,Account C2214 Rollup,MirrorFunc,rollup,million
-33,Account_C22_1_4_1,c,Account C22141 Rollup,MirrorFunc,"P_NBI, n_unit",million
-34,Account_C22_1_4_2,c,Account C22142 Rollup,MirrorFunc,"P_ICRH, n_unit",million
-35,Account_C22_1_4_3,c,Account C22143 Rollup,MirrorFunc,"P_ECH, n_unit",million
+33,Account_C22_1_4_1,c,Account C22141 Rollup,MirrorFunc,"P_NBI, cost_factor",million
+34,Account_C22_1_4_2,c,Account C22142 Rollup,MirrorFunc,"P_ICRH, cost_factor",million
+35,Account_C22_1_4_3,c,Account C22143 Rollup,MirrorFunc,"P_ECH, cost_factor",million
 36,Account_C22_1_5,c,Account C2215 Rollup,MirrorFunc,reference value,million
 37,Account_C22_1_6,c,Account C2216 Rollup,MirrorFunc,rollup,million
 38,Account_C22_1_6_2,c,Account C22162 Rollup,MirrorFunc,reference value,million
@@ -41,15 +41,15 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 40,Account_C22_1_6_4,c,Account C22164 Rollup,MirrorFunc,reference value,million
 41,Account_C22_1_7,c,Account C2217 Rollup,MirrorFunc,reference value,million
 42,Account_C22_1_8,c,Account C2218 Rollup,MirrorFunc,reference value,million
-43,Account_C22_1_9,c,Account C2219 Rollup,MirrorFunc,"P_DECe, n_unit",million
-44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,"L, N_module, construction_time, n_unit",million
+43,Account_C22_1_9,c,Account C2219 Rollup,MirrorFunc,"P_DECe, cost_factor",million
+44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,"L, N_module, construction_time, cost_factor",million
 45,Account_C22_2,c,Account C222 Rollup,MirrorFunc,rollup,million
 46,Account_C22_2_1,c,Account C2221 Rollup,MirrorFunc,"N_module, P_egross",million
 47,Account_C22_2_2,c,Account C2222 Rollup,MirrorFunc,P_th,million
 48,Account_C22_2_3,c,Account C2223 Rollup,MirrorFunc,reference value,million
 49,Account_C22_3,c,Account C223 Rollup,MirrorFunc,"N_module, P_th",million
 50,Account_C22_4,c,Account C224 Rollup,MirrorFunc,P_th,million
-51,Account_C22_5,c,Account C225 Rollup,MirrorFunc,n_unit,million
+51,Account_C22_5,c,Account C225 Rollup,MirrorFunc,cost_factor,million
 52,Account_C22_6,c,Account C226 Rollup,MirrorFunc,P_enet,million
 53,Account_C22_7,c,Account C227 Rollup,MirrorFunc,reference value,million
 54,Account_C23,c,Account C23 Rollup,MirrorFunc,"N_module, P_egross",million
@@ -85,22 +85,23 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 84,cal_L,v,Mirror generated variable calculation for L,MirrorFunc,L = L_CC + 2 * L_EP + 2 * L_EC,m
 85,cal_V_vac,v,Mirror generated variable calculation for V_vac,MirrorFunc,V_vac = L * pi * a_EC**2,m3
 86,cal_no_vpumps,v,Mirror generated variable calculation for no_vpumps,MirrorFunc,no_vpumps = V_vac / vpump_cap,1
-87,cal_P_alpha,v,Mirror generated variable calculation for P_alpha,MirrorFunc,P_alpha = P_f * E_alpha / E_DT,MW
-88,cal_P_n,v,Mirror generated variable calculation for P_n,MirrorFunc,P_n = P_f - P_alpha,MW
-89,cal_P_ine,v,Mirror generated variable calculation for P_ine,MirrorFunc,P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH,MW
-90,cal_P_pump,v,Mirror generated variable calculation for P_pump,MirrorFunc,P_pump = f_pump * M_n * P_n,MW
-91,cal_P_sub_cont,v,Mirror generated variable calculation for P_sub_cont,MirrorFunc,P_sub_cont = f_sub * P_f,MW
-92,cal_P_cryo,v,Mirror generated variable calculation for P_cryo,MirrorFunc,P_cryo = f_cryo * P_f,MW
-93,cal_P_other,v,Mirror generated variable calculation for P_other,MirrorFunc,P_other = P_pump + P_sub_cont + P_cryo,MW
-94,cal_P_in,v,Mirror generated variable calculation for P_in,MirrorFunc,P_in = P_NBI + P_ICRH + P_ECH,MW
-95,cal_P_th,v,Mirror generated variable calculation for P_th,MirrorFunc,P_th = M_n * P_n + eta_pump * P_pump,MW
-96,cal_P_the,v,Mirror generated variable calculation for P_the,MirrorFunc,P_the = eta_th * P_th,MW
-97,cal_P_DEC,v,Mirror generated variable calculation for P_DEC,MirrorFunc,P_DEC = P_in + P_alpha,MW
-98,cal_P_DECe,v,Mirror generated variable calculation for P_DECe,MirrorFunc,P_DECe = eta_DEC * P_DEC,MW
-99,cal_P_egross,v,Mirror generated variable calculation for P_egross,MirrorFunc,P_egross = P_DECe + P_the if application == 'electricity' else P_DECe,MW
-100,cal_P_enet,v,Mirror generated variable calculation for P_enet,MirrorFunc,P_enet = P_egross - (P_ine + P_other),MW
-101,cal_f_aux,v,Mirror generated variable calculation for f_aux,MirrorFunc,f_aux = P_aux / P_egross,1
-102,cal_Q_sci,v,Mirror generated variable calculation for Q_sci,MirrorFunc,Q_sci = P_f / P_in,1
-103,cal_Q_eng,v,Mirror generated variable calculation for Q_eng,MirrorFunc,Q_eng = P_egross / (P_ine + P_other),1
-104,cal_f_refrac,v,Mirror generated variable calculation for f_refrac,MirrorFunc,f_refrac = 1 / Q_eng,1
-105,cal_CF_magnet_number,v,Mirror generated variable calculation for CF_magnet_number,MirrorFunc,CF_magnet_number = L_CC / L_CF,1
+87,cal_cost_factor,v,Mirror generated variable calculation for cost_factor,MirrorFunc,cost_factor = 0.80 ** (log(n_unit) / log(2)),1
+88,cal_P_alpha,v,Mirror generated variable calculation for P_alpha,MirrorFunc,P_alpha = P_f * E_alpha / E_DT,MW
+89,cal_P_n,v,Mirror generated variable calculation for P_n,MirrorFunc,P_n = P_f - P_alpha,MW
+90,cal_P_ine,v,Mirror generated variable calculation for P_ine,MirrorFunc,P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH,MW
+91,cal_P_pump,v,Mirror generated variable calculation for P_pump,MirrorFunc,P_pump = f_pump * M_n * P_n,MW
+92,cal_P_sub_cont,v,Mirror generated variable calculation for P_sub_cont,MirrorFunc,P_sub_cont = f_sub * P_f,MW
+93,cal_P_cryo,v,Mirror generated variable calculation for P_cryo,MirrorFunc,P_cryo = f_cryo * P_f,MW
+94,cal_P_other,v,Mirror generated variable calculation for P_other,MirrorFunc,P_other = P_pump + P_sub_cont + P_cryo,MW
+95,cal_P_in,v,Mirror generated variable calculation for P_in,MirrorFunc,P_in = P_NBI + P_ICRH + P_ECH,MW
+96,cal_P_th,v,Mirror generated variable calculation for P_th,MirrorFunc,P_th = M_n * P_n + eta_pump * P_pump,MW
+97,cal_P_the,v,Mirror generated variable calculation for P_the,MirrorFunc,P_the = eta_th * P_th,MW
+98,cal_P_DEC,v,Mirror generated variable calculation for P_DEC,MirrorFunc,P_DEC = P_in + P_alpha,MW
+99,cal_P_DECe,v,Mirror generated variable calculation for P_DECe,MirrorFunc,P_DECe = eta_DEC * P_DEC,MW
+100,cal_P_egross,v,Mirror generated variable calculation for P_egross,MirrorFunc,P_egross = P_DECe + P_the if application == 'electricity' else P_DECe,MW
+101,cal_P_enet,v,Mirror generated variable calculation for P_enet,MirrorFunc,P_enet = P_egross - (P_ine + P_other),MW
+102,cal_f_aux,v,Mirror generated variable calculation for f_aux,MirrorFunc,f_aux = P_aux / P_egross,1
+103,cal_Q_sci,v,Mirror generated variable calculation for Q_sci,MirrorFunc,Q_sci = P_f / P_in,1
+104,cal_Q_eng,v,Mirror generated variable calculation for Q_eng,MirrorFunc,Q_eng = P_egross / (P_ine + P_other),1
+105,cal_f_refrac,v,Mirror generated variable calculation for f_refrac,MirrorFunc,f_refrac = 1 / Q_eng,1
+106,cal_CF_magnet_number,v,Mirror generated variable calculation for CF_magnet_number,MirrorFunc,CF_magnet_number = L_CC / L_CF,1

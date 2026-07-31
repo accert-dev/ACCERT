@@ -36,9 +36,9 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 35,22132,LF_Coils,12505240.0,4,2213,Unchanged,0.0024238062091604677,Account_C22_1_3_2,million,LF_magnet_number
 36,22133,CC_Coils,143134736.8,4,2213,Unchanged,0.02774283930595409,Account_C22_1_3_3,million,CF_magnet_number
 37,2214,Supplemental_Heating,227453000.0,3,221,Unchanged,0.04408567877882998,Account_C22_1_4,million,rollup
-38,22141,NBI,105963000.0,4,2214,Unchanged,0.02053809261887582,Account_C22_1_4_1,million,"P_NBI, n_unit"
-39,22142,ICRH,41490000.0,4,2214,Unchanged,0.008041726477705971,Account_C22_1_4_2,million,"P_ICRH, n_unit"
-40,22143,ECH,80000000.0,4,2214,Unchanged,0.015505859682248196,Account_C22_1_4_3,million,"P_ECH, n_unit"
+38,22141,NBI,105963000.0,4,2214,Unchanged,0.02053809261887582,Account_C22_1_4_1,million,"P_NBI, cost_factor"
+39,22142,ICRH,41490000.0,4,2214,Unchanged,0.008041726477705971,Account_C22_1_4_2,million,"P_ICRH, cost_factor"
+40,22143,ECH,80000000.0,4,2214,Unchanged,0.015505859682248196,Account_C22_1_4_3,million,"P_ECH, cost_factor"
 41,2215,Primary_Structure_and_Support,0.0,3,221,Unchanged,0.0,Account_C22_1_5,million,
 42,2216,Vacuum_System,2031827.2570000002,3,221,Unchanged,0.00039381535432011556,Account_C22_1_6,million,rollup
 43,22162,Vessel_Refrigerators,0.0,4,2216,Unchanged,0.0,Account_C22_1_6_2,million,
@@ -46,12 +46,12 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 45,22164,Backing_Vacuum_Pumps,342000.0,4,2216,Unchanged,6.628755014161104e-05,Account_C22_1_6_4,million,
 46,2217,Power_Supplies,0.0,3,221,Unchanged,0.0,Account_C22_1_7,million,
 47,2218,Divertor,0.0,3,221,Unchanged,0.0,Account_C22_1_8,million,
-48,2219,Direct_Energy_Convertor,109317164.8,3,221,Unchanged,0.02118820772812502,Account_C22_1_9,million,"P_DECe, n_unit"
-49,22111,Assembly_and_Installation_Costs,153195207.9,3,221,Unchanged,0.029692792471128007,Account_C22_1_11,million,"L, N_module, construction_time, n_unit"
+48,2219,Direct_Energy_Convertor,109317164.8,3,221,Unchanged,0.02118820772812502,Account_C22_1_9,million,"P_DECe, cost_factor"
+49,22111,Assembly_and_Installation_Costs,153195207.9,3,221,Unchanged,0.029692792471128007,Account_C22_1_11,million,"L, N_module, construction_time, cost_factor"
 50,222,Main_and_Secondary_Coolant,33649451.5,2,22,Unchanged,0.0065220459167952,Account_C22_2,million,rollup
 51,223,Auxiliary_Cooling_Systems,352198.2635,2,22,Unchanged,6.826421067703095e-05,Account_C22_3,million,"N_module, P_th"
 52,224,Radioactive_Waste_Treatment,627553.2695,2,22,Unchanged,0.00012163441175003857,Account_C22_4,million,P_th
-53,225,Fuel_Handling_and_Storage,88654052.28999999,2,22,Unchanged,0.017183216188392927,Account_C22_5,million,n_unit
+53,225,Fuel_Handling_and_Storage,88654052.28999999,2,22,Unchanged,0.017183216188392927,Account_C22_5,million,cost_factor
 54,226,Other_Heat_Island_Equipment,1748097.852,2,22,Unchanged,0.0003388220000493934,Account_C22_6,million,P_enet
 55,227,Instrumentation_and_Control,85000000.0,2,22,Unchanged,0.01647497591238871,Account_C22_7,million,
 56,23,Turbine_Plant_Equipment,39822761.09,1,2,Unchanged,0.007718576820265415,Account_C23,million,"N_module, P_egross"

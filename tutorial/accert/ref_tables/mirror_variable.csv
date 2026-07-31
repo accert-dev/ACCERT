@@ -18,7 +18,7 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 17,central_cell_cylindrical_part,str,,1,"central_cell, inputs",,,
 18,central_cell_cylindrical_part_cost,str,,1,central_cell_cylindrical_part,,,
 19,total_cost,str,,1,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result",,,
-20,cost_factor,str,,1,"inputs, np",,,
+20,cost_factor,Cost scaling factor calculated from the unit number using an 0.80 learning factor,1.0,1,cal_cost_factor,n_unit,,0
 21,cost_pump,"Cost of one vacuum pump, scaled from 1985 dollars",40000.0,dollar/pump,,,,0
 22,vpump_cap,Vacuum volume pumped by one vacuum pump in one second,4.166666666666667,m3/pump,,,no_vpumps,0
 23,no_vpumps,Number of vacuum pumps required to pump the full vacuum in one second,2.2619467105846507,1,cal_no_vpumps,"V_vac, vpump_cap",,0
@@ -76,22 +76,22 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 75,V_vac,str,9.42477796076938,m3,cal_V_vac,"L, a_EC",no_vpumps,0
 76,P_alpha,str,0.20011370096645825,MW,cal_P_alpha,"E_DT, E_alpha, P_f","P_DEC, P_n",0
 77,P_n,str,0.7998862990335418,MW,cal_P_n,"P_f, P_alpha","P_pump, P_th",0
-78,P_ine,str,6.0,MW,cal_P_ine,"P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH","P_enet, Q_eng",0
+78,P_ine,str,70.0,MW,cal_P_ine,"P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH","P_enet, Q_eng",0
 79,P_pump,str,0.02639624786810688,MW,cal_P_pump,"f_pump, M_n, P_n","P_other, P_th",0
 80,P_sub_cont,str,0.04,MW,cal_P_sub_cont,"f_sub, P_f",P_other,0
 81,P_cryo,str,0.01,MW,cal_P_cryo,"f_cryo, P_f",P_other,0
 82,P_other,str,0.07639624786810688,MW,cal_P_other,"P_pump, P_sub_cont, P_cryo","P_enet, Q_eng",0
-83,P_in,str,3.0,MW,cal_P_in,"P_NBI, P_ICRH, P_ECH","P_DEC, Q_sci",0
+83,P_in,str,35.0,MW,cal_P_in,"P_NBI, P_ICRH, P_ECH","P_DEC, Q_sci",0
 84,P_th,str,158.50506908190818,MW,cal_P_th,"M_n, P_n, P_pump, eta_pump",P_the,0
 85,P_the,str,0.45287162592382035,MW,cal_P_the,"eta_th, P_th",P_egross,0
 86,P_DEC,str,70.0198976448057,MW,cal_P_DEC,"P_in, P_alpha",P_DECe,0
 87,P_DECe,str,63.01790788032513,MW,cal_P_DECe,"eta_DEC, P_DEC",P_egross,0
 88,P_egross,str,158.12094932835822,MW,cal_P_egross,"application, P_DECe, P_the","P_enet, Q_eng, f_aux",0
 89,P_enet,str,94.91500463226332,MW,cal_P_enet,"P_egross, P_ine, P_other",,0
-90,f_aux,str,0.3472098853161209,1,cal_f_aux,"P_aux, P_egross",,0
-91,Q_sci,str,0.3333333333333333,1,cal_Q_sci,"P_f, P_in",,0
-92,Q_eng,str,0.4739819809941281,1,cal_Q_eng,"P_egross, P_ine, P_other",f_refrac,0
-93,f_refrac,str,2.1097848443575926,1,cal_f_refrac,Q_eng,,0
+90,f_aux,str,0.031565554604461525,1,cal_f_aux,"P_aux, P_egross",,0
+91,Q_sci,str,0.02857142857142857,1,cal_Q_sci,"P_f, P_in",,0
+92,Q_eng,str,0.45207950218806525,1,cal_Q_eng,"P_egross, P_ine, P_other",f_refrac,0
+93,f_refrac,str,2.2120003122459635,1,cal_f_refrac,Q_eng,,0
 94,run_name,str,,1,"P_f, float",,,
 95,cost_file_full,str,,1,"cost_file, pkg_resources",,,
 96,new_data,str,,1,"f_vol, material, name, pd, thickness",,,
@@ -138,9 +138,9 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 137,P_f,Mirror input parameter,1.0,MW,,,"P_alpha, P_cryo, P_f_CC, P_n, P_sub_cont, Q_sci",0
 138,P_f_L,Mirror input parameter,1.0,MW/m,,,L_CC,0
 139,P_f_EP,Mirror input parameter,1.0,MW,,,P_f_CC,0
-140,P_NBI,Mirror input parameter,1.0,MW,,,"P_in, P_ine",0
-141,P_ECH,Mirror input parameter,1.0,MW,,,"P_in, P_ine",0
-142,P_ICRH,Mirror input parameter,1.0,MW,,,"P_in, P_ine",0
+140,P_NBI,Mirror input parameter,15.0,MW,,,"P_in, P_ine",0
+141,P_ECH,Mirror input parameter,10.0,MW,,,"P_in, P_ine",0
+142,P_ICRH,Mirror input parameter,10.0,MW,,,"P_in, P_ine",0
 143,M_n,Mirror input parameter,1.1,1,,,"P_pump, P_th",0
 144,N_module,Mirror input parameter,1.0,1,,,,0
 145,f_pump,Mirror input parameter,0.03,1,,,P_pump,0
@@ -157,7 +157,7 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 156,eta_ECH,Mirror input parameter,0.5,1,,,P_ine,0
 157,eta_ICRH,Mirror input parameter,0.5,1,,,P_ine,0
 158,NOAK,Mirror input parameter,0.0,1,,,,0
-159,n_unit,Mirror input parameter,0.0,1,,,,0
+159,n_unit,Mirror input parameter,1.0,1,,,cost_factor,0
 160,construction_time,Mirror input parameter,6.0,years,,,,0
 161,lifetime,Mirror input parameter,30.0,years,,,,0
 162,replacement,Mirror input parameter,10.0,years,,,,0

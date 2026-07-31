@@ -294,6 +294,60 @@ def test_mirror_vacuum_pump_account_uses_deeper_variables(cursor):
     )
 
 
+def test_mirror_nbi_account_uses_cost_factor_variable(cursor):
+    cursor.execute(
+        """
+        SELECT variables
+        FROM mirror_acco
+        WHERE code_of_account = ?;
+        """,
+        ("22141",),
+    )
+    assert cursor.fetchone()[0] == "P_NBI, cost_factor"
+
+    cursor.execute(
+        """
+        SELECT var_name, var_value, var_unit, var_alg, var_need, v_linked
+        FROM mirror_var
+        WHERE var_name IN (?, ?, ?)
+        ORDER BY var_name;
+        """,
+        ("P_NBI", "cost_factor", "n_unit"),
+    )
+    rows = {row[0]: row[1:] for row in cursor.fetchall()}
+
+    assert rows["P_NBI"] == (15.0, "MW", "", "", "P_in, P_ine")
+    assert rows["cost_factor"] == (1.0, "1", "cal_cost_factor", "n_unit", "")
+    assert rows["n_unit"] == (1.0, "1", "", "", "cost_factor")
+
+    cursor.execute(
+        """
+        SELECT alg_for, alg_python, alg_formulation, alg_units
+        FROM mirror_alg
+        WHERE alg_name = ?;
+        """,
+        ("cal_cost_factor",),
+    )
+    assert cursor.fetchone() == (
+        "v",
+        "MirrorFunc",
+        "cost_factor = 0.80 ** (log(n_unit) / log(2))",
+        "1",
+    )
+
+    alg = MirrorFunc(
+        ind=1,
+        alg_name="Account_C22_1_4_1",
+        alg_for="c",
+        alg_description="",
+        alg_formulation="",
+        alg_units="million",
+        variables="P_NBI,cost_factor",
+        constants="",
+    )
+    assert alg.run({"P_NBI": 15.0, "cost_factor": 1.0}) == pytest.approx(105.963)
+
+
 def test_mirror_generated_variable_algorithm_can_recalculate(cursor):
     accert = Accert.__new__(Accert)
     accert.var_tabl = "mirror_var"

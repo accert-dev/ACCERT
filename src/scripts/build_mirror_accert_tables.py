@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import ast
 import csv
+import math
 import re
 import shutil
 import sqlite3
@@ -68,6 +69,10 @@ HUMAN_INPUT_TO_VAR = {
 }
 
 MIRROR_REFERENCE_VAR_OVERRIDES = {
+    "n_unit": (1, "1"),
+    "P_NBI": (15, "MW"),
+    "P_ICRH": (10, "MW"),
+    "P_ECH": (10, "MW"),
     "P_egross": (158.12094932835822, "MW"),
     "P_DECe": (63.01790788032513, "MW"),
     "P_DEC": (70.0198976448057, "MW"),
@@ -126,6 +131,7 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "L": "L_CC, L_EP, L_EC",
     "V_vac": "L, a_EC",
     "no_vpumps": "V_vac, vpump_cap",
+    "cost_factor": "n_unit",
     "P_alpha": "E_DT, E_alpha, P_f",
     "P_n": "P_f, P_alpha",
     "P_ine": "P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH",
@@ -154,6 +160,7 @@ MIRROR_GENERATED_VAR_FORMULAS = {
     "L": ("L = L_CC + 2 * L_EP + 2 * L_EC", "m"),
     "V_vac": ("V_vac = L * pi * a_EC**2", "m3"),
     "no_vpumps": ("no_vpumps = V_vac / vpump_cap", "1"),
+    "cost_factor": ("cost_factor = 0.80 ** (log(n_unit) / log(2))", "1"),
     "P_alpha": ("P_alpha = P_f * E_alpha / E_DT", "MW"),
     "P_n": ("P_n = P_f - P_alpha", "MW"),
     "P_ine": ("P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH", "MW"),
@@ -196,6 +203,11 @@ MIRROR_VARIABLE_OVERRIDES = {
     ),
     "no_vpumps": (
         "Number of vacuum pumps required to pump the full vacuum in one second",
+        None,
+        "1",
+    ),
+    "cost_factor": (
+        "Cost scaling factor calculated from the unit number using an 0.80 learning factor",
         None,
         "1",
     ),
@@ -351,6 +363,7 @@ def _generate_inputs_defaults(algorithm_source: Path) -> dict[str, tuple[object,
 def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) -> dict[str, float]:
     values = {name: value for name, (value, _unit) in input_defaults.items()}
     values.update({name: value for name, (value, _unit) in MIRROR_CONSTANT_DEFAULTS.items()})
+    values.update({name: value for name, (value, _unit) in MIRROR_REFERENCE_VAR_OVERRIDES.items()})
     generated = {}
 
     generated["P_f_CC"] = values["P_f"] - 2 * values["P_f_EP"]
@@ -360,6 +373,7 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     generated["V_vac"] = generated["L"] * 3.141592653589793 * values["a_EC"] ** 2
     values["vpump_cap"] = MIRROR_VARIABLE_OVERRIDES["vpump_cap"][1]
     generated["no_vpumps"] = generated["V_vac"] / values["vpump_cap"]
+    generated["cost_factor"] = 0.80 ** (math.log(values["n_unit"]) / math.log(2))
     generated["P_alpha"] = values["P_f"] * values["E_alpha"] / values["E_DT"]
     generated["P_n"] = values["P_f"] - generated["P_alpha"]
     generated["P_ine"] = (
@@ -463,6 +477,26 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
             VALUES (?, ?, ?, ?, ?, '', '', '', 0)
             """,
             (next_ind, var_name, "Mirror input parameter", value, unit),
+        )
+    for var_name, (value, unit) in MIRROR_REFERENCE_VAR_OVERRIDES.items():
+        if not conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():
+            next_ind = conn.execute("SELECT COALESCE(MAX(ind), 0) + 1 FROM mirror_var").fetchone()[0]
+            conn.execute(
+                """
+                INSERT INTO mirror_var
+                (ind, var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked, user_input)
+                VALUES (?, ?, ?, ?, ?, '', '', '', 0)
+                """,
+                (next_ind, var_name, "Mirror reference parameter", value, unit),
+            )
+            continue
+        conn.execute(
+            """
+            UPDATE mirror_var
+            SET var_value = ?, var_unit = ?, user_input = 0
+            WHERE var_name = ?
+            """,
+            (value, unit, var_name),
         )
     for var_name, var_need in MIRROR_GENERATED_VAR_NEEDS.items():
         if not conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():

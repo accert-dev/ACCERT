@@ -86,6 +86,10 @@ class MirrorFunc(Algorithm):
         return V_vac / vpump_cap
 
     @staticmethod
+    def cal_cost_factor(n_unit):
+        return 0.80 ** (np.log(n_unit) / np.log(2))
+
+    @staticmethod
     def cal_P_alpha(E_DT, E_alpha, P_f):
         return P_f * E_alpha / E_DT
 
@@ -403,20 +407,17 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def Account_C22_1_4_1(inputs):
         # NBI
-        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
-        return(7.0642 * inputs['P_NBI'] * cost_factor)
+        return(7.0642 * inputs['P_NBI'] * inputs['cost_factor'])
 
     @staticmethod
     def Account_C22_1_4_2(inputs):
         # ICRH
-        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
-        return(4.149 * inputs['P_ICRH'] * cost_factor)
+        return(4.149 * inputs['P_ICRH'] * inputs['cost_factor'])
 
     @staticmethod
     def Account_C22_1_4_3(inputs):
         # ECH
-        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
-        return(8.0 * inputs['P_ECH'] * cost_factor)
+        return(8.0 * inputs['P_ECH'] * inputs['cost_factor'])
 
     @staticmethod
     def Account_C22_1_5(inputs):
@@ -482,8 +483,7 @@ class MirrorFunc(Algorithm):
     def Account_C22_1_9(inputs):
         # Direct Energy Convertor
         # Not using Woodruff 2024 numbers here, but instead Woodruff 2022
-        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
-        return(1.7347 * inputs['P_DECe'] * cost_factor)
+        return(1.7347 * inputs['P_DECe'] * inputs['cost_factor'])
 
     @staticmethod
     def Account_C22_1_11(inputs):
@@ -513,9 +513,7 @@ class MirrorFunc(Algorithm):
         # Total cost calculations
         C220111 = (C_22_1_11_in + C_22_1_11_1_in + C_22_1_11_2_in + C_22_1_11_3_in + C_22_1_11_4_in + C_22_1_11_5_in + C_22_1_11_6_in + C_22_1_11_7_in + C_22_1_11_8_in + C_22_1_11_9_in + C_22_1_11_10_in)
 
-        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
-        
-        return(C220111 * cost_factor)
+        return(C220111 * inputs['cost_factor'])
 
     @staticmethod
     def Account_C22_2(inputs):
@@ -577,9 +575,7 @@ class MirrorFunc(Algorithm):
         C220506 = C2205060ITER * ltoak
         C220500 = C220501 + C220502 + C220503 + C220504 + C220505 + C220506 #ITER inflation cost
         
-        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
-        
-        return(C220500 * cost_factor)
+        return(C220500 * inputs['cost_factor'])
 
     @staticmethod
     def Account_C22_6(inputs):
