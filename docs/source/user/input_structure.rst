@@ -79,7 +79,7 @@ ref_model
 
 **Notes**:
 
-- `<ref_model>` is a string indicating the reactor model, e.g., `PWR12-BE`, `ABR1000`, `LFR`.
+- `<ref_model>` is a string indicating the reactor model, e.g., `PWR12-BE`, `ABR1000`, `AP1000`, `LPSR`, `LFR`, `heatpipe`, `fusion`, `stellarator`, or `mirror`.
 
 target_dollar_year
 ~~~~~~~~~~~~~~~~~~

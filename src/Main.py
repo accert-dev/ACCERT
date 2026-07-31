@@ -177,6 +177,14 @@ class Accert:
             self.alg_tabl = 'fusion_alg'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
+        elif "mirror" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'mirror'
+            self.acc_tabl = 'mirror_acco'
+            self.cel_tabl = None
+            self.var_tabl = 'mirror_var'
+            self.alg_tabl = 'mirror_alg'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
         elif "user_defined" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'user_defined'
             self.acc_tabl = 'user_defined_account'

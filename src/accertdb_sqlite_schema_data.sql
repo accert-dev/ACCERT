@@ -6931,4 +6931,347 @@ INSERT INTO ap1000_algorithm VALUES(28,'scale_law_wastewater_bldg','v','Wastewat
 INSERT INTO ap1000_algorithm VALUES(29,'scale_law_power','v','Power scale law.','AP1000DirectCostFunc','(input_unit_value / reference_unit_value)^exponent','1','input_unit_value, reference_unit_value, exponent',NULL);
 INSERT INTO ap1000_algorithm VALUES(30,'sum_all','c/v','Sum all supplied child cost elements or intermediate variables.','AP1000DirectCostFunc','sum(values)','$','values',NULL);
 INSERT INTO ap1000_algorithm VALUES(31,'calc_rej_th_P','v','Rejected thermal power = thermal power - electric power.','AP1000DirectCostFunc','rx_P - elec_P','MWt','rx_P, elec_P',NULL);
+CREATE TABLE mirror_acco (
+  ind INTEGER DEFAULT NULL,
+  code_of_account TEXT NOT NULL,
+  account_description text,
+  total_cost REAL DEFAULT NULL,
+  total_cost_dollars REAL DEFAULT NULL,
+  level INTEGER DEFAULT NULL,
+  prn REAL DEFAULT NULL,
+  supaccount text,
+  alg_name text,
+  fun_unit text,
+  variables text,
+  algno text, review_status TEXT, 
+  PRIMARY KEY (code_of_account)
+);
+INSERT INTO "mirror_acco" VALUES(1,'10','Pre-Construction_Costs',24.18611754,'$24186117.540000003',0,4.687831810420024433e-03,'','ac10','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(2,'11','Land_and_Land_Rights',1.18611754,'$1186117.5399999998',1,2.298971517736676198e-04,'1','ac11','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(3,'12','Site_Permits',10.0,'$10000000.0',1,1.938232460281024469e-03,'1','ac12','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(4,'13','Plant_Licensing',0.0,'$0.0',1,0.0,'1','ac13','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(5,'14','Plant_Permits',5.0,'$5000000.0',1,9.69116230140512235e-04,'1','ac14','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(6,'15','Plant_Studies',5.0,'$5000000.0',1,9.69116230140512235e-04,'1','ac15','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(7,'16','Plant_Reports',2.0,'$2000000.0',1,3.876464920562048719e-04,'1','ac16','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(8,'17','Other_Pre-Construction_Costs',1.0,'$1000000.0',1,1.938232460281024359e-04,'1','ac17','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(9,'19','Contingency_on_Pre-Construction_Costs',0.0,'$0.0',1,0.0,'1','ac19','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(10,'20','Capitalized_Direct_Costs_(CDC)',1298.175963,'$1298175963.0',0,2.516166790643177831e-01,'','ac20','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(11,'21','Structures_and_Improvements',112.9457941,'$112945794.1',1,2.189152043768370289e-02,'2','ac21','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(12,'21.1','Site_Preparation/Yard_Work',42.37641442,'$42376414.42',2,8.213534197916488519e-03,'21','ac21.1','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(13,'21.2','Heat_Island_Building',29.53699334,'$29536993.34',2,5.724955927069242875e-03,'21','ac21.2','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(14,'21.3','Turbine_Generator_Building',8.538531265,'$8538531.264999999',2,1.654965846094739622e-03,'21','ac21.3','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(15,'21.4','Heat_Exchanger_Building',5.976971885,'$5976971.885',2,1.158476092169406302e-03,'21','ac21.4','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(16,'21.5','Power_Supply_and_Energy_Storage',1.707706253,'$1707706.253',2,3.309931692189479568e-04,'21','ac21.5','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(17,'21.6','Reactor_Auxiliaries',0.8538531265,'$853853.1265',2,1.654965846094739784e-04,'21','ac21.6','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(18,'21.7','Hot_Cell',14.76849667,'$14768496.67',2,2.862477963534621437e-03,'21','ac21.7','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(19,'21.8','Reactor_Services',2.956861753,'$2956861.753',2,5.731085430228053398e-04,'21','ac21.8','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(20,'21.9','Service_Water',0.0474362848,'$47436.2848',2,9.194254699449536794e-06,'21','ac21.9','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(21,'21.10','Fuel_Storage',0.1739330443,'$173933.0443',2,3.371226723777574368e-05,'','ac21.10','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(22,'21.11','Control_Room',0.1423088544,'$142308.85439999998',2,2.758276409834860699e-05,'211','ac21.11','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(23,'21.12','Onsite_AC_Power',0.1264967595,'$126496.7595',2,2.45180125383262035e-05,'211','ac21.12','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(24,'21.13','Administration',0.6957321771,'$695732.1771',2,1.348490689317206382e-04,'211','ac21.13','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(25,'21.14','Site_Services',0.252993519,'$252993.519',2,4.903602507665240699e-05,'211','ac21.14','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(26,'21.15','Cryogenics',0.3794902784,'$379490.2784',2,7.35540375955963e-05,'211','ac21.15','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(27,'21.16','Security',0.1423088544,'$142308.85439999998',2,2.758276409834860699e-05,'211','ac21.16','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(28,'21.17','Ventilation_Stack',4.269265632,'$4269265.632',2,8.274829229504581827e-04,'211','ac21.17','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(29,'22','Heat_Island_Plant_Equipment',1111.99892,'$1111998920.0',1,2.155312402541442185e-01,'2','ac22','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(30,'22.1','Heat_Island_Components',901.9675668,'$901967566.8',2,1.748222816092453169e-01,'22','ac22.1','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(31,'22.1.1','First_Wall_and_Blanket',43.19343421,'$43193434.21',3,8.37189162568348702e-03,'221','ac22.1.1','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(32,'22.1.2','Magnet_Radiation_Shield',94.73695574,'$94736955.74',3,1.836222428034747084e-02,'221','ac22.1.2','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(33,'22.1.3','Coils',272.0399768,'$272039976.79999995',3,5.272767135278567941e-02,'221','ac22.1.3','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(34,'22.1.3.1','HF_Coils',116.4,'$116400000.0',4,2.256102583767112534e-02,'2213','ac22.1.3.1','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(35,'22.1.3.2','LF_Coils',12.50524,'$12505240.0',4,2.42380620916046773e-03,'2213','ac22.1.3.2','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(36,'22.1.3.3','CC_Coils',143.1347368,'$143134736.8',4,2.774283930595409022e-02,'2213','ac22.1.3.3','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(37,'22.1.4','Supplemental_Heating',227.453,'$227453000.0',3,4.408567877882998281e-02,'221','ac22.1.4','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(38,'22.1.4.1','NBI',105.963,'$105963000.0',4,2.05380926188758195e-02,'2214','ac22.1.4.1','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(39,'22.1.4.2','ICRH',41.49,'$41490000.0',4,8.041726477705971043e-03,'2214','ac22.1.4.2','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(40,'22.1.4.3','ECH',80.0,'$80000000.0',4,1.550585968224819574e-02,'2214','ac22.1.4.3','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(41,'22.1.5','Primary_Structure_and_Support',0.0,'$0.0',3,0.0,'221','ac22.1.5','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(42,'22.1.6','Vacuum_System',2.031827257,'$2031827.2570000002',3,3.938153543201155615e-04,'221','ac22.1.6','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(43,'22.1.6.2','Vessel_Refrigerators',0.0,'$0.0',4,0.0,'2216','ac22.1.6.2','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(44,'22.1.6.3','Primary_Vacuum_Pumps',1.689827257,'$1689827.257',4,3.275278041785044783e-04,'2216','ac22.1.6.3','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(45,'22.1.6.4','Backing_Vacuum_Pumps',0.342,'$342000.0',4,6.628755014161104265e-05,'2216','ac22.1.6.4','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(46,'22.1.7','Power_Supplies',0.0,'$0.0',3,0.0,'221','ac22.1.7','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(47,'22.1.8','Divertor',0.0,'$0.0',3,0.0,'221','ac22.1.8','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(48,'22.1.9','Direct_Energy_Convertor',109.3171648,'$109317164.8',3,2.118820772812501919e-02,'221','ac22.1.9','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(49,'22.1.11','Assembly_and_Installation_Costs',153.1952079,'$153195207.9',3,2.969279247112800724e-02,'2211','ac22.1.11','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(50,'22.2','Main_and_Secondary_Coolant',33.6494515,'$33649451.5',2,0.0065220459167952,'22','ac22.2','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(51,'22.3','Auxiliary_Cooling_Systems',0.3521982635,'$352198.2635',2,6.826421067703095135e-05,'22','ac22.3','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(52,'22.4','Radioactive_Waste_Treatment',0.6275532695,'$627553.2695',2,1.216344117500385732e-04,'22','ac22.4','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(53,'22.5','Fuel_Handling_and_Storage',88.65405229,'$88654052.28999999',2,1.718321618839292741e-02,'22','ac22.5','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(54,'22.6','Other_Heat_Island_Equipment',1.748097852,'$1748097.852',2,3.388220000493933943e-04,'22','ac22.6','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(55,'22.7','Instrumentation_and_Control',85.0,'$85000000.0',2,1.647497591238870906e-02,'22','ac22.7','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(56,'23','Turbine_Plant_Equipment',39.82276109,'$39822761.09',1,7.718576820265415049e-03,'2','ac23','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(57,'24','Electric_Plant_Equipment',9.819310954,'$9819310.954',1,1.903210722863583459e-03,'2','ac24','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(58,'25','Miscellaneous_Plant_Equipment',6.909885486,'$6909885.4860000005',1,1.339296434578992169e-03,'2','ac25','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(59,'26','Heat_Rejection',11.67929132,'$11679291.32',1,2.263718154950241507e-03,'2','ac26','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(60,'27','Special_Materials',0.0,'$0.0',1,0.0,'2','ac27','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(61,'28','Digital_Twin/Simulator',5.0,'$5000000.0',1,9.69116230140512235e-04,'2','ac28','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(62,'29','Contingency_on_Direct_Capital_Costs',0.0,'$0.0',1,0.0,'2','ac29','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(63,'30','Capitalized_Indirect_Service_Costs_(CISC)',71.59197058,'$71591970.58',0,1.387618812736401107e-02,'','ac30','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(64,'31','Field_Indirect_Costs',14.31839412,'$14318394.120000001',1,2.775237626248095324e-03,'3','ac31','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(65,'32','Construction_Supervision',35.79598529,'$35795985.29',1,6.938094063682005535e-03,'3','ac32','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(66,'33','Commissioning_and_Start-Up_Costs',0.0,'$0.0',1,0.0,'3','ac33','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(67,'34','Demonstration_Test_Run',0.0,'$0.0',1,0.0,'3','ac34','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(68,'35','Design_Services_Offsite',21.47759117,'$21477591.17',1,4.162856437433910644e-03,'3','ac35','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(69,'36','PM/CM_Services_Offsite',0.0,'$0.0',1,0.0,'3','ac36','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(70,'37','Design_Servies_Offsite',0.0,'$0.0',1,0.0,'3','ac37','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(71,'38','PM/CM_Services_Onsite',0.0,'$0.0',1,0.0,'3','ac38','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(72,'39','Contingency_on_Support_Services',0.0,'$0.0',1,0.0,'3','ac39','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(73,'40','Capitalized_Owner''s_Cost_(COC)',155.7811156,'$155781115.6',0,3.019400149547106504e-02,'','ac40','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(74,'50','Capitalized_Supplementary_Costs_(CSC)',37.83719261,'$37837192.61',0,0.00733372749226073,'','ac50','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(75,'51','Shipping_and_Transportation_Costs',8.0,'$8000000.0',1,1.550585968224819487e-03,'5','ac51','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(76,'52','Spare_Parts',7.323124886,'$7323124.886',1,1.419391836473697482e-03,'5','ac52','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(77,'53','Taxes',0.0,'$0.0',1,0.0,'5','ac53','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(78,'54','Insurance',1.0,'$1000000.0',1,1.938232460281024359e-04,'5','ac54','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(79,'55','Initial_Fuel_Load',21.51406772,'$21514067.72',1,4.169926440758816612e-03,'5','ac55','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(80,'58','Decommissioning_Costs',0.0,'$0.0',1,0.0,'5','ac58','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(81,'59','Contingency_on_Supplementary_Costs',0.0,'$0.0',1,0.0,'5','ac59','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(82,'60','Capitalized_Financial_Costs_(CFC)',195.4094412,'$195409441.20000002',0,3.787489219792161688e-02,'','ac60','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(83,'61','Escalation',20.125,'$20125000.0',1,3.900692826315561857e-03,'6','ac61','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(84,'62','Fees',0.0,'$0.0',1,0.0,'6','ac62','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(85,'63','Interest_During_Construction_(IDC)',175.2844412,'$175284441.20000002',1,3.397419937160605503e-02,'6','ac63','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(86,'69','Contingency_on_Capitalized_Financial_Costs',0.0,'$0.0',1,0.0,'6','ac69','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(87,'OCC','Overnight_Capital_Cost_(OCC)',1587.572359,'$1587572359.0',0,0.307708427925872,'OC','acOCC','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(88,'TCC','Total_Capital_Cost_(TCC)',1782.981801,'$1782981801.0',0,3.455833202788521908e-01,'TC','acTCC','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(89,'O&M','Operations_and_Maintenance',5.69490028,'$5694900.279999999',0,1.103804058075949327e-03,'O&','acO&M','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(90,'Fuel','Fuel',0.1090042081,'$109004.2081',0,2.112754944466477681e-05,'Fue','acFuel','million','','','Unchanged');
+INSERT INTO "mirror_acco" VALUES(91,'81','Deuterium',0.04739117657,'$47391.176569999996',1,9.185511675888353413e-06,'8','ac81','million','','','Unchanged');
+CREATE TABLE mirror_alg (
+  ind INTEGER DEFAULT NULL,
+  alg_name TEXT NOT NULL,
+  alg_for text,
+  alg_description text,
+  alg_python text,
+  alg_formulation text,
+  alg_units text,
+  PRIMARY KEY (alg_name)
+);
+INSERT INTO "mirror_alg" VALUES(1,'__init__','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(2,'add_account','v','Add an account to the cost_account object.','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(3,'generate_report','v','Generate a report based on user input.','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(4,'learning_credit','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(5,'Account_C20','c','Account C20 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(6,'Account_C21','c','Account C21 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(7,'Account_C21_1','c','Account C211 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(8,'Account_C21_2','c','Account C212 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(9,'Account_C21_3','c','Account C213 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(10,'Account_C21_4','c','Account C214 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(11,'Account_C21_5','c','Account C215 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(12,'Account_C21_6','c','Account C216 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(13,'Account_C21_7','c','Account C217 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(14,'Account_C21_8','c','Account C218 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(15,'Account_C21_9','c','Account C219 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(16,'Account_C21_10','c','Account C2110 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(17,'Account_C21_11','c','Account C2111 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(18,'Account_C21_12','c','Account C2112 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(19,'Account_C21_13','c','Account C2113 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(20,'Account_C21_14','c','Account C2114 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(21,'Account_C21_15','c','Account C2115 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(22,'Account_C21_16','c','Account C2116 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(23,'Account_C21_17','c','Account C2117 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(24,'Account_C22','c','Account C22 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(25,'Account_C22_1','c','Account C221 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(26,'Account_C22_1_1','c','Account C2211 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(27,'Account_C22_1_2','c','Account C2212 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(28,'Account_C22_1_3','c','Account C2213 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(29,'Account_C22_1_3_1','c','Account C22131 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(30,'Account_C22_1_3_2','c','Account C22132 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(31,'Account_C22_1_3_3','c','Account C22133 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(32,'Account_C22_1_4','c','Account C2214 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(33,'Account_C22_1_4_1','c','Account C22141 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(34,'Account_C22_1_4_2','c','Account C22142 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(35,'Account_C22_1_4_3','c','Account C22143 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(36,'Account_C22_1_5','c','Account C2215 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(37,'Account_C22_1_6','c','Account C2216 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(38,'Account_C22_1_6_2','c','Account C22162 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(39,'Account_C22_1_6_3','c','Account C22163 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(40,'Account_C22_1_6_4','c','Account C22164 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(41,'Account_C22_1_7','c','Account C2217 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(42,'Account_C22_1_8','c','Account C2218 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(43,'Account_C22_1_9','c','Account C2219 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(44,'Account_C22_1_11','c','Account C22111 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(45,'Account_C22_2','c','Account C222 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(46,'Account_C22_2_1','c','Account C2221 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(47,'Account_C22_2_2','c','Account C2222 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(48,'Account_C22_2_3','c','Account C2223 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(49,'Account_C22_3','c','Account C223 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(50,'Account_C22_4','c','Account C224 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(51,'Account_C22_5','c','Account C225 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(52,'Account_C22_6','c','Account C226 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(53,'Account_C22_7','c','Account C227 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(54,'Account_C23','c','Account C23 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(55,'Account_C24','c','Account C24 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(56,'Account_C25','c','Account C25 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(57,'Account_C26','c','Account C26 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(58,'Account_C27','c','Account C27 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(59,'Account_C28','c','Account C28 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(60,'Account_C29','c','Account C29 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(61,'Account_OCC','c','Account OCC Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(62,'Account_TCC','c','Account TCC Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(63,'Account_C90','c','Account C90 Rollup','MirrorFunc','TODO','million');
+INSERT INTO "mirror_alg" VALUES(64,'PbLi_density','v','Returns PbLi density (kg/m^3). Assumes the PbLi is a eutectic, which has','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(65,'Li_price','v','Return Li price (USD/kg) for enrichment levels above 90% 6Li','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(66,'PbLi_price','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(67,'V_cylindrical_shell','v','Return volume of a cylindrical shell','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(68,'V_inverse_triangular_washer','v','Return volume of cylindrical inverse triangular washer.','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(69,'generate_inputs','v','Return a dict containing all inputs for a techno-economic analysis.','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(70,'create_radial_build','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(71,'add_new_layer','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(72,'add_fractional_layer','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(73,'build_central_cell','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(74,'central_cell_cost','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(75,'central_cell','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(76,'expander_cell_cost','v','Each expander cell is made up of:','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(77,'HF_magnet_cost','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(78,'LF_magnet_cost','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(79,'CF_magnet_cost','v','None','MirrorFunc','TODO','TODO');
+INSERT INTO "mirror_alg" VALUES(80,'HF_magnet_shield_cost','v','The HF coils have annular shield with a U-shaped cross section:','MirrorFunc','TODO','TODO');
+CREATE TABLE mirror_var (
+  ind INTEGER DEFAULT NULL,
+  var_name TEXT NOT NULL,
+  var_description text,
+  var_value REAL DEFAULT NULL,
+  var_unit text,
+  var_alg text,
+  var_need text,
+  v_linked text,
+  user_input INTEGER DEFAULT NULL,
+  PRIMARY KEY (var_name)
+);
+INSERT INTO "mirror_var" VALUES(1,'E_DT','str','','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(2,'E_alpha','str','','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(3,'E_n','str','','TODO','E_DT, E_alpha','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(4,'m_T','str','','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(5,'m_D','str','','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(6,'m_6Li','str','','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(7,'Wh_to_BTU','float',3.41214,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(8,'indentation','INTEGER',0.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(9,'indented_name','str','','TODO','account_name, account_number, indentation','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(10,'inputs','str','','TODO','NOAK, P_ECH, P_ICRH, P_NBI, P_f, P_f_L, application, availability, blanket_coolant_fraction, blanket_coolant_material, blanket_structural_fraction, blanket_structural_material, blanket_thickness, construction_time, cost_file, discount, first_wall_material, first_wall_thickness, generate_inputs, include_contingency, include_decommissioning, include_licensing, include_tax, kwargs, lifetime, method, multiplier_material, multiplier_thickness, n_unit, outer_vessel_thickness, replacement, save, vacuum_gap_CC, vacuum_vessel_material, vacuum_vessel_thickness','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(11,'cost_data','str','','TODO','cost_account','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(12,'L_magnet_to_magnet','str','','TODO','inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(13,'L_cylinder','str','','TODO','L_magnet_to_magnet','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(14,'expander_cell_cost_result','str','','TODO','expander_cell_cost, inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(15,'end_plug_cylindrical_part','str','','TODO','L_cylinder, central_cell, inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(16,'end_plug_cylindrical_part_cost','str','','TODO','end_plug_cylindrical_part','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(17,'central_cell_cylindrical_part','str','','TODO','central_cell, inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(18,'central_cell_cylindrical_part_cost','str','','TODO','central_cell_cylindrical_part','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(19,'total_cost','str','','TODO','central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(20,'cost_factor','str','','TODO','inputs, np','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(21,'cost_pump','INTEGER',40000.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(22,'vpump_cap','str','','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(23,'no_vpumps','str','','TODO','inputs, vpump_cap','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(24,'axis_t','str','','TODO','inputs, np','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(25,'axis_ir','str','','TODO','axis_t','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(26,'lr','str','','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(27,'constructionworker','str','','TODO','axis_ir','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(28,'C_22_1_11_in','str','','TODO','inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(29,'C_22_1_11_1_in','str','','TODO','constructionworker, inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(30,'C_22_1_11_2_in','str','','TODO','constructionworker, inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(31,'C_22_1_11_3_in','str','','TODO','constructionworker, inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(32,'C_22_1_11_4_in','str','','TODO','constructionworker, inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(33,'C_22_1_11_5_in','str','','TODO','constructionworker, inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(34,'C_22_1_11_6_in','str','','TODO','constructionworker, inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(35,'C_22_1_11_7_in','str','','TODO','constructionworker, inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(36,'C_22_1_11_8_in','INTEGER',0.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(37,'C_22_1_11_9_in','str','','TODO','constructionworker, inputs, lr','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(38,'C_22_1_11_10_in','INTEGER',0.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(39,'C220111','str','','TODO','C_22_1_11_10_in, C_22_1_11_1_in, C_22_1_11_2_in, C_22_1_11_3_in, C_22_1_11_4_in, C_22_1_11_5_in, C_22_1_11_6_in, C_22_1_11_7_in, C_22_1_11_8_in, C_22_1_11_9_in, C_22_1_11_in','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(40,'inflation','float',1.43,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(41,'C2205010ITER','str','','TODO','inflation','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(42,'C2205020ITER','str','','TODO','inflation','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(43,'C2205030ITER','str','','TODO','inflation','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(44,'C2205040ITER','str','','TODO','inflation','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(45,'C2205050ITER','str','','TODO','inflation','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(46,'C2205060ITER','str','','TODO','inflation','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(47,'lcredit','float',0.8,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(48,'ltoak','str','','TODO','lcredit, np','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(49,'C220501','str','','TODO','C2205010ITER, ltoak','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(50,'C220502','str','','TODO','C2205020ITER, ltoak','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(51,'C220503','str','','TODO','C2205030ITER, ltoak','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(52,'C220504','str','','TODO','C2205040ITER, ltoak','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(53,'C220505','str','','TODO','C2205050ITER, ltoak','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(54,'C220506','str','','TODO','C2205060ITER, ltoak','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(55,'C220500','str','','TODO','C220501, C220502, C220503, C220504, C220505, C220506','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(56,'f_cr','float',0.09,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(57,'f_6Li_natural','float',0.075,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(58,'rho_6Li','float',460.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(59,'rho_7Li','float',537.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(60,'T_K','str','','TODO','T','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(61,'rho_PbLi','str','','TODO','T_K','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(62,'P_6Li075','float',15.152,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(63,'P_6Li90','INTEGER',70.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(64,'f','list','(0.9, 0.99, 0.999, 0.9999, 0.99999)','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(65,'Cf','list','(1, 2, 4, 8, 16)','TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(66,'f_interp','str','','TODO','Cf, f, scipy','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(67,'f_Li','float',0.17,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(68,'f_Pb','str','','TODO','f_Li','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(69,'P_Li','str','','TODO','Li_price, f_6Li','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(70,'P_PbLi','str','','TODO','P_Li, P_Pb, f_Li, f_Pb','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(71,'P_f_CC','str','','TODO','P_f, P_f_EP','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(72,'L_CC','str','','TODO','P_f_CC, P_f_L','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(73,'L_CF','float',1.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(74,'L','str','','TODO','L_CC, L_EC, L_EP','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(75,'V_vac','str','','TODO','L, a_EC, np','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(76,'P_alpha','str','','TODO','E_DT, E_alpha, P_f','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(77,'P_n','str','','TODO','P_alpha, P_f','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(78,'P_ine','str','','TODO','P_ECH, P_ICRH, P_NBI, eta_ECH, eta_ICRH, eta_NBI','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(79,'P_pump','str','','TODO','M_n, P_n, f_pump','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(80,'P_sub_cont','str','','TODO','P_f, f_sub','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(81,'P_cryo','str','','TODO','P_f, f_cryo','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(82,'P_other','str','','TODO','P_cryo, P_pump, P_sub_cont','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(83,'P_in','str','','TODO','P_ECH, P_ICRH, P_NBI','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(84,'P_th','str','','TODO','M_n, P_n, P_pump, eta_pump','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(85,'P_the','str','','TODO','P_th, eta_th','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(86,'P_DEC','str','','TODO','P_alpha, P_in','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(87,'P_DECe','str','','TODO','P_DEC, eta_DEC','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(88,'P_egross','str','','TODO','P_DECe, P_the','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(89,'P_enet','str','','TODO','P_egross, P_ine, P_other','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(90,'f_aux','str','','TODO','P_aux, P_egross','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(91,'Q_sci','str','','TODO','P_f, P_in','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(92,'Q_eng','str','','TODO','P_egross, P_ine, P_other','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(93,'f_refrac','str','','TODO','Q_eng','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(94,'run_name','str','','TODO','P_f, float','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(95,'cost_file_full','str','','TODO','cost_file, pkg_resources','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(96,'new_data','str','','TODO','f_vol, material, name, pd, thickness','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(97,'r_in','str','','TODO','data','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(98,'r_out','str','','TODO','data','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(99,'radial_build','str','','TODO','create_radial_build, inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(100,'filename','str','','TODO','inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(101,'T','INTEGER',300.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(102,'material','str','','TODO','i, radial_build','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(103,'f_6Li','float',0.075,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(104,'radius','str','','TODO','inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(105,'thickness','str','','TODO','inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(106,'vv_material','str','','TODO','inputs','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(107,'V_end_cap','str','','TODO','np, radius, thickness','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(108,'M_end_cap','str','','TODO','V_end_cap, cost_data, vv_material','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(109,'C_end_cap','str','','TODO','M_end_cap, cost_data, vv_material','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(110,'total','str','','TODO','C_end_cap, radial_build','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(111,'cost','float',29.1,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(112,'a_M','float',0.15,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(113,'a_CC','float',0.54,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(114,'a_0','float',0.7,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(115,'length','float',0.5,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(116,'r_gap','float',0.1,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(117,'r_vv','float',0.01,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(118,'r_magnet','float',1.5,'m','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(119,'r_cryostat','float',1.0,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(120,'f_vol','float',0.9,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(121,'V_radially_inner_cylinder','str','','TODO','V_cylindrical_shell, f_vol, length, r_in, r_out','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(122,'length_cc_cylinder','float',0.5,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(123,'r_in_cc','str','','TODO','a_CC, r_gap, r_vv','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(124,'r_out_cc','str','','TODO','r_in_cc','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(125,'V_cc_cylinder','str','','TODO','V_cylindrical_shell, f_vol, length_cc_cylinder, r_in_cc, r_out_cc','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(126,'V_cc_triangle','str','','TODO','V_inverse_triangular_washer, f_vol, length_cc_cylinder, r_in, r_in_cc','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(127,'length_ep_cylinder','float',0.5,'TODO','','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(128,'r_in_ep','str','','TODO','a_0, r_gap, r_vv','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(129,'r_out_ep','str','','TODO','r_in_ep','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(130,'V_ep_cylinder','str','','TODO','V_cylindrical_shell, f_vol, length_ep_cylinder, r_in_ep, r_out_ep','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(131,'V_ep_triangle','str','','TODO','V_inverse_triangular_washer, f_vol, length_ep_cylinder, r_in, r_in_ep','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(132,'V_total_cc_facing','str','','TODO','V_cc_cylinder, V_cc_triangle, V_ep_cylinder, V_ep_triangle, V_radially_inner_cylinder','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(133,'V_total_ec_facing','str','','TODO','V_ep_cylinder, V_ep_triangle, V_radially_inner_cylinder','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(134,'V_total','str','','TODO','V_total_cc_facing, V_total_ec_facing','TODO','TODO','');
+INSERT INTO "mirror_var" VALUES(135,'mass','str','','TODO','V_total, cost_data, material','TODO','TODO','');
 COMMIT;

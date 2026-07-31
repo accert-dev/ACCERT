@@ -8,7 +8,7 @@ Reading User Input
 
 This section summarizes the parameters entered by the user. These inputs guide the recalculations of specific cost elements. Key parameters typically include:
 
-- **Reference Model**: The reactor model being analyzed. Current options are "PWR12-BE", "ABR1000", "LFR", "Heatpipe", and "Fusion".
+- **Reference Model**: The reactor model being analyzed. Current options include "PWR12-BE", "ABR1000", "AP1000", "LPSR", "LFR", "Heatpipe", "Fusion", "Stellarator", and "Mirror".
 - **Thermal Power (MWth)**: The thermal power input provided by the user.
 - **Electric Power (MWe)**: The electric power input provided by the user.
   

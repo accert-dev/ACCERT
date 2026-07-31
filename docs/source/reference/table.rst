@@ -8,10 +8,12 @@ This section contains reference tables used in ACCERT.
    ACCERT reference tables use different base-dollar years by model. PWR12-BE,
    ABR1000, and LFR reference costs are in 2017 dollars; AP1000, Heatpipe, and
    LPSR reference costs are in 2018 dollars; Fusion and Stellarator reference
-   costs are in 2015 dollars. Runtime account-result tables are displayed in
-   the configured target dollar year using CPI-U escalation. Output account and
-   cost-element CSV files retain their reference-year cost columns; ACCERT
-   writes target-year OCC summary values in the separate ``*_post_*.csv`` file.
+   costs are in 2015 dollars. The Mirror reference tables are imported from the
+   upstream PR #50 account-level data. Runtime account-result tables are
+   displayed in the configured target dollar year using CPI-U escalation.
+   Output account and cost-element CSV files retain their reference-year cost
+   columns; ACCERT writes target-year OCC summary values in the separate
+   ``*_post_*.csv`` file.
 
 Reference-model context:
 
@@ -31,6 +33,8 @@ Reference-model context:
   UKAEA's `PROCESS <https://github.com/ukaea/PROCESS>`_.
 * Stellarator is also based on UKAEA's `PROCESS
   <https://github.com/ukaea/PROCESS>`_.
+* Mirror represents the magnetic-mirror fusion model imported from upstream
+  ACCERT PR #50.
 
 
 .. toctree::
@@ -39,4 +43,5 @@ Reference-model context:
    table/ABR1000tables
    table/Fusiontables
    table/Heatpipetables
+   table/Mirrortables
    table/PWR12tables
