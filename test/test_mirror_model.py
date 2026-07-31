@@ -5,6 +5,7 @@ from types import SimpleNamespace
 import pytest
 
 from Main import Accert
+from Algorithm.MirrorFunc import MirrorFunc
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -138,6 +139,26 @@ def test_mirror_variable_links_are_reversed_from_var_need(cursor):
     )
 
 
+def test_mirror_reference_power_defaults_are_back_calculated(cursor):
+    cursor.execute(
+        """
+        SELECT var_name, var_value, var_unit
+        FROM mirror_var
+        WHERE var_name IN (?, ?, ?, ?, ?)
+        ORDER BY var_name;
+        """,
+        ("P_DEC", "P_DECe", "P_egross", "P_enet", "P_th"),
+    )
+    rows = {name: (value, unit) for name, value, unit in cursor.fetchall()}
+
+    assert rows["P_DEC"][0] == pytest.approx(70.0198976448057)
+    assert rows["P_DECe"][0] == pytest.approx(63.01790788032513)
+    assert rows["P_egross"][0] == pytest.approx(158.12094932835822)
+    assert rows["P_enet"][0] == pytest.approx(94.91500463226332)
+    assert rows["P_th"][0] == pytest.approx(158.50506908190818)
+    assert {unit for _value, unit in rows.values()} == {"MW"}
+
+
 def test_mirror_generated_variable_algorithms_are_loaded(cursor):
     cursor.execute(
         """
@@ -175,9 +196,24 @@ def test_mirror_generated_variable_algorithms_are_loaded(cursor):
     )
     rows = cursor.fetchall()
     assert rows[0][0] == "P_DEC"
-    assert rows[0][1] == pytest.approx(3.20011370096646)
+    assert rows[0][1] == pytest.approx(70.0198976448057)
     assert rows[0][2:] == ("MW", "P_DECe")
     assert rows[1] == ("eta_DEC", 0.9, "1", "P_DECe")
+
+
+def test_mirror_account_algorithms_use_accert_variable_names():
+    alg = MirrorFunc(
+        ind=1,
+        alg_name="Account_C21_1",
+        alg_for="c",
+        alg_description="",
+        alg_formulation="",
+        alg_units="million",
+        variables="P_egross",
+        constants="",
+    )
+
+    assert alg.run({"P_egross": 158.12094932835822}) == pytest.approx(42.37641442)
 
 
 def test_mirror_generated_variable_algorithm_can_recalculate(cursor):

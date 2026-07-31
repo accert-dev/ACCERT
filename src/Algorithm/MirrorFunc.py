@@ -20,28 +20,6 @@ class MirrorFunc(Algorithm):
     # Conversion factors
     Wh_to_BTU = 3.41214 # 1 Wh = 3.41214 BTU
 
-    ACCERT_TO_TEAM_INPUT = {
-        "application": "Application",
-        "include_contingency": "Contingency",
-        "L": "Overall Length",
-        "L_CC": "Central Cell Length",
-        "L_EP": "End Plug Length",
-        "N_module": "Number of Modules",
-        "n_unit": "Unit Number",
-        "P_DECe": "DEC Electrical Power",
-        "P_ECH": "ECH Power",
-        "P_egross": "Gross Electric Power",
-        "P_enet": "Net Electric Power",
-        "P_ICRH": "ICRH Power",
-        "P_NBI": "NBI Power",
-        "P_th": "Thermal Power",
-        "V_vac": "Vacuum Volume",
-        "construction_time": "Construction Time",
-        "HF_magnet_number": "HF Magnet Number",
-        "LF_magnet_number": "LF Magnet Number",
-        "NOAK": "NOAK",
-    }
-
     def __init__(self, ind, alg_name, alg_for, alg_description, alg_formulation, alg_units, variables, constants):
         super().__init__(ind, alg_name, alg_for, alg_description, alg_formulation, alg_units, variables, constants)
 
@@ -64,12 +42,7 @@ class MirrorFunc(Algorithm):
             algorithm = getattr(self, alg_name)
         except AttributeError:
             raise ValueError(f"Algorithm {alg_name} not found")
-        team_inputs = {
-            team_name: variables[var_name]
-            for var_name, team_name in self.ACCERT_TO_TEAM_INPUT.items()
-            if var_name in variables
-        }
-        return algorithm(team_inputs)
+        return algorithm(variables)
 
     def _run_algorithm(self, alg_name: str, variables: list) -> float:
         """
@@ -226,103 +199,103 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def Account_C21_1(inputs):
         # Site Preparation/Yard Work
-        return(inputs['Gross Electric Power'] * 268/1e3)
+        return(inputs['P_egross'] * 268/1e3)
     
     @staticmethod
     def Account_C21_2(inputs):
         # Heat Island Building
-        return(inputs['Gross Electric Power'] * 186.8/1e3)
+        return(inputs['P_egross'] * 186.8/1e3)
     
     @staticmethod
     def Account_C21_3(inputs):
         # Turbine Generator Building
-        if inputs['Application'].lower()=='electricity':
-            return(inputs['Gross Electric Power'] * 54.0/1e3)
+        if inputs['application'].lower()=='electricity':
+            return(inputs['P_egross'] * 54.0/1e3)
         else:
             return(0)
 
     @staticmethod
     def Account_C21_4(inputs): 
         # Heat Exchanger Building
-        return(37.8/1e3 * inputs['Gross Electric Power'])
+        return(37.8/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.05.00,,Power supply & energy storage,Concrete & Steel,9.1,9.7,9.7,6.0,560,2019,1.19,
     def Account_C21_5(inputs): 
         # Power Supply and Energy Storage
-        return(10.8/1e3 * inputs['Gross Electric Power'])
+        return(10.8/1e3 * inputs['P_egross'])
     
     @staticmethod
     #21.06.00,,Reactor auxiliaries,Concrete & Steel,4.5,4.8,4.8,3.0,70,2019,1.19,
     def Account_C21_6(inputs): 
         # Reactor Auxiliaries
-        return(5.4/1e3 * inputs['Gross Electric Power'])
+        return(5.4/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.07.00,,Hot cell,Concrete & Steel,65.8,24.2,24.2,60,35000,2013,1.42,
     def Account_C21_7(inputs): 
         # Hot Cell
-        return(93.4/1e3 * inputs['Gross Electric Power'])
+        return(93.4/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.08.00,,Reactor services,Steel frame,13.2,4.8,4.8,10,233,2013,1.42,
     def Account_C21_8(inputs): 
         # Reactor Services
-        return(18.7/1e3 * inputs['Gross Electric Power'])
+        return(18.7/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.09.00,,Service water,Steel frame,0.2,1.3,4.0,4.0,21,2019,1.19,
     def Account_C21_9(inputs): 
         # Service Water
-        return(0.3/1e3 * inputs['Gross Electric Power'])
+        return(0.3/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.10.00,,Fuel storage,Steel frame,0.9,5.0,15.0,2.5,188,2019,1.19,
     def Account_C21_10(inputs):
         # Fuel Storage
-        return(1.1/1e3 * inputs['Gross Electric Power'])
+        return(1.1/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.11.00,,Control room,Steel frame,0.7,4.0,12.0,2,96,2019,1.19,
     def Account_C21_11(inputs):
         # Control Room
-        return(0.9/1e3 * inputs['Gross Electric Power'])
+        return(0.9/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.12.00,,Onsite AC inputs,Steel frame,0.7,3.6,10.8,1.8,70,2019,1.19,
     def Account_C21_12(inputs):
         # Onsite AC Power
-        return(0.8/1e3 * inputs['Gross Electric Power'])
+        return(0.8/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.13.00,,Administration,Steel frame,3.7,20.0,60.0,10,12000,2019,1.19,
     def Account_C21_13(inputs): 
         # Administration
-        return(4.4/1e3 * inputs['Gross Electric Power'])
+        return(4.4/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.14.00,,Site services,Steel frame,1.3,7.3,22.0,3.7,593,2019,1.19,
     def Account_C21_14(inputs): 
         # Site Services
-        return(1.6/1e3 * inputs['Gross Electric Power'])
+        return(1.6/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.15.00,,Cryogenics,Steel frame,2.0,11.0,33.0,5.5,2003,2019,1.19,
     def Account_C21_15(inputs):
         # Cyrogenics
-        return(2.4/1e3 * inputs['Gross Electric Power'])
+        return(2.4/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.16.00,,Security,Steel frame,0.7,4.0,12.0,2,96,2019,1.19,
     def Account_C21_16(inputs): 
         # Security
-        return(0.9/1e3 * inputs['Gross Electric Power'])
+        return(0.9/1e3 * inputs['P_egross'])
 
     @staticmethod
     #21.17.00,,Ventilation stack,Steel cylinder & concrete foundation,22.7,,,120,,2019,1.19,
     def Account_C21_17(inputs): 
         # Ventilation Stack
-        return(27.0/1e3 * inputs['Gross Electric Power'])
+        return(27.0/1e3 * inputs['P_egross'])
 
 
     @staticmethod
@@ -361,7 +334,7 @@ class MirrorFunc(Algorithm):
     def Account_C22_1_1(inputs):
         # First Wall and Blanket (and vacuum vessel)
 
-        L_magnet_to_magnet = inputs['End Plug Length']
+        L_magnet_to_magnet = inputs['L_EP']
 
         L_cylinder = L_magnet_to_magnet 
         
@@ -370,7 +343,7 @@ class MirrorFunc(Algorithm):
         end_plug_cylindrical_part = MirrorFunc.central_cell(inputs, L_cylinder)
         end_plug_cylindrical_part_cost = end_plug_cylindrical_part['cost'].max()
 
-        central_cell_cylindrical_part = MirrorFunc.central_cell(inputs, inputs['Central Cell Length'])
+        central_cell_cylindrical_part = MirrorFunc.central_cell(inputs, inputs['L_CC'])
         central_cell_cylindrical_part_cost = central_cell_cylindrical_part['cost'].max()
 
         total_cost = central_cell_cylindrical_part_cost + 2 * end_plug_cylindrical_part_cost + 2 * expander_cell_cost_result
@@ -398,20 +371,20 @@ class MirrorFunc(Algorithm):
         # HF Coils - Quantity 4
         # 2 per end cell
         # 2 end cells per tandem
-        return(inputs['HF Magnet Number'] * MirrorFunc.HF_magnet_cost(inputs))
+        return(inputs['HF_magnet_number'] * MirrorFunc.HF_magnet_cost(inputs))
 
     @staticmethod
     def Account_C22_1_3_2(inputs):
         # LF Coils - Quantity 8
         # 4 per end cell
         # 2 end cells per tandem
-        return(inputs['LF Magnet Number'] * MirrorFunc.LF_magnet_cost(inputs))
+        return(inputs['LF_magnet_number'] * MirrorFunc.LF_magnet_cost(inputs))
 
     @staticmethod
     def Account_C22_1_3_3(inputs):
         # CF Coils
         # One coil every L_CF m of Central Cell
-        return(inputs['CF Magnet Number'] * MirrorFunc.CF_magnet_cost(inputs))
+        return(inputs['CF_magnet_number'] * MirrorFunc.CF_magnet_cost(inputs))
 
     @staticmethod
     def Account_C22_1_4(inputs):
@@ -426,20 +399,20 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def Account_C22_1_4_1(inputs):
         # NBI
-        cost_factor = (0.80)**(np.log(inputs['Unit Number'])/np.log(2))
-        return(7.0642 * inputs['NBI Power'] * cost_factor)
+        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
+        return(7.0642 * inputs['P_NBI'] * cost_factor)
 
     @staticmethod
     def Account_C22_1_4_2(inputs):
         # ICRH
-        cost_factor = (0.80)**(np.log(inputs['Unit Number'])/np.log(2))
-        return(4.149 * inputs['ICRH Power'] * cost_factor)
+        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
+        return(4.149 * inputs['P_ICRH'] * cost_factor)
 
     @staticmethod
     def Account_C22_1_4_3(inputs):
         # ECH
-        cost_factor = (0.80)**(np.log(inputs['Unit Number'])/np.log(2))
-        return(8.0 * inputs['ECH Power'] * cost_factor)
+        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
+        return(8.0 * inputs['P_ECH'] * cost_factor)
 
     @staticmethod
     def Account_C22_1_5(inputs):
@@ -479,7 +452,7 @@ class MirrorFunc(Algorithm):
         cost_pump = 40000
         #48 pumps needed for 200^3 system
         vpump_cap = 200/48 #m^3 capable of beign pumped by 1 pump
-        no_vpumps = inputs['Vacuum Volume']/vpump_cap#Number of vacuum pumps required to pump the full vacuum in 1 second
+        no_vpumps = inputs['V_vac']/vpump_cap#Number of vacuum pumps required to pump the full vacuum in 1 second
         return(no_vpumps*cost_pump/1e6)
         
 
@@ -511,15 +484,15 @@ class MirrorFunc(Algorithm):
     def Account_C22_1_9(inputs):
         # Direct Energy Convertor
         # Not using Woodruff 2024 numbers here, but instead Woodruff 2022
-        cost_factor = (0.80)**(np.log(inputs['Unit Number'])/np.log(2))
-        return(1.7347 * inputs['DEC Electrical Power'] * cost_factor)
+        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
+        return(1.7347 * inputs['P_DECe'] * cost_factor)
 
     @staticmethod
     def Account_C22_1_11(inputs):
         # Assembly and Installation Costs
         
         #Cost Category 22.1.11 Installation costs
-        axis_t = inputs['Overall Length']/(2*np.pi) #[m] distance from r=0 to plasma central axis - effectively major radius
+        axis_t = inputs['L']/(2*np.pi) #[m] distance from r=0 to plasma central axis - effectively major radius
         axis_ir = axis_t
 
         # Define labor rate
@@ -527,22 +500,22 @@ class MirrorFunc(Algorithm):
 
         # Calculations
         constructionworker = 20 * axis_ir / 4
-        C_22_1_11_in = inputs['Number of Modules'] * inputs['Construction Time'] * (lr * 20 * 300)
-        C_22_1_11_1_in = inputs['Number of Modules'] * ((lr * 200 * constructionworker) + 0)  # 22.1 first wall blanket
-        C_22_1_11_2_in = inputs['Number of Modules'] * ((lr * 150 * constructionworker) + 0)  # 22.2 shield
-        C_22_1_11_3_in = inputs['Number of Modules'] * ((lr * 100 * constructionworker) + 0)  # coils
-        C_22_1_11_4_in = inputs['Number of Modules'] * ((lr *  30 * constructionworker) + 0)  # supplementary heating
-        C_22_1_11_5_in = inputs['Number of Modules'] * ((lr *  60 * constructionworker) + 0)  # primary structure
-        C_22_1_11_6_in = inputs['Number of Modules'] * ((lr * 200 * constructionworker) + 0)  # vacuum system
-        C_22_1_11_7_in = inputs['Number of Modules'] * ((lr * 400 * constructionworker) + 0)  # power supplies
+        C_22_1_11_in = inputs['N_module'] * inputs['construction_time'] * (lr * 20 * 300)
+        C_22_1_11_1_in = inputs['N_module'] * ((lr * 200 * constructionworker) + 0)  # 22.1 first wall blanket
+        C_22_1_11_2_in = inputs['N_module'] * ((lr * 150 * constructionworker) + 0)  # 22.2 shield
+        C_22_1_11_3_in = inputs['N_module'] * ((lr * 100 * constructionworker) + 0)  # coils
+        C_22_1_11_4_in = inputs['N_module'] * ((lr *  30 * constructionworker) + 0)  # supplementary heating
+        C_22_1_11_5_in = inputs['N_module'] * ((lr *  60 * constructionworker) + 0)  # primary structure
+        C_22_1_11_6_in = inputs['N_module'] * ((lr * 200 * constructionworker) + 0)  # vacuum system
+        C_22_1_11_7_in = inputs['N_module'] * ((lr * 400 * constructionworker) + 0)  # power supplies
         C_22_1_11_8_in = 0  # guns or divertor
-        C_22_1_11_9_in = inputs['Number of Modules'] * ((lr * 200 * constructionworker) + 0)   # direct energy converter
+        C_22_1_11_9_in = inputs['N_module'] * ((lr * 200 * constructionworker) + 0)   # direct energy converter
         C_22_1_11_10_in = 0  # ECRH
 
         # Total cost calculations
         C220111 = (C_22_1_11_in + C_22_1_11_1_in + C_22_1_11_2_in + C_22_1_11_3_in + C_22_1_11_4_in + C_22_1_11_5_in + C_22_1_11_6_in + C_22_1_11_7_in + C_22_1_11_8_in + C_22_1_11_9_in + C_22_1_11_10_in)
 
-        cost_factor = (0.80)**(np.log(inputs['Unit Number'])/np.log(2))
+        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
         
         return(C220111 * cost_factor)
 
@@ -558,12 +531,12 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def Account_C22_2_1(inputs):
         # Primary Coolant
-        return(166  * (inputs['Number of Modules'] * inputs['Gross Electric Power']/1000))
+        return(166  * (inputs['N_module'] * inputs['P_egross']/1000))
 
     @staticmethod
     def Account_C22_2_2(inputs):
         # Secondary Coolant
-        return(40.6 * (inputs['Thermal Power']/3500)**0.55)
+        return(40.6 * (inputs['P_th']/3500)**0.55)
 
     @staticmethod
     def Account_C22_2_3(inputs):
@@ -573,12 +546,12 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def Account_C22_3(inputs):
         # Auxiliary Cooling Systems
-        return(1.10 * 1e-3 * inputs['Number of Modules'] * inputs['Thermal Power'] * 2.02)
+        return(1.10 * 1e-3 * inputs['N_module'] * inputs['P_th'] * 2.02)
 
     @staticmethod
     def Account_C22_4(inputs):
         # Radioactive Waste Treatment
-        return(1.96 * 1e-3 * inputs['Thermal Power'] * 2.02)
+        return(1.96 * 1e-3 * inputs['P_th'] * 2.02)
 
     @staticmethod
     def Account_C22_5(inputs):
@@ -606,14 +579,14 @@ class MirrorFunc(Algorithm):
         C220506 = C2205060ITER * ltoak
         C220500 = C220501 + C220502 + C220503 + C220504 + C220505 + C220506 #ITER inflation cost
         
-        cost_factor = (0.80)**(np.log(inputs['Unit Number'])/np.log(2))
+        cost_factor = (0.80)**(np.log(inputs['n_unit'])/np.log(2))
         
         return(C220500 * cost_factor)
 
     @staticmethod
     def Account_C22_6(inputs):
         # Cost Category 22.6 Other Reactor Plant Equipment
-        return(11.5*(np.max((inputs['Net Electric Power'],0))/1000)**(0.8))
+        return(11.5*(np.max((inputs['P_enet'],0))/1000)**(0.8))
 
     @staticmethod
     def Account_C22_7(inputs):
@@ -623,22 +596,22 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def Account_C23(inputs):
         # Turbine Plant Equipment
-        return(inputs['Number of Modules'] * inputs['Gross Electric Power'] * 0.219 *1.15)
+        return(inputs['N_module'] * inputs['P_egross'] * 0.219 *1.15)
 
     @staticmethod
     def Account_C24(inputs):
         # Electric Plant Equipment
-        return(inputs['Number of Modules'] * inputs['Gross Electric Power'] * 0.054 * 1.15)
+        return(inputs['N_module'] * inputs['P_egross'] * 0.054 * 1.15)
 
     @staticmethod
     def Account_C25(inputs):
         # Miscellaneous Plant Equipment
-        return(inputs['Number of Modules'] * inputs['Gross Electric Power']  * 0.038 * 1.15)
+        return(inputs['N_module'] * inputs['P_egross']  * 0.038 * 1.15)
     
     @staticmethod
     def Account_C26(inputs):
         # Heat Rejection
-        return(inputs['Number of Modules'] * inputs['Net Electric Power'] * 0.107 * 1.15 )
+        return(inputs['N_module'] * inputs['P_enet'] * 0.107 * 1.15 )
 
     @staticmethod
     def Account_C27(inputs):
@@ -660,7 +633,7 @@ class MirrorFunc(Algorithm):
 
         # Rollup
         
-        if not(inputs['NOAK']) and inputs['Contingency']:
+        if not(inputs['NOAK']) and inputs['include_contingency']:
             return(0.1 * (
                 MirrorFunc.Account_C21(inputs) + 
                 MirrorFunc.Account_C22(inputs) + 
@@ -1249,7 +1222,7 @@ class MirrorFunc(Algorithm):
             if save:
                 # import csv
                 
-                filename = 'inputs-'+inputs['Run Name']+'.json'    
+                filename = 'inputs-'+inputs['run_name']+'.json'    
 
         
                 with open(filename, 'w') as file:
@@ -1308,14 +1281,14 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def build_central_cell(inputs):
 
-        radial_build = MirrorFunc.create_radial_build('Plasma', 'DT', inputs['Central Cell Plasma Radius'])
-        radial_build = MirrorFunc.add_new_layer(radial_build, 'Gap', 'vacuum', inputs['Central Cell Vacuum Gap'])
-        radial_build = MirrorFunc.add_new_layer(radial_build, 'First Wall', inputs['First Wall Material'], inputs['First Wall Thickness'])
-        radial_build = MirrorFunc.add_new_layer(radial_build, 'Vacuum Vessel', inputs['Vacuum Vessel Material'], inputs['Vacuum Vessel Thickness'])
-        radial_build = MirrorFunc.add_new_layer(radial_build, 'Multiplier', inputs['Multiplier Material'], inputs['Multiplier Thicnkess'])
-        radial_build = MirrorFunc.add_new_layer(radial_build, 'Blanket Coolant', inputs['Blanket Coolant Material'], inputs['Blanket Thickness'], inputs['Blanket Coolant Fraction'])
-        radial_build = MirrorFunc.add_fractional_layer(radial_build, 'Blanket Structure', inputs['Blanket Structural Material'], inputs['Blanket Structrual Fraction'])
-        radial_build = MirrorFunc.add_new_layer(radial_build, 'Outer Vessel', inputs['Vacuum Vessel Material'], inputs['Outer Vessel Thickness'])
+        radial_build = MirrorFunc.create_radial_build('Plasma', 'DT', inputs['a_CC'])
+        radial_build = MirrorFunc.add_new_layer(radial_build, 'Gap', 'vacuum', inputs['vacuum_gap_CC'])
+        radial_build = MirrorFunc.add_new_layer(radial_build, 'First Wall', inputs['first_wall_material'], inputs['first_wall_thickness'])
+        radial_build = MirrorFunc.add_new_layer(radial_build, 'Vacuum Vessel', inputs['vacuum_vessel_material'], inputs['vacuum_vessel_thickness'])
+        radial_build = MirrorFunc.add_new_layer(radial_build, 'Multiplier', inputs['multiplier_material'], inputs['multiplier_thickness'])
+        radial_build = MirrorFunc.add_new_layer(radial_build, 'Blanket Coolant', inputs['blanket_coolant_material'], inputs['blanket_thickness'], inputs['blanket_coolant_fraction'])
+        radial_build = MirrorFunc.add_fractional_layer(radial_build, 'Blanket Structure', inputs['blanket_structural_material'], inputs['blanket_structural_fraction'])
+        radial_build = MirrorFunc.add_new_layer(radial_build, 'Outer Vessel', inputs['vacuum_vessel_material'], inputs['outer_vessel_thickness'])
 
         return(radial_build)  
 
@@ -1326,7 +1299,7 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def central_cell(inputs, L=1.0):
         
-        filename = inputs['Cost File']
+        filename = inputs['cost_file']
         
         cost_data = pd.read_csv(filename, index_col=0)
         
@@ -1412,12 +1385,12 @@ class MirrorFunc(Algorithm):
         
         # print('Expander Cell')
         
-        L = inputs['Expander Cell Length']
-        radius = inputs['Expander Cell Radius']
-        thickness = inputs['Expander Cell Vessel Thickness']
-        vv_material = inputs['Expander Cell Vessel Material']
+        L = inputs['L_EC']
+        radius = inputs['a_EC']
+        thickness = inputs['expander_cell_vessel_thickness']
+        vv_material = inputs['expander_cell_vessel_material']
         
-        filename = inputs['Cost File']
+        filename = inputs['cost_file']
         
         cost_data = pd.read_csv(filename, index_col=0)
         
@@ -1503,7 +1476,7 @@ class MirrorFunc(Algorithm):
         # It's a reasonable assumption to say that all axial widths/layers will be the same
 
 
-        filename = inputs['Cost File']
+        filename = inputs['cost_file']
         cost_data = pd.read_csv(filename, index_col=0)    
 
         # Eventually these will be arguments
@@ -1661,7 +1634,7 @@ class MirrorFunc(Algorithm):
 
         # cost = 29.10 # Assuming ARPA number for WHAM magnet cost, 5x width, using PROCESS J_crit
         cost = MirrorFunc.HTS_storedEnergy(HF_field, inner_rad)
-        cost_factor = (0.70)**(np.log((inputs['Unit Number']-1)*inputs['HF Magnet Number'] + 1)/np.log(2))
+        cost_factor = (0.70)**(np.log((inputs['n_unit']-1)*inputs['HF_magnet_number'] + 1)/np.log(2))
         
         return(cost * cost_factor)
 
@@ -1670,7 +1643,7 @@ class MirrorFunc(Algorithm):
         # This is the LF cost per magnet [MUSD]
 
         cost = MirrorFunc.HTS_storedEnergy(LF_field, inner_rad)
-        cost_factor = (0.70)**(np.log((inputs['Unit Number']-1)*inputs['LF Magnet Number'] + 1)/np.log(2))
+        cost_factor = (0.70)**(np.log((inputs['n_unit']-1)*inputs['LF_magnet_number'] + 1)/np.log(2))
         
         return(cost * cost_factor)
 
@@ -1680,7 +1653,7 @@ class MirrorFunc(Algorithm):
         
         convert_to_currentDollar = 1.31
         cost = 0.7*CF_field*convert_to_currentDollar # Assuming 700k/Tesla in 2016 dollars with 3T LTS
-        cost_factor = (0.70)**(np.log((inputs['Unit Number']-1)*inputs['CF Magnet Number'] + 1)/np.log(2))
+        cost_factor = (0.70)**(np.log((inputs['n_unit']-1)*inputs['CF_magnet_number'] + 1)/np.log(2))
         
         return(cost * cost_factor)
 

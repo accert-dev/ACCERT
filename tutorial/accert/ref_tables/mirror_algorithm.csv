@@ -7,7 +7,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 6,Account_C21,c,Account C21 Rollup,MirrorFunc,rollup,million
 7,Account_C21_1,c,Account C211 Rollup,MirrorFunc,P_egross,million
 8,Account_C21_2,c,Account C212 Rollup,MirrorFunc,P_egross,million
-9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,"application, P_egross",million
+9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,"P_egross, application",million
 10,Account_C21_4,c,Account C214 Rollup,MirrorFunc,P_egross,million
 11,Account_C21_5,c,Account C215 Rollup,MirrorFunc,P_egross,million
 12,Account_C21_6,c,Account C216 Rollup,MirrorFunc,P_egross,million
@@ -29,7 +29,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 28,Account_C22_1_3,c,Account C2213 Rollup,MirrorFunc,rollup,million
 29,Account_C22_1_3_1,c,Account C22131 Rollup,MirrorFunc,HF_magnet_number,million
 30,Account_C22_1_3_2,c,Account C22132 Rollup,MirrorFunc,LF_magnet_number,million
-31,Account_C22_1_3_3,c,Account C22133 Rollup,MirrorFunc,reference value,million
+31,Account_C22_1_3_3,c,Account C22133 Rollup,MirrorFunc,CF_magnet_number,million
 32,Account_C22_1_4,c,Account C2214 Rollup,MirrorFunc,rollup,million
 33,Account_C22_1_4_1,c,Account C22141 Rollup,MirrorFunc,"P_NBI, n_unit",million
 34,Account_C22_1_4_2,c,Account C22142 Rollup,MirrorFunc,"P_ICRH, n_unit",million
@@ -42,9 +42,9 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 41,Account_C22_1_7,c,Account C2217 Rollup,MirrorFunc,reference value,million
 42,Account_C22_1_8,c,Account C2218 Rollup,MirrorFunc,reference value,million
 43,Account_C22_1_9,c,Account C2219 Rollup,MirrorFunc,"P_DECe, n_unit",million
-44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,"construction_time, N_module, L, n_unit",million
+44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,"L, N_module, construction_time, n_unit",million
 45,Account_C22_2,c,Account C222 Rollup,MirrorFunc,rollup,million
-46,Account_C22_2_1,c,Account C2221 Rollup,MirrorFunc,"P_egross, N_module",million
+46,Account_C22_2_1,c,Account C2221 Rollup,MirrorFunc,"N_module, P_egross",million
 47,Account_C22_2_2,c,Account C2222 Rollup,MirrorFunc,P_th,million
 48,Account_C22_2_3,c,Account C2223 Rollup,MirrorFunc,reference value,million
 49,Account_C22_3,c,Account C223 Rollup,MirrorFunc,"N_module, P_th",million
@@ -52,10 +52,10 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 51,Account_C22_5,c,Account C225 Rollup,MirrorFunc,n_unit,million
 52,Account_C22_6,c,Account C226 Rollup,MirrorFunc,P_enet,million
 53,Account_C22_7,c,Account C227 Rollup,MirrorFunc,reference value,million
-54,Account_C23,c,Account C23 Rollup,MirrorFunc,"P_egross, N_module",million
-55,Account_C24,c,Account C24 Rollup,MirrorFunc,"P_egross, N_module",million
-56,Account_C25,c,Account C25 Rollup,MirrorFunc,"P_egross, N_module",million
-57,Account_C26,c,Account C26 Rollup,MirrorFunc,"P_enet, N_module",million
+54,Account_C23,c,Account C23 Rollup,MirrorFunc,"N_module, P_egross",million
+55,Account_C24,c,Account C24 Rollup,MirrorFunc,"N_module, P_egross",million
+56,Account_C25,c,Account C25 Rollup,MirrorFunc,"N_module, P_egross",million
+57,Account_C26,c,Account C26 Rollup,MirrorFunc,"N_module, P_enet",million
 58,Account_C27,c,Account C27 Rollup,MirrorFunc,reference value,million
 59,Account_C28,c,Account C28 Rollup,MirrorFunc,reference value,million
 60,Account_C29,c,Account C29 Rollup,MirrorFunc,rollup,million

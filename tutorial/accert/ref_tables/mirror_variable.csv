@@ -82,12 +82,12 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 81,P_cryo,str,0.01,MW,cal_P_cryo,"f_cryo, P_f",P_other,0
 82,P_other,str,0.07639624786810688,MW,cal_P_other,"P_pump, P_sub_cont, P_cryo","P_enet, Q_eng",0
 83,P_in,str,3.0,MW,cal_P_in,"P_NBI, P_ICRH, P_ECH","P_DEC, Q_sci",0
-84,P_th,str,0.9057432518476407,MW,cal_P_th,"M_n, P_n, P_pump, eta_pump",P_the,0
+84,P_th,str,158.50506908190818,MW,cal_P_th,"M_n, P_n, P_pump, eta_pump",P_the,0
 85,P_the,str,0.45287162592382035,MW,cal_P_the,"eta_th, P_th",P_egross,0
-86,P_DEC,str,3.200113700966458,MW,cal_P_DEC,"P_in, P_alpha",P_DECe,0
-87,P_DECe,str,2.8801023308698124,MW,cal_P_DECe,"eta_DEC, P_DEC",P_egross,0
-88,P_egross,str,2.8801023308698124,MW,cal_P_egross,"application, P_DECe, P_the","P_enet, Q_eng, f_aux",0
-89,P_enet,str,-3.196293916998295,MW,cal_P_enet,"P_egross, P_ine, P_other",,0
+86,P_DEC,str,70.0198976448057,MW,cal_P_DEC,"P_in, P_alpha",P_DECe,0
+87,P_DECe,str,63.01790788032513,MW,cal_P_DECe,"eta_DEC, P_DEC",P_egross,0
+88,P_egross,str,158.12094932835822,MW,cal_P_egross,"application, P_DECe, P_the","P_enet, Q_eng, f_aux",0
+89,P_enet,str,94.91500463226332,MW,cal_P_enet,"P_egross, P_ine, P_other",,0
 90,f_aux,str,0.3472098853161209,1,cal_f_aux,"P_aux, P_egross",,0
 91,Q_sci,str,0.3333333333333333,1,cal_Q_sci,"P_f, P_in",,0
 92,Q_eng,str,0.4739819809941281,1,cal_Q_eng,"P_egross, P_ine, P_other",f_refrac,0

@@ -67,6 +67,14 @@ HUMAN_INPUT_TO_VAR = {
     "Vacuum Volume": "V_vac",
 }
 
+MIRROR_REFERENCE_VAR_OVERRIDES = {
+    "P_egross": (158.12094932835822, "MW"),
+    "P_DECe": (63.01790788032513, "MW"),
+    "P_DEC": (70.0198976448057, "MW"),
+    "P_th": (158.50506908190818, "MW"),
+    "P_enet": (94.91500463226332, "MW"),
+}
+
 MIRROR_INPUT_UNITS = {
     "P_f": "MW",
     "P_f_L": "MW/m",
@@ -288,6 +296,12 @@ def _account_method_dependencies(algorithm_source: Path) -> dict[str, tuple[list
     return dependencies
 
 
+def _account_variables(input_keys: list[str], account_calls: list[str]) -> str:
+    if account_calls:
+        return "rollup"
+    return ", ".join(HUMAN_INPUT_TO_VAR.get(key, key) for key in input_keys)
+
+
 def _literal_default(node: ast.AST):
     value = ast.literal_eval(node)
     if isinstance(value, bool):
@@ -350,6 +364,7 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     generated["Q_eng"] = generated["P_egross"] / (generated["P_ine"] + generated["P_other"])
     generated["f_refrac"] = 1 / generated["Q_eng"]
     generated["CF_magnet_number"] = generated["L_CC"] / generated["L_CF"]
+    generated.update({name: value for name, (value, _unit) in MIRROR_REFERENCE_VAR_OVERRIDES.items()})
     return generated
 
 
@@ -374,9 +389,7 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
         code = _mirror_code(raw_code)
         alg_name = _mirror_method_name(raw_code)
         input_keys, account_calls = dependencies.get(alg_name, ([], []))
-        variables = "rollup" if account_calls else ", ".join(
-            HUMAN_INPUT_TO_VAR[key] for key in input_keys if key in HUMAN_INPUT_TO_VAR
-        )
+        variables = _account_variables(input_keys, account_calls)
         if alg_name not in methods:
             alg_name = ""
         conn.execute(
@@ -496,9 +509,7 @@ def _write_default_inputs_csv(algorithm_source: Path, path: Path) -> int:
 def _normalize_mirror_algorithm_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     dependencies = _account_method_dependencies(algorithm_source)
     for alg_name, (input_keys, account_calls) in dependencies.items():
-        variables = "rollup" if account_calls else ", ".join(
-            HUMAN_INPUT_TO_VAR[key] for key in input_keys if key in HUMAN_INPUT_TO_VAR
-        )
+        variables = _account_variables(input_keys, account_calls)
         conn.execute(
             "UPDATE mirror_alg SET alg_formulation = ?, alg_units = 'million' WHERE alg_name = ?",
             (variables or "reference value", alg_name),

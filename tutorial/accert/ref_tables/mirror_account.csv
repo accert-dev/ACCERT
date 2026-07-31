@@ -12,7 +12,7 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 11,21,Structures_and_Improvements,112945794.1,1,2,Unchanged,0.021891520437683703,Account_C21,million,rollup
 12,211,Site_Preparation/Yard_Work,42376414.42,2,21,Unchanged,0.008213534197916489,Account_C21_1,million,P_egross
 13,212,Heat_Island_Building,29536993.34,2,21,Unchanged,0.005724955927069243,Account_C21_2,million,P_egross
-14,213,Turbine_Generator_Building,8538531.264999999,2,21,Unchanged,0.0016549658460947396,Account_C21_3,million,"application, P_egross"
+14,213,Turbine_Generator_Building,8538531.264999999,2,21,Unchanged,0.0016549658460947396,Account_C21_3,million,"P_egross, application"
 15,214,Heat_Exchanger_Building,5976971.885,2,21,Unchanged,0.0011584760921694063,Account_C21_4,million,P_egross
 16,215,Power_Supply_and_Energy_Storage,1707706.253,2,21,Unchanged,0.00033099316921894796,Account_C21_5,million,P_egross
 17,216,Reactor_Auxiliaries,853853.1265,2,21,Unchanged,0.00016549658460947398,Account_C21_6,million,P_egross
@@ -34,7 +34,7 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 33,2213,Coils,272039976.79999995,3,221,Unchanged,0.05272767135278568,Account_C22_1_3,million,rollup
 34,22131,HF_Coils,116400000.0,4,2213,Unchanged,0.022561025837671125,Account_C22_1_3_1,million,HF_magnet_number
 35,22132,LF_Coils,12505240.0,4,2213,Unchanged,0.0024238062091604677,Account_C22_1_3_2,million,LF_magnet_number
-36,22133,CC_Coils,143134736.8,4,2213,Unchanged,0.02774283930595409,Account_C22_1_3_3,million,
+36,22133,CC_Coils,143134736.8,4,2213,Unchanged,0.02774283930595409,Account_C22_1_3_3,million,CF_magnet_number
 37,2214,Supplemental_Heating,227453000.0,3,221,Unchanged,0.04408567877882998,Account_C22_1_4,million,rollup
 38,22141,NBI,105963000.0,4,2214,Unchanged,0.02053809261887582,Account_C22_1_4_1,million,"P_NBI, n_unit"
 39,22142,ICRH,41490000.0,4,2214,Unchanged,0.008041726477705971,Account_C22_1_4_2,million,"P_ICRH, n_unit"
@@ -47,17 +47,17 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 46,2217,Power_Supplies,0.0,3,221,Unchanged,0.0,Account_C22_1_7,million,
 47,2218,Divertor,0.0,3,221,Unchanged,0.0,Account_C22_1_8,million,
 48,2219,Direct_Energy_Convertor,109317164.8,3,221,Unchanged,0.02118820772812502,Account_C22_1_9,million,"P_DECe, n_unit"
-49,22111,Assembly_and_Installation_Costs,153195207.9,3,221,Unchanged,0.029692792471128007,Account_C22_1_11,million,"construction_time, N_module, L, n_unit"
+49,22111,Assembly_and_Installation_Costs,153195207.9,3,221,Unchanged,0.029692792471128007,Account_C22_1_11,million,"L, N_module, construction_time, n_unit"
 50,222,Main_and_Secondary_Coolant,33649451.5,2,22,Unchanged,0.0065220459167952,Account_C22_2,million,rollup
 51,223,Auxiliary_Cooling_Systems,352198.2635,2,22,Unchanged,6.826421067703095e-05,Account_C22_3,million,"N_module, P_th"
 52,224,Radioactive_Waste_Treatment,627553.2695,2,22,Unchanged,0.00012163441175003857,Account_C22_4,million,P_th
 53,225,Fuel_Handling_and_Storage,88654052.28999999,2,22,Unchanged,0.017183216188392927,Account_C22_5,million,n_unit
 54,226,Other_Heat_Island_Equipment,1748097.852,2,22,Unchanged,0.0003388220000493934,Account_C22_6,million,P_enet
 55,227,Instrumentation_and_Control,85000000.0,2,22,Unchanged,0.01647497591238871,Account_C22_7,million,
-56,23,Turbine_Plant_Equipment,39822761.09,1,2,Unchanged,0.007718576820265415,Account_C23,million,"P_egross, N_module"
-57,24,Electric_Plant_Equipment,9819310.954,1,2,Unchanged,0.0019032107228635835,Account_C24,million,"P_egross, N_module"
-58,25,Miscellaneous_Plant_Equipment,6909885.4860000005,1,2,Unchanged,0.0013392964345789922,Account_C25,million,"P_egross, N_module"
-59,26,Heat_Rejection,11679291.32,1,2,Unchanged,0.0022637181549502415,Account_C26,million,"P_enet, N_module"
+56,23,Turbine_Plant_Equipment,39822761.09,1,2,Unchanged,0.007718576820265415,Account_C23,million,"N_module, P_egross"
+57,24,Electric_Plant_Equipment,9819310.954,1,2,Unchanged,0.0019032107228635835,Account_C24,million,"N_module, P_egross"
+58,25,Miscellaneous_Plant_Equipment,6909885.4860000005,1,2,Unchanged,0.0013392964345789922,Account_C25,million,"N_module, P_egross"
+59,26,Heat_Rejection,11679291.32,1,2,Unchanged,0.0022637181549502415,Account_C26,million,"N_module, P_enet"
 60,27,Special_Materials,0.0,1,2,Unchanged,0.0,Account_C27,million,
 61,28,Digital_Twin/Simulator,5000000.0,1,2,Unchanged,0.0009691162301405122,Account_C28,million,
 62,29,Contingency_on_Direct_Capital_Costs,0.0,1,2,Unchanged,0.0,Account_C29,million,rollup
