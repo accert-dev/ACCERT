@@ -3,62 +3,62 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 2,add_account,v,Add an account to the cost_account object.,MirrorFunc,TODO,TODO
 3,generate_report,v,Generate a report based on user input.,MirrorFunc,TODO,TODO
 4,learning_credit,v,None,MirrorFunc,TODO,TODO
-5,Account_C20,c,Account C20 Rollup,MirrorFunc,TODO,million
-6,Account_C21,c,Account C21 Rollup,MirrorFunc,TODO,million
-7,Account_C21_1,c,Account C211 Rollup,MirrorFunc,TODO,million
-8,Account_C21_2,c,Account C212 Rollup,MirrorFunc,TODO,million
-9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,TODO,million
-10,Account_C21_4,c,Account C214 Rollup,MirrorFunc,TODO,million
-11,Account_C21_5,c,Account C215 Rollup,MirrorFunc,TODO,million
-12,Account_C21_6,c,Account C216 Rollup,MirrorFunc,TODO,million
-13,Account_C21_7,c,Account C217 Rollup,MirrorFunc,TODO,million
-14,Account_C21_8,c,Account C218 Rollup,MirrorFunc,TODO,million
-15,Account_C21_9,c,Account C219 Rollup,MirrorFunc,TODO,million
-16,Account_C21_10,c,Account C2110 Rollup,MirrorFunc,TODO,million
-17,Account_C21_11,c,Account C2111 Rollup,MirrorFunc,TODO,million
-18,Account_C21_12,c,Account C2112 Rollup,MirrorFunc,TODO,million
-19,Account_C21_13,c,Account C2113 Rollup,MirrorFunc,TODO,million
-20,Account_C21_14,c,Account C2114 Rollup,MirrorFunc,TODO,million
-21,Account_C21_15,c,Account C2115 Rollup,MirrorFunc,TODO,million
-22,Account_C21_16,c,Account C2116 Rollup,MirrorFunc,TODO,million
-23,Account_C21_17,c,Account C2117 Rollup,MirrorFunc,TODO,million
-24,Account_C22,c,Account C22 Rollup,MirrorFunc,TODO,million
-25,Account_C22_1,c,Account C221 Rollup,MirrorFunc,TODO,million
-26,Account_C22_1_1,c,Account C2211 Rollup,MirrorFunc,TODO,million
-27,Account_C22_1_2,c,Account C2212 Rollup,MirrorFunc,TODO,million
-28,Account_C22_1_3,c,Account C2213 Rollup,MirrorFunc,TODO,million
-29,Account_C22_1_3_1,c,Account C22131 Rollup,MirrorFunc,TODO,million
-30,Account_C22_1_3_2,c,Account C22132 Rollup,MirrorFunc,TODO,million
-31,Account_C22_1_3_3,c,Account C22133 Rollup,MirrorFunc,TODO,million
-32,Account_C22_1_4,c,Account C2214 Rollup,MirrorFunc,TODO,million
-33,Account_C22_1_4_1,c,Account C22141 Rollup,MirrorFunc,TODO,million
-34,Account_C22_1_4_2,c,Account C22142 Rollup,MirrorFunc,TODO,million
-35,Account_C22_1_4_3,c,Account C22143 Rollup,MirrorFunc,TODO,million
-36,Account_C22_1_5,c,Account C2215 Rollup,MirrorFunc,TODO,million
-37,Account_C22_1_6,c,Account C2216 Rollup,MirrorFunc,TODO,million
-38,Account_C22_1_6_2,c,Account C22162 Rollup,MirrorFunc,TODO,million
-39,Account_C22_1_6_3,c,Account C22163 Rollup,MirrorFunc,TODO,million
-40,Account_C22_1_6_4,c,Account C22164 Rollup,MirrorFunc,TODO,million
-41,Account_C22_1_7,c,Account C2217 Rollup,MirrorFunc,TODO,million
-42,Account_C22_1_8,c,Account C2218 Rollup,MirrorFunc,TODO,million
-43,Account_C22_1_9,c,Account C2219 Rollup,MirrorFunc,TODO,million
-44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,TODO,million
-45,Account_C22_2,c,Account C222 Rollup,MirrorFunc,TODO,million
-46,Account_C22_2_1,c,Account C2221 Rollup,MirrorFunc,TODO,million
-47,Account_C22_2_2,c,Account C2222 Rollup,MirrorFunc,TODO,million
-48,Account_C22_2_3,c,Account C2223 Rollup,MirrorFunc,TODO,million
-49,Account_C22_3,c,Account C223 Rollup,MirrorFunc,TODO,million
-50,Account_C22_4,c,Account C224 Rollup,MirrorFunc,TODO,million
-51,Account_C22_5,c,Account C225 Rollup,MirrorFunc,TODO,million
-52,Account_C22_6,c,Account C226 Rollup,MirrorFunc,TODO,million
-53,Account_C22_7,c,Account C227 Rollup,MirrorFunc,TODO,million
-54,Account_C23,c,Account C23 Rollup,MirrorFunc,TODO,million
-55,Account_C24,c,Account C24 Rollup,MirrorFunc,TODO,million
-56,Account_C25,c,Account C25 Rollup,MirrorFunc,TODO,million
-57,Account_C26,c,Account C26 Rollup,MirrorFunc,TODO,million
-58,Account_C27,c,Account C27 Rollup,MirrorFunc,TODO,million
-59,Account_C28,c,Account C28 Rollup,MirrorFunc,TODO,million
-60,Account_C29,c,Account C29 Rollup,MirrorFunc,TODO,million
+5,Account_C20,c,Account C20 Rollup,MirrorFunc,rollup,million
+6,Account_C21,c,Account C21 Rollup,MirrorFunc,rollup,million
+7,Account_C21_1,c,Account C211 Rollup,MirrorFunc,P_egross,million
+8,Account_C21_2,c,Account C212 Rollup,MirrorFunc,P_egross,million
+9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,"application, P_egross",million
+10,Account_C21_4,c,Account C214 Rollup,MirrorFunc,P_egross,million
+11,Account_C21_5,c,Account C215 Rollup,MirrorFunc,P_egross,million
+12,Account_C21_6,c,Account C216 Rollup,MirrorFunc,P_egross,million
+13,Account_C21_7,c,Account C217 Rollup,MirrorFunc,P_egross,million
+14,Account_C21_8,c,Account C218 Rollup,MirrorFunc,P_egross,million
+15,Account_C21_9,c,Account C219 Rollup,MirrorFunc,P_egross,million
+16,Account_C21_10,c,Account C2110 Rollup,MirrorFunc,P_egross,million
+17,Account_C21_11,c,Account C2111 Rollup,MirrorFunc,P_egross,million
+18,Account_C21_12,c,Account C2112 Rollup,MirrorFunc,P_egross,million
+19,Account_C21_13,c,Account C2113 Rollup,MirrorFunc,P_egross,million
+20,Account_C21_14,c,Account C2114 Rollup,MirrorFunc,P_egross,million
+21,Account_C21_15,c,Account C2115 Rollup,MirrorFunc,P_egross,million
+22,Account_C21_16,c,Account C2116 Rollup,MirrorFunc,P_egross,million
+23,Account_C21_17,c,Account C2117 Rollup,MirrorFunc,P_egross,million
+24,Account_C22,c,Account C22 Rollup,MirrorFunc,rollup,million
+25,Account_C22_1,c,Account C221 Rollup,MirrorFunc,rollup,million
+26,Account_C22_1_1,c,Account C2211 Rollup,MirrorFunc,"L_CC, L_EP",million
+27,Account_C22_1_2,c,Account C2212 Rollup,MirrorFunc,reference value,million
+28,Account_C22_1_3,c,Account C2213 Rollup,MirrorFunc,rollup,million
+29,Account_C22_1_3_1,c,Account C22131 Rollup,MirrorFunc,HF_magnet_number,million
+30,Account_C22_1_3_2,c,Account C22132 Rollup,MirrorFunc,LF_magnet_number,million
+31,Account_C22_1_3_3,c,Account C22133 Rollup,MirrorFunc,reference value,million
+32,Account_C22_1_4,c,Account C2214 Rollup,MirrorFunc,rollup,million
+33,Account_C22_1_4_1,c,Account C22141 Rollup,MirrorFunc,"P_NBI, n_unit",million
+34,Account_C22_1_4_2,c,Account C22142 Rollup,MirrorFunc,"P_ICRH, n_unit",million
+35,Account_C22_1_4_3,c,Account C22143 Rollup,MirrorFunc,"P_ECH, n_unit",million
+36,Account_C22_1_5,c,Account C2215 Rollup,MirrorFunc,reference value,million
+37,Account_C22_1_6,c,Account C2216 Rollup,MirrorFunc,rollup,million
+38,Account_C22_1_6_2,c,Account C22162 Rollup,MirrorFunc,reference value,million
+39,Account_C22_1_6_3,c,Account C22163 Rollup,MirrorFunc,V_vac,million
+40,Account_C22_1_6_4,c,Account C22164 Rollup,MirrorFunc,reference value,million
+41,Account_C22_1_7,c,Account C2217 Rollup,MirrorFunc,reference value,million
+42,Account_C22_1_8,c,Account C2218 Rollup,MirrorFunc,reference value,million
+43,Account_C22_1_9,c,Account C2219 Rollup,MirrorFunc,"P_DECe, n_unit",million
+44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,"construction_time, N_module, L, n_unit",million
+45,Account_C22_2,c,Account C222 Rollup,MirrorFunc,rollup,million
+46,Account_C22_2_1,c,Account C2221 Rollup,MirrorFunc,"P_egross, N_module",million
+47,Account_C22_2_2,c,Account C2222 Rollup,MirrorFunc,P_th,million
+48,Account_C22_2_3,c,Account C2223 Rollup,MirrorFunc,reference value,million
+49,Account_C22_3,c,Account C223 Rollup,MirrorFunc,"N_module, P_th",million
+50,Account_C22_4,c,Account C224 Rollup,MirrorFunc,P_th,million
+51,Account_C22_5,c,Account C225 Rollup,MirrorFunc,n_unit,million
+52,Account_C22_6,c,Account C226 Rollup,MirrorFunc,P_enet,million
+53,Account_C22_7,c,Account C227 Rollup,MirrorFunc,reference value,million
+54,Account_C23,c,Account C23 Rollup,MirrorFunc,"P_egross, N_module",million
+55,Account_C24,c,Account C24 Rollup,MirrorFunc,"P_egross, N_module",million
+56,Account_C25,c,Account C25 Rollup,MirrorFunc,"P_egross, N_module",million
+57,Account_C26,c,Account C26 Rollup,MirrorFunc,"P_enet, N_module",million
+58,Account_C27,c,Account C27 Rollup,MirrorFunc,reference value,million
+59,Account_C28,c,Account C28 Rollup,MirrorFunc,reference value,million
+60,Account_C29,c,Account C29 Rollup,MirrorFunc,rollup,million
 61,Account_OCC,c,Account OCC Rollup,MirrorFunc,TODO,million
 62,Account_TCC,c,Account TCC Rollup,MirrorFunc,TODO,million
 63,Account_C90,c,Account C90 Rollup,MirrorFunc,TODO,million

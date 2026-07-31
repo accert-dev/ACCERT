@@ -20,6 +20,28 @@ class MirrorFunc(Algorithm):
     # Conversion factors
     Wh_to_BTU = 3.41214 # 1 Wh = 3.41214 BTU
 
+    ACCERT_TO_TEAM_INPUT = {
+        "application": "Application",
+        "include_contingency": "Contingency",
+        "L": "Overall Length",
+        "L_CC": "Central Cell Length",
+        "L_EP": "End Plug Length",
+        "N_module": "Number of Modules",
+        "n_unit": "Unit Number",
+        "P_DECe": "DEC Electrical Power",
+        "P_ECH": "ECH Power",
+        "P_egross": "Gross Electric Power",
+        "P_enet": "Net Electric Power",
+        "P_ICRH": "ICRH Power",
+        "P_NBI": "NBI Power",
+        "P_th": "Thermal Power",
+        "V_vac": "Vacuum Volume",
+        "construction_time": "Construction Time",
+        "HF_magnet_number": "HF Magnet Number",
+        "LF_magnet_number": "LF Magnet Number",
+        "NOAK": "NOAK",
+    }
+
     def __init__(self, ind, alg_name, alg_for, alg_description, alg_formulation, alg_units, variables, constants):
         super().__init__(ind, alg_name, alg_for, alg_description, alg_formulation, alg_units, variables, constants)
 
@@ -33,8 +55,21 @@ class MirrorFunc(Algorithm):
         Returns:
         float: Result of the algorithm computation.
         """
-        # run the algorithm use self.name not self.alg_name
+        if self.name.startswith("Account_"):
+            return self._run_account_algorithm(self.name, inputs)
         return self._run_algorithm(self.name, [inputs[var] for var in self.variables.split(",")])
+
+    def _run_account_algorithm(self, alg_name: str, variables: dict) -> float:
+        try:
+            algorithm = getattr(self, alg_name)
+        except AttributeError:
+            raise ValueError(f"Algorithm {alg_name} not found")
+        team_inputs = {
+            team_name: variables[var_name]
+            for var_name, team_name in self.ACCERT_TO_TEAM_INPUT.items()
+            if var_name in variables
+        }
+        return algorithm(team_inputs)
 
     def _run_algorithm(self, alg_name: str, variables: list) -> float:
         """

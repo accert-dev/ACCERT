@@ -58,3 +58,57 @@ def test_mirror_variable_update_uses_reference_table(cursor):
         ("r_magnet",),
     )
     assert cursor.fetchone() == (2.0, "m", 1)
+
+
+def test_mirror_accounts_use_fusion_style_structure(cursor):
+    cursor.execute(
+        """
+        SELECT code_of_account, supaccount, alg_name, variables
+        FROM mirror_acco
+        WHERE code_of_account = ?;
+        """,
+        ("211",),
+    )
+    assert cursor.fetchone() == ("211", "21", "Account_C21_1", "P_egross")
+
+
+def test_mirror_variable_links_are_reversed_from_var_need(cursor):
+    cursor.execute(
+        """
+        SELECT var_need, v_linked
+        FROM mirror_var
+        WHERE var_name = ?;
+        """,
+        ("P_egross",),
+    )
+    assert cursor.fetchone() == (
+        "application, P_DECe, P_the",
+        "P_enet, Q_eng, f_aux",
+    )
+
+
+def test_mirror_account_recalculation_uses_accert_variables(cursor):
+    accert = Accert.__new__(Accert)
+    accert.acc_tabl = "mirror_acco"
+    accert.var_tabl = "mirror_var"
+    accert.alg_tabl = "mirror_alg"
+
+    cursor.execute(
+        """
+        UPDATE mirror_var
+        SET var_value = ?, user_input = 1
+        WHERE var_name = ?;
+        """,
+        (1000.0, "P_egross"),
+    )
+
+    assert accert.update_new_accounts(cursor) is None
+    cursor.execute(
+        """
+        SELECT total_cost, review_status
+        FROM mirror_acco
+        WHERE code_of_account = ?;
+        """,
+        ("211",),
+    )
+    assert cursor.fetchone() == (268000000.0, "User Input")
