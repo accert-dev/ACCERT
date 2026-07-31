@@ -1,22 +1,76 @@
-import mysql.connector
+from sqlite_accert_connection import connect as accert_sqlite_connect
+import atexit
 import os
+import shutil
+import tempfile
 from prettytable import PrettyTable
 import configparser
 import xml2obj
 from utility_accert import Utility_methods
 from Algorithm import Algorithm
+from post_process_accert import AccertPostProcessor
+from cost_escalation import TARGET_DOLLAR_YEAR, cpi_escalation_factor, model_cost_year
 import importlib
 import numpy as np
 import sys
 import pandas.io.sql as sql
 import pandas as pd
 import warnings
+from datetime import datetime
 from typing import Union
 
 warnings.filterwarnings('ignore')
 PathLike = Union[str, bytes, os.PathLike]
 
+
+def _accert_sqlite_db_path() -> str:
+    """Return a run-local SQLite database path for ACCERT.
+
+    Normal ACCERT runs update many rows while calculating results. To keep the
+    bundled reference database reusable, run against a temporary copy by default.
+    Set ACCERT_SQLITE_DB only when you intentionally want to use a specific
+    writable database file.
+    """
+    db_env = os.environ.get("ACCERT_SQLITE_DB")
+    if db_env:
+        return db_env
+
+    source_db = os.path.join(os.path.dirname(os.path.abspath(__file__)), "accertdb.sqlite")
+    fd, run_db = tempfile.mkstemp(prefix="accert_run_", suffix=".sqlite")
+    os.close(fd)
+    shutil.copy2(source_db, run_db)
+    atexit.register(lambda path=run_db: os.path.exists(path) and os.remove(path))
+    return run_db
+
+
 class Accert:
+    NO_UNIT_VALUES = {"", "1", "n/a", "none", "null"}
+    UNIT_ALIASES = {"$": "dollar"}
+    UNIT_CONVERSIONS = {
+        ("KW", "MW"): 0.001,
+        ("KW", "GW"): 0.000001,
+        ("MW", "KW"): 1000,
+        ("MW", "GW"): 0.001,
+        ("GW", "KW"): 1000000,
+        ("GW", "MW"): 1000,
+        ("million", "dollar"): 1000000,
+        ("million", "thousand"): 1000,
+        ("thousand", "million"): 1 / 1000,
+        ("thousand", "dollar"): 1000,
+        ("dollar", "thousand"): 1 / 1000,
+        ("dollar", "million"): 1 / 1000000,
+        ("lbs", "kg"): 0.453592,
+        ("lbs", "ton"): 0.000453592,
+        ("kg", "lbs"): 2.20462,
+        ("kg", "ton"): 0.001,
+        ("ton", "lbs"): 2204.62,
+        ("ton", "kg"): 1000,
+        ("bar", "psi"): 14.5038,
+        ("bar", "psf"): 2088.54,
+        ("psi", "bar"): 0.068947572927646,
+        ("psi", "psf"): 144,
+    }
+
     def __init__(self, input_path, accert_path):
         """
         Initialize the Accert class.
@@ -40,6 +94,9 @@ class Accert:
         self.fac_tabl = None
         self.use_gncoa = False
         self.gncoa_map = 'gncoamapping'
+        self.output_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.post_processor = AccertPostProcessor()
+        self.target_dollar_year = TARGET_DOLLAR_YEAR
     
     def setup_table_names(self,xml2obj):
         """Setup different table names in the database.
@@ -55,6 +112,7 @@ class Accert:
         """
         if xml2obj.use_gncoa is not None:
             self.use_gncoa = str(xml2obj.use_gncoa.value).lower() == 'true'
+        self.target_dollar_year = self._target_dollar_year_from_input(xml2obj)
         if "abr1000" in str(xml2obj.ref_model.value).lower():
             self.ref_model = 'abr1000'
             self.acc_tabl = 'abr_account'
@@ -77,6 +135,22 @@ class Accert:
             self.cel_tabl = 'cost_element'
             self.var_tabl = 'variable'
             self.alg_tabl = 'algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
+        elif "lpsr" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'lpsr'
+            self.acc_tabl = 'lpsr_account'
+            self.cel_tabl = 'lpsr_cost_element'
+            self.var_tabl = 'lpsr_variable'
+            self.alg_tabl = 'lpsr_algorithm'
+            self.esc_tabl = 'escalation'
+            self.fac_tabl = 'facility'
+        elif "ap1000" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'ap1000'
+            self.acc_tabl = 'ap1000_account'
+            self.cel_tabl = 'ap1000_cost_element'
+            self.var_tabl = 'ap1000_variable'
+            self.alg_tabl = 'ap1000_algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
         elif "lfr" in str(xml2obj.ref_model.value).lower():
@@ -129,10 +203,15 @@ class Accert:
         """    
 
         import subprocess
-        sonvalidxml = os.path.join(accert_path, "bin", "sonvalidxml")
-        schema = os.path.join(accert_path, "src", "etc", "accert.sch")
-        cmd = ' '.join([sonvalidxml, schema, input_path])
-        xmlresult = subprocess.check_output(cmd, shell=True)
+        # sonvalidxml = os.path.join(accert_path, "bin", "sonvalidxml")
+        # schema = os.path.join(accert_path, "src", "etc", "accert.sch")
+        cmd = [
+            os.path.join(accert_path, "bin", "sonvalidxml"),
+            os.path.join(accert_path, "src", "etc", "accert.sch"),
+            input_path,
+        ]
+
+        xmlresult = subprocess.check_output(cmd)
         ### obtain pieces of input by name for convenience
         # from .wasppy import xml2obj
         return xml2obj.xml2obj(xmlresult)
@@ -142,8 +221,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements. 
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements. 
         inp_id : str
             COA ID
 
@@ -154,18 +233,6 @@ class Accert:
         coa_others
             List of a COA's other info, including ind, lft, rgt.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `get_current_COAs`(IN table_name VARCHAR(50), 
-        #                                 IN inp_id VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT code_of_account, 
-        #                     ind FROM ', table_name, ' WHERE supaccount = ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @inp_id = inp_id;
-        #     EXECUTE stmt USING @inp_id;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('get_current_COAs',(self.acc_tabl, inp_id))
         for row in c.stored_results():
             coa_info = row.fetchall()
@@ -181,24 +248,12 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         min_ind : int
             Original index of the account next to the inserted COA.
 
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_before_insert`(IN table_name VARCHAR(50),
-        #                                             IN min_ind INT)
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', table_name,
-        #                     ' SET ind = ind + 1 WHERE ind > ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @min_ind = min_ind-1;
-        #     EXECUTE stmt USING @max_ind;
-        #     DEALLOCATE PREPARE stmt;  
-        # END$$
-        # DELIMITER ;
 
         c.callproc('update_account_before_insert',(self.acc_tabl, min_ind-1))
         return None
@@ -210,8 +265,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ind : int
             Index of the new inserted COA.
         supaccount : str
@@ -229,45 +284,6 @@ class Accert:
         prn : str(float), optional
             Percentage of the total cost of new inserted COA. (Set to 0% by default)
         """       
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_COA`(IN table_name VARCHAR(50),
-        #                                           IN ind INT,
-        #                                           IN supaccount VARCHAR(50),
-        #                                           IN level INT,
-        #                                           IN lft INT,
-        #                                           IN rgt INT,
-        #                                           IN code_of_account VARCHAR(50),
-        #                                           IN account_description VARCHAR(50),
-        #                                           IN total_cost INT,
-        #                                           IN unit VARCHAR(50),
-        #                                           IN main_subaccounts VARCHAR(100),
-        #                                           IN cost_elements VARCHAR(50),
-        #                                           IN review_status VARCHAR(50),
-        #                                           IN prn VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('INSERT INTO ', table_name,
-        #                        ' (ind, supaccount, level, lft, rgt, code_of_account, account_description, 
-        #                           total_cost, unit, main_subaccounts, cost_elements, review_status, prn) 
-        #                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        # PREPARE stmt FROM @stmt;
-        # SET @ind = ind;
-        # SET @supaccount = supaccount;
-        # SET @level = level;
-        # SET @lft = lft;
-        # SET @rgt = rgt;
-        # SET @code_of_account = code_of_account;
-        # SET @account_description = account_description;
-        # SET @total_cost = total_cost;
-        # SET @unit = unit;
-        # SET @main_subaccounts = main_subaccounts;
-        # SET @cost_elements = cost_elements;
-        # SET @review_status = review_status;
-        # SET @prn = prn;
-        # EXECUTE stmt USING @ind, @supaccount, @level, @lft, @rgt, @code_of_account, @account_description,
-        # @total_cost, @unit, @main_subaccounts, @cost_elements, @review_status, @prn;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
 
         c.callproc('insert_new_COA',(self.acc_tabl, ind, supaccount, level, 
                                    code_of_account, account_description, total_cost, 
@@ -280,8 +296,8 @@ class Accert:
         
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         sup_coa : str
             Super account of the new inserted COA.
         user_added_coa : str
@@ -307,17 +323,6 @@ class Accert:
         # TODO : return a new COA id with the COA list as input
         # new_COA = get_new_COA_id(current_COAs)
 
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `sup_coa_level`(IN table_name VARCHAR(50),
-        #                                           IN supaccount VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT level FROM ', table_name, ' WHERE code_of_account = ?');
-        # PREPARE stmt FROM @stmt;
-        # SET @supaccount = supaccount;
-        # EXECUTE stmt USING @supaccount;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
 
         c.callproc('sup_coa_level',(self.acc_tabl, sup_coa))
 
@@ -344,8 +349,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
 
@@ -355,17 +360,6 @@ class Accert:
             Variable info including variable name and variable unit
         """
 
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_variable_info_on_name`(IN table_name VARCHAR(50),
-        #                                           IN var_name VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT var_value, var_unit FROM ', table_name, ' WHERE var_name = ?');
-        # PREPARE stmt FROM @stmt;
-        # SET @var_name = var_name;
-        # EXECUTE stmt USING @var_name;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         var_id = str(var_id).replace("'","").replace('"','')
         c.callproc('extract_variable_info_on_name',(self.var_tabl, var_id))
         for row in c.stored_results():
@@ -379,8 +373,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
 
@@ -389,17 +383,6 @@ class Accert:
         sup_val : List[str]
             Super variable info including the name of the super variable.
         """    
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_super_val`(IN table_name VARCHAR(50),
-        #                                          IN var_name VARCHAR(50))
-        # BEGIN
-        #    SET @stmt = CONCAT('SELECT v_linked FROM ', table_name, ' WHERE var_name = ?');
-        # PREPARE stmt FROM @stmt;
-        # SET @var_name = var_name;
-        # EXECUTE stmt USING @var_name;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('extract_super_val',(self.var_tabl, var_id))
         for row in c.stored_results():
            results = row.fetchone()    
@@ -416,8 +399,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
         u_i_var_value : float
@@ -460,8 +443,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
         var_value : float   
@@ -469,22 +452,6 @@ class Accert:
         var_unit : str
             Variable unit.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_variable_info_on_name`(IN table_name VARCHAR(50),
-        #                             IN `u_i_var_name` VARCHAR(50), IN `value` FLOAT, IN `unit` VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', table_name, ' SET var_value = ?,
-        #                         var_unit = ?,
-        #                         user_input = ? WHERE var_name = ?');
-        # PREPARE stmt FROM @stmt;
-        # SET @var_value = value;
-        # SET @var_unit = unit;
-        # SET @user_input = 1;
-        # SET @var_name = u_i_var_name;
-        # EXECUTE stmt USING @var_value, @var_unit, @user_input, @var_name;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         args = (self.var_tabl, var_id, float(var_value), var_unit)
         c.callproc('update_variable_info_on_name', args)
         return None    
@@ -495,37 +462,24 @@ class Accert:
         
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_super_variable`(IN var_table_name VARCHAR(50),
-        #                             IN alg_table_name VARCHAR(50), IN `u_i_var_name` VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT var.ind, var.var_name, var.var_value,
-        #                         var.var_alg, var.var_need, alg.ind, alg.alg_python,
-        #                         alg.alg_formulation, alg.alg_units, var.var_unit
-        #                         FROM ', var_table_name, ' as var JOIN ', alg_table_name, ' as alg
-        #                         ON var.var_alg=alg.alg_name
-        #                         WHERE var.var_name=?');
-        # PREPARE stmt FROM @stmt;
-        # SET @var_name = u_i_var_name;
-        # EXECUTE stmt USING @var_name;
-        # DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
+        var_id = str(var_id).strip()
         c.callproc('update_super_variable',(self.var_tabl, self.alg_tabl, var_id))
         for row in c.stored_results():
             result = row.fetchone()
+        if result is None:
+            return None
         ### results is a tuple
         sup_var_name = result[1]
         org_var_value = result[2]
         alg_name = result[3]
         var_name_lst = [x.strip() for x in result[4].split(',')]
         alg_no = result[5]
-        alg = result[6]
+        alg_py = result[6]
         alg_form = result[7]
         alg_unit = result[8]
         sup_var_unit = result[9]
@@ -537,12 +491,12 @@ class Accert:
                 # var_value_lst.append(get_var_value_by_name(c, var_name))
                 variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
             print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
-            alg_value = self.run_pre_alg(alg, **variables)
+            alg_value = self.update_account_value(alg_py, alg_name, variables)
         else:
             for var_ind, var_name in enumerate(var_name_lst):
                 variables[var_name] = self.get_var_value_by_name(c, var_name)
             print('[Updating] Sup Variable {}, running algorithm: [{}], \n[Updating] with formulation: {}'.format(sup_var_name, alg_name, alg_form))
-            alg_value= self.update_account_value(alg, alg_name, variables)
+            alg_value= self.update_account_value(alg_py, alg_name, variables)
         self.update_input_variable(c,sup_var_name,alg_value,sup_var_unit,quite = True)
         if alg_unit == '1':
             alg_unit=''
@@ -559,8 +513,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         tc_id : str
             Total cost ID.
         """
@@ -575,19 +529,7 @@ class Accert:
         #             FROM account
         #             WHERE code_of_account = "{}" ;
         #             """.format(tc_id))
-        # Stored procedure
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `extract_total_cost_on_name`(IN tc_id VARCHAR(50),
-        #                                         IN table_name VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT code_of_account, account_description, total_cost, unit
-        #                         FROM ', table_name, ' WHERE code_of_account = ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @tc_id = tc_id;
-        #     EXECUTE stmt USING @tc_id;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
+        # procedure
         tc_id = str(tc_id).replace("'","").replace('"','')
         # remove single quotes or double quotes from the string
         # c.execute("""SELECT code_of_account, account_description, total_cost
@@ -605,8 +547,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility_methods
             Utility_methods class instantiates objects that can perform utility methods.
         accert : Accert
@@ -627,6 +569,15 @@ class Accert:
         else:
             pass
 
+    def _normalize_unit(self, unit):
+        if unit is None:
+            return ""
+        unit = str(unit).strip()
+        return self.UNIT_ALIASES.get(unit, unit)
+
+    def _has_unit(self, unit):
+        return self._normalize_unit(unit).lower() not in self.NO_UNIT_VALUES
+
     def check_unit_conversion(self, org_unit, new_unit):
         """
         Checks if unit conversion is needed.
@@ -638,13 +589,13 @@ class Accert:
         new_unit : str
             New unit.
         """
+        org_unit = self._normalize_unit(org_unit)
+        new_unit = self._normalize_unit(new_unit)
         if org_unit == new_unit:
             return False
-        elif org_unit == "N/A" or org_unit == "none" or org_unit == "None":
-            print('[Note] Original unit is not available, no conversion needed')
+        if not self._has_unit(org_unit) or not self._has_unit(new_unit):
             return False
-        else:
-            return True
+        return True
 
     def convert_unit(self, current_value, current_unit, to_unit):
         """
@@ -666,7 +617,7 @@ class Accert:
         """
         scale = float(self.convert_unit_scale(current_unit,to_unit))
         to_value = current_value * scale
-        if to_unit != 'dollar':
+        if self._normalize_unit(to_unit) != 'dollar':
             print("[Unit Changed] Converted input from {} {} to {} {}".format(current_value, current_unit,to_value,to_unit))
         return to_value
 
@@ -685,66 +636,14 @@ class Accert:
         -------
         scale : float
         """      
+        current_unit = self._normalize_unit(current_unit)
+        to_unit = self._normalize_unit(to_unit)
         if current_unit == to_unit:
             return 1
-        elif current_unit == 'KW':
-            if to_unit == 'MW':
-                return 0.001
-            elif to_unit == 'GW':
-                return 0.000001
-        elif current_unit == 'MW':
-            if to_unit == 'KW':
-                return 1000
-            elif to_unit == 'GW':
-                return 0.001
-        elif current_unit == 'GW':
-            if to_unit == 'KW':
-                return 1000000
-            elif to_unit == 'MW':
-                return 1000
-        elif current_unit == 'million':
-            if to_unit == 'dollar':
-                return 1000000
-            elif to_unit == 'thousand':
-                return 1000
-        elif current_unit == 'thousand':
-            if to_unit == 'million':
-                return 1/1000
-            elif to_unit == 'dollar':
-                return 1000
-        elif current_unit == 'dollar':
-            if to_unit == 'thousand':
-                return 1/1000
-            elif to_unit == 'million':
-                return 1/1000000
-        elif current_unit == 'lbs':
-            if to_unit == 'kg':
-                return 0.453592
-            elif to_unit == 'ton':
-                return 0.000453592
-        elif current_unit == 'kg':
-            if to_unit == 'lbs':
-                return 2.20462
-            elif to_unit == 'ton':
-                return 0.001
-        elif current_unit == 'ton':
-            if to_unit == 'lbs':
-                return 2204.62
-            elif to_unit == 'kg':
-                return 1000
-        elif current_unit == 'bar':
-            if to_unit == 'psi':
-                return 14.5038
-            elif to_unit == 'psf':
-                return 2088.54
-        elif current_unit == 'psi':
-            if to_unit == 'bar':
-                return 0.068947572927646
-            elif to_unit == 'psf':
-                return 144
-        else:
-            print('Cannot convert unit from ',current_unit,'to',to_unit)
-            raise ValueError
+        try:
+            return self.UNIT_CONVERSIONS[(current_unit, to_unit)]
+        except KeyError as exc:
+            raise ValueError(f"Cannot convert unit from {current_unit} to {to_unit}") from exc
 
     def update_total_cost(self, c,tc_id, u_i_tc_value, u_i_tc_unit):
         """
@@ -752,8 +651,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         tc_id : str
             COA of the total cost.
         u_i_tc_value : float
@@ -784,8 +683,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         tc_id : str
             COA of the total cost.
         u_i_tc_value : float
@@ -801,22 +700,6 @@ class Accert:
         ## Statement is not working as expected when passing in a string in a dictionary
         ## but it works when passing in the string directly in .format() method
 
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_total_cost_on_name`(IN table_name VARCHAR(50),
-        #                                                                         IN `tc_id` VARCHAR(50), 
-        #                                                                         IN `u_i_tc_value` FLOAT, 
-        #                                                                         IN `u_i_tc_unit` VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', table_name, ' SET total_cost = ?, unit = ?, 
-        #                                               review_status = "User Input" WHERE code_of_account = ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @tc_id = tc_id;
-        #     SET @u_i_tc_value = u_i_tc_value;
-        #     SET @u_i_tc_unit = u_i_tc_unit;
-        #     EXECUTE stmt USING @u_i_tc_value, @u_i_tc_unit, @tc_id;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         u_i_tc_value= float(u_i_tc_value)
         c.callproc('update_total_cost_on_name',(self.acc_tabl,tc_id,u_i_tc_value))
 
@@ -828,8 +711,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_name : str
             Variable name.
 
@@ -838,17 +721,6 @@ class Accert:
         var_value : str
             Variable value.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `get_var_value_by_name`(IN table_name VARCHAR(50),
-        #                                                                     IN `var_name` VARCHAR(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('SELECT var_value FROM ', table_name, ' WHERE var_name = ?');
-        #     PREPARE stmt FROM @stmt;
-        #     SET @var_name = var_name;
-        #     EXECUTE stmt USING @var_name;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('get_var_value_by_name',(self.var_tabl,var_name))
         for row in c.stored_results():
             var_value = row.fetchone()[0]
@@ -856,7 +728,7 @@ class Accert:
 
     def run_pre_alg(self, alg, **kwargs):
         """
-        Runs pre-algorithms.
+        Runs a reference algorithm without evaluating database text.
 
         Parameters
         ----------
@@ -870,31 +742,20 @@ class Accert:
         alg_value : float
             Algorithm value
         """
-        # NOTE: comments below is the original note from Patrick,
-        #       I would want to keep the original note for future reference
-        # add the variables in kwargs to the local
-        # function namespace
-        # (equivalent to c1 = 10; c2 = 10; c3 = 40.5)
-        locals().update(kwargs)
-        # report back the user algorithm
-        # evaluate the algorithm
-        alg_value = eval(alg)
-        return alg_value
+        if alg == 'sum(kwargs.values())':
+            return sum(kwargs.values())
+        return self.update_account_value('PWRABRFunc', alg, kwargs)
 
     def update_account_value(self, alg_py, alg_name, variables):
         """
-        Calls the specified algorithm with the given variables. Only called for fusion model now.
-        For PWR, ABR,LFR, HEATPIPE the alg_py is in the form of a string that will be 
-        evaluated in the Algorithm table stored in database. For Fusion, the algorithm is in 
-        the form of a python file name that stored in Algorithm folder. For example, in 
-        Fusion model, the alg_py value is 'FusionFunc' then it should look for FusionFunc.py 
-        in the Algorithm folder.
+        Calls the specified algorithm with the given variables. The algorithm
+        module name points to a Python file in the Algorithm folder.
 
 
         Parameters
         ----------
         alg_py : str
-            Algorithm in python.
+            Algorithm Python module name.
         alg_name : str
             Algorithm name.my
         variables : dict
@@ -907,13 +768,8 @@ class Accert:
 
         
         """
-        # Dynamically import the module
         module = importlib.import_module(f'Algorithm.{alg_py}')
-        
-        # Get the class from the module
         class_ = getattr(module, alg_py)
-        
-        # Create an instance of the class
         algorithm_instance = class_(
             ind=1,  # Dummy value, may be needed for future reference
             alg_name=alg_name,
@@ -925,7 +781,6 @@ class Accert:
             constants=''  # Dummy value, replace as needed
         )
         
-        # Run the algorithm and get the result
         result = algorithm_instance.run(variables)
         return result
 
@@ -935,8 +790,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ce_name : str
             Cost element name starting with the COA of the account.
         alg_value : float
@@ -946,38 +801,8 @@ class Accert:
         -------
         None
         """
-        # Turn off safe update mode
-        # keep the original note for future reference
-        c.execute("""SET SQL_SAFE_UPDATES = 0;""")
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cost_element_on_name`(
-        #     IN table_name VARCHAR(50),
-        #     IN ce_name VARCHAR(50),
-        #     IN alg_value DECIMAL(20,5)  
-        # )
-        # BEGIN
-        #     -- Disable safe updates for this operation
-        #     SET SQL_SAFE_UPDATES = 0;
-
-        #     -- Build the dynamic SQL query
-        #     SET @stmt = CONCAT('UPDATE ', table_name, 
-        #                     ' SET cost_2017 = ', alg_value, 
-        #                     ', updated = 1 WHERE cost_element = ''', ce_name, '''');
-
-        #     -- Prepare and execute the dynamic statement
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-
-        #     -- Deallocate the prepared statement
-        #     DEALLOCATE PREPARE stmt;
-
-        # END;$$
-        # DELIMITER ;
-
-        # NOTE, float is used for alg_value, but it can be changed to DECIMAL(20,15) in the 
-        # stored procedure, since float in python is equivalent to double in MySQL, tested 
-        # for several values but using float in stored procedure is not recommended since 
-        # the rolled up value may not be accurate.
+        # NOTE, float is used for alg_value. The rolled up value may not be
+        # accurate if the procedure needs higher decimal precision.
         c.callproc('update_cost_element_on_name',(self.cel_tabl,ce_name,float(alg_value)))
 
         return None
@@ -988,43 +813,21 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor 
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter 
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Updating cost elements '.center(100,'='))
         print('\n')
         c.callproc('update_new_cost_elements',(self.cel_tabl,self.var_tabl,self.alg_tabl))
         for row in c.stored_results():
             results = row.fetchall()
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_cost_elements`(IN cel_tabl_name VARCHAR(50),
-        #                                                                         IN var_tabl_name VARCHAR(50),
-        #                                                                         IN alg_tabl_name VARCHAR(50))
-        # BEGIN
-        # 	SET SQL_SAFE_UPDATES = 0;
-        #     SET @stmt = CONCAT("SELECT ce.ind, ce.cost_element,
-        #        ce.cost_2017, ce.alg_name,
-        #        ce.variables, ce.algno,
-        #        alg.alg_python, alg.alg_formulation, alg.alg_units 
-        # 		FROM ", cel_tabl_name, " AS ce 
-        # 		JOIN ", alg_tabl_name, " AS alg ON ce.alg_name = alg.alg_name
-        # 		WHERE EXISTS (
-        # 			SELECT 1
-        # 			FROM ", var_tabl_name, " AS va
-        # 			WHERE va.user_input = 1
-        # 			AND FIND_IN_SET(va.var_name, REPLACE(ce.variables, ' ', '')) > 0);");
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         for row in results:
             ce_name = row[1]
             org_ce_value = row[2]
             alg_name = row[3]
             var_name_lst = [x.strip() for x in row[4].split(',')]
             alg_no = row[5]
-            alg = row[6]
+            alg_py = row[6]
             alg_form = row[7]
             alg_unit = row[8]
             # NOTE cost element unit is always in USD dollar
@@ -1036,7 +839,7 @@ class Accert:
                 # var_value_lst.append(get_var_value_by_name(c, var_name))
                 variables['v_{}'.format(var_ind+1)] = self.get_var_value_by_name(c, var_name)
             print('[Updating] Cost element [{}], running algorithm: [{}], \n[Updating] with formulation: {}'.format(ce_name, alg_name, alg_form))
-            alg_value = self.run_pre_alg(alg, **variables)
+            alg_value = self.update_account_value(alg_py, alg_name, variables)
             unit_convert = self.check_unit_conversion('dollar',alg_unit)
             if unit_convert:
                 alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
@@ -1052,34 +855,13 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         # for fusion or user defined table,  there is no cost_element table
         # so the update_new_cost_elements will not be executed
         # instead, the update_new_accounts will be executed
         print(' Updating accounts '.center(100,'='))
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_new_accounts`(IN acc_tabl_name VARCHAR(50),
-        #                                                                         IN var_tabl_name VARCHAR(50),
-        #                                                                         IN alg_tabl_name VARCHAR(50))
-        # BEGIN
-        #     SET SQL_SAFE_UPDATES = 0;
-        #     SET @stmt = CONCAT("SELECT ac.ind, ac.code_of_account,
-        #     ac.total_cost, ac.alg_name,
-        #     ac.variables, 
-        #     alg.alg_python, alg.alg_formulation, alg.alg_units 
-        #         FROM ", acc_tabl_name, " AS ac 
-        #         JOIN ", alg_tabl_name, " AS alg ON ac.alg_name = alg.alg_name
-        #         WHERE EXISTS (
-        #             SELECT 1
-        #             FROM ", var_tabl_name, " AS va
-        #             WHERE va.user_input = 1
-        #             AND FIND_IN_SET(va.var_name, REPLACE(ac.variables, ' ', '')) > 0);");
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
         c.callproc('update_new_accounts',(self.acc_tabl,self.var_tabl,self.alg_tabl))
         for row in c.stored_results():
             results = row.fetchall()
@@ -1105,6 +887,7 @@ class Accert:
                 alg_value = self.convert_unit(alg_value,alg_unit,'dollar')
             self.update_total_cost(c, acc_name, alg_value, 'dollar')
             print(' ')
+        return None
 
     def update_account_table_by_cost_elements(self, c):
         """
@@ -1112,99 +895,53 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Updating account table '.center(100,'='))
         print('\n')
         print('[Updating] Updating account table by cost elements')
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `update_account_table_by_cost_elements`(IN acc_tabl_name varchar(50),
-        #                                                                                     IN cel_tabl_name varchar(50))
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', acc_tabl_name, ',',
-        #                         '(SELECT ', acc_tabl_name, '.code_of_account,
-        #                                 ce.total_cost as cost,
-        #                                 ce.updated as updated,
-        #                                 ', acc_tabl_name, '.unit
-        #                         FROM ', acc_tabl_name, '
-        #                         JOIN (SELECT account,
-        #                                     sum(cost_2017) as total_cost,
-        #                                     sum(updated) as updated
-        #                             FROM ', cel_tabl_name, '
-        #                             GROUP BY ', cel_tabl_name, '.account ) as ce
-        #                         on ', acc_tabl_name, '.code_of_account = ce.account
-        #                         ORDER BY ', acc_tabl_name, '.ind) as updated_account
-        #                         SET ', acc_tabl_name, '.total_cost = updated_account.cost,
-        #                         review_status = \'Ready for Review\'
-        #                         WHERE updated_account.updated > 0
-        #                         and ', acc_tabl_name, '.code_of_account = updated_account.code_of_account;');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt;
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('update_account_table_by_cost_elements', (self.acc_tabl, self.cel_tabl))
         print('[Updated]  Account table updated from cost elements\n')
         return None
 
-    def roll_up_cost_elements(self, c):
+    def roll_up_cost_elements(self, c, passes=1):
         """
         Rolls up cost elements from level 3 to 0 for pwr. Only rolls up level 3 to 2 for ABR.
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Roll up cost elements '.center(100,'='))
         print('\n')
-        self.roll_up_cost_elements_by_level(c,3,2)
-        if self.ref_model=="pwr12-be":
-            self.roll_up_cost_elements_by_level(c,2,1)
-            self.roll_up_cost_elements_by_level(c,1,0)
+        for pass_no in range(passes):
+            if passes > 1:
+                print('[Updating] Roll up cost element hierarchy pass {} of {}'.format(pass_no + 1, passes))
+            self.roll_up_cost_elements_by_level(c,3,2, quiet=passes > 1)
+            if self.ref_model=="pwr12-be":
+                self.roll_up_cost_elements_by_level(c,2,1)
+                self.roll_up_cost_elements_by_level(c,1,0)
         print('[Updated] Cost elements rolled up\n')
         return None
 
-    def roll_up_cost_elements_by_level(self, c,from_level,to_level):
+    def roll_up_cost_elements_by_level(self, c,from_level,to_level, quiet=False):
         """
         Rolls up cost elements from an input lower level to a higher level.
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         from_level : int
             Roll up from a given level.
         to_level : int
             Roll up to a given level.
         """
-        # DELIMITER $$
-        # CREATE DEFINER=`root`@`localhost` PROCEDURE `roll_up_cost_elements_by_level`(IN table_name varchar(50), 
-        #                                                                   IN from_level int, IN to_level int)
-        # BEGIN
-        #     SET @stmt = CONCAT('UPDATE ', table_name, ',',
-        #                         '(SELECT c',to_level,'.cost_element as ce',to_level,'_ce, ',
-        #                             'sum(uc',from_level,'.cost_2017) as c',to_level,'_cal_total_cost ',
-        #                         'FROM ', table_name, ' as uc',from_level,
-        #                         ' JOIN ', table_name, ' as c',to_level,
-        #                         ' on uc',from_level,'.sup_cost_ele=c',to_level,'.cost_element ',
-        #                         'join account as ac',to_level,
-        #                         ' on c',to_level,'.account = ac',to_level,'.code_of_account ',
-        #                         'where ac',to_level,'.level=',to_level,
-        #                         ' group by c',to_level,'.cost_element) as updated_ce',to_level,
-        #                         ' SET ',
-        #                         table_name,'.cost_2017 = updated_ce',to_level,'.c',to_level,'_cal_total_cost,',
-        #                         table_name,'.updated = 1 ',
-        #                         'WHERE ',
-        #                         table_name,'.cost_element = updated_ce',to_level,'.ce',to_level,'_ce');
-        #     PREPARE stmt FROM @stmt;
-        #     EXECUTE stmt
-        #     DEALLOCATE PREPARE stmt;
-        # END$$
-        # DELIMITER ;
         c.callproc('roll_up_cost_elements_by_level',(self.cel_tabl,from_level,to_level))
-        print('[Updating] Roll up cost elements from level {} to level {}'.format(from_level,to_level))
+        if not quiet:
+            print('[Updating] Roll up cost elements from level {} to level {}'.format(from_level,to_level))
         return None
 
     def roll_up_account_table(self, c, from_level=3, to_level=0, gncoa=False):
@@ -1213,8 +950,8 @@ class Accert:
         
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Rolling up account table '.center(100,'='))
         print('\n')
@@ -1229,8 +966,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         from_level : int
             Roll up from a given level.
         to_level : int
@@ -1250,8 +987,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         print(' Rolling up account table by GNCOA '.center(100,'='))
         # remove 220A first
@@ -1266,8 +1003,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
 
         def fetch_sum_and_update(cost_type, proc_name):
@@ -1281,7 +1018,7 @@ class Accert:
             proc_name : str
                 Procedure name.
             """
-            # Call stored procedure and fetch results
+            # Call procedure and fetch results
             print(f'[Updating] Summing cost element for {cost_type}')
             c.callproc(proc_name, (self.cel_tabl, self.acc_tabl))
             for row in c.stored_results():
@@ -1311,8 +1048,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
 
         print(' Rolling up account table '.center(100,'='))
@@ -1329,8 +1066,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         c.callproc('roll_up_lmt_direct_cost',(self.acc_tabl,))
         print('[Updated]  Account table rolled up for direct cost.\n')
@@ -1342,13 +1079,13 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         """
         c.callproc('cal_direct_cost_elements', (self.acc_tabl, self.cel_tabl))
 
         # After the procedure execution, fetch the OUT parameters from the cursor
-        # The stored procedure call doesn't return results, but the OUT parameters are updated
+        # The procedure call doesn't return results, but the OUT parameters are updated
         for row in c.stored_results():
             results = row.fetchall()
         fac, lab, mat = results[0]
@@ -1360,8 +1097,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements
         """
         ### only update account 222 and account 2C
         self.roll_up_account_table(c, from_level=3, to_level=2)
@@ -1392,15 +1129,14 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : UserTable
             UserTable class instantiates objects that can execute user input statements.
         """
         self.print_logo()
 
         accert = self.load_obj(input_path, accert_path).accert
-        c.execute("USE accert_db")
         print(' Reading user input '.center(100, '='))
         print('\n')
 
@@ -1415,6 +1151,7 @@ class Accert:
         self.finalize_process(c, ut, accert)
         self.generate_results(c, ut, accert)
         self.cal_LCOE(c, ut, accert)
+        conn.commit()
         conn.close()
         sys.stdout.close()
         sys.stdout = stdoutOrigin
@@ -1425,8 +1162,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1436,6 +1173,11 @@ class Accert:
         print('[USER_INPUT]', 'Reference model is', str(accert.ref_model.value), '\n')
         self.setup_table_names(accert)
         ut.setup_table_names(c, Accert)
+        ut.setup_cost_escalation(
+            model_cost_year(self.ref_model),
+            self.target_dollar_year,
+            self._cost_escalation_factor(),
+        )
         # if ref.model is not fusion or user defined then process cost elements:
         if self.cel_tabl:
             ut.print_user_request_parameter(c)
@@ -1448,22 +1190,105 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
 
-        if accert.power:
-            for inp in accert.power:
-                print('[USER_INPUT]', str(inp.id), 'power is', str(inp.value.value), str(inp.unit.value), '\n')
-                var_id = 'mwth' if str(inp.id) == 'Thermal' else 'mwe' if str(inp.id) == 'Electric' else None
+        power_inputs = self._power_inputs_by_type(accert)
+        if self.ref_model in ("lpsr", "ap1000"):
+            power_inputs = self._apply_direct_default_power_inputs(power_inputs)
+
+        if power_inputs:
+            changed_vars = []
+            for power_type, power_input in power_inputs.items():
+                var_id, var_unit = self._power_variable_for_model(power_type)
                 if var_id:
-                    self.update_variable_info_on_name(c, var_id, str(inp.value.value), str(inp.unit.value))
-                    self.process_super_values(c, var_id)
+                    if power_input.get("is_default"):
+                        continue
+                    print(
+                        '[USER_INPUT]',
+                        power_type,
+                        'power is',
+                        self._format_user_number(power_input["value"]),
+                        power_input["input_unit"],
+                        '\n',
+                    )
+                    if not self._variable_value_changed(c, var_id, power_input["value"]):
+                        print('[Unchanged] {} is the same as the reference value; dependent variables will not be recalculated\n'.format(var_id))
+                        continue
+                    self.update_variable_info_on_name(c, var_id, power_input["value"], var_unit)
+                    changed_vars.append(var_id)
+            if changed_vars:
+                self.process_super_values(c, changed_vars)
         else:
             # warning
-            print('WARNING: No power input found in the user input file\n')            
+            print('WARNING: No power input found in the user input file\n')
+
+    @staticmethod
+    def _format_user_number(value):
+        number = float(value)
+        if number.is_integer():
+            return str(int(number))
+        return "{:g}".format(number)
+
+    def _power_inputs_by_type(self, accert):
+        power_inputs = {}
+        if accert.power:
+            for inp in accert.power:
+                power_type = str(inp.id)
+                power_inputs[power_type] = {
+                    "value": float(str(inp.value.value)),
+                    "input_unit": str(inp.unit.value),
+                    "is_default": False,
+                }
+        return power_inputs
+
+    def _apply_direct_default_power_inputs(self, power_inputs):
+        if self.ref_model == "ap1000":
+            defaults = {
+                "Thermal": {"value": 6800.0, "input_unit": "MW", "is_default": True},
+                "Electric": {"value": 2234.0, "input_unit": "MW", "is_default": True},
+            }
+        else:
+            defaults = {
+                "Thermal": {"value": 3400.0, "input_unit": "MW", "is_default": True},
+                "Electric": {"value": 1117.0, "input_unit": "MW", "is_default": True},
+            }
+        resolved = dict(power_inputs)
+        for power_type, default in defaults.items():
+            if power_type not in resolved:
+                resolved[power_type] = default
+                print('[Default] {} {} power was not provided; using {} {}'.format(
+                    self.ref_model.upper(),
+                    power_type,
+                    default["value"],
+                    default["input_unit"],
+                ))
+        return resolved
+
+    def _power_variable_for_model(self, power_type):
+        if self.ref_model in ("lpsr", "ap1000"):
+            if power_type == "Thermal":
+                return "rx_P", "MWt"
+            if power_type == "Electric":
+                return "elec_P", "MWe"
+            return None, None
+        if power_type == "Thermal":
+            return "mwth", "MW"
+        if power_type == "Electric":
+            return "mwe", "MW"
+        return None, None
+
+    def _variable_value_changed(self, c, var_id, new_value):
+        c.execute("""SELECT var_value
+                    FROM {}
+                    WHERE var_name = ?;""".format(self.var_tabl), (var_id,))
+        row = c.fetchone()
+        if row is None or row[0] is None:
+            return True
+        return abs(float(row[0]) - float(new_value)) > 1e-9
 
     def process_variables(self, c, accert):
         """
@@ -1471,8 +1296,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1490,26 +1315,33 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_id : str
             Variable ID.
         """
-        var_id = str(var_id).replace('"', '').replace("'", "")
-        sup_val_lst = self.extract_super_val(c, var_id)
+        var_ids = var_id if isinstance(var_id, (list, tuple, set)) else [var_id]
+        sup_val_lst = []
+        for single_var_id in var_ids:
+            single_var_id = str(single_var_id).replace('"', '').replace("'", "")
+            linked = self.extract_super_val(c, single_var_id)
+            if linked:
+                sup_val_lst.extend([x.strip() for x in linked.split(',')])
+        sup_val_lst = list(dict.fromkeys([x for x in sup_val_lst if x]))
         if sup_val_lst:
-            sup_val_lst = sup_val_lst.split(',')
-            # also remove the space after the comma
-            sup_val_lst = [x.strip() for x in sup_val_lst]
-        if sup_val_lst:
-            print('[Updating] Other variable(s) should be updated based on {} are {} \n'.format(var_id, sup_val_lst))
+            display_var_ids = var_ids[0] if len(var_ids) == 1 else var_ids
+            print('[Updating] Other variable(s) should be updated based on {} are {} \n'.format(display_var_ids, sup_val_lst))
+        processed = set()
         while sup_val_lst:
             sup_val = sup_val_lst.pop(0)
-            if sup_val:
+            if sup_val and sup_val not in processed:
+                processed.add(sup_val)
                 self.update_super_variable(c, sup_val)
                 new_sup_val = self.extract_super_val(c, sup_val)
                 if new_sup_val:
-                    sup_val_lst.extend(new_sup_val.split(','))
+                    for linked in [x.strip() for x in new_sup_val.split(',') if x.strip()]:
+                        if linked not in processed and linked not in sup_val_lst:
+                            sup_val_lst.append(linked)
                     
     def process_COA(self, c, accert):
         """
@@ -1518,8 +1350,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1534,8 +1366,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         level_accounts : list
             List of level accounts.
         accert : ACCERT
@@ -1584,8 +1416,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         account : Account
             Account class instantiates objects that can parse the account.
         """
@@ -1609,8 +1441,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         var_inp : Variable
 
         """
@@ -1626,8 +1458,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         alg_inp : Algorithm
         """
 
@@ -1652,8 +1484,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1668,8 +1500,8 @@ class Accert:
         
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1686,8 +1518,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         level_accounts : list
             List of level accounts.
         accert : ACCERT
@@ -1709,8 +1541,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1726,8 +1558,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         level_accounts : list
             List of level accounts.
         accert : ACCERT
@@ -1775,8 +1607,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1791,7 +1623,8 @@ class Accert:
             ut.extract_affected_cost_elements(c)
             self.update_new_cost_elements(c)
             ut.print_updated_cost_elements(c)
-            self.roll_up_cost_elements(c)
+            if self.ref_model not in ("lpsr", "ap1000"):
+                self.roll_up_cost_elements(c)
         else:
             # if the model is fusion or user assigned model without cost elements
             # then the update_new_accounts will be executed otherwise the update_new_cost_elements should be executed
@@ -1804,8 +1637,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1815,9 +1648,67 @@ class Accert:
         if model:
             # generate results for the models in the future we can add more models
             self._generate_common_results(c, ut, accert, model)
+            self.post_process_results(c, accert)
             if self.cel_tabl:
                 self.generate_results_table_with_cost_elements(c, conn, level=3)
         self.generate_results_table(c, conn, level=3)
+
+    def post_process_results(self, c, accert):
+        if not self._post_process_occ_enabled(accert):
+            return None
+
+        results = self.post_processor.calculate_occ(
+            c,
+            self.acc_tabl,
+            self._electric_power_mw(c),
+            self.ref_model,
+            self._cost_escalation_factor(),
+            self.target_dollar_year,
+        )
+        self.post_processor.print_occ_summary(results)
+        self.post_processor.write_occ_csv(results, self.ref_model, self.output_timestamp)
+        return results.as_dict()
+
+    def _post_process_occ_enabled(self, accert):
+        post_process = getattr(accert, "post_process", None)
+        if not post_process:
+            return False
+        occ = getattr(post_process, "occ", None)
+        if occ is None:
+            return True
+        return str(occ.value).lower() == "true"
+
+    def calculate_occ_post_process(self, c):
+        return self.post_processor.calculate_occ(
+            c,
+            self.acc_tabl,
+            self._electric_power_mw(c),
+            self.ref_model,
+            self._cost_escalation_factor(),
+            self.target_dollar_year,
+        ).as_dict()
+
+    def _electric_power_mw(self, c):
+        var_name = "elec_P" if self.ref_model in ("lpsr", "ap1000") else "mwe"
+        try:
+            value = self.get_var_value_by_name(c, var_name)
+        except Exception:
+            return None
+        return float(value) if value is not None else None
+
+    def _cost_escalation_factor(self):
+        return cpi_escalation_factor(model_cost_year(self.ref_model), self.target_dollar_year)
+
+    def _target_dollar_year_from_input(self, accert):
+        for field in ("target_dollar_year", "escalated_dollar_year"):
+            node = getattr(accert, field, None)
+            if node is None:
+                continue
+            value = getattr(node, "value", node)
+            value = getattr(value, "value", value)
+            if value is not None:
+                return int(value)
+        return TARGET_DOLLAR_YEAR
 
     def _generate_common_results(self, c, ut, accert, model):
         """
@@ -1825,8 +1716,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1839,6 +1730,8 @@ class Accert:
             fac, lab, mat = self.cal_direct_cost_elements(c)
             all_flag = model != "lfr"
             self._print_results(ut, c, fac, lab, mat, all_flag)
+        elif model in ("lpsr", "ap1000"):
+            self._lpsr_processing(c, ut, accert)
         elif model == "pwr12-be":
             self._pwr12be_processing(c, ut, accert)
         else:
@@ -1850,8 +1743,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         accert : ACCERT
             xml2obj class instantiates objects that can parse the ACCERT XML file.
         """
@@ -1869,8 +1762,8 @@ class Accert:
         ----------
         ut : Utility class
             Utility class for processing user input.
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         fac : float
             Factory cost.
         lab : float
@@ -1881,6 +1774,7 @@ class Accert:
             Flag to print all accounts.
         """
         print(' Generating results table for review '.center(100, '='))
+        self._print_cost_basis_note()
         print('\n')    
         if self.use_gncoa:
             ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
@@ -1893,8 +1787,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1905,13 +1799,25 @@ class Accert:
         if self.use_gncoa:
             self.roll_up_account_table_GNCOA(c)
             print(' Generating results table for review '.center(100, '='))   
+            self._print_cost_basis_note()
             print('\n')
             ut.print_leveled_accounts_gncoa(c, all=False, cost_unit='million', level=3)
         else:
             self.roll_up_account_table(c, from_level=3, to_level=0)
             print(' Generating results table for review '.center(100, '='))   
+            self._print_cost_basis_note()
             print('\n') 
             ut.print_leveled_accounts(c, all=True, cost_unit='million', level=3)
+
+    def _lpsr_processing(self, c, ut, accert):
+        self.roll_up_cost_elements(c, passes=4)
+        self.update_account_table_by_cost_elements(c)
+        self.check_and_process_total_cost(c, accert)
+        self.roll_up_account_table(c, from_level=4, to_level=0)
+        print(' Generating results table for review '.center(100, '='))
+        self._print_cost_basis_note()
+        print('\n')
+        ut.print_leveled_accounts(c, all=True, cost_unit='million', level=4)
 
     def _no_cost_element_processing(self, c, ut, accert):
         """
@@ -1919,8 +1825,8 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         ut : Utility class
             Utility class for processing user input.
         accert : ACCERT
@@ -1929,8 +1835,15 @@ class Accert:
         self.check_and_process_total_cost(c, accert)
         self.roll_up_account_table(c, from_level=4, to_level=0)
         print(' Generating results table for review '.center(100, '='))
+        self._print_cost_basis_note()
         print('\n')
         ut.print_leveled_accounts(c, all=False, cost_unit='million', level=4)
+
+    def _print_cost_basis_note(self):
+        print('[Note] Reference costs are in {} dollars. Displayed account costs are escalated to {} dollars using CPI-U.\n'.format(
+            model_cost_year(self.ref_model),
+            self.target_dollar_year,
+        ))
 
     def generate_results_table_with_cost_elements(self, c, conn, level=3):
         """
@@ -1938,30 +1851,30 @@ class Accert:
 
         Parameters
         ----------
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
-        conn : MySQLConnection
-            MySQLConnection class instantiates objects that represent a connection to the MySQL database server.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
+        conn : SQLiteConnectionAdapter
+            SQLiteConnectionAdapter class instantiates objects that represent a connection to the SQLite database file.
         level : int
             Level of the account.
         """
 
-        self._generate_excel(c, '_variable_affected_cost_elements.xlsx', 'extract_affected_cost_elements_w_dis', self.cel_tabl, self.var_tabl)
-        self._generate_excel(c, '_updated_cost_element.xlsx', 'print_updated_cost_elements', self.cel_tabl, remove_last_col=True)
+        self._generate_csv(c, 'aff_ce', 'extract_affected_cost_elements_w_dis', self.cel_tabl, self.var_tabl)
+        self._generate_csv(c, 'upd_ce', 'print_updated_cost_elements', self.cel_tabl, remove_last_col=True)
 
-    def _generate_excel(self, c, filename_suffix, proc_name,  *args, remove_last_col=False):
+    def _generate_csv(self, c, output_name, proc_name,  *args, remove_last_col=False):
         """
-        Generate an Excel file from stored procedure results.
+        Generate a timestamped CSV file from procedure results.
         
         Parameters:
-        c : MySQLCursor
-            MySQLCursor class instantiates objects that can execute MySQL statements.
+        c : SQLiteCursorAdapter
+            SQLiteCursorAdapter class instantiates objects that can execute SQLite statements.
         proc_name : str
-            Name of the stored procedure.
-        filename_suffix : str
-            Suffix of the filename.
+            Name of the procedure.
+        output_name : str
+            Short output filename label.
         args : tuple
-            Arguments for the stored procedure.
+            Arguments for the procedure.
         remove_last_col : bool
             Remove the last column if required.
         """
@@ -1972,16 +1885,16 @@ class Accert:
         df = pd.DataFrame(results, columns=field_names)
         if remove_last_col:
             df = df.iloc[:, :-1]  # Remove the last column if required
-        filename = str(self.ref_model) + filename_suffix
-        df.to_excel(filename, index=False)
-        print(f"Successfully created excel file {filename}")
+        filename = "{}_{}_{}.csv".format(self.ref_model, output_name, self.output_timestamp)
+        df.to_csv(filename, index=False)
+        print(f"Successfully created CSV file {filename}")
 
 
     def generate_results_table(self, c, conn, level=3):
         """
         Generates the results tables.
         """
-        self._generate_excel(c, '_updated_account.xlsx', 'print_leveled_accounts_simple', self.acc_tabl, level)
+        self._generate_csv(c, 'upd_acc', 'print_leveled_accounts_simple', self.acc_tabl, level)
 
 if __name__ == "__main__":
     """
@@ -1995,20 +1908,9 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     code_folder = os.path.dirname(os.path.abspath(__file__))
-    initfile = os.path.join(code_folder, 'install.conf')
-    ins = configparser.ConfigParser()
-    ins.read(initfile)
-    passwd = ins.get("INSTALL","PASSWD")
-
-    conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password=passwd,
-    database="accert_db",
-    auth_plugin="mysql_native_password"
-    )
+    conn = accert_sqlite_connect(db_path=_accert_sqlite_db_path())
     # conn.commit()
-    # NOTE: cursor is a class that instantiates objects that can execute MySQL statements
+    # NOTE: cursor is a class that instantiates objects that can execute SQLite statements
     # only commit when you are sure that the transaction is complete
     c = conn.cursor()
     ut = Utility_methods()

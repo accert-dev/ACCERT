@@ -1,7 +1,8 @@
 % ACCERT Test input file
 % Author: J. Zhou (jia.zhou@anl.gov)
 % Last updated: 04/17/2024
-% Test stellarator model with a simple case
+% Stellarator fusion cost model example based on UKAEA PROCESS:
+% https://github.com/ukaea/PROCESS.
 
 accert{
     ref_model = "stellarator"
@@ -9,4 +10,3 @@ accert{
     var("lsa"){value = 2 unit = N/A}
     var("denstl"){value = 7800 unit = 'kg/m3'}
 }
-

@@ -26,7 +26,7 @@ The table includes the following columns:
 
 .. csv-table:: Fusion Account Table
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/fusion_acc.csv
+   :file: ../../../../tutorial/accert/ref_tables/fusion_acc.csv
    :widths: auto
    :class: wide-table
 
@@ -45,11 +45,8 @@ The table includes the following columns:
 - **alg_formulation**: Formulation of the algorithm
 - **alg_units**: Unit of the algorithm output
 
-.. csv-table:: Fusion Algorithm Table
-   :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/fusion_alg.csv
-   :widths: auto
-   :class: wide-table
+.. literalinclude:: ../../../../tutorial/accert/ref_tables/fusion_alg.csv
+   :language: text
 
 Fusion Variable Table
 ---------------------
@@ -70,6 +67,6 @@ The table includes the following columns:
 
 .. csv-table:: Fusion Variable Table
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/fusion_var.csv
+   :file: ../../../../tutorial/accert/ref_tables/fusion_var.csv
    :widths: auto
    :class: wide-table

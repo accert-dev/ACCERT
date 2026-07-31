@@ -3,12 +3,12 @@ accert{
     Description = "[optional] for accert calculations"
     MinOccurs = 0
     MaxOccurs = 1
-    InputTmpl = "accert"
+    InputTmpl = "accert/accert"
     ref_model{
         Description = "[required] User input reference model"
         MinOccurs = 1
         MaxOccurs = 1
-        InputTmpl = "ref_model"
+        InputTmpl = "accert/ref_model"
         ValType = String
         ValEnums = [ REF:user_defined_names  REF:ref_models]
         }            
@@ -18,16 +18,42 @@ accert{
         MinOccurs = 0
         MaxOccurs = 1
         InputType=String
-        InputTmpl="flagtypes"
+        InputTmpl = "common/flagtypes"
         ValEnums=[true false]
         InputDefault=false
+    }
+
+    target_dollar_year{
+        Description = "[optional] CPI-U target dollar year for displayed results and post-process summaries"
+        MinOccurs = 0
+        MaxOccurs = 1
+        ValType = Int
+        MinValInc = 2015
+        MaxValExc = NoLimit
+        InputDefault = 2025
+    }
+
+    post_process{
+        Description = "[optional] post-process ACCERT results"
+        MinOccurs = 0
+        MaxOccurs = 1
+        InputTmpl = "accert/post_process"
+        occ{
+            Description = "[optional] calculate ACCERT OCC summary"
+            MinOccurs = 0
+            MaxOccurs = 1
+            InputType=String
+            InputTmpl = "common/flagtypes"
+            ValEnums=[true false]
+            InputDefault=true
+        }
     }
     
     power{
         Description = "[required] User input power"
         MinOccurs = 0
         MaxOccurs = NoLimit
-        InputTmpl = "power"
+        InputTmpl = "accert/power"
         id{
             MinOccurs = 1
             MaxOccurs = 1
@@ -54,12 +80,12 @@ accert{
         Description = "changed variable value"
         MinOccurs = 0
         MaxOccurs = NoLimit
-        InputTmpl = "var"
+        InputTmpl = "accert/var"
         id{
             MinOccurs = 1
             MaxOccurs = 1
             ValType = String
-            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
+            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names REF:lpsr_var_names]
         }
         value{
             MinOccurs = 1
@@ -79,7 +105,7 @@ accert{
         Description = "level 0 code of account"
         MinOccurs = 0
         MaxOccurs = NoLimit
-        InputTmpl = "L0COA"
+        InputTmpl = "accert/L0COA"
         id{
             MinOccurs = 0
             MaxOccurs = 1
@@ -90,7 +116,7 @@ accert{
         	Description = "level 1 code of account"
         	MinOccurs = 0
         	MaxOccurs = NoLimit
-        	InputTmpl = "L1COA" % TODO: add template
+        	InputTmpl = "accert/L1COA" % TODO: add template
             id{
                 MinOccurs = 0
                 MaxOccurs = 1
@@ -101,7 +127,7 @@ accert{
                 Description = "total cost value"
                 MinOccurs = 0
                 MaxOccurs = NoLimit
-                InputTmpl = "total_cost" % TODO: Add template
+                InputTmpl = "accert/total_cost" % TODO: Add template
                 value{
                     MinOccurs = 1
                     MaxOccurs = 1
@@ -121,7 +147,7 @@ accert{
         		Description = "level 2 code of account"
         		MinOccurs = 0
         		MaxOccurs = NoLimit
-        		InputTmpl = "L2COA" % TODO: add template
+        		InputTmpl = "accert/L2COA" % TODO: add template
                 id{
                     MinOccurs = 0
                     MaxOccurs = 1
@@ -132,7 +158,7 @@ accert{
                     Description = "total cost value"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
-                    InputTmpl = "total_cost"
+                    InputTmpl = "accert/total_cost"
                     value{
                         MinOccurs = 1
                         MaxOccurs = 1
@@ -151,7 +177,7 @@ accert{
         			Description = "???" % needs to be added
         			MinOccurs = 0
         			MaxOccurs = NoLimit
-        			InputTmpl = "ce" % TODO: add template
+        			InputTmpl = "accert/ce" % TODO: add template
                     id{
                         MinOccurs = 0
                         MaxOccurs = 1
@@ -162,7 +188,7 @@ accert{
         				Description = "???" % needs to be added
         				MinOccurs = 0
         				MaxOccurs = NoLimit
-        				InputTmpl = "alg" % TODO: add template
+        				InputTmpl = "accert/alg" % TODO: add template
                         id{
                             MinOccurs = 0
                             MaxOccurs = 1
@@ -173,7 +199,7 @@ accert{
                             Description = "changed variable value"
                             MinOccurs = 1
                             MaxOccurs = NoLimit
-                            InputTmpl = "alg_var"  % TODO add template
+                            InputTmpl = "accert/alg_var"  % TODO add template
                             id{
                                 MinOccurs = 1
                                 MaxOccurs = 1
@@ -181,7 +207,7 @@ accert{
                                 ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names 
                                 REF:heatpipe_var_names
                                 REF:fusion_var_names
-                                REF:stellarator_var_names]
+                                REF:stellarator_var_names REF:lpsr_var_names]
                             }
                             value{
                                 MinOccurs = 0
@@ -200,7 +226,7 @@ accert{
                                 Description = "valriable algorithm"
                                 MinOccurs = 0
                                 MaxOccurs = 1
-                                InputTmpl = "alg_var_alg" % ???
+                                InputTmpl = "accert/alg_var_alg" % ???
                                 id{
                                     MinOccurs = 1
                                     MaxOccurs = 1
@@ -211,12 +237,12 @@ accert{
                                     Description = "changed variable value"
                                     MinOccurs = 1
                                     MaxOccurs = NoLimit
-                                    InputTmpl = "alg_var_alg_var" % ???
+                                    InputTmpl = "accert/alg_var_alg_var" % ???
                                     id{
                                         MinOccurs = 1
                                         MaxOccurs = 1
                                         ValType = String
-                                        ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
+                                        ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names REF:lpsr_var_names]
                                     }
                                     value{
                                         MinOccurs = 1
@@ -251,7 +277,7 @@ accert{
                             MinOccurs = 1
                             MaxOccurs = 1
                             ValType = String
-                            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
+                            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names REF:lpsr_var_names]
                         }
                         value{
                             MinOccurs = 0
@@ -284,7 +310,7 @@ accert{
                                     MinOccurs = 1
                                     MaxOccurs = 1
                                     ValType = String
-                                    ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
+                                    ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names REF:lpsr_var_names]
                                 }
                                 value{
                                     MinOccurs = 1
@@ -344,7 +370,7 @@ accert{
                                 MinOccurs = 1
                                 MaxOccurs = 1
                                 ValType = String
-                                ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
+                                ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names REF:lpsr_var_names]
                             }
                             value{
                                 MinOccurs = 0
@@ -377,7 +403,7 @@ accert{
                                         MinOccurs = 1
                                         MaxOccurs = 1
                                         ValType = String
-                                        ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
+                                        ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names REF:lpsr_var_names]
                                     }
                                     value{
                                         MinOccurs = 1
@@ -419,7 +445,7 @@ accert{
                                     MinOccurs = 1
                                     MaxOccurs = 1
                                     ValType = String
-                                    ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
+                                    ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names REF:lpsr_var_names]
                                 }
                                 value{
                                     MinOccurs = 0
@@ -452,7 +478,7 @@ accert{
                                             MinOccurs = 1
                                             MaxOccurs = 1
                                             ValType = String
-                                            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names]
+                                            ValEnums =[ REF:user_defined_names REF:pwr_var_names REF:abr_var_names REF:containment_var_names REF:heatpipe_var_names REF:fusion_var_names REF:stellarator_var_names REF:lpsr_var_names]
                                         }
                                         value{
                                             MinOccurs = 1
@@ -477,7 +503,7 @@ accert{
                     Description = "new code of account"
                     MinOccurs = 0
                     MaxOccurs = NoLimit
-                    InputTmpl = "newCOA" % TODO: add template
+                    InputTmpl = "accert/newCOA" % TODO: add template
                     id{
                         MinOccurs = 0
                         MaxOccurs = 1
@@ -496,7 +522,7 @@ accert{
 }
 
 EndOfSchema{}
-ref_models = [ "PWR12-BE" "ABR1000" "LFR" "heatpipe" "fusion" "stellarator"]
+ref_models = [ "PWR12-BE" "ABR1000" "AP1000" "LFR" "LPSR" "heatpipe" "fusion" "stellarator"]
 power_type = ["Thermal" "Electric"] 
 power_unit = ["W" "kWW" "MW"]
 total_cost_unit = ["million" "dollar"]
@@ -564,23 +590,7 @@ unit_names = [squareMeter cubeMeter kW MW W lbs ton kg million 'gpm*feet' '1' 'm
     '$/coil', '$/A', 'kW', 'kV', 'kg/coil' '$/m3' '$/MVA' '$/kA-m' '$/kW' '$/mva' 
     '$/kw' '$/ka-m' 'million/ton']
 
-alg_names = ['sum_multi_accounts' 'sum_multi_weights' 'sum_multi_pumps' 'ptn_account' 
-'unit_weights' 'pump' 'containment' 'MWth_scale' 'unit_volume' 'dev_factor_ref' 'tur_exp_n' 
-'esc_1987' 'cost_by_weight' 'default_0' 'rpv_mass' 'unit_facility' 'MWe_scale' 
-'unit_weights_plate' 'esc_1978' 'total_weight_prn' 'unit_weights_factor' 'factor_sum' 
-'complex' 'MWth_lmfbrscale' 'MWreth_scale' 'Sgsum' 'containmentsum' 'inside_rad' 
-'round_surface' 'basemat_volume' 'wall_height' 'walls_surface' 'wall_volume' 
-'dome_inside_diameter' 'roof_surface' 'roof_volume' 'tot_internal_volume' 
-'building_internal_volume' 'building_internal _surface' 'volume_of_the_structures' 
-'Inside_liner_surface' 'liner_Surface' 'painted_surface' 'Inflation_rate' 
-'unitcost_v_eedb_to_accert' 'unitcost_s_eedb_to_accert' 'tol_contaiment_ce_cost' 'sum_ce' 
-'Yardwork_cost' 'Reactor_containment_mat_cost' 'Reactor_containment_lab_cost' 
-'Building_and_utilities_mat_cost' 'Building_and_utilities_lab_cost' 
-'Reactor_startup_facility_cost' 'Outer_vessel_mat_cost' 'Outer_vessel_lab_cost' 
-'Inner_vessel_cost' 'Reactivity_control_system_cost' 'Reflector_cost' 'Shield_cost' 
-'Moderator_cost' 'cooling_heat_pipes_cost' 'heat_exchangers_mat_cost' 
-'heat_exchangers_lab_cost' 'heat_exchangers_fac_cost' 'instrumentation_contorl_cost' 
-'turb_and_elec_sys_cost' 'stcalaintmass' 'stcalintercoil_surface' 'stcalclgsmass']
+alg_names = ['sum_multi_accounts' 'sum_multi_weights' 'sum_multi_pumps' 'ptn_account' 'unit_weights' 'pump' 'containment' 'MWth_scale' 'unit_volume' 'dev_factor_ref' 'tur_exp_n' 'esc_1987' 'cost_by_weight' 'default_0' 'rpv_mass' 'unit_facility' 'MWe_scale' 'unit_weights_plate' 'esc_1978' 'total_weight_prn' 'unit_weights_factor' 'factor_sum' 'complex' 'MWth_lmfbrscale' 'MWreth_scale' 'Sgsum' 'containmentsum' 'inside_rad' 'round_surface' 'basemat_volume' 'wall_height' 'walls_surface' 'wall_volume' 'dome_inside_diameter' 'roof_surface' 'roof_volume' 'tot_internal_volume' 'building_internal_volume' 'building_internal _surface' 'volume_of_the_structures' 'Inside_liner_surface' 'liner_Surface' 'painted_surface' 'Inflation_rate' 'unitcost_v_eedb_to_accert' 'unitcost_s_eedb_to_accert' 'tol_contaiment_ce_cost' 'sum_ce' 'Yardwork_cost' 'Reactor_containment_mat_cost' 'Reactor_containment_lab_cost' 'Building_and_utilities_mat_cost' 'Building_and_utilities_lab_cost' 'Reactor_startup_facility_cost' 'Outer_vessel_mat_cost' 'Outer_vessel_lab_cost' 'Inner_vessel_cost' 'Reactivity_control_system_cost' 'Reflector_cost' 'Shield_cost' 'Moderator_cost' 'cooling_heat_pipes_cost' 'heat_exchangers_mat_cost' 'heat_exchangers_lab_cost' 'heat_exchangers_fac_cost' 'instrumentation_contorl_cost' 'turb_and_elec_sys_cost' 'stcalaintmass' 'stcalintercoil_surface' 'stcalclgsmass' 'category_scale' 'cal_sup_str_S' 'formula_scale_flow_rate' 'formula_scale_fuel_cask_capacity' 'formula_scale_fuel_crane_capacity' 'formula_scale_ht_surface_S' 'formula_scale_pressurizer_mass' 'formula_scale_surface_S' 'formula_scale_surface_S_9_71886e_06' 'formula_scale_vessel_mass' 'scale_law_admin_bldg' 'scale_law_bldg_V' 'scale_law_containment' 'scale_law_control_dg_bldg' 'scale_law_elec_P' 'scale_law_electrical_bldg' 'scale_law_flow_rate' 'scale_law_fuel_storage' 'scale_law_heat_rejection' 'scale_law_piping_mass' 'scale_law_primary_aux_bldg' 'scale_law_reactor_equipment' 'scale_law_site_S' 'scale_law_turbine_bldg' 'scale_law_turbine_equipment' 'scale_law_V_of_212_213_215_216_217' 'scale_law_waste_bldg' 'scale_law_wastewater_bldg' 'scale_law_power' 'sum_all' 'calc_rej_th_P']
 
 fusion_alg_names = ['acc2' 'acc21' 'acc211' 'acc212' 'acc213' 'acc214' 'acc2141' 'acc2142' 
 'acc215' 'acc216' 'acc217' 'acc2171' 'acc2172' 'acc2173' 'acc2174' 'acc22' 'acc221' 
@@ -787,5 +797,6 @@ heatpipe_var_names = ['land_surface_area' 'containment_subVolume' 'Containment_h
 fusion_var_names = ['a' 'acptmax' 'admvol' 'afuel' 'ai' 'aintmass' 'akappa' 'anncap' 'anncdr' 'anncp' 'anndecom' 'anndiv' 'annfuel' 'annfwbl' 'annoam' 'annwst' 'areaoh' 'awpoh' 'b0' 'bktlife' 'blmass' 'capcost' 'cconfix' 'cconshpf' 'cconshtf' 'cdcost' 'cdirt' 'cdriv0' 'cdriv1' 'cdriv2' 'cdriv3' 'cdrlife' 'cfactr' 'cfind_0' 'cfind_1' 'cfind_2' 'cfind_3' 'cland' 'clgsmass' 'cmlsa' 'coecdr' 'coecp' 'coediv' 'coefuel' 'coefwbl' 'coewst' 'coilmass' 'convol' 'coolmass' 'coolwh' 'cowner' 'cplife' 'cpstcst' 'cpttf' 'crfcdr' 'crfcp' 'crfdiv' 'crffwbl' 'crypmw' 'cryvol' 'csi' 'cturbb' 'd_0' 'd_1' 'd_2' 'd_3' 'dcdrv0' 'dcdrv1' 'dcdrv2' 'dcond_0' 'dcond_1' 'dcond_2' 'dcond_3' 'dcond_4' 'dcond_5' 'dcond_6' 'dcond_7' 'dcond_8' 'dcopper' 'decomf' 'dens' 'denstl' 'dintrt' 'discount_rate' 'divcst' 'divlife' 'divsur' 'dlscal' 'drbi' 'dtlife' 'dtstor' 'dvrtmass' 'ealphadt' 'echarge' 'echpwr' 'edrive' 'effrfss' 'elevol' 'ensxpfm' 'esbldgm3' 'estotftgj' 'etadrv' 'expcry' 'expel' 'expepe' 'exphts' 'exprb' 'exprf' 'exptpe' 'faccd' 'faccdfix' 'fachtmw' 'fburn' 'fcap0' 'fcap0cp' 'fcdfuel' 'fcontng' 'fcr0' 'fcsht' 'fcuohsu' 'fcupfsu' 'fefcdr' 'fefcp' 'fefdiv' 'feffwbl' 'fhe3' 'fkind' 'fncmass' 'fndt' 'ftrit' 'fusionrate' 'fwallcst' 'fwarea' 'fwbllife' 'fwmass' 'fwmatm' 'gain' 'gsmass' 'hccl' 'hcwt' 'helpow' 'hrbi' 'i_tf_sc_mat' 'i_tf_sup' 'iblanket' 'iefrf' 'ife' 'ifedrv' 'ifueltyp' 'imax' 'intercoil_surface' 'iohcl' 'ipfres' 'ireactor' 'istore' 'isumatoh' 'isumatpf' 'itart' 'l1' 'lpulse' 'lsa' 'ltot' 'mbvfac' 'mcdriv' 'n_day_year' 'n_tf' 'n_tf_turn' 'nohc' 'nphx' 'ntype' 'nvduct' 'oh_steel_frac' 'pacpmw' 'palpnb' 'peakmva' 'pfbldgm3' 'pfckts' 'pfmass' 'pfwdiv' 'pfwndl' 'pgrossmw' 'pheat' 'pibv' 'pinjht' 'pinjwp' 'plascur' 'plhybd' 'pnbitot' 'pnetelmw' 'pnucblkt' 'pnucshld' 'powfmw' 'pthermmw' 'r0' 'rbrt' 'rbvfac' 'rbvol' 'rbwt' 'reprat' 'ric_0' 'ric_1' 'ric_2' 'ric_3' 'ric_4' 'ric_5' 'ric_6' 'rjconpf_0' 'rjconpf_1' 'rjconpf_10' 'rjconpf_11' 'rjconpf_12' 'rjconpf_13' 'rjconpf_14' 'rjconpf_15' 'rjconpf_16' 'rjconpf_17' 'rjconpf_18' 'rjconpf_19' 'rjconpf_2' 'rjconpf_20' 'rjconpf_21' 'rjconpf_3' 'rjconpf_4' 'rjconpf_5' 'rjconpf_6' 'rjconpf_7' 'rjconpf_8' 'rjconpf_9' 'rmbvol' 'rndfuel' 'rpf_0' 'rpf_1' 'rpf_2' 'rpf_3' 'rpf_4' 'rpf_5' 'rpf_6' 'shh' 'shldmass' 'shm' 'shmatm' 'shmf' 'shovol' 'shri' 'shro' 'sigal' 'spfbusl' 'srcktpm' 'st_f_b' 'st_f_n' 'st_f_r' 'stcl' 'stella_config_coillength' 'stella_config_coilsurface' 'targtm' 'tburn' 'tcycle' 'tdown' 'tdspmw' 'tf_h_width' 'tfacmw' 'tfbusl' 'tfbusmas' 'tfcbv' 'tfckw' 'tfcmw' 'tfhmax' 'tfleng' 'tfmass' 'tftort' 'tlife' 'tlvpmw' 'tmpcry' 'trcl' 'trithtmw' 'triv' 'turns_0' 'turns_1' 'turns_2' 'turns_3' 'turns_4' 'turns_5' 'turns_6' 'twopi' 'ucad' 'ucaf' 'ucahts' 'ucap' 'ucblbe' 'ucblbreed' 'ucblli' 'ucblli2o' 'ucbllipb' 'ucblss' 'ucblvd' 'ucbpmp' 'ucbus' 'uccarb' 'uccase' 'ucco' 'ucconc' 'uccpcl1' 'uccpclb' 'uccpmp' 'uccr' 'uccry' 'uccryo' 'uccu' 'ucdgen' 'ucdiv' 'ucdtc' 'ucduct' 'ucech' 'ucel' 'ucf1' 'ucfnc' 'ucfpr' 'ucfuel' 'ucfwa' 'ucfwps' 'ucfws' 'ucgss' 'uche3' 'uchrs' 'uchts_0' 'uchts_1' 'uciac' 'ucich' 'ucint' 'uclh' 'uclv' 'ucmb' 'ucme' 'ucmisc' 'ucnbi' 'ucnbv' 'ucoam_0' 'ucoam_1' 'ucoam_2' 'ucoam_3' 'ucpens' 'ucpfb' 'ucpfbk' 'ucpfbs' 'ucpfcb' 'ucpfdr1' 'ucpfic' 'ucpfps' 'ucphx' 'ucpp' 'ucrb' 'ucsc_0' 'ucsc_1' 'ucsc_2' 'ucsc_3' 'ucsc_4' 'ucsc_5' 'ucsc_6' 'ucsc_7' 'ucsc_8' 'ucsh' 'ucshld' 'ucswyd' 'uctarg' 'uctfbr' 'uctfbus' 'uctfdr' 'uctfgr' 'uctfic' 'uctfps' 'uctfsw' 'uctpmp' 'uctr' 'ucturb_0' 'ucturb_1' 'ucvalv' 'ucvdsh' 'ucviac' 'ucwindpf' 'ucwindtf' 'ucws' 'ucwst_0' 'ucwst_1' 'ucwst_2' 'ucwst_3' 'umass' 'vacdshm' 'vachtmw' 'vcdimax' 'vf' 'vfohc' 'vol' 'volrci' 'vpfskv' 'vpumpn' 'vtfskv' 'vvmass' 'wgt2' 'whtblbe' 'whtblbreed' 'whtblli' 'whtblss' 'whtblvd' 'whtcas' 'whtconcu' 'whtconsc' 'whtcp' 'whtpfs' 'whtshld' 'whttflgs' 'wpenshld' 'wrbi' 'wsvfac' 'wsvol' 'wtblli2o' 'wtbllipb' 'wtgpd']
 
 stellarator_var_names = ['st_f_b' 'denstl' 'intercoil_surface' 'stella_config_coilsurface' 'st_f_r' 'tftort' 'stella_config_coillength' 'st_f_n']
+lpsr_var_names = ['adm_bldg_bldg_vol' 'S' 'bldg_V' 'cont_D_D' 'cont_hatch_ms_bldg_vol' 'cont_H_H' 'cont_V' 'cr_dg_bldg_bldg_vol' 'cr_dg_bldg_sub_S' 'cr_dg_bldg_sub_vol' 'cr_dg_bldg_sup_S' 'cr_dg_bldg_sup_vol' 'elec_P' 'elec_tunnel_bldg_vol' 'frm_flow' 'frm_fuel_cask_cap' 'frm_fuel_crane_cap' 'frm_ht_S' 'frm_prz_M' 'frm_S' 'frm_S_9_71886e_06' 'frm_vsl_M' 'fuel_stor_bldg_bldg_vol' 'fuel_stor_bldg_sub_S' 'fuel_stor_bldg_sub_vol' 'fuel_stor_bldg_sup_S' 'fuel_stor_bldg_sup_vol' 'mc_piping_M' 'non_ess_swgr_bldg_bldg_vol' 'n_crs' 'pri_aux_bldg_bldg_vol' 'pri_aux_bldg_sub_S' 'pri_aux_bldg_sub_vol' 'pri_aux_bldg_sup_S' 'pri_aux_bldg_sup_vol' 'pri_flow' 'rx_D' 'rej_th_P' 'rx_P' 'sfp_V' 'sub_str_S' 'sub_str_V' 'sup_const' 'sup_str_S' 'turb_gen_bldg_sub_vol' 'turb_gen_bldg_sup_S' 'turb_gen_bldg_sup_vol' 'uc_frm_flow' 'uc_frm_fuel_cap' 'uc_frm_ht_S' 'uc_frm_prz_M' 'uc_frm_S' 'uc_frm_S_9_71886e_06' 'uc_frm_vsl_M' 'V_of_212_213_215_216_217' 'waste_bldg_bldg_vol' 'waste_bldg_sub_S' 'waste_bldg_sub_vol' 'waste_bldg_sup_S' 'waste_bldg_sup_vol' 'wwt_bldg_bldg_vol' 'adj_212_14112_lab' 'adj_212_14122_lab' 'adj_cont_mat_1_48' 'adj_half' 'adj_none' 'adj_rx_aux_0_25' 'count_222_11' 'count_222_13' 'exp_lin' 'exp_elec_P' 'exp_P' 'exp_pri_flow' 'exp_rx_D' 'exp_sfp_V' 'exp_tur_plant_equip_elec_P' 'f_elec_P_ctrl_wir' 'f_elec_prot' 'f_elec_st_serv' 'f_elec_str_wir_cont' 'f_elec_switchboards' 'f_elec_swgr' 'f_simp_fuel_hndl' 'f_simp_other_rx_equip' 'f_simp_radw' 'f_simp_sfgd' 'f_ss_cont_fac' 'f_ss_cont_lab' 'f_ss_cont_mat' 'lrn_222_11_fac' 'lrn_222_11_lab' 'lrn_222_11_mat' 'lrn_222_13_fac' 'lrn_222_13_lab' 'lrn_222_13_mat' 'ref_211_1_fac' 'ref_211_1_lab' 'ref_211_1_mat' 'ref_211_4_lab' 'ref_211_4_mat' 'ref_211_711_lab' 'ref_211_711_mat' 'ref_211_712_fac' 'ref_211_712_lab' 'ref_211_712_mat' 'ref_212_13_lab' 'ref_212_13_mat' 'ref_212_140_fac' 'ref_212_140_lab' 'ref_212_140_mat' 'ref_212_14111_lab' 'ref_212_14111_mat' 'ref_212_14112_lab' 'ref_212_14112_mat' 'ref_212_14113_lab' 'ref_212_14113_mat' 'ref_212_14114_lab' 'ref_212_14114_mat' 'ref_212_14115_lab' 'ref_212_14115_mat' 'ref_212_14116_lab' 'ref_212_14116_mat' 'ref_212_14117_lab' 'ref_212_14117_mat' 'ref_212_14118_lab' 'ref_212_14118_mat' 'ref_212_14121_lab' 'ref_212_14121_mat' 'ref_212_14122_lab' 'ref_212_14122_mat' 'ref_212_14123_lab' 'ref_212_14123_mat' 'ref_212_14125_lab' 'ref_212_14125_mat' 'ref_212_14127_lab' 'ref_212_14127_mat' 'ref_212_14128_lab' 'ref_212_14128_mat' 'ref_212_1419_lab' 'ref_212_1419_mat' 'ref_212_142_lab' 'ref_212_142_mat' 'ref_212_149_lab' 'ref_212_149_mat' 'ref_212_15_fac' 'ref_212_15_lab' 'ref_212_15_mat' 'ref_212_21_fac' 'ref_212_21_lab' 'ref_212_21_mat' 'ref_212_22_fac' 'ref_212_22_lab' 'ref_212_22_mat' 'ref_212_23_fac' 'ref_212_23_lab' 'ref_212_23_mat' 'ref_212_24_lab' 'ref_212_24_mat' 'ref_212_25_fac' 'ref_212_25_lab' 'ref_212_25_mat' 'ref_212_3_lab' 'ref_212_3_mat' 'ref_213_13_lab' 'ref_213_13_mat' 'ref_213_141_lab' 'ref_213_141_mat' 'ref_213_142_lab' 'ref_213_142_mat' 'ref_213_143_lab' 'ref_213_143_mat' 'ref_213_144_lab' 'ref_213_144_mat' 'ref_213_145_lab' 'ref_213_145_mat' 'ref_213_146_lab' 'ref_213_146_mat' 'ref_213_147_lab' 'ref_213_147_mat' 'ref_213_149_lab' 'ref_213_149_mat' 'ref_213_21_fac' 'ref_213_21_lab' 'ref_213_21_mat' 'ref_213_22_fac' 'ref_213_22_lab' 'ref_213_22_mat' 'ref_213_24_lab' 'ref_213_24_mat' 'ref_213_25_fac' 'ref_213_25_lab' 'ref_213_25_mat' 'ref_214_fac' 'ref_214_lab' 'ref_214_mat' 'ref_215_13_lab' 'ref_215_13_mat' 'ref_215_141_lab' 'ref_215_141_mat' 'ref_215_142_lab' 'ref_215_142_mat' 'ref_215_145_lab' 'ref_215_145_mat' 'ref_215_146_lab' 'ref_215_146_mat' 'ref_215_147_lab' 'ref_215_147_mat' 'ref_215_149_lab' 'ref_215_149_mat' 'ref_215_21_fac' 'ref_215_21_lab' 'ref_215_21_mat' 'ref_215_221_fac' 'ref_215_221_lab' 'ref_215_221_mat' 'ref_215_222_fac' 'ref_215_222_lab' 'ref_215_222_mat' 'ref_215_223_fac' 'ref_215_223_lab' 'ref_215_223_mat' 'ref_215_224_fac' 'ref_215_224_lab' 'ref_215_224_mat' 'ref_215_225_fac' 'ref_215_225_lab' 'ref_215_225_mat' 'ref_215_226_fac' 'ref_215_226_lab' 'ref_215_226_mat' 'ref_215_227_fac' 'ref_215_228_fac' 'ref_215_228_lab' 'ref_215_228_mat' 'ref_215_23_fac' 'ref_215_23_lab' 'ref_215_23_mat' 'ref_215_24_lab' 'ref_215_24_mat' 'ref_215_25_fac' 'ref_215_25_lab' 'ref_215_25_mat' 'ref_216_13_lab' 'ref_216_13_mat' 'ref_216_141_lab' 'ref_216_141_mat' 'ref_216_142_lab' 'ref_216_142_mat' 'ref_216_143_lab' 'ref_216_143_mat' 'ref_216_144_lab' 'ref_216_144_mat' 'ref_216_145_lab' 'ref_216_145_mat' 'ref_216_146_lab' 'ref_216_146_mat' 'ref_216_147_lab' 'ref_216_147_mat' 'ref_216_148_lab' 'ref_216_148_mat' 'ref_216_149_lab' 'ref_216_149_mat' 'ref_216_21_lab' 'ref_216_21_mat' 'ref_216_22_fac' 'ref_216_22_lab' 'ref_216_22_mat' 'ref_216_24_lab' 'ref_216_24_mat' 'ref_216_25_fac' 'ref_216_25_lab' 'ref_216_25_mat' 'ref_217_13_lab' 'ref_217_13_mat' 'ref_217_141_lab' 'ref_217_141_mat' 'ref_217_142_lab' 'ref_217_142_mat' 'ref_217_145_lab' 'ref_217_145_mat' 'ref_217_147_lab' 'ref_217_147_mat' 'ref_217_149_lab' 'ref_217_149_mat' 'ref_217_21_fac' 'ref_217_21_lab' 'ref_217_21_mat' 'ref_217_22_fac' 'ref_217_22_lab' 'ref_217_22_mat' 'ref_217_23_fac' 'ref_217_23_lab' 'ref_217_23_mat' 'ref_217_24_lab' 'ref_217_24_mat' 'ref_217_3_lab' 'ref_217_3_mat' 'ref_218A_13_lab' 'ref_218A_13_mat' 'ref_218A_141_lab' 'ref_218A_141_mat' 'ref_218A_142_lab' 'ref_218A_142_mat' 'ref_218A_145_lab' 'ref_218A_145_mat' 'ref_218A_146_lab' 'ref_218A_146_mat' 'ref_218A_147_lab' 'ref_218A_147_mat' 'ref_218A_148_lab' 'ref_218A_148_mat' 'ref_218A_149_lab' 'ref_218A_149_mat' 'ref_218A_21_lab' 'ref_218A_21_mat' 'ref_218A_231_fac' 'ref_218A_231_lab' 'ref_218A_231_mat' 'ref_218A_232_fac' 'ref_218A_232_lab' 'ref_218A_232_mat' 'ref_218A_233_fac' 'ref_218A_233_lab' 'ref_218A_233_mat' 'ref_218A_234_fac' 'ref_218A_234_lab' 'ref_218A_234_mat' 'ref_218A_235_fac' 'ref_218A_235_lab' 'ref_218A_235_mat' 'ref_218A_236_fac' 'ref_218A_236_lab' 'ref_218A_236_mat' 'ref_218A_237_fac' 'ref_218A_238_fac' 'ref_218A_238_lab' 'ref_218A_238_mat' 'ref_218A_24_lab' 'ref_218A_24_mat' 'ref_218B_22_fac' 'ref_218B_22_lab' 'ref_218B_22_mat' 'ref_218B_23_fac' 'ref_218B_23_lab' 'ref_218B_23_mat' 'ref_218B_24_lab' 'ref_218B_24_mat' 'ref_218B_25_fac' 'ref_218B_25_lab' 'ref_218B_25_mat' 'ref_218D_fac' 'ref_218D_lab' 'ref_218D_mat' 'ref_218E_fac' 'ref_218E_lab' 'ref_218E_mat' 'ref_218F_lab' 'ref_218F_mat' 'ref_218G_fac' 'ref_218G_lab' 'ref_218G_mat' 'ref_218H_fac' 'ref_218H_lab' 'ref_218H_mat' 'ref_218J_fac' 'ref_218J_lab' 'ref_218J_mat' 'ref_218K_lab' 'ref_218K_mat' 'ref_218L_fac' 'ref_218L_lab' 'ref_218L_mat' 'ref_218P_lab' 'ref_218P_mat' 'ref_218S_fac' 'ref_218S_lab' 'ref_218S_mat' 'ref_218T_fac' 'ref_218T_lab' 'ref_218T_mat' 'ref_218V_lab' 'ref_218V_mat' 'ref_221_1_fac' 'ref_221_1_lab' 'ref_221_1_mat' 'ref_221_2_fac' 'ref_221_2_lab' 'ref_221_2_mat' 'ref_221_3_fac' 'ref_221_3_lab' 'ref_221_3_mat' 'ref_222_111_fac' 'ref_222_111_lab' 'ref_222_111_mat' 'ref_222_119_fac' 'ref_222_119_lab' 'ref_222_119_mat' 'ref_222_12_fac' 'ref_222_12_lab' 'ref_222_12_mat' 'ref_222_132_fac' 'ref_222_132_lab' 'ref_222_132_mat' 'ref_222_139_fac' 'ref_222_139_lab' 'ref_222_139_mat' 'ref_222_14_fac' 'ref_222_14_lab' 'ref_222_14_mat' 'ref_223_1_fac' 'ref_223_1_lab' 'ref_223_1_mat' 'ref_223_3_fac' 'ref_223_3_lab' 'ref_223_3_mat' 'ref_223_4_fac' 'ref_223_4_lab' 'ref_223_4_mat' 'ref_223_5_fac' 'ref_223_5_lab' 'ref_223_5_mat' 'ref_224_1_fac' 'ref_224_1_lab' 'ref_224_1_mat' 'ref_224_2_fac' 'ref_224_2_lab' 'ref_224_2_mat' 'ref_224_3_fac' 'ref_224_3_lab' 'ref_224_3_mat' 'ref_225_111_fac' 'ref_225_111_lab' 'ref_225_111_mat' 'ref_225_112_fac' 'ref_225_112_lab' 'ref_225_112_mat' 'ref_225_113_fac' 'ref_225_113_lab' 'ref_225_113_mat' 'ref_225_114_fac' 'ref_225_114_lab' 'ref_225_114_mat' 'ref_225_12_fac' 'ref_225_12_lab' 'ref_225_12_mat' 'ref_225_13_fac' 'ref_225_13_lab' 'ref_225_13_mat' 'ref_225_3_fac' 'ref_225_3_lab' 'ref_225_3_mat' 'ref_225_4_fac' 'ref_225_4_lab' 'ref_225_4_mat' 'ref_226_1_fac' 'ref_226_1_lab' 'ref_226_1_mat' 'ref_226_3_fac' 'ref_226_3_lab' 'ref_226_3_mat' 'ref_226_4_fac' 'ref_226_4_lab' 'ref_226_4_mat' 'ref_226_6_fac' 'ref_226_6_lab' 'ref_226_6_mat' 'ref_226_71_fac' 'ref_226_71_lab' 'ref_226_71_mat' 'ref_226_72_fac' 'ref_226_72_lab' 'ref_226_72_mat' 'ref_226_8_fac' 'ref_226_8_lab' 'ref_226_8_mat' 'ref_226_9_fac' 'ref_226_9_lab' 'ref_226_9_mat' 'ref_227_11_fac' 'ref_227_11_lab' 'ref_227_11_mat' 'ref_227_15_fac' 'ref_227_15_lab' 'ref_227_15_mat' 'ref_227_16_fac' 'ref_227_16_lab' 'ref_227_16_mat' 'ref_227_17_fac' 'ref_227_17_lab' 'ref_227_17_mat' 'ref_227_18_fac' 'ref_227_18_lab' 'ref_227_18_mat' 'ref_227_19_fac' 'ref_227_19_lab' 'ref_227_19_mat' 'ref_227_2_fac' 'ref_227_2_lab' 'ref_227_2_mat' 'ref_227_3_fac' 'ref_227_3_lab' 'ref_227_3_mat' 'ref_227_4_fac' 'ref_227_4_lab' 'ref_227_4_mat' 'ref_227_5_fac' 'ref_227_5_lab' 'ref_227_5_mat' 'ref_227_9_fac' 'ref_227_9_lab' 'ref_227_9_mat' 'ref_228_lab' 'ref_228_mat' 'ref_23_fac' 'ref_23_lab' 'ref_23_mat' 'ref_241_fac' 'ref_241_lab' 'ref_241_mat' 'ref_242_fac' 'ref_242_lab' 'ref_242_mat' 'ref_243_fac' 'ref_243_lab' 'ref_243_mat' 'ref_244_lab' 'ref_244_mat' 'ref_245_lab' 'ref_245_mat' 'ref_246_fac' 'ref_246_lab' 'ref_246_mat' 'ref_251_11_fac' 'ref_251_11_lab' 'ref_251_11_mat' 'ref_251_12_fac' 'ref_251_12_lab' 'ref_251_12_mat' 'ref_251_16_fac' 'ref_251_16_lab' 'ref_251_16_mat' 'ref_251_17_fac' 'ref_251_17_lab' 'ref_251_17_mat' 'ref_252_1_fac' 'ref_252_1_lab' 'ref_252_1_mat' 'ref_252_2_fac' 'ref_252_2_lab' 'ref_252_2_mat' 'ref_252_3_fac' 'ref_252_3_lab' 'ref_252_3_mat' 'ref_252_4_lab' 'ref_252_4_mat' 'ref_253_fac' 'ref_253_lab' 'ref_253_mat' 'ref_254_fac' 'ref_254_lab' 'ref_254_mat' 'ref_255_fac' 'ref_255_lab' 'ref_255_mat' 'ref_261_fac' 'ref_261_lab' 'ref_261_mat' 'ref_262_11_fac' 'ref_262_11_lab' 'ref_262_11_mat' 'ref_262_12_fac' 'ref_262_12_lab' 'ref_262_12_mat' 'ref_262_13_fac' 'ref_262_13_lab' 'ref_262_13_mat' 'ref_262_14_lab' 'ref_262_14_mat' 'ref_262_15_fac' 'ref_262_15_lab' 'ref_262_15_mat' 'ref_S' 'ref_bldg_V' 'ref_cmn_bldg_vol' 'ref_cr_dg_bldg_bldg_vol' 'ref_cr_dg_bldg_sub_S' 'ref_cr_dg_bldg_sub_vol' 'ref_cr_dg_bldg_sup_S' 'ref_cr_dg_bldg_sup_vol' 'ref_direct_cost_frm_flow' 'ref_direct_cost_frm_fuel_cask_cap' 'ref_direct_cost_frm_fuel_crane_cap' 'ref_direct_cost_frm_ht_S' 'ref_direct_cost_frm_prz_M' 'ref_direct_cost_frm_S' 'ref_direct_cost_frm_S_9_71886e_06' 'ref_direct_cost_frm_vsl_M' 'ref_elec_P' 'ref_fuel_stor_bldg_bldg_vol' 'ref_fuel_stor_bldg_sub_S' 'ref_fuel_stor_bldg_sub_vol' 'ref_fuel_stor_bldg_sup_S' 'ref_fuel_stor_bldg_sup_vol' 'ref_mc_piping_M' 'ref_n_crs' 'ref_pri_aux_bldg_bldg_vol' 'ref_pri_aux_bldg_sub_S' 'ref_pri_aux_bldg_sub_vol' 'ref_pri_aux_bldg_sup_S' 'ref_pri_aux_bldg_sup_vol' 'ref_pri_flow' 'ref_rx_D' 'ref_rej_th_P' 'ref_rx_P' 'ref_sfp_V' 'ref_sub_str_S' 'ref_sub_str_V' 'ref_sup_str_S' 'ref_sup_str_V' 'ref_turb_gen_bldg_sub_vol' 'ref_turb_gen_bldg_sup_S' 'ref_turb_gen_bldg_sup_vol' 'ref_V_of_212_213_215_216_217' 'ref_waste_bldg_bldg_vol' 'ref_waste_bldg_sub_S' 'ref_waste_bldg_sub_vol' 'ref_waste_bldg_sup_S' 'ref_waste_bldg_sup_vol' 'scale_adm_bldg_bldg_vol' 'scale_S' 'scale_bldg_V' 'scale_cont_hatch_ms_bldg_vol' 'scale_cont_V' 'scale_cr_dg_bldg_bldg_vol' 'scale_cr_dg_bldg_sub_S' 'scale_cr_dg_bldg_sub_vol' 'scale_cr_dg_bldg_sup_S' 'scale_cr_dg_bldg_sup_vol' 'scale_elec_P' 'scale_elec_tunnel_bldg_vol' 'scale_frm_flow' 'scale_frm_fuel_cask_cap' 'scale_frm_fuel_crane_cap' 'scale_frm_ht_S' 'scale_frm_prz_M' 'scale_frm_S' 'scale_frm_S_9_71886e_06' 'scale_frm_vsl_M' 'scale_fuel_stor_bldg_bldg_vol' 'scale_fuel_stor_bldg_sub_S' 'scale_fuel_stor_bldg_sub_vol' 'scale_fuel_stor_bldg_sup_S' 'scale_fuel_stor_bldg_sup_vol' 'scale_mc_piping_M' 'scale_non_ess_swgr_bldg_bldg_vol' 'scale_n_crs' 'scale_P' 'scale_pri_aux_bldg_bldg_vol' 'scale_pri_aux_bldg_sub_S' 'scale_pri_aux_bldg_sub_vol' 'scale_pri_aux_bldg_sup_S' 'scale_pri_aux_bldg_sup_vol' 'scale_pri_flow' 'scale_rx_D' 'scale_rej_th_P' 'scale_sfp_V' 'scale_sub_str_S' 'scale_sub_str_V' 'scale_sup_const' 'scale_sup_str_S' 'scale_sup_str_V' 'scale_turb_gen_bldg_sub_vol' 'scale_turb_gen_bldg_sup_S' 'scale_turb_gen_bldg_sup_vol' 'scale_tur_plant_equip_elec_P' 'scale_V_of_212_213_215_216_217' 'scale_waste_bldg_bldg_vol' 'scale_waste_bldg_sub_S' 'scale_waste_bldg_sub_vol' 'scale_waste_bldg_sup_S' 'scale_waste_bldg_sup_vol' 'scale_wwt_bldg_bldg_vol' 'ce_211_711_fac' 'ce_211_711_mat' 'ce_211_711_lab' 'ce_211_712_fac' 'ce_211_712_mat' 'ce_211_712_lab' 'ce_212_141_fac' 'ce_212_141_mat' 'ce_212_141_lab' 'ce_212_1411_fac' 'ce_212_1411_mat' 'ce_212_1411_lab' 'ce_212_14111_fac' 'ce_212_14111_mat' 'ce_212_14111_lab' 'ce_212_14112_fac' 'ce_212_14112_mat' 'ce_212_14112_lab' 'ce_212_14113_fac' 'ce_212_14113_mat' 'ce_212_14113_lab' 'ce_212_14114_fac' 'ce_212_14114_mat' 'ce_212_14114_lab' 'ce_212_14115_fac' 'ce_212_14115_mat' 'ce_212_14115_lab' 'ce_212_14116_fac' 'ce_212_14116_mat' 'ce_212_14116_lab' 'ce_212_14117_fac' 'ce_212_14117_mat' 'ce_212_14117_lab' 'ce_212_14118_fac' 'ce_212_14118_mat' 'ce_212_14118_lab' 'ce_212_1412_fac' 'ce_212_1412_mat' 'ce_212_1412_lab' 'ce_212_14121_fac' 'ce_212_14121_mat' 'ce_212_14121_lab' 'ce_212_14122_fac' 'ce_212_14122_mat' 'ce_212_14122_lab' 'ce_212_14123_fac' 'ce_212_14123_mat' 'ce_212_14123_lab' 'ce_212_14125_fac' 'ce_212_14125_mat' 'ce_212_14125_lab' 'ce_212_14127_fac' 'ce_212_14127_mat' 'ce_212_14127_lab' 'ce_212_14128_fac' 'ce_212_14128_mat' 'ce_212_14128_lab' 'ce_212_140_fac' 'ce_212_140_mat' 'ce_212_140_lab' 'ce_212_1419_fac' 'ce_212_1419_mat' 'ce_212_1419_lab' 'ce_212_142_fac' 'ce_212_142_mat' 'ce_212_142_lab' 'ce_212_149_fac' 'ce_212_149_mat' 'ce_212_149_lab' 'ce_213_141_fac' 'ce_213_141_mat' 'ce_213_141_lab' 'ce_213_142_fac' 'ce_213_142_mat' 'ce_213_142_lab' 'ce_213_143_fac' 'ce_213_143_mat' 'ce_213_143_lab' 'ce_213_144_fac' 'ce_213_144_mat' 'ce_213_144_lab' 'ce_213_145_fac' 'ce_213_145_mat' 'ce_213_145_lab' 'ce_213_146_fac' 'ce_213_146_mat' 'ce_213_146_lab' 'ce_213_147_fac' 'ce_213_147_mat' 'ce_213_147_lab' 'ce_213_149_fac' 'ce_213_149_mat' 'ce_213_149_lab' 'ce_215_141_fac' 'ce_215_141_mat' 'ce_215_141_lab' 'ce_215_142_fac' 'ce_215_142_mat' 'ce_215_142_lab' 'ce_215_145_fac' 'ce_215_145_mat' 'ce_215_145_lab' 'ce_215_146_fac' 'ce_215_146_mat' 'ce_215_146_lab' 'ce_215_147_fac' 'ce_215_147_mat' 'ce_215_147_lab' 'ce_215_149_fac' 'ce_215_149_mat' 'ce_215_149_lab' 'ce_215_221_fac' 'ce_215_221_mat' 'ce_215_221_lab' 'ce_215_222_fac' 'ce_215_222_mat' 'ce_215_222_lab' 'ce_215_223_fac' 'ce_215_223_mat' 'ce_215_223_lab' 'ce_215_224_fac' 'ce_215_224_mat' 'ce_215_224_lab' 'ce_215_225_fac' 'ce_215_225_mat' 'ce_215_225_lab' 'ce_215_226_fac' 'ce_215_226_mat' 'ce_215_226_lab' 'ce_215_227_fac' 'ce_215_227_mat' 'ce_215_227_lab' 'ce_215_228_fac' 'ce_215_228_mat' 'ce_215_228_lab' 'ce_216_141_fac' 'ce_216_141_mat' 'ce_216_141_lab' 'ce_216_142_fac' 'ce_216_142_mat' 'ce_216_142_lab' 'ce_216_143_fac' 'ce_216_143_mat' 'ce_216_143_lab' 'ce_216_144_fac' 'ce_216_144_mat' 'ce_216_144_lab' 'ce_216_145_fac' 'ce_216_145_mat' 'ce_216_145_lab' 'ce_216_146_fac' 'ce_216_146_mat' 'ce_216_146_lab' 'ce_216_147_fac' 'ce_216_147_mat' 'ce_216_147_lab' 'ce_216_148_fac' 'ce_216_148_mat' 'ce_216_148_lab' 'ce_216_149_fac' 'ce_216_149_mat' 'ce_216_149_lab' 'ce_217_141_fac' 'ce_217_141_mat' 'ce_217_141_lab' 'ce_217_142_fac' 'ce_217_142_mat' 'ce_217_142_lab' 'ce_217_145_fac' 'ce_217_145_mat' 'ce_217_145_lab' 'ce_217_147_fac' 'ce_217_147_mat' 'ce_217_147_lab' 'ce_217_149_fac' 'ce_217_149_mat' 'ce_217_149_lab' 'ce_218A_13_fac' 'ce_218A_13_mat' 'ce_218A_13_lab' 'ce_218A_14_fac' 'ce_218A_14_mat' 'ce_218A_14_lab' 'ce_218A_141_fac' 'ce_218A_141_mat' 'ce_218A_141_lab' 'ce_218A_142_fac' 'ce_218A_142_mat' 'ce_218A_142_lab' 'ce_218A_145_fac' 'ce_218A_145_mat' 'ce_218A_145_lab' 'ce_218A_146_fac' 'ce_218A_146_mat' 'ce_218A_146_lab' 'ce_218A_147_fac' 'ce_218A_147_mat' 'ce_218A_147_lab' 'ce_218A_148_fac' 'ce_218A_148_mat' 'ce_218A_148_lab' 'ce_218A_149_fac' 'ce_218A_149_mat' 'ce_218A_149_lab' 'ce_218A_21_fac' 'ce_218A_21_mat' 'ce_218A_21_lab' 'ce_218A_23_fac' 'ce_218A_23_mat' 'ce_218A_23_lab' 'ce_218A_231_fac' 'ce_218A_231_mat' 'ce_218A_231_lab' 'ce_218A_232_fac' 'ce_218A_232_mat' 'ce_218A_232_lab' 'ce_218A_233_fac' 'ce_218A_233_mat' 'ce_218A_233_lab' 'ce_218A_234_fac' 'ce_218A_234_mat' 'ce_218A_234_lab' 'ce_218A_235_fac' 'ce_218A_235_mat' 'ce_218A_235_lab' 'ce_218A_236_fac' 'ce_218A_236_mat' 'ce_218A_236_lab' 'ce_218A_237_fac' 'ce_218A_237_mat' 'ce_218A_237_lab' 'ce_218A_238_fac' 'ce_218A_238_mat' 'ce_218A_238_lab' 'ce_218A_24_fac' 'ce_218A_24_mat' 'ce_218A_24_lab' 'ce_218B_21_fac' 'ce_218B_21_mat' 'ce_218B_21_lab' 'ce_218B_22_fac' 'ce_218B_22_mat' 'ce_218B_22_lab' 'ce_218B_23_fac' 'ce_218B_23_mat' 'ce_218B_23_lab' 'ce_218B_24_fac' 'ce_218B_24_mat' 'ce_218B_24_lab' 'ce_218B_25_fac' 'ce_218B_25_mat' 'ce_218B_25_lab' 'ce_222_111_fac' 'ce_222_111_mat' 'ce_222_111_lab' 'ce_222_119_fac' 'ce_222_119_mat' 'ce_222_119_lab' 'ce_222_132_fac' 'ce_222_132_mat' 'ce_222_132_lab' 'ce_222_139_fac' 'ce_222_139_mat' 'ce_222_139_lab' 'ce_225_111_fac' 'ce_225_111_mat' 'ce_225_111_lab' 'ce_225_112_fac' 'ce_225_112_mat' 'ce_225_112_lab' 'ce_225_113_fac' 'ce_225_113_mat' 'ce_225_113_lab' 'ce_225_114_fac' 'ce_225_114_mat' 'ce_225_114_lab']
 user_defined_names = [N/A]
 total_cost_unit = ['million' 'dollar']

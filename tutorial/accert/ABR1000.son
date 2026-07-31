@@ -5,11 +5,13 @@
 
 % This test input file is used to test the
 % assign costs functionality.
+% ABR1000 represents the Advanced Burner Reactor 1000 MWth reference concept:
+% https://publications.anl.gov/anlpubs/2017/04/134264.pdf.
 
 
 accert{
     ref_model = "ABR1000"
-    power( Thermal ){ value = 1000   unit = MW } 
+    power(Thermal){ value = 1000 unit = MW }
    
 
     var(Cont_H_wall_m){ value = 20  unit = m }

@@ -2,6 +2,9 @@
 % Author: J. Zhou (jia.zhou@anl.gov)
 % Last updated: 06/08/2022
 
+% PWR12-BE represents a Better Experience reference model for a standard
+% four-loop 1,144 MWe PWR derived from DOE's Energy Economic Data Base (EEDB):
+% https://www.osti.gov/servlets/purl/1963917.
 
 accert{
     ref_model = "PWR12-BE"

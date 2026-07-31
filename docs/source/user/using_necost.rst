@@ -29,7 +29,13 @@ Using NE-COST via Python
    fuel_costs
    fuel_inputs
 
-   An example input file is provided in the tutorial directory `necost.son`.
+   Example input files are provided in ``tutorial/necost``:
+
+   * ``EG01.OT01A.son``: once-through PWR UOX reference case.
+   * ``EG02.OT01B.son``: HTGR LEU once-through case with report comments and a single-island 175 MWe weighting basis.
+   * ``EG03.OT01C.son`` through ``EG40.MC12.son``: structured examples generated from Appendix A of FCRD-FCO-2013-000196, with normal ``fuel_cycles``, ``reactors``, ``capital_costs``, ``om_costs``, ``fuel_costs``, and ``fuels`` sections.
+   * ``AP1000.ACCERT.NECost.son``: runs ACCERT first, reads the ACCERT OCC post-process CSV, and uses that OCC as the NEcost capital cost input.
+   * ``Example.OnceThrough.TwoStageEnrichment.son``: compact legacy syntax example for a single once-through island with two-stage enrichment.
 
 3. Run NECOST
    
@@ -37,9 +43,63 @@ Using NE-COST via Python
 
    .. code-block:: shell
 
-      $ python necostmain.py -i <input_file> 
+      $ python src/necostmain.py -i tutorial/necost/EG01.OT01A.son
+      $ python src/necostmain.py -i tutorial/necost/EG13.ML02.son
+      $ python src/necostmain.py -i tutorial/necost/EG23.SC05.son
+
+   To run ACCERT and NEcost together:
+
+   .. code-block:: shell
+
+      $ python src/necostmain.py -i tutorial/necost/AP1000.ACCERT.NECost.son
+
+   You can also run the Python workflow driver:
+
+   .. code-block:: shell
+
+      $ python tutorial/necost/accert_necost_workflow.py
+
+   To run the EG23 two-island Python example:
+
+   .. code-block:: shell
+
+      $ python tutorial/necost/eg23_two_island_example.py
+
+   To run the generated EG03-EG40 examples and compare the 5% discount-rate mean LCAE against the report comments:
+
+   .. code-block:: shell
+
+      $ python tutorial/necost/check_report_examples.py
 
    The output file 'NECOST_results.csv' will contain the LCAE and other relevant information.
+   Multi-reactor cases also write ``NECOST_reactor_results.csv`` with the per-reactor details before the weighted cycle result is calculated.
+
+   The report-generated examples keep the report preparer/reviewer, fuel-cycle description, LCAE report values, and multi-island ``energy_fraction`` comments while exposing the inputs through the same structured blocks used by ``EG01`` and ``EG23``.
+
+   In a ``fuel_cycles`` reactor block, ``fleet_capacity`` is the reactor island's electric capacity in MWe. It is calculated from the reactor power block as ``reference_thermal * net_thermal_efficiency / 100 / 1e6`` when the reactor is specified by thermal power, or from ``reference_net_electrical / 1e6`` when the reactor is specified by net electrical power. ``fleet_capacity`` is optional when ``fleet_energy``, ``energy_fraction``, or ``mass_fraction`` is supplied. If ``fleet_capacity`` is supplied together with ``energy_fraction`` or ``mass_fraction``, ACCERT checks that the MWe value is consistent with the reactor power block.
+
+   ``EG13.ML02.son`` follows the report's two-island LCAE weighting. The UOX LWR island uses ``energy_fraction = 0.902`` and the MOX PWR island uses ``energy_fraction = 0.098``.
+   ``EG23.SC05.son`` follows the report's two-island structure. The driver island uses ``energy_fraction = 0.954`` and the blanket island uses ``energy_fraction = 0.046`` for the weighted LCAE calculation.
+
+ACCERT to NEcost coupling
+-------------------------
+
+The optional ``accert_coupling`` block lets a NEcost SON file use ACCERT's total OCC as the NEcost ``capital_cost`` input.
+The bridge reads ACCERT post-processing metric ``total_OCC`` from
+``value_escalated_dollar_per_kw`` and writes it into the selected NEcost
+capital cost item in ``$/kWe``. Older ACCERT post-process CSV files with
+``value_2024_dollar_per_kw`` are still accepted for compatibility.
+
+.. code-block:: son
+
+   accert_coupling {
+      accert_input = "../accert/AP1000.son"
+      capital_cost_id = "capital_cost"
+      occ_metric = "total_OCC"
+      uncertainty_fraction = 0.0
+   }
+
+If ``accert_post_csv`` is provided instead of ``accert_input``, NEcost uses the existing ACCERT post-process CSV without rerunning ACCERT.
 
 4. Analyze the Results
    
@@ -88,7 +148,7 @@ Using NE-COST via NEAMS Workbench
 
    - Navigate to `Workbench` > `Configurations`.
    - Click `Add` and select `Necost` from the list of available configurations.
-   - Set the **Executable** path to `Main.py` located in the `ACCERT/src/` directory.
+   - Set the **Executable** path to ``necostmain.py`` located in the ``ACCERT/src/`` directory.
    - Load the grammar by clicking `Load Grammar`.
 
    .. admonition:: Windows Users!
@@ -97,7 +157,6 @@ Using NE-COST via NEAMS Workbench
 
 3. **Run Necost**
 
-   - Open your input file within the Workbench environment.
+   - Open one of the ``tutorial/necost/*.son`` input files within the Workbench environment.
    - Click the `Run` button to execute Necost.
    - Review the results in `NECOST_results.csv` directly within Workbench.
-

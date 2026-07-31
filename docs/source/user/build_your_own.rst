@@ -1,12 +1,14 @@
 Build Your Own Reference Model
 ==============================
 
-ACCERT now accept user-defined model with user defined code of account structure. 
+ACCERT accepts user-defined models with a custom code-of-account structure.
 
 Build your own account table
 -----------------------------
 
-Create a raw_account.csv file, that table should includes with the following columns: ind, code_of_account, account_description, total_cost, level, supaccount, alg_name, fun_unit, variables. 
+Create a ``raw_account.csv`` file with the following columns: ``ind``,
+``code_of_account``, ``account_description``, ``total_cost``, ``level``,
+``supaccount``, ``alg_name``, ``fun_unit``, and ``variables``.
 
 - **ind**: [REQUIRED] Unique identifier for each account
 - **code_of_account**: [REQUIRED] Code of account 
@@ -25,7 +27,11 @@ Create a raw_account.csv file, that table should includes with the following col
    :widths: auto
    :class: normal-table
 
-Make sure that all the hierarchy accounts can be connected from the top level to the bottom level. And for each account, the supaccount should be the code_of_account of its parent account. If any algorithm is applied to the account, the alg_name should be specified. The fun_unit is the unit of the algorithm function. The variables are the variables that are used in the algorithm. Total cost is the in the unit of dollar.
+Make sure every account is connected from the top level to the bottom level.
+For each account, ``supaccount`` should be the ``code_of_account`` of its parent
+account. If an algorithm is applied to the account, specify ``alg_name``.
+``fun_unit`` is the output unit of the algorithm function, and ``variables``
+lists the variables used by the algorithm. ``total_cost`` is in dollars.
 
 Run the following commands from the repository root to generate the
 user-defined account table.
@@ -35,7 +41,11 @@ user-defined account table.
     cd tutorial/accert/user_defined
     python ../../../src/scripts/gen_user_defined.py
 
-The script will generate a `user_defined_account.csv` file in the same directory, and also generate a `raw_variable_automated_generated.csv` file. The `user_defined_account.csv` file will be used in the next step to generate the user-defined algorithm table. The `raw_variable_automated_generated.csv` file will be filled in by the user to provide the values of the variables used in the algorithm.
+The script generates ``user_defined_account.csv`` and
+``raw_variable_automated_generated.csv`` in the same directory.
+``user_defined_account.csv`` is used in the next step to generate the
+user-defined algorithm table. Fill in ``raw_variable_automated_generated.csv``
+with the values of the variables used in the algorithm.
 
 .. csv-table:: [Generated account Table with added review_status and prn columns]
    :header-rows: 1
@@ -43,7 +53,7 @@ The script will generate a `user_defined_account.csv` file in the same directory
    :widths: auto
    :class: normal-table
 
-The `raw_variable_automated_generated.csv` file will be filled in by the user to provide the values of the variables used in the algorithm, the following columns are required:
+The following columns are required in the filled variable file:
 
    - **var_value**: value of the variable
    - **var_unit**: unit of the variable
@@ -70,18 +80,19 @@ If some variables are calculated from other variables, the user can fill in the 
 Fill in your own algorithm
 ---------------------------
 
-Save the filled in variable file as `raw_variable.csv`, then run the command
+Save the filled variable file as ``raw_variable.csv``, then run the command
 again from ``tutorial/accert/user_defined`` to generate the algorithm table,
-database SQL file, and algorithm Python file.
+SQLite load script, and algorithm Python file.
 
 .. code-block:: bash
 
     python ../../../src/scripts/gen_user_defined.py
 
-The script will generate 3 files:
-- `user_defined_algorithm.csv` will a reference table.
-- `user_defined_algorithm.sql` will be used to create the database table.
-- `user_defined_func.py` will be used to calculate the total cost of each account or variable.
+The script generates three files:
+
+- ``user_defined_algorithm.csv`` is the algorithm reference table.
+- ``user_defined.sql`` creates and loads the user-defined SQLite tables.
+- ``user_defined_func.py`` calculates the total cost of each account or variable.
 
 .. csv-table:: [Generated algorithm Table]
    :header-rows: 1
@@ -89,15 +100,21 @@ The script will generate 3 files:
    :widths: auto
    :class: normal-table
 
-This table will be used to create the database table. the column `alg_for` is the account or variable that the algorithm is applied to, `c` means the algorithm is applied to the account, `v` means the algorithm is applied to the variable. The `alg_name` is the name of the algorithm. The `alg_unit` is the unit of the algorithm function output. 
+This table is used to create the database table. The ``alg_for`` column
+identifies whether the algorithm is applied to an account or a variable:
+``c`` means account, and ``v`` means variable. ``alg_name`` is the name of the
+algorithm. ``alg_unit`` is the output unit of the algorithm function.
 
-And the `user_defined_func.py` file will be used to calculate the total cost of each account. User can modify the `user_defined_func.py` file to implement the algorithm. Each algorithm function will have the notes to explain the algorithm with the needed variables.
+The ``user_defined_func.py`` file calculates the total cost of each account.
+Modify ``user_defined_func.py`` to implement the algorithms. Each generated
+algorithm function includes notes explaining the variables it needs.
 
 .. include:: ../../../tutorial/accert/user_defined/user_defined_func_generated.py
    :literal:
 
 
-After filled in the algorithm function, it should be saved as `user_defined_func.py` in the same directory. Here is an example of the filled in algorithm function.
+After filling in the algorithm functions, save them as ``user_defined_func.py``
+in the same directory. Here is an example of a filled algorithm function.
 
 .. include:: ../../../tutorial/accert/user_defined/user_defined_func.py
    :literal:
@@ -106,33 +123,22 @@ After filled in the algorithm function, it should be saved as `user_defined_func
 Create the database table
 -------------------------
 
-In the same folder a `user_defined_algorithm.sql` file will be generated. Run the following command to implement all the tables in the database.
+In the same folder, ``user_defined.sql`` is generated. Run the following command
+to create and load the user-defined tables in the SQLite database.
 
 .. code-block:: bash
 
     python ../../../src/scripts/run_sql.py
 
-The script will create the database table and insert the data from the `user_defined_account.csv`, `user_defined_variable.csv` and `user_defined_algorithm.csv` files into the database.
+The script creates the database tables and inserts the data from
+``user_defined_account.csv``, ``user_defined_variable.csv``, and
+``user_defined_algorithm.csv``.
 
-You can also run mysql command and source the `user_defined_algorithm.sql` file to create the database table.
+To apply the SQL to a different SQLite database file, pass ``--db``:
 
 .. code-block:: bash
 
-    $ mysql -h localhost -u root -p
-    Enter password:
-    Welcome to the MySQL monitor.  Commands end with ; or \g.
-    Your MySQL connection id is 2475
-    Server version: 8.0.27 MySQL Community Server - GPL
-
-    Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
-
-    Oracle is a registered trademark of Oracle Corporation and/or its
-    affiliates. Other names may be trademarks of their respective
-    owners.
-
-    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-    mysql>source user_defined_algorithm.sql
+    python ../../../src/scripts/run_sql.py user_defined.sql --db /path/to/accertdb.sqlite
 
 
 Prepare the input file

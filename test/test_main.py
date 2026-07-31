@@ -1,16 +1,23 @@
 import sys
 import os
+import glob
+import contextlib
+import io
+from pathlib import Path
+from types import SimpleNamespace
 
-src_path = os.path.abspath(os.path.join(os.pardir, 'src'))
-sys.path.insert(0, src_path)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+TEST_DIR = Path(__file__).resolve().parent
+SRC_PATH = PROJECT_ROOT / 'src'
+sys.path.insert(0, str(SRC_PATH))
 from utility_accert import Utility_methods 
 from Main import Accert
 import pytest
 
 
 ut = Utility_methods()
-accert_path = os.path.dirname(os.getcwd())
-input_path = os.path.join(os.getcwd(), 'accert_unit_test_input.son')
+accert_path = str(PROJECT_ROOT)
+input_path = str(TEST_DIR / 'accert_unit_test_input.son')
 accert = Accert(input_path, accert_path)
 accert.ref_model = 'pwr12-be'
 accert.acc_tabl = 'account'
@@ -56,7 +63,7 @@ def test_update_input_variable(cursor):
     # check if the value is updated
     cursor.execute("""SELECT var_name,var_value, var_unit
                     FROM variable 
-                    WHERE var_name = "c_213_fac";""")
+                    WHERE var_name = ?;""", ("c_213_fac",))
     expect_output = ('c_213_fac',  0.0, 'million') 
     assert expect_output in cursor.fetchall()
 
@@ -67,7 +74,7 @@ def test_update_variable_info_on_name(cursor):
     # check if the value is updated
     cursor.execute("""SELECT var_name,var_value, var_unit
                     FROM variable
-                    WHERE var_name = "c_213_fac";""")
+                    WHERE var_name = ?;""", ("c_213_fac",))
     expect_output = ('c_213_fac',  0.0, 'million') 
     assert expect_output in cursor.fetchall()
 
@@ -78,7 +85,7 @@ def test_update_super_variable(cursor):
     # check if the value is updated only check the user_input column
     cursor.execute("""SELECT var_name,user_input
                     FROM variable 
-                    WHERE var_name = "n_231";""")
+                    WHERE var_name = ?;""", ("n_231",))
     expect_output = ('n_231', 1)
     assert expect_output in cursor.fetchall()
 
@@ -89,7 +96,7 @@ def test_update_total_cost(cursor):
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, total_cost
                     FROM account 
-                    WHERE code_of_account = "211";""")
+                    WHERE code_of_account = ?;""", ("211",))
     expect_output = ('211',  1000000.0) 
     assert expect_output in cursor.fetchall()
 
@@ -100,7 +107,7 @@ def test_update_total_cost_on_name(cursor):
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, total_cost
                     FROM account 
-                    WHERE code_of_account = "211";""")
+                    WHERE code_of_account = ?;""", ("211",))
     expect_output = ('211',  1000000.0 ) 
     assert expect_output in cursor.fetchall()
 
@@ -111,7 +118,7 @@ def test_update_cost_element_on_name(cursor):
     # check if the value is updated
     cursor.execute("""SELECT cost_element, cost_2017, updated
                     FROM cost_element
-                    WHERE cost_element = "211_fac";""")
+                    WHERE cost_element = ?;""", ("211_fac",))
     expect_output = ('211_fac', 2000.0, 1)
     assert expect_output in cursor.fetchall()
 
@@ -120,15 +127,19 @@ def test_roll_up_cost_elements(cursor):
     element for pwr12be, also test the function roll_up_cost_elements_by_level"""
     # roll up the cost element for pwr12be
     assert accert.roll_up_cost_elements(cursor)==None
-    # only the higher level cost element is updated
-    # check updated column
-    cursor.execute("""SELECT cost_element, updated
-                    FROM cost_element
-                    WHERE updated = 1;""")
-    expect_output = [('218_fac', 1), ('21_fac', 1),('2_fac', 1)]
-    real_output = cursor.fetchall()
-    for tup in expect_output:
-        assert tup in real_output
+    # Parent cost elements should equal the sum of their child cost elements.
+    # Rollup recalculates cost_2017 but does not mark parents as directly updated.
+    for cost_element in ('218_fac', '21_fac', '2_fac'):
+        cursor.execute("""SELECT cost_2017, updated
+                        FROM cost_element
+                        WHERE cost_element = ?;""", (cost_element,))
+        parent_cost, updated = cursor.fetchone()
+        cursor.execute("""SELECT SUM(cost_2017)
+                        FROM cost_element
+                        WHERE sup_cost_ele = ?;""", (cost_element,))
+        child_total = cursor.fetchone()[0]
+        assert round(parent_cost, 2) == round(child_total, 2)
+        assert updated == 0
 
 def test_roll_up_account_table(cursor):
     """ test function roll_up_account_table,this function will roll up the account table and also test the function roll_up_account_table_by_level"""
@@ -138,7 +149,7 @@ def test_roll_up_account_table(cursor):
     # check updated column
     cursor.execute("""SELECT code_of_account, review_status
                     FROM account 
-                    WHERE review_status = 'updated';""")
+                    WHERE review_status = ?;""", ("Updated",))
     expect_output = [('218', 'Updated'), ('21', 'Updated'), ('2', 'Updated')]
     real_output = cursor.fetchall()
     for tup in expect_output:
@@ -157,7 +168,7 @@ def test_roll_up_lmt_account_table(cursor):
     # check updated column
     cursor.execute("""SELECT code_of_account, review_status
                     FROM abr_account
-                    WHERE review_status = 'updated';""")
+                    WHERE review_status = ?;""", ("Updated",))
     expect_output = [('222', 'Updated')]
     accert.acc_tabl = 'account'
     assert expect_output==cursor.fetchall()
@@ -170,7 +181,7 @@ def test_sum_cost_elements_2C(cursor):
     # check if the value is updated
     cursor.execute("""SELECT cost_element, updated
                     FROM abr_cost_element 
-                    WHERE account = "2";""")
+                    WHERE account = ?;""", ("2",))
     expect_output = [('2c_fac',1), ('2c_lab', 1), ('2c_mat',1)]
     real_output = cursor.fetchall()
     for tup in expect_output:
@@ -184,7 +195,7 @@ def test_roll_up_lmt_account_2C(cursor):
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, review_status
                     FROM abr_account
-                    WHERE code_of_account = "2C";""")
+                    WHERE code_of_account = ?;""", ("2C",))
     expect_output = [('2C', 'Ready for Review')]
     assert expect_output==cursor.fetchall()
 
@@ -196,7 +207,7 @@ def test_roll_up_lmt_direct_cost(cursor):
     # check if the value is updated
     cursor.execute("""SELECT code_of_account, review_status
                     FROM abr_account
-                    WHERE code_of_account = "2";""")
+                    WHERE code_of_account = ?;""", ("2",))
     expect_output = [('2', 'Ready for Review')]
     assert expect_output==cursor.fetchall()
 
@@ -229,6 +240,8 @@ def test_check_unit_conversion():
     possible. for example, if the unit is dollar and the new unit is million, the function will
     return True"""
     assert accert.check_unit_conversion('dollar','million')==True
+    assert accert.check_unit_conversion('dollar','$')==False
+    assert accert.check_unit_conversion('N/A','million')==False
 
 def test_convert_unit():
     """ test function convert_unit, this function will return the converted value of the
@@ -236,14 +249,14 @@ def test_convert_unit():
     to_unit is million, the function will return the converted value 1. this function 
     also test convert_unit_scale"""
     assert accert.convert_unit(1000000,'dollar','million')==1
+    assert accert.convert_unit(1,'$','dollar')==1
 
 def test_run_pre_alg():
     """ test function run_pre_alg, this function will run the pre programed algorithm. the pre algorithm
     will update the cost element table for PWR12 BE and ABR1000. NOTE: all the pre programed algorithm
     output unit is million"""
-    alg='sum(kwargs.values())'
     kwargs={'v_1': 1, 'v_2': 2}
-    assert accert.run_pre_alg(alg, **kwargs)==3
+    assert accert.run_pre_alg('sum_multi_accounts', **kwargs)==3
 
 def test_cal_direct_cost_elements(cursor,conn):
     """ test function cal_direct_cost_elements, this function will calculate the direct cost for 
@@ -255,22 +268,127 @@ def test_cal_direct_cost_elements(cursor,conn):
     for i in range(3):
         assert round(real_ouput[i],-6)==round((852973431.1169341, 382841817.9556325, 183971968.309387)[i],-6)
 
+def test_calculate_occ_post_process(cursor):
+    """Test ACCERT OCC post-processing formulas."""
+    accert.acc_tabl = 'account'
+    results = accert.calculate_occ_post_process(cursor)
+    cursor.execute("""SELECT total_cost
+                    FROM account
+                    WHERE code_of_account = ?;""", ("2",))
+    total_calculated_direct_cost = cursor.fetchone()[0]
+    assert results["total_calculated_direct_cost"] == pytest.approx(total_calculated_direct_cost)
+    assert results["total_direct_cost"] == pytest.approx(total_calculated_direct_cost)
+    assert results["total_indirect_costs"] == pytest.approx(total_calculated_direct_cost * 0.609)
+    assert results["total_cost_without_owner"] == pytest.approx(total_calculated_direct_cost * 1.609)
+    assert results["owner_cost"] == pytest.approx(total_calculated_direct_cost * 1.609 * 0.2)
+    assert results["total_OCC"] == pytest.approx(total_calculated_direct_cost * 1.609 * 1.2)
+
+def test_lpsr_occ_post_process_includes_per_kw(cursor):
+    """Test LPSR OCC post-processing includes $/kW using elec_P."""
+    accert.ref_model = 'lpsr'
+    accert.acc_tabl = 'lpsr_account'
+    accert.var_tabl = 'lpsr_variable'
+    results = accert.post_processor.calculate_occ(cursor, accert.acc_tabl, accert._electric_power_mw(cursor), accert.ref_model, accert._cost_escalation_factor(), accert.target_dollar_year)
+    rows = {row["metric"]: row for row in results.as_rows()}
+    assert rows["total_OCC"]["value_escalated_dollar_per_kw"] == pytest.approx(results.total_OCC * accert._cost_escalation_factor() / (1117 * 1000))
+    assert rows["total_OCC"]["escalated_dollar_year"] == accert.target_dollar_year
+
+def test_lpsr_power_defaults_update_rejected_heat(cursor):
+    """LPSR defaults power inputs and calculates rejected thermal power."""
+    accert.ref_model = 'lpsr'
+    accert.var_tabl = 'lpsr_variable'
+    accert.alg_tabl = 'lpsr_algorithm'
+    accert.cel_tabl = 'lpsr_cost_element'
+    accert.process_power_inputs(cursor, SimpleNamespace(power=None))
+    cursor.execute("""SELECT var_name, var_value, var_unit
+                    FROM lpsr_variable
+                    WHERE var_name IN (?, ?, ?)
+                    ORDER BY var_name;""", ("elec_P", "rej_th_P", "rx_P"))
+    values = {name: (value, unit) for name, value, unit in cursor.fetchall()}
+    assert values["elec_P"][0] == pytest.approx(1117.0)
+    assert values["elec_P"][1] == "MWe"
+    assert values["rx_P"][0] == pytest.approx(3400.0)
+    assert values["rx_P"][1] == "MWt"
+    assert values["rej_th_P"][0] == pytest.approx(2283.0)
+    assert values["rej_th_P"][1] == "MWt"
+
+def test_ap1000_reference_tables_match_target_direct_cost(cursor):
+    """AP1000 mirrors LPSR structure at the 2234 MWe direct-cost basis."""
+    cursor.execute("""SELECT total_cost
+                    FROM ap1000_account
+                    WHERE code_of_account = ?;""", ("2",))
+    assert cursor.fetchone()[0] == pytest.approx(6673722963.402768347)
+    cursor.execute("""SELECT var_name, var_value, var_unit
+                    FROM ap1000_variable
+                    WHERE var_name IN (?, ?, ?)
+                    ORDER BY var_name;""", ("elec_P", "rej_th_P", "rx_P"))
+    values = {name: (value, unit) for name, value, unit in cursor.fetchall()}
+    assert values["elec_P"][0] == pytest.approx(2234.0)
+    assert values["elec_P"][1] == "MWe"
+    assert values["rx_P"][0] == pytest.approx(6800.0)
+    assert values["rx_P"][1] == "MWt"
+    assert values["rej_th_P"][0] == pytest.approx(4566.0)
+    assert values["rej_th_P"][1] == "MWt"
+    cursor.execute("""SELECT var_value
+                    FROM ap1000_variable
+                    WHERE var_name = ?;""", ("scale_ap1000",))
+    assert cursor.fetchone()[0] == pytest.approx(2.8540789982106554)
+
+def test_ap1000_recalculation_reproduces_reference_direct_cost(cursor):
+    """AP1000 recalculates to its scaled reference when baseline inputs are unchanged."""
+    accert.ref_model = 'ap1000'
+    accert.acc_tabl = 'ap1000_account'
+    accert.cel_tabl = 'ap1000_cost_element'
+    accert.var_tabl = 'ap1000_variable'
+    accert.alg_tabl = 'ap1000_algorithm'
+    cursor.execute("""UPDATE ap1000_variable
+                    SET user_input = 1
+                    WHERE var_name = ?;""", ("scale_ap1000",))
+    with contextlib.redirect_stdout(io.StringIO()):
+        accert.process_super_values(cursor, "scale_ap1000")
+        accert.update_new_cost_elements(cursor)
+        accert.roll_up_cost_elements(cursor, passes=4)
+        accert.update_account_table_by_cost_elements(cursor)
+        accert.roll_up_account_table(cursor, from_level=4, to_level=0)
+    cursor.execute("""SELECT total_cost
+                    FROM ap1000_account
+                    WHERE code_of_account = ?;""", ("2",))
+    assert cursor.fetchone()[0] == pytest.approx(6673722963.402768347, rel=1e-7)
+
+def test_lpsr_same_power_input_does_not_recalculate_rejected_heat(cursor):
+    """LPSR skips rejected heat recalculation when power inputs match defaults."""
+    accert.ref_model = 'lpsr'
+    accert.var_tabl = 'lpsr_variable'
+    accert.alg_tabl = 'lpsr_algorithm'
+    accert.cel_tabl = 'lpsr_cost_element'
+    power = [
+        SimpleNamespace(id="Thermal", value=SimpleNamespace(value=3400), unit=SimpleNamespace(value="MW")),
+        SimpleNamespace(id="Electric", value=SimpleNamespace(value=1117), unit=SimpleNamespace(value="MW")),
+    ]
+    accert.process_power_inputs(cursor, SimpleNamespace(power=power))
+    cursor.execute("""SELECT user_input
+                    FROM lpsr_variable
+                    WHERE var_name = ?;""", ("rej_th_P",))
+    assert cursor.fetchone()[0] == 0
+
 def test_generate_results_table(cursor,conn):
     """ test function generate_results_table, this function will generate the results table for 
     each cost element. This function will update the cost element table for PWR12BE. Also, this
-    function will test write_to_excel function"""
+    function will test CSV output."""
     accert.ref_model = 'pwr12-be'
     accert.acc_tabl = 'account'
     accert.cel_tabl = 'cost_element'
     accert.var_tabl = 'variable'
+    for pattern in ('pwr12-be_upd_acc_*.csv', 'pwr12-be_aff_ce_*.csv', 'pwr12-be_upd_ce_*.csv'):
+        for output_file in glob.glob(pattern):
+            os.remove(output_file)
     assert accert.generate_results_table(cursor, conn, level=3)==None
-    # check whether the results xlsx file is generated
-    assert os.path.isfile('pwr12-be_updated_account.xlsx')==True
+    # check whether the results CSV file is generated
+    assert len(glob.glob('pwr12-be_upd_acc_*.csv')) == 1
     assert accert.generate_results_table_with_cost_elements(cursor, conn, level=3)==None
 
-    assert os.path.isfile('pwr12-be_variable_affected_cost_elements.xlsx')==True
-    assert os.path.isfile('pwr12-be_updated_cost_element.xlsx')==True
-    # remove the generated xlsx file
-    os.remove('pwr12-be_updated_account.xlsx')
-    os.remove('pwr12-be_variable_affected_cost_elements.xlsx')
-    os.remove('pwr12-be_updated_cost_element.xlsx')
+    assert len(glob.glob('pwr12-be_aff_ce_*.csv')) == 1
+    assert len(glob.glob('pwr12-be_upd_ce_*.csv')) == 1
+    for pattern in ('pwr12-be_upd_acc_*.csv', 'pwr12-be_aff_ce_*.csv', 'pwr12-be_upd_ce_*.csv'):
+        for output_file in glob.glob(pattern):
+            os.remove(output_file)

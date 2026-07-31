@@ -26,7 +26,7 @@ if errorlevel 9009 (
 )
 
 REM Define pre-build scripts
-set PRE_BUILD_SCRIPTS=generate_sp_docs.py generate_main_docs.py
+set PRE_BUILD_SCRIPTS=source\generate_sp_docs.py source\generate_autorst.py
 
 REM Define build command based on the first argument
 if "%1" == "" goto help
