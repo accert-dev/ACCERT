@@ -29,6 +29,7 @@ TABLES = {
     "mirror_alg": "mirror_algorithm.csv",
     "mirror_var": "mirror_variable.csv",
 }
+DEFAULT_INPUT_FILE = "mirror_default_inputs.csv"
 
 MIRROR_ACCOUNT_COLUMNS = [
     ("ind", "INTEGER"),
@@ -66,56 +67,48 @@ HUMAN_INPUT_TO_VAR = {
     "Vacuum Volume": "V_vac",
 }
 
-MIRROR_INPUT_DEFAULTS = {
-    "application": ("heat", "1"),
-    "P_f": (1, "MW"),
-    "P_f_L": (1, "MW/m"),
-    "P_f_EP": (1, "MW"),
-    "P_NBI": (1, "MW"),
-    "P_ECH": (1, "MW"),
-    "P_ICRH": (1, "MW"),
-    "M_n": (1.1, "1"),
-    "N_module": (1, "1"),
-    "f_pump": (0.03, "1"),
-    "f_sub": (0.04, "1"),
-    "f_cryo": (0.01, "1"),
-    "P_aux": (1, "MW"),
-    "eta_th": (0.50, "1"),
-    "eta_DEC": (0.90, "1"),
-    "eta_pump": (0.98, "1"),
-    "eta_NBI": (0.50, "1"),
-    "eta_ECH": (0.50, "1"),
-    "eta_ICRH": (0.50, "1"),
-    "NOAK": (0, "1"),
-    "n_unit": (1, "1"),
-    "construction_time": (6, "years"),
-    "lifetime": (30, "years"),
-    "replacement": (10, "years"),
-    "availability": (0.90, "1"),
-    "discount": (0.0245, "1"),
-    "LSA": (2, "1"),
-    "include_decommissioning": (0, "1"),
-    "include_tax": (0, "1"),
-    "include_licensing": (0, "1"),
-    "include_contingency": (0, "1"),
-    "hf_magnet_length": (1, "m"),
-    "hf_magnet_shielding_thickness": (1, "m"),
-    "a_EC": (1, "m"),
-    "expander_cell_vessel_thickness": (0.01, "m"),
-    "vacuum_gap_CC": (0.01, "m"),
-    "first_wall_thickness": (0.01, "m"),
-    "vacuum_vessel_thickness": (0.01, "m"),
-    "multiplier_thickness": (0.01, "m"),
-    "blanket_thickness": (1.00, "m"),
-    "blanket_coolant_fraction": (0.90, "1"),
-    "blanket_structural_fraction": (0.10, "1"),
-    "outer_vessel_thickness": (0.01, "m"),
-    "L_EP": (1, "m"),
-    "L_EC": (1, "m"),
-    "a_CC": (1, "m"),
-    "a_EP": (1, "m"),
-    "HF_magnet_number": (4, "1"),
-    "LF_magnet_number": (2, "1"),
+MIRROR_INPUT_UNITS = {
+    "P_f": "MW",
+    "P_f_L": "MW/m",
+    "P_f_EP": "MW",
+    "P_NBI": "MW",
+    "P_ECH": "MW",
+    "P_ICRH": "MW",
+    "P_pump": "MW",
+    "P_sub_cont": "MW",
+    "P_cryo": "MW",
+    "P_pfcool": "MW",
+    "P_thcool": "MW",
+    "P_coils": "MW",
+    "P_aux": "MW",
+    "construction_time": "years",
+    "lifetime": "years",
+    "replacement": "years",
+    "hf_magnet_length": "m",
+    "hf_magnet_shielding_thickness": "m",
+    "a_EC": "m",
+    "expander_cell_vessel_thickness": "m",
+    "vacuum_gap_CC": "m",
+    "first_wall_thickness": "m",
+    "vacuum_vessel_thickness": "m",
+    "multiplier_thickness": "m",
+    "blanket_thickness": "m",
+    "outer_vessel_thickness": "m",
+    "L_EP": "m",
+    "L_EC": "m",
+    "a_CC": "m",
+    "a_EP": "m",
+    "application": "1",
+    "cost_file": "1",
+    "method": "1",
+    "expander_cell_vessel_material": "1",
+    "first_wall_material": "1",
+    "vacuum_vessel_material": "1",
+    "multiplier_material": "1",
+    "blanket_coolant_material": "1",
+    "blanket_structural_material": "1",
+    "filename": "1",
+    "run_name": "1",
 }
 
 MIRROR_GENERATED_VAR_NEEDS = {
@@ -260,6 +253,32 @@ def _account_method_dependencies(algorithm_source: Path) -> dict[str, tuple[list
     return dependencies
 
 
+def _literal_default(node: ast.AST):
+    value = ast.literal_eval(node)
+    if isinstance(value, bool):
+        return int(value)
+    if value is None:
+        return ""
+    return value
+
+
+def _generate_inputs_defaults(algorithm_source: Path) -> dict[str, tuple[object, str]]:
+    module = ast.parse(algorithm_source.read_text(encoding="utf-8"))
+    klass = next(node for node in module.body if isinstance(node, ast.ClassDef) and node.name == "MirrorFunc")
+    method = next(node for node in klass.body if isinstance(node, ast.FunctionDef) and node.name == "generate_inputs")
+    args = method.args.args
+    defaults = method.args.defaults
+    default_start = len(args) - len(defaults)
+    values = {}
+    for arg, default in zip(args[default_start:], defaults):
+        if arg.arg in {"verbose", "exact", "save", "load"}:
+            continue
+        values[arg.arg] = (_literal_default(default), MIRROR_INPUT_UNITS.get(arg.arg, "1"))
+    values["HF_magnet_number"] = (4, "1")
+    values["LF_magnet_number"] = (2, "1")
+    return values
+
+
 def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     dependencies = _account_method_dependencies(algorithm_source)
     methods = set(dependencies)
@@ -316,13 +335,13 @@ def _split_vars(value: str | None) -> list[str]:
     return [part.strip() for part in str(value).split(",") if part.strip() and part.strip() != "TODO"]
 
 
-def _normalize_mirror_variable_table(conn: sqlite3.Connection) -> None:
+def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     conn.execute("UPDATE mirror_var SET var_alg = '' WHERE var_alg = 'TODO'")
     conn.execute("UPDATE mirror_var SET var_need = '' WHERE var_need = 'TODO'")
     conn.execute("UPDATE mirror_var SET v_linked = '' WHERE v_linked = 'TODO'")
     conn.execute("UPDATE mirror_var SET var_unit = '1' WHERE var_unit = 'TODO'")
     conn.execute("UPDATE mirror_var SET var_unit = 'm' WHERE var_name = 'r_magnet'")
-    for var_name, (value, unit) in MIRROR_INPUT_DEFAULTS.items():
+    for var_name, (value, unit) in _generate_inputs_defaults(algorithm_source).items():
         if conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():
             continue
         next_ind = conn.execute("SELECT COALESCE(MAX(ind), 0) + 1 FROM mirror_var").fetchone()[0]
@@ -359,6 +378,19 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection) -> None:
         )
 
 
+def _write_default_inputs_csv(algorithm_source: Path, path: Path) -> int:
+    rows = [
+        (name, value, unit)
+        for name, (value, unit) in sorted(_generate_inputs_defaults(algorithm_source).items())
+    ]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(["var_name", "default_value", "var_unit"])
+        writer.writerows(rows)
+    return len(rows)
+
+
 def _normalize_mirror_algorithm_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     dependencies = _account_method_dependencies(algorithm_source)
     for alg_name, (input_keys, account_calls) in dependencies.items():
@@ -392,12 +424,14 @@ def load_mirror_tables(
                 _mysql_insert_rows(mysql_sql, table_name),
             )
         _normalize_mirror_account_table(conn, algorithm_source)
-        _normalize_mirror_variable_table(conn)
+        _normalize_mirror_variable_table(conn, algorithm_source)
         _normalize_mirror_algorithm_table(conn, algorithm_source)
         conn.commit()
         for table_name, file_name in TABLES.items():
             count = _write_csv(conn, table_name, ref_dir / file_name)
             print(f"Wrote {count} {table_name} rows.")
+        count = _write_default_inputs_csv(algorithm_source, ref_dir / DEFAULT_INPUT_FILE)
+        print(f"Wrote {count} Mirror default input rows.")
     finally:
         conn.close()
 

@@ -25,6 +25,21 @@ def test_mirror_reference_tables_loaded(cursor):
         assert cursor.fetchone()[0] == _csv_row_count(csv_path)
 
 
+def test_mirror_default_inputs_are_exported_from_generate_inputs():
+    defaults_path = REF_DIR / "mirror_default_inputs.csv"
+    with defaults_path.open(newline="", encoding="utf-8") as handle:
+        defaults = {
+            row["var_name"]: (row["default_value"], row["var_unit"])
+            for row in csv.DictReader(handle)
+        }
+
+    assert defaults["application"] == ("heat", "1")
+    assert defaults["P_f"] == ("1", "MW")
+    assert defaults["n_unit"] == ("0", "1")
+    assert defaults["HF_magnet_number"] == ("4", "1")
+    assert defaults["LF_magnet_number"] == ("2", "1")
+
+
 def test_mirror_setup_table_names():
     accert = Accert.__new__(Accert)
     accert.use_gncoa = False
