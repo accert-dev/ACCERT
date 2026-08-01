@@ -7,7 +7,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 6,Account_C21,c,Account C21 Rollup,MirrorFunc,rollup,million
 7,Account_C21_1,c,Account C211 Rollup,MirrorFunc,P_egross,million
 8,Account_C21_2,c,Account C212 Rollup,MirrorFunc,P_egross,million
-9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,"P_egross, application",million
+9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,"application, P_egross",million
 10,Account_C21_4,c,Account C214 Rollup,MirrorFunc,P_egross,million
 11,Account_C21_5,c,Account C215 Rollup,MirrorFunc,P_egross,million
 12,Account_C21_6,c,Account C216 Rollup,MirrorFunc,P_egross,million
@@ -25,7 +25,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 24,Account_C22,c,Account C22 Rollup,MirrorFunc,rollup,million
 25,Account_C22_1,c,Account C221 Rollup,MirrorFunc,rollup,million
 26,Account_C22_1_1,c,Account C2211 Rollup,MirrorFunc,"L_CC, L_EP",million
-27,Account_C22_1_2,c,Account C2212 Rollup,MirrorFunc,reference value,million
+27,Account_C22_1_2,c,Account C2212 Rollup,MirrorFunc,HF_magnet_shield_cost,million
 28,Account_C22_1_3,c,Account C2213 Rollup,MirrorFunc,rollup,million
 29,Account_C22_1_3_1,c,Account C22131 Rollup,MirrorFunc,"HF_magnet_number, HF_magnet_cost",million
 30,Account_C22_1_3_2,c,Account C22132 Rollup,MirrorFunc,"LF_magnet_number, LF_magnet_cost",million
@@ -37,7 +37,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 36,Account_C22_1_5,c,Account C2215 Rollup,MirrorFunc,reference value,million
 37,Account_C22_1_6,c,Account C2216 Rollup,MirrorFunc,rollup,million
 38,Account_C22_1_6_2,c,Account C22162 Rollup,MirrorFunc,reference value,million
-39,Account_C22_1_6_3,c,Account C22163 Rollup,MirrorFunc,"cost_pump, no_vpumps",million
+39,Account_C22_1_6_3,c,Account C22163 Rollup,MirrorFunc,"no_vpumps, cost_pump",million
 40,Account_C22_1_6_4,c,Account C22164 Rollup,MirrorFunc,reference value,million
 41,Account_C22_1_7,c,Account C2217 Rollup,MirrorFunc,reference value,million
 42,Account_C22_1_8,c,Account C2218 Rollup,MirrorFunc,reference value,million

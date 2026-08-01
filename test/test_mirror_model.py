@@ -124,6 +124,25 @@ def test_mirror_accounts_use_fusion_style_structure(cursor):
     assert cursor.fetchone()[0] == 1587572359.0
 
 
+def test_mirror_parent_accounts_are_rollups_without_algorithms(cursor):
+    cursor.execute(
+        """
+        SELECT code_of_account, alg_name, variables
+        FROM mirror_acco
+        WHERE code_of_account IN (?, ?, ?, ?, ?)
+        ORDER BY code_of_account;
+        """,
+        ("21", "22", "221", "2213", "29"),
+    )
+    assert cursor.fetchall() == [
+        ("21", "", "rollup"),
+        ("22", "", "rollup"),
+        ("221", "", "rollup"),
+        ("2213", "", "rollup"),
+        ("29", "", "rollup"),
+    ]
+
+
 def test_mirror_variable_links_are_reversed_from_var_need(cursor):
     cursor.execute(
         """
@@ -215,6 +234,20 @@ def test_mirror_account_algorithms_use_accert_variable_names():
 
     assert alg.run({"P_egross": 158.12094932835822}) == pytest.approx(42.37641442)
 
+    alg = MirrorFunc(
+        ind=1,
+        alg_name="Account_C21_3",
+        alg_for="c",
+        alg_description="",
+        alg_formulation="",
+        alg_units="million",
+        variables="application,P_egross",
+        constants="",
+    )
+    assert alg.run({"application": "electricity", "P_egross": 158.12094932835822}) == pytest.approx(
+        8.538531263731343
+    )
+
 
 def test_mirror_vacuum_pump_account_uses_deeper_variables(cursor):
     cursor.execute(
@@ -225,7 +258,7 @@ def test_mirror_vacuum_pump_account_uses_deeper_variables(cursor):
         """,
         ("22163",),
     )
-    assert cursor.fetchone()[0] == "cost_pump, no_vpumps"
+    assert cursor.fetchone()[0] == "no_vpumps, cost_pump"
 
     cursor.execute(
         """
@@ -286,10 +319,10 @@ def test_mirror_vacuum_pump_account_uses_deeper_variables(cursor):
         alg_description="",
         alg_formulation="",
         alg_units="million",
-        variables="cost_pump,no_vpumps",
+        variables="no_vpumps,cost_pump",
         constants="",
     )
-    assert alg.run({"cost_pump": 40000, "no_vpumps": 2.2619467105846507}) == pytest.approx(
+    assert alg.run({"no_vpumps": 2.2619467105846507, "cost_pump": 40000}) == pytest.approx(
         0.09047786842338603
     )
 
@@ -429,6 +462,40 @@ def test_mirror_magnet_accounts_use_explicit_cost_variables(cursor):
         constants="",
     )
     assert alg.run({"HF_magnet_number": 4.0, "HF_magnet_cost": 29.1}) == pytest.approx(116.4)
+
+
+def test_mirror_magnet_shield_account_uses_reference_variable(cursor):
+    cursor.execute(
+        """
+        SELECT variables
+        FROM mirror_acco
+        WHERE code_of_account = ?;
+        """,
+        ("2212",),
+    )
+    assert cursor.fetchone()[0] == "HF_magnet_shield_cost"
+
+    cursor.execute(
+        """
+        SELECT var_description, var_value, var_unit
+        FROM mirror_var
+        WHERE var_name = ?;
+        """,
+        ("HF_magnet_shield_cost",),
+    )
+    assert cursor.fetchone() == ("HF magnet shield cost per end plug", 47.36847787, "million")
+
+    alg = MirrorFunc(
+        ind=1,
+        alg_name="Account_C22_1_2",
+        alg_for="c",
+        alg_description="",
+        alg_formulation="",
+        alg_units="million",
+        variables="HF_magnet_shield_cost",
+        constants="",
+    )
+    assert alg.run({"HF_magnet_shield_cost": 47.36847787}) == pytest.approx(94.73695574)
 
 
 def test_mirror_generated_variable_algorithm_can_recalculate(cursor):

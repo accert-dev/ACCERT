@@ -76,6 +76,7 @@ MIRROR_REFERENCE_VAR_OVERRIDES = {
     "HF_magnet_cost": (29.1, "million"),
     "LF_magnet_cost": (6.25262, "million"),
     "CF_magnet_cost": (2.751, "million"),
+    "HF_magnet_shield_cost": (47.36847787, "million"),
     "CF_magnet_number": (52.0300751726645, "1"),
     "P_egross": (158.12094932835822, "MW"),
     "P_DECe": (63.01790788032513, "MW"),
@@ -249,6 +250,11 @@ MIRROR_VARIABLE_OVERRIDES = {
         "One CF coil every L_CF m of central cell",
         None,
         "1",
+    ),
+    "HF_magnet_shield_cost": (
+        "HF magnet shield cost per end plug",
+        None,
+        "million",
     ),
 }
 
@@ -479,7 +485,7 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
         alg_name = _mirror_method_name(raw_code)
         input_keys, account_calls = dependencies.get(alg_name, ([], []))
         variables = _account_variables(input_keys, account_calls)
-        if alg_name not in methods:
+        if account_calls or alg_name not in methods:
             alg_name = ""
         conn.execute(
             """

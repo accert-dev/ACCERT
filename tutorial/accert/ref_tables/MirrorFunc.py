@@ -221,105 +221,105 @@ class MirrorFunc(Algorithm):
             )
     
     @staticmethod
-    def Account_C21_1(inputs):
+    def Account_C21_1(P_egross):
         # Site Preparation/Yard Work
-        return(inputs['P_egross'] * 268/1e3)
+        return(P_egross * 268/1e3)
     
     @staticmethod
-    def Account_C21_2(inputs):
+    def Account_C21_2(P_egross):
         # Heat Island Building
-        return(inputs['P_egross'] * 186.8/1e3)
+        return(P_egross * 186.8/1e3)
     
     @staticmethod
-    def Account_C21_3(inputs):
+    def Account_C21_3(application, P_egross):
         # Turbine Generator Building
-        if inputs['application'].lower()=='electricity':
-            return(inputs['P_egross'] * 54.0/1e3)
+        if application.lower()=='electricity':
+            return(P_egross * 54.0/1e3)
         else:
             return(0)
 
     @staticmethod
-    def Account_C21_4(inputs): 
+    def Account_C21_4(P_egross): 
         # Heat Exchanger Building
-        return(37.8/1e3 * inputs['P_egross'])
+        return(37.8/1e3 * P_egross)
 
     @staticmethod
     #21.05.00,,Power supply & energy storage,Concrete & Steel,9.1,9.7,9.7,6.0,560,2019,1.19,
-    def Account_C21_5(inputs): 
+    def Account_C21_5(P_egross): 
         # Power Supply and Energy Storage
-        return(10.8/1e3 * inputs['P_egross'])
+        return(10.8/1e3 * P_egross)
     
     @staticmethod
     #21.06.00,,Reactor auxiliaries,Concrete & Steel,4.5,4.8,4.8,3.0,70,2019,1.19,
-    def Account_C21_6(inputs): 
+    def Account_C21_6(P_egross): 
         # Reactor Auxiliaries
-        return(5.4/1e3 * inputs['P_egross'])
+        return(5.4/1e3 * P_egross)
 
     @staticmethod
     #21.07.00,,Hot cell,Concrete & Steel,65.8,24.2,24.2,60,35000,2013,1.42,
-    def Account_C21_7(inputs): 
+    def Account_C21_7(P_egross): 
         # Hot Cell
-        return(93.4/1e3 * inputs['P_egross'])
+        return(93.4/1e3 * P_egross)
 
     @staticmethod
     #21.08.00,,Reactor services,Steel frame,13.2,4.8,4.8,10,233,2013,1.42,
-    def Account_C21_8(inputs): 
+    def Account_C21_8(P_egross): 
         # Reactor Services
-        return(18.7/1e3 * inputs['P_egross'])
+        return(18.7/1e3 * P_egross)
 
     @staticmethod
     #21.09.00,,Service water,Steel frame,0.2,1.3,4.0,4.0,21,2019,1.19,
-    def Account_C21_9(inputs): 
+    def Account_C21_9(P_egross): 
         # Service Water
-        return(0.3/1e3 * inputs['P_egross'])
+        return(0.3/1e3 * P_egross)
 
     @staticmethod
     #21.10.00,,Fuel storage,Steel frame,0.9,5.0,15.0,2.5,188,2019,1.19,
-    def Account_C21_10(inputs):
+    def Account_C21_10(P_egross):
         # Fuel Storage
-        return(1.1/1e3 * inputs['P_egross'])
+        return(1.1/1e3 * P_egross)
 
     @staticmethod
     #21.11.00,,Control room,Steel frame,0.7,4.0,12.0,2,96,2019,1.19,
-    def Account_C21_11(inputs):
+    def Account_C21_11(P_egross):
         # Control Room
-        return(0.9/1e3 * inputs['P_egross'])
+        return(0.9/1e3 * P_egross)
 
     @staticmethod
     #21.12.00,,Onsite AC inputs,Steel frame,0.7,3.6,10.8,1.8,70,2019,1.19,
-    def Account_C21_12(inputs):
+    def Account_C21_12(P_egross):
         # Onsite AC Power
-        return(0.8/1e3 * inputs['P_egross'])
+        return(0.8/1e3 * P_egross)
 
     @staticmethod
     #21.13.00,,Administration,Steel frame,3.7,20.0,60.0,10,12000,2019,1.19,
-    def Account_C21_13(inputs): 
+    def Account_C21_13(P_egross): 
         # Administration
-        return(4.4/1e3 * inputs['P_egross'])
+        return(4.4/1e3 * P_egross)
 
     @staticmethod
     #21.14.00,,Site services,Steel frame,1.3,7.3,22.0,3.7,593,2019,1.19,
-    def Account_C21_14(inputs): 
+    def Account_C21_14(P_egross): 
         # Site Services
-        return(1.6/1e3 * inputs['P_egross'])
+        return(1.6/1e3 * P_egross)
 
     @staticmethod
     #21.15.00,,Cryogenics,Steel frame,2.0,11.0,33.0,5.5,2003,2019,1.19,
-    def Account_C21_15(inputs):
+    def Account_C21_15(P_egross):
         # Cyrogenics
-        return(2.4/1e3 * inputs['P_egross'])
+        return(2.4/1e3 * P_egross)
 
     @staticmethod
     #21.16.00,,Security,Steel frame,0.7,4.0,12.0,2,96,2019,1.19,
-    def Account_C21_16(inputs): 
+    def Account_C21_16(P_egross): 
         # Security
-        return(0.9/1e3 * inputs['P_egross'])
+        return(0.9/1e3 * P_egross)
 
     @staticmethod
     #21.17.00,,Ventilation stack,Steel cylinder & concrete foundation,22.7,,,120,,2019,1.19,
-    def Account_C21_17(inputs): 
+    def Account_C21_17(P_egross): 
         # Ventilation Stack
-        return(27.0/1e3 * inputs['P_egross'])
+        return(27.0/1e3 * P_egross)
 
 
     @staticmethod
@@ -375,10 +375,10 @@ class MirrorFunc(Algorithm):
         return(total_cost/1e6)
 
     @staticmethod
-    def Account_C22_1_2(inputs):
+    def Account_C22_1_2(HF_magnet_shield_cost):
         # Magnet Radiation Shield
         # Factor of two for each end plug
-        return(2 * MirrorFunc.HF_magnet_shield_cost(inputs) / 1e6)
+        return(2 * HF_magnet_shield_cost)
 
     @staticmethod
     def Account_C22_1_3(inputs):
@@ -421,22 +421,22 @@ class MirrorFunc(Algorithm):
             )
 
     @staticmethod
-    def Account_C22_1_4_1(inputs):
+    def Account_C22_1_4_1(P_NBI, cost_factor):
         # NBI
-        return(7.0642 * inputs['P_NBI'] * inputs['cost_factor'])
+        return(7.0642 * P_NBI * cost_factor)
 
     @staticmethod
-    def Account_C22_1_4_2(inputs):
+    def Account_C22_1_4_2(P_ICRH, cost_factor):
         # ICRH
-        return(4.149 * inputs['P_ICRH'] * inputs['cost_factor'])
+        return(4.149 * P_ICRH * cost_factor)
 
     @staticmethod
-    def Account_C22_1_4_3(inputs):
+    def Account_C22_1_4_3(P_ECH, cost_factor):
         # ECH
-        return(8.0 * inputs['P_ECH'] * inputs['cost_factor'])
+        return(8.0 * P_ECH * cost_factor)
 
     @staticmethod
-    def Account_C22_1_5(inputs):
+    def Account_C22_1_5():
         # Primary Structure and Support
         return(0)
 
@@ -459,25 +459,25 @@ class MirrorFunc(Algorithm):
 
 
     @staticmethod
-    def Account_C22_1_6_2(inputs):
+    def Account_C22_1_6_2():
         # Helium Liquefier-Refrigerators (not for magnets)
         # Presumably for a full vessel cryostat?
         return(0)
 
     @staticmethod
-    def Account_C22_1_6_3(inputs):
+    def Account_C22_1_6_3(no_vpumps, cost_pump):
 
         #VACUUM PUMPING 22.1.6.3
-        return(inputs['no_vpumps'] * inputs['cost_pump'] / 1e6)
+        return(no_vpumps * cost_pump / 1e6)
         
 
     @staticmethod
-    def Account_C22_1_6_4(inputs):
+    def Account_C22_1_6_4():
         # Roughing Pump
         return(120000*2.85/1e6)
 
     @staticmethod
-    def Account_C22_1_7(inputs):
+    def Account_C22_1_7():
         # Power Supplies
 
         # Not using Woodruff 2024 as that is based on ITER fusion power
@@ -491,22 +491,22 @@ class MirrorFunc(Algorithm):
         return(0)
 
     @staticmethod
-    def Account_C22_1_8(inputs):
+    def Account_C22_1_8():
         # Divertor
         return(0)
 
     @staticmethod
-    def Account_C22_1_9(inputs):
+    def Account_C22_1_9(P_DECe, cost_factor):
         # Direct Energy Convertor
         # Not using Woodruff 2024 numbers here, but instead Woodruff 2022
-        return(1.7347 * inputs['P_DECe'] * inputs['cost_factor'])
+        return(1.7347 * P_DECe * cost_factor)
 
     @staticmethod
-    def Account_C22_1_11(inputs):
+    def Account_C22_1_11(L, N_module, construction_time, cost_factor):
         # Assembly and Installation Costs
         
         #Cost Category 22.1.11 Installation costs
-        axis_t = inputs['L']/(2*np.pi) #[m] distance from r=0 to plasma central axis - effectively major radius
+        axis_t = L/(2*np.pi) #[m] distance from r=0 to plasma central axis - effectively major radius
         axis_ir = axis_t
 
         # Define labor rate
@@ -514,22 +514,22 @@ class MirrorFunc(Algorithm):
 
         # Calculations
         constructionworker = 20 * axis_ir / 4
-        C_22_1_11_in = inputs['N_module'] * inputs['construction_time'] * (lr * 20 * 300)
-        C_22_1_11_1_in = inputs['N_module'] * ((lr * 200 * constructionworker) + 0)  # 22.1 first wall blanket
-        C_22_1_11_2_in = inputs['N_module'] * ((lr * 150 * constructionworker) + 0)  # 22.2 shield
-        C_22_1_11_3_in = inputs['N_module'] * ((lr * 100 * constructionworker) + 0)  # coils
-        C_22_1_11_4_in = inputs['N_module'] * ((lr *  30 * constructionworker) + 0)  # supplementary heating
-        C_22_1_11_5_in = inputs['N_module'] * ((lr *  60 * constructionworker) + 0)  # primary structure
-        C_22_1_11_6_in = inputs['N_module'] * ((lr * 200 * constructionworker) + 0)  # vacuum system
-        C_22_1_11_7_in = inputs['N_module'] * ((lr * 400 * constructionworker) + 0)  # power supplies
+        C_22_1_11_in = N_module * construction_time * (lr * 20 * 300)
+        C_22_1_11_1_in = N_module * ((lr * 200 * constructionworker) + 0)  # 22.1 first wall blanket
+        C_22_1_11_2_in = N_module * ((lr * 150 * constructionworker) + 0)  # 22.2 shield
+        C_22_1_11_3_in = N_module * ((lr * 100 * constructionworker) + 0)  # coils
+        C_22_1_11_4_in = N_module * ((lr *  30 * constructionworker) + 0)  # supplementary heating
+        C_22_1_11_5_in = N_module * ((lr *  60 * constructionworker) + 0)  # primary structure
+        C_22_1_11_6_in = N_module * ((lr * 200 * constructionworker) + 0)  # vacuum system
+        C_22_1_11_7_in = N_module * ((lr * 400 * constructionworker) + 0)  # power supplies
         C_22_1_11_8_in = 0  # guns or divertor
-        C_22_1_11_9_in = inputs['N_module'] * ((lr * 200 * constructionworker) + 0)   # direct energy converter
+        C_22_1_11_9_in = N_module * ((lr * 200 * constructionworker) + 0)   # direct energy converter
         C_22_1_11_10_in = 0  # ECRH
 
         # Total cost calculations
         C220111 = (C_22_1_11_in + C_22_1_11_1_in + C_22_1_11_2_in + C_22_1_11_3_in + C_22_1_11_4_in + C_22_1_11_5_in + C_22_1_11_6_in + C_22_1_11_7_in + C_22_1_11_8_in + C_22_1_11_9_in + C_22_1_11_10_in)
 
-        return(C220111 * inputs['cost_factor'])
+        return(C220111 * cost_factor)
 
     @staticmethod
     def Account_C22_2(inputs):
@@ -541,32 +541,32 @@ class MirrorFunc(Algorithm):
             )
 
     @staticmethod
-    def Account_C22_2_1(inputs):
+    def Account_C22_2_1(N_module, P_egross):
         # Primary Coolant
-        return(166  * (inputs['N_module'] * inputs['P_egross']/1000))
+        return(166  * (N_module * P_egross/1000))
 
     @staticmethod
-    def Account_C22_2_2(inputs):
+    def Account_C22_2_2(P_th):
         # Secondary Coolant
-        return(40.6 * (inputs['P_th']/3500)**0.55)
+        return(40.6 * (P_th/3500)**0.55)
 
     @staticmethod
-    def Account_C22_2_3(inputs):
+    def Account_C22_2_3():
         # Tertiary Coolant
         return(0)
 
     @staticmethod
-    def Account_C22_3(inputs):
+    def Account_C22_3(N_module, P_th):
         # Auxiliary Cooling Systems
-        return(1.10 * 1e-3 * inputs['N_module'] * inputs['P_th'] * 2.02)
+        return(1.10 * 1e-3 * N_module * P_th * 2.02)
 
     @staticmethod
-    def Account_C22_4(inputs):
+    def Account_C22_4(P_th):
         # Radioactive Waste Treatment
-        return(1.96 * 1e-3 * inputs['P_th'] * 2.02)
+        return(1.96 * 1e-3 * P_th * 2.02)
 
     @staticmethod
-    def Account_C22_5(inputs):
+    def Account_C22_5(cost_factor):
         # Cost Category 22.5 Fuel Handling and Storage
 
         inflation = 1.43
@@ -591,46 +591,46 @@ class MirrorFunc(Algorithm):
         C220506 = C2205060ITER * ltoak
         C220500 = C220501 + C220502 + C220503 + C220504 + C220505 + C220506 #ITER inflation cost
         
-        return(C220500 * inputs['cost_factor'])
+        return(C220500 * cost_factor)
 
     @staticmethod
-    def Account_C22_6(inputs):
+    def Account_C22_6(P_enet):
         # Cost Category 22.6 Other Reactor Plant Equipment
-        return(11.5*(np.max((inputs['P_enet'],0))/1000)**(0.8))
+        return(11.5*(np.max((P_enet,0))/1000)**(0.8))
 
     @staticmethod
-    def Account_C22_7(inputs):
+    def Account_C22_7():
         # Cost Category 22.7 Instrumentation and Control
         return(85)
 
     @staticmethod
-    def Account_C23(inputs):
+    def Account_C23(N_module, P_egross):
         # Turbine Plant Equipment
-        return(inputs['N_module'] * inputs['P_egross'] * 0.219 *1.15)
+        return(N_module * P_egross * 0.219 *1.15)
 
     @staticmethod
-    def Account_C24(inputs):
+    def Account_C24(N_module, P_egross):
         # Electric Plant Equipment
-        return(inputs['N_module'] * inputs['P_egross'] * 0.054 * 1.15)
+        return(N_module * P_egross * 0.054 * 1.15)
 
     @staticmethod
-    def Account_C25(inputs):
+    def Account_C25(N_module, P_egross):
         # Miscellaneous Plant Equipment
-        return(inputs['N_module'] * inputs['P_egross']  * 0.038 * 1.15)
+        return(N_module * P_egross  * 0.038 * 1.15)
     
     @staticmethod
-    def Account_C26(inputs):
+    def Account_C26(N_module, P_enet):
         # Heat Rejection
-        return(inputs['N_module'] * inputs['P_enet'] * 0.107 * 1.15 )
+        return(N_module * P_enet * 0.107 * 1.15 )
 
     @staticmethod
-    def Account_C27(inputs):
+    def Account_C27():
         # Special Materials
         # Total elsewhere, implement later
         return(0)
 
     @staticmethod
-    def Account_C28(inputs):
+    def Account_C28():
         # Digital Twin
         return(5)
 

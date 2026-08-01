@@ -196,4 +196,5 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 195,HF_magnet_cost,"HF cost per magnet, not for all four",29.1,million,cal_HF_magnet_cost,"n_unit, HF_magnet_number",,0
 196,LF_magnet_cost,LF cost per magnet,6.25262,million,cal_LF_magnet_cost,"n_unit, LF_magnet_number",,0
 197,CF_magnet_cost,CF cost per magnet,2.751,million,cal_CF_magnet_cost,"n_unit, CF_magnet_number",,0
-198,CF_magnet_number,One CF coil every L_CF m of central cell,52.0300751726645,1,cal_CF_magnet_number,"L_CC, L_CF",CF_magnet_cost,0
+198,HF_magnet_shield_cost,HF magnet shield cost per end plug,47.36847787,million,,,,0
+199,CF_magnet_number,One CF coil every L_CF m of central cell,52.0300751726645,1,cal_CF_magnet_number,"L_CC, L_CF",CF_magnet_cost,0
