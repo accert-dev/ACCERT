@@ -644,6 +644,18 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
                 (description, value, unit, var_name),
             )
 
+    valid_variable_algorithms = {f"cal_{var_name}" for var_name in MIRROR_GENERATED_VAR_FORMULAS}
+    placeholders = ", ".join("?" for _ in valid_variable_algorithms)
+    conn.execute(
+        f"""
+        UPDATE mirror_var
+        SET var_alg = ''
+        WHERE COALESCE(var_alg, '') != ''
+          AND var_alg NOT IN ({placeholders})
+        """,
+        tuple(sorted(valid_variable_algorithms)),
+    )
+
     reverse_links: dict[str, list[str]] = {}
     for var_name, var_need in conn.execute("SELECT var_name, var_need FROM mirror_var"):
         for needed in _split_vars(var_need):
@@ -719,6 +731,14 @@ def _normalize_mirror_algorithm_table(conn: sqlite3.Connection, algorithm_source
             ),
         )
         next_ind += 1
+
+    used_variable_algorithms = {
+        row[0]
+        for row in conn.execute("SELECT DISTINCT var_alg FROM mirror_var WHERE COALESCE(var_alg, '') != ''")
+    }
+    for (alg_name,) in conn.execute("SELECT alg_name FROM mirror_alg WHERE alg_for = 'v'").fetchall():
+        if alg_name not in used_variable_algorithms:
+            conn.execute("DELETE FROM mirror_alg WHERE alg_name = ?", (alg_name,))
 
 
 def load_mirror_tables(

@@ -634,9 +634,9 @@ class MirrorFunc(Algorithm):
         Return volume of cylindrical inverse triangular washer.
         From the ASCII art below you can see how this is used for magnet shielding.
         
-                    ^ z
-                    |
-                    |               z
+                      ^ z
+                      |
+                      |               z
         |\            |            /|
         | \           |           / |
         |  \          |          /  |

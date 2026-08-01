@@ -231,6 +231,35 @@ def test_mirror_generated_variable_algorithms_are_loaded(cursor):
     assert rows[1] == ("eta_DEC", 0.9, "1", "P_DECe")
 
 
+def test_mirror_algorithm_table_only_keeps_referenced_variable_algorithms(cursor):
+    cursor.execute("SELECT COUNT(*) FROM mirror_alg WHERE alg_name = '__init__';")
+    assert cursor.fetchone()[0] == 0
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM mirror_alg
+        WHERE alg_for = 'v'
+          AND alg_name NOT IN (
+              SELECT var_alg
+              FROM mirror_var
+              WHERE COALESCE(var_alg, '') != ''
+          );
+        """
+    )
+    assert cursor.fetchone()[0] == 0
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM mirror_var
+        WHERE COALESCE(var_alg, '') != ''
+          AND var_alg NOT IN (SELECT alg_name FROM mirror_alg);
+        """
+    )
+    assert cursor.fetchone()[0] == 0
+
+
 def test_mirror_account_algorithms_use_accert_variable_names():
     alg = MirrorFunc(
         ind=1,

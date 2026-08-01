@@ -1,8 +1,4 @@
 ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
-1,__init__,v,None,MirrorFunc,TODO,TODO
-2,add_account,v,Add an account to the cost_account object.,MirrorFunc,TODO,TODO
-3,generate_report,v,Generate a report based on user input.,MirrorFunc,TODO,TODO
-4,learning_credit,v,None,MirrorFunc,TODO,TODO
 7,Account_C21_1,c,Account C211 Rollup,MirrorFunc,P_egross,million
 8,Account_C21_2,c,Account C212 Rollup,MirrorFunc,P_egross,million
 9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,"application, P_egross",million
@@ -47,23 +43,6 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 57,Account_C26,c,Account C26 Rollup,MirrorFunc,"N_module, P_enet",million
 58,Account_C27,c,Account C27 Rollup,MirrorFunc,reference value,million
 59,Account_C28,c,Account C28 Rollup,MirrorFunc,reference value,million
-64,PbLi_density,v,"Returns PbLi density (kg/m^3). Assumes the PbLi is a eutectic, which has",MirrorFunc,TODO,TODO
-65,Li_price,v,Return Li price (USD/kg) for enrichment levels above 90% 6Li,MirrorFunc,TODO,TODO
-66,PbLi_price,v,None,MirrorFunc,TODO,TODO
-67,V_cylindrical_shell,v,Return volume of a cylindrical shell,MirrorFunc,TODO,TODO
-68,V_inverse_triangular_washer,v,Return volume of cylindrical inverse triangular washer.,MirrorFunc,TODO,TODO
-69,generate_inputs,v,Return a dict containing all inputs for a techno-economic analysis.,MirrorFunc,TODO,TODO
-70,create_radial_build,v,None,MirrorFunc,TODO,TODO
-71,add_new_layer,v,None,MirrorFunc,TODO,TODO
-72,add_fractional_layer,v,None,MirrorFunc,TODO,TODO
-73,build_central_cell,v,None,MirrorFunc,TODO,TODO
-74,central_cell_cost,v,None,MirrorFunc,TODO,TODO
-75,central_cell,v,None,MirrorFunc,TODO,TODO
-76,expander_cell_cost,v,Each expander cell is made up of:,MirrorFunc,TODO,TODO
-77,HF_magnet_cost,v,None,MirrorFunc,TODO,TODO
-78,LF_magnet_cost,v,None,MirrorFunc,TODO,TODO
-79,CF_magnet_cost,v,None,MirrorFunc,TODO,TODO
-80,HF_magnet_shield_cost,v,The HF coils have annular shield with a U-shaped cross section:,MirrorFunc,TODO,TODO
 81,cal_P_f_CC,v,Mirror generated variable calculation for P_f_CC,MirrorFunc,P_f_CC = P_f - 2 * P_f_EP,MW
 82,cal_L_CC,v,Mirror generated variable calculation for L_CC,MirrorFunc,L_CC = P_f_CC / P_f_L,m
 83,cal_L_CF,v,Mirror generated variable calculation for L_CF,MirrorFunc,L_CF = 1.0,m
