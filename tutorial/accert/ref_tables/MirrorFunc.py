@@ -182,6 +182,26 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def cal_CF_magnet_number(L_CC, L_CF):
         return L_CC / L_CF
+
+    @staticmethod
+    def cal_firstwall_vol(chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t):
+        firstwall_ir = axis_t + plasma_t + vacuum_t
+        firstwall_or = firstwall_ir + firstwall_t
+        return np.pi * chamber_length * (firstwall_or**2 - firstwall_ir**2)
+
+    @staticmethod
+    def cal_blanket1_vol(chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t):
+        blanket_ir = axis_t + plasma_t + vacuum_t + firstwall_t
+        blanket_or = blanket_ir + blanket1_t
+        return np.pi * chamber_length * (blanket_or**2 - blanket_ir**2)
+
+    @staticmethod
+    def cal_first_wall_cost(firstwall_vol, Be_rho, Be_c_raw, Be_m):
+        return firstwall_vol * Be_rho * Be_c_raw * Be_m / 1e6
+
+    @staticmethod
+    def cal_blanket_cost(blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m):
+        return blanket1_vol * Li4SiO4_rho * Li4SiO4_c_raw * Li4SiO4_m / 1e6
     
     ### Account Methods: ###
     
@@ -288,24 +308,9 @@ class MirrorFunc(Algorithm):
 
 
     @staticmethod
-    def Account_C22_1_1(inputs):
+    def Account_C22_1_1(first_wall_cost, blanket_cost):
         # First Wall and Blanket (and vacuum vessel)
-
-        L_magnet_to_magnet = inputs['L_EP']
-
-        L_cylinder = L_magnet_to_magnet 
-        
-        expander_cell_cost_result = MirrorFunc.expander_cell_cost(inputs)
-
-        end_plug_cylindrical_part = MirrorFunc.central_cell(inputs, L_cylinder)
-        end_plug_cylindrical_part_cost = end_plug_cylindrical_part['cost'].max()
-
-        central_cell_cylindrical_part = MirrorFunc.central_cell(inputs, inputs['L_CC'])
-        central_cell_cylindrical_part_cost = central_cell_cylindrical_part['cost'].max()
-
-        total_cost = central_cell_cylindrical_part_cost + 2 * end_plug_cylindrical_part_cost + 2 * expander_cell_cost_result
-        
-        return(total_cost/1e6)
+        return first_wall_cost + blanket_cost
 
     @staticmethod
     def Account_C22_1_2(HF_magnet_shield_cost):

@@ -504,6 +504,70 @@ def test_mirror_magnet_accounts_use_explicit_cost_variables(cursor):
     assert alg.run({"HF_magnet_number": 4.0, "HF_magnet_cost": 29.1}) == pytest.approx(116.4)
 
 
+def test_mirror_first_wall_and_blanket_use_pyfecons_scalar_defaults(cursor):
+    cursor.execute(
+        """
+        SELECT total_cost, alg_name, variables
+        FROM mirror_acco
+        WHERE code_of_account = ?;
+        """,
+        ("2211",),
+    )
+    total_cost, alg_name, variables = cursor.fetchone()
+    assert total_cost / 1e6 == pytest.approx(1217.1218954107624)
+    assert alg_name == "Account_C22_1_1"
+    assert variables == "first_wall_cost, blanket_cost"
+
+    cursor.execute(
+        """
+        SELECT var_name, var_value, var_unit, var_alg, var_need
+        FROM mirror_var
+        WHERE var_name IN (?, ?, ?, ?)
+        ORDER BY var_name;
+        """,
+        ("blanket1_vol", "blanket_cost", "first_wall_cost", "firstwall_vol"),
+    )
+    rows = {row[0]: row[1:] for row in cursor.fetchall()}
+    assert rows["firstwall_vol"][0] == pytest.approx(38.07610296150822)
+    assert rows["firstwall_vol"][1:] == (
+        "m3",
+        "cal_firstwall_vol",
+        "chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t",
+    )
+    assert rows["blanket1_vol"][0] == pytest.approx(422.230052642468)
+    assert rows["blanket1_vol"][1:] == (
+        "m3",
+        "cal_blanket1_vol",
+        "chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t",
+    )
+    assert rows["first_wall_cost"][0] == pytest.approx(1215.1036357591313)
+    assert rows["first_wall_cost"][1:] == (
+        "million",
+        "cal_first_wall_cost",
+        "firstwall_vol, Be_rho, Be_c_raw, Be_m",
+    )
+    assert rows["blanket_cost"][0] == pytest.approx(2.018259651630997)
+    assert rows["blanket_cost"][1:] == (
+        "million",
+        "cal_blanket_cost",
+        "blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m",
+    )
+
+    alg = MirrorFunc(
+        ind=1,
+        alg_name="Account_C22_1_1",
+        alg_for="c",
+        alg_description="",
+        alg_formulation="",
+        alg_units="million",
+        variables="first_wall_cost,blanket_cost",
+        constants="",
+    )
+    assert alg.run({"first_wall_cost": 1215.1036357591313, "blanket_cost": 2.018259651630997}) == pytest.approx(
+        1217.1218954107624
+    )
+
+
 def test_mirror_magnet_shield_account_uses_reference_variable(cursor):
     cursor.execute(
         """

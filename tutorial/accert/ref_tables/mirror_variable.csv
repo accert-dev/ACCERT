@@ -22,7 +22,7 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 21,cost_pump,"Cost of one vacuum pump, scaled from 1985 dollars",40000.0,dollar/pump,,,,0
 22,vpump_cap,Vacuum volume pumped by one vacuum pump in one second,4.166666666666667,m3/pump,,,no_vpumps,0
 23,no_vpumps,Number of vacuum pumps required to pump the full vacuum in one second,2.2619467105846507,1,cal_no_vpumps,"V_vac, vpump_cap",,0
-24,axis_t,str,,1,,,,
+24,axis_t,PyFECONS radial build axis thickness,0.0,m,,,"blanket1_vol, firstwall_vol",0
 25,axis_ir,str,,1,,,,
 26,lr,str,,1,,,,
 27,constructionworker,str,,1,,,,
@@ -198,3 +198,73 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 197,CF_magnet_cost,CF cost per magnet,2.751,million,cal_CF_magnet_cost,"n_unit, CF_magnet_number",,0
 198,HF_magnet_shield_cost,HF magnet shield cost per end plug,47.36847787,million,,,,0
 199,CF_magnet_number,One CF coil every L_CF m of central cell,52.0300751726645,1,cal_CF_magnet_number,"L_CC, L_CF",CF_magnet_cost,0
+200,firstwall_vol,Mirror generated parameter,38.07610296150822,m3,cal_firstwall_vol,"chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t",first_wall_cost,0
+201,blanket1_vol,Mirror generated parameter,422.230052642468,m3,cal_blanket1_vol,"chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t",blanket_cost,0
+202,first_wall_cost,Mirror generated parameter,1215.1036357591313,million,cal_first_wall_cost,"firstwall_vol, Be_rho, Be_c_raw, Be_m",,0
+203,blanket_cost,Mirror generated parameter,2.018259651630997,million,cal_blanket_cost,"blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m",,0
+204,chamber_length,PyFECONS magnetic mirror chamber length,12.0,m,,,"blanket1_vol, firstwall_vol",0
+205,plasma_t,PyFECONS radial build plasma thickness,4.9,m,,,"blanket1_vol, firstwall_vol",0
+206,vacuum_t,PyFECONS radial build vacuum thickness,0.1,m,,,"blanket1_vol, firstwall_vol",0
+207,firstwall_t,PyFECONS radial build first wall thickness,0.1,m,,,"blanket1_vol, firstwall_vol",0
+208,blanket1_t,PyFECONS radial build blanket thickness,1.0,m,,,blanket1_vol,0
+209,reflector_t,PyFECONS radial build reflector thickness,0.1,m,,,,0
+210,ht_shield_t,PyFECONS radial build high-temperature shield thickness,0.25,m,,,,0
+211,structure_t,PyFECONS radial build support structure thickness,0.2,m,,,,0
+212,gap1_t,PyFECONS radial build first gap thickness,0.5,m,,,,0
+213,vessel_t,PyFECONS radial build vessel thickness,0.2,m,,,,0
+214,coil_t,PyFECONS radial build coil thickness,1.76,m,,,,0
+215,gap2_t,PyFECONS radial build second gap thickness,1.0,m,,,,0
+216,lt_shield_t,PyFECONS radial build low-temperature shield thickness,0.3,m,,,,0
+217,bioshield_t,PyFECONS radial build bioshield thickness,1.0,m,,,,0
+218,FS_rho,PyFECONS Ferritic Steel density,7470.0,kg/m3,,,,0
+219,FS_c_raw,PyFECONS Ferritic Steel raw cost,10.0,dollar/kg,,,,0
+220,FS_m,PyFECONS Ferritic Steel manufacturing multiplier,3.0,1,,,,0
+221,FS_sigma,PyFECONS Ferritic Steel stress limit,450.0,MPa,,,,0
+222,Pb_rho,PyFECONS Lead density,9400.0,kg/m3,,,,0
+223,Pb_c_raw,PyFECONS Lead raw cost,2.4,dollar/kg,,,,0
+224,Pb_m,PyFECONS Lead manufacturing multiplier,1.5,1,,,,0
+225,Li4SiO4_rho,PyFECONS Lithium Silicate density,2390.0,kg/m3,,,blanket_cost,0
+226,Li4SiO4_c_raw,PyFECONS Lithium Silicate raw cost,1.0,dollar/kg,,,blanket_cost,0
+227,Li4SiO4_m,PyFECONS Lithium Silicate manufacturing multiplier,2.0,1,,,blanket_cost,0
+228,FLiBe_rho,PyFECONS FLiBe density,1900.0,kg/m3,,,,0
+229,FLiBe_c,PyFECONS FLiBe cost,40.0,dollar/m3,,,,0
+230,W_rho,PyFECONS Tungsten density,19300.0,kg/m3,,,,0
+231,W_c_raw,PyFECONS Tungsten raw cost,100.0,dollar/kg,,,,0
+232,W_m,PyFECONS Tungsten manufacturing multiplier,3.0,1,,,,0
+233,Li_rho,PyFECONS Lithium density,534.0,kg/m3,,,,0
+234,Li_c_raw,PyFECONS Lithium raw cost,70.0,dollar/kg,,,,0
+235,Li_m,PyFECONS Lithium manufacturing multiplier,1.5,1,,,,0
+236,BFS_rho,PyFECONS BFS density,7800.0,kg/m3,,,,0
+237,BFS_c_raw,PyFECONS BFS raw cost,30.0,dollar/kg,,,,0
+238,BFS_m,PyFECONS BFS manufacturing multiplier,2.0,1,,,,0
+239,SiC_rho,PyFECONS Silicon Carbide density,3200.0,kg/m3,,,,0
+240,SiC_c_raw,PyFECONS Silicon Carbide raw cost,14.49,dollar/kg,,,,0
+241,SiC_m,PyFECONS Silicon Carbide manufacturing multiplier,3.0,1,,,,0
+242,Inconel_rho,PyFECONS Inconel density,8440.0,kg/m3,,,,0
+243,Inconel_c_raw,PyFECONS Inconel raw cost,46.0,dollar/kg,,,,0
+244,Inconel_m,PyFECONS Inconel manufacturing multiplier,3.0,1,,,,0
+245,Cu_rho,PyFECONS Copper density,7300.0,kg/m3,,,,0
+246,Cu_c_raw,PyFECONS Copper raw cost,10.2,dollar/kg,,,,0
+247,Cu_m,PyFECONS Copper manufacturing multiplier,3.0,1,,,,0
+248,Polyimide_rho,PyFECONS Polyimide density,1430.0,kg/m3,,,,0
+249,Polyimide_c_raw,PyFECONS Polyimide raw cost,100.0,dollar/kg,,,,0
+250,Polyimide_m,PyFECONS Polyimide manufacturing multiplier,3.0,1,,,,0
+251,YBCO_rho,PyFECONS YBCO density,6200.0,kg/m3,,,,0
+252,YBCO_c,PyFECONS YBCO cost,55.0,dollar/m3,,,,0
+253,Concrete_rho,PyFECONS Concrete density,2300.0,kg/m3,,,,0
+254,Concrete_c_raw,PyFECONS Concrete raw cost,0.52,dollar/kg,,,,0
+255,Concrete_m,PyFECONS Concrete manufacturing multiplier,2.0,1,,,,0
+256,SS316_rho,PyFECONS Stainless Steel 316 density,7860.0,kg/m3,,,,0
+257,SS316_c_raw,PyFECONS Stainless Steel 316 raw cost,2.0,dollar/kg,,,,0
+258,SS316_m,PyFECONS Stainless Steel 316 manufacturing multiplier,2.0,1,,,,0
+259,SS316_sigma,PyFECONS Stainless Steel 316 stress limit,900.0,MPa,,,,0
+260,Nb3Sn_c,PyFECONS Niobium-Tin cost,5.0,dollar/m3,,,,0
+261,Incoloy_rho,PyFECONS Incoloy density,8170.0,kg/m3,,,,0
+262,Incoloy_c_raw,PyFECONS Incoloy raw cost,4.0,dollar/kg,,,,0
+263,Incoloy_m,PyFECONS Incoloy manufacturing multiplier,2.0,1,,,,0
+264,Be_rho,PyFECONS Beryllium density,1850.0,kg/m3,,,first_wall_cost,0
+265,Be_c_raw,PyFECONS Beryllium raw cost,5750.0,dollar/kg,,,first_wall_cost,0
+266,Be_m,PyFECONS Beryllium manufacturing multiplier,3.0,1,,,first_wall_cost,0
+267,Li2TiO3_rho,PyFECONS Lithium Titanate density,3430.0,kg/m3,,,,0
+268,Li2TiO3_c_raw,PyFECONS Lithium Titanate raw cost,1297.05,dollar/kg,,,,0
+269,Li2TiO3_m,PyFECONS Lithium Titanate manufacturing multiplier,3.0,1,,,,0

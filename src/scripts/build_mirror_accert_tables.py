@@ -159,6 +159,10 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "Q_eng": "P_egross, P_ine, P_other",
     "f_refrac": "Q_eng",
     "CF_magnet_number": "L_CC, L_CF",
+    "firstwall_vol": "chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t",
+    "blanket1_vol": "chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t",
+    "first_wall_cost": "firstwall_vol, Be_rho, Be_c_raw, Be_m",
+    "blanket_cost": "blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m",
 }
 
 MIRROR_GENERATED_VAR_FORMULAS = {
@@ -203,6 +207,16 @@ MIRROR_GENERATED_VAR_FORMULAS = {
     "Q_eng": ("Q_eng = P_egross / (P_ine + P_other)", "1"),
     "f_refrac": ("f_refrac = 1 / Q_eng", "1"),
     "CF_magnet_number": ("CF_magnet_number = L_CC / L_CF", "1"),
+    "firstwall_vol": (
+        "firstwall_vol = pi * chamber_length * ((axis_t + plasma_t + vacuum_t + firstwall_t)**2 - (axis_t + plasma_t + vacuum_t)**2)",
+        "m3",
+    ),
+    "blanket1_vol": (
+        "blanket1_vol = pi * chamber_length * ((axis_t + plasma_t + vacuum_t + firstwall_t + blanket1_t)**2 - (axis_t + plasma_t + vacuum_t + firstwall_t)**2)",
+        "m3",
+    ),
+    "first_wall_cost": ("first_wall_cost = firstwall_vol * Be_rho * Be_c_raw * Be_m / 1e6", "million"),
+    "blanket_cost": ("blanket_cost = blanket1_vol * Li4SiO4_rho * Li4SiO4_c_raw * Li4SiO4_m / 1e6", "million"),
 }
 
 MIRROR_CONSTANT_DEFAULTS = {
@@ -256,6 +270,73 @@ MIRROR_VARIABLE_OVERRIDES = {
         None,
         "million",
     ),
+    "chamber_length": ("PyFECONS magnetic mirror chamber length", 12, "m"),
+    "axis_t": ("PyFECONS radial build axis thickness", 0, "m"),
+    "plasma_t": ("PyFECONS radial build plasma thickness", 4.9, "m"),
+    "vacuum_t": ("PyFECONS radial build vacuum thickness", 0.1, "m"),
+    "firstwall_t": ("PyFECONS radial build first wall thickness", 0.1, "m"),
+    "blanket1_t": ("PyFECONS radial build blanket thickness", 1, "m"),
+    "reflector_t": ("PyFECONS radial build reflector thickness", 0.1, "m"),
+    "ht_shield_t": ("PyFECONS radial build high-temperature shield thickness", 0.25, "m"),
+    "structure_t": ("PyFECONS radial build support structure thickness", 0.2, "m"),
+    "gap1_t": ("PyFECONS radial build first gap thickness", 0.5, "m"),
+    "vessel_t": ("PyFECONS radial build vessel thickness", 0.2, "m"),
+    "coil_t": ("PyFECONS radial build coil thickness", 1.76, "m"),
+    "gap2_t": ("PyFECONS radial build second gap thickness", 1, "m"),
+    "lt_shield_t": ("PyFECONS radial build low-temperature shield thickness", 0.3, "m"),
+    "bioshield_t": ("PyFECONS radial build bioshield thickness", 1, "m"),
+    "FS_rho": ("PyFECONS Ferritic Steel density", 7470, "kg/m3"),
+    "FS_c_raw": ("PyFECONS Ferritic Steel raw cost", 10, "dollar/kg"),
+    "FS_m": ("PyFECONS Ferritic Steel manufacturing multiplier", 3, "1"),
+    "FS_sigma": ("PyFECONS Ferritic Steel stress limit", 450, "MPa"),
+    "Pb_rho": ("PyFECONS Lead density", 9400, "kg/m3"),
+    "Pb_c_raw": ("PyFECONS Lead raw cost", 2.4, "dollar/kg"),
+    "Pb_m": ("PyFECONS Lead manufacturing multiplier", 1.5, "1"),
+    "Li4SiO4_rho": ("PyFECONS Lithium Silicate density", 2390, "kg/m3"),
+    "Li4SiO4_c_raw": ("PyFECONS Lithium Silicate raw cost", 1, "dollar/kg"),
+    "Li4SiO4_m": ("PyFECONS Lithium Silicate manufacturing multiplier", 2, "1"),
+    "FLiBe_rho": ("PyFECONS FLiBe density", 1900, "kg/m3"),
+    "FLiBe_c": ("PyFECONS FLiBe cost", 40, "dollar/m3"),
+    "W_rho": ("PyFECONS Tungsten density", 19300, "kg/m3"),
+    "W_c_raw": ("PyFECONS Tungsten raw cost", 100, "dollar/kg"),
+    "W_m": ("PyFECONS Tungsten manufacturing multiplier", 3, "1"),
+    "Li_rho": ("PyFECONS Lithium density", 534, "kg/m3"),
+    "Li_c_raw": ("PyFECONS Lithium raw cost", 70, "dollar/kg"),
+    "Li_m": ("PyFECONS Lithium manufacturing multiplier", 1.5, "1"),
+    "BFS_rho": ("PyFECONS BFS density", 7800, "kg/m3"),
+    "BFS_c_raw": ("PyFECONS BFS raw cost", 30, "dollar/kg"),
+    "BFS_m": ("PyFECONS BFS manufacturing multiplier", 2, "1"),
+    "SiC_rho": ("PyFECONS Silicon Carbide density", 3200, "kg/m3"),
+    "SiC_c_raw": ("PyFECONS Silicon Carbide raw cost", 14.49, "dollar/kg"),
+    "SiC_m": ("PyFECONS Silicon Carbide manufacturing multiplier", 3, "1"),
+    "Inconel_rho": ("PyFECONS Inconel density", 8440, "kg/m3"),
+    "Inconel_c_raw": ("PyFECONS Inconel raw cost", 46, "dollar/kg"),
+    "Inconel_m": ("PyFECONS Inconel manufacturing multiplier", 3, "1"),
+    "Cu_rho": ("PyFECONS Copper density", 7300, "kg/m3"),
+    "Cu_c_raw": ("PyFECONS Copper raw cost", 10.2, "dollar/kg"),
+    "Cu_m": ("PyFECONS Copper manufacturing multiplier", 3, "1"),
+    "Polyimide_rho": ("PyFECONS Polyimide density", 1430, "kg/m3"),
+    "Polyimide_c_raw": ("PyFECONS Polyimide raw cost", 100, "dollar/kg"),
+    "Polyimide_m": ("PyFECONS Polyimide manufacturing multiplier", 3, "1"),
+    "YBCO_rho": ("PyFECONS YBCO density", 6200, "kg/m3"),
+    "YBCO_c": ("PyFECONS YBCO cost", 55, "dollar/m3"),
+    "Concrete_rho": ("PyFECONS Concrete density", 2300, "kg/m3"),
+    "Concrete_c_raw": ("PyFECONS Concrete raw cost", 13 / 25, "dollar/kg"),
+    "Concrete_m": ("PyFECONS Concrete manufacturing multiplier", 2, "1"),
+    "SS316_rho": ("PyFECONS Stainless Steel 316 density", 7860, "kg/m3"),
+    "SS316_c_raw": ("PyFECONS Stainless Steel 316 raw cost", 2, "dollar/kg"),
+    "SS316_m": ("PyFECONS Stainless Steel 316 manufacturing multiplier", 2, "1"),
+    "SS316_sigma": ("PyFECONS Stainless Steel 316 stress limit", 900, "MPa"),
+    "Nb3Sn_c": ("PyFECONS Niobium-Tin cost", 5, "dollar/m3"),
+    "Incoloy_rho": ("PyFECONS Incoloy density", 8170, "kg/m3"),
+    "Incoloy_c_raw": ("PyFECONS Incoloy raw cost", 4, "dollar/kg"),
+    "Incoloy_m": ("PyFECONS Incoloy manufacturing multiplier", 2, "1"),
+    "Be_rho": ("PyFECONS Beryllium density", 1850, "kg/m3"),
+    "Be_c_raw": ("PyFECONS Beryllium raw cost", 5750, "dollar/kg"),
+    "Be_m": ("PyFECONS Beryllium manufacturing multiplier", 3, "1"),
+    "Li2TiO3_rho": ("PyFECONS Lithium Titanate density", 3430, "kg/m3"),
+    "Li2TiO3_c_raw": ("PyFECONS Lithium Titanate raw cost", 1297.05, "dollar/kg"),
+    "Li2TiO3_m": ("PyFECONS Lithium Titanate manufacturing multiplier", 3, "1"),
 }
 
 TYPE_REPLACEMENTS = (
@@ -421,6 +502,13 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     values = {name: value for name, (value, _unit) in input_defaults.items()}
     values.update({name: value for name, (value, _unit) in MIRROR_CONSTANT_DEFAULTS.items()})
     values.update({name: value for name, (value, _unit) in MIRROR_REFERENCE_VAR_OVERRIDES.items()})
+    values.update(
+        {
+            name: value
+            for name, (_description, value, _unit) in MIRROR_VARIABLE_OVERRIDES.items()
+            if value is not None
+        }
+    )
     generated = {}
 
     generated["P_f_CC"] = values["P_f"] - 2 * values["P_f_EP"]
@@ -466,12 +554,30 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     generated["Q_eng"] = generated["P_egross"] / (generated["P_ine"] + generated["P_other"])
     generated["f_refrac"] = 1 / generated["Q_eng"]
     generated["CF_magnet_number"] = generated["L_CC"] / generated["L_CF"]
+    firstwall_ir = values["axis_t"] + values["plasma_t"] + values["vacuum_t"]
+    firstwall_or = firstwall_ir + values["firstwall_t"]
+    generated["firstwall_vol"] = math.pi * values["chamber_length"] * (firstwall_or**2 - firstwall_ir**2)
+    blanket_ir = firstwall_or
+    blanket_or = blanket_ir + values["blanket1_t"]
+    generated["blanket1_vol"] = math.pi * values["chamber_length"] * (blanket_or**2 - blanket_ir**2)
+    generated["first_wall_cost"] = (
+        generated["firstwall_vol"] * values["Be_rho"] * values["Be_c_raw"] * values["Be_m"] / 1e6
+    )
+    generated["blanket_cost"] = (
+        generated["blanket1_vol"]
+        * values["Li4SiO4_rho"]
+        * values["Li4SiO4_c_raw"]
+        * values["Li4SiO4_m"]
+        / 1e6
+    )
     generated.update({name: value for name, (value, _unit) in MIRROR_REFERENCE_VAR_OVERRIDES.items()})
     return generated
 
 
 def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     dependencies = _account_method_dependencies(algorithm_source)
+    input_defaults = _generate_inputs_defaults(algorithm_source)
+    generated_values = _mirror_generated_var_values(input_defaults)
     methods = set(dependencies)
     conn.execute("ALTER TABLE mirror_acco RENAME TO mirror_acco_raw")
     conn.execute(
@@ -504,6 +610,11 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
         variables = "rollup" if is_rollup else _account_variables(input_keys, account_calls)
         if is_rollup or account_calls or alg_name not in methods:
             alg_name = ""
+        normalized_total_cost = _dollar_value(total_cost)
+        if code == "2211":
+            normalized_total_cost = (
+                generated_values["first_wall_cost"] + generated_values["blanket_cost"]
+            ) * 1e6
         conn.execute(
             """
             INSERT INTO mirror_acco
@@ -515,7 +626,7 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
                 ind,
                 code,
                 description,
-                _dollar_value(total_cost),
+                normalized_total_cost,
                 level,
                 _mirror_parent_code_for_table(raw_code, int(level or 0), codes),
                 "Unchanged",

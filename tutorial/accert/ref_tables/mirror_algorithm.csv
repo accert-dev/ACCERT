@@ -16,7 +16,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 21,Account_C21_15,c,Account C2115 Rollup,MirrorFunc,P_egross,million
 22,Account_C21_16,c,Account C2116 Rollup,MirrorFunc,P_egross,million
 23,Account_C21_17,c,Account C2117 Rollup,MirrorFunc,P_egross,million
-26,Account_C22_1_1,c,Account C2211 Rollup,MirrorFunc,"L_CC, L_EP",million
+26,Account_C22_1_1,c,Account C2211 Rollup,MirrorFunc,"first_wall_cost, blanket_cost",million
 27,Account_C22_1_2,c,Account C2212 Rollup,MirrorFunc,HF_magnet_shield_cost,million
 29,Account_C22_1_3_1,c,Account C22131 Rollup,MirrorFunc,"HF_magnet_number, HF_magnet_cost",million
 30,Account_C22_1_3_2,c,Account C22132 Rollup,MirrorFunc,"LF_magnet_number, LF_magnet_cost",million
@@ -72,3 +72,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 107,cal_Q_eng,v,Mirror generated variable calculation for Q_eng,MirrorFunc,Q_eng = P_egross / (P_ine + P_other),1
 108,cal_f_refrac,v,Mirror generated variable calculation for f_refrac,MirrorFunc,f_refrac = 1 / Q_eng,1
 109,cal_CF_magnet_number,v,Mirror generated variable calculation for CF_magnet_number,MirrorFunc,CF_magnet_number = L_CC / L_CF,1
+110,cal_firstwall_vol,v,Mirror generated variable calculation for firstwall_vol,MirrorFunc,firstwall_vol = pi * chamber_length * ((axis_t + plasma_t + vacuum_t + firstwall_t)**2 - (axis_t + plasma_t + vacuum_t)**2),m3
+111,cal_blanket1_vol,v,Mirror generated variable calculation for blanket1_vol,MirrorFunc,blanket1_vol = pi * chamber_length * ((axis_t + plasma_t + vacuum_t + firstwall_t + blanket1_t)**2 - (axis_t + plasma_t + vacuum_t + firstwall_t)**2),m3
+112,cal_first_wall_cost,v,Mirror generated variable calculation for first_wall_cost,MirrorFunc,first_wall_cost = firstwall_vol * Be_rho * Be_c_raw * Be_m / 1e6,million
+113,cal_blanket_cost,v,Mirror generated variable calculation for blanket_cost,MirrorFunc,blanket_cost = blanket1_vol * Li4SiO4_rho * Li4SiO4_c_raw * Li4SiO4_m / 1e6,million
