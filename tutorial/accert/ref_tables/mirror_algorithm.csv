@@ -3,8 +3,6 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 2,add_account,v,Add an account to the cost_account object.,MirrorFunc,TODO,TODO
 3,generate_report,v,Generate a report based on user input.,MirrorFunc,TODO,TODO
 4,learning_credit,v,None,MirrorFunc,TODO,TODO
-5,Account_C20,c,Account C20 Rollup,MirrorFunc,rollup,million
-6,Account_C21,c,Account C21 Rollup,MirrorFunc,rollup,million
 7,Account_C21_1,c,Account C211 Rollup,MirrorFunc,P_egross,million
 8,Account_C21_2,c,Account C212 Rollup,MirrorFunc,P_egross,million
 9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,"application, P_egross",million
@@ -22,20 +20,15 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 21,Account_C21_15,c,Account C2115 Rollup,MirrorFunc,P_egross,million
 22,Account_C21_16,c,Account C2116 Rollup,MirrorFunc,P_egross,million
 23,Account_C21_17,c,Account C2117 Rollup,MirrorFunc,P_egross,million
-24,Account_C22,c,Account C22 Rollup,MirrorFunc,rollup,million
-25,Account_C22_1,c,Account C221 Rollup,MirrorFunc,rollup,million
 26,Account_C22_1_1,c,Account C2211 Rollup,MirrorFunc,"L_CC, L_EP",million
 27,Account_C22_1_2,c,Account C2212 Rollup,MirrorFunc,HF_magnet_shield_cost,million
-28,Account_C22_1_3,c,Account C2213 Rollup,MirrorFunc,rollup,million
 29,Account_C22_1_3_1,c,Account C22131 Rollup,MirrorFunc,"HF_magnet_number, HF_magnet_cost",million
 30,Account_C22_1_3_2,c,Account C22132 Rollup,MirrorFunc,"LF_magnet_number, LF_magnet_cost",million
 31,Account_C22_1_3_3,c,Account C22133 Rollup,MirrorFunc,"CF_magnet_number, CF_magnet_cost",million
-32,Account_C22_1_4,c,Account C2214 Rollup,MirrorFunc,rollup,million
 33,Account_C22_1_4_1,c,Account C22141 Rollup,MirrorFunc,"P_NBI, cost_factor",million
 34,Account_C22_1_4_2,c,Account C22142 Rollup,MirrorFunc,"P_ICRH, cost_factor",million
 35,Account_C22_1_4_3,c,Account C22143 Rollup,MirrorFunc,"P_ECH, cost_factor",million
 36,Account_C22_1_5,c,Account C2215 Rollup,MirrorFunc,reference value,million
-37,Account_C22_1_6,c,Account C2216 Rollup,MirrorFunc,rollup,million
 38,Account_C22_1_6_2,c,Account C22162 Rollup,MirrorFunc,reference value,million
 39,Account_C22_1_6_3,c,Account C22163 Rollup,MirrorFunc,"no_vpumps, cost_pump",million
 40,Account_C22_1_6_4,c,Account C22164 Rollup,MirrorFunc,reference value,million
@@ -43,10 +36,6 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 42,Account_C22_1_8,c,Account C2218 Rollup,MirrorFunc,reference value,million
 43,Account_C22_1_9,c,Account C2219 Rollup,MirrorFunc,"P_DECe, cost_factor",million
 44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,"L, N_module, construction_time, cost_factor",million
-45,Account_C22_2,c,Account C222 Rollup,MirrorFunc,rollup,million
-46,Account_C22_2_1,c,Account C2221 Rollup,MirrorFunc,"N_module, P_egross",million
-47,Account_C22_2_2,c,Account C2222 Rollup,MirrorFunc,P_th,million
-48,Account_C22_2_3,c,Account C2223 Rollup,MirrorFunc,reference value,million
 49,Account_C22_3,c,Account C223 Rollup,MirrorFunc,"N_module, P_th",million
 50,Account_C22_4,c,Account C224 Rollup,MirrorFunc,P_th,million
 51,Account_C22_5,c,Account C225 Rollup,MirrorFunc,cost_factor,million
@@ -58,10 +47,6 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 57,Account_C26,c,Account C26 Rollup,MirrorFunc,"N_module, P_enet",million
 58,Account_C27,c,Account C27 Rollup,MirrorFunc,reference value,million
 59,Account_C28,c,Account C28 Rollup,MirrorFunc,reference value,million
-60,Account_C29,c,Account C29 Rollup,MirrorFunc,rollup,million
-61,Account_OCC,c,Account OCC Rollup,MirrorFunc,TODO,million
-62,Account_TCC,c,Account TCC Rollup,MirrorFunc,TODO,million
-63,Account_C90,c,Account C90 Rollup,MirrorFunc,TODO,million
 64,PbLi_density,v,"Returns PbLi density (kg/m^3). Assumes the PbLi is a eutectic, which has",MirrorFunc,TODO,TODO
 65,Li_price,v,Return Li price (USD/kg) for enrichment levels above 90% 6Li,MirrorFunc,TODO,TODO
 66,PbLi_price,v,None,MirrorFunc,TODO,TODO

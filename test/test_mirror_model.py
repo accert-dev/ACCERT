@@ -132,15 +132,26 @@ def test_mirror_parent_accounts_are_rollups_without_algorithms(cursor):
         WHERE code_of_account IN (?, ?, ?, ?, ?)
         ORDER BY code_of_account;
         """,
-        ("21", "22", "221", "2213", "29"),
+        ("20", "21", "22", "221", "2213"),
     )
     assert cursor.fetchall() == [
+        ("20", "", "rollup"),
         ("21", "", "rollup"),
         ("22", "", "rollup"),
         ("221", "", "rollup"),
         ("2213", "", "rollup"),
-        ("29", "", "rollup"),
     ]
+
+    cursor.execute(
+        """
+        SELECT code_of_account, supaccount
+        FROM mirror_acco
+        WHERE code_of_account IN (?, ?, ?)
+        ORDER BY code_of_account;
+        """,
+        ("21", "22", "29"),
+    )
+    assert cursor.fetchall() == [("21", "20"), ("22", "20"), ("29", "20")]
 
 
 def test_mirror_variable_links_are_reversed_from_var_need(cursor):

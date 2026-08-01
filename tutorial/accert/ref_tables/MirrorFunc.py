@@ -183,42 +183,7 @@ class MirrorFunc(Algorithm):
     def cal_CF_magnet_number(L_CC, L_CF):
         return L_CC / L_CF
     
-    ### Account Methods: ### 
-    @staticmethod
-    def Account_C20(inputs):
-        return(
-            MirrorFunc.Account_C21(inputs) +
-            MirrorFunc.Account_C22(inputs) +
-            MirrorFunc.Account_C23(inputs) +
-            MirrorFunc.Account_C24(inputs) +
-            MirrorFunc.Account_C25(inputs) +
-            MirrorFunc.Account_C26(inputs) +
-            MirrorFunc.Account_C27(inputs) +
-            MirrorFunc.Account_C28(inputs) +
-            MirrorFunc.Account_C29(inputs)
-            )
-    
-    @staticmethod
-    def Account_C21(inputs):
-        return(
-            MirrorFunc.Account_C21_1(inputs) +
-            MirrorFunc.Account_C21_2(inputs) +
-            MirrorFunc.Account_C21_3(inputs) +
-            MirrorFunc.Account_C21_4(inputs) +
-            MirrorFunc.Account_C21_5(inputs) +
-            MirrorFunc.Account_C21_6(inputs) +
-            MirrorFunc.Account_C21_7(inputs) +
-            MirrorFunc.Account_C21_8(inputs) +
-            MirrorFunc.Account_C21_9(inputs) +
-            MirrorFunc.Account_C21_10(inputs) +
-            MirrorFunc.Account_C21_11(inputs) +
-            MirrorFunc.Account_C21_12(inputs) +
-            MirrorFunc.Account_C21_13(inputs) +
-            MirrorFunc.Account_C21_14(inputs) +
-            MirrorFunc.Account_C21_15(inputs) +
-            MirrorFunc.Account_C21_16(inputs) +
-            MirrorFunc.Account_C21_17(inputs)
-            )
+    ### Account Methods: ###
     
     @staticmethod
     def Account_C21_1(P_egross):
@@ -323,38 +288,6 @@ class MirrorFunc(Algorithm):
 
 
     @staticmethod
-    def Account_C22(inputs):
-        # Rollup
-        return(
-            MirrorFunc.Account_C22_1(inputs) +
-            MirrorFunc.Account_C22_2(inputs) +
-            MirrorFunc.Account_C22_3(inputs) +
-            MirrorFunc.Account_C22_4(inputs) +
-            MirrorFunc.Account_C22_5(inputs) +
-            MirrorFunc.Account_C22_6(inputs) +
-            MirrorFunc.Account_C22_7(inputs)
-            )
-
-
-    @staticmethod
-    def Account_C22_1(inputs):
-        # This is a special case and is NOT calculated using Woodruff's model,
-        # However, I maintained the naming convention for convenience
-        # Rollup
-        return(
-            MirrorFunc.Account_C22_1_1(inputs) +
-            MirrorFunc.Account_C22_1_2(inputs) +
-            MirrorFunc.Account_C22_1_3(inputs) +
-            MirrorFunc.Account_C22_1_4(inputs) +
-            MirrorFunc.Account_C22_1_5(inputs) +
-            MirrorFunc.Account_C22_1_6(inputs) +
-            MirrorFunc.Account_C22_1_7(inputs) +
-            MirrorFunc.Account_C22_1_8(inputs) +
-            MirrorFunc.Account_C22_1_9(inputs) +
-            MirrorFunc.Account_C22_1_11(inputs)
-            )
-
-    @staticmethod
     def Account_C22_1_1(inputs):
         # First Wall and Blanket (and vacuum vessel)
 
@@ -381,16 +314,6 @@ class MirrorFunc(Algorithm):
         return(2 * HF_magnet_shield_cost)
 
     @staticmethod
-    def Account_C22_1_3(inputs):
-        # Coils
-        # Rollup
-        return(
-            MirrorFunc.Account_C22_1_3_1(inputs['HF_magnet_number'], inputs['HF_magnet_cost']) +
-            MirrorFunc.Account_C22_1_3_2(inputs['LF_magnet_number'], inputs['LF_magnet_cost']) +
-            MirrorFunc.Account_C22_1_3_3(inputs['CF_magnet_number'], inputs['CF_magnet_cost'])
-            )
-
-    @staticmethod
     def Account_C22_1_3_1(HF_magnet_number, HF_magnet_cost):
         # HF Coils - Quantity 4
         # 2 per end cell
@@ -411,16 +334,6 @@ class MirrorFunc(Algorithm):
         return(CF_magnet_number * CF_magnet_cost)
 
     @staticmethod
-    def Account_C22_1_4(inputs):
-        # Supplemenatry Heating
-        # Rollup
-        return(
-            MirrorFunc.Account_C22_1_4_1(inputs) + 
-            MirrorFunc.Account_C22_1_4_2(inputs) +
-            MirrorFunc.Account_C22_1_4_3(inputs)
-            )
-
-    @staticmethod
     def Account_C22_1_4_1(P_NBI, cost_factor):
         # NBI
         return(7.0642 * P_NBI * cost_factor)
@@ -439,24 +352,6 @@ class MirrorFunc(Algorithm):
     def Account_C22_1_5():
         # Primary Structure and Support
         return(0)
-
-    @staticmethod
-    def Account_C22_1_6(inputs):
-        # Vacuum Systems
-        # Rollup
-        return(
-            # Account_C22_1_6_1(inputs) + 
-            MirrorFunc.Account_C22_1_6_2(inputs) +
-            MirrorFunc.Account_C22_1_6_3(inputs) + 
-            MirrorFunc.Account_C22_1_6_4(inputs)
-            )
-
-
-    # def Account_C22_1_6_1(inputs):
-        # Vacuum Vessel
-        # Tracked in radial builds and folded into blanket
-        # return(0)
-
 
     @staticmethod
     def Account_C22_1_6_2():
@@ -530,15 +425,6 @@ class MirrorFunc(Algorithm):
         C220111 = (C_22_1_11_in + C_22_1_11_1_in + C_22_1_11_2_in + C_22_1_11_3_in + C_22_1_11_4_in + C_22_1_11_5_in + C_22_1_11_6_in + C_22_1_11_7_in + C_22_1_11_8_in + C_22_1_11_9_in + C_22_1_11_10_in)
 
         return(C220111 * cost_factor)
-
-    @staticmethod
-    def Account_C22_2(inputs):
-        # Main and Secondary Coolant
-        return(
-            MirrorFunc.Account_C22_2_1(inputs) +
-            MirrorFunc.Account_C22_2_2(inputs) +
-            MirrorFunc.Account_C22_2_3(inputs)
-            )
 
     @staticmethod
     def Account_C22_2_1(N_module, P_egross):
@@ -633,29 +519,6 @@ class MirrorFunc(Algorithm):
     def Account_C28():
         # Digital Twin
         return(5)
-
-    @staticmethod
-    def Account_C29(inputs):
-        # Contingency on Direct Capital Costs
-        
-        # I may have to change the way that I do sums as this must be done separately?
-        # C21 = sum(C21.1 + C21.2 + ...)
-
-        # Rollup
-        
-        if not(inputs['NOAK']) and inputs['include_contingency']:
-            return(0.1 * (
-                MirrorFunc.Account_C21(inputs) + 
-                MirrorFunc.Account_C22(inputs) + 
-                MirrorFunc.Account_C23(inputs) + 
-                MirrorFunc.Account_C24(inputs) + 
-                MirrorFunc.Account_C25(inputs) + 
-                MirrorFunc.Account_C26(inputs) + 
-                MirrorFunc.Account_C27(inputs) +
-                MirrorFunc.Account_C28(inputs)))
-        else:
-            return(0)
-
 
     ### Other Methods: ###
     @staticmethod

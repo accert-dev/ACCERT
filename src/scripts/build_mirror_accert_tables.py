@@ -337,6 +337,13 @@ def _mirror_parent_code(code_of_account: str, level: int) -> str:
     return ""
 
 
+def _mirror_parent_code_for_table(code_of_account: str, level: int, codes: set[str]) -> str:
+    parent = _mirror_parent_code(code_of_account, level)
+    if parent == "2" and "20" in codes:
+        return "20"
+    return parent
+
+
 def _dollar_value(value: str | float | int | None) -> float | None:
     if value in (None, ""):
         return None
@@ -480,12 +487,22 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
         ORDER BY ind
         """
     ).fetchall()
+    codes = {
+        _mirror_code(raw_code)
+        for _ind, raw_code, _description, _total_cost, _level, _prn, _fun_unit in rows
+    }
+    rollup_codes = {
+        _mirror_parent_code_for_table(raw_code, int(level or 0), codes)
+        for _ind, raw_code, _description, _total_cost, level, _prn, _fun_unit in rows
+        if _mirror_parent_code_for_table(raw_code, int(level or 0), codes)
+    }
     for ind, raw_code, description, total_cost, level, prn, fun_unit in rows:
         code = _mirror_code(raw_code)
         alg_name = _mirror_method_name(raw_code)
         input_keys, account_calls = dependencies.get(alg_name, ([], []))
-        variables = _account_variables(input_keys, account_calls)
-        if account_calls or alg_name not in methods:
+        is_rollup = code in rollup_codes
+        variables = "rollup" if is_rollup else _account_variables(input_keys, account_calls)
+        if is_rollup or account_calls or alg_name not in methods:
             alg_name = ""
         conn.execute(
             """
@@ -500,7 +517,7 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
                 description,
                 _dollar_value(total_cost),
                 level,
-                _mirror_parent_code(raw_code, int(level or 0)),
+                _mirror_parent_code_for_table(raw_code, int(level or 0), codes),
                 "Unchanged",
                 prn,
                 alg_name,
@@ -654,7 +671,16 @@ def _write_default_inputs_csv(algorithm_source: Path, path: Path) -> int:
 
 def _normalize_mirror_algorithm_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     dependencies = _account_method_dependencies(algorithm_source)
+    used_account_algorithms = {
+        row[0]
+        for row in conn.execute("SELECT DISTINCT alg_name FROM mirror_acco WHERE COALESCE(alg_name, '') != ''")
+    }
+    for (alg_name,) in conn.execute("SELECT alg_name FROM mirror_alg WHERE alg_for = 'c'").fetchall():
+        if alg_name not in used_account_algorithms:
+            conn.execute("DELETE FROM mirror_alg WHERE alg_name = ?", (alg_name,))
     for alg_name, (input_keys, account_calls) in dependencies.items():
+        if alg_name not in used_account_algorithms:
+            continue
         variables = _account_variables(input_keys, account_calls)
         conn.execute(
             "UPDATE mirror_alg SET alg_formulation = ?, alg_units = 'million' WHERE alg_name = ?",
