@@ -32,6 +32,78 @@ TABLES = {
 }
 DEFAULT_INPUT_FILE = "mirror_default_inputs.csv"
 
+MIRROR_INPUT_DEFAULTS = {
+    "application": "heat",
+    "P_f": 1,
+    "P_f_L": 1,
+    "P_f_EP": 1,
+    "P_NBI": 1,
+    "P_ECH": 1,
+    "P_ICRH": 1,
+    "M_n": 1.1,
+    "N_module": 1,
+    "f_pump": 0.03,
+    "f_sub": 0.04,
+    "f_cryo": 0.01,
+    "P_pump": 1,
+    "P_sub_cont": 1,
+    "P_cryo": 1,
+    "P_pfcool": 0,
+    "P_thcool": 0,
+    "P_coils": 0,
+    "P_aux": 1,
+    "eta_th": 0.50,
+    "eta_DEC": 0.90,
+    "eta_pump": 0.98,
+    "eta_NBI": 0.50,
+    "eta_ECH": 0.50,
+    "eta_ICRH": 0.50,
+    "verbose": 0,
+    "exact": 0,
+    "NOAK": 0,
+    "n_unit": 0,
+    "construction_time": 6,
+    "lifetime": 30,
+    "replacement": 10,
+    "availability": 0.90,
+    "discount": 0.0245,
+    "LSA": 2,
+    "cost_file": "woodruff-data.csv",
+    "method": "new",
+    "include_decommissioning": 0,
+    "include_tax": 0,
+    "include_licensing": 0,
+    "include_contingency": 0,
+    "hf_magnet_length": 1,
+    "hf_magnet_shielding_thickness": 1,
+    "a_EC": 1,
+    "expander_cell_vessel_thickness": 0.01,
+    "expander_cell_vessel_material": "SS316",
+    "vacuum_gap_CC": 0.01,
+    "first_wall_material": "W",
+    "first_wall_thickness": 0.01,
+    "vacuum_vessel_material": "SS316",
+    "vacuum_vessel_thickness": 0.01,
+    "multiplier_material": "Pb",
+    "multiplier_thickness": 0.01,
+    "blanket_coolant_material": "Natural PbLi",
+    "blanket_thickness": 1.00,
+    "blanket_coolant_fraction": 0.90,
+    "blanket_structural_material": "SS316",
+    "blanket_structural_fraction": 0.10,
+    "outer_vessel_thickness": 0.01,
+    "L_EP": 1,
+    "L_EC": 1,
+    "a_CC": 1,
+    "a_EP": 1,
+    "save": 1,
+    "load": 0,
+    "filename": "",
+    "run_name": "",
+}
+
+MIRROR_DEFAULT_EXPORT_EXCLUDE = {"verbose", "exact", "save", "load"}
+
 MIRROR_ACCOUNT_COLUMNS = [
     ("ind", "INTEGER"),
     ("code_of_account", "TEXT NOT NULL"),
@@ -472,27 +544,12 @@ def _account_variables(input_keys: list[str], account_calls: list[str]) -> str:
     return ", ".join(HUMAN_INPUT_TO_VAR.get(key, key) for key in input_keys)
 
 
-def _literal_default(node: ast.AST):
-    value = ast.literal_eval(node)
-    if isinstance(value, bool):
-        return int(value)
-    if value is None:
-        return ""
-    return value
-
-
-def _generate_inputs_defaults(algorithm_source: Path) -> dict[str, tuple[object, str]]:
-    module = ast.parse(algorithm_source.read_text(encoding="utf-8"))
-    klass = next(node for node in module.body if isinstance(node, ast.ClassDef) and node.name == "MirrorFunc")
-    method = next(node for node in klass.body if isinstance(node, ast.FunctionDef) and node.name == "generate_inputs")
-    args = method.args.args
-    defaults = method.args.defaults
-    default_start = len(args) - len(defaults)
+def _mirror_input_defaults(_algorithm_source: Path | None = None) -> dict[str, tuple[object, str]]:
     values = {}
-    for arg, default in zip(args[default_start:], defaults):
-        if arg.arg in {"verbose", "exact", "save", "load"}:
+    for name, value in MIRROR_INPUT_DEFAULTS.items():
+        if name in MIRROR_DEFAULT_EXPORT_EXCLUDE:
             continue
-        values[arg.arg] = (_literal_default(default), MIRROR_INPUT_UNITS.get(arg.arg, "1"))
+        values[name] = (value, MIRROR_INPUT_UNITS.get(name, "1"))
     values["HF_magnet_number"] = (4, "1")
     values["LF_magnet_number"] = (2, "1")
     return values
@@ -576,7 +633,7 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
 
 def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     dependencies = _account_method_dependencies(algorithm_source)
-    input_defaults = _generate_inputs_defaults(algorithm_source)
+    input_defaults = _mirror_input_defaults(algorithm_source)
     generated_values = _mirror_generated_var_values(input_defaults)
     methods = set(dependencies)
     conn.execute("ALTER TABLE mirror_acco RENAME TO mirror_acco_raw")
@@ -646,7 +703,7 @@ def _split_vars(value: str | None) -> list[str]:
 
 
 def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
-    input_defaults = _generate_inputs_defaults(algorithm_source)
+    input_defaults = _mirror_input_defaults(algorithm_source)
     generated_values = _mirror_generated_var_values(input_defaults)
     conn.execute("UPDATE mirror_var SET var_alg = '' WHERE var_alg = 'TODO'")
     conn.execute("UPDATE mirror_var SET var_need = '' WHERE var_need = 'TODO'")
@@ -782,7 +839,7 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
 def _write_default_inputs_csv(algorithm_source: Path, path: Path) -> int:
     rows = [
         (name, value, unit)
-        for name, (value, unit) in sorted(_generate_inputs_defaults(algorithm_source).items())
+        for name, (value, unit) in sorted(_mirror_input_defaults(algorithm_source).items())
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
