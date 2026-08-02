@@ -47,6 +47,25 @@ def test_mirror_func_does_not_keep_legacy_generate_inputs():
     assert not hasattr(MirrorFunc, "generate_inputs")
 
 
+def test_mirror_func_does_not_keep_legacy_dataframe_helpers():
+    removed_helpers = {
+        "PbLi_density",
+        "Li_price",
+        "PbLi_price",
+        "V_cylindrical_shell",
+        "V_inverse_triangular_washer",
+        "create_radial_build",
+        "add_new_layer",
+        "add_fractional_layer",
+        "build_central_cell",
+        "central_cell_cost",
+        "central_cell",
+        "expander_cell_cost",
+        "HF_magnet_shield_cost",
+    }
+    assert all(not hasattr(MirrorFunc, helper) for helper in removed_helpers)
+
+
 def test_mirror_setup_table_names():
     accert = Accert.__new__(Accert)
     accert.use_gncoa = False
