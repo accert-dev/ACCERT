@@ -589,9 +589,19 @@ def test_mirror_first_wall_and_blanket_use_legacy_scalar_super_variables(cursor)
         """
         SELECT COUNT(*)
         FROM mirror_var
-        WHERE var_name IN (?, ?, ?, ?);
+        WHERE var_name IN (?, ?, ?, ?, ?, ?, ?, ?, ?);
         """,
-        ("blanket1_vol", "blanket_cost", "first_wall_cost", "firstwall_vol"),
+        (
+            "blanket1_vol",
+            "blanket_cost",
+            "central_cell_cylindrical_part",
+            "end_plug_cylindrical_part",
+            "first_wall_cost",
+            "firstwall_vol",
+            "L_cylinder",
+            "L_magnet_to_magnet",
+            "total_cost",
+        ),
     )
     assert cursor.fetchone()[0] == 0
 

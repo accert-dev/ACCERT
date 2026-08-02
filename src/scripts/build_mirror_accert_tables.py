@@ -104,6 +104,14 @@ MIRROR_INPUT_DEFAULTS = {
 
 MIRROR_DEFAULT_EXPORT_EXCLUDE = {"verbose", "exact", "save", "load"}
 
+MIRROR_UNUSED_C2211_FRAME_VARIABLES = {
+    "L_magnet_to_magnet",
+    "L_cylinder",
+    "end_plug_cylindrical_part",
+    "central_cell_cylindrical_part",
+    "total_cost",
+}
+
 MIRROR_ACCOUNT_COLUMNS = [
     ("ind", "INTEGER"),
     ("code_of_account", "TEXT NOT NULL"),
@@ -988,6 +996,13 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
             "UPDATE mirror_var SET v_linked = ? WHERE var_name = ?",
             (", ".join(sorted(set(links))), var_name),
         )
+    conn.executemany(
+        "DELETE FROM mirror_var WHERE var_name = ?",
+        [(var_name,) for var_name in sorted(MIRROR_UNUSED_C2211_FRAME_VARIABLES)],
+    )
+    rows = conn.execute("SELECT rowid FROM mirror_var ORDER BY ind, rowid").fetchall()
+    for new_ind, (rowid,) in enumerate(rows, start=1):
+        conn.execute("UPDATE mirror_var SET ind = ? WHERE rowid = ?", (new_ind, rowid))
 
 
 def _write_default_inputs_csv(algorithm_source: Path, path: Path) -> int:
