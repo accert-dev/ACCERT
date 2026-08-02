@@ -180,24 +180,178 @@ class MirrorFunc(Algorithm):
         return L_CC / L_CF
 
     @staticmethod
-    def cal_firstwall_vol(chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t):
-        firstwall_ir = axis_t + plasma_t + vacuum_t
-        firstwall_or = firstwall_ir + firstwall_t
-        return np.pi * chamber_length * (firstwall_or**2 - firstwall_ir**2)
+    def cal_rho_PbLi(T, f_6Li):
+        f_6Li_natural = 0.075
+        rho_6Li = 460.0
+        rho_7Li = 537.0
+        T_K = T + 273.15
+        rho_PbLi = 10520.35 - 1.19051 * T_K
+        return rho_PbLi * (rho_6Li * f_6Li + rho_7Li * (1 - f_6Li)) / (
+            rho_6Li * f_6Li_natural + rho_7Li * (1 - f_6Li_natural)
+        )
 
     @staticmethod
-    def cal_blanket1_vol(chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t):
-        blanket_ir = axis_t + plasma_t + vacuum_t + firstwall_t
-        blanket_or = blanket_ir + blanket1_t
-        return np.pi * chamber_length * (blanket_or**2 - blanket_ir**2)
+    def cal_P_Li(f_6Li):
+        if f_6Li == 0.075:
+            return 15.152
+        if f_6Li >= 0.90:
+            points = [(0.90, 1), (0.99, 2), (0.999, 4), (0.9999, 8), (0.99999, 16)]
+            for (x0, y0), (x1, y1) in zip(points, points[1:]):
+                if x0 <= f_6Li <= x1:
+                    return (y0 + (y1 - y0) * (f_6Li - x0) / (x1 - x0)) * 70
+        raise ValueError("Lithium pricing at this enrichment level is not supported")
 
     @staticmethod
-    def cal_first_wall_cost(firstwall_vol, Be_rho, Be_c_raw, Be_m):
-        return firstwall_vol * Be_rho * Be_c_raw * Be_m / 1e6
+    def cal_P_PbLi(Pb_c_raw, P_Li):
+        f_Li = 0.17
+        return (1 - f_Li) * Pb_c_raw + f_Li * P_Li
 
     @staticmethod
-    def cal_blanket_cost(blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m):
-        return blanket1_vol * Li4SiO4_rho * Li4SiO4_c_raw * Li4SiO4_m / 1e6
+    def cal_central_cell_cylindrical_part_cost(
+        L_CC,
+        a_CC,
+        vacuum_gap_CC,
+        first_wall_thickness,
+        vacuum_vessel_thickness,
+        multiplier_thickness,
+        blanket_thickness,
+        blanket_coolant_fraction,
+        blanket_structural_fraction,
+        outer_vessel_thickness,
+        W_rho,
+        W_c_raw,
+        W_m,
+        SS316_rho,
+        SS316_c_raw,
+        SS316_m,
+        Pb_rho,
+        Pb_c_raw,
+        Pb_m,
+        rho_PbLi,
+        P_PbLi,
+    ):
+        return MirrorFunc._central_cell_cylindrical_cost(
+            L_CC,
+            a_CC,
+            vacuum_gap_CC,
+            first_wall_thickness,
+            vacuum_vessel_thickness,
+            multiplier_thickness,
+            blanket_thickness,
+            blanket_coolant_fraction,
+            blanket_structural_fraction,
+            outer_vessel_thickness,
+            W_rho,
+            W_c_raw,
+            W_m,
+            SS316_rho,
+            SS316_c_raw,
+            SS316_m,
+            Pb_rho,
+            Pb_c_raw,
+            Pb_m,
+            rho_PbLi,
+            P_PbLi,
+        )
+
+    @staticmethod
+    def cal_end_plug_cylindrical_part_cost(
+        L_EP,
+        a_CC,
+        vacuum_gap_CC,
+        first_wall_thickness,
+        vacuum_vessel_thickness,
+        multiplier_thickness,
+        blanket_thickness,
+        blanket_coolant_fraction,
+        blanket_structural_fraction,
+        outer_vessel_thickness,
+        W_rho,
+        W_c_raw,
+        W_m,
+        SS316_rho,
+        SS316_c_raw,
+        SS316_m,
+        Pb_rho,
+        Pb_c_raw,
+        Pb_m,
+        rho_PbLi,
+        P_PbLi,
+    ):
+        return MirrorFunc._central_cell_cylindrical_cost(
+            L_EP,
+            a_CC,
+            vacuum_gap_CC,
+            first_wall_thickness,
+            vacuum_vessel_thickness,
+            multiplier_thickness,
+            blanket_thickness,
+            blanket_coolant_fraction,
+            blanket_structural_fraction,
+            outer_vessel_thickness,
+            W_rho,
+            W_c_raw,
+            W_m,
+            SS316_rho,
+            SS316_c_raw,
+            SS316_m,
+            Pb_rho,
+            Pb_c_raw,
+            Pb_m,
+            rho_PbLi,
+            P_PbLi,
+        )
+
+    @staticmethod
+    def _central_cell_cylindrical_cost(
+        length,
+        a_CC,
+        vacuum_gap_CC,
+        first_wall_thickness,
+        vacuum_vessel_thickness,
+        multiplier_thickness,
+        blanket_thickness,
+        blanket_coolant_fraction,
+        blanket_structural_fraction,
+        outer_vessel_thickness,
+        W_rho,
+        W_c_raw,
+        W_m,
+        SS316_rho,
+        SS316_c_raw,
+        SS316_m,
+        Pb_rho,
+        Pb_c_raw,
+        Pb_m,
+        rho_PbLi,
+        P_PbLi,
+    ):
+        radius = a_CC + vacuum_gap_CC
+        total = 0.0
+
+        r_in = radius
+        radius += first_wall_thickness
+        total += np.pi * length * (radius**2 - r_in**2) * W_rho * W_c_raw * W_m
+
+        r_in = radius
+        radius += vacuum_vessel_thickness
+        total += np.pi * length * (radius**2 - r_in**2) * SS316_rho * SS316_c_raw * SS316_m
+
+        r_in = radius
+        radius += multiplier_thickness
+        total += np.pi * length * (radius**2 - r_in**2) * Pb_rho * Pb_c_raw * Pb_m
+
+        r_in = radius
+        radius += blanket_thickness
+        blanket_volume = np.pi * length * (radius**2 - r_in**2)
+        total += blanket_volume * blanket_coolant_fraction * rho_PbLi * P_PbLi
+        total += blanket_volume * blanket_structural_fraction * SS316_rho * SS316_c_raw * SS316_m
+
+        r_in = radius
+        radius += outer_vessel_thickness
+        total += np.pi * length * (radius**2 - r_in**2) * SS316_rho * SS316_c_raw * SS316_m
+
+        return total / 1e6
 
     @staticmethod
     def cal_expander_cell_cost_result(
@@ -353,9 +507,9 @@ class MirrorFunc(Algorithm):
 
 
     @staticmethod
-    def Account_C22_1_1(first_wall_cost, blanket_cost):
+    def Account_C22_1_1(central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result):
         # First Wall and Blanket (and vacuum vessel)
-        return first_wall_cost + blanket_cost
+        return central_cell_cylindrical_part_cost + 2 * end_plug_cylindrical_part_cost + 2 * expander_cell_cost_result
 
     @staticmethod
     def Account_C22_1_2(HF_magnet_shield_cost):

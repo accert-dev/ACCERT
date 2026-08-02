@@ -29,7 +29,7 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 28,2117,Ventilation_Stack,4269265.632,2,21,Unchanged,0.0008274829229504582,Account_C21_17,million,P_egross
 29,22,Heat_Island_Plant_Equipment,1111998920.0,1,20,Unchanged,0.21553124025414422,,million,rollup
 30,221,Heat_Island_Components,901967566.8,2,22,Unchanged,0.17482228160924532,,million,rollup
-31,2211,First_Wall_and_Blanket,1217121895.4107623,3,221,Unchanged,0.008371891625683487,Account_C22_1_1,million,"first_wall_cost, blanket_cost"
+31,2211,First_Wall_and_Blanket,511083.5873559177,3,221,Unchanged,0.008371891625683487,Account_C22_1_1,million,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result"
 32,2212,Magnet_Radiation_Shield,70016988.37318401,3,221,Unchanged,0.01836222428034747,Account_C22_1_2,million,HF_magnet_shield_cost
 33,2213,Coils,272039976.79999995,3,221,Unchanged,0.05272767135278568,,million,rollup
 34,22131,HF_Coils,116400000.0,4,2213,Unchanged,0.022561025837671125,Account_C22_1_3_1,million,"HF_magnet_number, HF_magnet_cost"

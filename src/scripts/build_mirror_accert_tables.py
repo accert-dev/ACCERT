@@ -230,10 +230,21 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "Q_eng": "P_egross, P_ine, P_other",
     "f_refrac": "Q_eng",
     "CF_magnet_number": "L_CC, L_CF",
-    "firstwall_vol": "chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t",
-    "blanket1_vol": "chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t",
-    "first_wall_cost": "firstwall_vol, Be_rho, Be_c_raw, Be_m",
-    "blanket_cost": "blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m",
+    "rho_PbLi": "T, f_6Li",
+    "P_Li": "f_6Li",
+    "P_PbLi": "Pb_c_raw, P_Li",
+    "central_cell_cylindrical_part_cost": (
+        "L_CC, a_CC, vacuum_gap_CC, first_wall_thickness, vacuum_vessel_thickness, "
+        "multiplier_thickness, blanket_thickness, blanket_coolant_fraction, "
+        "blanket_structural_fraction, outer_vessel_thickness, W_rho, W_c_raw, W_m, "
+        "SS316_rho, SS316_c_raw, SS316_m, Pb_rho, Pb_c_raw, Pb_m, rho_PbLi, P_PbLi"
+    ),
+    "end_plug_cylindrical_part_cost": (
+        "L_EP, a_CC, vacuum_gap_CC, first_wall_thickness, vacuum_vessel_thickness, "
+        "multiplier_thickness, blanket_thickness, blanket_coolant_fraction, "
+        "blanket_structural_fraction, outer_vessel_thickness, W_rho, W_c_raw, W_m, "
+        "SS316_rho, SS316_c_raw, SS316_m, Pb_rho, Pb_c_raw, Pb_m, rho_PbLi, P_PbLi"
+    ),
     "expander_cell_cost_result": (
         "L_EC, a_EC, expander_cell_vessel_thickness, SS316_rho, SS316_c_raw, SS316_m"
     ),
@@ -285,16 +296,17 @@ MIRROR_GENERATED_VAR_FORMULAS = {
     "Q_eng": ("Q_eng = P_egross / (P_ine + P_other)", "1"),
     "f_refrac": ("f_refrac = 1 / Q_eng", "1"),
     "CF_magnet_number": ("CF_magnet_number = L_CC / L_CF", "1"),
-    "firstwall_vol": (
-        "firstwall_vol = pi * chamber_length * ((axis_t + plasma_t + vacuum_t + firstwall_t)**2 - (axis_t + plasma_t + vacuum_t)**2)",
-        "m3",
+    "rho_PbLi": ("rho_PbLi = PbLi density corrected for lithium enrichment and temperature", "kg/m3"),
+    "P_Li": ("P_Li = lithium price as a function of 6Li enrichment", "dollar/kg"),
+    "P_PbLi": ("P_PbLi = 0.83 * Pb_c_raw + 0.17 * P_Li", "dollar/kg"),
+    "central_cell_cylindrical_part_cost": (
+        "central_cell_cylindrical_part_cost = legacy central-cell radial build material cost for L_CC",
+        "million",
     ),
-    "blanket1_vol": (
-        "blanket1_vol = pi * chamber_length * ((axis_t + plasma_t + vacuum_t + firstwall_t + blanket1_t)**2 - (axis_t + plasma_t + vacuum_t + firstwall_t)**2)",
-        "m3",
+    "end_plug_cylindrical_part_cost": (
+        "end_plug_cylindrical_part_cost = legacy central-cell radial build material cost for L_EP",
+        "million",
     ),
-    "first_wall_cost": ("first_wall_cost = firstwall_vol * Be_rho * Be_c_raw * Be_m / 1e6", "million"),
-    "blanket_cost": ("blanket_cost = blanket1_vol * Li4SiO4_rho * Li4SiO4_c_raw * Li4SiO4_m / 1e6", "million"),
     "expander_cell_cost_result": (
         "expander_cell_cost_result = (pi * L_EC * ((a_EC + expander_cell_vessel_thickness)**2 - a_EC**2) + 2 * pi * expander_cell_vessel_thickness * a_EC**2) * SS316_rho * SS316_c_raw * SS316_m / 1e6",
         "million",
@@ -358,6 +370,21 @@ MIRROR_VARIABLE_OVERRIDES = {
     ),
     "expander_cell_cost_result": (
         "Expander cell vacuum vessel cost from legacy Mirror geometry",
+        None,
+        "million",
+    ),
+    "rho_PbLi": ("PbLi density from legacy Mirror temperature/enrichment correlation", None, "kg/m3"),
+    "P_Li": ("Lithium price from legacy Mirror enrichment pricing", None, "dollar/kg"),
+    "P_PbLi": ("PbLi price from legacy Mirror eutectic mixture pricing", None, "dollar/kg"),
+    "T": ("Mean coolant temperature for legacy PbLi density correlation", 300, "degC"),
+    "f_6Li": ("Lithium-6 enrichment fraction for legacy PbLi pricing", 0.075, "1"),
+    "central_cell_cylindrical_part_cost": (
+        "Central cell cylindrical radial-build material cost",
+        None,
+        "million",
+    ),
+    "end_plug_cylindrical_part_cost": (
+        "End plug cylindrical radial-build material cost",
         None,
         "million",
     ),
@@ -641,22 +668,61 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     generated["Q_eng"] = generated["P_egross"] / (generated["P_ine"] + generated["P_other"])
     generated["f_refrac"] = 1 / generated["Q_eng"]
     generated["CF_magnet_number"] = generated["L_CC"] / generated["L_CF"]
-    firstwall_ir = values["axis_t"] + values["plasma_t"] + values["vacuum_t"]
-    firstwall_or = firstwall_ir + values["firstwall_t"]
-    generated["firstwall_vol"] = math.pi * values["chamber_length"] * (firstwall_or**2 - firstwall_ir**2)
-    blanket_ir = firstwall_or
-    blanket_or = blanket_ir + values["blanket1_t"]
-    generated["blanket1_vol"] = math.pi * values["chamber_length"] * (blanket_or**2 - blanket_ir**2)
-    generated["first_wall_cost"] = (
-        generated["firstwall_vol"] * values["Be_rho"] * values["Be_c_raw"] * values["Be_m"] / 1e6
-    )
-    generated["blanket_cost"] = (
-        generated["blanket1_vol"]
-        * values["Li4SiO4_rho"]
-        * values["Li4SiO4_c_raw"]
-        * values["Li4SiO4_m"]
-        / 1e6
-    )
+    T_K = values["T"] + 273.15
+    f_6li_natural = 0.075
+    rho_6li = 460.0
+    rho_7li = 537.0
+    rho_pbli = 10520.35 - 1.19051 * T_K
+    generated["rho_PbLi"] = rho_pbli * (
+        rho_6li * values["f_6Li"] + rho_7li * (1 - values["f_6Li"])
+    ) / (rho_6li * f_6li_natural + rho_7li * (1 - f_6li_natural))
+    generated["P_Li"] = 15.152
+    generated["P_PbLi"] = 0.83 * values["Pb_c_raw"] + 0.17 * generated["P_Li"]
+
+    def central_cell_cylindrical_cost(length: float) -> float:
+        radius = values["a_CC"] + values["vacuum_gap_CC"]
+        total = 0.0
+        r_in = radius
+        radius += values["first_wall_thickness"]
+        total += math.pi * length * (radius**2 - r_in**2) * values["W_rho"] * values["W_c_raw"] * values["W_m"]
+        r_in = radius
+        radius += values["vacuum_vessel_thickness"]
+        total += (
+            math.pi
+            * length
+            * (radius**2 - r_in**2)
+            * values["SS316_rho"]
+            * values["SS316_c_raw"]
+            * values["SS316_m"]
+        )
+        r_in = radius
+        radius += values["multiplier_thickness"]
+        total += math.pi * length * (radius**2 - r_in**2) * values["Pb_rho"] * values["Pb_c_raw"] * values["Pb_m"]
+        r_in = radius
+        radius += values["blanket_thickness"]
+        blanket_volume = math.pi * length * (radius**2 - r_in**2)
+        total += blanket_volume * values["blanket_coolant_fraction"] * generated["rho_PbLi"] * generated["P_PbLi"]
+        total += (
+            blanket_volume
+            * values["blanket_structural_fraction"]
+            * values["SS316_rho"]
+            * values["SS316_c_raw"]
+            * values["SS316_m"]
+        )
+        r_in = radius
+        radius += values["outer_vessel_thickness"]
+        total += (
+            math.pi
+            * length
+            * (radius**2 - r_in**2)
+            * values["SS316_rho"]
+            * values["SS316_c_raw"]
+            * values["SS316_m"]
+        )
+        return total / 1e6
+
+    generated["central_cell_cylindrical_part_cost"] = central_cell_cylindrical_cost(generated["L_CC"])
+    generated["end_plug_cylindrical_part_cost"] = central_cell_cylindrical_cost(values["L_EP"])
     expander_vessel_outer_radius = values["a_EC"] + values["expander_cell_vessel_thickness"]
     expander_vessel_volume = math.pi * values["L_EC"] * (expander_vessel_outer_radius**2 - values["a_EC"] ** 2)
     expander_end_cap_volume = math.pi * values["expander_cell_vessel_thickness"] * values["a_EC"] ** 2
@@ -754,7 +820,9 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
         normalized_total_cost = _dollar_value(total_cost)
         if code == "2211":
             normalized_total_cost = (
-                generated_values["first_wall_cost"] + generated_values["blanket_cost"]
+                generated_values["central_cell_cylindrical_part_cost"]
+                + 2 * generated_values["end_plug_cylindrical_part_cost"]
+                + 2 * generated_values["expander_cell_cost_result"]
             ) * 1e6
         elif code == "2212":
             normalized_total_cost = 2 * generated_values["HF_magnet_shield_cost"] * 1e6
