@@ -76,3 +76,5 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 111,cal_blanket1_vol,v,Mirror generated variable calculation for blanket1_vol,MirrorFunc,blanket1_vol = pi * chamber_length * ((axis_t + plasma_t + vacuum_t + firstwall_t + blanket1_t)**2 - (axis_t + plasma_t + vacuum_t + firstwall_t)**2),m3
 112,cal_first_wall_cost,v,Mirror generated variable calculation for first_wall_cost,MirrorFunc,first_wall_cost = firstwall_vol * Be_rho * Be_c_raw * Be_m / 1e6,million
 113,cal_blanket_cost,v,Mirror generated variable calculation for blanket_cost,MirrorFunc,blanket_cost = blanket1_vol * Li4SiO4_rho * Li4SiO4_c_raw * Li4SiO4_m / 1e6,million
+114,cal_expander_cell_cost_result,v,Mirror generated variable calculation for expander_cell_cost_result,MirrorFunc,expander_cell_cost_result = (pi * L_EC * ((a_EC + expander_cell_vessel_thickness)**2 - a_EC**2) + 2 * pi * expander_cell_vessel_thickness * a_EC**2) * SS316_rho * SS316_c_raw * SS316_m / 1e6,million
+115,cal_HF_magnet_shield_cost,v,Mirror generated variable calculation for HF_magnet_shield_cost,MirrorFunc,HF_magnet_shield_cost = legacy shield volume geometry * W_rho * W_c_raw * W_m / 1e6,million

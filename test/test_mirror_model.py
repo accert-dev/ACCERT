@@ -591,26 +591,43 @@ def test_mirror_first_wall_and_blanket_use_pyfecons_scalar_defaults(cursor):
     )
 
 
-def test_mirror_magnet_shield_account_uses_reference_variable(cursor):
+def test_mirror_magnet_shield_and_expander_costs_are_super_variables(cursor):
     cursor.execute(
         """
-        SELECT variables
+        SELECT total_cost, variables
         FROM mirror_acco
         WHERE code_of_account = ?;
         """,
         ("2212",),
     )
-    assert cursor.fetchone()[0] == "HF_magnet_shield_cost"
+    total_cost, variables = cursor.fetchone()
+    assert total_cost / 1e6 == pytest.approx(70.016988373184)
+    assert variables == "HF_magnet_shield_cost"
 
     cursor.execute(
         """
-        SELECT var_description, var_value, var_unit
+        SELECT var_name, var_description, var_value, var_unit, var_alg, var_need
         FROM mirror_var
-        WHERE var_name = ?;
+        WHERE var_name IN (?, ?)
+        ORDER BY var_name;
         """,
-        ("HF_magnet_shield_cost",),
+        ("HF_magnet_shield_cost", "expander_cell_cost_result"),
     )
-    assert cursor.fetchone() == ("HF magnet shield cost per end plug", 47.36847787, "million")
+    rows = {row[0]: row[1:] for row in cursor.fetchall()}
+    assert rows["HF_magnet_shield_cost"][0] == "HF magnet shield cost per end plug"
+    assert rows["HF_magnet_shield_cost"][1] == pytest.approx(35.008494186592)
+    assert rows["HF_magnet_shield_cost"][2:] == (
+        "million",
+        "cal_HF_magnet_shield_cost",
+        "a_M, a_CC, a_0, length, r_gap, r_vv, r_magnet, r_cryostat, f_vol, length_cc_cylinder, length_ep_cylinder, W_rho, W_c_raw, W_m",
+    )
+    assert rows["expander_cell_cost_result"][0] == "Expander cell vacuum vessel cost from legacy Mirror geometry"
+    assert rows["expander_cell_cost_result"][1] == pytest.approx(0.003960744088457411)
+    assert rows["expander_cell_cost_result"][2:] == (
+        "million",
+        "cal_expander_cell_cost_result",
+        "L_EC, a_EC, expander_cell_vessel_thickness, SS316_rho, SS316_c_raw, SS316_m",
+    )
 
     alg = MirrorFunc(
         ind=1,
@@ -622,7 +639,24 @@ def test_mirror_magnet_shield_account_uses_reference_variable(cursor):
         variables="HF_magnet_shield_cost",
         constants="",
     )
-    assert alg.run({"HF_magnet_shield_cost": 47.36847787}) == pytest.approx(94.73695574)
+    assert alg.run({"HF_magnet_shield_cost": 35.008494186592}) == pytest.approx(70.016988373184)
+
+    accert = Accert.__new__(Accert)
+    accert.var_tabl = "mirror_var"
+    accert.alg_tabl = "mirror_alg"
+    accert.cel_tabl = None
+
+    cursor.execute(
+        """
+        UPDATE mirror_var
+        SET var_value = ?
+        WHERE var_name = ?;
+        """,
+        (2.0, "a_EC"),
+    )
+    assert accert.update_super_variable(cursor, "expander_cell_cost_result") is None
+    cursor.execute("SELECT var_value FROM mirror_var WHERE var_name = ?;", ("expander_cell_cost_result",))
+    assert cursor.fetchone()[0] == pytest.approx(0.011862477930766351)
 
 
 def test_mirror_generated_variable_algorithm_can_recalculate(cursor):

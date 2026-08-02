@@ -148,7 +148,6 @@ MIRROR_REFERENCE_VAR_OVERRIDES = {
     "HF_magnet_cost": (29.1, "million"),
     "LF_magnet_cost": (6.25262, "million"),
     "CF_magnet_cost": (2.751, "million"),
-    "HF_magnet_shield_cost": (47.36847787, "million"),
     "CF_magnet_number": (52.0300751726645, "1"),
     "P_egross": (158.12094932835822, "MW"),
     "P_DECe": (63.01790788032513, "MW"),
@@ -235,6 +234,13 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "blanket1_vol": "chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t",
     "first_wall_cost": "firstwall_vol, Be_rho, Be_c_raw, Be_m",
     "blanket_cost": "blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m",
+    "expander_cell_cost_result": (
+        "L_EC, a_EC, expander_cell_vessel_thickness, SS316_rho, SS316_c_raw, SS316_m"
+    ),
+    "HF_magnet_shield_cost": (
+        "a_M, a_CC, a_0, length, r_gap, r_vv, r_magnet, r_cryostat, f_vol, "
+        "length_cc_cylinder, length_ep_cylinder, W_rho, W_c_raw, W_m"
+    ),
 }
 
 MIRROR_GENERATED_VAR_FORMULAS = {
@@ -289,6 +295,14 @@ MIRROR_GENERATED_VAR_FORMULAS = {
     ),
     "first_wall_cost": ("first_wall_cost = firstwall_vol * Be_rho * Be_c_raw * Be_m / 1e6", "million"),
     "blanket_cost": ("blanket_cost = blanket1_vol * Li4SiO4_rho * Li4SiO4_c_raw * Li4SiO4_m / 1e6", "million"),
+    "expander_cell_cost_result": (
+        "expander_cell_cost_result = (pi * L_EC * ((a_EC + expander_cell_vessel_thickness)**2 - a_EC**2) + 2 * pi * expander_cell_vessel_thickness * a_EC**2) * SS316_rho * SS316_c_raw * SS316_m / 1e6",
+        "million",
+    ),
+    "HF_magnet_shield_cost": (
+        "HF_magnet_shield_cost = legacy shield volume geometry * W_rho * W_c_raw * W_m / 1e6",
+        "million",
+    ),
 }
 
 MIRROR_CONSTANT_DEFAULTS = {
@@ -342,6 +356,22 @@ MIRROR_VARIABLE_OVERRIDES = {
         None,
         "million",
     ),
+    "expander_cell_cost_result": (
+        "Expander cell vacuum vessel cost from legacy Mirror geometry",
+        None,
+        "million",
+    ),
+    "a_CC": ("Legacy Mirror central cell plasma radius", 0.54, "m"),
+    "a_M": ("HF shield magnet bore/plasma radius from legacy Mirror geometry", 0.15, "m"),
+    "a_0": ("HF shield end plug plasma radius from legacy Mirror geometry", 0.7, "m"),
+    "length": ("HF shield radially inner cylinder length", 0.5, "m"),
+    "r_gap": ("HF shield radial gap", 0.1, "m"),
+    "r_vv": ("HF shield vacuum vessel radial thickness allowance", 0.01, "m"),
+    "r_magnet": ("HF shield magnet radius", 1.5, "m"),
+    "r_cryostat": ("HF shield cryostat radius allowance", 1.0, "m"),
+    "f_vol": ("HF shield volume fill fraction", 0.9, "1"),
+    "length_cc_cylinder": ("HF shield central-cell-facing cylinder length", 0.5, "m"),
+    "length_ep_cylinder": ("HF shield end-plug-facing cylinder length", 0.5, "m"),
     "chamber_length": ("PyFECONS magnetic mirror chamber length", 12, "m"),
     "axis_t": ("PyFECONS radial build axis thickness", 0, "m"),
     "plasma_t": ("PyFECONS radial build plasma thickness", 4.9, "m"),
@@ -627,6 +657,60 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
         * values["Li4SiO4_m"]
         / 1e6
     )
+    expander_vessel_outer_radius = values["a_EC"] + values["expander_cell_vessel_thickness"]
+    expander_vessel_volume = math.pi * values["L_EC"] * (expander_vessel_outer_radius**2 - values["a_EC"] ** 2)
+    expander_end_cap_volume = math.pi * values["expander_cell_vessel_thickness"] * values["a_EC"] ** 2
+    generated["expander_cell_cost_result"] = (
+        (expander_vessel_volume + 2 * expander_end_cap_volume)
+        * values["SS316_rho"]
+        * values["SS316_c_raw"]
+        * values["SS316_m"]
+        / 1e6
+    )
+    shield_r_in = values["a_M"] + values["r_gap"] + values["r_vv"]
+    shield_r_out = values["r_magnet"] - values["r_cryostat"]
+    v_radially_inner_cylinder = (
+        math.pi * values["length"] * (shield_r_out**2 - shield_r_in**2) * values["f_vol"]
+    )
+    shield_r_in_cc = values["a_CC"] + values["r_gap"] + values["r_vv"]
+    shield_r_out_cc = shield_r_in_cc + 0.5
+    v_cc_cylinder = (
+        math.pi
+        * values["length_cc_cylinder"]
+        * (shield_r_out_cc**2 - shield_r_in_cc**2)
+        * values["f_vol"]
+    )
+    v_cc_triangle = (
+        math.pi
+        * values["length_cc_cylinder"]
+        / 3
+        * (shield_r_in_cc - shield_r_in)
+        * (shield_r_in + 2 * shield_r_in_cc)
+        * values["f_vol"]
+    )
+    shield_r_in_ep = values["a_0"] + values["r_gap"] + values["r_vv"]
+    shield_r_out_ep = shield_r_in_ep + 0.5
+    v_ep_cylinder = (
+        math.pi
+        * values["length_ep_cylinder"]
+        * (shield_r_out_ep**2 - shield_r_in_ep**2)
+        * values["f_vol"]
+    )
+    v_ep_triangle = (
+        math.pi
+        * values["length_ep_cylinder"]
+        / 3
+        * (shield_r_in_ep - shield_r_in)
+        * (shield_r_in + 2 * shield_r_in_ep)
+        * values["f_vol"]
+    )
+    v_total_cc_facing = (
+        v_radially_inner_cylinder + v_cc_cylinder + v_cc_triangle + v_ep_cylinder + v_ep_triangle
+    )
+    v_total_ec_facing = v_radially_inner_cylinder + v_ep_cylinder + v_ep_triangle
+    generated["HF_magnet_shield_cost"] = (
+        (v_total_cc_facing + v_total_ec_facing) * values["W_rho"] * values["W_c_raw"] * values["W_m"] / 1e6
+    )
     generated.update({name: value for name, (value, _unit) in MIRROR_REFERENCE_VAR_OVERRIDES.items()})
     return generated
 
@@ -672,6 +756,8 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
             normalized_total_cost = (
                 generated_values["first_wall_cost"] + generated_values["blanket_cost"]
             ) * 1e6
+        elif code == "2212":
+            normalized_total_cost = 2 * generated_values["HF_magnet_shield_cost"] * 1e6
         conn.execute(
             """
             INSERT INTO mirror_acco

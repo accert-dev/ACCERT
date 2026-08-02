@@ -198,6 +198,55 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def cal_blanket_cost(blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m):
         return blanket1_vol * Li4SiO4_rho * Li4SiO4_c_raw * Li4SiO4_m / 1e6
+
+    @staticmethod
+    def cal_expander_cell_cost_result(
+        L_EC,
+        a_EC,
+        expander_cell_vessel_thickness,
+        SS316_rho,
+        SS316_c_raw,
+        SS316_m,
+    ):
+        vessel_outer_radius = a_EC + expander_cell_vessel_thickness
+        vessel_volume = np.pi * L_EC * (vessel_outer_radius**2 - a_EC**2)
+        end_cap_volume = np.pi * expander_cell_vessel_thickness * a_EC**2
+        return (vessel_volume + 2 * end_cap_volume) * SS316_rho * SS316_c_raw * SS316_m / 1e6
+
+    @staticmethod
+    def cal_HF_magnet_shield_cost(
+        a_M,
+        a_CC,
+        a_0,
+        length,
+        r_gap,
+        r_vv,
+        r_magnet,
+        r_cryostat,
+        f_vol,
+        length_cc_cylinder,
+        length_ep_cylinder,
+        W_rho,
+        W_c_raw,
+        W_m,
+    ):
+        r_in = a_M + r_gap + r_vv
+        r_out = r_magnet - r_cryostat
+        v_inner = np.pi * length * (r_out**2 - r_in**2) * f_vol
+
+        r_in_cc = a_CC + r_gap + r_vv
+        r_out_cc = r_in_cc + 0.5
+        v_cc_cylinder = np.pi * length_cc_cylinder * (r_out_cc**2 - r_in_cc**2) * f_vol
+        v_cc_triangle = np.pi * length_cc_cylinder / 3 * (r_in_cc - r_in) * (r_in + 2 * r_in_cc) * f_vol
+
+        r_in_ep = a_0 + r_gap + r_vv
+        r_out_ep = r_in_ep + 0.5
+        v_ep_cylinder = np.pi * length_ep_cylinder * (r_out_ep**2 - r_in_ep**2) * f_vol
+        v_ep_triangle = np.pi * length_ep_cylinder / 3 * (r_in_ep - r_in) * (r_in + 2 * r_in_ep) * f_vol
+
+        v_total_cc_facing = v_inner + v_cc_cylinder + v_cc_triangle + v_ep_cylinder + v_ep_triangle
+        v_total_ec_facing = v_inner + v_ep_cylinder + v_ep_triangle
+        return (v_total_cc_facing + v_total_ec_facing) * W_rho * W_c_raw * W_m / 1e6
     
     ### Account Methods: ###
     

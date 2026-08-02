@@ -12,7 +12,7 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 11,cost_data,str,,1,,,,
 12,L_magnet_to_magnet,str,,1,,,,
 13,L_cylinder,str,,1,,,,
-14,expander_cell_cost_result,str,,1,,,,
+14,expander_cell_cost_result,Expander cell vacuum vessel cost from legacy Mirror geometry,0.003960744088457411,million,cal_expander_cell_cost_result,"L_EC, a_EC, expander_cell_vessel_thickness, SS316_rho, SS316_c_raw, SS316_m",,0
 15,end_plug_cylindrical_part,str,,1,,,,
 16,end_plug_cylindrical_part_cost,str,,1,,,,
 17,central_cell_cylindrical_part,str,,1,,,,
@@ -110,22 +110,22 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 109,C_end_cap,str,,1,,,,
 110,total,str,,1,,,,
 111,cost,float,29.1,1,,,,
-112,a_M,float,0.15,1,,,,
-113,a_CC,float,0.54,1,,,,
-114,a_0,float,0.7,1,,,,
-115,length,float,0.5,1,,,,
-116,r_gap,float,0.1,1,,,,
-117,r_vv,float,0.01,1,,,,
-118,r_magnet,float,1.5,m,,,,
-119,r_cryostat,float,1.0,1,,,,
-120,f_vol,float,0.9,1,,,,
+112,a_M,HF shield magnet bore/plasma radius from legacy Mirror geometry,0.15,m,,,HF_magnet_shield_cost,0
+113,a_CC,Legacy Mirror central cell plasma radius,0.54,m,,,HF_magnet_shield_cost,0
+114,a_0,HF shield end plug plasma radius from legacy Mirror geometry,0.7,m,,,HF_magnet_shield_cost,0
+115,length,HF shield radially inner cylinder length,0.5,m,,,HF_magnet_shield_cost,0
+116,r_gap,HF shield radial gap,0.1,m,,,HF_magnet_shield_cost,0
+117,r_vv,HF shield vacuum vessel radial thickness allowance,0.01,m,,,HF_magnet_shield_cost,0
+118,r_magnet,HF shield magnet radius,1.5,m,,,HF_magnet_shield_cost,0
+119,r_cryostat,HF shield cryostat radius allowance,1.0,m,,,HF_magnet_shield_cost,0
+120,f_vol,HF shield volume fill fraction,0.9,1,,,HF_magnet_shield_cost,0
 121,V_radially_inner_cylinder,str,,1,,,,
-122,length_cc_cylinder,float,0.5,1,,,,
+122,length_cc_cylinder,HF shield central-cell-facing cylinder length,0.5,m,,,HF_magnet_shield_cost,0
 123,r_in_cc,str,,1,,,,
 124,r_out_cc,str,,1,,,,
 125,V_cc_cylinder,str,,1,,,,
 126,V_cc_triangle,str,,1,,,,
-127,length_ep_cylinder,float,0.5,1,,,,
+127,length_ep_cylinder,HF shield end-plug-facing cylinder length,0.5,m,,,HF_magnet_shield_cost,0
 128,r_in_ep,str,,1,,,,
 129,r_out_ep,str,,1,,,,
 130,V_ep_cylinder,str,,1,,,,
@@ -172,8 +172,8 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 171,include_contingency,Mirror input parameter,0.0,1,,,,0
 172,hf_magnet_length,Mirror input parameter,1.0,m,,,,0
 173,hf_magnet_shielding_thickness,Mirror input parameter,1.0,m,,,,0
-174,a_EC,Mirror input parameter,1.0,m,,,V_vac,0
-175,expander_cell_vessel_thickness,Mirror input parameter,0.01,m,,,,0
+174,a_EC,Mirror input parameter,1.0,m,,,"V_vac, expander_cell_cost_result",0
+175,expander_cell_vessel_thickness,Mirror input parameter,0.01,m,,,expander_cell_cost_result,0
 176,expander_cell_vessel_material,Mirror input parameter,SS316,1,,,,0
 177,vacuum_gap_CC,Mirror input parameter,0.01,m,,,,0
 178,first_wall_material,Mirror input parameter,W,1,,,,0
@@ -189,19 +189,19 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 188,blanket_structural_fraction,Mirror input parameter,0.1,1,,,,0
 189,outer_vessel_thickness,Mirror input parameter,0.01,m,,,,0
 190,L_EP,Mirror input parameter,1.0,m,,,L,0
-191,L_EC,Mirror input parameter,1.0,m,,,L,0
+191,L_EC,Mirror input parameter,1.0,m,,,"L, expander_cell_cost_result",0
 192,a_EP,Mirror input parameter,1.0,m,,,,0
 193,HF_magnet_number,Mirror input parameter,4.0,1,,,HF_magnet_cost,0
 194,LF_magnet_number,Mirror input parameter,2.0,1,,,LF_magnet_cost,0
 195,HF_magnet_cost,"HF cost per magnet, not for all four",29.1,million,cal_HF_magnet_cost,"n_unit, HF_magnet_number",,0
 196,LF_magnet_cost,LF cost per magnet,6.25262,million,cal_LF_magnet_cost,"n_unit, LF_magnet_number",,0
 197,CF_magnet_cost,CF cost per magnet,2.751,million,cal_CF_magnet_cost,"n_unit, CF_magnet_number",,0
-198,HF_magnet_shield_cost,HF magnet shield cost per end plug,47.36847787,million,,,,0
-199,CF_magnet_number,One CF coil every L_CF m of central cell,52.0300751726645,1,cal_CF_magnet_number,"L_CC, L_CF",CF_magnet_cost,0
-200,firstwall_vol,Mirror generated parameter,38.07610296150822,m3,cal_firstwall_vol,"chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t",first_wall_cost,0
-201,blanket1_vol,Mirror generated parameter,422.230052642468,m3,cal_blanket1_vol,"chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t",blanket_cost,0
-202,first_wall_cost,Mirror generated parameter,1215.1036357591313,million,cal_first_wall_cost,"firstwall_vol, Be_rho, Be_c_raw, Be_m",,0
-203,blanket_cost,Mirror generated parameter,2.018259651630997,million,cal_blanket_cost,"blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m",,0
+198,CF_magnet_number,One CF coil every L_CF m of central cell,52.0300751726645,1,cal_CF_magnet_number,"L_CC, L_CF",CF_magnet_cost,0
+199,firstwall_vol,Mirror generated parameter,38.07610296150822,m3,cal_firstwall_vol,"chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t",first_wall_cost,0
+200,blanket1_vol,Mirror generated parameter,422.230052642468,m3,cal_blanket1_vol,"chamber_length, axis_t, plasma_t, vacuum_t, firstwall_t, blanket1_t",blanket_cost,0
+201,first_wall_cost,Mirror generated parameter,1215.1036357591313,million,cal_first_wall_cost,"firstwall_vol, Be_rho, Be_c_raw, Be_m",,0
+202,blanket_cost,Mirror generated parameter,2.018259651630997,million,cal_blanket_cost,"blanket1_vol, Li4SiO4_rho, Li4SiO4_c_raw, Li4SiO4_m",,0
+203,HF_magnet_shield_cost,HF magnet shield cost per end plug,35.008494186592,million,cal_HF_magnet_shield_cost,"a_M, a_CC, a_0, length, r_gap, r_vv, r_magnet, r_cryostat, f_vol, length_cc_cylinder, length_ep_cylinder, W_rho, W_c_raw, W_m",,0
 204,chamber_length,PyFECONS magnetic mirror chamber length,12.0,m,,,"blanket1_vol, firstwall_vol",0
 205,plasma_t,PyFECONS radial build plasma thickness,4.9,m,,,"blanket1_vol, firstwall_vol",0
 206,vacuum_t,PyFECONS radial build vacuum thickness,0.1,m,,,"blanket1_vol, firstwall_vol",0
@@ -228,9 +228,9 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 227,Li4SiO4_m,PyFECONS Lithium Silicate manufacturing multiplier,2.0,1,,,blanket_cost,0
 228,FLiBe_rho,PyFECONS FLiBe density,1900.0,kg/m3,,,,0
 229,FLiBe_c,PyFECONS FLiBe cost,40.0,dollar/m3,,,,0
-230,W_rho,PyFECONS Tungsten density,19300.0,kg/m3,,,,0
-231,W_c_raw,PyFECONS Tungsten raw cost,100.0,dollar/kg,,,,0
-232,W_m,PyFECONS Tungsten manufacturing multiplier,3.0,1,,,,0
+230,W_rho,PyFECONS Tungsten density,19300.0,kg/m3,,,HF_magnet_shield_cost,0
+231,W_c_raw,PyFECONS Tungsten raw cost,100.0,dollar/kg,,,HF_magnet_shield_cost,0
+232,W_m,PyFECONS Tungsten manufacturing multiplier,3.0,1,,,HF_magnet_shield_cost,0
 233,Li_rho,PyFECONS Lithium density,534.0,kg/m3,,,,0
 234,Li_c_raw,PyFECONS Lithium raw cost,70.0,dollar/kg,,,,0
 235,Li_m,PyFECONS Lithium manufacturing multiplier,1.5,1,,,,0
@@ -254,9 +254,9 @@ ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_i
 253,Concrete_rho,PyFECONS Concrete density,2300.0,kg/m3,,,,0
 254,Concrete_c_raw,PyFECONS Concrete raw cost,0.52,dollar/kg,,,,0
 255,Concrete_m,PyFECONS Concrete manufacturing multiplier,2.0,1,,,,0
-256,SS316_rho,PyFECONS Stainless Steel 316 density,7860.0,kg/m3,,,,0
-257,SS316_c_raw,PyFECONS Stainless Steel 316 raw cost,2.0,dollar/kg,,,,0
-258,SS316_m,PyFECONS Stainless Steel 316 manufacturing multiplier,2.0,1,,,,0
+256,SS316_rho,PyFECONS Stainless Steel 316 density,7860.0,kg/m3,,,expander_cell_cost_result,0
+257,SS316_c_raw,PyFECONS Stainless Steel 316 raw cost,2.0,dollar/kg,,,expander_cell_cost_result,0
+258,SS316_m,PyFECONS Stainless Steel 316 manufacturing multiplier,2.0,1,,,expander_cell_cost_result,0
 259,SS316_sigma,PyFECONS Stainless Steel 316 stress limit,900.0,MPa,,,,0
 260,Nb3Sn_c,PyFECONS Niobium-Tin cost,5.0,dollar/m3,,,,0
 261,Incoloy_rho,PyFECONS Incoloy density,8170.0,kg/m3,,,,0
