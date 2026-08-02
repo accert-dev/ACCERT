@@ -82,6 +82,30 @@ def test_mirror_variables_do_not_keep_blank_legacy_temporaries(cursor):
     assert cursor.fetchall() == []
 
 
+def test_mirror_variable_descriptions_are_human_readable(cursor):
+    generic_descriptions = {
+        "",
+        "str",
+        "int",
+        "float",
+        "list",
+        "Mirror input parameter",
+        "Mirror generated parameter",
+        "Mirror reference parameter",
+    }
+    placeholders = ", ".join("?" for _ in generic_descriptions)
+    cursor.execute(
+        f"""
+        SELECT var_name, var_description
+        FROM mirror_var
+        WHERE COALESCE(var_description, '') IN ({placeholders})
+        ORDER BY var_name;
+        """,
+        tuple(sorted(generic_descriptions)),
+    )
+    assert cursor.fetchall() == []
+
+
 def test_mirror_func_does_not_keep_legacy_dataframe_helpers():
     removed_helpers = {
         "PbLi_density",
@@ -616,7 +640,7 @@ def test_mirror_first_wall_and_blanket_use_legacy_scalar_super_variables(cursor)
     assert rows["P_Li"][0] == pytest.approx(15.152)
     assert rows["P_Li"][1:] == ("dollar/kg", "cal_P_Li", "f_6Li")
     assert rows["P_PbLi"][0] == pytest.approx(4.56784)
-    assert rows["P_PbLi"][1:] == ("dollar/kg", "cal_P_PbLi", "Pb_c_raw, P_Li")
+    assert rows["P_PbLi"][1:] == ("dollar/kg", "cal_P_PbLi", "Pb_c_raw, P_Li, f_Li")
     assert rows["rho_PbLi"][0] == pytest.approx(9838.0091935)
     assert rows["rho_PbLi"][1:] == ("kg/m3", "cal_rho_PbLi", "T, f_6Li")
 

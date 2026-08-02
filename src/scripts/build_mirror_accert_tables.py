@@ -208,6 +208,116 @@ MIRROR_INPUT_UNITS = {
     "run_name": "1",
 }
 
+MIRROR_INPUT_DESCRIPTIONS = {
+    "application": "Mirror plant application mode used for gross-electric-power logic",
+    "P_f": "Total fusion power",
+    "P_f_L": "Fusion power per meter of central cell length",
+    "P_f_EP": "Fusion power assigned to each end plug",
+    "P_NBI": "Neutral beam injection power",
+    "P_ECH": "Electron cyclotron heating power",
+    "P_ICRH": "Ion cyclotron resonance heating power",
+    "M_n": "Neutron energy multiplication factor",
+    "N_module": "Number of Mirror plant modules",
+    "f_pump": "Fraction of neutron power used for pumping",
+    "f_sub": "Fraction of fusion power used for subsystem controls",
+    "f_cryo": "Fraction of fusion power used for cryogenic load",
+    "P_pump": "Reference pumping power",
+    "P_sub_cont": "Reference subsystem control power",
+    "P_cryo": "Reference cryogenic power",
+    "P_pfcool": "Plasma-facing-component cooling power",
+    "P_thcool": "Thermal-system cooling power",
+    "P_coils": "Coil power load",
+    "P_aux": "Auxiliary plant power",
+    "eta_th": "Thermal conversion efficiency",
+    "eta_DEC": "Direct energy conversion efficiency",
+    "eta_pump": "Pump heat recovery efficiency",
+    "eta_NBI": "Neutral beam injection wall-plug efficiency",
+    "eta_ECH": "Electron cyclotron heating wall-plug efficiency",
+    "eta_ICRH": "Ion cyclotron resonance heating wall-plug efficiency",
+    "NOAK": "Nth-of-a-kind plant flag",
+    "n_unit": "Plant unit number for learning-curve cost scaling",
+    "construction_time": "Construction duration",
+    "lifetime": "Plant operating lifetime",
+    "replacement": "Major component replacement interval",
+    "availability": "Plant availability factor",
+    "discount": "Real discount rate",
+    "LSA": "Licensing safety analysis level",
+    "cost_file": "PyFECONS cost data file name",
+    "method": "PyFECONS costing method selector",
+    "include_decommissioning": "Flag to include decommissioning cost",
+    "include_tax": "Flag to include tax cost",
+    "include_licensing": "Flag to include licensing cost",
+    "include_contingency": "Flag to include contingency cost",
+    "hf_magnet_length": "High-field magnet axial length",
+    "hf_magnet_shielding_thickness": "High-field magnet shielding thickness",
+    "a_EC": "Expander cell plasma radius",
+    "expander_cell_vessel_thickness": "Expander cell vessel wall thickness",
+    "expander_cell_vessel_material": "Expander cell vessel material",
+    "vacuum_gap_CC": "Central cell radial vacuum gap",
+    "first_wall_material": "Central cell first wall material",
+    "first_wall_thickness": "Central cell first wall thickness",
+    "vacuum_vessel_material": "Central cell vacuum vessel material",
+    "vacuum_vessel_thickness": "Central cell vacuum vessel thickness",
+    "multiplier_material": "Central cell neutron multiplier material",
+    "multiplier_thickness": "Central cell neutron multiplier thickness",
+    "blanket_coolant_material": "Central cell blanket coolant material",
+    "blanket_thickness": "Central cell blanket radial thickness",
+    "blanket_coolant_fraction": "Central cell blanket coolant volume fraction",
+    "blanket_structural_material": "Central cell blanket structural material",
+    "blanket_structural_fraction": "Central cell blanket structural volume fraction",
+    "outer_vessel_thickness": "Central cell outer vessel thickness",
+    "L_EP": "End plug axial length",
+    "L_EC": "Expander cell axial length",
+    "a_CC": "Central cell plasma radius",
+    "a_EP": "End plug plasma radius",
+    "HF_magnet_number": "Number of high-field magnets",
+    "LF_magnet_number": "Number of low-field magnets",
+}
+
+MIRROR_GENERATED_VAR_DESCRIPTIONS = {
+    "P_f_CC": "Fusion power assigned to the central cell",
+    "L_CC": "Calculated central cell length",
+    "L_CF": "Central-field coil spacing",
+    "L": "Overall axial length of the Mirror plant",
+    "V_vac": "Vacuum volume for the Mirror plant",
+    "no_vpumps": "Number of vacuum pumps required for the default pump-down assumption",
+    "cost_factor": "Learning-curve cost multiplier based on plant unit number",
+    "HF_magnet_cost": "Cost per high-field magnet",
+    "LF_magnet_cost": "Cost per low-field magnet",
+    "CF_magnet_cost": "Cost per central-field magnet",
+    "P_alpha": "Fusion alpha-particle power",
+    "P_n": "Fusion neutron power",
+    "P_ine": "Injected-power electrical input requirement",
+    "P_pump": "Pumping power requirement",
+    "P_sub_cont": "Subsystem control power requirement",
+    "P_cryo": "Cryogenic power requirement",
+    "P_other": "Total miscellaneous plant power requirement",
+    "P_in": "Total injected heating power",
+    "P_th": "Recoverable thermal power",
+    "P_the": "Thermal-electric power contribution",
+    "P_DEC": "Power available to direct energy conversion",
+    "P_DECe": "Electrical output from direct energy conversion",
+    "P_egross": "Gross electric power",
+    "P_enet": "Net electric power",
+    "f_aux": "Auxiliary power fraction relative to gross electric power",
+    "Q_sci": "Scientific fusion gain",
+    "Q_eng": "Engineering gain",
+    "f_refrac": "Recirculating power fraction",
+    "CF_magnet_number": "Calculated number of central-field magnets",
+    "rho_PbLi": "PbLi density corrected for coolant temperature and lithium enrichment",
+    "P_Li": "Lithium price from enrichment level",
+    "P_PbLi": "PbLi coolant price from lead and lithium prices",
+    "central_cell_cylindrical_part_cost": "Central cell cylindrical radial-build material cost",
+    "end_plug_cylindrical_part_cost": "End plug cylindrical radial-build material cost",
+    "expander_cell_cost_result": "Expander cell vacuum vessel cost",
+    "HF_magnet_shield_cost": "High-field magnet shield cost per end plug",
+}
+
+MIRROR_CONSTANT_DESCRIPTIONS = {
+    "E_DT": "Energy released per deuterium-tritium fusion reaction",
+    "E_alpha": "Alpha-particle energy released per deuterium-tritium fusion reaction",
+}
+
 MIRROR_GENERATED_VAR_NEEDS = {
     "P_f_CC": "P_f, P_f_EP",
     "L_CC": "P_f_CC, P_f_L",
@@ -240,7 +350,7 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "CF_magnet_number": "L_CC, L_CF",
     "rho_PbLi": "T, f_6Li",
     "P_Li": "f_6Li",
-    "P_PbLi": "Pb_c_raw, P_Li",
+    "P_PbLi": "Pb_c_raw, P_Li, f_Li",
     "central_cell_cylindrical_part_cost": (
         "L_CC, a_CC, vacuum_gap_CC, first_wall_thickness, vacuum_vessel_thickness, "
         "multiplier_thickness, blanket_thickness, blanket_coolant_fraction, "
@@ -306,7 +416,7 @@ MIRROR_GENERATED_VAR_FORMULAS = {
     "CF_magnet_number": ("CF_magnet_number = L_CC / L_CF", "1"),
     "rho_PbLi": ("rho_PbLi = PbLi density corrected for lithium enrichment and temperature", "kg/m3"),
     "P_Li": ("P_Li = lithium price as a function of 6Li enrichment", "dollar/kg"),
-    "P_PbLi": ("P_PbLi = 0.83 * Pb_c_raw + 0.17 * P_Li", "dollar/kg"),
+    "P_PbLi": ("P_PbLi = (1 - f_Li) * Pb_c_raw + f_Li * P_Li", "dollar/kg"),
     "central_cell_cylindrical_part_cost": (
         "central_cell_cylindrical_part_cost = legacy central-cell radial build material cost for L_CC",
         "million",
@@ -384,6 +494,7 @@ MIRROR_VARIABLE_OVERRIDES = {
     "rho_PbLi": ("PbLi density from legacy Mirror temperature/enrichment correlation", None, "kg/m3"),
     "P_Li": ("Lithium price from legacy Mirror enrichment pricing", None, "dollar/kg"),
     "P_PbLi": ("PbLi price from legacy Mirror eutectic mixture pricing", None, "dollar/kg"),
+    "f_Li": ("Lithium mass fraction in PbLi eutectic mixture", 0.17, "1"),
     "T": ("Mean coolant temperature for legacy PbLi density correlation", 300, "degC"),
     "f_6Li": ("Lithium-6 enrichment fraction for legacy PbLi pricing", 0.075, "1"),
     "central_cell_cylindrical_part_cost": (
@@ -685,7 +796,7 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
         rho_6li * values["f_6Li"] + rho_7li * (1 - values["f_6Li"])
     ) / (rho_6li * f_6li_natural + rho_7li * (1 - f_6li_natural))
     generated["P_Li"] = 15.152
-    generated["P_PbLi"] = 0.83 * values["Pb_c_raw"] + 0.17 * generated["P_Li"]
+    generated["P_PbLi"] = (1 - values["f_Li"]) * values["Pb_c_raw"] + values["f_Li"] * generated["P_Li"]
 
     def central_cell_cylindrical_cost(length: float) -> float:
         radius = values["a_CC"] + values["vacuum_gap_CC"]
@@ -864,6 +975,20 @@ def _split_vars(value: str | None) -> list[str]:
     return [part.strip() for part in str(value).split(",") if part.strip() and part.strip() != "TODO"]
 
 
+def _mirror_var_description(var_name: str, fallback: str = "") -> str:
+    if var_name in MIRROR_VARIABLE_OVERRIDES:
+        return MIRROR_VARIABLE_OVERRIDES[var_name][0]
+    if var_name in MIRROR_GENERATED_VAR_DESCRIPTIONS:
+        return MIRROR_GENERATED_VAR_DESCRIPTIONS[var_name]
+    if var_name in MIRROR_INPUT_DESCRIPTIONS:
+        return MIRROR_INPUT_DESCRIPTIONS[var_name]
+    if var_name in MIRROR_CONSTANT_DESCRIPTIONS:
+        return MIRROR_CONSTANT_DESCRIPTIONS[var_name]
+    if fallback and fallback not in {"str", "int", "float", "list"}:
+        return fallback
+    return var_name.replace("_", " ")
+
+
 def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source: Path) -> None:
     input_defaults = _mirror_input_defaults(algorithm_source)
     generated_values = _mirror_generated_var_values(input_defaults)
@@ -874,6 +999,14 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
     conn.execute("UPDATE mirror_var SET var_unit = 'm' WHERE var_name = 'r_magnet'")
     for var_name, (value, unit) in input_defaults.items():
         if conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():
+            conn.execute(
+                """
+                UPDATE mirror_var
+                SET var_description = ?, var_value = ?, var_unit = ?, user_input = 0
+                WHERE var_name = ?
+                """,
+                (_mirror_var_description(var_name), value, unit, var_name),
+            )
             continue
         next_ind = conn.execute("SELECT COALESCE(MAX(ind), 0) + 1 FROM mirror_var").fetchone()[0]
         conn.execute(
@@ -882,7 +1015,7 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
             (ind, var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked, user_input)
             VALUES (?, ?, ?, ?, ?, '', '', '', 0)
             """,
-            (next_ind, var_name, "Mirror input parameter", value, unit),
+            (next_ind, var_name, _mirror_var_description(var_name), value, unit),
         )
     for var_name, (value, unit) in MIRROR_REFERENCE_VAR_OVERRIDES.items():
         if not conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():
@@ -893,16 +1026,16 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
                 (ind, var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked, user_input)
                 VALUES (?, ?, ?, ?, ?, '', '', '', 0)
                 """,
-                (next_ind, var_name, "Mirror reference parameter", value, unit),
+                (next_ind, var_name, _mirror_var_description(var_name), value, unit),
             )
             continue
         conn.execute(
             """
             UPDATE mirror_var
-            SET var_value = ?, var_unit = ?, user_input = 0
+            SET var_description = ?, var_value = ?, var_unit = ?, user_input = 0
             WHERE var_name = ?
             """,
-            (value, unit, var_name),
+            (_mirror_var_description(var_name), value, unit, var_name),
         )
     for var_name, var_need in MIRROR_GENERATED_VAR_NEEDS.items():
         if not conn.execute("SELECT 1 FROM mirror_var WHERE var_name = ?", (var_name,)).fetchone():
@@ -913,17 +1046,17 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
                 (ind, var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked, user_input)
                 VALUES (?, ?, ?, '', '1', '', ?, '', 0)
                 """,
-                (next_ind, var_name, "Mirror generated parameter", var_need),
+                (next_ind, var_name, _mirror_var_description(var_name), var_need),
             )
         conn.execute("UPDATE mirror_var SET var_need = ? WHERE var_name = ?", (var_need, var_name))
         _formulation, unit = MIRROR_GENERATED_VAR_FORMULAS.get(var_name, ("", "1"))
         conn.execute(
             """
             UPDATE mirror_var
-            SET var_value = ?, var_alg = ?, var_unit = ?, user_input = 0
+            SET var_description = ?, var_value = ?, var_alg = ?, var_unit = ?, user_input = 0
             WHERE var_name = ?
             """,
-            (generated_values.get(var_name), f"cal_{var_name}", unit, var_name),
+            (_mirror_var_description(var_name), generated_values.get(var_name), f"cal_{var_name}", unit, var_name),
         )
 
     for var_name, (value, unit) in MIRROR_CONSTANT_DEFAULTS.items():
@@ -935,12 +1068,16 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
                 (ind, var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked, user_input)
                 VALUES (?, ?, ?, ?, ?, '', '', '', 0)
                 """,
-                (next_ind, var_name, "Mirror physical constant", value, unit),
+                (next_ind, var_name, _mirror_var_description(var_name), value, unit),
             )
         else:
             conn.execute(
-                "UPDATE mirror_var SET var_value = ?, var_unit = ?, user_input = 0 WHERE var_name = ?",
-                (value, unit, var_name),
+                """
+                UPDATE mirror_var
+                SET var_description = ?, var_value = ?, var_unit = ?, user_input = 0
+                WHERE var_name = ?
+                """,
+                (_mirror_var_description(var_name), value, unit, var_name),
             )
 
     for var_name, (description, value, unit) in MIRROR_VARIABLE_OVERRIDES.items():
@@ -1005,6 +1142,30 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
           AND COALESCE(v_linked, '') = ''
         """
     )
+    classified_variables = (
+        set(input_defaults)
+        | set(MIRROR_REFERENCE_VAR_OVERRIDES)
+        | set(MIRROR_GENERATED_VAR_NEEDS)
+        | set(MIRROR_CONSTANT_DEFAULTS)
+        | set(MIRROR_VARIABLE_OVERRIDES)
+    )
+    for (var_name,) in conn.execute(
+        """
+        SELECT var_name
+        FROM mirror_var
+        WHERE COALESCE(var_alg, '') = ''
+          AND COALESCE(var_need, '') = ''
+          AND COALESCE(v_linked, '') = ''
+        """
+    ).fetchall():
+        if var_name not in classified_variables:
+            conn.execute("DELETE FROM mirror_var WHERE var_name = ?", (var_name,))
+    for var_name, description in conn.execute("SELECT var_name, var_description FROM mirror_var").fetchall():
+        if description in {"str", "int", "float", "list", "Mirror input parameter", "Mirror generated parameter"}:
+            conn.execute(
+                "UPDATE mirror_var SET var_description = ? WHERE var_name = ?",
+                (_mirror_var_description(var_name, description), var_name),
+            )
     conn.executemany(
         "DELETE FROM mirror_var WHERE var_name = ?",
         [(var_name,) for var_name in sorted(MIRROR_UNUSED_C2211_FRAME_VARIABLES)],

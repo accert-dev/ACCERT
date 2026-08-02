@@ -202,8 +202,7 @@ class MirrorFunc(Algorithm):
         raise ValueError("Lithium pricing at this enrichment level is not supported")
 
     @staticmethod
-    def cal_P_PbLi(Pb_c_raw, P_Li):
-        f_Li = 0.17
+    def cal_P_PbLi(Pb_c_raw, P_Li, f_Li):
         return (1 - f_Li) * Pb_c_raw + f_Li * P_Li
 
     @staticmethod
