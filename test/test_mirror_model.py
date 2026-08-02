@@ -47,6 +47,41 @@ def test_mirror_func_does_not_keep_legacy_generate_inputs():
     assert not hasattr(MirrorFunc, "generate_inputs")
 
 
+def test_mirror_variables_do_not_keep_blank_legacy_temporaries(cursor):
+    cursor.execute("SELECT var_name FROM mirror_var WHERE COALESCE(var_value, '') = '' ORDER BY var_name")
+    assert cursor.fetchall() == []
+
+    temporary_locals = {
+        "C_end_cap",
+        "M_end_cap",
+        "T_K",
+        "V_cc_cylinder",
+        "V_cc_triangle",
+        "V_end_cap",
+        "V_ep_cylinder",
+        "V_ep_triangle",
+        "V_radially_inner_cylinder",
+        "V_total",
+        "V_total_cc_facing",
+        "V_total_ec_facing",
+        "f_interp",
+        "r_in",
+        "r_in_cc",
+        "r_in_ep",
+        "r_out",
+        "r_out_cc",
+        "r_out_ep",
+        "radial_build",
+        "total",
+    }
+    placeholders = ", ".join("?" for _ in temporary_locals)
+    cursor.execute(
+        f"SELECT var_name FROM mirror_var WHERE var_name IN ({placeholders}) ORDER BY var_name",
+        tuple(sorted(temporary_locals)),
+    )
+    assert cursor.fetchall() == []
+
+
 def test_mirror_func_does_not_keep_legacy_dataframe_helpers():
     removed_helpers = {
         "PbLi_density",

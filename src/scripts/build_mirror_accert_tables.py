@@ -996,6 +996,15 @@ def _normalize_mirror_variable_table(conn: sqlite3.Connection, algorithm_source:
             "UPDATE mirror_var SET v_linked = ? WHERE var_name = ?",
             (", ".join(sorted(set(links))), var_name),
         )
+    conn.execute(
+        """
+        DELETE FROM mirror_var
+        WHERE COALESCE(var_value, '') = ''
+          AND COALESCE(var_alg, '') = ''
+          AND COALESCE(var_need, '') = ''
+          AND COALESCE(v_linked, '') = ''
+        """
+    )
     conn.executemany(
         "DELETE FROM mirror_var WHERE var_name = ?",
         [(var_name,) for var_name in sorted(MIRROR_UNUSED_C2211_FRAME_VARIABLES)],
