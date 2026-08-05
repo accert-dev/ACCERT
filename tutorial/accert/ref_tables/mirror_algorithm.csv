@@ -32,6 +32,7 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 42,Account_C22_1_8,c,Account C2218 Rollup,MirrorFunc,reference value,million
 43,Account_C22_1_9,c,Account C2219 Rollup,MirrorFunc,"P_DECe, cost_factor",million
 44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,"L, N_module, construction_time, cost_factor",million
+45,Account_C22_2,c,Account C222 Rollup,MirrorFunc,"N_module, P_egross, P_th",million
 49,Account_C22_3,c,Account C223 Rollup,MirrorFunc,"N_module, P_th",million
 50,Account_C22_4,c,Account C224 Rollup,MirrorFunc,P_th,million
 51,Account_C22_5,c,Account C225 Rollup,MirrorFunc,cost_factor,million
@@ -50,9 +51,9 @@ ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
 85,cal_V_vac,v,Mirror generated variable calculation for V_vac,MirrorFunc,V_vac = L * pi * a_EC**2,m3
 86,cal_no_vpumps,v,Mirror generated variable calculation for no_vpumps,MirrorFunc,no_vpumps = V_vac / vpump_cap,1
 87,cal_cost_factor,v,Mirror generated variable calculation for cost_factor,MirrorFunc,cost_factor = 0.80 ** (log(n_unit) / log(2)),1
-88,cal_HF_magnet_cost,v,Mirror generated variable calculation for HF_magnet_cost,MirrorFunc,"HF_magnet_cost = HTS_storedEnergy(25.0, 50) * 0.70 ** (log((n_unit - 1) * HF_magnet_number + 1) / log(2))",million
-89,cal_LF_magnet_cost,v,Mirror generated variable calculation for LF_magnet_cost,MirrorFunc,"LF_magnet_cost = HTS_storedEnergy(10.0, 50) * 0.70 ** (log((n_unit - 1) * LF_magnet_number + 1) / log(2))",million
-90,cal_CF_magnet_cost,v,Mirror generated variable calculation for CF_magnet_cost,MirrorFunc,CF_magnet_cost = 0.7 * 3.0 * 1.31 * 0.70 ** (log((n_unit - 1) * CF_magnet_number + 1) / log(2)),million
+88,cal_HF_magnet_cost,v,Mirror generated variable calculation for HF_magnet_cost,MirrorFunc,HF_magnet_cost = 29.10 * 0.70 ** (log((n_unit - 1) * HF_magnet_number + 1) / log(2)) * sc_mat_scale,million
+89,cal_LF_magnet_cost,v,Mirror generated variable calculation for LF_magnet_cost,MirrorFunc,LF_magnet_cost = 6.25262 * 0.70 ** (log((n_unit - 1) * LF_magnet_number + 1) / log(2)) * sc_mat_scale,million
+90,cal_CF_magnet_cost,v,Mirror generated variable calculation for CF_magnet_cost,MirrorFunc,CF_magnet_cost = 0.7 * 3.0 * 1.31 * 0.70 ** (log((n_unit - 1) * CF_magnet_number + 1) / log(2)) * sc_mat_scale,million
 91,cal_P_alpha,v,Mirror generated variable calculation for P_alpha,MirrorFunc,P_alpha = P_f * E_alpha / E_DT,MW
 92,cal_P_n,v,Mirror generated variable calculation for P_n,MirrorFunc,P_n = P_f - P_alpha,MW
 93,cal_P_ine,v,Mirror generated variable calculation for P_ine,MirrorFunc,P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH,MW

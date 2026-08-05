@@ -90,16 +90,16 @@ class MirrorFunc(Algorithm):
         return 0.80 ** (np.log(n_unit) / np.log(2))
 
     @staticmethod
-    def cal_HF_magnet_cost(n_unit, HF_magnet_number):
-        return MirrorFunc.HF_magnet_cost(n_unit, HF_magnet_number)
+    def cal_HF_magnet_cost(n_unit, HF_magnet_number, sc_mat_scale):
+        return MirrorFunc.HF_magnet_cost(n_unit, HF_magnet_number, sc_mat_scale)
 
     @staticmethod
-    def cal_LF_magnet_cost(n_unit, LF_magnet_number):
-        return MirrorFunc.LF_magnet_cost(n_unit, LF_magnet_number)
+    def cal_LF_magnet_cost(n_unit, LF_magnet_number, sc_mat_scale):
+        return MirrorFunc.LF_magnet_cost(n_unit, LF_magnet_number, sc_mat_scale)
 
     @staticmethod
-    def cal_CF_magnet_cost(n_unit, CF_magnet_number):
-        return MirrorFunc.CF_magnet_cost(n_unit, CF_magnet_number)
+    def cal_CF_magnet_cost(n_unit, CF_magnet_number, sc_mat_scale):
+        return MirrorFunc.CF_magnet_cost(n_unit, CF_magnet_number, sc_mat_scale)
 
     @staticmethod
     def cal_P_alpha(E_DT, E_alpha, P_f):
@@ -193,12 +193,11 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def cal_P_Li(f_6Li):
         if f_6Li == 0.075:
-            return 15.152
-        if f_6Li >= 0.90:
-            points = [(0.90, 1), (0.99, 2), (0.999, 4), (0.9999, 8), (0.99999, 16)]
-            for (x0, y0), (x1, y1) in zip(points, points[1:]):
-                if x0 <= f_6Li <= x1:
-                    return (y0 + (y1 - y0) * (f_6Li - x0) / (x1 - x0)) * 70
+            return 29.53
+        if 0.075 <= f_6Li <= 0.975:
+            enrichments = [0.075, 0.80, 0.90, 0.95, 0.975]
+            prices = [29.53, 2000.0, 4000.0, 8000.0, 16000.0]
+            return float(np.interp(f_6Li, enrichments, prices))
         raise ValueError("Lithium pricing at this enrichment level is not supported")
 
     @staticmethod
@@ -369,7 +368,7 @@ class MirrorFunc(Algorithm):
     @staticmethod
     def cal_HF_magnet_shield_cost(
         a_M,
-        a_CC,
+        a_CC_shield,
         a_0,
         length,
         r_gap,
@@ -379,6 +378,8 @@ class MirrorFunc(Algorithm):
         f_vol,
         length_cc_cylinder,
         length_ep_cylinder,
+        r_out_cc,
+        r_out_ep,
         W_rho,
         W_c_raw,
         W_m,
@@ -387,13 +388,11 @@ class MirrorFunc(Algorithm):
         r_out = r_magnet - r_cryostat
         v_inner = np.pi * length * (r_out**2 - r_in**2) * f_vol
 
-        r_in_cc = a_CC + r_gap + r_vv
-        r_out_cc = r_in_cc + 0.5
+        r_in_cc = a_CC_shield + r_gap + r_vv
         v_cc_cylinder = np.pi * length_cc_cylinder * (r_out_cc**2 - r_in_cc**2) * f_vol
         v_cc_triangle = np.pi * length_cc_cylinder / 3 * (r_in_cc - r_in) * (r_in + 2 * r_in_cc) * f_vol
 
         r_in_ep = a_0 + r_gap + r_vv
-        r_out_ep = r_in_ep + 0.5
         v_ep_cylinder = np.pi * length_ep_cylinder * (r_out_ep**2 - r_in_ep**2) * f_vol
         v_ep_triangle = np.pi * length_ep_cylinder / 3 * (r_in_ep - r_in) * (r_in + 2 * r_in_ep) * f_vol
 
@@ -645,6 +644,11 @@ class MirrorFunc(Algorithm):
         return(0)
 
     @staticmethod
+    def Account_C22_2(N_module, P_egross, P_th):
+        # Main and Secondary Coolant
+        return 166 * (N_module * P_egross / 1000) + 40.6 * (P_th / 3500) ** 0.55
+
+    @staticmethod
     def Account_C22_3(N_module, P_th):
         # Auxiliary Cooling Systems
         return(1.10 * 1e-3 * N_module * P_th * 2.02)
@@ -722,6 +726,86 @@ class MirrorFunc(Algorithm):
     def Account_C28():
         # Digital Twin
         return(5)
+
+    @staticmethod
+    def Account_C31(P_enet, construction_time):
+        # Field Indirect Costs
+        if P_enet > 0:
+            return (max(P_enet / 150, 0)) ** -0.5 * P_enet * 0.02 * construction_time
+        return 0
+
+    @staticmethod
+    def Account_C32(P_enet, construction_time):
+        # Construction Supervision
+        if P_enet > 0:
+            return (P_enet / 150) ** -0.5 * P_enet * 0.05 * construction_time
+        return 0
+
+    @staticmethod
+    def Account_C35(P_enet, construction_time, n_unit):
+        # Design Services Offsite
+        if P_enet > 0:
+            cost_factor = 0.70 ** (np.log(n_unit) / np.log(2))
+            return (P_enet / 150) ** -0.5 * P_enet * 0.03 * construction_time * cost_factor
+        return 0
+
+    @staticmethod
+    def Account_C51():
+        # Shipping and Transportation Costs
+        return 8
+
+    @staticmethod
+    def Account_C52(N_module, P_egross, P_enet):
+        # Spare Parts
+        return 0.1 * (
+            MirrorFunc.Account_C23(N_module, P_egross)
+            + MirrorFunc.Account_C24(N_module, P_egross)
+            + MirrorFunc.Account_C25(N_module, P_egross)
+            + MirrorFunc.Account_C26(N_module, P_enet)
+            + MirrorFunc.Account_C27()
+            + MirrorFunc.Account_C28()
+        )
+
+    @staticmethod
+    def Account_C53(include_tax):
+        # Taxes
+        return 100 if bool(include_tax) else 0
+
+    @staticmethod
+    def Account_C54():
+        # Insurance
+        return 1
+
+    @staticmethod
+    def Account_C55(P_enet):
+        # Initial Fuel Load
+        return P_enet / 150 * 34
+
+    @staticmethod
+    def Account_C58(include_decommissioning):
+        # Decommissioning Costs
+        return 200 if bool(include_decommissioning) else 0
+
+    @staticmethod
+    def Account_C61(N_module, P_f, NOAK):
+        # Escalation
+        learning_credit = 0.0 if bool(NOAK) else 1.0
+        return N_module * P_f / 1000 * 115 * learning_credit
+
+    @staticmethod
+    def Account_C62():
+        # Fees
+        return 0
+
+    @staticmethod
+    def Account_C69(include_contingency, NOAK):
+        # Contingency on Capitalized Financial Costs
+        return 0
+
+    @staticmethod
+    def Account_OM(P_enet):
+        # Annualized O&M Cost
+        return 60 * P_enet * 1000 / 1e6
 
     ### MNyberg's Magnet Methods ###
     
@@ -811,33 +895,32 @@ class MirrorFunc(Algorithm):
 
 
     @staticmethod
-    def HF_magnet_cost(n_unit, HF_magnet_number, HF_field=25.0, inner_rad=50):
+    def HF_magnet_cost(n_unit, HF_magnet_number, sc_mat_scale=1.0):
         # This is the HF cost per magnet [MUSD], not for all four
 
-        # cost = 29.10 # Assuming ARPA number for WHAM magnet cost, 5x width, using PROCESS J_crit
-        cost = MirrorFunc.HTS_storedEnergy(HF_field, inner_rad)
+        cost = 29.10
         cost_factor = (0.70)**(np.log((n_unit - 1) * HF_magnet_number + 1)/np.log(2))
         
-        return(cost * cost_factor)
+        return(cost * cost_factor * sc_mat_scale)
 
     @staticmethod
-    def LF_magnet_cost(n_unit, LF_magnet_number, LF_field=10.0, inner_rad=50):
+    def LF_magnet_cost(n_unit, LF_magnet_number, sc_mat_scale=1.0):
         # This is the LF cost per magnet [MUSD]
 
-        cost = MirrorFunc.HTS_storedEnergy(LF_field, inner_rad)
+        cost = 6.25262
         cost_factor = (0.70)**(np.log((n_unit - 1) * LF_magnet_number + 1)/np.log(2))
         
-        return(cost * cost_factor)
+        return(cost * cost_factor * sc_mat_scale)
 
     @staticmethod
-    def CF_magnet_cost(n_unit, CF_magnet_number, CF_field=3.0):
+    def CF_magnet_cost(n_unit, CF_magnet_number, sc_mat_scale=1.0):
         # This is the CF cost per magnet [MUSD]
         
         convert_to_currentDollar = 1.31
-        cost = 0.7*CF_field*convert_to_currentDollar # Assuming 700k/Tesla in 2016 dollars with 3T LTS
+        cost = 0.7*3.0*convert_to_currentDollar # Assuming 700k/Tesla in 2016 dollars with 3T LTS
         cost_factor = (0.70)**(np.log((n_unit - 1) * CF_magnet_number + 1)/np.log(2))
         
-        return(cost * cost_factor)
+        return(cost * cost_factor * sc_mat_scale)
 
 
 

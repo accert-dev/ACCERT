@@ -1,5 +1,5 @@
 ind,code_of_account,account_description,total_cost,level,supaccount,review_status,prn,alg_name,fun_unit,variables
-1,10,Pre-Construction_Costs,24186117.540000003,0,,Unchanged,0.0046878318104200244,,million,
+1,10,Pre-Construction_Costs,24186117.54,0,,Unchanged,0.0046878318104200244,,million,
 2,11,Land_and_Land_Rights,1186117.5399999998,1,1,Unchanged,0.00022989715177366762,,million,
 3,12,Site_Permits,10000000.0,1,1,Unchanged,0.0019382324602810245,,million,
 4,13,Plant_Licensing,0.0,1,1,Unchanged,0.0,,million,
@@ -8,85 +8,85 @@ ind,code_of_account,account_description,total_cost,level,supaccount,review_statu
 7,16,Plant_Reports,2000000.0,1,1,Unchanged,0.00038764649205620487,,million,
 8,17,Other_Pre-Construction_Costs,1000000.0,1,1,Unchanged,0.00019382324602810244,,million,
 9,19,Contingency_on_Pre-Construction_Costs,0.0,1,1,Unchanged,0.0,,million,
-10,20,Capitalized_Direct_Costs_(CDC),1298175963.0,0,,Unchanged,0.2516166790643178,,million,rollup
-11,21,Structures_and_Improvements,112945794.1,1,20,Unchanged,0.021891520437683703,,million,rollup
-12,211,Site_Preparation/Yard_Work,42376414.42,2,21,Unchanged,0.008213534197916489,Account_C21_1,million,P_egross
-13,212,Heat_Island_Building,29536993.34,2,21,Unchanged,0.005724955927069243,Account_C21_2,million,P_egross
-14,213,Turbine_Generator_Building,8538531.264999999,2,21,Unchanged,0.0016549658460947396,Account_C21_3,million,"application, P_egross"
-15,214,Heat_Exchanger_Building,5976971.885,2,21,Unchanged,0.0011584760921694063,Account_C21_4,million,P_egross
-16,215,Power_Supply_and_Energy_Storage,1707706.253,2,21,Unchanged,0.00033099316921894796,Account_C21_5,million,P_egross
-17,216,Reactor_Auxiliaries,853853.1265,2,21,Unchanged,0.00016549658460947398,Account_C21_6,million,P_egross
-18,217,Hot_Cell,14768496.67,2,21,Unchanged,0.0028624779635346214,Account_C21_7,million,P_egross
-19,218,Reactor_Services,2956861.753,2,21,Unchanged,0.0005731085430228053,Account_C21_8,million,P_egross
-20,219,Service_Water,47436.2848,2,21,Unchanged,9.194254699449537e-06,Account_C21_9,million,P_egross
-21,2110,Fuel_Storage,173933.0443,2,21,Unchanged,3.3712267237775744e-05,Account_C21_10,million,P_egross
-22,2111,Control_Room,142308.85439999998,2,21,Unchanged,2.7582764098348607e-05,Account_C21_11,million,P_egross
-23,2112,Onsite_AC_Power,126496.7595,2,21,Unchanged,2.4518012538326203e-05,Account_C21_12,million,P_egross
-24,2113,Administration,695732.1771,2,21,Unchanged,0.00013484906893172064,Account_C21_13,million,P_egross
-25,2114,Site_Services,252993.519,2,21,Unchanged,4.903602507665241e-05,Account_C21_14,million,P_egross
-26,2115,Cryogenics,379490.2784,2,21,Unchanged,7.35540375955963e-05,Account_C21_15,million,P_egross
-27,2116,Security,142308.85439999998,2,21,Unchanged,2.7582764098348607e-05,Account_C21_16,million,P_egross
-28,2117,Ventilation_Stack,4269265.632,2,21,Unchanged,0.0008274829229504582,Account_C21_17,million,P_egross
-29,22,Heat_Island_Plant_Equipment,1111998920.0,1,20,Unchanged,0.21553124025414422,,million,rollup
-30,221,Heat_Island_Components,901967566.8,2,22,Unchanged,0.17482228160924532,,million,rollup
-31,2211,First_Wall_and_Blanket,511083.5873559177,3,221,Unchanged,0.008371891625683487,Account_C22_1_1,million,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result"
-32,2212,Magnet_Radiation_Shield,70016988.37318401,3,221,Unchanged,0.01836222428034747,Account_C22_1_2,million,HF_magnet_shield_cost
-33,2213,Coils,272039976.79999995,3,221,Unchanged,0.05272767135278568,,million,rollup
+10,20,Capitalized_Direct_Costs_(CDC),1474130012.2589958,0,,Unchanged,0.2516166790643178,,million,rollup
+11,21,Structures_and_Improvements,100088394.11800456,1,20,Unchanged,0.021891520437683703,,million,rollup
+12,211,Site_Preparation/Yard_Work,37552414.42478681,2,21,Unchanged,0.008213534197916489,Account_C21_1,million,P_egross
+13,212,Heat_Island_Building,26174593.337873794,2,21,Unchanged,0.005724955927069243,Account_C21_2,million,P_egross
+14,213,Turbine_Generator_Building,7566531.26469585,2,21,Unchanged,0.0016549658460947396,Account_C21_3,million,"application, P_egross"
+15,214,Heat_Exchanger_Building,5296571.885287096,2,21,Unchanged,0.0011584760921694063,Account_C21_4,million,P_egross
+16,215,Power_Supply_and_Energy_Storage,1513306.25293917,2,21,Unchanged,0.00033099316921894796,Account_C21_5,million,P_egross
+17,216,Reactor_Auxiliaries,756653.126469585,2,21,Unchanged,0.00016549658460947398,Account_C21_6,million,P_egross
+18,217,Hot_Cell,13087296.668936897,2,21,Unchanged,0.0028624779635346214,Account_C21_7,million,P_egross
+19,218,Reactor_Services,2620261.7527743033,2,21,Unchanged,0.0005731085430228053,Account_C21_8,million,P_egross
+20,219,Service_Water,42036.28480386583,2,21,Unchanged,9.194254699449537e-06,Account_C21_9,million,P_egross
+21,2110,Fuel_Storage,154133.0442808414,2,21,Unchanged,3.3712267237775744e-05,Account_C21_10,million,P_egross
+22,2111,Control_Room,126108.8544115975,2,21,Unchanged,2.7582764098348607e-05,Account_C21_11,million,P_egross
+23,2112,Onsite_AC_Power,112096.75947697557,2,21,Unchanged,2.4518012538326203e-05,Account_C21_12,million,P_egross
+24,2113,Administration,616532.1771233656,2,21,Unchanged,0.00013484906893172064,Account_C21_13,million,P_egross
+25,2114,Site_Services,224193.51895395113,2,21,Unchanged,4.903602507665241e-05,Account_C21_14,million,P_egross
+26,2115,Cryogenics,336290.2784309266,2,21,Unchanged,7.35540375955963e-05,Account_C21_15,million,P_egross
+27,2116,Security,126108.8544115975,2,21,Unchanged,2.7582764098348607e-05,Account_C21_16,million,P_egross
+28,2117,Ventilation_Stack,3783265.632347925,2,21,Unchanged,0.0008274829229504582,Account_C21_17,million,P_egross
+29,22,Heat_Island_Plant_Equipment,1306044913.7280874,1,20,Unchanged,0.21553124025414422,,million,rollup
+30,221,Heat_Island_Components,1098858920.9198713,2,22,Unchanged,0.17482228160924532,,million,rollup
+31,2211,First_Wall_and_Blanket,446188406.03097904,3,221,Unchanged,0.008371891625683487,Account_C22_1_1,million,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result"
+32,2212,Magnet_Radiation_Shield,41347938.004038714,3,221,Unchanged,0.01836222428034747,Account_C22_1_2,million,HF_magnet_shield_cost
+33,2213,Coils,272039976.84210527,3,221,Unchanged,0.05272767135278568,,million,rollup
 34,22131,HF_Coils,116400000.0,4,2213,Unchanged,0.022561025837671125,Account_C22_1_3_1,million,"HF_magnet_number, HF_magnet_cost"
 35,22132,LF_Coils,12505240.0,4,2213,Unchanged,0.0024238062091604677,Account_C22_1_3_2,million,"LF_magnet_number, LF_magnet_cost"
-36,22133,CC_Coils,143134736.8,4,2213,Unchanged,0.02774283930595409,Account_C22_1_3_3,million,"CF_magnet_number, CF_magnet_cost"
-37,2214,Supplemental_Heating,227453000.0,3,221,Unchanged,0.04408567877882998,,million,rollup
+36,22133,CC_Coils,143134736.84210524,4,2213,Unchanged,0.02774283930595409,Account_C22_1_3_3,million,"CF_magnet_number, CF_magnet_cost"
+37,2214,Supplemental_Heating,105963000.0,3,221,Unchanged,0.04408567877882998,,million,rollup
 38,22141,NBI,105963000.0,4,2214,Unchanged,0.02053809261887582,Account_C22_1_4_1,million,"P_NBI, cost_factor"
-39,22142,ICRH,41490000.0,4,2214,Unchanged,0.008041726477705971,Account_C22_1_4_2,million,"P_ICRH, cost_factor"
-40,22143,ECH,80000000.0,4,2214,Unchanged,0.015505859682248196,Account_C22_1_4_3,million,"P_ECH, cost_factor"
+39,22142,ICRH,0.0,4,2214,Unchanged,0.008041726477705971,Account_C22_1_4_2,million,"P_ICRH, cost_factor"
+40,22143,ECH,0.0,4,2214,Unchanged,0.015505859682248196,Account_C22_1_4_3,million,"P_ECH, cost_factor"
 41,2215,Primary_Structure_and_Support,0.0,3,221,Unchanged,0.0,Account_C22_1_5,million,
-42,2216,Vacuum_System,2031827.2570000002,3,221,Unchanged,0.00039381535432011556,,million,rollup
+42,2216,Vacuum_System,2031827.2568698565,3,221,Unchanged,0.00039381535432011556,,million,rollup
 43,22162,Vessel_Refrigerators,0.0,4,2216,Unchanged,0.0,Account_C22_1_6_2,million,
-44,22163,Primary_Vacuum_Pumps,1689827.257,4,2216,Unchanged,0.0003275278041785045,Account_C22_1_6_3,million,"no_vpumps, cost_pump"
+44,22163,Primary_Vacuum_Pumps,1689827.2568698565,4,2216,Unchanged,0.0003275278041785045,Account_C22_1_6_3,million,"no_vpumps, cost_pump"
 45,22164,Backing_Vacuum_Pumps,342000.0,4,2216,Unchanged,6.628755014161104e-05,Account_C22_1_6_4,million,
 46,2217,Power_Supplies,0.0,3,221,Unchanged,0.0,Account_C22_1_7,million,
 47,2218,Divertor,0.0,3,221,Unchanged,0.0,Account_C22_1_8,million,
-48,2219,Direct_Energy_Convertor,109317164.8,3,221,Unchanged,0.02118820772812502,Account_C22_1_9,million,"P_DECe, cost_factor"
-49,22111,Assembly_and_Installation_Costs,153195207.9,3,221,Unchanged,0.029692792471128007,Account_C22_1_11,million,"L, N_module, construction_time, cost_factor"
-50,222,Main_and_Secondary_Coolant,33649451.5,2,22,Unchanged,0.0065220459167952,,million,
-51,223,Auxiliary_Cooling_Systems,352198.2635,2,22,Unchanged,6.826421067703095e-05,Account_C22_3,million,"N_module, P_th"
-52,224,Radioactive_Waste_Treatment,627553.2695,2,22,Unchanged,0.00012163441175003857,Account_C22_4,million,P_th
-53,225,Fuel_Handling_and_Storage,88654052.28999999,2,22,Unchanged,0.017183216188392927,Account_C22_5,million,cost_factor
-54,226,Other_Heat_Island_Equipment,1748097.852,2,22,Unchanged,0.0003388220000493934,Account_C22_6,million,P_enet
+48,2219,Direct_Energy_Convertor,78092564.83797613,3,221,Unchanged,0.02118820772812502,Account_C22_1_9,million,"P_DECe, cost_factor"
+49,22111,Assembly_and_Installation_Costs,153195207.9479024,3,221,Unchanged,0.029692792471128007,Account_C22_1_11,million,"L, N_module, construction_time, cost_factor"
+50,222,Main_and_Secondary_Coolant,30661451.50067612,2,22,Unchanged,0.0065220459167952,Account_C22_2,million,"N_module, P_egross, P_th"
+51,223,Auxiliary_Cooling_Systems,352198.26348095515,2,22,Unchanged,6.826421067703095e-05,Account_C22_3,million,"N_module, P_th"
+52,224,Radioactive_Waste_Treatment,627553.2694751564,2,22,Unchanged,0.00012163441175003857,Account_C22_4,million,P_th
+53,225,Fuel_Handling_and_Storage,88654052.29068641,2,22,Unchanged,0.017183216188392927,Account_C22_5,million,cost_factor
+54,226,Other_Heat_Island_Equipment,1890737.4838973947,2,22,Unchanged,0.0003388220000493934,Account_C22_6,million,P_enet
 55,227,Instrumentation_and_Control,85000000.0,2,22,Unchanged,0.01647497591238871,Account_C22_7,million,
-56,23,Turbine_Plant_Equipment,39822761.09,1,20,Unchanged,0.007718576820265415,Account_C23,million,"N_module, P_egross"
-57,24,Electric_Plant_Equipment,9819310.954,1,20,Unchanged,0.0019032107228635835,Account_C24,million,"N_module, P_egross"
-58,25,Miscellaneous_Plant_Equipment,6909885.4860000005,1,20,Unchanged,0.0013392964345789922,Account_C25,million,"N_module, P_egross"
-59,26,Heat_Rejection,11679291.32,1,20,Unchanged,0.0022637181549502415,Account_C26,million,"N_module, P_enet"
+56,23,Turbine_Plant_Equipment,35289461.092845365,1,20,Unchanged,0.007718576820265415,Account_C23,million,"N_module, P_egross"
+57,24,Electric_Plant_Equipment,8701510.954400226,1,20,Unchanged,0.0019032107228635835,Account_C24,million,"N_module, P_egross"
+58,25,Miscellaneous_Plant_Equipment,6123285.486429789,1,20,Unchanged,0.0013392964345789922,Account_C25,million,"N_module, P_egross"
+59,26,Heat_Rejection,12882446.879228339,1,20,Unchanged,0.0022637181549502415,Account_C26,million,"N_module, P_enet"
 60,27,Special_Materials,0.0,1,20,Unchanged,0.0,Account_C27,million,
 61,28,Digital_Twin/Simulator,5000000.0,1,20,Unchanged,0.0009691162301405122,Account_C28,million,
 62,29,Contingency_on_Direct_Capital_Costs,0.0,1,20,Unchanged,0.0,,million,
-63,30,Capitalized_Indirect_Service_Costs_(CISC),71591970.58,0,,Unchanged,0.013876188127364011,,million,
-64,31,Field_Indirect_Costs,14318394.120000001,1,3,Unchanged,0.0027752376262480953,,million,
-65,32,Construction_Supervision,35795985.29,1,3,Unchanged,0.0069380940636820055,,million,
+63,30,Capitalized_Indirect_Service_Costs_(CISC),75189163.12710233,0,,Unchanged,0.013876188127364011,,million,
+64,31,Field_Indirect_Costs,15037832.625420468,1,3,Unchanged,0.0027752376262480953,Account_C31,million,"P_enet, construction_time"
+65,32,Construction_Supervision,37594581.563551165,1,3,Unchanged,0.0069380940636820055,Account_C32,million,"P_enet, construction_time"
 66,33,Commissioning_and_Start-Up_Costs,0.0,1,3,Unchanged,0.0,,million,
 67,34,Demonstration_Test_Run,0.0,1,3,Unchanged,0.0,,million,
-68,35,Design_Services_Offsite,21477591.17,1,3,Unchanged,0.004162856437433911,,million,
+68,35,Design_Services_Offsite,22556748.9381307,1,3,Unchanged,0.004162856437433911,Account_C35,million,"P_enet, construction_time, n_unit"
 69,36,PM/CM_Services_Offsite,0.0,1,3,Unchanged,0.0,,million,
 70,37,Design_Servies_Offsite,0.0,1,3,Unchanged,0.0,,million,
 71,38,PM/CM_Services_Onsite,0.0,1,3,Unchanged,0.0,,million,
 72,39,Contingency_on_Support_Services,0.0,1,3,Unchanged,0.0,,million,
-73,40,Capitalized_Owner's_Cost_(COC),155781115.6,0,,Unchanged,0.030194001495471065,,million,
-74,50,Capitalized_Supplementary_Costs_(CSC),37837192.61,0,,Unchanged,0.00733372749226073,,million,
-75,51,Shipping_and_Transportation_Costs,8000000.0,1,5,Unchanged,0.0015505859682248195,,million,
-76,52,Spare_Parts,7323124.886,1,5,Unchanged,0.0014193918364736975,,million,
-77,53,Taxes,0.0,1,5,Unchanged,0.0,,million,
-78,54,Insurance,1000000.0,1,5,Unchanged,0.00019382324602810244,,million,
-79,55,Initial_Fuel_Load,21514067.72,1,5,Unchanged,0.004169926440758817,,million,
-80,58,Decommissioning_Costs,0.0,1,5,Unchanged,0.0,,million,
+73,40,Capitalized_Owner's_Cost_(COC),176895601.4710795,0,,Unchanged,0.030194001495471065,,million,
+74,50,Capitalized_Supplementary_Costs_(CSC),39530034.46099854,0,,Unchanged,0.00733372749226073,,million,
+75,51,Shipping_and_Transportation_Costs,8000000.0,1,5,Unchanged,0.0015505859682248195,Account_C51,million,
+76,52,Spare_Parts,6799670.441290373,1,5,Unchanged,0.0014193918364736975,,million,rollup
+77,53,Taxes,0.0,1,5,Unchanged,0.0,Account_C53,million,include_tax
+78,54,Insurance,1000000.0,1,5,Unchanged,0.00019382324602810244,Account_C54,million,
+79,55,Initial_Fuel_Load,23730364.019708168,1,5,Unchanged,0.004169926440758817,Account_C55,million,P_enet
+80,58,Decommissioning_Costs,0.0,1,5,Unchanged,0.0,Account_C58,million,include_decommissioning
 81,59,Contingency_on_Supplementary_Costs,0.0,1,5,Unchanged,0.0,,million,
-82,60,Capitalized_Financial_Costs_(CFC),195409441.20000002,0,,Unchanged,0.03787489219792162,,million,
-83,61,Escalation,20125000.0,1,6,Unchanged,0.003900692826315562,,million,
-84,62,Fees,0.0,1,6,Unchanged,0.0,,million,
-85,63,Interest_During_Construction_(IDC),175284441.20000002,1,6,Unchanged,0.033974199371606055,,million,
-86,69,Contingency_on_Capitalized_Financial_Costs,0.0,1,6,Unchanged,0.0,,million,
-87,OCC,Overnight_Capital_Cost_(OCC),1587572359.0,0,,Unchanged,0.307708427925872,,million,
-88,TCC,Total_Capital_Cost_(TCC),1782981801.0,0,,Unchanged,0.3455833202788522,,million,
-89,O&M,Operations_and_Maintenance,5694900.279999999,0,,Unchanged,0.0011038040580759493,,million,
+82,60,Capitalized_Financial_Costs_(CFC),217751924.44411266,0,,Unchanged,0.03787489219792162,,million,
+83,61,Escalation,20125000.0,1,6,Unchanged,0.003900692826315562,Account_C61,million,"N_module, P_f, NOAK"
+84,62,Fees,0.0,1,6,Unchanged,0.0,Account_C62,million,
+85,63,Interest_During_Construction_(IDC),197626924.44411266,1,6,Unchanged,0.033974199371606055,,million,
+86,69,Contingency_on_Capitalized_Financial_Costs,0.0,1,6,Unchanged,0.0,Account_C69,million,"include_contingency, NOAK"
+87,OCC,Overnight_Capital_Cost_(OCC),1789930928.8581762,0,,Unchanged,0.307708427925872,,million,
+88,TCC,Total_Capital_Cost_(TCC),2007682853.302289,0,,Unchanged,0.3455833202788522,,million,
+89,O&M,Operations_and_Maintenance,6281566.946393339,0,,Unchanged,0.0011038040580759493,Account_OM,million,P_enet
 90,Fuel,Fuel,109004.2081,0,,Unchanged,2.1127549444664777e-05,,million,
 91,81,Deuterium,47391.176569999996,1,8,Unchanged,9.185511675888353e-06,,million,

@@ -5,5 +5,4 @@
 
 accert{
     ref_model = "mirror"
-    var("r_magnet"){value = 2.0 unit = "m"}
 }

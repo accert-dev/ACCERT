@@ -13,6 +13,7 @@ import math
 import re
 import shutil
 import sqlite3
+import sys
 from pathlib import Path
 
 
@@ -33,13 +34,13 @@ TABLES = {
 DEFAULT_INPUT_FILE = "mirror_default_inputs.csv"
 
 MIRROR_INPUT_DEFAULTS = {
-    "application": "heat",
-    "P_f": 1,
-    "P_f_L": 1,
+    "application": "electricity",
+    "P_f": 175,
+    "P_f_L": 175 * 0.95 / 50,
     "P_f_EP": 1,
-    "P_NBI": 1,
-    "P_ECH": 1,
-    "P_ICRH": 1,
+    "P_NBI": 15,
+    "P_ECH": 0,
+    "P_ICRH": 0,
     "M_n": 1.1,
     "N_module": 1,
     "f_pump": 0.03,
@@ -52,23 +53,23 @@ MIRROR_INPUT_DEFAULTS = {
     "P_thcool": 0,
     "P_coils": 0,
     "P_aux": 1,
-    "eta_th": 0.50,
+    "eta_th": 0.60,
     "eta_DEC": 0.90,
     "eta_pump": 0.98,
-    "eta_NBI": 0.50,
-    "eta_ECH": 0.50,
-    "eta_ICRH": 0.50,
+    "eta_NBI": 0.68,
+    "eta_ECH": 0.60,
+    "eta_ICRH": 0.90,
     "verbose": 0,
     "exact": 0,
     "NOAK": 0,
-    "n_unit": 0,
+    "n_unit": 1,
     "construction_time": 6,
     "lifetime": 30,
     "replacement": 10,
     "availability": 0.90,
-    "discount": 0.0245,
+    "discount": 0.03,
     "LSA": 2,
-    "cost_file": "woodruff-data.csv",
+    "cost_file": "woodruff-data_edited.csv",
     "method": "new",
     "include_decommissioning": 0,
     "include_tax": 0,
@@ -86,9 +87,9 @@ MIRROR_INPUT_DEFAULTS = {
     "vacuum_vessel_thickness": 0.01,
     "multiplier_material": "Pb",
     "multiplier_thickness": 0.01,
-    "blanket_coolant_material": "Natural PbLi",
-    "blanket_thickness": 1.00,
-    "blanket_coolant_fraction": 0.90,
+    "blanket_coolant_material": "40% PbLi",
+    "blanket_thickness": 0.75,
+    "blanket_coolant_fraction": 0.80,
     "blanket_structural_material": "SS316",
     "blanket_structural_fraction": 0.10,
     "outer_vessel_thickness": 0.01,
@@ -148,21 +149,7 @@ HUMAN_INPUT_TO_VAR = {
     "Vacuum Volume": "V_vac",
 }
 
-MIRROR_REFERENCE_VAR_OVERRIDES = {
-    "n_unit": (1, "1"),
-    "P_NBI": (15, "MW"),
-    "P_ICRH": (10, "MW"),
-    "P_ECH": (10, "MW"),
-    "HF_magnet_cost": (29.1, "million"),
-    "LF_magnet_cost": (6.25262, "million"),
-    "CF_magnet_cost": (2.751, "million"),
-    "CF_magnet_number": (52.0300751726645, "1"),
-    "P_egross": (158.12094932835822, "MW"),
-    "P_DECe": (63.01790788032513, "MW"),
-    "P_DEC": (70.0198976448057, "MW"),
-    "P_th": (158.50506908190818, "MW"),
-    "P_enet": (94.91500463226332, "MW"),
-}
+MIRROR_REFERENCE_VAR_OVERRIDES = {}
 
 MIRROR_INPUT_UNITS = {
     "P_f": "MW",
@@ -326,9 +313,9 @@ MIRROR_GENERATED_VAR_NEEDS = {
     "V_vac": "L, a_EC",
     "no_vpumps": "V_vac, vpump_cap",
     "cost_factor": "n_unit",
-    "HF_magnet_cost": "n_unit, HF_magnet_number",
-    "LF_magnet_cost": "n_unit, LF_magnet_number",
-    "CF_magnet_cost": "n_unit, CF_magnet_number",
+    "HF_magnet_cost": "n_unit, HF_magnet_number, sc_mat_scale",
+    "LF_magnet_cost": "n_unit, LF_magnet_number, sc_mat_scale",
+    "CF_magnet_cost": "n_unit, CF_magnet_number, sc_mat_scale",
     "P_alpha": "E_DT, E_alpha, P_f",
     "P_n": "P_f, P_alpha",
     "P_ine": "P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH",
@@ -367,8 +354,8 @@ MIRROR_GENERATED_VAR_NEEDS = {
         "L_EC, a_EC, expander_cell_vessel_thickness, SS316_rho, SS316_c_raw, SS316_m"
     ),
     "HF_magnet_shield_cost": (
-        "a_M, a_CC, a_0, length, r_gap, r_vv, r_magnet, r_cryostat, f_vol, "
-        "length_cc_cylinder, length_ep_cylinder, W_rho, W_c_raw, W_m"
+        "a_M, a_CC_shield, a_0, length, r_gap, r_vv, r_magnet, r_cryostat, f_vol, "
+        "length_cc_cylinder, length_ep_cylinder, r_out_cc, r_out_ep, W_rho, W_c_raw, W_m"
     ),
 }
 
@@ -381,15 +368,15 @@ MIRROR_GENERATED_VAR_FORMULAS = {
     "no_vpumps": ("no_vpumps = V_vac / vpump_cap", "1"),
     "cost_factor": ("cost_factor = 0.80 ** (log(n_unit) / log(2))", "1"),
     "HF_magnet_cost": (
-        "HF_magnet_cost = HTS_storedEnergy(25.0, 50) * 0.70 ** (log((n_unit - 1) * HF_magnet_number + 1) / log(2))",
+        "HF_magnet_cost = 29.10 * 0.70 ** (log((n_unit - 1) * HF_magnet_number + 1) / log(2)) * sc_mat_scale",
         "million",
     ),
     "LF_magnet_cost": (
-        "LF_magnet_cost = HTS_storedEnergy(10.0, 50) * 0.70 ** (log((n_unit - 1) * LF_magnet_number + 1) / log(2))",
+        "LF_magnet_cost = 6.25262 * 0.70 ** (log((n_unit - 1) * LF_magnet_number + 1) / log(2)) * sc_mat_scale",
         "million",
     ),
     "CF_magnet_cost": (
-        "CF_magnet_cost = 0.7 * 3.0 * 1.31 * 0.70 ** (log((n_unit - 1) * CF_magnet_number + 1) / log(2))",
+        "CF_magnet_cost = 0.7 * 3.0 * 1.31 * 0.70 ** (log((n_unit - 1) * CF_magnet_number + 1) / log(2)) * sc_mat_scale",
         "million",
     ),
     "P_alpha": ("P_alpha = P_f * E_alpha / E_DT", "MW"),
@@ -496,7 +483,7 @@ MIRROR_VARIABLE_OVERRIDES = {
     "P_PbLi": ("PbLi price from legacy Mirror eutectic mixture pricing", None, "dollar/kg"),
     "f_Li": ("Lithium mass fraction in PbLi eutectic mixture", 0.17, "1"),
     "T": ("Mean coolant temperature for legacy PbLi density correlation", 300, "degC"),
-    "f_6Li": ("Lithium-6 enrichment fraction for legacy PbLi pricing", 0.075, "1"),
+    "f_6Li": ("Lithium-6 enrichment fraction for legacy PbLi pricing", 0.40, "1"),
     "central_cell_cylindrical_part_cost": (
         "Central cell cylindrical radial-build material cost",
         None,
@@ -507,17 +494,20 @@ MIRROR_VARIABLE_OVERRIDES = {
         None,
         "million",
     ),
-    "a_CC": ("Legacy Mirror central cell plasma radius", 0.54, "m"),
+    "a_CC": ("Legacy Mirror central cell plasma radius", 1.0, "m"),
     "a_M": ("HF shield magnet bore/plasma radius from legacy Mirror geometry", 0.15, "m"),
-    "a_0": ("HF shield end plug plasma radius from legacy Mirror geometry", 0.7, "m"),
-    "length": ("HF shield radially inner cylinder length", 0.5, "m"),
+    "a_CC_shield": ("HF shield central-cell plasma radius from legacy Mirror geometry", 0.54, "m"),
+    "a_0": ("HF shield end plug plasma radius from legacy Mirror geometry", 0.47, "m"),
+    "length": ("HF shield radially inner cylinder length", 1.5, "m"),
     "r_gap": ("HF shield radial gap", 0.1, "m"),
     "r_vv": ("HF shield vacuum vessel radial thickness allowance", 0.01, "m"),
-    "r_magnet": ("HF shield magnet radius", 1.5, "m"),
-    "r_cryostat": ("HF shield cryostat radius allowance", 1.0, "m"),
+    "r_magnet": ("HF shield magnet radius", 0.5, "m"),
+    "r_cryostat": ("HF shield cryostat radius allowance", 0.4, "m"),
     "f_vol": ("HF shield volume fill fraction", 0.9, "1"),
-    "length_cc_cylinder": ("HF shield central-cell-facing cylinder length", 0.5, "m"),
-    "length_ep_cylinder": ("HF shield end-plug-facing cylinder length", 0.5, "m"),
+    "length_cc_cylinder": ("HF shield central-cell-facing cylinder length", 2.0, "m"),
+    "length_ep_cylinder": ("HF shield end-plug-facing cylinder length", 0.4, "m"),
+    "r_out_cc": ("HF shield central-cell-facing outer radius", 0.85, "m"),
+    "r_out_ep": ("HF shield end-plug-facing outer radius", 0.85, "m"),
     "chamber_length": ("PyFECONS magnetic mirror chamber length", 12, "m"),
     "axis_t": ("PyFECONS radial build axis thickness", 0, "m"),
     "plasma_t": ("PyFECONS radial build plasma thickness", 4.9, "m"),
@@ -549,8 +539,9 @@ MIRROR_VARIABLE_OVERRIDES = {
     "W_c_raw": ("PyFECONS Tungsten raw cost", 100, "dollar/kg"),
     "W_m": ("PyFECONS Tungsten manufacturing multiplier", 3, "1"),
     "Li_rho": ("PyFECONS Lithium density", 534, "kg/m3"),
-    "Li_c_raw": ("PyFECONS Lithium raw cost", 70, "dollar/kg"),
+    "Li_c_raw": ("PyFECONS Lithium raw cost", 29.53, "dollar/kg"),
     "Li_m": ("PyFECONS Lithium manufacturing multiplier", 1.5, "1"),
+    "sc_mat_scale": ("Superconductor material cost scaling factor", 1, "1"),
     "BFS_rho": ("PyFECONS BFS density", 7800, "kg/m3"),
     "BFS_c_raw": ("PyFECONS BFS raw cost", 30, "dollar/kg"),
     "BFS_m": ("PyFECONS BFS manufacturing multiplier", 2, "1"),
@@ -647,6 +638,8 @@ def _write_csv(conn: sqlite3.Connection, table_name: str, path: Path) -> int:
 def _mirror_method_name(code_of_account: str) -> str:
     if code_of_account in {"OCC", "TCC"}:
         return f"Account_{code_of_account}"
+    if code_of_account == "O&M":
+        return "Account_OM"
     if re.fullmatch(r"[0-9.]+", code_of_account):
         return "Account_C" + code_of_account.replace(".", "_")
     return ""
@@ -720,6 +713,37 @@ def _account_variables(input_keys: list[str], account_calls: list[str]) -> str:
     return ", ".join(HUMAN_INPUT_TO_VAR.get(key, key) for key in input_keys)
 
 
+def _load_mirror_algorithm_class(algorithm_source: Path):
+    src_path = str(ROOT / "src")
+    if src_path not in sys.path:
+        sys.path.insert(0, src_path)
+    from Algorithm.MirrorFunc import MirrorFunc
+
+    return MirrorFunc
+
+
+def _account_input_values(input_defaults: dict[str, tuple[object, str]], generated_values: dict[str, float]) -> dict[str, object]:
+    values: dict[str, object] = {name: value for name, (value, _unit) in input_defaults.items()}
+    values.update({name: value for name, (value, _unit) in MIRROR_CONSTANT_DEFAULTS.items()})
+    values.update(
+        {
+            name: value
+            for name, (_description, value, _unit) in MIRROR_VARIABLE_OVERRIDES.items()
+            if value is not None
+        }
+    )
+    values.update(generated_values)
+    return values
+
+
+def _calculate_account_musd(algorithm_class, alg_name: str, variables: str, values: dict[str, object]) -> float | None:
+    if not alg_name or not hasattr(algorithm_class, alg_name):
+        return None
+    args = _split_vars(variables)
+    kwargs = {arg: values[arg] for arg in args}
+    return float(getattr(algorithm_class, alg_name)(**kwargs))
+
+
 def _mirror_input_defaults(_algorithm_source: Path | None = None) -> dict[str, tuple[object, str]]:
     values = {}
     for name, value in MIRROR_INPUT_DEFAULTS.items():
@@ -752,15 +776,17 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     values["vpump_cap"] = MIRROR_VARIABLE_OVERRIDES["vpump_cap"][1]
     generated["no_vpumps"] = generated["V_vac"] / values["vpump_cap"]
     generated["cost_factor"] = 0.80 ** (math.log(values["n_unit"]) / math.log(2))
+    generated["CF_magnet_number"] = generated["L_CC"] / generated["L_CF"]
+    values["CF_magnet_number"] = generated["CF_magnet_number"]
     generated["HF_magnet_cost"] = 29.1 * 0.70 ** (
         math.log((values["n_unit"] - 1) * values["HF_magnet_number"] + 1) / math.log(2)
-    )
+    ) * values["sc_mat_scale"]
     generated["LF_magnet_cost"] = 6.25262 * 0.70 ** (
         math.log((values["n_unit"] - 1) * values["LF_magnet_number"] + 1) / math.log(2)
-    )
+    ) * values["sc_mat_scale"]
     generated["CF_magnet_cost"] = 2.751 * 0.70 ** (
         math.log((values["n_unit"] - 1) * values["CF_magnet_number"] + 1) / math.log(2)
-    )
+    ) * values["sc_mat_scale"]
     generated["P_alpha"] = values["P_f"] * values["E_alpha"] / values["E_DT"]
     generated["P_n"] = values["P_f"] - generated["P_alpha"]
     generated["P_ine"] = (
@@ -786,7 +812,6 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     generated["Q_sci"] = values["P_f"] / generated["P_in"]
     generated["Q_eng"] = generated["P_egross"] / (generated["P_ine"] + generated["P_other"])
     generated["f_refrac"] = 1 / generated["Q_eng"]
-    generated["CF_magnet_number"] = generated["L_CC"] / generated["L_CF"]
     T_K = values["T"] + 273.15
     f_6li_natural = 0.075
     rho_6li = 460.0
@@ -795,7 +820,19 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     generated["rho_PbLi"] = rho_pbli * (
         rho_6li * values["f_6Li"] + rho_7li * (1 - values["f_6Li"])
     ) / (rho_6li * f_6li_natural + rho_7li * (1 - f_6li_natural))
-    generated["P_Li"] = 15.152
+    if values["f_6Li"] == 0.075:
+        generated["P_Li"] = 29.53
+    elif 0.075 <= values["f_6Li"] <= 0.975:
+        enrichments = [0.075, 0.80, 0.90, 0.95, 0.975]
+        prices = [29.53, 2000.0, 4000.0, 8000.0, 16000.0]
+        for idx in range(len(enrichments) - 1):
+            x0, x1 = enrichments[idx], enrichments[idx + 1]
+            if x0 <= values["f_6Li"] <= x1:
+                y0, y1 = prices[idx], prices[idx + 1]
+                generated["P_Li"] = y0 + (y1 - y0) * (values["f_6Li"] - x0) / (x1 - x0)
+                break
+    else:
+        raise ValueError("Lithium pricing at this enrichment level is not supported")
     generated["P_PbLi"] = (1 - values["f_Li"]) * values["Pb_c_raw"] + values["f_Li"] * generated["P_Li"]
 
     def central_cell_cylindrical_cost(length: float) -> float:
@@ -857,8 +894,8 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
     v_radially_inner_cylinder = (
         math.pi * values["length"] * (shield_r_out**2 - shield_r_in**2) * values["f_vol"]
     )
-    shield_r_in_cc = values["a_CC"] + values["r_gap"] + values["r_vv"]
-    shield_r_out_cc = shield_r_in_cc + 0.5
+    shield_r_in_cc = values["a_CC_shield"] + values["r_gap"] + values["r_vv"]
+    shield_r_out_cc = values["r_out_cc"]
     v_cc_cylinder = (
         math.pi
         * values["length_cc_cylinder"]
@@ -874,7 +911,7 @@ def _mirror_generated_var_values(input_defaults: dict[str, tuple[object, str]]) 
         * values["f_vol"]
     )
     shield_r_in_ep = values["a_0"] + values["r_gap"] + values["r_vv"]
-    shield_r_out_ep = shield_r_in_ep + 0.5
+    shield_r_out_ep = values["r_out_ep"]
     v_ep_cylinder = (
         math.pi
         * values["length_ep_cylinder"]
@@ -904,6 +941,8 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
     dependencies = _account_method_dependencies(algorithm_source)
     input_defaults = _mirror_input_defaults(algorithm_source)
     generated_values = _mirror_generated_var_values(input_defaults)
+    account_values = _account_input_values(input_defaults, generated_values)
+    algorithm_class = _load_mirror_algorithm_class(algorithm_source)
     methods = set(dependencies)
     conn.execute("ALTER TABLE mirror_acco RENAME TO mirror_acco_raw")
     conn.execute(
@@ -937,14 +976,9 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
         if is_rollup or account_calls or alg_name not in methods:
             alg_name = ""
         normalized_total_cost = _dollar_value(total_cost)
-        if code == "2211":
-            normalized_total_cost = (
-                generated_values["central_cell_cylindrical_part_cost"]
-                + 2 * generated_values["end_plug_cylindrical_part_cost"]
-                + 2 * generated_values["expander_cell_cost_result"]
-            ) * 1e6
-        elif code == "2212":
-            normalized_total_cost = 2 * generated_values["HF_magnet_shield_cost"] * 1e6
+        calculated = _calculate_account_musd(algorithm_class, alg_name, variables, account_values)
+        if calculated is not None:
+            normalized_total_cost = calculated * 1e6
         conn.execute(
             """
             INSERT INTO mirror_acco
@@ -966,7 +1000,62 @@ def _normalize_mirror_account_table(conn: sqlite3.Connection, algorithm_source: 
                 variables,
             ),
         )
+    _refresh_mirror_rollups(conn, account_values)
     conn.execute("DROP TABLE mirror_acco_raw")
+
+
+def _sum_accounts(conn: sqlite3.Connection, accounts: list[str]) -> float:
+    placeholders = ", ".join("?" for _ in accounts)
+    row = conn.execute(
+        f"SELECT COALESCE(SUM(total_cost), 0) FROM mirror_acco WHERE code_of_account IN ({placeholders})",
+        accounts,
+    ).fetchone()
+    return float(row[0] or 0.0)
+
+
+def _set_account_total(conn: sqlite3.Connection, code: str, total_cost: float) -> None:
+    conn.execute(
+        "UPDATE mirror_acco SET total_cost = ? WHERE code_of_account = ?",
+        (float(total_cost), code),
+    )
+
+
+def _refresh_mirror_rollups(conn: sqlite3.Connection, values: dict[str, object]) -> None:
+    rollups = {
+        "2213": ["22131", "22132", "22133"],
+        "2214": ["22141", "22142", "22143"],
+        "2216": ["22162", "22163", "22164"],
+        "221": ["2211", "2212", "2213", "2214", "2215", "2216", "2217", "2218", "2219", "22111"],
+        "22": ["221", "222", "223", "224", "225", "226", "227"],
+        "21": [
+            "211", "212", "213", "214", "215", "216", "217", "218", "219",
+            "2110", "2111", "2112", "2113", "2114", "2115", "2116", "2117",
+        ],
+        "20": ["21", "22", "23", "24", "25", "26", "27", "28", "29"],
+        "10": ["11", "12", "13", "14", "15", "16", "17", "19"],
+        "30": ["31", "32", "33", "34", "35", "36", "37", "38", "39"],
+        "50": ["51", "52", "53", "54", "55", "58", "59"],
+    }
+    for code, children in rollups.items():
+        _set_account_total(conn, code, _sum_accounts(conn, children))
+
+    _set_account_total(conn, "52", 0.1 * _sum_accounts(conn, ["23", "24", "25", "26", "27", "28"]))
+    _set_account_total(conn, "50", _sum_accounts(conn, ["51", "52", "53", "54", "55", "58", "59"]))
+
+    lsa = int(float(values.get("LSA", 2)))
+    owner_factors = [0.1130, 0.1200, 0.1280, 0.1510]
+    account_20 = _sum_accounts(conn, ["20"])
+    _set_account_total(conn, "40", owner_factors[lsa - 1] * account_20)
+
+    occ = _sum_accounts(conn, ["10", "20", "30", "40", "50"])
+    _set_account_total(conn, "OCC", occ)
+
+    discount = float(values["discount"])
+    construction_time = float(values["construction_time"])
+    idcm = ((1 + discount) ** (1 + construction_time) - (1 + discount)) / (discount * construction_time)
+    _set_account_total(conn, "63", (idcm - 1) * occ)
+    _set_account_total(conn, "60", _sum_accounts(conn, ["61", "62", "63", "69"]))
+    _set_account_total(conn, "TCC", _sum_accounts(conn, ["OCC", "60"]))
 
 
 def _split_vars(value: str | None) -> list[str]:

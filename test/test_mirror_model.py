@@ -36,9 +36,14 @@ def test_mirror_default_inputs_are_exported_from_builder_defaults():
             for row in csv.DictReader(handle)
         }
 
-    assert defaults["application"] == ("heat", "1")
-    assert defaults["P_f"] == ("1", "MW")
-    assert defaults["n_unit"] == ("0", "1")
+    assert defaults["application"] == ("electricity", "1")
+    assert defaults["P_f"] == ("175", "MW")
+    assert defaults["P_f_L"] == ("3.325", "MW/m")
+    assert defaults["P_ECH"] == ("0", "MW")
+    assert defaults["P_ICRH"] == ("0", "MW")
+    assert defaults["blanket_coolant_material"] == ("40% PbLi", "1")
+    assert defaults["blanket_thickness"] == ("0.75", "m")
+    assert defaults["n_unit"] == ("1", "1")
     assert defaults["HF_magnet_number"] == ("4", "1")
     assert defaults["LF_magnet_number"] == ("2", "1")
 
@@ -69,8 +74,6 @@ def test_mirror_variables_do_not_keep_blank_legacy_temporaries(cursor):
         "r_in_cc",
         "r_in_ep",
         "r_out",
-        "r_out_cc",
-        "r_out_ep",
         "radial_build",
         "total",
     }
@@ -203,7 +206,7 @@ def test_mirror_accounts_use_fusion_style_structure(cursor):
         """,
         ("OCC",),
     )
-    assert cursor.fetchone()[0] == 1587572359.0
+    assert cursor.fetchone()[0] == pytest.approx(1789930928.8581762)
 
 
 def test_mirror_parent_accounts_are_rollups_without_algorithms(cursor):
@@ -263,11 +266,11 @@ def test_mirror_reference_power_defaults_are_back_calculated(cursor):
     )
     rows = {name: (value, unit) for name, value, unit in cursor.fetchall()}
 
-    assert rows["P_DEC"][0] == pytest.approx(70.0198976448057)
-    assert rows["P_DECe"][0] == pytest.approx(63.01790788032513)
-    assert rows["P_egross"][0] == pytest.approx(158.12094932835822)
-    assert rows["P_enet"][0] == pytest.approx(94.91500463226332)
-    assert rows["P_th"][0] == pytest.approx(158.50506908190818)
+    assert rows["P_DEC"][0] == pytest.approx(50.019897669130195)
+    assert rows["P_DECe"][0] == pytest.approx(45.017907902217175)
+    assert rows["P_egross"][0] == pytest.approx(140.12094934621945)
+    assert rows["P_enet"][0] == pytest.approx(104.69278243988899)
+    assert rows["P_th"][0] == pytest.approx(158.50506907333715)
     assert {unit for _value, unit in rows.values()} == {"MW"}
 
 
@@ -308,7 +311,7 @@ def test_mirror_generated_variable_algorithms_are_loaded(cursor):
     )
     rows = cursor.fetchall()
     assert rows[0][0] == "P_DEC"
-    assert rows[0][1] == pytest.approx(70.0198976448057)
+    assert rows[0][1] == pytest.approx(50.019897669130195)
     assert rows[0][2:] == ("MW", "P_DECe")
     assert rows[1] == ("eta_DEC", 0.9, "1", "P_DECe")
 
@@ -411,7 +414,7 @@ def test_mirror_vacuum_pump_account_uses_deeper_variables(cursor):
     )
     assert rows["no_vpumps"] == (
         "Number of vacuum pumps required to pump the full vacuum in one second",
-        pytest.approx(9.42477796076938 / (200 / 48)),
+        pytest.approx(176.02367259061006 / (200 / 48)),
         "1",
         "cal_no_vpumps",
         "V_vac, vpump_cap",
@@ -444,8 +447,8 @@ def test_mirror_vacuum_pump_account_uses_deeper_variables(cursor):
         variables="no_vpumps,cost_pump",
         constants="",
     )
-    assert alg.run({"no_vpumps": 2.2619467105846507, "cost_pump": 40000}) == pytest.approx(
-        0.09047786842338603
+    assert alg.run({"no_vpumps": 42.24568142174641, "cost_pump": 40000}) == pytest.approx(
+        1.6898272568698564
     )
 
 
@@ -529,7 +532,7 @@ def test_mirror_magnet_accounts_use_explicit_cost_variables(cursor):
         """
         SELECT var_name, var_description, var_value, var_unit, var_alg, var_need, v_linked
         FROM mirror_var
-        WHERE var_name IN (?, ?, ?, ?, ?, ?, ?)
+        WHERE var_name IN (?, ?, ?, ?, ?, ?, ?, ?)
         ORDER BY var_name;
         """,
         (
@@ -540,6 +543,7 @@ def test_mirror_magnet_accounts_use_explicit_cost_variables(cursor):
             "LF_magnet_cost",
             "LF_magnet_number",
             "n_unit",
+            "sc_mat_scale",
         ),
     )
     rows = {row[0]: row[1:] for row in cursor.fetchall()}
@@ -549,7 +553,7 @@ def test_mirror_magnet_accounts_use_explicit_cost_variables(cursor):
         29.1,
         "million",
         "cal_HF_magnet_cost",
-        "n_unit, HF_magnet_number",
+        "n_unit, HF_magnet_number, sc_mat_scale",
         "",
     )
     assert rows["LF_magnet_cost"] == (
@@ -557,7 +561,7 @@ def test_mirror_magnet_accounts_use_explicit_cost_variables(cursor):
         6.25262,
         "million",
         "cal_LF_magnet_cost",
-        "n_unit, LF_magnet_number",
+        "n_unit, LF_magnet_number, sc_mat_scale",
         "",
     )
     assert rows["CF_magnet_cost"] == (
@@ -565,8 +569,16 @@ def test_mirror_magnet_accounts_use_explicit_cost_variables(cursor):
         2.751,
         "million",
         "cal_CF_magnet_cost",
-        "n_unit, CF_magnet_number",
+        "n_unit, CF_magnet_number, sc_mat_scale",
         "",
+    )
+    assert rows["sc_mat_scale"] == (
+        "Superconductor material cost scaling factor",
+        1.0,
+        "1",
+        "",
+        "",
+        "CF_magnet_cost, HF_magnet_cost, LF_magnet_cost",
     )
     assert rows["HF_magnet_number"][5] == "HF_magnet_cost"
     assert rows["LF_magnet_number"][5] == "LF_magnet_cost"
@@ -596,7 +608,7 @@ def test_mirror_first_wall_and_blanket_use_legacy_scalar_super_variables(cursor)
         ("2211",),
     )
     total_cost, alg_name, variables = cursor.fetchone()
-    assert total_cost / 1e6 == pytest.approx(0.5110835873559177)
+    assert total_cost / 1e6 == pytest.approx(446.188406030979)
     assert alg_name == "Account_C22_1_1"
     assert variables == (
         "central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result"
@@ -619,13 +631,13 @@ def test_mirror_first_wall_and_blanket_use_legacy_scalar_super_variables(cursor)
         ),
     )
     rows = {row[0]: row[1:] for row in cursor.fetchall()}
-    assert rows["central_cell_cylindrical_part_cost"][0] == pytest.approx(-0.5031620991790029)
+    assert rows["central_cell_cylindrical_part_cost"][0] == pytest.approx(429.6644799660716)
     assert rows["central_cell_cylindrical_part_cost"][1:] == (
         "million",
         "cal_central_cell_cylindrical_part_cost",
         "L_CC, a_CC, vacuum_gap_CC, first_wall_thickness, vacuum_vessel_thickness, multiplier_thickness, blanket_thickness, blanket_coolant_fraction, blanket_structural_fraction, outer_vessel_thickness, W_rho, W_c_raw, W_m, SS316_rho, SS316_c_raw, SS316_m, Pb_rho, Pb_c_raw, Pb_m, rho_PbLi, P_PbLi",
     )
-    assert rows["end_plug_cylindrical_part_cost"][0] == pytest.approx(0.5031620991790029)
+    assert rows["end_plug_cylindrical_part_cost"][0] == pytest.approx(8.258002288365251)
     assert rows["end_plug_cylindrical_part_cost"][1:] == (
         "million",
         "cal_end_plug_cylindrical_part_cost",
@@ -637,11 +649,11 @@ def test_mirror_first_wall_and_blanket_use_legacy_scalar_super_variables(cursor)
         "cal_expander_cell_cost_result",
         "L_EC, a_EC, expander_cell_vessel_thickness, SS316_rho, SS316_c_raw, SS316_m",
     )
-    assert rows["P_Li"][0] == pytest.approx(15.152)
+    assert rows["P_Li"][0] == pytest.approx(912.8441379310344)
     assert rows["P_Li"][1:] == ("dollar/kg", "cal_P_Li", "f_6Li")
-    assert rows["P_PbLi"][0] == pytest.approx(4.56784)
+    assert rows["P_PbLi"][0] == pytest.approx(157.17550344827586)
     assert rows["P_PbLi"][1:] == ("dollar/kg", "cal_P_PbLi", "Pb_c_raw, P_Li, f_Li")
-    assert rows["rho_PbLi"][0] == pytest.approx(9838.0091935)
+    assert rows["rho_PbLi"][0] == pytest.approx(9374.559280436162)
     assert rows["rho_PbLi"][1:] == ("kg/m3", "cal_rho_PbLi", "T, f_6Li")
 
     cursor.execute(
@@ -676,11 +688,11 @@ def test_mirror_first_wall_and_blanket_use_legacy_scalar_super_variables(cursor)
     )
     assert alg.run(
         {
-            "central_cell_cylindrical_part_cost": -0.5031620991790029,
-            "end_plug_cylindrical_part_cost": 0.5031620991790029,
+            "central_cell_cylindrical_part_cost": 429.6644799660716,
+            "end_plug_cylindrical_part_cost": 8.258002288365251,
             "expander_cell_cost_result": 0.003960744088457411,
         }
-    ) == pytest.approx(0.5110835873559177)
+    ) == pytest.approx(446.188406030979)
 
 
 def test_mirror_magnet_shield_and_expander_costs_are_super_variables(cursor):
@@ -693,7 +705,7 @@ def test_mirror_magnet_shield_and_expander_costs_are_super_variables(cursor):
         ("2212",),
     )
     total_cost, variables = cursor.fetchone()
-    assert total_cost / 1e6 == pytest.approx(70.016988373184)
+    assert total_cost / 1e6 == pytest.approx(41.34793800403872)
     assert variables == "HF_magnet_shield_cost"
 
     cursor.execute(
@@ -707,11 +719,11 @@ def test_mirror_magnet_shield_and_expander_costs_are_super_variables(cursor):
     )
     rows = {row[0]: row[1:] for row in cursor.fetchall()}
     assert rows["HF_magnet_shield_cost"][0] == "HF magnet shield cost per end plug"
-    assert rows["HF_magnet_shield_cost"][1] == pytest.approx(35.008494186592)
+    assert rows["HF_magnet_shield_cost"][1] == pytest.approx(20.67396900201936)
     assert rows["HF_magnet_shield_cost"][2:] == (
         "million",
         "cal_HF_magnet_shield_cost",
-        "a_M, a_CC, a_0, length, r_gap, r_vv, r_magnet, r_cryostat, f_vol, length_cc_cylinder, length_ep_cylinder, W_rho, W_c_raw, W_m",
+        "a_M, a_CC_shield, a_0, length, r_gap, r_vv, r_magnet, r_cryostat, f_vol, length_cc_cylinder, length_ep_cylinder, r_out_cc, r_out_ep, W_rho, W_c_raw, W_m",
     )
     assert rows["expander_cell_cost_result"][0] == "Expander cell vacuum vessel cost from legacy Mirror geometry"
     assert rows["expander_cell_cost_result"][1] == pytest.approx(0.003960744088457411)
@@ -731,7 +743,7 @@ def test_mirror_magnet_shield_and_expander_costs_are_super_variables(cursor):
         variables="HF_magnet_shield_cost",
         constants="",
     )
-    assert alg.run({"HF_magnet_shield_cost": 35.008494186592}) == pytest.approx(70.016988373184)
+    assert alg.run({"HF_magnet_shield_cost": 20.67396900201936}) == pytest.approx(41.34793800403872)
 
     accert = Accert.__new__(Accert)
     accert.var_tabl = "mirror_var"
