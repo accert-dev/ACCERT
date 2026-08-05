@@ -22,9 +22,7 @@ DEFAULT_DB = ROOT / "src" / "accertdb.sqlite"
 DEFAULT_REF_DIR = ROOT / "tutorial" / "accert" / "ref_tables"
 DEFAULT_SQL = DEFAULT_REF_DIR / "mirror_accertdb.sql"
 DEFAULT_ALG_SRC = DEFAULT_REF_DIR / "MirrorFunc.py"
-DEFAULT_SPLIT_ALG_SRC = DEFAULT_REF_DIR / "MirrorFunc_splitInputs.py"
 DEFAULT_ALG_DST = ROOT / "src" / "Algorithm" / "MirrorFunc.py"
-DEFAULT_SPLIT_ALG_DST = ROOT / "src" / "Algorithm" / "MirrorFunc_splitInputs.py"
 
 TABLES = {
     "mirror_acco": "mirror_account.csv",
@@ -1343,8 +1341,6 @@ def load_mirror_tables(
     sql_path: Path,
     algorithm_source: Path,
     algorithm_dest: Path,
-    split_algorithm_source: Path,
-    split_algorithm_dest: Path,
 ) -> None:
     mysql_sql = sql_path.read_text(encoding="utf-8")
     conn = sqlite3.connect(db_path)
@@ -1371,9 +1367,7 @@ def load_mirror_tables(
 
     algorithm_dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(algorithm_source, algorithm_dest)
-    shutil.copy2(split_algorithm_source, split_algorithm_dest)
     print(f"Copied {algorithm_source} to {algorithm_dest}.")
-    print(f"Copied {split_algorithm_source} to {split_algorithm_dest}.")
 
 
 def main() -> None:
@@ -1383,8 +1377,6 @@ def main() -> None:
     parser.add_argument("--sql", default=str(DEFAULT_SQL))
     parser.add_argument("--algorithm-source", default=str(DEFAULT_ALG_SRC))
     parser.add_argument("--algorithm-dest", default=str(DEFAULT_ALG_DST))
-    parser.add_argument("--split-algorithm-source", default=str(DEFAULT_SPLIT_ALG_SRC))
-    parser.add_argument("--split-algorithm-dest", default=str(DEFAULT_SPLIT_ALG_DST))
     args = parser.parse_args()
     load_mirror_tables(
         Path(args.db).resolve(),
@@ -1392,8 +1384,6 @@ def main() -> None:
         Path(args.sql).resolve(),
         Path(args.algorithm_source).resolve(),
         Path(args.algorithm_dest).resolve(),
-        Path(args.split_algorithm_source).resolve(),
-        Path(args.split_algorithm_dest).resolve(),
     )
 
 

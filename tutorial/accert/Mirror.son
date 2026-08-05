@@ -1,8 +1,29 @@
 % ACCERT Test input file
 % Author: J. Zhou (jia.zhou@anl.gov)
 % Last updated: 08/08/2024
+% Mirror reference model using the runFOAK.py baseline:
+% P_f=175, P_NBI=15, P_ICRH=0, P_ECH=0, n_unit=1,
+% construction_time=6, discount=0.03, P_f_L=175*0.95/50,
+% eta_th=0.60, eta_NBI=0.68, eta_ECH=0.60, eta_ICRH=0.90,
+% eta_DEC=0.90, blanket_coolant_material="40% PbLi",
+% blanket_coolant_fraction=0.80, blanket_thickness=0.75.
 
 
 accert{
     ref_model = "mirror"
+    var("P_f"){value = 175 unit = MW}
+    var("P_NBI"){value = 15 unit = MW}
+    var("P_ICRH"){value = 0 unit = MW}
+    var("P_ECH"){value = 0 unit = MW}
+    var("n_unit"){value = 1 unit = N/A}
+    var("construction_time"){value = 6 unit = years}
+    var("discount"){value = 0.03 unit = N/A}
+    var("P_f_L"){value = 3.325 unit = N/A}
+    var("eta_th"){value = 0.60 unit = N/A}
+    var("eta_NBI"){value = 0.68 unit = N/A}
+    var("eta_ECH"){value = 0.60 unit = N/A}
+    var("eta_ICRH"){value = 0.90 unit = N/A}
+    var("eta_DEC"){value = 0.90 unit = N/A}
+    var("blanket_coolant_fraction"){value = 0.80 unit = N/A}
+    var("blanket_thickness"){value = 0.75 unit = m}
 }

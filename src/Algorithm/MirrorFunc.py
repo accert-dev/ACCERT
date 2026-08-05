@@ -1,5 +1,4 @@
 import numpy as np
-import math
 import inspect
 from .Algorithm import Algorithm
 
@@ -807,97 +806,8 @@ class MirrorFunc(Algorithm):
         # Annualized O&M Cost
         return 60 * P_enet * 1000 / 1e6
 
-    ### MNyberg's Magnet Methods ###
-    
-    # Possibly integrate details from this paper: https://ieeexplore.ieee.org/document/10027193
-    # Table 2 should give good general information
-    # Critical current density from PROCESS
-    @staticmethod
-    def jcrit_rebco(temperature, b):
-        """Critical current density for "REBCO" 2nd generation HTS superconductor
-        temperature : input real : superconductor temperature (K)
-        b : input real : Magnetic field at superconductor (T)
-        jcrit : output real : Critical current density in superconductor (A/m2)
-
-        Will return a negative number if the temperature is greater than Tc0, the
-        zero-field critical temperature.
-        """
-        tc0 = 90.0  # (K)
-        birr0 = 132.5  # (T)
-        a = 1.82962e8  # scaling constant
-        # exponents
-        p = 0.5875
-        q = 1.7
-        alpha = 1.54121
-        beta = 1.96679
-        oneoveralpha = 1 / alpha
-
-        validity = True
-
-        if (temperature < 4.2) or (temperature > 72.0):
-            validity = False
-        if temperature < 65:
-            if (b < 0.0) or (b > 15.0):
-                validity = False
-        else:
-            if (b < 0.0) or (b > 11.5):
-                validity = False
-
-        if not validity:
-            print(
-                # f"jcrit_rebco: input out of range temperature: {temperature} Field: {b}"
-            )
-
-        if temperature < tc0:
-            # Normal case
-            birr = birr0 * (1 - temperature / tc0) ** alpha
-        else:
-            # If temp is greater than critical temp, ensure result is real but negative.
-            birr = birr0 * (1 - temperature / tc0)
-
-        if b < birr:
-            # Normal case
-            factor = (b / birr) ** p * (1 - b / birr) ** q
-            jcrit = (a / b) * (birr**beta) * factor
-        else:
-            # Field is too high
-            # Ensure result is real but negative, and varies with temperature.
-            # tcb = critical temperature at field b
-            tcb = tc0 * (1 - (b / birr0) ** oneoveralpha)
-            jcrit = -(temperature - tcb)
-
-        return jcrit, validity
-    
-    @staticmethod
-    def HTS_storedEnergy(field, inner_rad, HTS_temp=20):
-        radius_in_wham = 6.65 # cm
-        radius_out_wham = 31.85 # cm
-        B_wham = 17 # T
-        cost_wham = 2.3/2 # MUSD
-        mew_0=1 # TODO if I value is needed change this to be the real constant value
-        width_ratio = 5 # TODO update
-        volume_1 = math.pi*(radius_out_wham**2-radius_in_wham**2)
-
-        j_crit_ratio = MirrorFunc.jcrit_rebco(HTS_temp,25*(20/17))[0]/MirrorFunc.jcrit_rebco(15,20)[0]
-
-        # Equation taking into account width and critical current ratios
-        I_star = B_wham*2*math.pi/(mew_0*(math.log(radius_out_wham)-math.log(radius_in_wham)))
-        outer_rad=math.exp(field*2*math.pi/(mew_0*I_star*width_ratio*j_crit_ratio)+math.log(inner_rad))
-        # Old simple equation
-        # outer_rad=math.exp((field/(B_wham/(math.log(radius_out_wham)-math.log(radius_in_wham))))+math.log(inner_rad))
-        volume_2 = math.pi*(outer_rad**2-inner_rad**2)
-        ratioOfVols=volume_2/volume_1
-
-        # From BL paper: https://doi.org/10.1016/j.enpol.2023.113511
-        E_ratio=(field/B_wham)**2*ratioOfVols
-        cost_ratio=E_ratio**0.6
-        return cost_ratio*cost_wham
-
-
     @staticmethod
     def HF_magnet_cost(n_unit, HF_magnet_number, sc_mat_scale=1.0):
-        # This is the HF cost per magnet [MUSD], not for all four
-
         cost = 29.10
         cost_factor = (0.70)**(np.log((n_unit - 1) * HF_magnet_number + 1)/np.log(2))
         
@@ -905,8 +815,6 @@ class MirrorFunc(Algorithm):
 
     @staticmethod
     def LF_magnet_cost(n_unit, LF_magnet_number, sc_mat_scale=1.0):
-        # This is the LF cost per magnet [MUSD]
-
         cost = 6.25262
         cost_factor = (0.70)**(np.log((n_unit - 1) * LF_magnet_number + 1)/np.log(2))
         
@@ -914,8 +822,6 @@ class MirrorFunc(Algorithm):
 
     @staticmethod
     def CF_magnet_cost(n_unit, CF_magnet_number, sc_mat_scale=1.0):
-        # This is the CF cost per magnet [MUSD]
-        
         convert_to_currentDollar = 1.31
         cost = 0.7*3.0*convert_to_currentDollar # Assuming 700k/Tesla in 2016 dollars with 3T LTS
         cost_factor = (0.70)**(np.log((n_unit - 1) * CF_magnet_number + 1)/np.log(2))
