@@ -6,3 +6,4 @@ from .Stellarator import Stellarator
 from .LCOE import LCOE
 from .LPSRDirectCostFunc import LPSRDirectCostFunc
 from .AP1000DirectCostFunc import AP1000DirectCostFunc
+from .MirrorFunc import MirrorFunc
