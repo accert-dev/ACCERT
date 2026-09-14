@@ -3,7 +3,7 @@
 Example
 ======================
 
-This document provides a comprehensive explanation of the ACCERT running examples, including the **PWR12-BE**, **ABR1000**, **AP1000**, **Fusion**, and **Mirror** reactor models. It integrates key ACCERT concepts to elucidate how the input files are structured and why they are designed in a particular manner.
+This document provides a comprehensive explanation of the ACCERT running examples, including the **PWR12-BE**, **ABR1000**, **AP1000**, **Large Tokamak**, **Stellarator**, and **Mirror** reactor models. It integrates key ACCERT concepts to elucidate how the input files are structured and why they are designed in a particular manner.
 
 
 
@@ -14,6 +14,6 @@ This document provides a comprehensive explanation of the ACCERT running example
    pwr12-be
    abr1000
    ap1000
-   fusion
+   large-tokamak
    stellarator
    mirror

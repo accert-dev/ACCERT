@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2026-09-14
 
 ### Added
 - **Stellarator model** for fusion cost estimation, adding stellarator-specific algorithms, variables, and LCOE evaluation. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Expanded NEcost tutorial examples and validation/report-check inputs.
 
 ### Changed
+ - **Fusion examples** now distinguish the large tokamak tutorial from the Stellarator and Mirror tutorials.
+
  - **Fusion output naming** standardized across reactor types. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 
  - **Database variable entries** updated for consistency and unit handling. ([#47](https://github.com/accert-dev/ACCERT/pull/47))

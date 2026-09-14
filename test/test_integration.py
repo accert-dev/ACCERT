@@ -93,11 +93,11 @@ def latest_csv_columns(pattern):
         return next(csv.reader(csv_file))
 
 # Test functions
-def test_integration_with_fusion_son(prepare_environment):
-    """Test ACCERT with fusion.son input."""
-    run_accert_and_check_output("tutorial/accert/Fusion.son", "gold/output.fusion.out")
+def test_integration_with_large_tokamak_son(prepare_environment):
+    """Test ACCERT with the large tokamak input."""
+    run_accert_and_check_output("tutorial/accert/LargeTokamak.son", "gold/output.fusion.out")
     
-    # For fusion.son, only check for the updated account CSV file
+    # For the large tokamak model, only check for the updated account CSV file.
     check_csv_files(["*_upd_acc_*.csv"])
 
 def test_integration_with_pwr_son(prepare_environment,csv_patterns):
