@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - SQLite-backed ACCERT database workflow and CSV result generation.
 - CRT and IAT workflow APIs, examples, GUI integration, and regression tests.
 - Expanded NEcost tutorial examples and validation/report-check inputs.
+- GitHub Actions CI workflow for automated tests and package checks.
 
 ### Changed
  - **Fusion examples** now distinguish the large tokamak tutorial from the Stellarator and Mirror tutorials.
