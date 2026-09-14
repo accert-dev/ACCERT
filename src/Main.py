@@ -6,6 +6,7 @@ import tempfile
 from prettytable import PrettyTable
 import configparser
 import xml2obj
+from son_parser import son_to_xml
 from utility_accert import Utility_methods
 from Algorithm import Algorithm
 from post_process_accert import AccertPostProcessor
@@ -211,15 +212,16 @@ class Accert:
         """    
 
         import subprocess
-        # sonvalidxml = os.path.join(accert_path, "bin", "sonvalidxml")
-        # schema = os.path.join(accert_path, "src", "etc", "accert.sch")
-        cmd = [
+        sonvalidxml = os.environ.get(
+            "ACCERT_SONVALIDXML",
             os.path.join(accert_path, "bin", "sonvalidxml"),
-            os.path.join(accert_path, "src", "etc", "accert.sch"),
-            input_path,
-        ]
-
-        xmlresult = subprocess.check_output(cmd)
+        )
+        schema = os.path.join(accert_path, "src", "etc", "accert.sch")
+        if os.path.exists(sonvalidxml):
+            cmd = [sonvalidxml, schema, input_path]
+            xmlresult = subprocess.check_output(cmd)
+        else:
+            xmlresult = son_to_xml(input_path)
         ### obtain pieces of input by name for convenience
         # from .wasppy import xml2obj
         return xml2obj.xml2obj(xmlresult)

@@ -42,6 +42,8 @@ jobs:
           python -m pip install pytest build twine
 
       - name: Run tests
+        env:
+          ACCERT_SONVALIDXML: /missing/sonvalidxml
         run: python -m pytest
 
       - name: Build package
