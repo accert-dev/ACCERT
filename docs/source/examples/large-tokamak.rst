@@ -11,17 +11,17 @@ The input file for the large tokamak model is located at ``accert/tutorial/accer
 Reactor Model
 ~~~~~~~~~~~~~~
 
-The beginning of the input file specifies the reference model as "fusion". This internal reference model name selects the large tokamak fusion tables and algorithms.
+The beginning of the input file specifies the reference model as "large_tokamak".
 
 .. code-block:: console
 
    accert{
-       ref_model = "fusion"
+       ref_model = "large_tokamak"
        ...
    }
 
 - **accert{}**: Denotes the start of the ACCERT input configuration.
-- **ref_model**: Specifies the large tokamak reference model through ACCERT's internal "fusion" selector.
+- **ref_model**: Specifies the large tokamak reference model. ACCERT uses the existing tokamak/fusion reference tables internally for this model.
 
 Codes of Accounts (COA) Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -63,4 +63,4 @@ To run the large tokamak example with Python, execute the following command:
     > cd ACCERT/tutorial/accert
     > python ../../src/Main.py -i LargeTokamak.son
 
-The output will be generated in the ``tutorial/accert`` directory as ``output.out`` and large tokamak account output files using ACCERT's internal ``fusion`` prefix. The ``output.out`` file contains the cost estimation results, while the CSV files provide detailed information on the accounts affected by the input variables. Note that the large tokamak example does not generate the ``*_variable_affected_cost_elements`` file as it does not have any cost elements associated with the input variables; there is only one account affected by the input variables.
+The output will be generated in the ``tutorial/accert`` directory as ``output.out`` and large tokamak account output files. The ``output.out`` file contains the cost estimation results, while the CSV files provide detailed information on the accounts affected by the input variables. Note that the large tokamak example does not generate the ``*_variable_affected_cost_elements`` file as it does not have any cost elements associated with the input variables; there is only one account affected by the input variables.

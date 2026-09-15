@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
  - **Fusion examples** now distinguish the large tokamak tutorial from the Stellarator and Mirror tutorials.
+ - The large tokamak tutorial now uses ``ref_model = "large_tokamak"`` instead of the generic ``fusion`` selector; ``fusion`` remains supported as a backward-compatible alias.
 
  - **Fusion output naming** standardized across reactor types. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 

@@ -162,8 +162,8 @@ class Accert:
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
-        elif "fusion" in str(xml2obj.ref_model.value).lower():
-            self.ref_model = 'fusion'
+        elif "large_tokamak" in str(xml2obj.ref_model.value).lower() or "fusion" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'large_tokamak'
             self.acc_tabl = 'fusion_acco'
             self.cel_tabl = None
             self.var_tabl = 'fusion_varv'
@@ -568,7 +568,7 @@ class Accert:
         -------
         None
         """
-        if self.ref_model == 'fusion' or self.ref_model == 'stellarator':
+        if self.ref_model in ('large_tokamak', 'fusion', 'stellarator'):
             # inport the LCOE module
             module = importlib.import_module('Algorithm.LCOE')
             LCOE_module = module.LCOE(c, ut, accert)

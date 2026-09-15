@@ -76,6 +76,7 @@ class AccertPostProcessor:
         "ap1000": 1.0,
         "heatpipe": 0.834,
         "lfr": 0.834,
+        "large_tokamak": 1.0,
         "fusion": 1.0,
         "lpsr": 1.0,
         "pwr12-be": 1.0,

@@ -7,7 +7,7 @@
 % https://github.com/ukaea/PROCESS.
 
 accert{
-    ref_model = "fusion"
+    ref_model = "large_tokamak"
     l0COA(2){  
         l1COA(21){
             l2COA("211"){

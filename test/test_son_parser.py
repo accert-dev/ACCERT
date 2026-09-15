@@ -15,7 +15,7 @@ def test_fallback_son_parser_matches_accert_object_shape():
     xml = son_to_xml(PROJECT_ROOT / "tutorial" / "accert" / "LargeTokamak.son")
     document = xml2obj.xml2obj(xml)
 
-    assert str(document.accert.ref_model.value) == '"fusion"'
+    assert str(document.accert.ref_model.value) == '"large_tokamak"'
     assert str(document.accert.l0COA.id) == "2"
     assert str(document.accert.l0COA.l1COA.l2COA.alg.id) == '"acc211"'
     assert str(document.accert.l0COA.l1COA.l2COA.alg.var[0].id) == '"csi"'
@@ -30,4 +30,4 @@ def test_accert_load_obj_uses_python_fallback_when_sonvalidxml_is_missing(monkey
         PROJECT_ROOT,
     )
 
-    assert str(accert.input.accert.ref_model.value) == '"fusion"'
+    assert str(accert.input.accert.ref_model.value) == '"large_tokamak"'
