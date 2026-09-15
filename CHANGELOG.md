@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - 2026-09-14
 
 ### Added
 - **Stellarator model** for fusion cost estimation, adding stellarator-specific algorithms, variables, and LCOE evaluation. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
@@ -13,8 +13,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - SQLite-backed ACCERT database workflow and CSV result generation.
 - CRT and IAT workflow APIs, examples, GUI integration, and regression tests.
 - Expanded NEcost tutorial examples and validation/report-check inputs.
+- GitHub Actions CI workflow for automated tests and package checks.
+- Built-in ACCERT SON parser fallback for command-line Python runs without NEAMS Workbench.
+- GUI walkthrough GIFs for IAT-only and connected IAT-to-CRT workflows.
 
 ### Changed
+ - **Fusion examples** now distinguish the large tokamak tutorial from the Stellarator and Mirror tutorials.
+ - The large tokamak tutorial now uses ``ref_model = "large_tokamak"`` instead of the generic ``fusion`` selector; ``fusion`` remains supported as a backward-compatible alias.
+
  - **Fusion output naming** standardized across reactor types. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 
  - **Database variable entries** updated for consistency and unit handling. ([#47](https://github.com/accert-dev/ACCERT/pull/47))

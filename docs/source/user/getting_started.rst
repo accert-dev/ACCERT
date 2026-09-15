@@ -26,7 +26,9 @@ Using ACCERT via Python
      - `PWR12-BE.son`
      - `ABR1000.son`
      - `heatpipe.son`
-     - `Fusion.son`
+     - `LargeTokamak.son`
+     - `stellarator.son`
+     - `Mirror.son`
 
    -  Open a terminal and navigate to the directory containing your input file (e.g., `tutorial/accert`):
 

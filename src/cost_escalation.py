@@ -5,6 +5,7 @@ MODEL_COST_YEARS = {
     "lfr": 2017,
     "lpsr": 2018,
     "pwr12-be": 2017,
+    "large_tokamak": 2015,
     "fusion": 2015,
     "stellarator": 2015,
 }

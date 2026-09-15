@@ -1,8 +1,7 @@
 Stellarator Example
 ===============================
 
-The fusion example demonstrates the integration of ACCERT with a large tokamak fusion reactor model 
-This tutorial demonstrates how to run the **Stellarator** model introduced in :ghpull:`47`.  
+This tutorial demonstrates how to run the **Stellarator** model introduced in :ghpull:`47`.
 It extends ACCERT’s fusion modeling capabilities to include stellarator‐specific cost elements,
 variables, and LCOE evaluation, the algorithms are leveraged from UKAEA's `PROCESS <https://github.com/ukaea/PROCESS>`_.
 
@@ -46,12 +45,12 @@ The input file for the stellarator model is located at ``accert/tutorial/accert/
 Running the Example
 -------------------
 
-Please follow the :doc:`Installation Guide <../user/install>` before running the fusion example.
+Please follow the :doc:`Installation Guide <../user/install>` before running the stellarator example.
 
 Using command line
 ~~~~~~~~~~~~~~~~~~~
 
-To run the fusion example with Python, execute the following command:
+To run the stellarator example with Python, execute the following command:
 
 .. code-block:: console
 

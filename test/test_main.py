@@ -11,14 +11,17 @@ TEST_DIR = Path(__file__).resolve().parent
 SRC_PATH = PROJECT_ROOT / 'src'
 sys.path.insert(0, str(SRC_PATH))
 from utility_accert import Utility_methods 
-from Main import Accert
+from Main import Accert, AccertPostProcessor, TARGET_DOLLAR_YEAR
 import pytest
 
 
 ut = Utility_methods()
 accert_path = str(PROJECT_ROOT)
 input_path = str(TEST_DIR / 'accert_unit_test_input.son')
-accert = Accert(input_path, accert_path)
+accert = Accert.__new__(Accert)
+accert.input_path = input_path
+accert.accert_path = accert_path
+accert.input = None
 accert.ref_model = 'pwr12-be'
 accert.acc_tabl = 'account'
 accert.cel_tabl = 'cost_element'
@@ -26,6 +29,11 @@ accert.var_tabl = 'variable'
 accert.alg_tabl = 'algorithm'
 accert.esc_tabl = 'escalation'
 accert.fac_tabl = 'facility'
+accert.use_gncoa = False
+accert.gncoa_map = 'gncoamapping'
+accert.output_timestamp = 'pytest'
+accert.post_processor = AccertPostProcessor()
+accert.target_dollar_year = TARGET_DOLLAR_YEAR
 
 def test_get_current_COAs(cursor):
     """  Test the main function. """

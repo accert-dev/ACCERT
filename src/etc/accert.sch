@@ -522,7 +522,7 @@ accert{
 }
 
 EndOfSchema{}
-ref_models = [ "PWR12-BE" "ABR1000" "AP1000" "LFR" "LPSR" "heatpipe" "fusion" "stellarator" "mirror"]
+ref_models = [ "PWR12-BE" "ABR1000" "AP1000" "LFR" "LPSR" "heatpipe" "large_tokamak" "fusion" "stellarator" "mirror"]
 power_type = ["Thermal" "Electric"] 
 power_unit = ["W" "kWW" "MW"]
 total_cost_unit = ["million" "dollar"]

@@ -1,32 +1,32 @@
-Fusion Example
-==============
+Large Tokamak Example
+=====================
 
-The fusion example demonstrates the integration of ACCERT with a large tokamak fusion reactor model leveraging from UKAEA's `PROCESS <https://github.com/ukaea/PROCESS>`_.
+The large tokamak example demonstrates the integration of ACCERT with a tokamak fusion reactor model leveraging UKAEA's `PROCESS <https://github.com/ukaea/PROCESS>`_.
 
 General Input Structure
 ------------------------
 
-The input file for the fusion model is located at ``accert/tutorial/accert/Fusion.son``.
+The input file for the large tokamak model is located at ``accert/tutorial/accert/LargeTokamak.son``.
 
 Reactor Model
 ~~~~~~~~~~~~~~
 
-The beginning of the input file specifies the reference model as "fusion".
+The beginning of the input file specifies the reference model as "large_tokamak".
 
 .. code-block:: console
 
    accert{
-       ref_model = "fusion"
+       ref_model = "large_tokamak"
        ...
    }
 
 - **accert{}**: Denotes the start of the ACCERT input configuration.
-- **ref_model**: Specifies the reference model as "fusion".
+- **ref_model**: Specifies the large tokamak reference model. ACCERT uses the existing tokamak/fusion reference tables internally for this model.
 
 Codes of Accounts (COA) Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The COA hierarchy for the fusion model is structured as follows:
+The COA hierarchy for the large tokamak model is structured as follows:
 
 .. code-block:: console
 
@@ -51,16 +51,16 @@ The COA hierarchy for the fusion model is structured as follows:
 Running the Example
 -------------------
 
-Please follow the :doc:`Installation Guide <../user/install>` before running the fusion example.
+Please follow the :doc:`Installation Guide <../user/install>` before running the large tokamak example.
 
 Using command line
 ~~~~~~~~~~~~~~~~~~~
 
-To run the fusion example with Python, execute the following command:
+To run the large tokamak example with Python, execute the following command:
 
 .. code-block:: console
 
     > cd ACCERT/tutorial/accert
-    > python ../../src/Main.py -i Fusion.son
+    > python ../../src/Main.py -i LargeTokamak.son
 
-The output will be generated in the ``tutorial/accert`` directory as ``output.out``, and ``fusion_updated_account.xlsx``. The ``output.out`` file contains the cost estimation results, while the Excel files provide detailed information on the accounts affected by the input variables. Note that the fusion example does not generate the ``*_variable_affected_cost_elements.xlsx`` file as it does not have any cost elements associated with the input variables, there is only one account affected by the input variables.
+The output will be generated in the ``tutorial/accert`` directory as ``output.out`` and large tokamak account output files. The ``output.out`` file contains the cost estimation results, while the CSV files provide detailed information on the accounts affected by the input variables. Note that the large tokamak example does not generate the ``*_variable_affected_cost_elements`` file as it does not have any cost elements associated with the input variables; there is only one account affected by the input variables.

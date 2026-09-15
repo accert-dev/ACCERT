@@ -6,6 +6,7 @@ import tempfile
 from prettytable import PrettyTable
 import configparser
 import xml2obj
+from son_parser import son_to_xml
 from utility_accert import Utility_methods
 from Algorithm import Algorithm
 from post_process_accert import AccertPostProcessor
@@ -161,8 +162,8 @@ class Accert:
             self.alg_tabl = 'algorithm'
             self.esc_tabl = 'escalation'
             self.fac_tabl = 'facility'
-        elif "fusion" in str(xml2obj.ref_model.value).lower():
-            self.ref_model = 'fusion'
+        elif "large_tokamak" in str(xml2obj.ref_model.value).lower() or "fusion" in str(xml2obj.ref_model.value).lower():
+            self.ref_model = 'large_tokamak'
             self.acc_tabl = 'fusion_acco'
             self.cel_tabl = None
             self.var_tabl = 'fusion_varv'
@@ -211,15 +212,16 @@ class Accert:
         """    
 
         import subprocess
-        # sonvalidxml = os.path.join(accert_path, "bin", "sonvalidxml")
-        # schema = os.path.join(accert_path, "src", "etc", "accert.sch")
-        cmd = [
+        sonvalidxml = os.environ.get(
+            "ACCERT_SONVALIDXML",
             os.path.join(accert_path, "bin", "sonvalidxml"),
-            os.path.join(accert_path, "src", "etc", "accert.sch"),
-            input_path,
-        ]
-
-        xmlresult = subprocess.check_output(cmd)
+        )
+        schema = os.path.join(accert_path, "src", "etc", "accert.sch")
+        if os.path.exists(sonvalidxml):
+            cmd = [sonvalidxml, schema, input_path]
+            xmlresult = subprocess.check_output(cmd)
+        else:
+            xmlresult = son_to_xml(input_path)
         ### obtain pieces of input by name for convenience
         # from .wasppy import xml2obj
         return xml2obj.xml2obj(xmlresult)
@@ -566,7 +568,7 @@ class Accert:
         -------
         None
         """
-        if self.ref_model == 'fusion' or self.ref_model == 'stellarator':
+        if self.ref_model in ('large_tokamak', 'fusion', 'stellarator'):
             # inport the LCOE module
             module = importlib.import_module('Algorithm.LCOE')
             LCOE_module = module.LCOE(c, ut, accert)

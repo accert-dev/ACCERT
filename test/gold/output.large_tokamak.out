@@ -14,7 +14,7 @@
 ======================================== Reading user input ========================================
 
 
-[USER_INPUT] Reference model is "fusion"
+[USER_INPUT] Reference model is "large_tokamak" 
 
 WARNING: No power input found in the user input file
 
@@ -22,7 +22,7 @@ WARNING: No power input found in the user input file
 [Updated]  Changed from 16.0 million to 16.0 million
 
 [Updating] Variable lsa
-[Updated]  Changed from 4.0  to 4.0
+[Updated]  Changed from 4.0  to 4.0 
 
 =================================Extracting user changed variables==================================
 
@@ -45,75 +45,75 @@ variable "lsa" affects account(s):
 22612, 2262, 2263, 241, 242, 243, 244, 245, 25, 26
 
 ======================================== Updating accounts =========================================
-[Updating] Account [211], running algorithm: [acc211],
+[Updating] Account [211], running algorithm: [acc211], 
 [Updating] with formulation: acc211= csi*cmlsa[lsa-1] + cland
 [Updating] Total cost of account 211
 [Updated]  Changed from 35,200,000.00 dollar to 35,200,000.00 dollar
 
-
-[Updating] Account [212], running algorithm: [acc212],
+ 
+[Updating] Account [212], running algorithm: [acc212], 
 [Updating] with formulation: acc212= (1.0e-6*ucrb*rbvol)**exprb* cmlsa[lsa - 1]
 [Updating] Total cost of account 212
 [Updated]  Changed from 452,161,853.10 dollar to 452,161,853.00 dollar
 
-
-[Updating] Account [213], running algorithm: [acc213],
+ 
+[Updating] Account [213], running algorithm: [acc213], 
 [Updating] with formulation:  if ireactor == 1:
         acc213 = cturbb * cmlsa[lsa - 1]
     else: acc213 = 0.0e0
 [Updating] Total cost of account 213
 [Updated]  Changed from 38,000,000.00 dollar to 38,000,000.00 dollar
 
-
-[Updating] Account [2141], running algorithm: [acc2141],
+ 
+[Updating] Account [2141], running algorithm: [acc2141], 
 [Updating] with formulation: acc2142 = 1.0e-6*ucmb*rmbvol**exprb*cmlsa[lsa - 1]
 [Updating] Total cost of account 2141
 [Updated]  Changed from 103,067,666.80 dollar to 103,067,666.00 dollar
 
-
-[Updating] Account [2142], running algorithm: [acc2142],
+ 
+[Updating] Account [2142], running algorithm: [acc2142], 
 [Updating] with formulation: acc2142 = (1.0e-6*ucws*wsvol)**exprb*cmlsa[lsa - 1]
 [Updating] Total cost of account 2142
 [Updated]  Changed from 57,641,276.92 dollar to 57,641,276.00 dollar
 
-
-[Updating] Account [215], running algorithm: [acc215],
+ 
+[Updating] Account [215], running algorithm: [acc215], 
 [Updating] with formulation: acc215 = ((1.0e-6*uctr*triv)*exprb)*cmlsa[lsa - 1]
 [Updating] Total cost of account 215
 [Updated]  Changed from 14,800,000.00 dollar to 14,799,999.00 dollar
 
-
-[Updating] Account [216], running algorithm: [acc216],
+ 
+[Updating] Account [216], running algorithm: [acc216], 
 [Updating] with formulation: acc216 = 1.0e-6*ucel*elevol**exprb*cmlsa[lsa - 1]
 [Updating] Total cost of account 216
 [Updated]  Changed from 19,706,763.56 dollar to 19,706,763.00 dollar
 
-
-[Updating] Account [2171], running algorithm: [acc2171],
+ 
+[Updating] Account [2171], running algorithm: [acc2171], 
 [Updating] with formulation: acc2171 = 1.0e-6*ucad*admvol**exprb* cmlsa[lsa - 1]
 [Updating] Total cost of account 2171
 [Updated]  Changed from 18,000,000.00 dollar to 18,000,000.00 dollar
 
-
-[Updating] Account [2172], running algorithm: [acc2172],
+ 
+[Updating] Account [2172], running algorithm: [acc2172], 
 [Updating] with formulation: acc2172 = 1.0e-6*ucconc*convol**exprb* cmlsa[lsa - 1]
 [Updating] Total cost of account 2172
 [Updated]  Changed from 21,000,000.00 dollar to 21,000,000.00 dollar
 
-
-[Updating] Account [2173], running algorithm: [acc2173],
+ 
+[Updating] Account [2173], running algorithm: [acc2173], 
 [Updating] with formulation: acc2173 = 1.0e-6*ucsh*shovol**exprb*cmlsa[lsa - 1]
 [Updating] Total cost of account 2173
 [Updated]  Changed from 11,500,000.00 dollar to 11,499,999.00 dollar
 
-
-[Updating] Account [2174], running algorithm: [acc2174],
+ 
+[Updating] Account [2174], running algorithm: [acc2174], 
 [Updating] with formulation: acc2174 = 1.0e-6*uccr*cryvol**exprb*cmlsa[lsa - 1]
 [Updating] Total cost of account 2174
 [Updated]  Changed from 7,570,723.20 dollar to 7,570,723.00 dollar
 
-
-[Updating] Account [2211], running algorithm: [acc2211],
+ 
+[Updating] Account [2211], running algorithm: [acc2211], 
 [Updating] with formulation: if ife == 1:
         acc2211 = (1.0e-6*cmlsa[lsa - 1]
             *  (ucblss*(fwmatm(1, 1)+ fwmatm(2, 1)+ fwmatm(3, 1))
@@ -121,7 +121,7 @@ variable "lsa" affects account(s):
             + ucblli2o*(fwmatm(1, 4) + fwmatm(2, 4)+ fwmatm(3, 4))
             + ucconc*(fwmatm(1, 5)+ fwmatm(2, 5)+ fwmatm(3, 5))))
     else:
-        acc2211 = (1.0e-6* cmlsa[lsa - 1]*((ucfwa + ucfws)* fwarea+ ucfwps))
+        acc2211 = (1.0e-6* cmlsa[lsa - 1]*((ucfwa + ucfws)* fwarea+ ucfwps)) 
     acc2211 = fkind * acc2211
     if ifueltyp == 1:
         acc2211 = 0
@@ -133,8 +133,8 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 2211
 [Updated]  Changed from 191,300,792.10 dollar to 190,799,999.00 dollar
 
-
-[Updating] Account [22121], running algorithm: [acc22121],
+ 
+[Updating] Account [22121], running algorithm: [acc22121], 
 [Updating] with formulation: if ife == 1:
         acc22121 = 0
     else:
@@ -146,8 +146,8 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22121
 [Updated]  Changed from 261,092,739.80 dollar to 261,092,739.00 dollar
 
-
-[Updating] Account [22122], running algorithm: [acc22122],
+ 
+[Updating] Account [22122], running algorithm: [acc22122], 
 [Updating] with formulation: if ife == 1:
         if iblanket == 4:
             acc22122 = 1.0e-6*whtblli*ucblli
@@ -162,15 +162,15 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22122
 [Updated]  Changed from 639,846,060.70 dollar to 639,846,060.00 dollar
 
-
-[Updating] Account [22123], running algorithm: [acc22123],
+ 
+[Updating] Account [22123], running algorithm: [acc22123], 
 [Updating] with formulation: acc22123 = acc22123 = 1.0e-6*whtblss*ucblss
  acc22123 = fkind*acc22123*cmlsa[lsa - 1]
 [Updating] Total cost of account 22123
 [Updated]  Changed from 80,726,178.24 dollar to 80,726,178.00 dollar
 
-
-[Updating] Account [22124], running algorithm: [acc22124],
+ 
+[Updating] Account [22124], running algorithm: [acc22124], 
 [Updating] with formulation: if ife == 1:
         acc22124 = 1.0e-6*whtblvd*ucblvd
  else:
@@ -180,21 +180,21 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22124
 [Updated]  Changed from 0.00 dollar to 0.00 dollar
 
-
-[Updating] Account [22131], running algorithm: [acc22131],
+ 
+[Updating] Account [22131], running algorithm: [acc22131], 
 [Updating] with formulation: if ife == 1:
         acc22131 = 1.0e-6*cmlsa[lsa - 1]*ucshld*(shmatm[1, 0] + shmatm[2, 0]+shmatm[3, 0])
         + uccarb*(shmatm[1, 1]+ shmatm[2, 1]+ shmatm[3, 1])
         + ucblli2o*(shmatm[1, 1]+ shmatm[2, 1]+ shmatm[3, 1])
-        + ucconc* (shmatm[1, 1] + shmatm[2, 1]+ shmatm[3, 1])
+        + ucconc* (shmatm[1, 1] + shmatm[2, 1]+ shmatm[3, 1]) 
     else:
-        acc22131 = 1.0e-6*whtshld*ucshld*cmlsa[lsa - 1]
+        acc22131 = 1.0e-6*whtshld*ucshld*cmlsa[lsa - 1] 
     acc22131 = fkind*acc22131
 [Updating] Total cost of account 22131
 [Updated]  Changed from 78,394,202.68 dollar to 78,394,202.00 dollar
 
-
-[Updating] Account [22132], running algorithm: [acc22132],
+ 
+[Updating] Account [22132], running algorithm: [acc22132], 
 [Updating] with formulation: if ife == 1:
         acc22132 = 1.0e-6*wpenshld*ucpens* cmlsa[lsa - 1]
     else:
@@ -203,23 +203,23 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22132
 [Updated]  Changed from 78,394,202.68 dollar to 78,394,202.00 dollar
 
-
-[Updating] Account [2214], running algorithm: [acc2214],
+ 
+[Updating] Account [2214], running algorithm: [acc2214], 
 [Updating] with formulation: acc2214 = 1.0e-6*gsmass*ucgss*cmlsa[lsa - 1]
     acc2214 = fkind*acc2214
 [Updating] Total cost of account 2214
 [Updated]  Changed from 41,648,347.22 dollar to 41,648,347.00 dollar
 
-
-[Updating] Account [22211], running algorithm: [acc22211],
-[Updating] with formulation: if i_tf_sup == 1:
+ 
+[Updating] Account [22211], running algorithm: [acc22211], 
+[Updating] with formulation: if i_tf_sup == 1:  
         costtfsc = ucsc[i_tf_sc_mat - 1]*whtconsc/(tfleng*n_tf_turn)
         costtfcu = uccu*whtconcu/(tfleng*n_tf_turn)
         costwire = costtfsc+costtfcu
         ctfconpm = costwire+cconshtf+cconfix
         acc22211 = 1.0e-6*ctfconpm*n_tf*tfleng*n_tf_turn
         acc22211 = fkind*acc22211*cmlsa[lsa - 1]
-    else:
+    else:  
         acc22211 = 1.0e-6*whtcp*uccpcl1*cmlsa[lsa - 1]
         acc22211 = fkind*acc22211
         if (itart == 1) and (ifueltyp == 1):
@@ -230,8 +230,8 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22211
 [Updated]  Changed from 130,258,092.50 dollar to 130,258,092.00 dollar
 
-
-[Updating] Account [22212], running algorithm: [acc22212],
+ 
+[Updating] Account [22212], running algorithm: [acc22212], 
 [Updating] with formulation: if i_tf_sup == 1:
         acc22212 = 1.0e-6*ucwindtf*n_tf*tfleng*n_tf_turn
         acc22212 = fkind*acc22212*cmlsa[lsa-1]
@@ -241,8 +241,8 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22212
 [Updated]  Changed from 55,700,223.23 dollar to 55,700,223.00 dollar
 
-
-[Updating] Account [22213], running algorithm: [acc22213],
+ 
+[Updating] Account [22213], running algorithm: [acc22213], 
 [Updating] with formulation:  if i_tf_sup == 1:
         acc22213 = 1.0e-6*(whtcas*uccase)*n_tf
         acc22213 = fkind*acc22213*cmlsa[lsa - 1]
@@ -251,8 +251,8 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22213
 [Updated]  Changed from 439,106,666.30 dollar to 439,106,666.00 dollar
 
-
-[Updating] Account [22214], running algorithm: [acc22214],
+ 
+[Updating] Account [22214], running algorithm: [acc22214], 
 [Updating] with formulation: if i_tf_sup == 1:
         acc22214 = 1.0e-6*aintmass*ucint
         acc22214 = fkind*acc22214*cmlsa[lsa - 1]
@@ -261,8 +261,8 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22214
 [Updated]  Changed from 150,045,051.60 dollar to 150,045,051.00 dollar
 
-
-[Updating] Account [22215], running algorithm: [acc22215],
+ 
+[Updating] Account [22215], running algorithm: [acc22215], 
 [Updating] with formulation: if i_tf_sup == 1:
         acc22215 = 1.0e-6*clgsmass*ucgss
         acc22215 = fkind*acc22215*cmlsa[lsa - 1]
@@ -271,14 +271,14 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22215
 [Updated]  Changed from 45,440,398.23 dollar to 45,440,398.00 dollar
 
-
-[Updating] Account [22221], running algorithm: [acc22221],
+ 
+[Updating] Account [22221], running algorithm: [acc22221], 
 [Updating] with formulation: None
 [Updating] Total cost of account 22221
 [Updated]  Changed from 466,068,431.20 dollar to 466,068,431.00 dollar
 
-
-[Updating] Account [22222], running algorithm: [acc22222],
+ 
+[Updating] Account [22222], running algorithm: [acc22222], 
 [Updating] with formulation: for i in range(0, nohc):
         pfwndl = pfwndl +(twopi*rpf[i] *turns[i])
     acc22222 = 1.0e-6*ucwindpf*pfwndl
@@ -286,78 +286,78 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 22222
 [Updated]  Changed from 77,130,237.29 dollar to 77,130,237.00 dollar
 
-
-[Updating] Account [22223], running algorithm: [acc22223],
+ 
+[Updating] Account [22223], running algorithm: [acc22223], 
 [Updating] with formulation: acc22223 = 1.0e-6*uccase*whtpfs
     acc22223 = fkind*acc22223*cmlsa[lsa - 1]
 [Updating] Total cost of account 22223
 [Updated]  Changed from 129,551,313.80 dollar to 129,551,313.00 dollar
 
-
-[Updating] Account [22224], running algorithm: [acc22224],
+ 
+[Updating] Account [22224], running algorithm: [acc22224], 
 [Updating] with formulation: acc22224 = 1.0e-6*ucfnc*fncmass
     acc22224 = fkind*acc22224*cmlsa[lsa - 1]
 [Updating] Total cost of account 22224
 [Updated]  Changed from 8,050,194.63 dollar to 8,050,194.00 dollar
 
-
-[Updating] Account [2223], running algorithm: [acc2223],
+ 
+[Updating] Account [2223], running algorithm: [acc2223], 
 [Updating] with formulation: acc2223 = 1.0e-6*vvmass*uccryo
     acc2223 = fkind*acc2223*cmlsa[lsa - 1]
 [Updating] Total cost of account 2223
 [Updated]  Changed from 254,042,123.80 dollar to 254,042,123.00 dollar
 
-
-[Updating] Account [2262], running algorithm: [acc2262],
+ 
+[Updating] Account [2262], running algorithm: [acc2262], 
 [Updating] with formulation: cal_acc2262 = cal_accppa
 [Updating] Total cost of account 2262
 [Updated]  Changed from 29,300,032.53 dollar to 29,298,849.00 dollar
 
-
-[Updating] Account [2263], running algorithm: [acc2263],
+ 
+[Updating] Account [2263], running algorithm: [acc2263], 
 [Updating] with formulation: None
 [Updating] Total cost of account 2263
 [Updated]  Changed from 193,350,599.40 dollar to 193,350,599.00 dollar
 
-
-[Updating] Account [241], running algorithm: [acc241],
+ 
+[Updating] Account [241], running algorithm: [acc241], 
 [Updating] with formulation: acc241 = 1.0e-6*ucswyd*cmlsa[lsa - 1]
 [Updating] Total cost of account 241
 [Updated]  Changed from 18,400,000.00 dollar to 18,400,000.00 dollar
 
-
-[Updating] Account [242], running algorithm: [acc242],
+ 
+[Updating] Account [242], running algorithm: [acc242], 
 [Updating] with formulation: acc242 = 1.0e-6*((ucpp*(pacpmw* 1.0e3)**expepe)+ucap*(fcsht * 1.0e3))
     acc242 = acc242 * cmlsa[lsa - 1]
 [Updating] Total cost of account 242
 [Updated]  Changed from 7,502,814.23 dollar to 7,497,683.00 dollar
 
-
-[Updating] Account [243], running algorithm: [acc243],
+ 
+[Updating] Account [243], running algorithm: [acc243], 
 [Updating] with formulation: None
 [Updating] Total cost of account 243
 [Updated]  Changed from 6,573,339.47 dollar to 6,579,999.00 dollar
 
-
-[Updating] Account [244], running algorithm: [acc244],
+ 
+[Updating] Account [244], running algorithm: [acc244], 
 [Updating] with formulation: acc244 = 1.0e-6*ucdgen*4.0e0*cmlsa[lsa - 1]
 [Updating] Total cost of account 244
 [Updated]  Changed from 6,800,000.00 dollar to 6,800,000.00 dollar
 
-
-[Updating] Account [245], running algorithm: [acc245],
+ 
+[Updating] Account [245], running algorithm: [acc245], 
 [Updating] with formulation: acc245 = 1.0e-6*ucaf*cmlsa[lsa - 1]
 [Updating] Total cost of account 245
 [Updated]  Changed from 1,500,000.00 dollar to 1,500,000.00 dollar
 
-
-[Updating] Account [25], running algorithm: [acc25],
+ 
+[Updating] Account [25], running algorithm: [acc25], 
 [Updating] with formulation: acc25 = 1.0e-6*ucmisc*cmlsa[lsa - 1]
 [Updating] Total cost of account 25
 [Updated]  Changed from 25,000,000.00 dollar to 25,000,000.00 dollar
 
-
-[Updating] Account [26], running algorithm: [acc26],
+ 
+[Updating] Account [26], running algorithm: [acc26], 
 [Updating] with formulation: if ireactor == 0:
         pwrrej = powfmw+pinjwp+tfcmw
     else:
@@ -366,14 +366,14 @@ variable "lsa" affects account(s):
 [Updating] Total cost of account 26
 [Updated]  Changed from 50,520,149.78 dollar to 50,523,391.00 dollar
 
-
+ 
 ===================================== Rolling up account table =====================================
 
 
-[Updating] Rolling up account table from level 4 to level 3
-[Updating] Rolling up account table from level 3 to level 2
-[Updating] Rolling up account table from level 2 to level 1
-[Updating] Rolling up account table from level 1 to level 0
+[Updating] Rolling up account table from level 4 to level 3 
+[Updating] Rolling up account table from level 3 to level 2 
+[Updating] Rolling up account table from level 2 to level 1 
+[Updating] Rolling up account table from level 1 to level 0 
 [Updated]  Account table rolled up
 
 =============================== Generating results table for review ================================
@@ -475,5 +475,5 @@ variable "lsa" affects account(s):
 |  25             | Miscellaneous plant equipment cost               |            33.96            |   1   |   User Input  |
 |  26             | Heat rejection system cost                       |            68.63            |   1   |   User Input  |
 +-----------------+--------------------------------------------------+-----------------------------+-------+---------------+
-Successfully created CSV file fusion_upd_acc_20260730_145812.csv
-Successfully created excel file fusion_LCOE_results.xlsx
+Successfully created CSV file large_tokamak_upd_acc_20260915_131616.csv
+Successfully created excel file large_tokamak_LCOE_results.xlsx

@@ -5,6 +5,7 @@
 **/sonvalidxml
 **/.DS_Store
 **/*.out
+!test/gold/*.out
 **/install.conf
 docs/build/
 docs/source/reference/main.rst

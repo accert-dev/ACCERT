@@ -79,7 +79,7 @@ ref_model
 
 **Notes**:
 
-- `<ref_model>` is a string indicating the reactor model, e.g., `PWR12-BE`, `ABR1000`, `AP1000`, `LPSR`, `LFR`, `heatpipe`, `fusion`, `stellarator`, or `mirror`.
+- `<ref_model>` is a string indicating the reactor model, e.g., `PWR12-BE`, `ABR1000`, `AP1000`, `LPSR`, `LFR`, `heatpipe`, `large_tokamak`, `stellarator`, or `mirror`. The older `fusion` selector remains supported as an alias for `large_tokamak`.
 
 target_dollar_year
 ~~~~~~~~~~~~~~~~~~
