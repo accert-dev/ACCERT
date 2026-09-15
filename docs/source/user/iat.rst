@@ -216,3 +216,8 @@ workflows:
 The GUI writes generated CSV files and dashboard images under
 ``tutorial/gui_outputs``. Interactive charts show exact values on hover, and
 the result panels include download links for generated CSV and PNG outputs.
+
+IAT-only GUI walkthrough:
+
+.. image:: ../../../tutorial/gui/IAT.gif
+   :alt: IAT-only GUI walkthrough

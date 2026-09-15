@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Expanded NEcost tutorial examples and validation/report-check inputs.
 - GitHub Actions CI workflow for automated tests and package checks.
 - Built-in ACCERT SON parser fallback for command-line Python runs without NEAMS Workbench.
+- GUI walkthrough GIFs for IAT-only and connected IAT-to-CRT workflows.
 
 ### Changed
  - **Fusion examples** now distinguish the large tokamak tutorial from the Stellarator and Mirror tutorials.

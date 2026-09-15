@@ -19,6 +19,11 @@ Run the GUI from the ACCERT repository root:
 
 Then open ``http://127.0.0.1:8765/`` in a browser.
 
+The combined IAT-to-CRT GUI workflow is shown in this walkthrough:
+
+.. image:: ../../../tutorial/gui/CRTwithIAT.gif
+   :alt: Combined IAT-to-CRT GUI walkthrough
+
 Choose the Workflow
 -------------------
 
