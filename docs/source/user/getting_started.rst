@@ -26,13 +26,15 @@ Using ACCERT via Python
      - `PWR12-BE.son`
      - `ABR1000.son`
      - `heatpipe.son`
-     - `Fusion.son`
+     - `LargeTokamak.son`
+     - `stellarator.son`
+     - `Mirror.son`
 
-   -  Open a terminal and navigate to the directory containing your input file (e.g., `tutorial`):
+   -  Open a terminal and navigate to the directory containing your input file (e.g., `tutorial/accert`):
 
    .. code-block:: shell
 
-      $ cd ACCERT/tutorial
+      $ cd ACCERT/tutorial/accert
 
 2. **Modify Reactor Parameters**
 
@@ -58,7 +60,7 @@ Using ACCERT via Python
 
      .. code-block:: shell
 
-         $ python ../src/Main.py -i myinput.son
+         $ python ../../src/Main.py -i myinput.son
 
      Replace `myinput.son` with the path to your specific input file. ACCERT will process the input parameters and generate cost estimates based on the provided data.
 

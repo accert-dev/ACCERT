@@ -573,7 +573,7 @@ def generate_create_table_statement(table_name, columns, primary_key):
         column_defs.append(column_def)
     create_stmt += ",\n".join(column_defs)
     create_stmt += f",\n  PRIMARY KEY (`{primary_key}`)\n"
-    create_stmt += ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n"
+    create_stmt += ");\n"
     return create_stmt
 
 def generate_insert_statement(table_name, df, columns, dtypes):
@@ -589,8 +589,7 @@ def generate_insert_statement(table_name, df, columns, dtypes):
     Returns:
     - A string containing the INSERT INTO SQL statement.
     """
-    insert_stmt = f"LOCK TABLES `{table_name}` WRITE;\n"
-    insert_stmt += f"INSERT INTO `{table_name}` ({', '.join([f'`{col}`' for col in columns])}) VALUES \n"
+    insert_stmt = f"INSERT INTO `{table_name}` ({', '.join([f'`{col}`' for col in columns])}) VALUES \n"
     values_list = []
     for _, row in df.iterrows():
         formatted_values = []
@@ -603,7 +602,7 @@ def generate_insert_statement(table_name, df, columns, dtypes):
         values_list.append(values_str)
     insert_stmt += ",\n".join(values_list)
     insert_stmt += ";\n"
-    insert_stmt += f"UNLOCK TABLES;\n\n"
+    insert_stmt += "\n"
     return insert_stmt
 
 def generate_user_defined_sql(user_defined_algorithm_path, 
@@ -699,8 +698,6 @@ def generate_user_defined_sql(user_defined_algorithm_path,
     
     # Begin constructing the SQL script
     sql_script = ""
-    sql_script += "CREATE DATABASE IF NOT EXISTS `accert_db`;\n"
-    sql_script += "USE `accert_db`;\n\n"
     
     for table_name, table_info in tables.items():
         columns, primary_key, df = table_info['columns'], table_info['primary_key'], table_info['data']
@@ -800,7 +797,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
 

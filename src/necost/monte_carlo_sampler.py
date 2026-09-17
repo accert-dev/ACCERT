@@ -45,6 +45,9 @@ def generate_monte_carlo_samples(
         # https://en.wikipedia.org/wiki/Triangular_distribution#Generating_triangular-distributed_random_variates
         elif values["distribution"] == 1:
             low, mode, high = values["low"], values["nominal"], values["high"]
+            if high == low:
+                monte_carlo_results[idx, :] = mode
+                continue
             u = np.random.rand(sampling_amount)
             # The left area of the triangular distribution
             area1 = low + np.sqrt(u * (high - low) * (mode - low))

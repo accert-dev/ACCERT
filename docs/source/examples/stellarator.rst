@@ -1,8 +1,7 @@
 Stellarator Example
 ===============================
 
-The fusion example demonstrates the integration of ACCERT with a large tokamak fusion reactor model 
-This tutorial demonstrates how to run the **Stellarator** model introduced in :ghpull:`47`.  
+This tutorial demonstrates how to run the **Stellarator** model introduced in :ghpull:`47`.
 It extends ACCERT’s fusion modeling capabilities to include stellarator‐specific cost elements,
 variables, and LCOE evaluation, the algorithms are leveraged from UKAEA's `PROCESS <https://github.com/ukaea/PROCESS>`_.
 
@@ -10,8 +9,8 @@ variables, and LCOE evaluation, the algorithms are leveraged from UKAEA's `PROCE
 Prerequisites
 --------------
 
-- ACCERT installation (see :doc:`Installation Guide <install>`).
-- MySQL database initialized with the updated schema containing the *stellarator* algorithms and variables.
+- ACCERT installation (see :doc:`Installation Guide <../user/install>`).
+- SQLite database initialized with the updated schema containing the *stellarator* algorithms and variables.
 - ACCERT main branch after PR #47.
 
 New Features
@@ -24,9 +23,9 @@ New Features
 General Input Structure
 ------------------------
 
-The input file for the fusion model is located at ``accert/tutorial/stellarator.son``.
+The input file for the stellarator model is located at ``accert/tutorial/accert/stellarator.son``.
 
-.. code-block:: json
+.. code-block:: text
 
    accert{
        ref_model = "stellarator"
@@ -46,24 +45,22 @@ The input file for the fusion model is located at ``accert/tutorial/stellarator.
 Running the Example
 -------------------
 
-Please follow the :doc:`Installation Guide <../user/install>` before running the fusion example.
+Please follow the :doc:`Installation Guide <../user/install>` before running the stellarator example.
 
 Using command line
 ~~~~~~~~~~~~~~~~~~~
 
-To run the fusion example with Python, execute the following command:
+To run the stellarator example with Python, execute the following command:
 
 .. code-block:: console
 
-    > cd ACCERT/tutorial
-    > python ../src/Main.pi -i stellarator.son 
+    > cd ACCERT/tutorial/accert
+    > python ../../src/Main.py -i stellarator.son
 
 Interpreting the Results
 ------------------------
 
-The output will be generated in the ``tutorial`` directory, as ``output.out``, which contains screen outputs and the following Excel files: 
+The output will be generated in the ``tutorial/accert`` directory, as ``output.out``, which contains screen outputs and the following Excel files:
 
 - **stellarator_updated_account.xlsx**: Contains the updated cost breakdown for the stellarator model.
 - **stellarator_LCOE_results.xlsx**: Contains the LCOE analysis results specific to the stellarator configuration.
-
-

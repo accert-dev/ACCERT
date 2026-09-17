@@ -6,7 +6,7 @@ The PWR12-BE example demonstrates the use of the PWR12-BE model for a typical We
 General Input Structure
 ------------------------
 
-The example input file is loacted at ``ACCERT/tutorial/PWR12-BE.son``. 
+The example input file is located at ``ACCERT/tutorial/accert/PWR12-BE.son``.
 
 Reactor Model
 ~~~~~~~~~~~~~
@@ -189,10 +189,10 @@ To run the PWR12-BE example with Python, execute the following command:
 
 .. code-block:: console
 
-    > cd ACCERT/tutorial
-    > python ../src/Main.pi -i PWR12-BE.son
+    > cd ACCERT/tutorial/accert
+    > python ../../src/Main.py -i PWR12-BE.son
 
-The output will be saved in the ``tutorial`` directory as ``output.out``, ``pwr12-be_variable_affected_cost_elements.xlsx``, ``pwr12-be_updated_cost_element.xlsx``, and ``pwr12-be_updated_account.xlsx``. The ``output.out`` file contains the cost estimation results, while the Excel files provide detailed information on the cost elements and accounts affected by the input variables.
+The output will be saved in the ``tutorial/accert`` directory as ``output.out``, ``pwr12-be_variable_affected_cost_elements.xlsx``, ``pwr12-be_updated_cost_element.xlsx``, and ``pwr12-be_updated_account.xlsx``. The ``output.out`` file contains the cost estimation results, while the Excel files provide detailed information on the cost elements and accounts affected by the input variables.
 
 
 Using NEAMS Workbench
@@ -201,7 +201,7 @@ Using NEAMS Workbench
 To run the PWR12-BE example using the NEAMS Workbench, follow these steps:
 
 1. Open the NEAMS Workbench.
-2. Click on the **file** menu and select **open file**, then navigate to the ``ACCERT/tutorial`` directory and select the ``PWR12-BE.son`` file.
+2. Click on the **file** menu and select **open file**, then navigate to the ``ACCERT/tutorial/accert`` directory and select the ``PWR12-BE.son`` file.
 3. In the main window, select App as `Accert`, then click on the **Run** button to execute the simulation.
-4. Click on the **file** menu and select **open file**, then navigate to the ``ACCERT/tutorial`` directory and select the ``output.out`` file to view the cost estimation results.
+4. Click on the **file** menu and select **open file**, then navigate to the ``ACCERT/tutorial/accert`` directory and select the ``output.out`` file to view the cost estimation results.
 

@@ -1,0 +1,82 @@
+ind,alg_name,alg_for,alg_description,alg_python,alg_formulation,alg_units
+7,Account_C21_1,c,Account C211 Rollup,MirrorFunc,P_egross,million
+8,Account_C21_2,c,Account C212 Rollup,MirrorFunc,P_egross,million
+9,Account_C21_3,c,Account C213 Rollup,MirrorFunc,"application, P_egross",million
+10,Account_C21_4,c,Account C214 Rollup,MirrorFunc,P_egross,million
+11,Account_C21_5,c,Account C215 Rollup,MirrorFunc,P_egross,million
+12,Account_C21_6,c,Account C216 Rollup,MirrorFunc,P_egross,million
+13,Account_C21_7,c,Account C217 Rollup,MirrorFunc,P_egross,million
+14,Account_C21_8,c,Account C218 Rollup,MirrorFunc,P_egross,million
+15,Account_C21_9,c,Account C219 Rollup,MirrorFunc,P_egross,million
+16,Account_C21_10,c,Account C2110 Rollup,MirrorFunc,P_egross,million
+17,Account_C21_11,c,Account C2111 Rollup,MirrorFunc,P_egross,million
+18,Account_C21_12,c,Account C2112 Rollup,MirrorFunc,P_egross,million
+19,Account_C21_13,c,Account C2113 Rollup,MirrorFunc,P_egross,million
+20,Account_C21_14,c,Account C2114 Rollup,MirrorFunc,P_egross,million
+21,Account_C21_15,c,Account C2115 Rollup,MirrorFunc,P_egross,million
+22,Account_C21_16,c,Account C2116 Rollup,MirrorFunc,P_egross,million
+23,Account_C21_17,c,Account C2117 Rollup,MirrorFunc,P_egross,million
+26,Account_C22_1_1,c,Account C2211 Rollup,MirrorFunc,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result",million
+27,Account_C22_1_2,c,Account C2212 Rollup,MirrorFunc,HF_magnet_shield_cost,million
+29,Account_C22_1_3_1,c,Account C22131 Rollup,MirrorFunc,"HF_magnet_number, HF_magnet_cost",million
+30,Account_C22_1_3_2,c,Account C22132 Rollup,MirrorFunc,"LF_magnet_number, LF_magnet_cost",million
+31,Account_C22_1_3_3,c,Account C22133 Rollup,MirrorFunc,"CF_magnet_number, CF_magnet_cost",million
+33,Account_C22_1_4_1,c,Account C22141 Rollup,MirrorFunc,"P_NBI, cost_factor",million
+34,Account_C22_1_4_2,c,Account C22142 Rollup,MirrorFunc,"P_ICRH, cost_factor",million
+35,Account_C22_1_4_3,c,Account C22143 Rollup,MirrorFunc,"P_ECH, cost_factor",million
+36,Account_C22_1_5,c,Account C2215 Rollup,MirrorFunc,reference value,million
+38,Account_C22_1_6_2,c,Account C22162 Rollup,MirrorFunc,reference value,million
+39,Account_C22_1_6_3,c,Account C22163 Rollup,MirrorFunc,"no_vpumps, cost_pump",million
+40,Account_C22_1_6_4,c,Account C22164 Rollup,MirrorFunc,reference value,million
+41,Account_C22_1_7,c,Account C2217 Rollup,MirrorFunc,reference value,million
+42,Account_C22_1_8,c,Account C2218 Rollup,MirrorFunc,reference value,million
+43,Account_C22_1_9,c,Account C2219 Rollup,MirrorFunc,"P_DECe, cost_factor",million
+44,Account_C22_1_11,c,Account C22111 Rollup,MirrorFunc,"L, N_module, construction_time, cost_factor",million
+45,Account_C22_2,c,Account C222 Rollup,MirrorFunc,"N_module, P_egross, P_th",million
+49,Account_C22_3,c,Account C223 Rollup,MirrorFunc,"N_module, P_th",million
+50,Account_C22_4,c,Account C224 Rollup,MirrorFunc,P_th,million
+51,Account_C22_5,c,Account C225 Rollup,MirrorFunc,cost_factor,million
+52,Account_C22_6,c,Account C226 Rollup,MirrorFunc,P_enet,million
+53,Account_C22_7,c,Account C227 Rollup,MirrorFunc,reference value,million
+54,Account_C23,c,Account C23 Rollup,MirrorFunc,"N_module, P_egross",million
+55,Account_C24,c,Account C24 Rollup,MirrorFunc,"N_module, P_egross",million
+56,Account_C25,c,Account C25 Rollup,MirrorFunc,"N_module, P_egross",million
+57,Account_C26,c,Account C26 Rollup,MirrorFunc,"N_module, P_enet",million
+58,Account_C27,c,Account C27 Rollup,MirrorFunc,reference value,million
+59,Account_C28,c,Account C28 Rollup,MirrorFunc,reference value,million
+81,cal_P_f_CC,v,Mirror generated variable calculation for P_f_CC,MirrorFunc,P_f_CC = P_f - 2 * P_f_EP,MW
+82,cal_L_CC,v,Mirror generated variable calculation for L_CC,MirrorFunc,L_CC = P_f_CC / P_f_L,m
+83,cal_L_CF,v,Mirror generated variable calculation for L_CF,MirrorFunc,L_CF = 1.0,m
+84,cal_L,v,Mirror generated variable calculation for L,MirrorFunc,L = L_CC + 2 * L_EP + 2 * L_EC,m
+85,cal_V_vac,v,Mirror generated variable calculation for V_vac,MirrorFunc,V_vac = L * pi * a_EC**2,m3
+86,cal_no_vpumps,v,Mirror generated variable calculation for no_vpumps,MirrorFunc,no_vpumps = V_vac / vpump_cap,1
+87,cal_cost_factor,v,Mirror generated variable calculation for cost_factor,MirrorFunc,cost_factor = 0.80 ** (log(n_unit) / log(2)),1
+88,cal_HF_magnet_cost,v,Mirror generated variable calculation for HF_magnet_cost,MirrorFunc,HF_magnet_cost = 29.10 * 0.70 ** (log((n_unit - 1) * HF_magnet_number + 1) / log(2)) * sc_mat_scale,million
+89,cal_LF_magnet_cost,v,Mirror generated variable calculation for LF_magnet_cost,MirrorFunc,LF_magnet_cost = 6.25262 * 0.70 ** (log((n_unit - 1) * LF_magnet_number + 1) / log(2)) * sc_mat_scale,million
+90,cal_CF_magnet_cost,v,Mirror generated variable calculation for CF_magnet_cost,MirrorFunc,CF_magnet_cost = 0.7 * 3.0 * 1.31 * 0.70 ** (log((n_unit - 1) * CF_magnet_number + 1) / log(2)) * sc_mat_scale,million
+91,cal_P_alpha,v,Mirror generated variable calculation for P_alpha,MirrorFunc,P_alpha = P_f * E_alpha / E_DT,MW
+92,cal_P_n,v,Mirror generated variable calculation for P_n,MirrorFunc,P_n = P_f - P_alpha,MW
+93,cal_P_ine,v,Mirror generated variable calculation for P_ine,MirrorFunc,P_ine = P_NBI / eta_NBI + P_ICRH / eta_ICRH + P_ECH / eta_ECH,MW
+94,cal_P_pump,v,Mirror generated variable calculation for P_pump,MirrorFunc,P_pump = f_pump * M_n * P_n,MW
+95,cal_P_sub_cont,v,Mirror generated variable calculation for P_sub_cont,MirrorFunc,P_sub_cont = f_sub * P_f,MW
+96,cal_P_cryo,v,Mirror generated variable calculation for P_cryo,MirrorFunc,P_cryo = f_cryo * P_f,MW
+97,cal_P_other,v,Mirror generated variable calculation for P_other,MirrorFunc,P_other = P_pump + P_sub_cont + P_cryo,MW
+98,cal_P_in,v,Mirror generated variable calculation for P_in,MirrorFunc,P_in = P_NBI + P_ICRH + P_ECH,MW
+99,cal_P_th,v,Mirror generated variable calculation for P_th,MirrorFunc,P_th = M_n * P_n + eta_pump * P_pump,MW
+100,cal_P_the,v,Mirror generated variable calculation for P_the,MirrorFunc,P_the = eta_th * P_th,MW
+101,cal_P_DEC,v,Mirror generated variable calculation for P_DEC,MirrorFunc,P_DEC = P_in + P_alpha,MW
+102,cal_P_DECe,v,Mirror generated variable calculation for P_DECe,MirrorFunc,P_DECe = eta_DEC * P_DEC,MW
+103,cal_P_egross,v,Mirror generated variable calculation for P_egross,MirrorFunc,P_egross = P_DECe + P_the if application == 'electricity' else P_DECe,MW
+104,cal_P_enet,v,Mirror generated variable calculation for P_enet,MirrorFunc,P_enet = P_egross - (P_ine + P_other),MW
+105,cal_f_aux,v,Mirror generated variable calculation for f_aux,MirrorFunc,f_aux = P_aux / P_egross,1
+106,cal_Q_sci,v,Mirror generated variable calculation for Q_sci,MirrorFunc,Q_sci = P_f / P_in,1
+107,cal_Q_eng,v,Mirror generated variable calculation for Q_eng,MirrorFunc,Q_eng = P_egross / (P_ine + P_other),1
+108,cal_f_refrac,v,Mirror generated variable calculation for f_refrac,MirrorFunc,f_refrac = 1 / Q_eng,1
+109,cal_CF_magnet_number,v,Mirror generated variable calculation for CF_magnet_number,MirrorFunc,CF_magnet_number = L_CC / L_CF,1
+110,cal_rho_PbLi,v,Mirror generated variable calculation for rho_PbLi,MirrorFunc,rho_PbLi = PbLi density corrected for lithium enrichment and temperature,kg/m3
+111,cal_P_Li,v,Mirror generated variable calculation for P_Li,MirrorFunc,P_Li = lithium price as a function of 6Li enrichment,dollar/kg
+112,cal_P_PbLi,v,Mirror generated variable calculation for P_PbLi,MirrorFunc,P_PbLi = (1 - f_Li) * Pb_c_raw + f_Li * P_Li,dollar/kg
+113,cal_central_cell_cylindrical_part_cost,v,Mirror generated variable calculation for central_cell_cylindrical_part_cost,MirrorFunc,central_cell_cylindrical_part_cost = legacy central-cell radial build material cost for L_CC,million
+114,cal_end_plug_cylindrical_part_cost,v,Mirror generated variable calculation for end_plug_cylindrical_part_cost,MirrorFunc,end_plug_cylindrical_part_cost = legacy central-cell radial build material cost for L_EP,million
+115,cal_expander_cell_cost_result,v,Mirror generated variable calculation for expander_cell_cost_result,MirrorFunc,expander_cell_cost_result = (pi * L_EC * ((a_EC + expander_cell_vessel_thickness)**2 - a_EC**2) + 2 * pi * expander_cell_vessel_thickness * a_EC**2) * SS316_rho * SS316_c_raw * SS316_m / 1e6,million
+116,cal_HF_magnet_shield_cost,v,Mirror generated variable calculation for HF_magnet_shield_cost,MirrorFunc,HF_magnet_shield_cost = legacy shield volume geometry * W_rho * W_c_raw * W_m / 1e6,million

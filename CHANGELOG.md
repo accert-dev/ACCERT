@@ -5,20 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - 2026-09-14
 
 ### Added
 - **Stellarator model** for fusion cost estimation, adding stellarator-specific algorithms, variables, and LCOE evaluation. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 - **Example:** new tutorial `docs/source/example/stellarator.rst` showing input structure and run steps. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
+- SQLite-backed ACCERT database workflow and CSV result generation.
+- CRT and IAT workflow APIs, examples, GUI integration, and regression tests.
+- Expanded NEcost tutorial examples and validation/report-check inputs.
+- GitHub Actions CI workflow for automated tests and package checks.
+- Built-in ACCERT SON parser fallback for command-line Python runs without NEAMS Workbench.
+- GUI walkthrough GIFs for IAT-only and connected IAT-to-CRT workflows.
 
 ### Changed
+ - **Fusion examples** now distinguish the large tokamak tutorial from the Stellarator and Mirror tutorials.
+ - The large tokamak tutorial now uses ``ref_model = "large_tokamak"`` instead of the generic ``fusion`` selector; ``fusion`` remains supported as a backward-compatible alias.
+
  - **Fusion output naming** standardized across reactor types. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 
  - **Database variable entries** updated for consistency and unit handling. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
+- Reorganized Workbench templates into ACCERT, NEcost, and common template namespaces.
+- Renamed CRF workflow references to CRT.
+- ACCERT post-process OCC summaries now use generic ``value_escalated_*``
+  column names tied to the configured target dollar year.
 
 ### Fixed
 - Minor aggregation errors in fusion LCOE calculations. ([#47](https://github.com/accert-dev/ACCERT/pull/47))
 - Variable quotation issue for reading the input.([#47](https://github.com/accert-dev/ACCERT/pull/47))
+- Windows test import paths and refreshed integration gold outputs.
+
+### Removed
+- Legacy MySQL workflow/test pieces.
+- Old generated documentation and obsolete template locations.
 
 ## [1.0.0]
 
@@ -36,9 +54,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
      - `cost_1987`
    - These changes streamline the database structure, removing unnecessary complexity.
 
- **Stored Procedure Usage**:
-   - Removed previous usage of the `execute` method in the Python MySQL connector. The system now exclusively uses stored procedures for database interactions, ensuring consistency and improved performance.
-   - Removed redundant stored procedures to streamline database operations and eliminate outdated or unnecessary functionality.
+ **Database Procedure Usage**:
+   - Consolidated database interactions through named database procedures for consistency and maintainability.
+   - Removed redundant database procedures to streamline operations and eliminate outdated or unnecessary functionality.
 ### Added 
  **Fusion Model Addition**: 
    - A new fusion model has been integrated into ACCERT to extend its functionality and coverage for fusion-related cost assessments.

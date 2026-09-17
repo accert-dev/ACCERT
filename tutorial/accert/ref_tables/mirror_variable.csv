@@ -1,0 +1,185 @@
+ind,var_name,var_description,var_value,var_unit,var_alg,var_need,v_linked,user_input
+1,E_DT,Energy released per deuterium-tritium fusion reaction,2.8182346199999998e-12,J,,,P_alpha,0
+2,E_alpha,Alpha-particle energy released per deuterium-tritium fusion reaction,5.6396736e-13,J,,,P_alpha,0
+3,expander_cell_cost_result,Expander cell vacuum vessel cost from legacy Mirror geometry,0.003960744088457411,million,cal_expander_cell_cost_result,"L_EC, a_EC, expander_cell_vessel_thickness, SS316_rho, SS316_c_raw, SS316_m",,0
+4,end_plug_cylindrical_part_cost,End plug cylindrical radial-build material cost,8.258002288365251,million,cal_end_plug_cylindrical_part_cost,"L_EP, a_CC, vacuum_gap_CC, first_wall_thickness, vacuum_vessel_thickness, multiplier_thickness, blanket_thickness, blanket_coolant_fraction, blanket_structural_fraction, outer_vessel_thickness, W_rho, W_c_raw, W_m, SS316_rho, SS316_c_raw, SS316_m, Pb_rho, Pb_c_raw, Pb_m, rho_PbLi, P_PbLi",,0
+5,central_cell_cylindrical_part_cost,Central cell cylindrical radial-build material cost,429.6644799660716,million,cal_central_cell_cylindrical_part_cost,"L_CC, a_CC, vacuum_gap_CC, first_wall_thickness, vacuum_vessel_thickness, multiplier_thickness, blanket_thickness, blanket_coolant_fraction, blanket_structural_fraction, outer_vessel_thickness, W_rho, W_c_raw, W_m, SS316_rho, SS316_c_raw, SS316_m, Pb_rho, Pb_c_raw, Pb_m, rho_PbLi, P_PbLi",,0
+6,cost_factor,Cost scaling factor calculated from the unit number using an 0.80 learning factor,1.0,1,cal_cost_factor,n_unit,,0
+7,cost_pump,"Cost of one vacuum pump, scaled from 1985 dollars",40000.0,dollar/pump,,,,0
+8,vpump_cap,Vacuum volume pumped by one vacuum pump in one second,4.166666666666667,m3/pump,,,no_vpumps,0
+9,no_vpumps,Number of vacuum pumps required to pump the full vacuum in one second,42.24568142174641,1,cal_no_vpumps,"V_vac, vpump_cap",,0
+10,axis_t,PyFECONS radial build axis thickness,0.0,m,,,,0
+11,rho_PbLi,PbLi density from legacy Mirror temperature/enrichment correlation,9374.559280436162,kg/m3,cal_rho_PbLi,"T, f_6Li","central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+12,f_Li,Lithium mass fraction in PbLi eutectic mixture,0.17,1,,,P_PbLi,0
+13,P_Li,Lithium price from legacy Mirror enrichment pricing,912.8441379310344,dollar/kg,cal_P_Li,f_6Li,P_PbLi,0
+14,P_PbLi,PbLi price from legacy Mirror eutectic mixture pricing,157.17550344827586,dollar/kg,cal_P_PbLi,"Pb_c_raw, P_Li, f_Li","central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+15,P_f_CC,Fusion power assigned to the central cell,173.0,MW,cal_P_f_CC,"P_f, P_f_EP",L_CC,0
+16,L_CC,Calculated central cell length,52.03007518796992,m,cal_L_CC,"P_f_CC, P_f_L","CF_magnet_number, L, central_cell_cylindrical_part_cost",0
+17,L_CF,Central-field coil spacing,1.0,m,cal_L_CF,,CF_magnet_number,0
+18,L,Overall axial length of the Mirror plant,56.03007518796992,m,cal_L,"L_CC, L_EP, L_EC",V_vac,0
+19,V_vac,Vacuum volume for the Mirror plant,176.02367259061006,m3,cal_V_vac,"L, a_EC",no_vpumps,0
+20,P_alpha,Fusion alpha-particle power,35.019897669130195,MW,cal_P_alpha,"E_DT, E_alpha, P_f","P_DEC, P_n",0
+21,P_n,Fusion neutron power,139.9801023308698,MW,cal_P_n,"P_f, P_alpha","P_pump, P_th",0
+22,P_ine,Injected-power electrical input requirement,22.058823529411764,MW,cal_P_ine,"P_NBI, eta_NBI, P_ICRH, eta_ICRH, P_ECH, eta_ECH","P_enet, Q_eng",0
+23,P_pump,Pumping power requirement,4.619343376918704,MW,cal_P_pump,"f_pump, M_n, P_n","P_other, P_th",0
+24,P_sub_cont,Subsystem control power requirement,7.0,MW,cal_P_sub_cont,"f_sub, P_f",P_other,0
+25,P_cryo,Cryogenic power requirement,1.75,MW,cal_P_cryo,"f_cryo, P_f",P_other,0
+26,P_other,Total miscellaneous plant power requirement,13.369343376918703,MW,cal_P_other,"P_pump, P_sub_cont, P_cryo","P_enet, Q_eng",0
+27,P_in,Total injected heating power,15.0,MW,cal_P_in,"P_NBI, P_ICRH, P_ECH","P_DEC, Q_sci",0
+28,P_th,Recoverable thermal power,158.50506907333715,MW,cal_P_th,"M_n, P_n, P_pump, eta_pump",P_the,0
+29,P_the,Thermal-electric power contribution,95.10304144400229,MW,cal_P_the,"eta_th, P_th",P_egross,0
+30,P_DEC,Power available to direct energy conversion,50.019897669130195,MW,cal_P_DEC,"P_in, P_alpha",P_DECe,0
+31,P_DECe,Electrical output from direct energy conversion,45.017907902217175,MW,cal_P_DECe,"eta_DEC, P_DEC",P_egross,0
+32,P_egross,Gross electric power,140.12094934621945,MW,cal_P_egross,"application, P_DECe, P_the","P_enet, Q_eng, f_aux",0
+33,P_enet,Net electric power,104.69278243988899,MW,cal_P_enet,"P_egross, P_ine, P_other",,0
+34,f_aux,Auxiliary power fraction relative to gross electric power,0.007136691584419248,1,cal_f_aux,"P_aux, P_egross",,0
+35,Q_sci,Scientific fusion gain,11.666666666666666,1,cal_Q_sci,"P_f, P_in",,0
+36,Q_eng,Engineering gain,3.955071954941648,1,cal_Q_eng,"P_egross, P_ine, P_other",f_refrac,0
+37,f_refrac,Recirculating power fraction,0.25283990061180917,1,cal_f_refrac,Q_eng,,0
+38,T,Mean coolant temperature for legacy PbLi density correlation,300.0,degC,,,rho_PbLi,0
+39,f_6Li,Lithium-6 enrichment fraction for legacy PbLi pricing,0.4,1,,,"P_Li, rho_PbLi",0
+40,a_M,HF shield magnet bore/plasma radius from legacy Mirror geometry,0.15,m,,,HF_magnet_shield_cost,0
+41,a_CC,Legacy Mirror central cell plasma radius,1.0,m,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+42,a_0,HF shield end plug plasma radius from legacy Mirror geometry,0.47,m,,,HF_magnet_shield_cost,0
+43,length,HF shield radially inner cylinder length,1.5,m,,,HF_magnet_shield_cost,0
+44,r_gap,HF shield radial gap,0.1,m,,,HF_magnet_shield_cost,0
+45,r_vv,HF shield vacuum vessel radial thickness allowance,0.01,m,,,HF_magnet_shield_cost,0
+46,r_magnet,HF shield magnet radius,0.5,m,,,HF_magnet_shield_cost,0
+47,r_cryostat,HF shield cryostat radius allowance,0.4,m,,,HF_magnet_shield_cost,0
+48,f_vol,HF shield volume fill fraction,0.9,1,,,HF_magnet_shield_cost,0
+49,length_cc_cylinder,HF shield central-cell-facing cylinder length,2.0,m,,,HF_magnet_shield_cost,0
+50,r_out_cc,HF shield central-cell-facing outer radius,0.85,m,,,HF_magnet_shield_cost,0
+51,length_ep_cylinder,HF shield end-plug-facing cylinder length,0.4,m,,,HF_magnet_shield_cost,0
+52,r_out_ep,HF shield end-plug-facing outer radius,0.85,m,,,HF_magnet_shield_cost,0
+53,application,Mirror plant application mode used for gross-electric-power logic,electricity,1,,,P_egross,0
+54,P_f,Total fusion power,175.0,MW,,,"P_alpha, P_cryo, P_f_CC, P_n, P_sub_cont, Q_sci",0
+55,P_f_L,Fusion power per meter of central cell length,3.325,MW/m,,,L_CC,0
+56,P_f_EP,Fusion power assigned to each end plug,1.0,MW,,,P_f_CC,0
+57,P_NBI,Neutral beam injection power,15.0,MW,,,"P_in, P_ine",0
+58,P_ECH,Electron cyclotron heating power,0.0,MW,,,"P_in, P_ine",0
+59,P_ICRH,Ion cyclotron resonance heating power,0.0,MW,,,"P_in, P_ine",0
+60,M_n,Neutron energy multiplication factor,1.1,1,,,"P_pump, P_th",0
+61,N_module,Number of Mirror plant modules,1.0,1,,,,0
+62,f_pump,Fraction of neutron power used for pumping,0.03,1,,,P_pump,0
+63,f_sub,Fraction of fusion power used for subsystem controls,0.04,1,,,P_sub_cont,0
+64,f_cryo,Fraction of fusion power used for cryogenic load,0.01,1,,,P_cryo,0
+65,P_pfcool,Plasma-facing-component cooling power,0.0,MW,,,,0
+66,P_thcool,Thermal-system cooling power,0.0,MW,,,,0
+67,P_coils,Coil power load,0.0,MW,,,,0
+68,P_aux,Auxiliary plant power,1.0,MW,,,f_aux,0
+69,eta_th,Thermal conversion efficiency,0.6,1,,,P_the,0
+70,eta_DEC,Direct energy conversion efficiency,0.9,1,,,P_DECe,0
+71,eta_pump,Pump heat recovery efficiency,0.98,1,,,P_th,0
+72,eta_NBI,Neutral beam injection wall-plug efficiency,0.68,1,,,P_ine,0
+73,eta_ECH,Electron cyclotron heating wall-plug efficiency,0.6,1,,,P_ine,0
+74,eta_ICRH,Ion cyclotron resonance heating wall-plug efficiency,0.9,1,,,P_ine,0
+75,NOAK,Nth-of-a-kind plant flag,0.0,1,,,,0
+76,n_unit,Plant unit number for learning-curve cost scaling,1.0,1,,,"CF_magnet_cost, HF_magnet_cost, LF_magnet_cost, cost_factor",0
+77,construction_time,Construction duration,6.0,years,,,,0
+78,lifetime,Plant operating lifetime,30.0,years,,,,0
+79,replacement,Major component replacement interval,10.0,years,,,,0
+80,availability,Plant availability factor,0.9,1,,,,0
+81,discount,Real discount rate,0.03,1,,,,0
+82,LSA,Licensing safety analysis level,2.0,1,,,,0
+83,cost_file,PyFECONS cost data file name,woodruff-data_edited.csv,1,,,,0
+84,method,PyFECONS costing method selector,new,1,,,,0
+85,include_decommissioning,Flag to include decommissioning cost,0.0,1,,,,0
+86,include_tax,Flag to include tax cost,0.0,1,,,,0
+87,include_licensing,Flag to include licensing cost,0.0,1,,,,0
+88,include_contingency,Flag to include contingency cost,0.0,1,,,,0
+89,hf_magnet_length,High-field magnet axial length,1.0,m,,,,0
+90,hf_magnet_shielding_thickness,High-field magnet shielding thickness,1.0,m,,,,0
+91,a_EC,Expander cell plasma radius,1.0,m,,,"V_vac, expander_cell_cost_result",0
+92,expander_cell_vessel_thickness,Expander cell vessel wall thickness,0.01,m,,,expander_cell_cost_result,0
+93,expander_cell_vessel_material,Expander cell vessel material,SS316,1,,,,0
+94,vacuum_gap_CC,Central cell radial vacuum gap,0.01,m,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+95,first_wall_material,Central cell first wall material,W,1,,,,0
+96,first_wall_thickness,Central cell first wall thickness,0.01,m,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+97,vacuum_vessel_material,Central cell vacuum vessel material,SS316,1,,,,0
+98,vacuum_vessel_thickness,Central cell vacuum vessel thickness,0.01,m,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+99,multiplier_material,Central cell neutron multiplier material,Pb,1,,,,0
+100,multiplier_thickness,Central cell neutron multiplier thickness,0.01,m,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+101,blanket_coolant_material,Central cell blanket coolant material,40% PbLi,1,,,,0
+102,blanket_thickness,Central cell blanket radial thickness,0.75,m,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+103,blanket_coolant_fraction,Central cell blanket coolant volume fraction,0.8,1,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+104,blanket_structural_material,Central cell blanket structural material,SS316,1,,,,0
+105,blanket_structural_fraction,Central cell blanket structural volume fraction,0.1,1,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+106,outer_vessel_thickness,Central cell outer vessel thickness,0.01,m,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+107,L_EP,End plug axial length,1.0,m,,,"L, end_plug_cylindrical_part_cost",0
+108,L_EC,Expander cell axial length,1.0,m,,,"L, expander_cell_cost_result",0
+109,a_EP,End plug plasma radius,1.0,m,,,,0
+110,HF_magnet_number,Number of high-field magnets,4.0,1,,,HF_magnet_cost,0
+111,LF_magnet_number,Number of low-field magnets,2.0,1,,,LF_magnet_cost,0
+112,HF_magnet_cost,"HF cost per magnet, not for all four",29.1,million,cal_HF_magnet_cost,"n_unit, HF_magnet_number, sc_mat_scale",,0
+113,LF_magnet_cost,LF cost per magnet,6.25262,million,cal_LF_magnet_cost,"n_unit, LF_magnet_number, sc_mat_scale",,0
+114,CF_magnet_cost,CF cost per magnet,2.751,million,cal_CF_magnet_cost,"n_unit, CF_magnet_number, sc_mat_scale",,0
+115,CF_magnet_number,One CF coil every L_CF m of central cell,52.03007518796992,1,cal_CF_magnet_number,"L_CC, L_CF",CF_magnet_cost,0
+116,HF_magnet_shield_cost,HF magnet shield cost per end plug,20.67396900201936,million,cal_HF_magnet_shield_cost,"a_M, a_CC_shield, a_0, length, r_gap, r_vv, r_magnet, r_cryostat, f_vol, length_cc_cylinder, length_ep_cylinder, r_out_cc, r_out_ep, W_rho, W_c_raw, W_m",,0
+117,a_CC_shield,HF shield central-cell plasma radius from legacy Mirror geometry,0.54,m,,,HF_magnet_shield_cost,0
+118,chamber_length,PyFECONS magnetic mirror chamber length,12.0,m,,,,0
+119,plasma_t,PyFECONS radial build plasma thickness,4.9,m,,,,0
+120,vacuum_t,PyFECONS radial build vacuum thickness,0.1,m,,,,0
+121,firstwall_t,PyFECONS radial build first wall thickness,0.1,m,,,,0
+122,blanket1_t,PyFECONS radial build blanket thickness,1.0,m,,,,0
+123,reflector_t,PyFECONS radial build reflector thickness,0.1,m,,,,0
+124,ht_shield_t,PyFECONS radial build high-temperature shield thickness,0.25,m,,,,0
+125,structure_t,PyFECONS radial build support structure thickness,0.2,m,,,,0
+126,gap1_t,PyFECONS radial build first gap thickness,0.5,m,,,,0
+127,vessel_t,PyFECONS radial build vessel thickness,0.2,m,,,,0
+128,coil_t,PyFECONS radial build coil thickness,1.76,m,,,,0
+129,gap2_t,PyFECONS radial build second gap thickness,1.0,m,,,,0
+130,lt_shield_t,PyFECONS radial build low-temperature shield thickness,0.3,m,,,,0
+131,bioshield_t,PyFECONS radial build bioshield thickness,1.0,m,,,,0
+132,FS_rho,PyFECONS Ferritic Steel density,7470.0,kg/m3,,,,0
+133,FS_c_raw,PyFECONS Ferritic Steel raw cost,10.0,dollar/kg,,,,0
+134,FS_m,PyFECONS Ferritic Steel manufacturing multiplier,3.0,1,,,,0
+135,FS_sigma,PyFECONS Ferritic Steel stress limit,450.0,MPa,,,,0
+136,Pb_rho,PyFECONS Lead density,9400.0,kg/m3,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+137,Pb_c_raw,PyFECONS Lead raw cost,2.4,dollar/kg,,,"P_PbLi, central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+138,Pb_m,PyFECONS Lead manufacturing multiplier,1.5,1,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+139,Li4SiO4_rho,PyFECONS Lithium Silicate density,2390.0,kg/m3,,,,0
+140,Li4SiO4_c_raw,PyFECONS Lithium Silicate raw cost,1.0,dollar/kg,,,,0
+141,Li4SiO4_m,PyFECONS Lithium Silicate manufacturing multiplier,2.0,1,,,,0
+142,FLiBe_rho,PyFECONS FLiBe density,1900.0,kg/m3,,,,0
+143,FLiBe_c,PyFECONS FLiBe cost,40.0,dollar/m3,,,,0
+144,W_rho,PyFECONS Tungsten density,19300.0,kg/m3,,,"HF_magnet_shield_cost, central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+145,W_c_raw,PyFECONS Tungsten raw cost,100.0,dollar/kg,,,"HF_magnet_shield_cost, central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+146,W_m,PyFECONS Tungsten manufacturing multiplier,3.0,1,,,"HF_magnet_shield_cost, central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost",0
+147,Li_rho,PyFECONS Lithium density,534.0,kg/m3,,,,0
+148,Li_c_raw,PyFECONS Lithium raw cost,29.53,dollar/kg,,,,0
+149,Li_m,PyFECONS Lithium manufacturing multiplier,1.5,1,,,,0
+150,sc_mat_scale,Superconductor material cost scaling factor,1.0,1,,,"CF_magnet_cost, HF_magnet_cost, LF_magnet_cost",0
+151,BFS_rho,PyFECONS BFS density,7800.0,kg/m3,,,,0
+152,BFS_c_raw,PyFECONS BFS raw cost,30.0,dollar/kg,,,,0
+153,BFS_m,PyFECONS BFS manufacturing multiplier,2.0,1,,,,0
+154,SiC_rho,PyFECONS Silicon Carbide density,3200.0,kg/m3,,,,0
+155,SiC_c_raw,PyFECONS Silicon Carbide raw cost,14.49,dollar/kg,,,,0
+156,SiC_m,PyFECONS Silicon Carbide manufacturing multiplier,3.0,1,,,,0
+157,Inconel_rho,PyFECONS Inconel density,8440.0,kg/m3,,,,0
+158,Inconel_c_raw,PyFECONS Inconel raw cost,46.0,dollar/kg,,,,0
+159,Inconel_m,PyFECONS Inconel manufacturing multiplier,3.0,1,,,,0
+160,Cu_rho,PyFECONS Copper density,7300.0,kg/m3,,,,0
+161,Cu_c_raw,PyFECONS Copper raw cost,10.2,dollar/kg,,,,0
+162,Cu_m,PyFECONS Copper manufacturing multiplier,3.0,1,,,,0
+163,Polyimide_rho,PyFECONS Polyimide density,1430.0,kg/m3,,,,0
+164,Polyimide_c_raw,PyFECONS Polyimide raw cost,100.0,dollar/kg,,,,0
+165,Polyimide_m,PyFECONS Polyimide manufacturing multiplier,3.0,1,,,,0
+166,YBCO_rho,PyFECONS YBCO density,6200.0,kg/m3,,,,0
+167,YBCO_c,PyFECONS YBCO cost,55.0,dollar/m3,,,,0
+168,Concrete_rho,PyFECONS Concrete density,2300.0,kg/m3,,,,0
+169,Concrete_c_raw,PyFECONS Concrete raw cost,0.52,dollar/kg,,,,0
+170,Concrete_m,PyFECONS Concrete manufacturing multiplier,2.0,1,,,,0
+171,SS316_rho,PyFECONS Stainless Steel 316 density,7860.0,kg/m3,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result",0
+172,SS316_c_raw,PyFECONS Stainless Steel 316 raw cost,2.0,dollar/kg,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result",0
+173,SS316_m,PyFECONS Stainless Steel 316 manufacturing multiplier,2.0,1,,,"central_cell_cylindrical_part_cost, end_plug_cylindrical_part_cost, expander_cell_cost_result",0
+174,SS316_sigma,PyFECONS Stainless Steel 316 stress limit,900.0,MPa,,,,0
+175,Nb3Sn_c,PyFECONS Niobium-Tin cost,5.0,dollar/m3,,,,0
+176,Incoloy_rho,PyFECONS Incoloy density,8170.0,kg/m3,,,,0
+177,Incoloy_c_raw,PyFECONS Incoloy raw cost,4.0,dollar/kg,,,,0
+178,Incoloy_m,PyFECONS Incoloy manufacturing multiplier,2.0,1,,,,0
+179,Be_rho,PyFECONS Beryllium density,1850.0,kg/m3,,,,0
+180,Be_c_raw,PyFECONS Beryllium raw cost,5750.0,dollar/kg,,,,0
+181,Be_m,PyFECONS Beryllium manufacturing multiplier,3.0,1,,,,0
+182,Li2TiO3_rho,PyFECONS Lithium Titanate density,3430.0,kg/m3,,,,0
+183,Li2TiO3_c_raw,PyFECONS Lithium Titanate raw cost,1297.05,dollar/kg,,,,0
+184,Li2TiO3_m,PyFECONS Lithium Titanate manufacturing multiplier,3.0,1,,,,0

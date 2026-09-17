@@ -32,7 +32,7 @@ The table includes the following columns:
 
 .. csv-table:: [ABR1000 Account Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/ABR1000_account.csv
+   :file: ../../../../tutorial/accert/ref_tables/ABR1000_account.csv
    :widths: auto
    :class: normal-table
 
@@ -40,7 +40,7 @@ ABR1000 Cost Element Table
 --------------------------
 This table contains the cost element information for the ABR1000 model. Each entitiy in the account 
 table is divided into 3 main cost categories: Factory Equipment Costs, Labor Costs, and Material Costs.
-The cost element table is associated with a unique identifier, which is used to track and categorize costs. The table is connected to the account table through the `account` column, which links each cost element to a specific account. It is also connected to the variable table through the `variables` column, and the algorithm table through the `alg_name` column.
+The cost element table is associated with a unique identifier, which is used to track and categorize costs. The table is connected to the account table through the `account` column, which links each cost element to a specific account. It is also connected to the variable table through the `variables` column, and the Python algorithm registry through the `alg_name` column.
 
 The table includes the following columns:
 
@@ -52,18 +52,18 @@ The table includes the following columns:
    - **fun_unit**: algorithm function output unit
    - **variables**: variables used in the algorithm
    - **account**: account associated with the cost element
-   - **algno**: algorithm number in the algorithm table
+   - **algno**: legacy algorithm identifier
    - **updated**: updated status of the cost element, 0 for unchanged and 1 for updated, note that the default value should always be 0
  
 .. csv-table:: [ABR1000 Cost Element Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/ABR1000_cost_element.csv
+   :file: ../../../../tutorial/accert/ref_tables/ABR1000_cost_element.csv
    :widths: auto
    :class: normal-table
 
 ABR1000 Variable Table
 ----------------------
-This table contains the variable information for the ABR1000 model. All variables are needed to be calculated by the algorithm. Some variables are connected to the algorithm table through the `var_alg` column, which links each variable to a specific algorithm. The table is also connected to itself through the `v_linked` and `var_needed` column, which links each variable to a superior variable and the variables needed to calculate it.
+This table contains the variable information for the ABR1000 model. All variables are needed to be calculated by the algorithm. Some variables are connected to the Python algorithm registry through the `var_alg` column, which links each variable to a specific algorithm. The table is also connected to itself through the `v_linked` and `var_needed` column, which links each variable to a superior variable and the variables needed to calculate it.
 
 The table includes the following columns:
 
@@ -79,6 +79,5 @@ The table includes the following columns:
 
 .. csv-table:: [ABR1000 Variable Table]
    :header-rows: 1
-   :file: ../../../../tutorial/ref_tables/ABR1000_variable.csv
+   :file: ../../../../tutorial/accert/ref_tables/ABR1000_variable.csv
    :class: wide-table
-

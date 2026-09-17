@@ -1,0 +1,99 @@
+necost {
+    % EG02/OT01B - HTGR (graphite-moderated, He-cooled) with LEU fuel
+    % NE-COST input preparer: Tom Wood (PNNL) Technical Reviewer: Kent Williams (Consultant)
+    %
+    % Fuel cycle option description:
+    % This is a once-through High Temperature Gas Reactor case using
+    % TRISO-coated LEU fuel enriched to 15.5% U-235. The single island uses
+    % LEU, irradiates it once in the HTGR, and sends spent nuclear fuel to
+    % geologic disposal. The report notes the high HTGR thermal efficiency
+    % and high energy generation per unit heavy metal.
+
+    construction_interest_rate = 0.05
+    operations_interest_rate = 0.05
+    sample_size = 2000
+
+    fuel_cycles {
+        cycle(EG02_OT01B) {
+            % Single NE-COST island, so the LCAE weight is 100%.
+            % fleet_capacity is the physical electric capacity in MWe:
+            % 350 MWt reference thermal power * 50% efficiency = 175 MWe.
+            reactor(HTGR_LEU) {
+                fleet_capacity = 175
+                energy_fraction = 1
+            }
+        }
+    }
+
+    reactors {
+        reactor(HTGR_LEU) {
+            capacity_factor = 0.9
+            cycle_length = 1.5
+            lifetime_years = 60
+            power_level { reference_thermal = 350E6 net_thermal_efficiency = 50 }
+            capital_costs { scaling_factor(capital_cost_htgr) = 1 }
+            om_costs {
+                scaling_factor(OM_per_year_htgr) = 1
+                scaling_factor(OM_per_MWh_htgr) = 1
+            }
+            fuel_reloads {
+                quantity(HTGR_LEU_FUEL) { heavy_metal_mass = 5.19 fuel_fraction = 1 }
+            }
+        }
+    }
+
+    capital_costs {
+        item(capital_cost_htgr) {
+            cost_type = s_curve
+            expenditure_time = 5
+            distribution { type = triangular low = 2500 high = 8000 nominal = 5000 }
+        }
+    }
+
+    om_costs {
+        item(OM_per_year_htgr) {
+            cost_type = fixed
+            distribution { type = triangular low = 58 high = 84 nominal = 70 }
+        }
+        item(OM_per_MWh_htgr) {
+            cost_type = variable
+            distribution { type = triangular low = 0.84 high = 2.6 nominal = 1.9 }
+        }
+    }
+
+    fuel_costs {
+        item(cost_U) { cost_value = 110 lead_time = 2 distribution { type = triangular low = 65 high = 230 nominal = 110 } }
+        item(cost_SWU) { cost_value = 100 lead_time = 2 distribution { type = uniform low = 70 high = 120 nominal = 100 } }
+        item(cost_fuel_fab) { cost_value = 10000 lead_time = 2 distribution { type = triangular low = 3000 high = 27000 nominal = 10000 } }
+        item(cost_conv) { cost_value = 12 lead_time = 2 distribution { type = uniform low = 6 high = 18 nominal = 12 } }
+        item(cost_deconv) { cost_value = 6 lead_time = 2 distribution { type = triangular low = 4 high = 8 nominal = 6 } }
+        item(cost_SNF_cond) { cost_value = 100 lead_time = 0 distribution { type = triangular low = 50 high = 130 nominal = 100 } }
+        item(cost_geologic_disposal) { cost_value = 550 lead_time = 0 distribution { type = triangular low = 265 high = 801 nominal = 550 } }
+        item(cost_DU_disposal) { cost_value = 4 lead_time = 1 distribution { type = triangular low = 2 high = 22 nominal = 4 } }
+    }
+
+    fuels {
+        fuel(HTGR_LEU_FUEL) {
+            avg_discharge_burnup = 120
+            num_batches = 3
+            avg_specific_power = 1
+            fresh_fuel {
+                fabrication { loss_fraction = 0.002 costs = [cost_fuel_fab] }
+                EU { fuel_fraction = 1 costs = [cost_U] }
+            }
+            EU {
+                % Report line 50 is zero conversion loss; the schema requires
+                % a positive loss_fraction, so use a negligible positive value.
+                conversion { loss_fraction = 1E-12 costs = [cost_conv cost_deconv] }
+                enrichment {
+                    type = one_stage
+                    loss_fraction = 0.01
+                    stage_1 { feed = 0.711 product = 15.5 tails = 0.25 }
+                    SWU_costs = [cost_SWU]
+                    NU_costs = [cost_U]
+                    DU_costs = [cost_DU_disposal]
+                }
+            }
+        }
+    }
+}

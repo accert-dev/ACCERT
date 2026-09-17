@@ -39,31 +39,28 @@ fi
 ACCERT_DIR=$(pwd)
 echo -e "${GREEN}ACCERT_DIR set to: $ACCERT_DIR${NC}"
 
-# 6) Use the pip in conda/bin to install requirement.txt located in the parent folder of this shell script
-echo -e "${GREEN}Installing requirements from $ACCERT_DIR/../requirement.txt...${NC}"
+# 6) Use the pip in conda/bin to install requirements.txt located in the parent folder of this shell script
+echo -e "${GREEN}Installing requirements from $ACCERT_DIR/../requirements.txt...${NC}"
 if [ -x "$conda_path/bin/pip" ]; then
   "$conda_path/bin/pip" install -r "$ACCERT_DIR/../requirements.txt"
 elif [ -x "$conda_path/Scripts/pip" ]; then
   "$conda_path/Scripts/pip" install -r "$ACCERT_DIR/../requirements.txt"
 else
-  print_color "$RED" "Error: pip executable not found in conda directory"
+  echo -e "${RED}Error: pip executable not found in conda directory${NC}"
 fi
 
-echo -e "${GREEN}Installing requirements from $ACCERT_DIR/../requirement.txt...${NC} using system pip"
+echo -e "${GREEN}Installing requirements from $ACCERT_DIR/../requirements.txt using system pip...${NC}"
 pip install -r "$ACCERT_DIR/../requirements.txt"
 
-# 7) Create another file called 'install.conf' in current folder
-echo -e "${GREEN}Creating install.conf...${NC}"
-cat > install.conf << EOL
-[INSTALL]
-PASSWD = yourpassword
-
-# NOTE: ALL OTHER information should be set up later 
-# INSTALL_PATH = /usr/local 
-# DATADIR =/mysql/data
-# INSTALL_PACKAGE = 
-# EXP_DIR = 
-EOL
+# 7) Install or refresh the bundled SQLite database.
+echo -e "${GREEN}Installing SQLite database...${NC}"
+if [ -x "$conda_path/bin/python" ]; then
+  "$conda_path/bin/python" database_install.py
+elif [ -x "$conda_path/Scripts/python" ]; then
+  "$conda_path/Scripts/python" database_install.py
+else
+  python database_install.py
+fi
 
 # 8) cd into the parent folder of ACCERT_DIR
 cd "$(dirname "$ACCERT_DIR")"
@@ -84,6 +81,4 @@ ln -sf "${workbench_path}/bin/sonvalidxml" "$ACCERT_DIR/../bin/sonvalidxml"
 
 # 10) Confirm installation is finished
 echo -e "${GREEN}ACCERT has been set up.${NC}"
-
-echo -e "${YELLOW}Please change the 'yourpassword' of 'install.conf' to your MySQL root password.${NC}"
-
+echo -e "${YELLOW}ACCERT uses the bundled SQLite database in src/accertdb.sqlite.${NC}"

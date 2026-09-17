@@ -1,0 +1,21 @@
+% ACCERT Large Tokamak test input file
+% Author: J. Zhou (jia.zhou@anl.gov)
+% Last updated: 08/08/2024
+
+% Large Tokamak reference model for TETRA (Tokamak Engineering Test Reactor
+% Analysis), a large tokamak fusion reactor cost model based on UKAEA PROCESS:
+% https://github.com/ukaea/PROCESS.
+
+accert{
+    ref_model = "large_tokamak"
+    l0COA(2){  
+        l1COA(21){
+            l2COA("211"){
+                alg("acc211"){
+                    var("csi"){value = 16 unit = million} 
+                    var("lsa"){value = 4 unit = N/A}
+                }
+            }
+        }
+    }
+}

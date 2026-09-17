@@ -1,0 +1,15 @@
+% LPSR direct-cost example for a 1117 MWe Large Passively Safe Reactor.
+% Reference: Stewart W.R. and Shirvan K., "Capital cost estimation for
+% advanced nuclear power plants," Renewable and Sustainable Energy Reviews,
+% 2021, 111880, https://doi.org/10.1016/j.rser.2021.111880.
+accert{
+    ref_model = "LPSR"
+    use_gncoa = False
+    target_dollar_year = 2025
+
+    post_process { occ = true }
+
+    power(Thermal){ value = 3400 unit = MW }
+    power(Electric){ value = 1117 unit = MW }
+    var(cont_D_D){ value = 45.0 unit = m }
+}
