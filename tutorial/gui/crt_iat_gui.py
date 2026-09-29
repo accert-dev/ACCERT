@@ -36,7 +36,12 @@ from crt import (
     waterfall_to_dataframe,
 )
 from crt.io.excel_inputs import InputStore
-from crt.reactor_config import REACTOR_CONFIGS, iat_api_reactor_type, reactor_power_mwe
+from crt.reactor_config import (
+    REACTOR_CONFIGS,
+    compatible_crt_types,
+    iat_api_type_from_label,
+    reactor_power_mwe,
+)
 from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 from cost_escalation import TARGET_DOLLAR_YEAR
@@ -852,18 +857,25 @@ HTML = r"""<!doctype html>
       $("total20sLaborHours").value = String(Math.round(reactorConfigs[rt].labor_hours_20s));
     }
 
-    function syncSharedReactorSelection() {
+    function syncCrtOptionsToIat() {
       const shared = $("workflow").value === "iat_crt";
-      const crtType = $("crtReactorType").value;
-      if (shared) {
-        $("iatReactorType").value = reactorConfigs[crtType].iat_label;
+      const allowed = shared
+        ? ({"Large Reactor": ["AP1000"], "SMR": ["SFR"]}[$("iatReactorType").value] || [])
+        : ["AP1000", "HTGR", "SFR"];
+      const crtSelect = $("crtReactorType");
+      Array.from(crtSelect.options).forEach(option => {
+        option.disabled = !allowed.includes(option.value);
+      });
+      if (shared && !allowed.includes(crtSelect.value)) {
+        crtSelect.value = allowed[0];
+        updateCrtDefaults(true);
       }
-      $("iatReactorType").disabled = shared;
+      $("iatReactorType").disabled = false;
     }
 
     function apiReactorType() {
       if ($("workflow").value === "iat_crt") {
-        return iatApiTypeForCrt($('crtReactorType').value);
+        return iatApiTypeForIat($('iatReactorType').value);
       }
       const rt = $("iatReactorType").value;
       const mode = $("iatInputMode").value;
@@ -871,10 +883,10 @@ HTML = r"""<!doctype html>
       return rt === "Large Reactor" ? "large reactor" : "SMR";
     }
 
-    function iatApiTypeForCrt(reactorType) {
-      const config = reactorConfigs[reactorType];
+    function iatApiTypeForIat(iatType) {
+      const family = iatType === "Large Reactor" ? "LR" : "SMR";
       const prefix = $("iatInputMode").value === "csv" ? "ACCERT output-" : "";
-      return prefix + config.iat_family;
+      return prefix + family;
     }
 
     function payload() {
@@ -935,7 +947,7 @@ HTML = r"""<!doctype html>
       $("iatPanel").classList.toggle("hidden", workflow === "crt_only");
       $("crtPanel").classList.toggle("hidden", workflow === "iat_only");
       $("leverPanel").classList.toggle("hidden", workflow === "iat_only");
-      syncSharedReactorSelection();
+      syncCrtOptionsToIat();
       const inputMode = $("iatInputMode").value;
       const isCsvMode = inputMode === "csv" || workflow === "iat_crt";
       if (workflow === "iat_crt") {
@@ -1244,11 +1256,19 @@ HTML = r"""<!doctype html>
       const m = {left: 108, right: 28, top: 34, bottom: 66};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
-      const max = niceMax(Math.max(...rows.flatMap(r => [Number(r.TCI || 0), Number(r.OCC || 0)])) * 1.08);
+      const displayedValue = (row, preferred, fallback) => {
+        const value = row[preferred];
+        return value !== null && value !== undefined && Number.isFinite(Number(value))
+          ? Number(value)
+          : Number(row[fallback] || 0);
+      };
+      const displayedTci = row => displayedValue(row, "NCI", "TCI");
+      const displayedOcc = row => displayedValue(row, "Net OCC", "OCC");
+      const max = niceMax(Math.max(...rows.flatMap(r => [displayedTci(r), displayedOcc(r)])) * 1.08);
       const y = v => m.top + innerH - (Number(v || 0) / max) * innerH;
       const groupW = innerW / rows.length;
       const barW = Math.max(16, Math.min(42, groupW * 0.34));
-      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="TCI and OCC by plant">`;
+      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Capital cost by plant; ITC units show NCI and Net OCC">`;
       for (let i = 0; i <= 4; i++) {
         const value = max * i / 4;
         const yy = y(value);
@@ -1260,17 +1280,23 @@ HTML = r"""<!doctype html>
       svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Cost ($/kW)</text>`;
       rows.forEach((r, idx) => {
         const cx = m.left + groupW * idx + groupW / 2;
-        const tciH = m.top + innerH - y(r.TCI);
-        const occH = m.top + innerH - y(r.OCC);
-        svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>TCI: ${fmt(r.TCI)}" x="${cx - barW - 2}" y="${y(r.TCI)}" width="${barW}" height="${tciH}" fill="#2ca02c"></rect>`;
-        svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>OCC: ${fmt(r.OCC)}" x="${cx + 2}" y="${y(r.OCC)}" width="${barW}" height="${occH}" fill="#1f77b4"></rect>`;
+        const tci = displayedTci(r);
+        const occ = displayedOcc(r);
+        const tciLabel = r.NCI !== null && r.NCI !== undefined && Number.isFinite(Number(r.NCI)) ? "NCI" : "TCI";
+        const occLabel = r["Net OCC"] !== null && r["Net OCC"] !== undefined && Number.isFinite(Number(r["Net OCC"])) ? "Net OCC" : "OCC";
+        const tciH = m.top + innerH - y(tci);
+        const occH = m.top + innerH - y(occ);
+        svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>${tciLabel}: ${fmt(tci)}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${tciH}" fill="#2ca02c"></rect>`;
+        svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>${occLabel}: ${fmt(occ)}" x="${cx + 2}" y="${y(occ)}" width="${barW}" height="${occH}" fill="#1f77b4"></rect>`;
         if (idx % Math.ceil(rows.length / 8) === 0 || rows.length <= 8) {
           svg += `<text x="${cx}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${esc(r["Plant number"])}</text>`;
         }
       });
       svg += `<text x="${m.left + innerW / 2}" y="${h - 6}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Plant number</text>`;
-      svg += `<rect x="${w - 170}" y="14" width="14" height="14" fill="#2ca02c"></rect><text x="${w - 148}" y="26" fill="#596775" font-size="15" font-weight="700">TCI</text>`;
-      svg += `<rect x="${w - 94}" y="14" width="14" height="14" fill="#1f77b4"></rect><text x="${w - 72}" y="26" fill="#596775" font-size="15" font-weight="700">OCC</text>`;
+      const hasNci = rows.some(r => r.NCI !== null && r.NCI !== undefined && Number.isFinite(Number(r.NCI)));
+      const hasNetOcc = rows.some(r => r["Net OCC"] !== null && r["Net OCC"] !== undefined && Number.isFinite(Number(r["Net OCC"])));
+      svg += `<rect x="${w - 190}" y="14" width="14" height="14" fill="#2ca02c"></rect><text x="${w - 168}" y="26" fill="#596775" font-size="15" font-weight="700">${hasNci ? "NCI / TCI" : "TCI"}</text>`;
+      svg += `<rect x="${w - 94}" y="14" width="14" height="14" fill="#1f77b4"></rect><text x="${w - 72}" y="26" fill="#596775" font-size="15" font-weight="700">${hasNetOcc ? "Net OCC / OCC" : "OCC"}</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -1696,7 +1722,7 @@ HTML = r"""<!doctype html>
           <button data-tab="results">Results Table</button>
         </div>`;
         html += `<div id="tab-capital" class="tab-panel active"><div class="chart-grid">
-          <div class="chart-panel"><h3>Capital Cost: OCC and TCI</h3><div id="capitalChart"></div></div>
+          <div class="chart-panel"><h3>Capital Cost: TCI/OCC and ITC-adjusted NCI/Net OCC</h3><div id="capitalChart"></div></div>
           <div class="chart-panel"><h3>10-60 - TCI Breakdown</h3><div id="breakdownPreview"></div></div>
         </div></div>`;
         html += `<div id="tab-levers" class="tab-panel"><div class="chart-panel"><h3>TCI Savings by Reduction Lever</h3><div id="waterfallChart"></div></div></div>`;
@@ -1779,6 +1805,7 @@ HTML = r"""<!doctype html>
     $("iatInputMode").addEventListener("change", updatePanels);
     $("countrySingle").addEventListener("change", () => { loadIatFactorDefaults(); });
     $("iatReactorType").addEventListener("change", () => {
+      syncCrtOptionsToIat();
       const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crt";
       if (isCsvMode) {
         if (!_csvFileContent) updateDefaultCsvPath();
@@ -1820,12 +1847,12 @@ HTML = r"""<!doctype html>
       reader.readAsText(file);
     });
     $("crtReactorType").addEventListener("change", () => updateCrtDefaults(true));
-    $("crtReactorType").addEventListener("change", () => { syncSharedReactorSelection(); updateElectricOutputDefault(); });
+    $("crtReactorType").addEventListener("change", () => { syncCrtOptionsToIat(); updateElectricOutputDefault(); });
     $("runBtn").addEventListener("click", runWorkflow);
     $("resetBtn").addEventListener("click", () => location.reload());
     enhanceLabels();
     updatePanels();
-    syncSharedReactorSelection();
+    syncCrtOptionsToIat();
     loadIatFactorDefaults();
   </script>
 </body>
@@ -2325,15 +2352,23 @@ def run_workflow(payload: dict) -> dict:
     }
 
     if workflow == "iat_crt":
-        expected_iat_type = iat_api_reactor_type(
-            payload["crt"]["reactor_type"],
-            csv_mode=payload["iat"].get("input_mode") == "csv",
+        csv_mode = payload["iat"].get("input_mode") == "csv"
+        iat_reactor_type = payload["iat"].get("reactor_type")
+        iat_label = next(
+            (
+                label for label in ("Large Reactor", "SMR")
+                if iat_api_type_from_label(label, csv_mode=csv_mode) == iat_reactor_type
+            ),
+            None,
         )
-        if payload["iat"].get("reactor_type") != expected_iat_type:
+        if iat_label is None:
             raise ValueError(
-                "IAT and CRT reactor selections are inconsistent: "
-                f"{payload['iat'].get('reactor_type')!r} does not match "
-                f"{payload['crt']['reactor_type']!r} ({expected_iat_type!r})."
+                f"Unknown IAT reactor type {iat_reactor_type!r} for the selected input mode."
+            )
+        crt_reactor_type = payload["crt"].get("reactor_type")
+        if crt_reactor_type not in compatible_crt_types(iat_label):
+            raise ValueError(
+                f"CRT reactor type {crt_reactor_type!r} is not compatible with IAT reactor type {iat_label!r}."
             )
 
     if workflow == "iat_only":

@@ -116,9 +116,37 @@ def test_gui_crt_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
     assert base_coas.index("22") == base_coas.index("21") + 1
 
 
-def test_gui_rejects_inconsistent_iat_and_crt_reactor_types():
+def test_gui_accepts_large_reactor_with_ap1000(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+    result = crt_iat_gui.run_workflow(payload)
+    assert result["crt"]["plants"]
+
+
+def test_gui_rejects_large_reactor_with_sfr():
+    payload = _gui_payload("")
+    payload["crt"]["reactor_type"] = "SFR"
+
+    with pytest.raises(ValueError, match="not compatible with IAT reactor type"):
+        crt_iat_gui.run_workflow(payload)
+
+
+def test_gui_rejects_large_reactor_with_htgr():
+    payload = _gui_payload("")
+    payload["crt"]["reactor_type"] = "HTGR"
+
+    with pytest.raises(ValueError, match="not compatible with IAT reactor type"):
+        crt_iat_gui.run_workflow(payload)
+
+
+def test_gui_accepts_smr_with_sfr(monkeypatch, tmp_path):
     payload = _gui_payload("")
     payload["iat"]["reactor_type"] = "ACCERT output-SMR"
+    payload["crt"]["reactor_type"] = "SFR"
+    payload["iat"]["electric_output_mwe"] = 310.8
+    payload["iat"]["input_csv"] = "src/crt/data/SFR_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
 
-    with pytest.raises(ValueError, match="reactor selections are inconsistent"):
-        crt_iat_gui.run_workflow(payload)
+    result = crt_iat_gui.run_workflow(payload)
+    assert result["crt"]["plants"]
