@@ -46,6 +46,26 @@ def test_iat_requires_accert_csv_or_occ_input():
         )
 
 
+def test_iat_united_states_reproduces_accert_baseline():
+    baseline = AP1000_BASELINE
+    result = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "United States",
+            "year_dollar": 2024,
+            "input_csv": baseline,
+        }
+    )
+
+    assert result["country"] == "United States"
+    assert result["adjustment_ratio"] == pytest.approx(1.0)
+    assert result["occ_adjustment_ratio"] == pytest.approx(1.0)
+    adjusted = result["adjusted_costs"]
+    assert adjusted["Adjusted Total Cost"].tolist() == pytest.approx(
+        adjusted["Original Total Cost"].tolist()
+    )
+
+
 def test_iat_china_account_22_formula(tmp_path):
     csv_path = tmp_path / "accert_output.csv"
     pd.DataFrame(

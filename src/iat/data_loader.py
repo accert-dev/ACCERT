@@ -19,6 +19,10 @@ STANDARD_COST_COLUMNS = [
 ]
 
 COUNTRY_ALIASES = {
+    "united states": "United States",
+    "united states of america": "United States",
+    "usa": "United States",
+    "us": "United States",
     "korea": "Korea",
     "kor": "Korea",
     "south korea": "Korea",

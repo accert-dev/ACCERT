@@ -98,6 +98,35 @@ def test_normalize_levers_converts_external_inputs_to_model_values():
     assert normalized["RB_grade_0"] == "nuclear"
 
 
+def test_zero_itc_is_preserved_and_does_not_create_itc_outputs():
+    result = run_one_scenario(_config(), _levers(itc_percent=0, n_itc=0))
+
+    assert result["ITC"] == 0
+    assert result["n_ITC"] == 0
+    assert "NETOCC_1" not in result
+    assert "NCI_1" not in result
+
+
+def test_itc_changes_only_itc_adjusted_metrics_for_supported_units():
+    credited = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=40, n_itc=4)
+    )
+
+    assert credited["ITC"] == 40
+    assert credited["n_ITC"] == 4
+    baseline = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0)
+    )
+    assert credited["OCC_1"] == pytest.approx(baseline["OCC_1"])
+    assert credited["TCI_1"] == pytest.approx(baseline["TCI_1"])
+    assert credited["NETOCC_1"] < credited["OCC_1"]
+    assert credited["NCI_1"] < credited["TCI_1"]
+    assert credited["NETOCC_4"] < credited["OCC_4"]
+    assert credited["NCI_4"] < credited["TCI_4"]
+    assert "NETOCC_5" not in credited
+    assert "NCI_5" not in credited
+
+
 def test_run_one_scenario_returns_static_inputs_and_unit_results():
     result = run_one_scenario(_config(), _levers())
 
