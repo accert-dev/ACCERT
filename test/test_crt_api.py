@@ -190,6 +190,18 @@ def test_itc_plot_and_display_dataframe_use_returned_itc_results():
     assert frame.loc[3, "NCI"] == pytest.approx(result["NCI_4"])
 
 
+@pytest.mark.parametrize("itc_percent", [30, 40])
+def test_supported_itc_levels_reduce_itc_adjusted_costs(itc_percent):
+    result = run_one_scenario(
+        _config(),
+        _levers(num_orders=5, num_NOAK=5, itc_percent=itc_percent, n_itc=1),
+    )
+
+    assert result["ITC"] == itc_percent
+    assert result["NETOCC_1"] < result["OCC_1"]
+    assert result["NCI_1"] < result["TCI_1"]
+
+
 def test_run_one_scenario_returns_static_inputs_and_unit_results():
     result = run_one_scenario(_config(), _levers())
 
