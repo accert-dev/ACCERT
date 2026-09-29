@@ -697,8 +697,8 @@ HTML = r"""<!doctype html>
           <input id="crtCsvFile" type="file" accept=".csv" class="hidden">
         </div>
         <div class="triple">
-          <div><label for="f22">f_22</label><input id="f22" type="number" value="250000000"></div>
-          <div><label for="f2321">f_2321</label><input id="f2321" type="number" value="150000000"></div>
+          <div><label for="f22">Account 22 factory allocation ($)</label><input id="f22" type="number" min="0" value="250000000"></div>
+          <div><label for="f2321">Account 232.1 factory allocation ($)</label><input id="f2321" type="number" min="0" value="150000000"></div>
           <div><label for="landCost">Land $/acre</label><input id="landCost" type="number" value="22000"></div>
         </div>
         <div class="row">
@@ -982,6 +982,8 @@ HTML = r"""<!doctype html>
         occValue2: "Scenario 2 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
         occValue3: "Scenario 3 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
         crtReactorType: "CRT reactor case to run.",
+        f22: "Internal CRT parameter f_22. Adds a non-learning factory-equipment allocation to account 22, divided by the number of firm orders. The current reference workbook does not identify a source cell for the default.",
+        f2321: "Internal CRT parameter f_2321. Adds a non-learning factory-equipment allocation to account 232.1, divided by the number of firm orders. The current reference workbook does not identify a source cell for the default.",
         crtCsvName: "Optional CSV baseline for CRT. Connected IAT-to-CRT runs fill this automatically.",
         f22: "Factory equipment cost input used by the CRT baseline calculations.",
         f2321: "Turbine-generator equipment cost input used by the CRT baseline calculations.",

@@ -85,9 +85,9 @@ def _lever_workbook(path):
 
 
 def test_normalize_levers_converts_external_inputs_to_model_values():
-    normalized = normalize_levers(_levers(num_NOAK=5))
+    normalized = normalize_levers(_levers(num_orders=5, num_NOAK=5))
 
-    assert normalized["num_orders"] == 2
+    assert normalized["num_orders"] == 5
     assert normalized["num_NOAK"] == 5
     assert normalized["ITC_0"] == pytest.approx(0.30)
     assert normalized["interest_rate_0"] == pytest.approx(0.06)
@@ -130,6 +130,64 @@ def test_itc_changes_only_itc_adjusted_metrics_for_supported_units():
 def test_crt_rejects_more_itc_units_than_firm_orders():
     with pytest.raises(ValueError, match="n_itc.*num_orders"):
         run_one_scenario(_config(), _levers(num_orders=2, n_itc=3))
+
+
+def test_crt_rejects_invalid_noak_and_factory_allocations():
+    with pytest.raises(ValueError, match="num_NOAK.*num_orders"):
+        run_one_scenario(_config(), _levers(num_orders=2, num_NOAK=3))
+    with pytest.raises(ValueError, match="f_22.*nonnegative"):
+        run_one_scenario({**_config(), "f_22": -1}, _levers())
+
+
+@pytest.mark.parametrize(
+    "lever, changed, output_key",
+    [
+        ("num_orders", {"num_orders": 2, "num_NOAK": 2}, "avg_OCC"),
+        ("num_NOAK", {"num_NOAK": 2}, "occ_reduction_from_FOAK_to_NOAK_percent"),
+        ("design_completion_percent", {"design_completion_percent": 100}, "avg_OCC"),
+        ("design_maturity", {"design_maturity": 2}, "avg_OCC"),
+        ("proc_exp", {"proc_exp": 2}, "avg_OCC"),
+        ("N_proc", {"N_proc": 5}, "avg_OCC"),
+        ("ce_exp", {"ce_exp": 2}, "avg_OCC"),
+        ("N_cons", {"N_cons": 2}, "avg_OCC"),
+        ("ae_exp", {"ae_exp": 2}, "avg_OCC"),
+        ("N_AE", {"N_AE": 2}, "avg_OCC"),
+        ("standardization_percent", {"standardization_percent": 100}, "avg_OCC"),
+        ("rb_grade_code", {"rb_grade_code": 1}, "avg_OCC"),
+    ],
+)
+def test_major_crt_levers_reach_calculation_and_change_expected_output(lever, changed, output_key):
+    baseline_levers = _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0)
+    changed_levers = dict(baseline_levers)
+    changed_levers.update(changed)
+
+    baseline = run_one_scenario(_config(), baseline_levers)
+    result = run_one_scenario(_config(), changed_levers)
+
+    assert result[output_key] != pytest.approx(baseline[output_key])
+
+
+def test_ap1000_modularity_and_commercial_bop_are_documented_no_effects():
+    baseline = run_one_scenario(_config(), _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0))
+    modular = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0, modularity_code=1)
+    )
+    bop = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0, bop_grade_code=1)
+    )
+
+    assert modular["avg_OCC"] == pytest.approx(baseline["avg_OCC"])
+    assert bop["avg_OCC"] == pytest.approx(baseline["avg_OCC"])
+
+
+def test_itc_plot_and_display_dataframe_use_returned_itc_results():
+    result = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=40, n_itc=4)
+    )
+    frame = results_to_dataframe(result)
+
+    assert frame.loc[0, "Net OCC"] == pytest.approx(result["NETOCC_1"])
+    assert frame.loc[3, "NCI"] == pytest.approx(result["NCI_4"])
 
 
 def test_run_one_scenario_returns_static_inputs_and_unit_results():

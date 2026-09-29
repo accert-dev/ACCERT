@@ -24,10 +24,13 @@ def normalize_levers(levers: dict) -> dict:
     """Convert raw lever dict to model-ready normalized values."""
     num_orders = int(levers["num_orders"])
     n_itc = int(levers["n_itc"])
+    num_noak = int(levers.get("num_NOAK", num_orders))
     if num_orders < 1:
         raise ValueError("num_orders must be at least 1")
     if n_itc < 0 or n_itc > num_orders:
         raise ValueError("n_itc must be between 0 and num_orders")
+    if num_noak < 1 or num_noak > num_orders:
+        raise ValueError("num_NOAK must be between 1 and num_orders")
 
     def label01(x, zero_label, one_label):
         if x == 0:
@@ -53,11 +56,14 @@ def normalize_levers(levers: dict) -> dict:
         "mod_0": label01(levers["modularity_code"], "stick_built", "modularized"),
         "BOP_grade_0": label01(levers["bop_grade_code"], "nuclear", "non_nuclear"),
         "RB_grade_0": label01(levers["rb_grade_code"], "nuclear", "non_nuclear"),
-        "num_NOAK": int(levers.get("num_NOAK", levers["num_orders"])),
+        "num_NOAK": num_noak,
     }
 
 
 def run_one_scenario(config: dict, levers: dict) -> dict:
+    for key in ("f_22", "f_2321"):
+        if float(config.get(key, 0.0)) < 0:
+            raise ValueError(f"{key} must be nonnegative")
     store = _input_store(config)
     levers = apply_itc_rounding(levers)
     inp = normalize_levers(levers)
