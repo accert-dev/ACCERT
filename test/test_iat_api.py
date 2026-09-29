@@ -13,7 +13,9 @@ AP1000_BASELINE = REPO_ROOT / "src" / "crt" / "data" / "AP1000_baseline.csv"
 
 
 def test_iat_available_countries():
-    assert available_countries() == ["China", "El Salvador", "Korea", "Poland", "UAE"]
+    assert available_countries() == [
+        "China", "El Salvador", "Korea", "Poland", "UAE", "United States"
+    ]
 
 
 def test_iat_packaged_localization_csvs_store_leaf_level_2_accounts_only():
@@ -63,6 +65,46 @@ def test_iat_united_states_reproduces_accert_baseline():
     adjusted = result["adjusted_costs"]
     assert adjusted["Adjusted Total Cost"].tolist() == pytest.approx(
         adjusted["Original Total Cost"].tolist()
+    )
+
+
+def test_iat_factor_overrides_apply_to_one_run_without_changing_presets(tmp_path):
+    csv_path = tmp_path / "accert_output.csv"
+    pd.DataFrame(
+        [
+            {
+                "Account": "22",
+                "Title": "Reactor System",
+                "Total Cost (USD)": 1_000.0,
+                "Factory Equipment Cost": 1_000.0,
+                "Site Labor Hours": 0.0,
+                "Site Labor Cost": 0.0,
+                "Site Material Cost": 0.0,
+            }
+        ]
+    ).to_csv(csv_path, index=False)
+
+    preset = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "China",
+            "year_dollar": 2024,
+            "input_csv": csv_path,
+        }
+    )
+    overridden = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "China",
+            "year_dollar": 2024,
+            "input_csv": csv_path,
+            "adjustment_factor_overrides": {"equipment": 1.0},
+        }
+    )
+
+    assert overridden["adjusted_total"] > preset["adjusted_total"]
+    assert load_assumptions()["adjustment_factors"]["China"]["equipment"] == pytest.approx(
+        0.6586985391766269
     )
 
 

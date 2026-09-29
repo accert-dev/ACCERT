@@ -37,6 +37,7 @@ from crt import (
 )
 from crt.io.excel_inputs import InputStore
 from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
+from iat.data_loader import load_assumptions
 from cost_escalation import TARGET_DOLLAR_YEAR
 
 
@@ -44,6 +45,8 @@ HOST = "127.0.0.1"
 PORT = 8765
 OUTPUT_DIR = REPO_ROOT / "tutorial" / "gui_outputs"
 DEFAULT_IAT_YEAR_DOLLAR = TARGET_DOLLAR_YEAR
+IAT_FACTOR_FIELDS = ["import_tariff", "equipment", "material", "labor", "labor_o_and_m", "land", "catchall"]
+DEFAULT_IAT_FACTORS = load_assumptions()["adjustment_factors"]
 DEFAULT_CONSTRUCTION_DURATIONS = {
     "AP1000": 76.0,
     "SFR": 80.0,
@@ -595,7 +598,7 @@ HTML = r"""<!doctype html>
           <option value="iat_crt" selected>IAT then CRT</option>
         </select>
         <label for="outputName">Output name</label>
-        <input id="outputName" value="ap1000_china_gui">
+        <input id="outputName" value="ap1000_us_baseline_gui">
       </fieldset>
 
       <fieldset id="iatPanel">
@@ -620,6 +623,7 @@ HTML = r"""<!doctype html>
           <div>
             <label>Country</label>
             <select id="countrySingle" class="hidden">
+              <option value="United States" selected>United States / U.S. Baseline</option>
               <option value="China">China</option>
               <option value="Korea">Korea</option>
               <option value="UAE">UAE</option>
@@ -628,14 +632,15 @@ HTML = r"""<!doctype html>
             </select>
             <div id="countryMulti" class="country-dropdown">
               <button type="button" class="country-dropdown-btn" id="countryDropdownBtn">
-                <span id="countryDropdownLabel">Korea, China, UAE, Poland, El Salvador</span><span>▾</span>
+              <span id="countryDropdownLabel">United States / U.S. Baseline</span><span>▾</span>
               </button>
               <div class="country-dropdown-menu hidden" id="countryDropdownMenu">
-                <label class="country-option"><input type="checkbox" value="Korea" checked> Korea</label>
-                <label class="country-option"><input type="checkbox" value="China" checked> China</label>
-                <label class="country-option"><input type="checkbox" value="UAE" checked> UAE</label>
-                <label class="country-option"><input type="checkbox" value="Poland" checked> Poland</label>
-                <label class="country-option"><input type="checkbox" value="El Salvador" checked> El Salvador</label>
+                <label class="country-option"><input type="checkbox" value="United States" checked> United States / U.S. Baseline</label>
+                <label class="country-option"><input type="checkbox" value="Korea"> Korea</label>
+                <label class="country-option"><input type="checkbox" value="China"> China</label>
+                <label class="country-option"><input type="checkbox" value="UAE"> UAE</label>
+                <label class="country-option"><input type="checkbox" value="Poland"> Poland</label>
+                <label class="country-option"><input type="checkbox" value="El Salvador"> El Salvador</label>
               </div>
             </div>
           </div>
@@ -644,6 +649,19 @@ HTML = r"""<!doctype html>
             <div class="readonly-note">{{IAT_YEAR_DOLLAR}} CPI-U basis</div>
           </div>
         </div>
+        <div class="row">
+          <div><label for="iatEquipmentFactor">Equipment factor</label><input id="iatEquipmentFactor" type="number" min="0" step="0.000001"></div>
+          <div><label for="iatMaterialFactor">Material factor</label><input id="iatMaterialFactor" type="number" min="0" step="0.000001"></div>
+        </div>
+        <div class="row">
+          <div><label for="iatLaborFactor">Labor factor</label><input id="iatLaborFactor" type="number" min="0" step="0.000001"></div>
+          <div><label for="iatLandFactor">Land factor</label><input id="iatLandFactor" type="number" min="0" step="0.000001"></div>
+        </div>
+        <div class="row">
+          <div><label for="iatCatchallFactor">Catch-all factor</label><input id="iatCatchallFactor" type="number" min="0" step="0.000001"></div>
+          <div><label for="iatTariffFactor">Import tariff</label><input id="iatTariffFactor" type="number" min="0" step="0.000001"></div>
+        </div>
+        <div class="status">Preset factors load with the selected country; edits apply only to this run.</div>
         <div id="iatCsvGroup" class="hidden">
           <label>ACCERT CSV file</label>
           <div class="file-input-row">
@@ -754,6 +772,9 @@ HTML = r"""<!doctype html>
     let _crtFilePath = null;
     let _lastCrtReactorType = null;
     const defaultIatYearDollar = Number("{{IAT_YEAR_DOLLAR}}");
+    const iatFactorDefaults = {{IAT_FACTOR_DEFAULTS}};
+    const iatFactorIds = {import_tariff: "iatTariffFactor", equipment: "iatEquipmentFactor", material: "iatMaterialFactor", labor: "iatLaborFactor", land: "iatLandFactor", catchall: "iatCatchallFactor"};
+    const iatFactorOverrides = {};
     const defaultConstructionDuration = {AP1000: 76, SFR: 80, HTGR: 125};
     const default20sLaborHours = {
       AP1000: 51112635,
@@ -778,6 +799,24 @@ HTML = r"""<!doctype html>
       if (isCsvMode) return [$("countrySingle").value];
       return Array.from(document.querySelectorAll("#countryDropdownMenu input[type='checkbox']:checked"))
         .map(cb => cb.value);
+    }
+
+    function activeIatCountry() {
+      if ($("iatInputMode").value === "csv" || $("workflow").value === "iat_crt") return $("countrySingle").value;
+      return selectedCountries()[0] || "United States";
+    }
+
+    function saveIatFactorOverrides() {
+      const country = activeIatCountry();
+      const values = {};
+      Object.entries(iatFactorIds).forEach(([name, id]) => values[name] = numberValue(id));
+      iatFactorOverrides[country] = values;
+    }
+
+    function loadIatFactorDefaults() {
+      const country = activeIatCountry();
+      const values = iatFactorOverrides[country] || iatFactorDefaults[country] || {};
+      Object.entries(iatFactorIds).forEach(([name, id]) => $(id).value = values[name] ?? "");
     }
 
     function updateCountryDropdownLabel() {
@@ -832,6 +871,7 @@ HTML = r"""<!doctype html>
           input_mode: $("iatInputMode").value,
           reactor_type: apiReactorType(),
           countries: selectedCountries(),
+          adjustment_factor_overrides: (() => { saveIatFactorOverrides(); return iatFactorOverrides; })(),
           year_dollar: defaultIatYearDollar,
           input_csv: _csvFilePath,
           csv_content: _csvFileContent,
@@ -1720,6 +1760,7 @@ HTML = r"""<!doctype html>
 
     $("workflow").addEventListener("change", updatePanels);
     $("iatInputMode").addEventListener("change", updatePanels);
+    $("countrySingle").addEventListener("change", () => { loadIatFactorDefaults(); });
     $("iatReactorType").addEventListener("change", () => {
       const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crt";
       if (isCsvMode) {
@@ -1739,7 +1780,7 @@ HTML = r"""<!doctype html>
       }
     });
     document.querySelectorAll("#countryDropdownMenu input[type='checkbox']").forEach(cb => {
-      cb.addEventListener("change", updateCountryDropdownLabel);
+      cb.addEventListener("change", () => { updateCountryDropdownLabel(); loadIatFactorDefaults(); });
     });
     $("iatBrowseBtn").addEventListener("click", () => $("iatCsvFile").click());
     $("iatCsvFile").addEventListener("change", () => {
@@ -1766,6 +1807,7 @@ HTML = r"""<!doctype html>
     $("resetBtn").addEventListener("click", () => location.reload());
     enhanceLabels();
     updatePanels();
+    loadIatFactorDefaults();
   </script>
 </body>
 </html>
@@ -1994,6 +2036,9 @@ def _iat_config(payload: dict, output_csv: Path | None = None, country: str | No
         "country": country,
         "year_dollar": _int(iat["year_dollar"], DEFAULT_IAT_YEAR_DOLLAR),
     }
+    overrides = iat.get("adjustment_factor_overrides", {})
+    if isinstance(overrides, dict):
+        config["adjustment_factor_overrides"] = overrides.get(country, {})
     if output_csv is not None:
         config["output_csv"] = output_csv
     if iat["input_mode"] == "occ":
@@ -2398,6 +2443,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         if self.path in {"/", "/index.html"}:
             html = HTML.replace("{{IAT_YEAR_DOLLAR}}", str(DEFAULT_IAT_YEAR_DOLLAR))
+            html = html.replace("{{IAT_FACTOR_DEFAULTS}}", json.dumps(DEFAULT_IAT_FACTORS))
             self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
             return
         if self.path.startswith("/outputs/"):

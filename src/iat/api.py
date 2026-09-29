@@ -82,6 +82,7 @@ def run_adjustment(config: dict[str, Any]) -> dict[str, Any]:
         country=country,
         reactor_type=reactor_type,
         assumptions=assumptions,
+        factor_overrides=config.get("adjustment_factor_overrides"),
     )
 
     output_csv = config.get("output_csv")
@@ -227,6 +228,7 @@ def adjust_cost_dataframe(
     country: str,
     reactor_type: str,
     assumptions: dict[str, Any] | None = None,
+    factor_overrides: dict[str, float] | None = None,
 ) -> pd.DataFrame:
     """Apply IAT localization and country adjustment factors to a COA dataframe."""
     assumptions = load_assumptions() if assumptions is None else assumptions
@@ -238,7 +240,12 @@ def adjust_cost_dataframe(
         )
 
     records = assumptions["families"][family]
-    factors = assumptions["adjustment_factors"][country]
+    factors = dict(assumptions["adjustment_factors"][country])
+    if factor_overrides:
+        for category, value in factor_overrides.items():
+            if category not in factors:
+                raise ValueError(f"Unsupported IAT adjustment factor: {category}")
+            factors[category] = float(value)
 
     out = df.copy()
     out["Account"] = out["Account"].map(normalize_account)
