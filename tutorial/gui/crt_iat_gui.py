@@ -655,8 +655,12 @@ HTML = r"""<!doctype html>
           <div><label for="iatLandFactor">Land factor</label><input id="iatLandFactor" type="number" min="0" step="0.000001"></div>
         </div>
         <div class="row">
+          <div><label for="iatLaborOandMFactor">Labor O&amp;M factor</label><input id="iatLaborOandMFactor" type="number" min="0" step="0.000001"></div>
           <div><label for="iatCatchallFactor">Catch-all factor</label><input id="iatCatchallFactor" type="number" min="0" step="0.000001"></div>
+        </div>
+        <div class="row">
           <div><label for="iatTariffFactor">Import tariff</label><input id="iatTariffFactor" type="number" min="0" step="0.000001"></div>
+          <div></div>
         </div>
         <div class="status">Preset factors load with the selected country; edits apply only to this run.</div>
         <div id="iatCsvGroup" class="hidden">
@@ -770,7 +774,7 @@ HTML = r"""<!doctype html>
     let _lastCrtReactorType = null;
     const defaultIatYearDollar = Number("{{IAT_YEAR_DOLLAR}}");
     const iatFactorDefaults = {{IAT_FACTOR_DEFAULTS}};
-    const iatFactorIds = {import_tariff: "iatTariffFactor", equipment: "iatEquipmentFactor", material: "iatMaterialFactor", labor: "iatLaborFactor", land: "iatLandFactor", catchall: "iatCatchallFactor"};
+    const iatFactorIds = {import_tariff: "iatTariffFactor", equipment: "iatEquipmentFactor", material: "iatMaterialFactor", labor: "iatLaborFactor", labor_o_and_m: "iatLaborOandMFactor", land: "iatLandFactor", catchall: "iatCatchallFactor"};
     const iatFactorOverrides = {};
     const reactorConfigs = {{REACTOR_CONFIGS}};
 
