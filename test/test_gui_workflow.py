@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+import pytest
 
 from tutorial.gui import crt_iat_gui
 
@@ -113,3 +114,11 @@ def test_gui_crt_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
     base_coas = [row["COA"] for row in result["base_case"]["comparison"]]
     assert base_coas.index("21") == base_coas.index("20") + 1
     assert base_coas.index("22") == base_coas.index("21") + 1
+
+
+def test_gui_rejects_inconsistent_iat_and_crt_reactor_types():
+    payload = _gui_payload("")
+    payload["iat"]["reactor_type"] = "ACCERT output-SMR"
+
+    with pytest.raises(ValueError, match="reactor selections are inconsistent"):
+        crt_iat_gui.run_workflow(payload)

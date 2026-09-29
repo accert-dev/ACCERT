@@ -22,6 +22,13 @@ from .utils.serialize import write_csv_row, stream_pickle_dump
 
 def normalize_levers(levers: dict) -> dict:
     """Convert raw lever dict to model-ready normalized values."""
+    num_orders = int(levers["num_orders"])
+    n_itc = int(levers["n_itc"])
+    if num_orders < 1:
+        raise ValueError("num_orders must be at least 1")
+    if n_itc < 0 or n_itc > num_orders:
+        raise ValueError("n_itc must be between 0 and num_orders")
+
     def label01(x, zero_label, one_label):
         if x == 0:
             return zero_label
@@ -30,9 +37,9 @@ def normalize_levers(levers: dict) -> dict:
         return x
 
     return {
-        "num_orders": int(levers["num_orders"]),
+        "num_orders": num_orders,
         "ITC_0": float(levers["itc_percent"]) / 100.0,
-        "n_ITC": levers["n_itc"],
+        "n_ITC": n_itc,
         "interest_rate_0": float(levers["interest_percent"]) / 100.0,
         "design_completion_0": float(levers["design_completion_percent"]) / 100.0,
         "Design_Maturity_0": levers["design_maturity"],

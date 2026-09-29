@@ -127,6 +127,11 @@ def test_itc_changes_only_itc_adjusted_metrics_for_supported_units():
     assert "NCI_5" not in credited
 
 
+def test_crt_rejects_more_itc_units_than_firm_orders():
+    with pytest.raises(ValueError, match="n_itc.*num_orders"):
+        run_one_scenario(_config(), _levers(num_orders=2, n_itc=3))
+
+
 def test_run_one_scenario_returns_static_inputs_and_unit_results():
     result = run_one_scenario(_config(), _levers())
 

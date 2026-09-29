@@ -36,6 +36,7 @@ from crt import (
     waterfall_to_dataframe,
 )
 from crt.io.excel_inputs import InputStore
+from crt.reactor_config import REACTOR_CONFIGS, iat_api_reactor_type, reactor_power_mwe
 from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 from cost_escalation import TARGET_DOLLAR_YEAR
@@ -48,14 +49,10 @@ DEFAULT_IAT_YEAR_DOLLAR = TARGET_DOLLAR_YEAR
 IAT_FACTOR_FIELDS = ["import_tariff", "equipment", "material", "labor", "labor_o_and_m", "land", "catchall"]
 DEFAULT_IAT_FACTORS = load_assumptions()["adjustment_factors"]
 DEFAULT_CONSTRUCTION_DURATIONS = {
-    "AP1000": 76.0,
-    "SFR": 80.0,
-    "HTGR": 125.0,
+    name: values["construction_duration_months"] for name, values in REACTOR_CONFIGS.items()
 }
 DEFAULT_20S_LABOR_HOURS = {
-    "AP1000": 51_112_635.470753975,
-    "SFR": 10_402_590.638988608,
-    "HTGR": 37_288_941.04573331,
+    name: values["labor_hours_20s"] for name, values in REACTOR_CONFIGS.items()
 }
 BASE_GROUP_TITLES = {
     "10": "Capitalized Pre-Construction Costs",
@@ -775,12 +772,7 @@ HTML = r"""<!doctype html>
     const iatFactorDefaults = {{IAT_FACTOR_DEFAULTS}};
     const iatFactorIds = {import_tariff: "iatTariffFactor", equipment: "iatEquipmentFactor", material: "iatMaterialFactor", labor: "iatLaborFactor", land: "iatLandFactor", catchall: "iatCatchallFactor"};
     const iatFactorOverrides = {};
-    const defaultConstructionDuration = {AP1000: 76, SFR: 80, HTGR: 125};
-    const default20sLaborHours = {
-      AP1000: 51112635,
-      SFR: 10402591,
-      HTGR: 37288941
-    };
+    const reactorConfigs = {{REACTOR_CONFIGS}};
 
     function numberValue(id) {
       const value = $(id).value.trim();
@@ -852,15 +844,33 @@ HTML = r"""<!doctype html>
         $("bopGrade").value = "1";
         $("modularity").value = "1";
       }
-      $("constructionDuration").value = String(defaultConstructionDuration[rt] || 76);
-      $("total20sLaborHours").value = String(Math.round(default20sLaborHours[rt] || default20sLaborHours.AP1000));
+      $("constructionDuration").value = String(reactorConfigs[rt].construction_duration_months);
+      $("total20sLaborHours").value = String(Math.round(reactorConfigs[rt].labor_hours_20s));
+    }
+
+    function syncSharedReactorSelection() {
+      const shared = $("workflow").value === "iat_crt";
+      const crtType = $("crtReactorType").value;
+      if (shared) {
+        $("iatReactorType").value = reactorConfigs[crtType].iat_label;
+      }
+      $("iatReactorType").disabled = shared;
     }
 
     function apiReactorType() {
+      if ($("workflow").value === "iat_crt") {
+        return iatApiTypeForCrt($('crtReactorType').value);
+      }
       const rt = $("iatReactorType").value;
       const mode = $("iatInputMode").value;
       if (mode === "csv") return rt === "Large Reactor" ? "ACCERT output-LR" : "ACCERT output-SMR";
       return rt === "Large Reactor" ? "large reactor" : "SMR";
+    }
+
+    function iatApiTypeForCrt(reactorType) {
+      const config = reactorConfigs[reactorType];
+      const prefix = $("iatInputMode").value === "csv" ? "ACCERT output-" : "";
+      return prefix + config.iat_family;
     }
 
     function payload() {
@@ -921,6 +931,7 @@ HTML = r"""<!doctype html>
       $("iatPanel").classList.toggle("hidden", workflow === "crt_only");
       $("crtPanel").classList.toggle("hidden", workflow === "iat_only");
       $("leverPanel").classList.toggle("hidden", workflow === "iat_only");
+      syncSharedReactorSelection();
       const inputMode = $("iatInputMode").value;
       const isCsvMode = inputMode === "csv" || workflow === "iat_crt";
       if (workflow === "iat_crt") {
@@ -1803,10 +1814,12 @@ HTML = r"""<!doctype html>
       reader.readAsText(file);
     });
     $("crtReactorType").addEventListener("change", () => updateCrtDefaults(true));
+    $("crtReactorType").addEventListener("change", () => { syncSharedReactorSelection(); updateElectricOutputDefault(); });
     $("runBtn").addEventListener("click", runWorkflow);
     $("resetBtn").addEventListener("click", () => location.reload());
     enhanceLabels();
     updatePanels();
+    syncSharedReactorSelection();
     loadIatFactorDefaults();
   </script>
 </body>
@@ -1955,6 +1968,8 @@ def _occ_rows(summary: pd.DataFrame) -> pd.DataFrame:
 
 
 def _reactor_power_kwe(payload: dict) -> float:
+    if payload.get("workflow") == "iat_crt":
+        return reactor_power_mwe(payload["crt"]["reactor_type"]) * 1000.0
     iat = payload.get("iat", {})
     if iat.get("input_mode") == "occ":
         return 1.0
@@ -2030,7 +2045,7 @@ def _iat_config(payload: dict, output_csv: Path | None = None, country: str | No
     iat = payload["iat"]
     if country is None:
         countries = iat.get("countries") or []
-        country = countries[0] if countries else iat.get("country", "China")
+        country = countries[0] if countries else iat.get("country", "United States")
     config = {
         "reactor_type": iat["reactor_type"],
         "country": country,
@@ -2303,6 +2318,18 @@ def run_workflow(payload: dict) -> dict:
         "notes": notes,
     }
 
+    if workflow == "iat_crt":
+        expected_iat_type = iat_api_reactor_type(
+            payload["crt"]["reactor_type"],
+            csv_mode=payload["iat"].get("input_mode") == "csv",
+        )
+        if payload["iat"].get("reactor_type") != expected_iat_type:
+            raise ValueError(
+                "IAT and CRT reactor selections are inconsistent: "
+                f"{payload['iat'].get('reactor_type')!r} does not match "
+                f"{payload['crt']['reactor_type']!r} ({expected_iat_type!r})."
+            )
+
     if workflow == "iat_only":
         iat = payload["iat"]
         countries = iat.get("countries") or [iat.get("country", "China")]
@@ -2444,6 +2471,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.path in {"/", "/index.html"}:
             html = HTML.replace("{{IAT_YEAR_DOLLAR}}", str(DEFAULT_IAT_YEAR_DOLLAR))
             html = html.replace("{{IAT_FACTOR_DEFAULTS}}", json.dumps(DEFAULT_IAT_FACTORS))
+            html = html.replace("{{REACTOR_CONFIGS}}", json.dumps(REACTOR_CONFIGS))
             self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
             return
         if self.path.startswith("/outputs/"):
