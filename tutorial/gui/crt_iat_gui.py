@@ -51,6 +51,9 @@ HOST = "127.0.0.1"
 PORT = 8765
 OUTPUT_DIR = REPO_ROOT / "tutorial" / "gui_outputs"
 DEFAULT_IAT_YEAR_DOLLAR = TARGET_DOLLAR_YEAR
+LAND_COST_PER_GUI_UNIT = 1_000.0
+LABOR_HOURS_PER_MILLION = 1_000_000.0
+DEFAULT_LAND_COST_PER_ACRE = 22_000.0
 IAT_FACTOR_FIELDS = ["import_tariff", "equipment", "material", "labor", "labor_o_and_m", "land", "catchall"]
 DEFAULT_IAT_FACTORS = load_assumptions()["adjustment_factors"]
 DEFAULT_CONSTRUCTION_DURATIONS = {
@@ -66,6 +69,16 @@ BASE_GROUP_TITLES = {
     "50": "Capitalized Supplementary Costs",
     "60": "Capitalized Financial Costs",
 }
+
+
+def land_cost_from_gui(value: float | int | None) -> float | None:
+    """Convert GUI $k/acre input to the CRT native $/acre unit."""
+    return None if value is None else float(value) * LAND_COST_PER_GUI_UNIT
+
+
+def labor_hours_from_gui(value: float | int | None) -> float | None:
+    """Convert GUI million labor-hours input to native labor-hours."""
+    return None if value is None else float(value) * LABOR_HOURS_PER_MILLION
 
 
 HTML = r"""<!doctype html>
@@ -717,7 +730,7 @@ HTML = r"""<!doctype html>
         <div class="triple">
           <div><label for="f22">Account 22 factory allocation ($M)</label><input id="f22" type="text" inputmode="decimal" value="250"></div>
           <div><label for="f2321">Account 232.1 factory allocation ($M)</label><input id="f2321" type="text" inputmode="decimal" value="150"></div>
-          <div><label for="landCost">Land $/acre</label><input id="landCost" type="number" value="22000"></div>
+          <div><label for="landCost">Land Cost ($k/acre)</label><input id="landCost" type="number" min="0" step="0.1" value="22"></div>
         </div>
         <div class="row">
           <div><label for="startup">Startup months</label><input id="startup" type="number" value="28"></div>
@@ -725,7 +738,7 @@ HTML = r"""<!doctype html>
         </div>
         <div class="row">
           <div><label for="constructionDuration">Construction duration months</label><input id="constructionDuration" type="number" min="1" step="1" value="76"></div>
-          <div><label for="total20sLaborHours">20s labor hours</label><input id="total20sLaborHours" type="text" inputmode="numeric" value="51,112,635"></div>
+          <div><label for="total20sLaborHours">Total Labor Hours (million labor-hours)</label><input id="total20sLaborHours" type="number" min="0" step="0.01" value="51.11"></div>
         </div>
         <div class="inline"><input id="showLevers" type="checkbox"> Include lever table in dashboard image</div>
       </fieldset>
@@ -787,6 +800,8 @@ HTML = r"""<!doctype html>
     let _crtFilePath = null;
     let _lastCrtReactorType = null;
     const defaultIatYearDollar = Number("{{IAT_YEAR_DOLLAR}}");
+    const LAND_COST_GUI_TO_BACKEND = Number("{{LAND_COST_PER_GUI_UNIT}}");
+    const LABOR_HOURS_GUI_TO_BACKEND = Number("{{LABOR_HOURS_PER_MILLION}}");
     const iatFactorDefaults = {{IAT_FACTOR_DEFAULTS}};
     const iatFactorIds = {import_tariff: "iatTariffFactor", equipment: "iatEquipmentFactor", material: "iatMaterialFactor", labor: "iatLaborFactor", labor_o_and_m: "iatLaborOandMFactor", land: "iatLandFactor", catchall: "iatCatchallFactor"};
     const iatFactorOverrides = {};
@@ -795,6 +810,18 @@ HTML = r"""<!doctype html>
     function numberValue(id) {
       const value = $(id).value.trim().replace(/,/g, "");
       return value === "" ? null : Number(value);
+    }
+
+    function landCostToBackend(value) {
+      return value === null ? null : value * LAND_COST_GUI_TO_BACKEND;
+    }
+
+    function laborHoursToBackend(value) {
+      return value === null ? null : value * LABOR_HOURS_GUI_TO_BACKEND;
+    }
+
+    function formatMillionLaborHours(nativeHours) {
+      return (Number(nativeHours) / LABOR_HOURS_GUI_TO_BACKEND).toFixed(2).replace(/\.?(0+)$/, "");
     }
 
     function occScenarioValues() {
@@ -901,7 +928,7 @@ HTML = r"""<!doctype html>
         $("modularity").value = "1";
       }
       $("constructionDuration").value = String(reactorConfigs[rt].construction_duration_months);
-      $("total20sLaborHours").value = Math.round(reactorConfigs[rt].labor_hours_20s).toLocaleString("en-US");
+      $("total20sLaborHours").value = formatMillionLaborHours(reactorConfigs[rt].labor_hours_20s);
     }
 
     function syncCrtOptionsToIat() { syncBaselineSelection(); }
@@ -947,10 +974,10 @@ HTML = r"""<!doctype html>
           baseline_csv_filename: _crtFileContent ? $("crtCsvName").value : null,
           f_22: numberValue("f22") === null ? null : numberValue("f22") * 1000000,
           f_2321: numberValue("f2321") === null ? null : numberValue("f2321") * 1000000,
-          land_cost_per_acre_0: numberValue("landCost"),
+          land_cost_per_acre_0: landCostToBackend(numberValue("landCost")),
           startup_0: numberValue("startup"),
           construction_duration_0: numberValue("constructionDuration"),
-          total_20s_labor_hours: numberValue("total20sLaborHours"),
+          total_20s_labor_hours: laborHoursToBackend(numberValue("total20sLaborHours")),
           staggering_ratio: numberValue("staggering"),
           show_levers: $("showLevers").checked
         },
@@ -1039,10 +1066,10 @@ HTML = r"""<!doctype html>
         crtCsvName: "Optional CSV baseline for CRT. Connected IAT-to-CRT runs fill this automatically.",
         f22: "Factory equipment cost input used by the CRT baseline calculations.",
         f2321: "Turbine-generator equipment cost input used by the CRT baseline calculations.",
-        landCost: "Land cost per acre for preconstruction land accounts.",
+        landCost: "Land cost in thousand dollars per acre. The CRT backend receives the value in dollars per acre.",
         startup: "FOAK startup duration in months.",
         constructionDuration: "Reference FOAK construction duration in months. Defaults are AP1000 76, SFR 80, and HTGR 125.",
-        total20sLaborHours: "Total labor hours assigned across 20s direct accounts when a raw ACCERT account CSV is converted into a CRT/IAT baseline.",
+        total20sLaborHours: "Total labor hours in millions, assigned across 20s direct accounts. The CRT backend receives the full labor-hour value.",
         staggering: "Fractional overlap used for the sequential construction timeline.",
         numOrders: "Number of firm orders: This determines the size of the order book for a given reactor concept. It directly impacts equipment costs for all plants within the order (including the first).",
         numNoak: "NOAK unit: plant number used for the FOAK-to-NOAK comparison. Range: 1 to firm orders.",
@@ -2150,7 +2177,7 @@ def _crt_config(payload: dict, baseline_csv: Path | None = None) -> dict:
         "reactor_type": crt["reactor_type"],
         "f_22": _num(crt["f_22"], 0.0),
         "f_2321": _num(crt["f_2321"], 0.0),
-        "land_cost_per_acre_0": _num(crt["land_cost_per_acre_0"], 22_000.0),
+        "land_cost_per_acre_0": _num(crt["land_cost_per_acre_0"], DEFAULT_LAND_COST_PER_ACRE),
         "startup_0": _num(crt["startup_0"], 28.0),
         "construction_duration_0": _num(
             crt.get("construction_duration_0"),
@@ -2581,6 +2608,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         if self.path in {"/", "/index.html"}:
             html = HTML.replace("{{IAT_YEAR_DOLLAR}}", str(DEFAULT_IAT_YEAR_DOLLAR))
+            html = html.replace("{{LAND_COST_PER_GUI_UNIT}}", str(LAND_COST_PER_GUI_UNIT))
+            html = html.replace("{{LABOR_HOURS_PER_MILLION}}", str(LABOR_HOURS_PER_MILLION))
             html = html.replace("{{IAT_FACTOR_DEFAULTS}}", json.dumps(DEFAULT_IAT_FACTORS))
             html = html.replace("{{REACTOR_CONFIGS}}", json.dumps(REACTOR_CONFIGS))
             self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")

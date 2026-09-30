@@ -203,3 +203,26 @@ def test_capital_cost_records_split_tci_into_nci_and_actual_itc_reduction():
     assert records[1]["ITC reduction"] == pytest.approx(0.0)
     assert records[0]["OCC"] == pytest.approx(5000.0)
     assert records[0]["Net OCC"] == pytest.approx(3500.0)
+
+
+def test_gui_display_units_convert_to_native_crt_units():
+    assert crt_iat_gui.land_cost_from_gui(22) == pytest.approx(22_000.0)
+    assert crt_iat_gui.land_cost_from_gui(25) == pytest.approx(25_000.0)
+    assert crt_iat_gui.labor_hours_from_gui(51.11) == pytest.approx(51_110_000.0)
+    assert crt_iat_gui.labor_hours_from_gui(52.5) == pytest.approx(52_500_000.0)
+
+
+def test_gui_defaults_are_derived_from_native_reactor_config():
+    ap1000 = crt_iat_gui.REACTOR_CONFIGS["AP1000"]
+    assert crt_iat_gui.DEFAULT_LAND_COST_PER_ACRE == pytest.approx(22_000.0)
+    assert crt_iat_gui.land_cost_from_gui(
+        crt_iat_gui.DEFAULT_LAND_COST_PER_ACRE / crt_iat_gui.LAND_COST_PER_GUI_UNIT
+    ) == pytest.approx(22_000.0)
+    assert ap1000["labor_hours_20s"] / crt_iat_gui.LABOR_HOURS_PER_MILLION == pytest.approx(51.112635470753975)
+
+
+def test_gui_uses_human_scale_labels_and_explicit_conversion_layer():
+    assert 'Land Cost ($k/acre)' in crt_iat_gui.HTML
+    assert 'Total Labor Hours (million labor-hours)' in crt_iat_gui.HTML
+    assert "landCostToBackend(numberValue(\"landCost\"))" in crt_iat_gui.HTML
+    assert "laborHoursToBackend(numberValue(\"total20sLaborHours\"))" in crt_iat_gui.HTML
