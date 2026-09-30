@@ -182,5 +182,22 @@ def test_gui_honors_only_iat_output_for_iat_crt_baseline(monkeypatch, tmp_path):
 
 def test_capital_chart_uses_calculated_itc_portion_pattern():
     assert 'id="itcHatch"' in crt_iat_gui.HTML
-    assert "itcPart(originalTci, tci)" in crt_iat_gui.HTML
+    assert "ITC reduction" in crt_iat_gui.HTML
     assert 'fill="url(#itcHatch)"' in crt_iat_gui.HTML
+
+
+def test_capital_cost_records_split_tci_into_nci_and_actual_itc_reduction():
+    rows = pd.DataFrame(
+        [
+            {"Plant number": 1, "TCI": 6000.0, "NCI": 4000.0, "OCC": 5000.0, "Net OCC": 3500.0},
+            {"Plant number": 2, "TCI": 5000.0, "NCI": None, "OCC": 4200.0, "Net OCC": None},
+        ]
+    )
+
+    records = crt_iat_gui._capital_cost_records(rows)
+
+    assert records[0]["NCI"] == pytest.approx(4000.0)
+    assert records[0]["ITC reduction"] == pytest.approx(2000.0)
+    assert records[0]["NCI"] + records[0]["ITC reduction"] == pytest.approx(records[0]["TCI"])
+    assert records[1]["NCI"] == pytest.approx(records[1]["TCI"])
+    assert records[1]["ITC reduction"] == pytest.approx(0.0)
