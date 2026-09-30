@@ -1295,7 +1295,9 @@ HTML = r"""<!doctype html>
       const tciValue = row => Number(row.TCI || 0);
       const nciValue = row => Number(row.NCI ?? row.TCI ?? 0);
       const itcValue = row => Math.max(0, Number(row["ITC reduction"] ?? (tciValue(row) - nciValue(row))));
-      const max = niceMax(Math.max(...rows.map(tciValue)) * 1.08);
+      const occValue = row => Number(row.OCC || 0);
+      const netOccValue = row => Number(row["Net OCC"] ?? row.OCC ?? 0);
+      const max = niceMax(Math.max(...rows.flatMap(r => [tciValue(r), occValue(r)])) * 1.08);
       const y = v => m.top + innerH - (Number(v || 0) / max) * innerH;
       const groupW = innerW / rows.length;
       const barW = Math.max(16, Math.min(42, groupW * 0.34));
@@ -1314,23 +1316,26 @@ HTML = r"""<!doctype html>
         const tci = tciValue(r);
         const nci = Math.min(tci, nciValue(r));
         const itc = Math.min(tci - nci, itcValue(r));
+        const occ = occValue(r);
+        const netOcc = Math.min(occ, netOccValue(r));
+        const occItc = Math.max(0, occ - netOcc);
         const solidH = m.top + innerH - y(nci);
         const itcH = y(nci) - y(tci);
-        const tip = `<b>Plant ${esc(r["Plant number"])}</b><br>TCI: ${fmt(tci)}<br>NCI: ${fmt(nci)}${itc > 0 ? `<br>ITC reduction: ${fmt(itc)}` : ""}`;
-        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW / 2}" y="${y(nci)}" width="${barW}" height="${solidH}" fill="#2ca02c"></rect>`;
-        if (itc > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW / 2}" y="${y(tci)}" width="${barW}" height="${itcH}" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect>`;
-        if (itc > 0 && (rows.length <= 10 || idx === 0)) {
-          svg += `<text x="${cx}" y="${y(tci) - 8}" text-anchor="middle" fill="#596775" font-size="13" font-weight="800">TCI ${fmt(tci)}</text>`;
-          svg += `<text x="${cx}" y="${y(nci) + 16}" text-anchor="middle" fill="#596775" font-size="13" font-weight="800">NCI ${fmt(nci)}</text>`;
-        }
+        const occSolidH = m.top + innerH - y(netOcc);
+        const occItcH = y(netOcc) - y(occ);
+        const tip = `<b>Plant ${esc(r["Plant number"])}</b><br>TCI: ${fmt(tci)}<br>NCI: ${fmt(nci)}${itc > 0 ? `<br>TCI ITC reduction: ${fmt(itc)}` : ""}<br>OCC: ${fmt(occ)}<br>Net OCC: ${fmt(netOcc)}${occItc > 0 ? `<br>OCC ITC reduction: ${fmt(occItc)}` : ""}`;
+        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(nci)}" width="${barW}" height="${solidH}" fill="#2ca02c"></rect>`;
+        if (itc > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${itcH}" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect>`;
+        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx + 2}" y="${y(netOcc)}" width="${barW}" height="${occSolidH}" fill="#1f77b4"></rect>`;
+        if (occItc > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${cx + 2}" y="${y(occ)}" width="${barW}" height="${occItcH}" fill="url(#itcHatch)" stroke="#1f77b4" stroke-width="1.5"></rect>`;
         if (idx % Math.ceil(rows.length / 8) === 0 || rows.length <= 8) {
           svg += `<text x="${cx}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${esc(r["Plant number"])}</text>`;
         }
       });
       svg += `<text x="${m.left + innerW / 2}" y="${h - 6}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Plant number</text>`;
-      svg += `<rect x="${w - 232}" y="14" width="14" height="14" fill="#2ca02c"></rect><text x="${w - 210}" y="26" fill="#596775" font-size="15" font-weight="700">NCI (solid)</text>`;
+      svg += `<rect x="${w - 318}" y="14" width="14" height="14" fill="#2ca02c"></rect><text x="${w - 296}" y="26" fill="#596775" font-size="15" font-weight="700">NCI / TCI</text>`;
+      svg += `<rect x="${w - 232}" y="14" width="14" height="14" fill="#1f77b4"></rect><text x="${w - 210}" y="26" fill="#596775" font-size="15" font-weight="700">OCC / Net OCC</text>`;
       svg += `<rect x="${w - 112}" y="14" width="14" height="14" fill="url(#itcHatch)"></rect><text x="${w - 90}" y="26" fill="#596775" font-size="15" font-weight="700">ITC reduction</text>`;
-      svg += `<text x="${w - 270}" y="26" text-anchor="end" fill="#596775" font-size="15" font-weight="700">Full height = TCI</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -1756,7 +1761,7 @@ HTML = r"""<!doctype html>
           <button data-tab="results">Results Table</button>
         </div>`;
         html += `<div id="tab-capital" class="tab-panel active"><div class="chart-grid">
-          <div class="chart-panel"><h3>Capital Cost: TCI with NCI and ITC reduction</h3><div id="capitalChart"></div></div>
+          <div class="chart-panel"><h3>Capital Cost: TCI/NCI and OCC</h3><div id="capitalChart"></div></div>
           <div class="chart-panel"><h3>10-60 - TCI Breakdown</h3><div id="breakdownPreview"></div></div>
         </div></div>`;
         html += `<div id="tab-levers" class="tab-panel"><div class="chart-panel"><h3>TCI Savings by Reduction Lever</h3><div id="waterfallChart"></div></div></div>`;
@@ -2325,7 +2330,7 @@ def _base_case_from_crt_config(config: dict) -> dict:
 
 
 def _capital_cost_records(plants: pd.DataFrame) -> list[dict]:
-    columns = ["Plant number", "TCI", "NCI", "ITC reduction"]
+    columns = ["Plant number", "TCI", "NCI", "OCC", "Net OCC", "ITC reduction"]
     available = [column for column in columns if column in plants.columns]
     records = _records(plants[available])
     for row in records:
@@ -2333,6 +2338,9 @@ def _capital_cost_records(plants: pd.DataFrame) -> list[dict]:
         nci_value = row.get("NCI")
         nci = tci if nci_value in (None, "") else float(nci_value)
         row["NCI"] = nci
+        occ = float(row.get("OCC") or 0.0)
+        net_occ_value = row.get("Net OCC")
+        row["Net OCC"] = occ if net_occ_value in (None, "") else float(net_occ_value)
         row["ITC reduction"] = max(0.0, tci - nci)
     return records
 

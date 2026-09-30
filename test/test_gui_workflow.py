@@ -201,3 +201,5 @@ def test_capital_cost_records_split_tci_into_nci_and_actual_itc_reduction():
     assert records[0]["NCI"] + records[0]["ITC reduction"] == pytest.approx(records[0]["TCI"])
     assert records[1]["NCI"] == pytest.approx(records[1]["TCI"])
     assert records[1]["ITC reduction"] == pytest.approx(0.0)
+    assert records[0]["OCC"] == pytest.approx(5000.0)
+    assert records[0]["Net OCC"] == pytest.approx(3500.0)
