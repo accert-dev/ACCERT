@@ -226,3 +226,11 @@ def test_gui_uses_human_scale_labels_and_explicit_conversion_layer():
     assert 'Total Labor Hours (million labor-hours)' in crt_iat_gui.HTML
     assert "landCostToBackend(numberValue(\"landCost\"))" in crt_iat_gui.HTML
     assert "laborHoursToBackend(numberValue(\"total20sLaborHours\"))" in crt_iat_gui.HTML
+
+
+def test_gui_groups_conditional_inputs_and_aligns_crt_cost_fields():
+    assert 'class="triple crt-cost-row"' in crt_iat_gui.HTML
+    assert 'id="iatUploadGroup"' in crt_iat_gui.HTML
+    assert 'id="crtReactorTypeGroup"' in crt_iat_gui.HTML
+    assert '$("iatUploadGroup").classList.toggle("hidden", !isCustom)' in crt_iat_gui.HTML
+    assert '$("crtReactorTypeGroup").classList.toggle("hidden", workflow !== "crt_only")' in crt_iat_gui.HTML

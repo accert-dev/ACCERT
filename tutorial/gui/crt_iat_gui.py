@@ -217,6 +217,14 @@ HTML = r"""<!doctype html>
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }
+    .crt-cost-row > div {
+      display: flex;
+      flex-direction: column;
+    }
+    .crt-cost-row .label-row {
+      min-height: 44px;
+      align-items: flex-start;
+    }
     .lever-matrix {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -689,11 +697,13 @@ HTML = r"""<!doctype html>
             <option value="HTGR">HTGR baseline</option>
             <option value="custom">ACCERT output / uploaded CSV</option>
           </select>
-          <div class="status">Built-in ACCERT reference files. The selected baseline sets the reactor model and electric output; use the upload control for a user-generated ACCERT CSV.</div>
-          <div class="file-input-row">
-            <input type="text" id="iatCsvName" readonly placeholder="No file selected">
-            <button type="button" id="iatBrowseBtn">Browse…</button>
-            <input id="iatCsvFile" type="file" accept=".csv" class="hidden">
+          <div id="iatUploadGroup" class="hidden">
+            <div class="status">Built-in ACCERT reference files set the reactor model and electric output. Select ACCERT output / uploaded CSV to choose a user-generated ACCERT CSV.</div>
+            <div class="file-input-row">
+              <input type="text" id="iatCsvName" readonly placeholder="No file selected">
+              <button type="button" id="iatBrowseBtn">Browse…</button>
+              <input id="iatCsvFile" type="file" accept=".csv" class="hidden">
+            </div>
           </div>
         </div>
         <div id="electricOutputGroup" class="hidden">
@@ -713,12 +723,14 @@ HTML = r"""<!doctype html>
 
       <fieldset id="crtPanel">
         <legend>CRT Fixed Inputs</legend>
-        <label for="crtReactorType">Reactor type</label>
-        <select id="crtReactorType">
-          <option selected>AP1000</option>
-          <option>HTGR</option>
-          <option>SFR</option>
-        </select>
+        <div id="crtReactorTypeGroup">
+          <label for="crtReactorType">Reactor type</label>
+          <select id="crtReactorType">
+            <option selected>AP1000</option>
+            <option>HTGR</option>
+            <option>SFR</option>
+          </select>
+        </div>
         <div id="crtBaselineGroup">
           <label for="crtCsvName">Optional CRT baseline CSV</label>
           <div class="file-input-row">
@@ -727,7 +739,7 @@ HTML = r"""<!doctype html>
             <input id="crtCsvFile" type="file" accept=".csv" class="hidden">
           </div>
         </div>
-        <div class="triple">
+        <div class="triple crt-cost-row">
           <div><label for="f22">Account 22 factory allocation ($M)</label><input id="f22" type="text" inputmode="decimal" value="250"></div>
           <div><label for="f2321">Account 232.1 factory allocation ($M)</label><input id="f2321" type="text" inputmode="decimal" value="150"></div>
           <div><label for="landCost">Land Cost ($k/acre)</label><input id="landCost" type="number" min="0" step="0.1" value="22"></div>
@@ -879,6 +891,8 @@ HTML = r"""<!doctype html>
       const shared = $("workflow").value === "iat_crt";
       const allowed = baselineOptionsForIat();
       const baseline = $("iatBaseline");
+      const isCustom = baseline.value === "custom";
+      $("iatUploadGroup").classList.toggle("hidden", !isCustom);
       Array.from(baseline.options).forEach(option => {
         option.disabled = option.value !== "custom" && !allowed.includes(option.value);
       });
@@ -1009,6 +1023,7 @@ HTML = r"""<!doctype html>
       $("crtPanel").classList.toggle("hidden", workflow === "iat_only");
       $("leverPanel").classList.toggle("hidden", workflow === "iat_only");
       $("crtBaselineGroup").classList.toggle("hidden", workflow !== "crt_only");
+      $("crtReactorTypeGroup").classList.toggle("hidden", workflow !== "crt_only");
       syncCrtOptionsToIat();
       const inputMode = $("iatInputMode").value;
       const isCsvMode = inputMode === "csv" || workflow === "iat_crt";
