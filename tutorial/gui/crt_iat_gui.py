@@ -225,6 +225,22 @@ HTML = r"""<!doctype html>
       min-height: 44px;
       align-items: flex-start;
     }
+    .baseline-control-row {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .baseline-control-row > select {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .baseline-control-row .file-input-row {
+      flex: 0 0 235px;
+      min-width: 0;
+    }
+    .baseline-control-row .file-input-row input {
+      min-width: 0;
+    }
     .lever-matrix {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -691,20 +707,20 @@ HTML = r"""<!doctype html>
         <div class="status">Preset factors load with the selected country; edits apply only to this run.</div>
         <div id="iatCsvGroup" class="hidden">
           <label for="iatBaseline">ACCERT baseline CSV</label>
-          <select id="iatBaseline">
-            <option value="AP1000">AP1000 baseline</option>
-            <option value="SFR">SFR baseline</option>
-            <option value="HTGR">HTGR baseline</option>
-            <option value="custom">ACCERT output / uploaded CSV</option>
-          </select>
-          <div id="iatUploadGroup" class="hidden">
-            <div class="status">Built-in ACCERT reference files set the reactor model and electric output. Select ACCERT output / uploaded CSV to choose a user-generated ACCERT CSV.</div>
-            <div class="file-input-row">
+          <div class="baseline-control-row">
+            <select id="iatBaseline">
+              <option value="AP1000">AP1000 baseline</option>
+              <option value="SFR">SFR baseline</option>
+              <option value="HTGR">HTGR baseline</option>
+              <option value="custom">ACCERT output / uploaded CSV</option>
+            </select>
+            <div id="iatUploadGroup" class="file-input-row hidden">
               <input type="text" id="iatCsvName" readonly placeholder="No file selected">
               <button type="button" id="iatBrowseBtn">Browse…</button>
               <input id="iatCsvFile" type="file" accept=".csv" class="hidden">
             </div>
           </div>
+          <div class="status">Built-in ACCERT reference files set the reactor model and electric output. Select ACCERT output / uploaded CSV to choose a user-generated ACCERT CSV.</div>
         </div>
         <div id="electricOutputGroup" class="hidden">
           <label for="electricOutputMwe">Electric output (MWe)</label>
@@ -1342,7 +1358,7 @@ HTML = r"""<!doctype html>
       const max = niceMax(Math.max(...rows.flatMap(r => [tciValue(r), occValue(r)])) * 1.08);
       const y = v => m.top + innerH - (Number(v || 0) / max) * innerH;
       const groupW = innerW / rows.length;
-      const barW = Math.max(16, Math.min(42, groupW * 0.34));
+      const barW = Math.max(14, Math.min(34, groupW * 0.28));
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="TCI by plant with NCI and ITC reduction"><defs><pattern id="itcHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="#2ca02c" stroke-width="3" opacity="0.7"></line></pattern></defs>`;
       for (let i = 0; i <= 4; i++) {
         const value = max * i / 4;
