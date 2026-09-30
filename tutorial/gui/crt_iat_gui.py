@@ -669,7 +669,14 @@ HTML = r"""<!doctype html>
         </div>
         <div class="status">Preset factors load with the selected country; edits apply only to this run.</div>
         <div id="iatCsvGroup" class="hidden">
-          <label>ACCERT CSV file</label>
+          <label for="iatBaseline">ACCERT baseline CSV</label>
+          <select id="iatBaseline">
+            <option value="AP1000">AP1000 baseline</option>
+            <option value="SFR">SFR baseline</option>
+            <option value="HTGR">HTGR baseline</option>
+            <option value="custom">ACCERT output / uploaded CSV</option>
+          </select>
+          <div class="status">Built-in ACCERT reference files. The selected baseline sets the reactor model and electric output; use the upload control for a user-generated ACCERT CSV.</div>
           <div class="file-input-row">
             <input type="text" id="iatCsvName" readonly placeholder="No file selected">
             <button type="button" id="iatBrowseBtn">Browse…</button>
@@ -699,15 +706,17 @@ HTML = r"""<!doctype html>
           <option>HTGR</option>
           <option>SFR</option>
         </select>
-        <label for="crtCsvName">Optional CRT baseline CSV</label>
-        <div class="file-input-row">
-          <input type="text" id="crtCsvName" readonly placeholder="Leave blank for built-in baseline">
-          <button type="button" id="crtBrowseBtn">Browse…</button>
-          <input id="crtCsvFile" type="file" accept=".csv" class="hidden">
+        <div id="crtBaselineGroup">
+          <label for="crtCsvName">Optional CRT baseline CSV</label>
+          <div class="file-input-row">
+            <input type="text" id="crtCsvName" readonly placeholder="Leave blank for built-in baseline">
+            <button type="button" id="crtBrowseBtn">Browse…</button>
+            <input id="crtCsvFile" type="file" accept=".csv" class="hidden">
+          </div>
         </div>
         <div class="triple">
-          <div><label for="f22">Account 22 factory allocation ($)</label><input id="f22" type="number" min="0" value="250000000"></div>
-          <div><label for="f2321">Account 232.1 factory allocation ($)</label><input id="f2321" type="number" min="0" value="150000000"></div>
+          <div><label for="f22">Account 22 factory allocation ($M)</label><input id="f22" type="text" inputmode="decimal" value="250"></div>
+          <div><label for="f2321">Account 232.1 factory allocation ($M)</label><input id="f2321" type="text" inputmode="decimal" value="150"></div>
           <div><label for="landCost">Land $/acre</label><input id="landCost" type="number" value="22000"></div>
         </div>
         <div class="row">
@@ -716,7 +725,7 @@ HTML = r"""<!doctype html>
         </div>
         <div class="row">
           <div><label for="constructionDuration">Construction duration months</label><input id="constructionDuration" type="number" min="1" step="1" value="76"></div>
-          <div><label for="total20sLaborHours">20s labor hours</label><input id="total20sLaborHours" type="number" min="0" step="1" value="51112635"></div>
+          <div><label for="total20sLaborHours">20s labor hours</label><input id="total20sLaborHours" type="text" inputmode="numeric" value="51,112,635"></div>
         </div>
         <div class="inline"><input id="showLevers" type="checkbox"> Include lever table in dashboard image</div>
       </fieldset>
@@ -784,7 +793,7 @@ HTML = r"""<!doctype html>
     const reactorConfigs = {{REACTOR_CONFIGS}};
 
     function numberValue(id) {
-      const value = $(id).value.trim();
+      const value = $(id).value.trim().replace(/,/g, "");
       return value === "" ? null : Number(value);
     }
 
@@ -817,7 +826,10 @@ HTML = r"""<!doctype html>
     function loadIatFactorDefaults() {
       const country = activeIatCountry();
       const values = iatFactorOverrides[country] || iatFactorDefaults[country] || {};
-      Object.entries(iatFactorIds).forEach(([name, id]) => $(id).value = values[name] ?? "");
+      Object.entries(iatFactorIds).forEach(([name, id]) => {
+        const value = values[name];
+        $(id).value = value === undefined || value === null ? "" : Number(value).toFixed(4);
+      });
     }
 
     function updateCountryDropdownLabel() {
@@ -827,17 +839,52 @@ HTML = r"""<!doctype html>
       $("countryDropdownLabel").textContent = selected.length ? selected.join(", ") : "Select countries";
     }
 
+    function baselineOptionsForIat() {
+      return $("iatReactorType").value === "Large Reactor" ? ["AP1000"] : ["SFR", "HTGR"];
+    }
+
+    function selectedBaselineModel() {
+      const selected = $("iatBaseline").value;
+      return selected === "custom" ? $("crtReactorType").value : selected;
+    }
+
+    function syncBaselineSelection() {
+      const shared = $("workflow").value === "iat_crt";
+      const allowed = baselineOptionsForIat();
+      const baseline = $("iatBaseline");
+      Array.from(baseline.options).forEach(option => {
+        option.disabled = option.value !== "custom" && !allowed.includes(option.value);
+      });
+      if (baseline.value !== "custom" && !allowed.includes(baseline.value)) baseline.value = allowed[0];
+      const model = selectedBaselineModel();
+      const config = reactorConfigs[model];
+      if (baseline.value !== "custom" && config) {
+        _csvFileContent = null;
+        _csvFilePath = `src/crt/data/${config.baseline_csv}`;
+        $("iatCsvName").value = `${config.baseline_csv} (${model})`;
+        $("electricOutputMwe").value = String(config.power_mwe);
+      }
+      const crtSelect = $("crtReactorType");
+      Array.from(crtSelect.options).forEach(option => {
+        option.disabled = shared ? !allowed.includes(option.value) : false;
+      });
+      if (shared && allowed.includes(model)) {
+        crtSelect.value = model;
+        updateCrtDefaults(true);
+      } else if (shared && !allowed.includes(crtSelect.value)) {
+        crtSelect.value = allowed[0];
+        updateCrtDefaults(true);
+      }
+      crtSelect.disabled = shared && baseline.value !== "custom";
+    }
+
     function updateDefaultCsvPath() {
-      if (_csvFileContent) return;
-      const rt = $("iatReactorType").value;
-      const path = rt === "SMR" ? "src/crt/data/SFR_baseline.csv" : "src/crt/data/AP1000_baseline.csv";
-      _csvFilePath = path;
-      $("iatCsvName").value = path;
+      syncBaselineSelection();
     }
 
     function updateElectricOutputDefault() {
-      const rt = $("iatReactorType").value;
-      $("electricOutputMwe").value = rt === "SMR" ? "310.8" : "2234";
+      const model = selectedBaselineModel();
+      if (reactorConfigs[model]) $("electricOutputMwe").value = String(reactorConfigs[model].power_mwe);
     }
 
     function updateCrtDefaults(force = false) {
@@ -854,24 +901,10 @@ HTML = r"""<!doctype html>
         $("modularity").value = "1";
       }
       $("constructionDuration").value = String(reactorConfigs[rt].construction_duration_months);
-      $("total20sLaborHours").value = String(Math.round(reactorConfigs[rt].labor_hours_20s));
+      $("total20sLaborHours").value = Math.round(reactorConfigs[rt].labor_hours_20s).toLocaleString("en-US");
     }
 
-    function syncCrtOptionsToIat() {
-      const shared = $("workflow").value === "iat_crt";
-      const allowed = shared
-        ? ({"Large Reactor": ["AP1000"], "SMR": ["SFR"]}[$("iatReactorType").value] || [])
-        : ["AP1000", "HTGR", "SFR"];
-      const crtSelect = $("crtReactorType");
-      Array.from(crtSelect.options).forEach(option => {
-        option.disabled = !allowed.includes(option.value);
-      });
-      if (shared && !allowed.includes(crtSelect.value)) {
-        crtSelect.value = allowed[0];
-        updateCrtDefaults(true);
-      }
-      $("iatReactorType").disabled = false;
-    }
+    function syncCrtOptionsToIat() { syncBaselineSelection(); }
 
     function apiReactorType() {
       if ($("workflow").value === "iat_crt") {
@@ -898,6 +931,7 @@ HTML = r"""<!doctype html>
           reactor_type: apiReactorType(),
           countries: selectedCountries(),
           adjustment_factor_overrides: (() => { saveIatFactorOverrides(); return iatFactorOverrides; })(),
+          baseline_reactor_type: selectedBaselineModel(),
           year_dollar: defaultIatYearDollar,
           input_csv: _csvFilePath,
           csv_content: _csvFileContent,
@@ -911,8 +945,8 @@ HTML = r"""<!doctype html>
           baseline_csv: _crtFilePath,
           baseline_csv_content: _crtFileContent,
           baseline_csv_filename: _crtFileContent ? $("crtCsvName").value : null,
-          f_22: numberValue("f22"),
-          f_2321: numberValue("f2321"),
+          f_22: numberValue("f22") === null ? null : numberValue("f22") * 1000000,
+          f_2321: numberValue("f2321") === null ? null : numberValue("f2321") * 1000000,
           land_cost_per_acre_0: numberValue("landCost"),
           startup_0: numberValue("startup"),
           construction_duration_0: numberValue("constructionDuration"),
@@ -947,6 +981,7 @@ HTML = r"""<!doctype html>
       $("iatPanel").classList.toggle("hidden", workflow === "crt_only");
       $("crtPanel").classList.toggle("hidden", workflow === "iat_only");
       $("leverPanel").classList.toggle("hidden", workflow === "iat_only");
+      $("crtBaselineGroup").classList.toggle("hidden", workflow !== "crt_only");
       syncCrtOptionsToIat();
       const inputMode = $("iatInputMode").value;
       const isCsvMode = inputMode === "csv" || workflow === "iat_crt";
@@ -993,6 +1028,7 @@ HTML = r"""<!doctype html>
         iatReactorType: "Large reactor or SMR localization basis. ACCERT output options use the input COA file.",
         country: "Country where localization and adjustment factors are applied.",
         iatCsv: "Input ACCERT/COA CSV. Relative paths are resolved from the ACCERT repository root.",
+        iatBaseline: "Built-in ACCERT reference CSV. It selects the associated model and electric output; choose uploaded CSV for a user-generated ACCERT result.",
         scenarioCount: "Standalone IAT scenario count. Choose 1 to 3 OCC scenarios.",
         occValue1: "Scenario 1 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
         occValue2: "Scenario 2 U.S.-based OCC input. IAT allocates this OCC to COA accounts using packaged COA breakdown percentages, then applies localization and adjustment factors.",
@@ -1262,13 +1298,15 @@ HTML = r"""<!doctype html>
           ? Number(value)
           : Number(row[fallback] || 0);
       };
+      const originalValue = (row, key, fallback) => Number(row[key] ?? row[fallback] ?? 0);
+      const itcPart = (original, retained) => Math.max(0, original - retained);
       const displayedTci = row => displayedValue(row, "NCI", "TCI");
       const displayedOcc = row => displayedValue(row, "Net OCC", "OCC");
-      const max = niceMax(Math.max(...rows.flatMap(r => [displayedTci(r), displayedOcc(r)])) * 1.08);
+      const max = niceMax(Math.max(...rows.flatMap(r => [originalValue(r, "TCI", "NCI"), originalValue(r, "OCC", "Net OCC")])) * 1.08);
       const y = v => m.top + innerH - (Number(v || 0) / max) * innerH;
       const groupW = innerW / rows.length;
       const barW = Math.max(16, Math.min(42, groupW * 0.34));
-      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Capital cost by plant; ITC units show NCI and Net OCC">`;
+      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Capital cost by plant; ITC units show retained cost and ITC portion"><defs><pattern id="itcHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="#17647f" stroke-width="3" opacity="0.7"></line></pattern></defs>`;
       for (let i = 0; i <= 4; i++) {
         const value = max * i / 4;
         const yy = y(value);
@@ -1282,12 +1320,22 @@ HTML = r"""<!doctype html>
         const cx = m.left + groupW * idx + groupW / 2;
         const tci = displayedTci(r);
         const occ = displayedOcc(r);
+        const originalTci = originalValue(r, "TCI", "NCI");
+        const originalOcc = originalValue(r, "OCC", "Net OCC");
+        const tciItc = itcPart(originalTci, tci);
+        const occItc = itcPart(originalOcc, occ);
         const tciLabel = r.NCI !== null && r.NCI !== undefined && Number.isFinite(Number(r.NCI)) ? "NCI" : "TCI";
         const occLabel = r["Net OCC"] !== null && r["Net OCC"] !== undefined && Number.isFinite(Number(r["Net OCC"])) ? "Net OCC" : "OCC";
-        const tciH = m.top + innerH - y(tci);
-        const occH = m.top + innerH - y(occ);
-        svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>${tciLabel}: ${fmt(tci)}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${tciH}" fill="#2ca02c"></rect>`;
-        svg += `<rect class="hoverable" data-tip="<b>Plant ${esc(r["Plant number"])}</b><br>${occLabel}: ${fmt(occ)}" x="${cx + 2}" y="${y(occ)}" width="${barW}" height="${occH}" fill="#1f77b4"></rect>`;
+        const tciSolidH = m.top + innerH - y(tci);
+        const occSolidH = m.top + innerH - y(occ);
+        const tciItcH = y(tci) - y(originalTci);
+        const occItcH = y(occ) - y(originalOcc);
+        const tciTip = `<b>Plant ${esc(r["Plant number"])}</b><br>${tciLabel}: ${fmt(tci)}${tciItc ? `<br>ITC portion: ${fmt(tciItc)}` : ""}`;
+        const occTip = `<b>Plant ${esc(r["Plant number"])}</b><br>${occLabel}: ${fmt(occ)}${occItc ? `<br>ITC portion: ${fmt(occItc)}` : ""}`;
+        svg += `<rect class="hoverable" data-tip="${tciTip}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${tciSolidH}" fill="#2ca02c"></rect>`;
+        if (tciItc > 0) svg += `<rect class="hoverable" data-tip="${tciTip}" x="${cx - barW - 2}" y="${y(originalTci)}" width="${barW}" height="${tciItcH}" fill="url(#itcHatch)"></rect>`;
+        svg += `<rect class="hoverable" data-tip="${occTip}" x="${cx + 2}" y="${y(occ)}" width="${barW}" height="${occSolidH}" fill="#1f77b4"></rect>`;
+        if (occItc > 0) svg += `<rect class="hoverable" data-tip="${occTip}" x="${cx + 2}" y="${y(originalOcc)}" width="${barW}" height="${occItcH}" fill="url(#itcHatch)"></rect>`;
         if (idx % Math.ceil(rows.length / 8) === 0 || rows.length <= 8) {
           svg += `<text x="${cx}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${esc(r["Plant number"])}</text>`;
         }
@@ -1295,8 +1343,9 @@ HTML = r"""<!doctype html>
       svg += `<text x="${m.left + innerW / 2}" y="${h - 6}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Plant number</text>`;
       const hasNci = rows.some(r => r.NCI !== null && r.NCI !== undefined && Number.isFinite(Number(r.NCI)));
       const hasNetOcc = rows.some(r => r["Net OCC"] !== null && r["Net OCC"] !== undefined && Number.isFinite(Number(r["Net OCC"])));
-      svg += `<rect x="${w - 190}" y="14" width="14" height="14" fill="#2ca02c"></rect><text x="${w - 168}" y="26" fill="#596775" font-size="15" font-weight="700">${hasNci ? "NCI / TCI" : "TCI"}</text>`;
-      svg += `<rect x="${w - 94}" y="14" width="14" height="14" fill="#1f77b4"></rect><text x="${w - 72}" y="26" fill="#596775" font-size="15" font-weight="700">${hasNetOcc ? "Net OCC / OCC" : "OCC"}</text>`;
+      svg += `<rect x="${w - 278}" y="14" width="14" height="14" fill="#2ca02c"></rect><text x="${w - 256}" y="26" fill="#596775" font-size="15" font-weight="700">${hasNci ? "NCI / TCI" : "TCI"}</text>`;
+      svg += `<rect x="${w - 184}" y="14" width="14" height="14" fill="#1f77b4"></rect><text x="${w - 162}" y="26" fill="#596775" font-size="15" font-weight="700">${hasNetOcc ? "Net OCC / OCC" : "OCC"}</text>`;
+      svg += `<rect x="${w - 58}" y="14" width="14" height="14" fill="url(#itcHatch)"></rect><text x="${w - 38}" y="26" fill="#596775" font-size="15" font-weight="700">ITC</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -1812,6 +1861,13 @@ HTML = r"""<!doctype html>
         updateElectricOutputDefault();
       }
     });
+    $("iatBaseline").addEventListener("change", () => {
+      if ($("iatBaseline").value === "custom") {
+        _csvFilePath = null;
+        $("iatCsvName").value = "";
+      }
+      syncBaselineSelection();
+    });
     $("scenarioCount").addEventListener("input", updatePanels);
     $("numOrders").addEventListener("input", updatePanels);
     $("countryDropdownBtn").addEventListener("click", e => {
@@ -1830,6 +1886,7 @@ HTML = r"""<!doctype html>
     $("iatCsvFile").addEventListener("change", () => {
       const file = $("iatCsvFile").files[0];
       if (!file) return;
+      $("iatBaseline").value = "custom";
       _csvFilePath = null;
       $("iatCsvName").value = file.name;
       const reader = new FileReader();
@@ -2369,6 +2426,11 @@ def run_workflow(payload: dict) -> dict:
         if crt_reactor_type not in compatible_crt_types(iat_label):
             raise ValueError(
                 f"CRT reactor type {crt_reactor_type!r} is not compatible with IAT reactor type {iat_label!r}."
+            )
+        baseline_reactor_type = payload["iat"].get("baseline_reactor_type")
+        if baseline_reactor_type and baseline_reactor_type != "custom" and baseline_reactor_type != crt_reactor_type:
+            raise ValueError(
+                f"ACCERT baseline reactor type {baseline_reactor_type!r} does not match CRT reactor type {crt_reactor_type!r}."
             )
 
     if workflow == "iat_only":

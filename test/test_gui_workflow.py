@@ -150,3 +150,37 @@ def test_gui_accepts_smr_with_sfr(monkeypatch, tmp_path):
 
     result = crt_iat_gui.run_workflow(payload)
     assert result["crt"]["plants"]
+
+
+def test_gui_accepts_smr_with_htgr_and_uses_iat_output(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["reactor_type"] = "ACCERT output-SMR"
+    payload["iat"]["input_csv"] = "src/crt/data/HTGR_baseline.csv"
+    payload["iat"]["electric_output_mwe"] = 1056
+    payload["iat"]["baseline_reactor_type"] = "HTGR"
+    payload["crt"]["reactor_type"] = "HTGR"
+    payload["crt"]["baseline_csv_content"] = "not-used-in-iat-crt"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert result["crt"]["plants"]
+    assert result["files"]["IAT adjusted CSV"]
+
+
+def test_gui_honors_only_iat_output_for_iat_crt_baseline(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    payload["crt"]["baseline_csv_content"] = "not-used-in-iat-crt"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert result["crt"]["plants"]
+    assert "Optional CRT baseline" not in result["notes"]
+
+
+def test_capital_chart_uses_calculated_itc_portion_pattern():
+    assert 'id="itcHatch"' in crt_iat_gui.HTML
+    assert "itcPart(originalTci, tci)" in crt_iat_gui.HTML
+    assert 'fill="url(#itcHatch)"' in crt_iat_gui.HTML

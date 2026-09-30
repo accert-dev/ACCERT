@@ -6,6 +6,7 @@ from __future__ import annotations
 REACTOR_CONFIGS = {
     "AP1000": {
         "power_mwe": 2234.0,
+        "baseline_csv": "AP1000_baseline.csv",
         "iat_family": "LR",
         "iat_label": "Large Reactor",
         "construction_duration_months": 76.0,
@@ -13,6 +14,7 @@ REACTOR_CONFIGS = {
     },
     "SFR": {
         "power_mwe": 310.8,
+        "baseline_csv": "SFR_baseline.csv",
         "iat_family": "SMR",
         "iat_label": "SMR",
         "construction_duration_months": 80.0,
@@ -20,6 +22,7 @@ REACTOR_CONFIGS = {
     },
     "HTGR": {
         "power_mwe": 1056.0,
+        "baseline_csv": "HTGR_baseline.csv",
         "iat_family": None,
         "iat_label": None,
         "construction_duration_months": 125.0,
@@ -29,7 +32,7 @@ REACTOR_CONFIGS = {
 
 IAT_TO_CRT_TYPES = {
     "Large Reactor": ("AP1000",),
-    "SMR": ("SFR",),
+    "SMR": ("SFR", "HTGR"),
 }
 
 
