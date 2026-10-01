@@ -256,8 +256,10 @@ def test_capital_chart_uses_consistent_outlines_and_compact_legend_tooltip():
 def test_capital_tooltip_keeps_gross_net_pairs_together():
     assert '#tooltip .tip-label' in crt_iat_gui.HTML
     assert 'white-space: nowrap' in crt_iat_gui.HTML
-    assert 'class="tip-label">TCI / Net TCI ($/kW)</span><span class="tip-value">' in crt_iat_gui.HTML
-    assert 'class="tip-label">OCC / Net OCC ($/kW)</span><span class="tip-value">' in crt_iat_gui.HTML
+    assert "class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>" in crt_iat_gui.HTML
+    assert "class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>" in crt_iat_gui.HTML
+    assert "class='tip-label'" in crt_iat_gui.HTML
+    assert 'data-tip="${tip}"' in crt_iat_gui.HTML
 
 
 def test_crt_summary_cards_show_foak_gross_and_net_values():
@@ -281,3 +283,9 @@ def test_gui_startup_opens_local_address_automatically():
     source = inspect.getsource(crt_iat_gui.main)
     assert "webbrowser.open(url)" in source
     assert "if \"--open\" in sys.argv" not in source
+
+
+def test_gui_http_handler_does_not_mask_request_errors_with_broken_pipe():
+    source = inspect.getsource(crt_iat_gui.Handler.do_POST)
+    assert "except BrokenPipeError" in source
+    assert "traceback.print_exc()" in source

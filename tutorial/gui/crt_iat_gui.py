@@ -1406,7 +1406,7 @@ HTML = r"""<!doctype html>
         const itcH = y(nci) - y(tci);
         const occSolidH = m.top + innerH - y(netOcc);
         const occItcH = y(netOcc) - y(occ);
-        const tip = `<b>Plant ${esc(r["Plant number"])}</b><br><span class="tip-label">TCI / Net TCI ($/kW)</span><span class="tip-value">${fmt(tci)} / ${fmt(nci)}</span><span class="tip-label">OCC / Net OCC ($/kW)</span><span class="tip-value">${fmt(occ)} / ${fmt(netOcc)}</span>${itc > 0 || occItc > 0 ? `<span class="tip-label">ITC Reduction ($/kW)</span><span class="tip-value">${fmt(Math.max(itc, occItc))}</span>` : ""}`;
+        const tip = `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>${fmt(tci)} / ${fmt(nci)}</span><span class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>${fmt(occ)} / ${fmt(netOcc)}</span>${itc > 0 || occItc > 0 ? `<span class='tip-label'>ITC Reduction ($/kW)</span><span class='tip-value'>${fmt(Math.max(itc, occItc))}</span>` : ""}`;
         svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(nci)}" width="${barW}" height="${solidH}" fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"></rect>`;
         if (itc > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${itcH}" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect>`;
         svg += `<rect class="hoverable" data-tip="${tip}" x="${cx + 2}" y="${y(netOcc)}" width="${barW}" height="${occSolidH}" fill="#1f77b4" stroke="#1f77b4" stroke-width="1.5"></rect>`;
@@ -2695,12 +2695,20 @@ class Handler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
             result = run_workflow(payload)
             self._send(200, json.dumps(result).encode("utf-8"), "application/json")
+        except BrokenPipeError:
+            # The browser may navigate away while a long CRT run is finishing.
+            # Do not replace that client disconnect with a second server error.
+            return
         except Exception as exc:
+            traceback.print_exc()
             body = {
                 "error": str(exc),
                 "traceback": traceback.format_exc(),
             }
-            self._send(500, json.dumps(body).encode("utf-8"), "application/json")
+            try:
+                self._send(500, json.dumps(body).encode("utf-8"), "application/json")
+            except BrokenPipeError:
+                return
 
 
 def main() -> None:
