@@ -1,4 +1,5 @@
 import inspect
+import re
 
 import pandas as pd
 import pytest
@@ -191,7 +192,7 @@ def test_capital_chart_uses_calculated_itc_portion_pattern():
 def test_capital_cost_records_split_tci_into_nci_and_actual_itc_reduction():
     rows = pd.DataFrame(
         [
-            {"Plant number": 1, "TCI": 6000.0, "NCI": 4000.0, "OCC": 5000.0, "Net OCC": 3500.0},
+            {"Plant number": 1, "TCI": 6000.0, "NCI": 4000.0, "OCC": 5000.0, "Net OCC": 3200.0},
             {"Plant number": 2, "TCI": 5000.0, "NCI": None, "OCC": 4200.0, "Net OCC": None},
         ]
     )
@@ -200,11 +201,30 @@ def test_capital_cost_records_split_tci_into_nci_and_actual_itc_reduction():
 
     assert records[0]["NCI"] == pytest.approx(4000.0)
     assert records[0]["ITC reduction"] == pytest.approx(2000.0)
+    assert records[0]["TCI ITC reduction"] == pytest.approx(2000.0)
+    assert records[0]["OCC ITC reduction"] == pytest.approx(1800.0)
     assert records[0]["NCI"] + records[0]["ITC reduction"] == pytest.approx(records[0]["TCI"])
     assert records[1]["NCI"] == pytest.approx(records[1]["TCI"])
     assert records[1]["ITC reduction"] == pytest.approx(0.0)
+    assert records[1]["TCI ITC reduction"] == pytest.approx(0.0)
+    assert records[1]["OCC ITC reduction"] == pytest.approx(0.0)
     assert records[0]["OCC"] == pytest.approx(5000.0)
-    assert records[0]["Net OCC"] == pytest.approx(3500.0)
+    assert records[0]["Net OCC"] == pytest.approx(3200.0)
+
+
+def test_capital_chart_uses_trace_specific_tooltips_and_reductions():
+    assert 'const tciReduction = Math.max(0, Number(r["TCI ITC reduction"] ?? (tci - netTci)));' in crt_iat_gui.HTML
+    assert 'const occReduction = Math.max(0, Number(r["OCC ITC reduction"] ?? (occ - netOccValueActual)));' in crt_iat_gui.HTML
+    assert 'const tciTip =' in crt_iat_gui.HTML
+    assert 'const occTip =' in crt_iat_gui.HTML
+    assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
+    assert 'data-tip="${occTip}"' in crt_iat_gui.HTML
+    assert 'TCI / Net TCI ($/kW)' in crt_iat_gui.HTML
+    assert 'OCC / Net OCC ($/kW)' in crt_iat_gui.HTML
+    tci_tip = re.search(r"const tciTip = `(.+?)`;", crt_iat_gui.HTML).group(1)
+    occ_tip = re.search(r"const occTip = `(.+?)`;", crt_iat_gui.HTML).group(1)
+    assert "OCC / Net OCC" not in tci_tip
+    assert "TCI / Net TCI" not in occ_tip
 
 
 def test_gui_display_units_convert_to_native_crt_units():
@@ -259,7 +279,8 @@ def test_capital_tooltip_keeps_gross_net_pairs_together():
     assert "class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>" in crt_iat_gui.HTML
     assert "class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>" in crt_iat_gui.HTML
     assert "class='tip-label'" in crt_iat_gui.HTML
-    assert 'data-tip="${tip}"' in crt_iat_gui.HTML
+    assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
+    assert 'data-tip="${occTip}"' in crt_iat_gui.HTML
 
 
 def test_crt_summary_cards_show_foak_gross_and_net_values():

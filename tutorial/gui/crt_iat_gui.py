@@ -1377,7 +1377,6 @@ HTML = r"""<!doctype html>
       const innerH = h - m.top - m.bottom;
       const tciValue = row => Number(row.TCI || 0);
       const nciValue = row => Number(row.NCI ?? row.TCI ?? 0);
-      const itcValue = row => Math.max(0, Number(row["ITC reduction"] ?? (tciValue(row) - nciValue(row))));
       const occValue = row => Number(row.OCC || 0);
       const netOccValue = row => Number(row["Net OCC"] ?? row.OCC ?? 0);
       const max = niceMax(Math.max(...rows.flatMap(r => [tciValue(r), occValue(r)])) * 1.08);
@@ -1397,20 +1396,25 @@ HTML = r"""<!doctype html>
       rows.forEach((r, idx) => {
         const cx = m.left + groupW * idx + groupW / 2;
         const tci = tciValue(r);
-        const nci = Math.min(tci, nciValue(r));
-        const itc = Math.min(tci - nci, itcValue(r));
+        const netTci = nciValue(r);
+        const tciReduction = Math.max(0, Number(r["TCI ITC reduction"] ?? (tci - netTci)));
+        const nci = Math.min(tci, netTci);
+        const itc = Math.min(tci - nci, tciReduction);
         const occ = occValue(r);
-        const netOcc = Math.min(occ, netOccValue(r));
-        const occItc = Math.max(0, occ - netOcc);
+        const netOccValueActual = netOccValue(r);
+        const occReduction = Math.max(0, Number(r["OCC ITC reduction"] ?? (occ - netOccValueActual)));
+        const netOcc = Math.min(occ, netOccValueActual);
+        const occItc = Math.min(occ - netOcc, occReduction);
         const solidH = m.top + innerH - y(nci);
         const itcH = y(nci) - y(tci);
         const occSolidH = m.top + innerH - y(netOcc);
         const occItcH = y(netOcc) - y(occ);
-        const tip = `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>${fmt(tci)} / ${fmt(nci)}</span><span class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>${fmt(occ)} / ${fmt(netOcc)}</span>${itc > 0 || occItc > 0 ? `<span class='tip-label'>ITC Reduction ($/kW)</span><span class='tip-value'>${fmt(Math.max(itc, occItc))}</span>` : ""}`;
-        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(nci)}" width="${barW}" height="${solidH}" fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"></rect>`;
-        if (itc > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${itcH}" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect>`;
-        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx + 2}" y="${y(netOcc)}" width="${barW}" height="${occSolidH}" fill="#1f77b4" stroke="#1f77b4" stroke-width="1.5"></rect>`;
-        if (occItc > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${cx + 2}" y="${y(occ)}" width="${barW}" height="${occItcH}" fill="url(#itcHatch)" stroke="#1f77b4" stroke-width="1.5"></rect>`;
+        const tciTip = `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>${fmt(tci)} / ${fmt(netTci)}</span><span class='tip-label'>ITC Reduction ($/kW)</span><span class='tip-value'>${fmt(tciReduction)}</span>`;
+        const occTip = `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>${fmt(occ)} / ${fmt(netOccValueActual)}</span><span class='tip-label'>ITC Reduction ($/kW)</span><span class='tip-value'>${fmt(occReduction)}</span>`;
+        svg += `<rect class="hoverable" data-tip="${tciTip}" x="${cx - barW - 2}" y="${y(nci)}" width="${barW}" height="${solidH}" fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"></rect>`;
+        if (itc > 0) svg += `<rect class="hoverable" data-tip="${tciTip}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${itcH}" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect>`;
+        svg += `<rect class="hoverable" data-tip="${occTip}" x="${cx + 2}" y="${y(netOcc)}" width="${barW}" height="${occSolidH}" fill="#1f77b4" stroke="#1f77b4" stroke-width="1.5"></rect>`;
+        if (occItc > 0) svg += `<rect class="hoverable" data-tip="${occTip}" x="${cx + 2}" y="${y(occ)}" width="${barW}" height="${occItcH}" fill="url(#itcHatch)" stroke="#1f77b4" stroke-width="1.5"></rect>`;
         if (idx % Math.ceil(rows.length / 8) === 0 || rows.length <= 8) {
           svg += `<text x="${cx}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${esc(r["Plant number"])}</text>`;
         }
@@ -2424,7 +2428,9 @@ def _capital_cost_records(plants: pd.DataFrame) -> list[dict]:
         occ = float(row.get("OCC") or 0.0)
         net_occ_value = row.get("Net OCC")
         row["Net OCC"] = occ if net_occ_value in (None, "") else float(net_occ_value)
-        row["ITC reduction"] = max(0.0, tci - nci)
+        row["TCI ITC reduction"] = max(0.0, tci - nci)
+        row["OCC ITC reduction"] = max(0.0, occ - row["Net OCC"])
+        row["ITC reduction"] = row["TCI ITC reduction"]
     return records
 
 
