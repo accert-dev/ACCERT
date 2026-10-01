@@ -212,6 +212,20 @@ HTML = r"""<!doctype html>
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
+    .row > div,
+    .triple > div {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .row > div > label,
+    .triple > div > label,
+    .row > div > .label-row,
+    .triple > div > .label-row {
+      min-height: 2.8em;
+      display: flex;
+      align-items: flex-end;
+    }
     .triple {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -414,6 +428,11 @@ HTML = r"""<!doctype html>
       font-size: 12px;
       line-height: 1.35;
       box-shadow: 0 8px 20px rgba(0,0,0,0.22);
+    }
+    #tooltip .tip-label,
+    #tooltip .tip-value {
+      display: block;
+      white-space: nowrap;
     }
     table {
       width: 100%;
@@ -756,8 +775,8 @@ HTML = r"""<!doctype html>
           </div>
         </div>
         <div class="triple crt-cost-row">
-          <div><label for="f22">Account 22 factory allocation ($M)</label><input id="f22" type="text" inputmode="decimal" value="250"></div>
-          <div><label for="f2321">Account 232.1 factory allocation ($M)</label><input id="f2321" type="text" inputmode="decimal" value="150"></div>
+          <div><div class="label-row"><label for="f22">Account 22 ($M)</label><span class="help" title="Factory allocation added to Account 22">?</span></div><input id="f22" type="text" inputmode="decimal" value="250"></div>
+          <div><div class="label-row"><label for="f2321">Account 232.1 ($M)</label><span class="help" title="Factory allocation added to Account 232.1">?</span></div><input id="f2321" type="text" inputmode="decimal" value="150"></div>
           <div><label for="landCost">Land Cost ($k/acre)</label><input id="landCost" type="number" min="0" step="0.1" value="22"></div>
         </div>
         <div class="row">
@@ -765,8 +784,8 @@ HTML = r"""<!doctype html>
           <div><label for="staggering">Staggering ratio</label><input id="staggering" type="number" step="0.01" value="0.75"></div>
         </div>
         <div class="row">
-          <div><label for="constructionDuration">Construction duration months</label><input id="constructionDuration" type="number" min="1" step="1" value="76"></div>
-          <div><label for="total20sLaborHours">Total Labor Hours (million labor-hours)</label><input id="total20sLaborHours" type="number" min="0" step="0.01" value="51.11"></div>
+          <div><label for="constructionDuration">Construction duration (months)</label><input id="constructionDuration" type="number" min="1" step="1" value="76"></div>
+          <div><div class="label-row"><label for="total20sLaborHours">Total labor hours (million)</label><span class="help" title="Total labor hours for capitalized direct costs">?</span></div><input id="total20sLaborHours" type="number" min="0" step="0.01" value="51.11"></div>
         </div>
         <div class="inline"><input id="showLevers" type="checkbox"> Include lever table in dashboard image</div>
       </fieldset>
@@ -1159,6 +1178,12 @@ HTML = r"""<!doctype html>
       return `$${fmt(value)}/kW`;
     }
 
+    function pairValue(gross, net) {
+      const grossText = fmtInt(gross);
+      const netText = fmtInt(net ?? gross);
+      return grossText === netText ? grossText : `${grossText} / ${netText}`;
+    }
+
     function metrics(items) {
       return `<div class="summary">${items.map(item => `
         <div class="metric"><div class="label">${item.label}</div><div class="value">${item.value}</div>${item.sub ? `<div class="subvalue">${item.sub}</div>` : ""}</div>
@@ -1347,7 +1372,7 @@ HTML = r"""<!doctype html>
     function capitalChart(rows) {
       if (!rows || !rows.length) return "";
       const w = 1120, h = 430;
-      const m = {left: 108, right: 28, top: 34, bottom: 66};
+      const m = {left: 108, right: 28, top: 58, bottom: 66};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const tciValue = row => Number(row.TCI || 0);
@@ -1381,19 +1406,19 @@ HTML = r"""<!doctype html>
         const itcH = y(nci) - y(tci);
         const occSolidH = m.top + innerH - y(netOcc);
         const occItcH = y(netOcc) - y(occ);
-        const tip = `<b>Plant ${esc(r["Plant number"])}</b><br>TCI: ${fmt(tci)}<br>NCI: ${fmt(nci)}${itc > 0 ? `<br>TCI ITC reduction: ${fmt(itc)}` : ""}<br>OCC: ${fmt(occ)}<br>Net OCC: ${fmt(netOcc)}${occItc > 0 ? `<br>OCC ITC reduction: ${fmt(occItc)}` : ""}`;
-        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(nci)}" width="${barW}" height="${solidH}" fill="#2ca02c"></rect>`;
+        const tip = `<b>Plant ${esc(r["Plant number"])}</b><br><span class="tip-label">TCI / Net TCI ($/kW)</span><span class="tip-value">${fmt(tci)} / ${fmt(nci)}</span><span class="tip-label">OCC / Net OCC ($/kW)</span><span class="tip-value">${fmt(occ)} / ${fmt(netOcc)}</span>${itc > 0 || occItc > 0 ? `<span class="tip-label">ITC Reduction ($/kW)</span><span class="tip-value">${fmt(Math.max(itc, occItc))}</span>` : ""}`;
+        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(nci)}" width="${barW}" height="${solidH}" fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"></rect>`;
         if (itc > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${itcH}" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect>`;
-        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx + 2}" y="${y(netOcc)}" width="${barW}" height="${occSolidH}" fill="#1f77b4"></rect>`;
+        svg += `<rect class="hoverable" data-tip="${tip}" x="${cx + 2}" y="${y(netOcc)}" width="${barW}" height="${occSolidH}" fill="#1f77b4" stroke="#1f77b4" stroke-width="1.5"></rect>`;
         if (occItc > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${cx + 2}" y="${y(occ)}" width="${barW}" height="${occItcH}" fill="url(#itcHatch)" stroke="#1f77b4" stroke-width="1.5"></rect>`;
         if (idx % Math.ceil(rows.length / 8) === 0 || rows.length <= 8) {
           svg += `<text x="${cx}" y="${h - 28}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">${esc(r["Plant number"])}</text>`;
         }
       });
       svg += `<text x="${m.left + innerW / 2}" y="${h - 6}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Plant number</text>`;
-      svg += `<rect x="${w - 318}" y="14" width="14" height="14" fill="#2ca02c"></rect><text x="${w - 296}" y="26" fill="#596775" font-size="15" font-weight="700">NCI / TCI</text>`;
-      svg += `<rect x="${w - 232}" y="14" width="14" height="14" fill="#1f77b4"></rect><text x="${w - 210}" y="26" fill="#596775" font-size="15" font-weight="700">OCC / Net OCC</text>`;
-      svg += `<rect x="${w - 112}" y="14" width="14" height="14" fill="url(#itcHatch)"></rect><text x="${w - 90}" y="26" fill="#596775" font-size="15" font-weight="700">ITC reduction</text>`;
+      svg += `<rect x="${m.left}" y="20" width="14" height="14" fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"></rect><text x="${m.left + 22}" y="32" fill="#596775" font-size="15" font-weight="700">TCI / Net TCI</text>`;
+      svg += `<rect x="${m.left + 160}" y="20" width="14" height="14" fill="#1f77b4" stroke="#1f77b4" stroke-width="1.5"></rect><text x="${m.left + 182}" y="32" fill="#596775" font-size="15" font-weight="700">OCC / Net OCC</text>`;
+      svg += `<rect x="${m.left + 360}" y="20" width="14" height="14" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect><text x="${m.left + 382}" y="32" fill="#596775" font-size="15" font-weight="700">ITC reduction</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -1795,13 +1820,13 @@ HTML = r"""<!doctype html>
         html += `<h3>CRT Result</h3>`;
         html += `<div class="result-note">The IAT value above is the internationally adjusted WE-FOAK OCC baseline. CRT recalculates FOAK from that baseline using the CRT fixed inputs and first-unit project effects, including factory-equipment inputs, land, construction/startup duration, financing, design completion, and FOAK execution assumptions, so the CRT FOAK OCC can differ from the WE-FOAK OCC.</div>`;
         html += metrics([
-          {label: "FOAK OCC ($/kW)", value: fmtInt(data.crt.occ_1)},
+          {label: "FOAK OCC / Net OCC ($/kW)", value: pairValue(data.crt.occ_1, data.crt.net_occ_1)},
           {label: "NOAK OCC ($/kW)", value: fmtInt(data.crt.occ_noak)},
           {label: "Average OCC ($/kW)", value: fmtInt(data.crt.avg_occ)},
           {label: "OCC reduction (%)", value: fmtInt(data.crt.occ_reduction_percent)}
         ]);
         html += metrics([
-          {label: "FOAK TCI ($/kW)", value: fmtInt(data.crt.tci_1)},
+          {label: "FOAK TCI / Net TCI ($/kW)", value: pairValue(data.crt.tci_1, data.crt.net_tci_1)},
           {label: "NOAK TCI ($/kW)", value: fmtInt(data.crt.tci_noak)},
           {label: "Average TCI ($/kW)", value: fmtInt(data.crt.avg_tci)},
           {label: "Average duration (months)", value: fmtInt(data.crt.avg_duration)}
@@ -2434,8 +2459,12 @@ def _summarize_crt_result(result: dict) -> dict:
         "num_orders": num_orders,
         "occ_1": result.get("OCC_1"),
         "occ_noak": result.get(f"OCC_{noak}"),
+        "net_occ_1": result.get("NETOCC_1", result.get("OCC_1")),
+        "net_occ_noak": result.get(f"NETOCC_{noak}", result.get(f"OCC_{noak}")),
         "tci_1": result.get("TCI_1"),
         "tci_noak": result.get(f"TCI_{noak}"),
+        "net_tci_1": result.get("NCI_1", result.get("TCI_1")),
+        "net_tci_noak": result.get(f"NCI_{noak}", result.get(f"TCI_{noak}")),
         "avg_occ": result.get("avg_OCC"),
         "avg_tci": result.get("avg_TCI"),
         "avg_duration": result.get("avg_duration"),
@@ -2680,11 +2709,10 @@ def main() -> None:
     url = f"http://{HOST}:{PORT}"
     print(f"ACCERT IAT and CRT GUI running at {url}")
     print(f"Outputs will be written to {OUTPUT_DIR}")
-    if "--open" in sys.argv:
-        try:
-            webbrowser.open(url)
-        except Exception:
-            pass
+    try:
+        webbrowser.open(url)
+    except Exception:
+        pass
     server.serve_forever()
 
 

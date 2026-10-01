@@ -1,3 +1,5 @@
+import inspect
+
 import pandas as pd
 import pytest
 import pytest
@@ -223,7 +225,7 @@ def test_gui_defaults_are_derived_from_native_reactor_config():
 
 def test_gui_uses_human_scale_labels_and_explicit_conversion_layer():
     assert 'Land Cost ($k/acre)' in crt_iat_gui.HTML
-    assert 'Total Labor Hours (million labor-hours)' in crt_iat_gui.HTML
+    assert 'Total labor hours (million)' in crt_iat_gui.HTML
     assert "landCostToBackend(numberValue(\"landCost\"))" in crt_iat_gui.HTML
     assert "laborHoursToBackend(numberValue(\"total20sLaborHours\"))" in crt_iat_gui.HTML
 
@@ -239,3 +241,43 @@ def test_gui_groups_conditional_inputs_and_aligns_crt_cost_fields():
 
 def test_capital_chart_keeps_paired_bars_compact():
     assert "Math.min(34, groupW * 0.28)" in crt_iat_gui.HTML
+
+
+def test_capital_chart_uses_consistent_outlines_and_compact_legend_tooltip():
+    assert 'top: 58' in crt_iat_gui.HTML
+    assert 'fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"' in crt_iat_gui.HTML
+    assert 'TCI / Net TCI ($/kW)' in crt_iat_gui.HTML
+    assert 'OCC / Net OCC ($/kW)' in crt_iat_gui.HTML
+    assert 'ITC Reduction ($/kW)' in crt_iat_gui.HTML
+    assert 'TCI / Net TCI' in crt_iat_gui.HTML
+    assert 'OCC / Net OCC' in crt_iat_gui.HTML
+
+
+def test_capital_tooltip_keeps_gross_net_pairs_together():
+    assert '#tooltip .tip-label' in crt_iat_gui.HTML
+    assert 'white-space: nowrap' in crt_iat_gui.HTML
+    assert 'class="tip-label">TCI / Net TCI ($/kW)</span><span class="tip-value">' in crt_iat_gui.HTML
+    assert 'class="tip-label">OCC / Net OCC ($/kW)</span><span class="tip-value">' in crt_iat_gui.HTML
+
+
+def test_crt_summary_cards_show_foak_gross_and_net_values():
+    assert 'FOAK OCC / Net OCC ($/kW)' in crt_iat_gui.HTML
+    assert 'FOAK TCI / Net TCI ($/kW)' in crt_iat_gui.HTML
+    assert 'data.crt.net_occ_1' in crt_iat_gui.HTML
+    assert 'data.crt.net_tci_1' in crt_iat_gui.HTML
+
+
+def test_crt_fixed_inputs_use_short_labels_and_structural_field_alignment():
+    assert ".row > div" in crt_iat_gui.HTML
+    assert ".triple > div" in crt_iat_gui.HTML
+    assert "Account 22 ($M)" in crt_iat_gui.HTML
+    assert "Account 232.1 ($M)" in crt_iat_gui.HTML
+    assert "Land Cost ($k/acre)" in crt_iat_gui.HTML
+    assert "Construction duration (months)" in crt_iat_gui.HTML
+    assert "Total labor hours (million)" in crt_iat_gui.HTML
+
+
+def test_gui_startup_opens_local_address_automatically():
+    source = inspect.getsource(crt_iat_gui.main)
+    assert "webbrowser.open(url)" in source
+    assert "if \"--open\" in sys.argv" not in source
