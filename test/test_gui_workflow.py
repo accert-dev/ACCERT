@@ -339,7 +339,8 @@ def test_dashboard_title_uses_custom_display_name_but_sanitizes_filename():
 
 def test_crt_summary_uses_consistent_metric_grid_and_conditional_gross_net_values():
     assert "function crtResultsGrid(crt)" in crt_iat_gui.HTML
-    assert "Metric</div><div class=\"grid-head\">FOAK" in crt_iat_gui.HTML
+    assert "function crtMetricGroup(title, explanation, cards" in crt_iat_gui.HTML
+    assert "crt-metric-cards" in crt_iat_gui.HTML
     assert "Construction duration (months)" in crt_iat_gui.HTML
     assert "function crtGridValue(gross, net, reduction)" in crt_iat_gui.HTML
     assert "reduction > 0" in crt_iat_gui.HTML
@@ -350,6 +351,18 @@ def test_output_name_is_generated_from_reactor_and_country_without_overwriting_c
     assert "function updateOutputName()" in crt_iat_gui.HTML
     assert "_outputNameCustomized" in crt_iat_gui.HTML
     assert "${parts.reactor} ${parts.country} Baseline" in crt_iat_gui.HTML
+
+
+def test_crt_result_cards_explain_occ_tci_and_duration_accessibly():
+    assert "Overnight Capital Cost (OCC)" in crt_iat_gui.HTML
+    assert "Total Capital Investment (TCI)" in crt_iat_gui.HTML
+    assert "Construction Duration" in crt_iat_gui.HTML
+    assert "excluding financing costs incurred during construction" in crt_iat_gui.HTML
+    assert "60-series financing costs, including interest during construction" in crt_iat_gui.HTML
+    assert "info-tip" in crt_iat_gui.HTML
+    assert 'aria-label="Explain ${esc(label)}"' in crt_iat_gui.HTML
+    assert 'node.addEventListener("focus"' in crt_iat_gui.HTML
+    assert 'node.addEventListener("click"' in crt_iat_gui.HTML
     assert "class='tip-label'" in crt_iat_gui.HTML
     assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
     assert 'data-tip="${occTip}"' in crt_iat_gui.HTML

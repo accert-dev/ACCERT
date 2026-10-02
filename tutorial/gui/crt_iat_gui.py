@@ -547,6 +547,14 @@ HTML = r"""<!doctype html>
     .crt-results-grid .grid-label { font-weight: 800; color: var(--ink); }
     .crt-results-grid .grid-value { justify-content: flex-end; color: var(--ink); font-weight: 750; font-variant-numeric: tabular-nums; }
     .crt-results-grid .grid-sub { display: block; margin-left: 5px; color: var(--muted); font-size: 10px; font-weight: 600; }
+    .crt-metric-group { margin: 14px 0 18px; }
+    .crt-metric-heading { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; color: var(--ink); font-size: 18px; }
+    .crt-metric-cards { display: grid; grid-template-columns: repeat(3, minmax(150px, 1fr)); gap: 10px; }
+    .crt-metric-cards .metric { min-height: 82px; border-top: 3px solid var(--accent-2); }
+    .crt-metric-reduction { margin: 7px 2px 0; color: var(--muted); font-size: 12px; }
+    .crt-metric-reduction strong { color: var(--ink); }
+    .info-tip { border-color: #8aa0b2; color: var(--accent); background: transparent; padding: 0; }
+    .info-tip:hover, .info-tip:focus-visible { background: #e7f1f5; }
     .metric {
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -843,7 +851,7 @@ HTML = r"""<!doctype html>
       .workflow-steps { grid-template-columns: 1fr; }
       .baseline-control-row { flex-direction: column; }
       .baseline-control-row .file-input-row { flex-basis: auto; }
-    .result-summary-cards, .summary, .iat-summary-cards, .crt-key-cards { grid-template-columns: 1fr; }
+    .result-summary-cards, .summary, .iat-summary-cards, .crt-key-cards, .crt-metric-cards { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -1687,12 +1695,27 @@ HTML = r"""<!doctype html>
 
     function hideTip() {
       $("tooltip").style.display = "none";
+      $("tooltip").dataset.owner = "";
     }
 
     function bindTips(root) {
       root.querySelectorAll("[data-tip]").forEach(node => {
         node.addEventListener("mousemove", event => showTip(event, node.dataset.tip));
         node.addEventListener("mouseleave", hideTip);
+        if (node.matches("button, [tabindex]")) {
+          const showFromFocus = () => {
+            const rect = node.getBoundingClientRect();
+            showTip({clientX: rect.right, clientY: rect.top}, node.dataset.tip);
+            $("tooltip").dataset.owner = node.dataset.tip;
+          };
+          node.addEventListener("focus", showFromFocus);
+          node.addEventListener("blur", hideTip);
+          node.addEventListener("click", event => {
+            event.stopPropagation();
+            if ($("tooltip").dataset.owner === node.dataset.tip && $("tooltip").style.display === "block") hideTip();
+            else showFromFocus();
+          });
+        }
       });
     }
 
@@ -1999,6 +2022,14 @@ HTML = r"""<!doctype html>
         : fmtInt(grossValue);
     }
 
+    function infoIcon(label, explanation) {
+      return `<button type="button" class="help info-tip" aria-label="Explain ${esc(label)}" data-tip="${esc(explanation)}">?</button>`;
+    }
+
+    function crtMetricGroup(title, explanation, cards, reductionLabel = "", reductionValue = "") {
+      return `<div class="crt-metric-group"><h4 class="crt-metric-heading">${title} ${infoIcon(title, explanation)}</h4><div class="crt-metric-cards">${cards.map(card => `<div class="metric"><div class="label">${card.label}</div><div class="value">${card.value}</div>${card.sub ? `<div class="subvalue">${card.sub}</div>` : ""}</div>`).join("")}</div>${reductionLabel ? `<div class="crt-metric-reduction">${reductionLabel}: <strong>${reductionValue || "—"}</strong></div>` : ""}</div>`;
+    }
+
     function crtResultsGrid(crt) {
       const plants = crt.plants || [];
       const plant = number => plants.find(row => Number(row["Plant number"]) === number) || {};
@@ -2009,25 +2040,24 @@ HTML = r"""<!doctype html>
       const noakOccNet = crt.net_occ_noak ?? noak["Net OCC"];
       const foakTciNet = crt.net_tci_1 ?? foak.NCI;
       const noakTciNet = crt.net_tci_noak ?? noak.NCI;
-      const cell = value => `<div class="grid-value">${value || "—"}</div>`;
-      return `<div class="crt-results-grid-wrap"><div class="crt-results-grid" role="table" aria-label="CRT results summary">
-        <div class="grid-head">Metric</div><div class="grid-head">FOAK</div><div class="grid-head">NOAK</div><div class="grid-head">Average</div><div class="grid-head">Reduction</div>
-        <div class="grid-label">OCC ($/kW)</div>
-        ${cell(crtGridValue(foak.OCC, foakOccNet, reduction(foak, "OCC ITC reduction")))}
-        ${cell(crtGridValue(noak.OCC, noakOccNet, reduction(noak, "OCC ITC reduction")))}
-        ${cell(fmtInt(crt.avg_occ))}
-        ${cell(`${fmt(crt.occ_reduction_percent)}%<span class="grid-sub">learning</span>`)}
-        <div class="grid-label">TCI ($/kW)</div>
-        ${cell(crtGridValue(foak.TCI, foakTciNet, reduction(foak, "TCI ITC reduction")))}
-        ${cell(crtGridValue(noak.TCI, noakTciNet, reduction(noak, "TCI ITC reduction")))}
-        ${cell(fmtInt(crt.avg_tci))}
-        ${cell(`${fmt(crt.tci_reduction_percent)}%<span class="grid-sub">learning</span>`)}
-        <div class="grid-label">Construction duration (months)</div>
-        ${cell(fmt(foak["Construction duration"]))}
-        ${cell(fmt(noak["Construction duration"]))}
-        ${cell(fmt(crt.avg_duration))}
-        ${cell("—")}
-      </div></div>`;
+      const value = (gross, net, reductionValue) => crtGridValue(gross, net, reductionValue);
+      return `<div class="crt-results-summary">
+        ${crtMetricGroup("Overnight Capital Cost (OCC)", "Overnight Capital Cost (OCC) represents the estimated capital cost of constructing the plant as if it were built overnight, excluding financing costs incurred during construction.", [
+          {label: "FOAK OCC", value: value(foak.OCC, foakOccNet, reduction(foak, "OCC ITC reduction")), sub: reduction(foak, "OCC ITC reduction") > 0 ? "Gross / Net" : ""},
+          {label: "NOAK OCC", value: value(noak.OCC, noakOccNet, reduction(noak, "OCC ITC reduction")), sub: reduction(noak, "OCC ITC reduction") > 0 ? "Gross / Net" : ""},
+          {label: "Average OCC", value: fmtInt(crt.avg_occ)}
+        ], "Learning reduction", `${fmt(crt.occ_reduction_percent)}%`)}
+        ${crtMetricGroup("Total Capital Investment (TCI)", "Total Capital Investment (TCI) includes the model's Overnight Capital Cost plus 60-series financing costs, including interest during construction, as defined in the CRT model.", [
+          {label: "FOAK TCI", value: value(foak.TCI, foakTciNet, reduction(foak, "TCI ITC reduction")), sub: reduction(foak, "TCI ITC reduction") > 0 ? "Gross / Net" : ""},
+          {label: "NOAK TCI", value: value(noak.TCI, noakTciNet, reduction(noak, "TCI ITC reduction")), sub: reduction(noak, "TCI ITC reduction") > 0 ? "Gross / Net" : ""},
+          {label: "Average TCI", value: fmtInt(crt.avg_tci)}
+        ], "Learning reduction", `${fmt(crt.tci_reduction_percent)}%`)}
+        ${crtMetricGroup("Construction Duration", "Construction duration is the modeled time to build each unit; startup duration is reported separately in the detailed results.", [
+          {label: "FOAK", value: fmt(foak["Construction duration"])},
+          {label: "NOAK", value: fmt(noak["Construction duration"])},
+          {label: "Average", value: fmt(crt.avg_duration)}
+        ])}
+      </div>`;
     }
 
     function iatBlock(iat, title = "", includeMetrics = true) {
