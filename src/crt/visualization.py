@@ -176,7 +176,8 @@ def plot_dashboard(
     noak_reduction = tci_reduction_from_foak_to_noak(result)
 
     if figsize is None:
-        figsize = (24, 18) if show_levers else (22, 13)
+        lever_rows = int(result.get("Num_orders", 0)) if show_levers else 0
+        figsize = (24, max(18, 17 + 0.28 * lever_rows)) if show_levers else (22, 13)
 
     fig = plt.figure(figsize=figsize, constrained_layout=True)
     if show_levers:
@@ -207,9 +208,9 @@ def plot_dashboard(
     ax.bar(x - 0.18, df["TCI"], width=0.36, label="10-60 - Total Capital Investment (TCI)", color=CAPITAL_COLORS["tci"])
     ax.bar(x + 0.18, df["OCC"], width=0.36, label="10-50 - Overnight Capital Cost (OCC)", color=CAPITAL_COLORS["occ"])
     if df["Net OCC"].notna().any():
-        ax.plot(x, df["Net OCC"], marker="o", linestyle="--", linewidth=1.2, label="Net OCC (after ITC)", color=CAPITAL_COLORS["net_occ"])
+        ax.plot(x + 0.18, df["Net OCC"], marker="o", linestyle="--", linewidth=1.2, label="Net OCC (after ITC)", color=CAPITAL_COLORS["net_occ"])
     if df["NCI"].notna().any():
-        ax.plot(x, df["NCI"], marker="o", linestyle="--", linewidth=1.2, label="Net Capital Investment (NCI)", color=CAPITAL_COLORS["nci"])
+        ax.plot(x - 0.18, df["NCI"], marker="o", linestyle="--", linewidth=1.2, label="Net Capital Investment (NCI)", color=CAPITAL_COLORS["nci"])
     ax.set_title("Capital Cost: OCC and TCI")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("$/kWe")
@@ -263,6 +264,9 @@ def plot_dashboard(
 
     ax = axes[2, 1]
     _plot_tci_waterfall(ax, result, noak_reduction)
+
+    for plant_axis in (axes[0, 0], axes[0, 1], axes[1, 0], axes[2, 0]):
+        plant_axis.set_xticks(x)
 
     for ax in axes.flat:
         ax.spines["top"].set_visible(False)
@@ -318,12 +322,24 @@ def _plot_lever_table(ax, result: dict) -> None:
         "ITC Amount",
     ]
 
+    column_wrap_widths = [4, 9, 11, 13, 13, 11, 14, 12, 13, 10, 12, 9]
+    wrapped_columns = [
+        "\n".join(textwrap.wrap(str(label), width=width, break_long_words=False))
+        for label, width in zip(display_df.columns, column_wrap_widths)
+    ]
+    display_df.columns = wrapped_columns
+    for column, width in zip(display_df.columns, column_wrap_widths):
+        display_df[column] = display_df[column].map(
+            lambda value: "\n".join(textwrap.wrap(str(value), width=width, break_long_words=False))
+        )
+
     table = ax.table(
         cellText=display_df.values,
-        colLabels=display_df.columns,
+        colLabels=wrapped_columns,
         loc="center",
         cellLoc="center",
         colLoc="center",
+        colWidths=[0.035, 0.065, 0.075, 0.085, 0.105, 0.09, 0.11, 0.095, 0.105, 0.075, 0.10, 0.06],
     )
     table.auto_set_font_size(False)
     table.set_fontsize(8.5)
@@ -335,10 +351,13 @@ def _plot_lever_table(ax, result: dict) -> None:
     for (row, col), cell in table.get_celld().items():
         cell.set_edgecolor(grid)
         if row == 0:
+            cell.set_height(0.13)
             cell.set_facecolor(header_color)
             cell.set_text_props(color="white", weight="bold")
             cell.set_linewidth(1.0)
         else:
+            line_count = max(1, str(cell.get_text().get_text()).count("\n") + 1)
+            cell.set_height(max(0.065, 0.045 * line_count))
             cell.set_text_props(color="#155d78" if row <= 2 else "#8f8f8f", weight="bold")
             cell.set_facecolor(highlight if row <= 2 else "white")
             cell.set_linewidth(0.7)
@@ -347,7 +366,7 @@ def _plot_lever_table(ax, result: dict) -> None:
                 cell.get_text().set_text("")
 
     ax.set_title(
-        f"Lever Inputs: {int(result['Num_orders'])} firm orders, "
+        f"CRT Lever Settings: {int(result['Num_orders'])} firm orders, "
         f"{int(result['n_ITC'])} reactors claiming ITC, ITC {float(result['ITC']):.0f}%",
         loc="left",
         fontsize=13,

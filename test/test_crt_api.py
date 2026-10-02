@@ -1,4 +1,5 @@
 import csv
+import inspect
 import pickle
 from pathlib import Path
 
@@ -22,6 +23,7 @@ from crt.api import normalize_levers
 from crt.io.excel_inputs import InputStore
 from crt.model.schedule import build_schedule_timeline
 from crt.sampling.lever_schema import EXCEL_NAME_TO_ID_ORDERED
+from crt.visualization import _plot_lever_table, plot_dashboard
 
 
 def _config():
@@ -362,6 +364,20 @@ def test_visualization_helpers_create_dashboard(tmp_path):
     assert out_png.stat().st_size > 0
     assert compact_png.exists()
     assert compact_png.stat().st_size > 0
+
+
+def test_dashboard_capital_cost_markers_are_centered_on_matching_bars():
+    source = inspect.getsource(plot_dashboard)
+    assert 'x + 0.18, df["Net OCC"]' in source
+    assert 'x - 0.18, df["NCI"]' in source
+    assert "plant_axis.set_xticks(x)" in source
+
+
+def test_dashboard_lever_table_wraps_content_and_uses_clear_title():
+    source = inspect.getsource(_plot_lever_table)
+    assert "CRT Lever Settings" in source
+    assert "wrap" in source
+    assert "cell.set_height" in source
 
 
 def test_run_sampling_from_excel_writes_csv_and_pickle_outputs(tmp_path):
