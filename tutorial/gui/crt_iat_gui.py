@@ -203,6 +203,12 @@ HTML = r"""<!doctype html>
       color: #eef7fb;
       font-weight: 700;
     }
+    .field-note {
+      margin-top: 5px;
+      color: rgba(255,255,255,0.68);
+      font-size: 11px;
+      line-height: 1.35;
+    }
     input[type="checkbox"] {
       width: auto;
       margin-right: 7px;
@@ -508,6 +514,39 @@ HTML = r"""<!doctype html>
       margin: 8px 0 16px;
     }
     .crt-key-cards .metric { border-top: 3px solid var(--accent-2); }
+    .crt-results-grid-wrap {
+      overflow-x: auto;
+      margin: 8px 0 16px;
+    }
+    .crt-results-grid {
+      display: grid;
+      grid-template-columns: minmax(170px, 1.35fr) repeat(4, minmax(120px, 1fr));
+      min-width: 720px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .crt-results-grid > div {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .crt-results-grid > div:nth-child(5n) { border-right: 0; }
+    .crt-results-grid > div:nth-last-child(-n + 5) { border-bottom: 0; }
+    .crt-results-grid .grid-head {
+      min-height: 42px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .crt-results-grid .grid-label { font-weight: 800; color: var(--ink); }
+    .crt-results-grid .grid-value { justify-content: flex-end; color: var(--ink); font-weight: 750; font-variant-numeric: tabular-nums; }
+    .crt-results-grid .grid-sub { display: block; margin-left: 5px; color: var(--muted); font-size: 10px; font-weight: 600; }
     .metric {
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -835,7 +874,8 @@ HTML = r"""<!doctype html>
           <option value="iat_crt" selected>IAT then CRT</option>
         </select>
         <label for="outputName">Output name</label>
-        <input id="outputName" value="ap1000_us_baseline_gui">
+        <input id="outputName" value="AP1000 United States Baseline">
+        <div class="field-note" id="outputNameHint">Auto-generated from reactor and country. Edit it to add a description.</div>
       </fieldset>
 
       <fieldset id="iatPanel">
@@ -1033,6 +1073,8 @@ HTML = r"""<!doctype html>
     let _crtFileContent = null;
     let _crtFilePath = null;
     let _lastCrtReactorType = null;
+    let _lastGeneratedOutputName = "";
+    let _outputNameCustomized = false;
     const defaultIatYearDollar = Number("{{IAT_YEAR_DOLLAR}}");
     const LAND_COST_GUI_TO_BACKEND = Number("{{LAND_COST_PER_GUI_UNIT}}");
     const LABOR_HOURS_GUI_TO_BACKEND = Number("{{LABOR_HOURS_PER_MILLION}}");
@@ -1273,6 +1315,7 @@ HTML = r"""<!doctype html>
         if (Number($(id).value) > maxOrders) $(id).value = maxOrders;
       });
       updateRunSummary();
+      updateOutputName();
       updateEmptyState();
       if (!$('runBtn').disabled) setWorkflowStep(workflow === "iat_only" ? 2 : 1);
     }
@@ -1340,6 +1383,24 @@ HTML = r"""<!doctype html>
         ? `IAT reactor: ${reactor}; country: ${country}`
         : `CRT reactor: ${$("crtReactorType").value}; construction: ${$("constructionDuration").value || "—"} months`;
       $("runSummary").innerHTML = `<strong>Ready to run · ${esc(workflowLabel)}</strong><span>Source: ${esc(source)} · ${esc(assumptions)}</span>`;
+    }
+
+    function outputNameParts() {
+      const workflow = $("workflow").value;
+      const reactor = workflow === "iat_only" ? $("iatReactorType").value : $("crtReactorType").value;
+      const country = $("countrySingle").value || "United States";
+      return {reactor: reactor || "ACCERT", country};
+    }
+
+    function updateOutputName() {
+      const parts = outputNameParts();
+      const generated = `${parts.reactor} ${parts.country} Baseline`;
+      const current = $("outputName").value.trim();
+      if (!_outputNameCustomized || current === _lastGeneratedOutputName || !current) {
+        $("outputName").value = generated;
+        _outputNameCustomized = false;
+      }
+      _lastGeneratedOutputName = generated;
     }
 
     function enhanceLabels() {
@@ -1681,8 +1742,12 @@ HTML = r"""<!doctype html>
         const itcH = y(nci) - y(tci);
         const occSolidH = m.top + innerH - y(netOcc);
         const occItcH = y(netOcc) - y(occ);
-        const tciTip = `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>${fmt(tci)} / ${fmt(netTci)}</span><span class='tip-label'>ITC Reduction ($/kW)</span><span class='tip-value'>${fmt(tciReduction)}</span>`;
-        const occTip = `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>${fmt(occ)} / ${fmt(netOccValueActual)}</span><span class='tip-label'>ITC Reduction ($/kW)</span><span class='tip-value'>${fmt(occReduction)}</span>`;
+        const tciTip = tciReduction > 0
+          ? `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>${fmt(tci)} / ${fmt(netTci)}</span><span class='tip-label'>ITC Reduction ($/kW)</span><span class='tip-value'>${fmt(tciReduction)}</span>`
+          : `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>TCI ($/kW)</span><span class='tip-value'>${fmt(tci)}</span>`;
+        const occTip = occReduction > 0
+          ? `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>${fmt(occ)} / ${fmt(netOccValueActual)}</span><span class='tip-label'>ITC Reduction ($/kW)</span><span class='tip-value'>${fmt(occReduction)}</span>`
+          : `<b>Plant ${esc(r["Plant number"])}</b><br><span class='tip-label'>OCC ($/kW)</span><span class='tip-value'>${fmt(occ)}</span>`;
         svg += `<rect class="hoverable" data-tip="${tciTip}" x="${cx - barW - 2}" y="${y(nci)}" width="${barW}" height="${solidH}" fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"></rect>`;
         if (itc > 0) svg += `<rect class="hoverable" data-tip="${tciTip}" x="${cx - barW - 2}" y="${y(tci)}" width="${barW}" height="${itcH}" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect>`;
         svg += `<rect class="hoverable" data-tip="${occTip}" x="${cx + 2}" y="${y(netOcc)}" width="${barW}" height="${occSolidH}" fill="#1f77b4" stroke="#1f77b4" stroke-width="1.5"></rect>`;
@@ -1694,7 +1759,9 @@ HTML = r"""<!doctype html>
       svg += `<text x="${m.left + innerW / 2}" y="${h - 6}" text-anchor="middle" fill="#596775" font-size="15" font-weight="700">Plant number</text>`;
       svg += `<rect x="${m.left}" y="20" width="14" height="14" fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"></rect><text x="${m.left + 22}" y="32" fill="#596775" font-size="15" font-weight="700">TCI / Net TCI</text>`;
       svg += `<rect x="${m.left + 160}" y="20" width="14" height="14" fill="#1f77b4" stroke="#1f77b4" stroke-width="1.5"></rect><text x="${m.left + 182}" y="32" fill="#596775" font-size="15" font-weight="700">OCC / Net OCC</text>`;
-      svg += `<rect x="${m.left + 360}" y="20" width="14" height="14" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect><text x="${m.left + 382}" y="32" fill="#596775" font-size="15" font-weight="700">ITC reduction</text>`;
+      if (rows.some(r => Number(r["TCI ITC reduction"] || 0) > 0 || Number(r["OCC ITC reduction"] || 0) > 0)) {
+        svg += `<rect x="${m.left + 360}" y="20" width="14" height="14" fill="url(#itcHatch)" stroke="#2ca02c" stroke-width="1.5"></rect><text x="${m.left + 382}" y="32" fill="#596775" font-size="15" font-weight="700">ITC reduction</text>`;
+      }
       svg += `</svg>`;
       return svg;
     }
@@ -1924,6 +1991,45 @@ HTML = r"""<!doctype html>
       </div>`;
     }
 
+    function crtGridValue(gross, net, reduction) {
+      const grossValue = Number(gross);
+      const netValue = Number(net ?? gross);
+      return reduction > 0 && Math.abs(grossValue - netValue) > 0.005
+        ? `${fmtInt(grossValue)} / ${fmtInt(netValue)}`
+        : fmtInt(grossValue);
+    }
+
+    function crtResultsGrid(crt) {
+      const plants = crt.plants || [];
+      const plant = number => plants.find(row => Number(row["Plant number"]) === number) || {};
+      const foak = plant(1);
+      const noak = plant(Number(crt.num_noak));
+      const reduction = (row, key) => Number(row[key] || 0);
+      const foakOccNet = crt.net_occ_1 ?? foak["Net OCC"];
+      const noakOccNet = crt.net_occ_noak ?? noak["Net OCC"];
+      const foakTciNet = crt.net_tci_1 ?? foak.NCI;
+      const noakTciNet = crt.net_tci_noak ?? noak.NCI;
+      const cell = value => `<div class="grid-value">${value || "—"}</div>`;
+      return `<div class="crt-results-grid-wrap"><div class="crt-results-grid" role="table" aria-label="CRT results summary">
+        <div class="grid-head">Metric</div><div class="grid-head">FOAK</div><div class="grid-head">NOAK</div><div class="grid-head">Average</div><div class="grid-head">Reduction</div>
+        <div class="grid-label">OCC ($/kW)</div>
+        ${cell(crtGridValue(foak.OCC, foakOccNet, reduction(foak, "OCC ITC reduction")))}
+        ${cell(crtGridValue(noak.OCC, noakOccNet, reduction(noak, "OCC ITC reduction")))}
+        ${cell(fmtInt(crt.avg_occ))}
+        ${cell(`${fmt(crt.occ_reduction_percent)}%<span class="grid-sub">learning</span>`)}
+        <div class="grid-label">TCI ($/kW)</div>
+        ${cell(crtGridValue(foak.TCI, foakTciNet, reduction(foak, "TCI ITC reduction")))}
+        ${cell(crtGridValue(noak.TCI, noakTciNet, reduction(noak, "TCI ITC reduction")))}
+        ${cell(fmtInt(crt.avg_tci))}
+        ${cell(`${fmt(crt.tci_reduction_percent)}%<span class="grid-sub">learning</span>`)}
+        <div class="grid-label">Construction duration (months)</div>
+        ${cell(fmt(foak["Construction duration"]))}
+        ${cell(fmt(noak["Construction duration"]))}
+        ${cell(fmt(crt.avg_duration))}
+        ${cell("—")}
+      </div></div>`;
+    }
+
     function iatBlock(iat, title = "", includeMetrics = true) {
       let html = title ? `<div class="scenario-card"><h4>${title}</h4>` : "";
       if (includeMetrics) {
@@ -2124,33 +2230,8 @@ HTML = r"""<!doctype html>
       if (data.crt) {
         if (!data.iat) html += baseCaseBlock(data.base_case);
         html += `<section class="crt-results-section"><h3>CRT Results</h3>`;
-        html += `<div class="result-note">The IAT value above is the internationally adjusted WE-FOAK OCC baseline. CRT recalculates FOAK from that baseline using the CRT fixed inputs and first-unit project effects, including factory-equipment inputs, land, construction/startup duration, financing, design completion, and FOAK execution assumptions, so the CRT FOAK OCC can differ from the WE-FOAK OCC.</div>`;
-        if (data.iat) {
-          html += crtKeySummaryCards(data.crt);
-          html += metrics([
-            {label: "NOAK OCC ($/kW)", value: fmtInt(data.crt.occ_noak)},
-            {label: "Average OCC ($/kW)", value: fmtInt(data.crt.avg_occ)},
-            {label: "OCC reduction (%)", value: fmtInt(data.crt.occ_reduction_percent)}
-          ]);
-          html += metrics([
-            {label: "NOAK TCI ($/kW)", value: fmtInt(data.crt.tci_noak)},
-            {label: "Average TCI ($/kW)", value: fmtInt(data.crt.avg_tci)},
-            {label: "Average duration (months)", value: fmtInt(data.crt.avg_duration)}
-          ]);
-        } else {
-          html += metrics([
-            {label: "FOAK OCC / Net OCC ($/kW)", value: pairValue(data.crt.occ_1, data.crt.net_occ_1)},
-            {label: "NOAK OCC ($/kW)", value: fmtInt(data.crt.occ_noak)},
-            {label: "Average OCC ($/kW)", value: fmtInt(data.crt.avg_occ)},
-            {label: "OCC reduction (%)", value: fmtInt(data.crt.occ_reduction_percent)}
-          ]);
-          html += metrics([
-            {label: "FOAK TCI / Net TCI ($/kW)", value: pairValue(data.crt.tci_1, data.crt.net_tci_1)},
-            {label: "NOAK TCI ($/kW)", value: fmtInt(data.crt.tci_noak)},
-            {label: "Average TCI ($/kW)", value: fmtInt(data.crt.avg_tci)},
-            {label: "Average duration (months)", value: fmtInt(data.crt.avg_duration)}
-          ]);
-        }
+        html += crtResultsGrid(data.crt);
+        if (data.iat) html += `<div class="result-note">CRT recalculates FOAK from the IAT-adjusted baseline using the CRT fixed inputs and first-unit project effects.</div>`;
         html += metrics([
           {label: `Years to build ${fmtInt(data.crt.num_noak)} plants`, value: `${fmtInt(data.crt.years_to_noak)} years`},
           {label: `Years to build ${fmtInt(data.crt.num_orders)} plants`, value: `${fmtInt(data.crt.years_to_orderbook)} years`}
@@ -2256,9 +2337,10 @@ HTML = r"""<!doctype html>
 
     $("workflow").addEventListener("change", updatePanels);
     $("iatInputMode").addEventListener("change", updatePanels);
-    $("countrySingle").addEventListener("change", () => { loadIatFactorDefaults(); });
+    $("countrySingle").addEventListener("change", () => { loadIatFactorDefaults(); updateOutputName(); });
     $("iatReactorType").addEventListener("change", () => {
       syncCrtOptionsToIat();
+      updateOutputName();
       const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crt";
       if (isCsvMode) {
         if (!_csvFileContent) updateDefaultCsvPath();
@@ -2307,8 +2389,8 @@ HTML = r"""<!doctype html>
       reader.onload = e => { _crtFileContent = e.target.result; };
       reader.readAsText(file);
     });
-    $("crtReactorType").addEventListener("change", () => updateCrtDefaults(true));
-    $("crtReactorType").addEventListener("change", () => { syncCrtOptionsToIat(); updateElectricOutputDefault(); });
+    $("crtReactorType").addEventListener("change", () => { updateCrtDefaults(true); updateOutputName(); });
+    $("crtReactorType").addEventListener("change", () => { syncCrtOptionsToIat(); updateElectricOutputDefault(); updateOutputName(); });
     $("runBtn").addEventListener("click", runWorkflow);
     $("resetBtn").addEventListener("click", () => location.reload());
     enhanceLabels();
@@ -2319,6 +2401,9 @@ HTML = r"""<!doctype html>
       if (control.type === "file") return;
       control.addEventListener("input", updateRunSummary);
       control.addEventListener("change", updateRunSummary);
+    });
+    $("outputName").addEventListener("input", () => {
+      _outputNameCustomized = $("outputName").value.trim() !== _lastGeneratedOutputName;
     });
     updateRunSummary();
   </script>
@@ -2334,7 +2419,7 @@ def _safe_name(value: str) -> str:
 
 def _dashboard_title(display_name: str, workflow: str, reactor_type: str, country: str = "") -> str:
     """Return the user-facing dashboard title without changing filename rules."""
-    custom = str(display_name or "").strip()
+    custom = re.sub(r"\s+", " ", str(display_name or "").replace("_", " ").strip())
     if custom:
         return custom
     if workflow == "iat_crt" and country:
@@ -2785,7 +2870,9 @@ def _summarize_crt_result(result: dict) -> dict:
     plant_columns = [
         "Plant number",
         "OCC",
+        "Net OCC",
         "TCI",
+        "NCI",
         "Construction duration",
         "Startup duration",
         "Preconstruction costs",
@@ -2820,6 +2907,12 @@ def _summarize_crt_result(result: dict) -> dict:
         "avg_tci": result.get("avg_TCI"),
         "avg_duration": result.get("avg_duration"),
         "occ_reduction_percent": result.get("occ_reduction_from_FOAK_to_NOAK_percent"),
+        "tci_reduction_percent": (
+            (float(result.get("TCI_1")) - float(result.get(f"TCI_{noak}")))
+            / float(result.get("TCI_1")) * 100.0
+            if result.get("TCI_1") and result.get(f"TCI_{noak}") is not None
+            else None
+        ),
         "years_to_noak": years_by_plant.get(noak),
         "years_to_orderbook": years_by_plant.get(num_orders),
         "show_levers": False,

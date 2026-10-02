@@ -221,10 +221,10 @@ def test_capital_chart_uses_trace_specific_tooltips_and_reductions():
     assert 'data-tip="${occTip}"' in crt_iat_gui.HTML
     assert 'TCI / Net TCI ($/kW)' in crt_iat_gui.HTML
     assert 'OCC / Net OCC ($/kW)' in crt_iat_gui.HTML
-    tci_tip = re.search(r"const tciTip = `(.+?)`;", crt_iat_gui.HTML).group(1)
-    occ_tip = re.search(r"const occTip = `(.+?)`;", crt_iat_gui.HTML).group(1)
-    assert "OCC / Net OCC" not in tci_tip
-    assert "TCI / Net TCI" not in occ_tip
+    assert "tciReduction > 0" in crt_iat_gui.HTML
+    assert "occReduction > 0" in crt_iat_gui.HTML
+    assert "TCI ($/kW)" in crt_iat_gui.HTML
+    assert "OCC ($/kW)" in crt_iat_gui.HTML
 
 
 def test_gui_display_units_convert_to_native_crt_units():
@@ -332,8 +332,24 @@ def test_combined_results_keep_iat_summary_before_crt_details():
 
 def test_dashboard_title_uses_custom_display_name_but_sanitizes_filename():
     assert crt_iat_gui._dashboard_title("China AP1000 – Fast Learning", "iat_crt", "AP1000", "China") == "China AP1000 – Fast Learning"
+    assert crt_iat_gui._dashboard_title("AP1000_China_Fast_Learning", "iat_crt", "AP1000", "China") == "AP1000 China Fast Learning"
     assert crt_iat_gui._dashboard_title("", "crt_only", "AP1000", "") == "AP1000 CRT Dashboard"
     assert crt_iat_gui._safe_name("China AP1000 – Fast Learning") == "China_AP1000_Fast_Learning"
+
+
+def test_crt_summary_uses_consistent_metric_grid_and_conditional_gross_net_values():
+    assert "function crtResultsGrid(crt)" in crt_iat_gui.HTML
+    assert "Metric</div><div class=\"grid-head\">FOAK" in crt_iat_gui.HTML
+    assert "Construction duration (months)" in crt_iat_gui.HTML
+    assert "function crtGridValue(gross, net, reduction)" in crt_iat_gui.HTML
+    assert "reduction > 0" in crt_iat_gui.HTML
+
+
+def test_output_name_is_generated_from_reactor_and_country_without_overwriting_custom_text():
+    assert "function outputNameParts()" in crt_iat_gui.HTML
+    assert "function updateOutputName()" in crt_iat_gui.HTML
+    assert "_outputNameCustomized" in crt_iat_gui.HTML
+    assert "${parts.reactor} ${parts.country} Baseline" in crt_iat_gui.HTML
     assert "class='tip-label'" in crt_iat_gui.HTML
     assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
     assert 'data-tip="${occTip}"' in crt_iat_gui.HTML
@@ -342,8 +358,8 @@ def test_dashboard_title_uses_custom_display_name_but_sanitizes_filename():
 def test_crt_summary_cards_show_foak_gross_and_net_values():
     assert 'FOAK OCC / Net OCC ($/kW)' in crt_iat_gui.HTML
     assert 'FOAK TCI / Net TCI ($/kW)' in crt_iat_gui.HTML
-    assert 'data.crt.net_occ_1' in crt_iat_gui.HTML
-    assert 'data.crt.net_tci_1' in crt_iat_gui.HTML
+    assert 'crt.net_occ_1' in crt_iat_gui.HTML
+    assert 'crt.net_tci_1' in crt_iat_gui.HTML
 
 
 def test_crt_fixed_inputs_use_short_labels_and_structural_field_alignment():
