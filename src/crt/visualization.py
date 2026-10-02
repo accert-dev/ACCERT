@@ -205,12 +205,17 @@ def plot_dashboard(
     x = df["Plant number"]
 
     ax = axes[0, 0]
-    ax.bar(x - 0.18, df["TCI"], width=0.36, label="10-60 - Total Capital Investment (TCI)", color=CAPITAL_COLORS["tci"])
-    ax.bar(x + 0.18, df["OCC"], width=0.36, label="10-50 - Overnight Capital Cost (OCC)", color=CAPITAL_COLORS["occ"])
-    if df["Net OCC"].notna().any():
-        ax.plot(x + 0.18, df["Net OCC"], marker="o", linestyle="--", linewidth=1.2, label="Net OCC (after ITC)", color=CAPITAL_COLORS["net_occ"])
-    if df["NCI"].notna().any():
-        ax.plot(x - 0.18, df["NCI"], marker="o", linestyle="--", linewidth=1.2, label="Net Capital Investment (NCI)", color=CAPITAL_COLORS["nci"])
+    bar_width = 0.36
+    tci_net = df["NCI"].fillna(df["TCI"]).astype(float)
+    occ_net = df["Net OCC"].fillna(df["OCC"]).astype(float)
+    tci_itc = (df["TCI"].astype(float) - tci_net).clip(lower=0)
+    occ_itc = (df["OCC"].astype(float) - occ_net).clip(lower=0)
+    ax.bar(x - 0.18, tci_net, width=bar_width, label="10-60 - TCI", color=CAPITAL_COLORS["tci"], edgecolor=CAPITAL_COLORS["tci"], linewidth=1.0)
+    ax.bar(x + 0.18, occ_net, width=bar_width, label="10-50 - OCC", color=CAPITAL_COLORS["occ"], edgecolor=CAPITAL_COLORS["occ"], linewidth=1.0)
+    if tci_itc.gt(0).any():
+        ax.bar(x - 0.18, tci_itc, width=bar_width, bottom=tci_net, label="ITC reduction", color="none", edgecolor=CAPITAL_COLORS["tci"], hatch="///", linewidth=1.0)
+    if occ_itc.gt(0).any():
+        ax.bar(x + 0.18, occ_itc, width=bar_width, bottom=occ_net, color="none", edgecolor=CAPITAL_COLORS["occ"], hatch="///", linewidth=1.0)
     ax.set_title("Capital Cost: OCC and TCI")
     ax.set_xlabel("Plant number")
     ax.set_ylabel("$/kWe")

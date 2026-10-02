@@ -366,10 +366,13 @@ def test_visualization_helpers_create_dashboard(tmp_path):
     assert compact_png.stat().st_size > 0
 
 
-def test_dashboard_capital_cost_markers_are_centered_on_matching_bars():
+def test_dashboard_capital_cost_uses_solid_and_hatched_net_cost_bars():
     source = inspect.getsource(plot_dashboard)
-    assert 'x + 0.18, df["Net OCC"]' in source
-    assert 'x - 0.18, df["NCI"]' in source
+    assert 'tci_itc = (df["TCI"].astype(float) - tci_net).clip(lower=0)' in source
+    assert 'occ_itc = (df["OCC"].astype(float) - occ_net).clip(lower=0)' in source
+    assert 'hatch="///"' in source
+    assert 'ax.plot(x + 0.18' not in source
+    assert 'ax.plot(x - 0.18' not in source
     assert "plant_axis.set_xticks(x)" in source
 
 
