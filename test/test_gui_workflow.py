@@ -321,10 +321,13 @@ def test_empty_state_updates_for_selected_workflow_and_terms_are_visible():
 def test_combined_results_keep_iat_summary_before_crt_details():
     assert 'class="iat-results-section"' in crt_iat_gui.HTML
     assert 'IAT Results' in crt_iat_gui.HTML
-    assert 'Original ACCERT OCC' in crt_iat_gui.HTML
+    assert 'Original OCC' in crt_iat_gui.HTML
     assert 'IAT-adjusted OCC' in crt_iat_gui.HTML
-    assert 'OCC adjustment' in crt_iat_gui.HTML
+    assert 'OCC Change' in crt_iat_gui.HTML
     assert 'CRT Results' in crt_iat_gui.HTML
+    assert 'class="iat-breakdown"' in crt_iat_gui.HTML
+    assert 'crt-key-cards' in crt_iat_gui.HTML
+    assert 'if (!data.iat) html += resultSummaryCards(data);' in crt_iat_gui.HTML
 
 
 def test_dashboard_title_uses_custom_display_name_but_sanitizes_filename():

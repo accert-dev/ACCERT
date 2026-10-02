@@ -481,6 +481,33 @@ HTML = r"""<!doctype html>
       margin: 10px 0 16px;
     }
     .iat-summary-cards .metric { border-top: 3px solid var(--accent); }
+    .iat-country {
+      margin: 2px 0 8px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .iat-breakdown {
+      margin: 2px 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .breakdown-label { margin-bottom: 6px; }
+    .breakdown-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface-soft);
+    }
+    .breakdown-items span { color: var(--muted); }
+    .breakdown-items strong { color: var(--ink); margin-left: 4px; }
+    .crt-key-cards {
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      margin: 8px 0 16px;
+    }
+    .crt-key-cards .metric { border-top: 3px solid var(--accent-2); }
     .metric {
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -777,7 +804,7 @@ HTML = r"""<!doctype html>
       .workflow-steps { grid-template-columns: 1fr; }
       .baseline-control-row { flex-direction: column; }
       .baseline-control-row .file-input-row { flex-basis: auto; }
-    .result-summary-cards, .summary, .iat-summary-cards { grid-template-columns: 1fr; }
+    .result-summary-cards, .summary, .iat-summary-cards, .crt-key-cards { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -1875,10 +1902,25 @@ HTML = r"""<!doctype html>
     }
 
     function iatSummaryCards(iat) {
-      return `<div class="summary iat-summary-cards">
-        <div class="metric"><div class="label">Original ACCERT OCC</div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">Original cost</div></div>
+      return `<div class="iat-country">Selected country: <strong>${esc(iat.country || "Selected country")}</strong></div><div class="summary iat-summary-cards">
+        <div class="metric"><div class="label">Original OCC</div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">Original ACCERT cost</div></div>
         <div class="metric"><div class="label">IAT-adjusted OCC</div><div class="value">${fmtKwe(iat.adjusted_occ_per_kw)}</div><div class="subvalue">${esc(iat.country || "Selected country")}</div></div>
-        <div class="metric"><div class="label">OCC adjustment</div><div class="value">${fmt((Number(iat.adjustment_ratio || 1) - 1) * 100)}%</div><div class="subvalue">Adjustment from original</div></div>
+        <div class="metric"><div class="label">OCC Change</div><div class="value">${fmt((Number(iat.adjustment_ratio || 1) - 1) * 100)}%</div><div class="subvalue">Change from original</div></div>
+      </div>`;
+    }
+
+    function iatBreakdown(iat) {
+      const rows = iat.comparison || [];
+      const total = key => rows.reduce((sum, row) => sum + Number(row[key] || 0), 0);
+      const power = Number(iat.power_kwe || 1);
+      const value = (...keys) => fmtKwe(keys.reduce((sum, key) => sum + total(key), 0) / power);
+      return `<div class="iat-breakdown"><div class="breakdown-label">Cost breakdown</div><div class="breakdown-items"><span>Material <strong>${value("Adjusted Material Cost")}</strong></span><span>Factory <strong>${value("Adjusted Equipment Cost")}</strong></span><span>Labor <strong>${value("Adjusted Labor Cost")}</strong></span></div></div>`;
+    }
+
+    function crtKeySummaryCards(crt) {
+      return `<div class="summary crt-key-cards">
+        <div class="metric"><div class="label">FOAK OCC / Net OCC ($/kW)</div><div class="value">${fmtPerKw(crt.occ_1)} / ${fmtPerKw(crt.net_occ_1 ?? crt.occ_1)}</div><div class="subvalue">Gross / Net</div></div>
+        <div class="metric"><div class="label">FOAK TCI / Net TCI ($/kW)</div><div class="value">${fmtPerKw(crt.tci_1)} / ${fmtPerKw(crt.net_tci_1 ?? crt.tci_1)}</div><div class="subvalue">Gross / Net</div></div>
       </div>`;
     }
 
@@ -2001,7 +2043,7 @@ HTML = r"""<!doctype html>
       lastData = data;
       const result = $("result");
       let html = `<div class="hero"><h2>${data.workflow_label}</h2><p>ACCERT workflow results with saved outputs and interactive cost plots.</p></div>`;
-      html += resultSummaryCards(data);
+      if (!data.iat) html += resultSummaryCards(data);
       const isStandaloneMultiCountryIat = data.workflow === "iat_only"
         && data.iat
         && data.iat.country_results
@@ -2011,7 +2053,7 @@ HTML = r"""<!doctype html>
       }
       if (data.iat) {
         html += `<section class="iat-results-section"><h3>IAT Results</h3>`;
-        html += baseCaseBlock(data.base_case);
+        if (!data.crt) html += baseCaseBlock(data.base_case);
         if (data.iat.country_results && data.iat.country_results.length) {
           if (isStandaloneMultiCountryIat) {
             html += `<div class="tabs">`;
@@ -2062,7 +2104,7 @@ HTML = r"""<!doctype html>
           }
         } else {
           html += iatSummaryCards(data.iat);
-          html += `<h4>IAT cost distribution</h4>`;
+          html += iatBreakdown(data.iat);
           if (data.iat.scenarios && data.iat.scenarios.length) {
             html += table(data.iat.summary, [
               {key: "Scenario", label: "Scenario"},
@@ -2083,18 +2125,32 @@ HTML = r"""<!doctype html>
         if (!data.iat) html += baseCaseBlock(data.base_case);
         html += `<section class="crt-results-section"><h3>CRT Results</h3>`;
         html += `<div class="result-note">The IAT value above is the internationally adjusted WE-FOAK OCC baseline. CRT recalculates FOAK from that baseline using the CRT fixed inputs and first-unit project effects, including factory-equipment inputs, land, construction/startup duration, financing, design completion, and FOAK execution assumptions, so the CRT FOAK OCC can differ from the WE-FOAK OCC.</div>`;
-        html += metrics([
-          {label: "FOAK OCC / Net OCC ($/kW)", value: pairValue(data.crt.occ_1, data.crt.net_occ_1)},
-          {label: "NOAK OCC ($/kW)", value: fmtInt(data.crt.occ_noak)},
-          {label: "Average OCC ($/kW)", value: fmtInt(data.crt.avg_occ)},
-          {label: "OCC reduction (%)", value: fmtInt(data.crt.occ_reduction_percent)}
-        ]);
-        html += metrics([
-          {label: "FOAK TCI / Net TCI ($/kW)", value: pairValue(data.crt.tci_1, data.crt.net_tci_1)},
-          {label: "NOAK TCI ($/kW)", value: fmtInt(data.crt.tci_noak)},
-          {label: "Average TCI ($/kW)", value: fmtInt(data.crt.avg_tci)},
-          {label: "Average duration (months)", value: fmtInt(data.crt.avg_duration)}
-        ]);
+        if (data.iat) {
+          html += crtKeySummaryCards(data.crt);
+          html += metrics([
+            {label: "NOAK OCC ($/kW)", value: fmtInt(data.crt.occ_noak)},
+            {label: "Average OCC ($/kW)", value: fmtInt(data.crt.avg_occ)},
+            {label: "OCC reduction (%)", value: fmtInt(data.crt.occ_reduction_percent)}
+          ]);
+          html += metrics([
+            {label: "NOAK TCI ($/kW)", value: fmtInt(data.crt.tci_noak)},
+            {label: "Average TCI ($/kW)", value: fmtInt(data.crt.avg_tci)},
+            {label: "Average duration (months)", value: fmtInt(data.crt.avg_duration)}
+          ]);
+        } else {
+          html += metrics([
+            {label: "FOAK OCC / Net OCC ($/kW)", value: pairValue(data.crt.occ_1, data.crt.net_occ_1)},
+            {label: "NOAK OCC ($/kW)", value: fmtInt(data.crt.occ_noak)},
+            {label: "Average OCC ($/kW)", value: fmtInt(data.crt.avg_occ)},
+            {label: "OCC reduction (%)", value: fmtInt(data.crt.occ_reduction_percent)}
+          ]);
+          html += metrics([
+            {label: "FOAK TCI / Net TCI ($/kW)", value: pairValue(data.crt.tci_1, data.crt.net_tci_1)},
+            {label: "NOAK TCI ($/kW)", value: fmtInt(data.crt.tci_noak)},
+            {label: "Average TCI ($/kW)", value: fmtInt(data.crt.avg_tci)},
+            {label: "Average duration (months)", value: fmtInt(data.crt.avg_duration)}
+          ]);
+        }
         html += metrics([
           {label: `Years to build ${fmtInt(data.crt.num_noak)} plants`, value: `${fmtInt(data.crt.years_to_noak)} years`},
           {label: `Years to build ${fmtInt(data.crt.num_orders)} plants`, value: `${fmtInt(data.crt.years_to_orderbook)} years`}
@@ -2132,6 +2188,7 @@ HTML = r"""<!doctype html>
           ${table(data.crt.plants, crtResultsColumns())}
         </div>`;
         html += `</section>`;
+        if (data.iat) html += baseCaseBlock(data.base_case);
       }
       if (data.notes && data.notes.length) {
         html += `<h3>Notes</h3><ul>${data.notes.map(n => `<li>${n}</li>`).join("")}</ul>`;
