@@ -428,9 +428,11 @@ HTML = r"""<!doctype html>
     .term-guide span {
       padding: 4px 7px;
       border-radius: 5px;
-      background: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.78);
+      background: #e5eef3;
+      border: 1px solid #c9dbe4;
+      color: var(--ink);
       font-size: 11px;
+      font-weight: 700;
     }
     .hero {
       border-radius: 8px;
@@ -968,7 +970,7 @@ HTML = r"""<!doctype html>
     <section>
       <div id="result">
         <div class="empty-state" id="emptyState">
-          <div><h2>Your results will appear here</h2><p>Run IAT, CRT, or the connected IAT → CRT workflow to see summary cards, interactive charts, tables, and downloadable output files.</p><div class="term-guide"><span>IAT · International Adjustment Tool</span><span>CRT · Cost Reduction Tool</span><span>FOAK · First-of-a-Kind</span><span>NOAK · Nth-of-a-Kind</span><span>Levers · cost-reduction levers</span></div></div>
+          <div><h2 id="emptyTitle">Connected IAT → CRT results will appear here</h2><p id="emptyDescription">Run the connected workflow to see summary cards, interactive charts, tables, and downloadable output files.</p><div class="term-guide" id="termGuide"><span>IAT · International Adjustment Tool</span><span>CRT · Cost Reduction Tool</span><span>FOAK · First-of-a-Kind</span><span>NOAK · Nth-of-a-Kind</span><span>Levers · cost-reduction levers</span></div></div>
         </div>
       </div>
     </section>
@@ -1225,6 +1227,7 @@ HTML = r"""<!doctype html>
         if (Number($(id).value) > maxOrders) $(id).value = maxOrders;
       });
       updateRunSummary();
+      updateEmptyState();
       if (!$('runBtn').disabled) setWorkflowStep(workflow === "iat_only" ? 2 : 1);
     }
 
@@ -1252,6 +1255,30 @@ HTML = r"""<!doctype html>
       stageEl.textContent = message || "";
       stageEl.classList.toggle("hidden", !message);
       stageEl.setAttribute("aria-live", stage === "complete" || stage === "error" ? "polite" : "assertive");
+    }
+
+    function updateEmptyState() {
+      const states = {
+        iat_only: {
+          title: "IAT results will appear here",
+          description: "Run IAT to see localization adjustments, OCC comparisons, interactive charts, tables, and downloadable output files.",
+          terms: ["IAT · International Adjustment Tool", "FOAK · First-of-a-Kind", "NOAK · Nth-of-a-Kind"]
+        },
+        crt_only: {
+          title: "CRT results will appear here",
+          description: "Run CRT to see capital cost summaries, reduction levers, construction charts, results tables, and downloadable output files.",
+          terms: ["CRT · Cost Reduction Tool", "FOAK · First-of-a-Kind", "NOAK · Nth-of-a-Kind", "Levers · cost-reduction levers"]
+        },
+        iat_crt: {
+          title: "Connected IAT → CRT results will appear here",
+          description: "Run the connected workflow to see IAT-adjusted inputs flowing into CRT, followed by summary cards, charts, tables, and downloads.",
+          terms: ["IAT · International Adjustment Tool", "CRT · Cost Reduction Tool", "FOAK · First-of-a-Kind", "NOAK · Nth-of-a-Kind", "Levers · cost-reduction levers"]
+        }
+      }[$("workflow").value];
+      if (!states || !$("emptyTitle")) return;
+      $("emptyTitle").textContent = states.title;
+      $("emptyDescription").textContent = states.description;
+      $("termGuide").innerHTML = states.terms.map(term => `<span>${esc(term)}</span>`).join("");
     }
 
     function updateRunSummary() {

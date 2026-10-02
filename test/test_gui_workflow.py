@@ -305,6 +305,17 @@ def test_phase_one_results_include_prominent_summary_cards():
     for label in ["Total OCC", "Adjusted OCC", "$/kW", "Cost change", "Construction duration"]:
         assert label in crt_iat_gui.HTML
     assert 'class="result-summary-cards"' in crt_iat_gui.HTML
+
+
+def test_empty_state_updates_for_selected_workflow_and_terms_are_visible():
+    assert 'id="emptyTitle"' in crt_iat_gui.HTML
+    assert 'id="emptyDescription"' in crt_iat_gui.HTML
+    assert 'id="termGuide"' in crt_iat_gui.HTML
+    assert 'function updateEmptyState()' in crt_iat_gui.HTML
+    assert 'IAT results will appear here' in crt_iat_gui.HTML
+    assert 'CRT results will appear here' in crt_iat_gui.HTML
+    assert 'Connected IAT → CRT results will appear here' in crt_iat_gui.HTML
+    assert 'color: var(--ink);' in crt_iat_gui.HTML
     assert "class='tip-label'" in crt_iat_gui.HTML
     assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
     assert 'data-tip="${occTip}"' in crt_iat_gui.HTML
