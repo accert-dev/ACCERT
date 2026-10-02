@@ -462,6 +462,25 @@ HTML = r"""<!doctype html>
       min-height: 96px;
       border-top: 3px solid var(--accent);
     }
+    .iat-results-section, .crt-results-section {
+      margin: 18px 0 22px;
+      padding-top: 4px;
+    }
+    .iat-results-section {
+      border-top: 3px solid var(--accent);
+    }
+    .crt-results-section {
+      border-top: 3px solid var(--accent-2);
+    }
+    .iat-results-section > h3, .crt-results-section > h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+    .iat-summary-cards {
+      grid-template-columns: repeat(3, minmax(160px, 1fr));
+      margin: 10px 0 16px;
+    }
+    .iat-summary-cards .metric { border-top: 3px solid var(--accent); }
     .metric {
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -758,7 +777,7 @@ HTML = r"""<!doctype html>
       .workflow-steps { grid-template-columns: 1fr; }
       .baseline-control-row { flex-direction: column; }
       .baseline-control-row .file-input-row { flex-basis: auto; }
-      .result-summary-cards, .summary { grid-template-columns: 1fr; }
+    .result-summary-cards, .summary, .iat-summary-cards { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -1855,14 +1874,24 @@ HTML = r"""<!doctype html>
       return value != null ? `$${fmtInt(value)}/kWe` : "";
     }
 
-    function iatBlock(iat, title = "") {
+    function iatSummaryCards(iat) {
+      return `<div class="summary iat-summary-cards">
+        <div class="metric"><div class="label">Original ACCERT OCC</div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">Original cost</div></div>
+        <div class="metric"><div class="label">IAT-adjusted OCC</div><div class="value">${fmtKwe(iat.adjusted_occ_per_kw)}</div><div class="subvalue">${esc(iat.country || "Selected country")}</div></div>
+        <div class="metric"><div class="label">OCC adjustment</div><div class="value">${fmt((Number(iat.adjustment_ratio || 1) - 1) * 100)}%</div><div class="subvalue">Adjustment from original</div></div>
+      </div>`;
+    }
+
+    function iatBlock(iat, title = "", includeMetrics = true) {
       let html = title ? `<div class="scenario-card"><h4>${title}</h4>` : "";
-      html += metrics([
-        {label: "Base case OCC", value: fmtKwe(iat.input_occ_per_kw)},
-        {label: "WE-FOAK OCC ($/kWe)", value: fmtKwe(iat.adjusted_occ_per_kw)},
-        {label: "OCC adjustment factor", value: fmt(iat.occ_adjustment_factor)},
-        {label: "Country", value: iat.country}
-      ]);
+      if (includeMetrics) {
+        html += metrics([
+          {label: "Base case OCC", value: fmtKwe(iat.input_occ_per_kw)},
+          {label: "WE-FOAK OCC ($/kWe)", value: fmtKwe(iat.adjusted_occ_per_kw)},
+          {label: "OCC adjustment factor", value: fmt(iat.occ_adjustment_factor)},
+          {label: "Country", value: iat.country}
+        ]);
+      }
       const isStandalone = !iat.power_kwe || iat.power_kwe === 1.0;
       if (isStandalone) {
         html += coaTable(iat.comparison, iatResultColumns(v => fmtKwe(v)), 1.0, false);
@@ -1980,8 +2009,9 @@ HTML = r"""<!doctype html>
       if (!isStandaloneMultiCountryIat) {
         html += links(data.files);
       }
-      html += baseCaseBlock(data.base_case);
       if (data.iat) {
+        html += `<section class="iat-results-section"><h3>IAT Results</h3>`;
+        html += baseCaseBlock(data.base_case);
         if (data.iat.country_results && data.iat.country_results.length) {
           if (isStandaloneMultiCountryIat) {
             html += `<div class="tabs">`;
@@ -2031,7 +2061,8 @@ HTML = r"""<!doctype html>
             </div>`;
           }
         } else {
-          html += `<h3>IAT Result</h3>`;
+          html += iatSummaryCards(data.iat);
+          html += `<h4>IAT cost distribution</h4>`;
           if (data.iat.scenarios && data.iat.scenarios.length) {
             html += table(data.iat.summary, [
               {key: "Scenario", label: "Scenario"},
@@ -2043,12 +2074,14 @@ HTML = r"""<!doctype html>
               html += iatBlock(scenario, `${scenario.scenario || `Scenario ${idx + 1}`} result`);
             });
           } else {
-            html += iatBlock(data.iat);
+            html += iatBlock(data.iat, "", false);
           }
         }
+        html += `</section>`;
       }
       if (data.crt) {
-        html += `<h3>CRT Result</h3>`;
+        if (!data.iat) html += baseCaseBlock(data.base_case);
+        html += `<section class="crt-results-section"><h3>CRT Results</h3>`;
         html += `<div class="result-note">The IAT value above is the internationally adjusted WE-FOAK OCC baseline. CRT recalculates FOAK from that baseline using the CRT fixed inputs and first-unit project effects, including factory-equipment inputs, land, construction/startup duration, financing, design completion, and FOAK execution assumptions, so the CRT FOAK OCC can differ from the WE-FOAK OCC.</div>`;
         html += metrics([
           {label: "FOAK OCC / Net OCC ($/kW)", value: pairValue(data.crt.occ_1, data.crt.net_occ_1)},
@@ -2098,6 +2131,7 @@ HTML = r"""<!doctype html>
           ${fileLink("Download CRT results CSV", data.files && data.files["CRT results CSV"])}
           ${table(data.crt.plants, crtResultsColumns())}
         </div>`;
+        html += `</section>`;
       }
       if (data.notes && data.notes.length) {
         html += `<h3>Notes</h3><ul>${data.notes.map(n => `<li>${n}</li>`).join("")}</ul>`;
@@ -2239,6 +2273,18 @@ HTML = r"""<!doctype html>
 def _safe_name(value: str) -> str:
     name = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(value).strip()).strip("._")
     return name or "accert_gui_run"
+
+
+def _dashboard_title(display_name: str, workflow: str, reactor_type: str, country: str = "") -> str:
+    """Return the user-facing dashboard title without changing filename rules."""
+    custom = str(display_name or "").strip()
+    if custom:
+        return custom
+    if workflow == "iat_crt" and country:
+        return f"{country} {reactor_type} CRT Dashboard"
+    if workflow == "crt_only":
+        return f"{reactor_type} CRT Dashboard"
+    return f"{reactor_type} IAT Dashboard"
 
 
 def _resolve_path(value: str | None) -> Path | None:
@@ -2859,7 +2905,11 @@ def run_workflow(payload: dict) -> dict:
         save_dashboard(
             result,
             dashboard,
-            title=f"{payload['crt']['reactor_type']} Cost Reduction Framework Tool",
+            title=_dashboard_title(
+                payload.get("output_name", ""),
+                workflow,
+                payload["crt"]["reactor_type"],
+            ),
             show_levers=bool(payload["crt"].get("show_levers", True)),
         )
         response["crt"] = _summarize_crt_result(result)
@@ -2886,7 +2936,12 @@ def run_workflow(payload: dict) -> dict:
         save_dashboard(
             crt_result,
             dashboard,
-            title=f"{payload['crt']['reactor_type']} {_crt_countries[0]} Cost Reduction Framework Tool",
+            title=_dashboard_title(
+                payload.get("output_name", ""),
+                workflow,
+                payload["crt"]["reactor_type"],
+                _crt_countries[0],
+            ),
             show_levers=bool(payload["crt"].get("show_levers", True)),
         )
         response["iat"] = _summarize_iat_result(iat_result, _reactor_power_kwe(payload))

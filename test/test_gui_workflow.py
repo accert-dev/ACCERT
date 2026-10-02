@@ -316,6 +316,21 @@ def test_empty_state_updates_for_selected_workflow_and_terms_are_visible():
     assert 'CRT results will appear here' in crt_iat_gui.HTML
     assert 'Connected IAT → CRT results will appear here' in crt_iat_gui.HTML
     assert 'color: var(--ink);' in crt_iat_gui.HTML
+
+
+def test_combined_results_keep_iat_summary_before_crt_details():
+    assert 'class="iat-results-section"' in crt_iat_gui.HTML
+    assert 'IAT Results' in crt_iat_gui.HTML
+    assert 'Original ACCERT OCC' in crt_iat_gui.HTML
+    assert 'IAT-adjusted OCC' in crt_iat_gui.HTML
+    assert 'OCC adjustment' in crt_iat_gui.HTML
+    assert 'CRT Results' in crt_iat_gui.HTML
+
+
+def test_dashboard_title_uses_custom_display_name_but_sanitizes_filename():
+    assert crt_iat_gui._dashboard_title("China AP1000 – Fast Learning", "iat_crt", "AP1000", "China") == "China AP1000 – Fast Learning"
+    assert crt_iat_gui._dashboard_title("", "crt_only", "AP1000", "") == "AP1000 CRT Dashboard"
+    assert crt_iat_gui._safe_name("China AP1000 – Fast Learning") == "China_AP1000_Fast_Learning"
     assert "class='tip-label'" in crt_iat_gui.HTML
     assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
     assert 'data-tip="${occTip}"' in crt_iat_gui.HTML
