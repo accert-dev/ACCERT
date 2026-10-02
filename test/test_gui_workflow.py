@@ -278,6 +278,33 @@ def test_capital_tooltip_keeps_gross_net_pairs_together():
     assert 'white-space: nowrap' in crt_iat_gui.HTML
     assert "class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>" in crt_iat_gui.HTML
     assert "class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>" in crt_iat_gui.HTML
+
+
+def test_phase_one_gui_has_three_step_input_flow_and_advanced_sections():
+    assert 'class="workflow-steps"' in crt_iat_gui.HTML
+    assert 'data-step="1"' in crt_iat_gui.HTML
+    assert 'data-step="2"' in crt_iat_gui.HTML
+    assert 'data-step="3"' in crt_iat_gui.HTML
+    assert '<details class="advanced-section"' in crt_iat_gui.HTML
+    assert 'Advanced IAT assumptions' in crt_iat_gui.HTML
+    assert 'Advanced CRT assumptions' in crt_iat_gui.HTML
+    assert 'CRT levers' in crt_iat_gui.HTML
+
+
+def test_phase_one_gui_explains_terms_and_exposes_run_summary_states():
+    for term in ["International Adjustment Tool", "Cost Reduction Tool", "First-of-a-Kind", "Nth-of-a-Kind", "cost-reduction levers"]:
+        assert term in crt_iat_gui.HTML
+    assert 'id="runSummary"' in crt_iat_gui.HTML
+    assert 'id="processingStage"' in crt_iat_gui.HTML
+    assert 'id="emptyState"' in crt_iat_gui.HTML
+    assert "Running IAT" in crt_iat_gui.HTML
+    assert "Running CRT" in crt_iat_gui.HTML
+
+
+def test_phase_one_results_include_prominent_summary_cards():
+    for label in ["Total OCC", "Adjusted OCC", "$/kW", "Cost change", "Construction duration"]:
+        assert label in crt_iat_gui.HTML
+    assert 'class="result-summary-cards"' in crt_iat_gui.HTML
     assert "class='tip-label'" in crt_iat_gui.HTML
     assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
     assert 'data-tip="${occTip}"' in crt_iat_gui.HTML

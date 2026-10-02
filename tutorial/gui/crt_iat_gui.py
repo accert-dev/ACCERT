@@ -93,6 +93,8 @@ HTML = r"""<!doctype html>
       --muted: #687587;
       --line: #d7dee8;
       --panel: #f7f9fc;
+      --surface: #ffffff;
+      --surface-soft: #f3f7fa;
       --accent: #17647f;
       --accent-2: #2f7d57;
       --orange: #f28c34;
@@ -116,7 +118,7 @@ HTML = r"""<!doctype html>
       gap: 16px;
       padding: 14px 18px;
       border-bottom: 1px solid #0c3a50;
-      background: linear-gradient(90deg, #082f4a, #0b6f86 58%, #15937f);
+      background: #082f4a;
       color: white;
     }
     h1 {
@@ -127,14 +129,12 @@ HTML = r"""<!doctype html>
     }
     main {
       display: grid;
-      grid-template-columns: minmax(500px, 560px) minmax(0, 1fr);
+      grid-template-columns: minmax(360px, 420px) minmax(0, 1fr);
       min-height: calc(100vh - 57px);
     }
     aside {
       border-right: 0;
-      background:
-        radial-gradient(circle at 12% 0%, rgba(78, 188, 214, 0.22), transparent 28%),
-        linear-gradient(180deg, var(--sidebar), #07556f 48%, var(--sidebar-2));
+      background: var(--sidebar);
       padding: 14px;
       overflow: auto;
     }
@@ -144,10 +144,10 @@ HTML = r"""<!doctype html>
     }
     fieldset {
       border: 1px solid rgba(207,239,248,0.28);
-      border-radius: 6px;
+      border-radius: 8px;
       margin: 0 0 12px;
       padding: 12px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.08);
       color: #eef7fb;
     }
     legend {
@@ -189,8 +189,8 @@ HTML = r"""<!doctype html>
     input, select {
       width: 100%;
       border: 1px solid #90b9cb;
-      border-radius: 5px;
-      padding: 7px 8px;
+      border-radius: 6px;
+      padding: 9px 10px;
       font: inherit;
       background: #f7fbff;
       color: var(--ink);
@@ -299,8 +299,8 @@ HTML = r"""<!doctype html>
     }
     button {
       border: 0;
-      border-radius: 6px;
-      padding: 9px 13px;
+      border-radius: 7px;
+      padding: 10px 14px;
       font: inherit;
       font-weight: 700;
       color: white;
@@ -309,6 +309,10 @@ HTML = r"""<!doctype html>
     }
     button.secondary { background: rgba(255,255,255,0.14); border: 1px solid rgba(199,239,250,0.45); }
     button:disabled { opacity: 0.55; cursor: not-allowed; }
+    button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+      outline: 3px solid rgba(242, 140, 52, 0.72);
+      outline-offset: 2px;
+    }
     .actions {
       display: flex;
       gap: 10px;
@@ -322,6 +326,112 @@ HTML = r"""<!doctype html>
     }
     .status.error { color: #a13030; }
     header .status.error { color: #ffd0d0; }
+    .panel-intro {
+      padding: 4px 2px 12px;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.45;
+    }
+    .panel-intro strong { color: #fff; }
+    .workflow-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .workflow-step {
+      min-height: 64px;
+      padding: 8px;
+      border: 1px solid rgba(207,239,248,0.2);
+      border-radius: 7px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.66);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+    .workflow-step .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      margin-bottom: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      font-weight: 800;
+    }
+    .workflow-step.active {
+      border-color: rgba(242,140,52,0.9);
+      background: rgba(242,140,52,0.14);
+      color: #fff;
+    }
+    .workflow-step.done { border-color: rgba(93,196,146,0.7); color: #d9f5e7; }
+    .workflow-step.done .step-number { background: var(--accent-2); }
+    .advanced-section {
+      margin: 10px 0 12px;
+      border: 1px solid rgba(207,239,248,0.2);
+      border-radius: 7px;
+      background: rgba(8,47,74,0.24);
+    }
+    .advanced-section > summary {
+      padding: 10px 11px;
+      color: #d9f5e7;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .advanced-section > fieldset {
+      margin: 0;
+      border: 0;
+      border-top: 1px solid rgba(207,239,248,0.18);
+      border-radius: 0;
+      background: transparent;
+    }
+    .run-summary {
+      margin: 10px 0 12px;
+      padding: 11px 12px;
+      border: 1px solid rgba(207,239,248,0.26);
+      border-radius: 7px;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.82);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .run-summary strong { display: block; color: #fff; margin-bottom: 3px; }
+    .processing-stage {
+      display: none;
+      margin-top: 8px;
+      color: #d9f5e7;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .processing-stage.visible { display: block; }
+    .processing-stage[data-stage="error"] { color: #ffd0d0; }
+    .empty-state {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      padding: 36px;
+      text-align: center;
+      border: 1px dashed #b8c8d6;
+      border-radius: 10px;
+      background: var(--surface-soft);
+      color: var(--muted);
+    }
+    .empty-state h2 { margin: 0 0 8px; color: var(--ink); }
+    .empty-state p { max-width: 520px; margin: 0; line-height: 1.5; }
+    .term-guide {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .term-guide span {
+      padding: 4px 7px;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.78);
+      font-size: 11px;
+    }
     .hero {
       border-radius: 8px;
       padding: 18px;
@@ -341,6 +451,14 @@ HTML = r"""<!doctype html>
       grid-template-columns: repeat(4, minmax(130px, 1fr));
       gap: 10px;
       margin-bottom: 14px;
+    }
+    .result-summary-cards {
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      margin: 14px 0 18px;
+    }
+    .result-summary-cards .metric {
+      min-height: 96px;
+      border-top: 3px solid var(--accent);
     }
     .metric {
       border: 1px solid var(--line);
@@ -631,19 +749,32 @@ HTML = r"""<!doctype html>
       main { grid-template-columns: 1fr; }
       aside { border-right: 0; border-bottom: 1px solid var(--line); }
       .summary { grid-template-columns: 1fr 1fr; }
+      .result-summary-cards { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
       .chart-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .workflow-steps { grid-template-columns: 1fr; }
+      .baseline-control-row { flex-direction: column; }
+      .baseline-control-row .file-input-row { flex-basis: auto; }
+      .result-summary-cards, .summary { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>ACCERT IAT and CRT GUI</h1>
-    <div class="status" id="status">Ready</div>
+    <div class="status" id="status">Ready<div class="processing-stage" id="processingStage"></div></div>
   </header>
   <main>
     <aside>
+      <div class="panel-intro"><strong>Build a clear cost scenario.</strong><br>Choose a source, review the key assumptions, then run the analysis.</div>
+      <div class="workflow-steps" aria-label="Workflow steps">
+        <div class="workflow-step active" data-step="1"><span class="step-number">1</span><br>Select task &amp; source</div>
+        <div class="workflow-step" data-step="2"><span class="step-number">2</span><br>Configure assumptions</div>
+        <div class="workflow-step" data-step="3"><span class="step-number">3</span><br>Run &amp; review</div>
+      </div>
       <div class="actions">
-        <button id="runBtn">Run workflow</button>
+        <button id="runBtn">Run analysis</button>
         <button class="secondary" id="resetBtn" type="button">Reset</button>
       </div>
 
@@ -707,6 +838,8 @@ HTML = r"""<!doctype html>
             <div class="readonly-note">{{IAT_YEAR_DOLLAR}} CPI-U basis</div>
           </div>
         </div>
+        <details class="advanced-section">
+          <summary>Advanced IAT assumptions</summary>
         <div class="row">
           <div><label for="iatEquipmentFactor">Equipment factor</label><input id="iatEquipmentFactor" type="number" min="0" step="0.000001"></div>
           <div><label for="iatMaterialFactor">Material factor</label><input id="iatMaterialFactor" type="number" min="0" step="0.000001"></div>
@@ -724,6 +857,7 @@ HTML = r"""<!doctype html>
           <div></div>
         </div>
         <div class="status">Preset factors load with the selected country; edits apply only to this run.</div>
+        </details>
         <div id="iatCsvGroup" class="hidden">
           <label for="iatBaseline">ACCERT baseline CSV</label>
           <div class="baseline-control-row">
@@ -790,6 +924,8 @@ HTML = r"""<!doctype html>
         <div class="inline"><input id="showLevers" type="checkbox"> Include lever table in dashboard image</div>
       </fieldset>
 
+      <details class="advanced-section" id="advancedLevers">
+        <summary>Advanced CRT assumptions · CRT levers <span class="subvalue">Cost-reduction assumptions</span></summary>
       <fieldset id="leverPanel">
         <legend>CRT Levers</legend>
         <div class="triple">
@@ -826,11 +962,14 @@ HTML = r"""<!doctype html>
           <div><label for="modularity">Modular civil constr.</label><select id="modularity"><option value="0">False</option><option value="1">True</option></select></div>
         </div>
       </fieldset>
+      </details>
+      <div class="run-summary" id="runSummary"><strong>Ready to run</strong>Choose a workflow and review the selected source and assumptions here before starting.</div>
     </aside>
     <section>
       <div id="result">
-        <h2>Run Output</h2>
-        <p>Select a workflow and run it. The GUI saves CSV and dashboard outputs under <code>tutorial/gui_outputs</code>.</p>
+        <div class="empty-state" id="emptyState">
+          <div><h2>Your results will appear here</h2><p>Run IAT, CRT, or the connected IAT → CRT workflow to see summary cards, interactive charts, tables, and downloadable output files.</p><div class="term-guide"><span>IAT · International Adjustment Tool</span><span>CRT · Cost Reduction Tool</span><span>FOAK · First-of-a-Kind</span><span>NOAK · Nth-of-a-Kind</span><span>Levers · cost-reduction levers</span></div></div>
+        </div>
       </div>
     </section>
   </main>
@@ -1056,7 +1195,7 @@ HTML = r"""<!doctype html>
       const workflow = $("workflow").value;
       $("iatPanel").classList.toggle("hidden", workflow === "crt_only");
       $("crtPanel").classList.toggle("hidden", workflow === "iat_only");
-      $("leverPanel").classList.toggle("hidden", workflow === "iat_only");
+      $("advancedLevers").classList.toggle("hidden", workflow === "iat_only");
       $("crtBaselineGroup").classList.toggle("hidden", workflow !== "crt_only");
       $("crtReactorTypeGroup").classList.toggle("hidden", workflow !== "crt_only");
       syncCrtOptionsToIat();
@@ -1085,6 +1224,8 @@ HTML = r"""<!doctype html>
         $(id).max = maxOrders;
         if (Number($(id).value) > maxOrders) $(id).value = maxOrders;
       });
+      updateRunSummary();
+      if (!$('runBtn').disabled) setWorkflowStep(workflow === "iat_only" ? 2 : 1);
     }
 
     function updateScenarioInputs() {
@@ -1095,6 +1236,37 @@ HTML = r"""<!doctype html>
         wrapper.classList.toggle("hidden", i > count);
         $(`occValue${i}`).disabled = i > count;
       }
+    }
+
+    function setWorkflowStep(step) {
+      document.querySelectorAll(".workflow-step").forEach(item => {
+        const itemStep = Number(item.dataset.step);
+        item.classList.toggle("active", itemStep === step);
+        item.classList.toggle("done", itemStep < step);
+      });
+    }
+
+    function setProcessingStage(stage, message) {
+      const stageEl = $("processingStage");
+      stageEl.dataset.stage = stage;
+      stageEl.textContent = message || "";
+      stageEl.classList.toggle("hidden", !message);
+      stageEl.setAttribute("aria-live", stage === "complete" || stage === "error" ? "polite" : "assertive");
+    }
+
+    function updateRunSummary() {
+      const workflow = $("workflow").value;
+      const workflowLabel = $("workflow").selectedOptions[0]?.textContent || workflow;
+      const inputMode = $("iatInputMode").value;
+      const source = inputMode === "csv" ? ($("iatCsvName").value || "ACCERT output CSV") : "Standalone OCC scenarios";
+      const reactor = workflow === "crt_only" ? $("crtReactorType").value : $("iatReactorType").value;
+      const country = inputMode === "csv" || workflow === "iat_crt"
+        ? ($("countrySingle").value || "selected country")
+        : "selected countries";
+      const assumptions = workflow === "iat_only"
+        ? `IAT reactor: ${reactor}; country: ${country}`
+        : `CRT reactor: ${$("crtReactorType").value}; construction: ${$("constructionDuration").value || "—"} months`;
+      $("runSummary").innerHTML = `<strong>Ready to run · ${esc(workflowLabel)}</strong><span>Source: ${esc(source)} · ${esc(assumptions)}</span>`;
     }
 
     function enhanceLabels() {
@@ -1188,6 +1360,33 @@ HTML = r"""<!doctype html>
       return `<div class="summary">${items.map(item => `
         <div class="metric"><div class="label">${item.label}</div><div class="value">${item.value}</div>${item.sub ? `<div class="subvalue">${item.sub}</div>` : ""}</div>
       `).join("")}</div>`;
+    }
+
+    function resultSummaryCards(data) {
+      const crt = data.crt;
+      let cards;
+      if (crt) {
+        cards = [
+          {label: "Total OCC", value: fmtPerKw(crt.occ_1), sub: "FOAK gross"},
+          {label: "Adjusted OCC", value: fmtPerKw(crt.net_occ_1 ?? crt.occ_1), sub: "After ITC, when applicable"},
+          {label: "$/kW", value: fmtPerKw(crt.avg_occ), sub: "Average OCC"},
+          {label: "Cost change", value: `${fmt(crt.occ_reduction_percent)}%`, sub: "OCC reduction"},
+          {label: "Construction duration", value: `${fmtInt(crt.avg_duration)} months`, sub: "Average duration"}
+        ];
+      } else {
+        const scenario = data.iat?.scenarios?.[0] || data.iat?.country_results?.[0]?.data?.scenarios?.[0] || data.iat || {};
+        const total = scenario.input_occ_per_kw ?? scenario.input_occ ?? scenario["Input OCC"];
+        const adjusted = scenario.adjusted_occ_per_kw ?? scenario.adjusted_occ ?? scenario["Adjusted OCC"];
+        const ratio = scenario.adjustment_ratio ?? scenario["Adjustment Ratio of OCC"];
+        cards = [
+          {label: "Total OCC", value: fmtPerKw(total), sub: "Input OCC"},
+          {label: "Adjusted OCC", value: fmtPerKw(adjusted), sub: "After IAT adjustment"},
+          {label: "$/kW", value: fmtPerKw(adjusted), sub: "Adjusted OCC basis"},
+          {label: "Cost change", value: ratio == null ? "—" : `${fmt((Number(ratio) - 1) * 100)}%`, sub: "Adjustment from input"},
+          {label: "Construction duration", value: "—", sub: "Not part of IAT"}
+        ];
+      }
+      return `<div class="result-summary-cards">${cards.map(card => `<div class="metric"><div class="label">${card.label}</div><div class="value">${card.value || "—"}</div><div class="subvalue">${card.sub}</div></div>`).join("")}</div>`;
     }
 
     function table(rows, columns) {
@@ -1746,6 +1945,7 @@ HTML = r"""<!doctype html>
       lastData = data;
       const result = $("result");
       let html = `<div class="hero"><h2>${data.workflow_label}</h2><p>ACCERT workflow results with saved outputs and interactive cost plots.</p></div>`;
+      html += resultSummaryCards(data);
       const isStandaloneMultiCountryIat = data.workflow === "iat_only"
         && data.iat
         && data.iat.country_results
@@ -1907,7 +2107,12 @@ HTML = r"""<!doctype html>
     async function runWorkflow() {
       $("runBtn").disabled = true;
       $("status").className = "status";
-      $("status").textContent = "Running...";
+      const workflow = $("workflow").value;
+      setWorkflowStep(3);
+      const stage = workflow === "iat_only" ? "iat" : workflow === "crt_only" ? "crt" : "prepare";
+      const message = workflow === "iat_crt" ? "Running IAT, then CRT…" : stage === "iat" ? "Running IAT…" : "Running CRT…";
+      $("status").firstChild.textContent = "Running";
+      setProcessingStage(stage, message);
       try {
         const response = await fetch("/run", {
           method: "POST",
@@ -1916,12 +2121,16 @@ HTML = r"""<!doctype html>
         });
         const data = await response.json();
         if (!response.ok || data.error) throw new Error(data.error || "Run failed");
+        setProcessingStage("render", "Rendering results…");
         render(data);
-        $("status").textContent = "Complete";
+        $("status").firstChild.textContent = "Complete";
+        setProcessingStage("complete", "Complete");
+        setWorkflowStep(3);
       } catch (error) {
         $("status").className = "status error";
-        $("status").textContent = error.message;
-        $("result").innerHTML = `<h2>Run failed</h2><pre>${error.message}</pre>`;
+        $("status").firstChild.textContent = "Run failed";
+        setProcessingStage("error", "Run failed");
+        $("result").innerHTML = `<div class="empty-state error-state"><div><h2>Run failed</h2><p>${esc(error.message)}</p><p>Review the inputs and try again.</p></div></div>`;
       } finally {
         $("runBtn").disabled = false;
       }
@@ -1988,6 +2197,12 @@ HTML = r"""<!doctype html>
     updatePanels();
     syncCrtOptionsToIat();
     loadIatFactorDefaults();
+    document.querySelectorAll("input, select").forEach(control => {
+      if (control.type === "file") return;
+      control.addEventListener("input", updateRunSummary);
+      control.addEventListener("change", updateRunSummary);
+    });
+    updateRunSummary();
   </script>
 </body>
 </html>
