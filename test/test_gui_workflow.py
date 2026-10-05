@@ -183,6 +183,30 @@ def test_gui_honors_only_iat_output_for_iat_crt_baseline(monkeypatch, tmp_path):
     assert "Optional CRT baseline" not in result["notes"]
 
 
+def test_iat_only_comparison_has_no_synthetic_base_case_rows(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": ["United States", "China"],
+        "occ_values": [5750],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert result["iat"]["country_results"]
+    assert {row["country"] for row in result["iat"]["comparison_chart"]} == {"United States", "China"}
+
+
+def test_iat_country_assumption_selector_is_separate_from_country_multi_select():
+    assert 'id="iatAssumptionCountry"' in crt_iat_gui.HTML
+    assert 'function updateIatAssumptionCountryOptions()' in crt_iat_gui.HTML
+    assert 'iatFactorOverrides[country]' in crt_iat_gui.HTML
+    assert 'return $("iatAssumptionCountry").value || selectedCountries()[0]' in crt_iat_gui.HTML
+
+
 def test_capital_chart_uses_calculated_itc_portion_pattern():
     assert 'id="itcHatch"' in crt_iat_gui.HTML
     assert "ITC reduction" in crt_iat_gui.HTML

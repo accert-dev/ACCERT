@@ -937,6 +937,14 @@ HTML = r"""<!doctype html>
         <details class="advanced-section">
           <summary>Advanced IAT assumptions</summary>
         <div class="row">
+          <div>
+            <label for="iatAssumptionCountry">Assumption country</label>
+            <select id="iatAssumptionCountry"></select>
+            <div class="field-note">Choose which selected country's factors you are editing.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="row">
           <div><label for="iatEquipmentFactor">Equipment factor</label><input id="iatEquipmentFactor" type="number" min="0" step="0.000001"></div>
           <div><label for="iatMaterialFactor">Material factor</label><input id="iatMaterialFactor" type="number" min="0" step="0.000001"></div>
         </div>
@@ -1125,7 +1133,7 @@ HTML = r"""<!doctype html>
 
     function activeIatCountry() {
       if ($("iatInputMode").value === "csv" || $("workflow").value === "iat_crt") return $("countrySingle").value;
-      return selectedCountries()[0] || "United States";
+      return $("iatAssumptionCountry").value || selectedCountries()[0] || "United States";
     }
 
     function saveIatFactorOverrides() {
@@ -1149,6 +1157,17 @@ HTML = r"""<!doctype html>
         document.querySelectorAll("#countryDropdownMenu input[type='checkbox']:checked")
       ).map(cb => cb.value);
       $("countryDropdownLabel").textContent = selected.length ? selected.join(", ") : "Select countries";
+      updateIatAssumptionCountryOptions();
+    }
+
+    function updateIatAssumptionCountryOptions() {
+      const countries = ($("iatInputMode").value === "csv" || $("workflow").value === "iat_crt")
+        ? [$("countrySingle").value]
+        : selectedCountries();
+      const select = $("iatAssumptionCountry");
+      const current = activeIatCountry();
+      select.innerHTML = countries.map(country => `<option value="${esc(country)}">${esc(country)}</option>`).join("");
+      select.value = countries.includes(current) ? current : (countries[0] || "United States");
     }
 
     function baselineOptionsForIat() {
@@ -1313,6 +1332,7 @@ HTML = r"""<!doctype html>
       }
       $("countrySingle").classList.toggle("hidden", !isCsvMode);
       $("countryMulti").classList.toggle("hidden", isCsvMode);
+      updateIatAssumptionCountryOptions();
       $("electricOutputGroup").classList.toggle("hidden", !isCsvMode);
       if (isCsvMode) {
         updateDefaultCsvPath();
@@ -2363,6 +2383,7 @@ HTML = r"""<!doctype html>
     document.querySelectorAll("#countryDropdownMenu input[type='checkbox']").forEach(cb => {
       cb.addEventListener("change", () => { updateCountryDropdownLabel(); loadIatFactorDefaults(); });
     });
+    $("iatAssumptionCountry").addEventListener("change", loadIatFactorDefaults);
     $("iatBrowseBtn").addEventListener("click", () => $("iatCsvFile").click());
     $("iatCsvFile").addEventListener("change", () => {
       const file = $("iatCsvFile").files[0];
@@ -2391,6 +2412,7 @@ HTML = r"""<!doctype html>
     enhanceLabels();
     updatePanels();
     syncCrtOptionsToIat();
+    updateIatAssumptionCountryOptions();
     loadIatFactorDefaults();
     document.querySelectorAll("input, select").forEach(control => {
       if (control.type === "file") return;
@@ -2975,7 +2997,6 @@ def run_workflow(payload: dict) -> dict:
         power_kwe = _reactor_power_kwe(payload)
         country_results: list[dict] = []
         comparison_chart: list[dict] = []
-        base_scenarios_added: set[str] = set()
         for country in countries:
             country_slug = re.sub(r"[^A-Za-z0-9]+", "_", country.lower())
             iat_csv = OUTPUT_DIR / f"{name}_iat_{country_slug}_adjusted.csv"
@@ -2987,16 +3008,6 @@ def run_workflow(payload: dict) -> dict:
                     response["base_case"] = _base_case_from_iat_result(result["scenario_results"][0], power_kwe)
                 for scenario in summary["scenarios"]:
                     scenario_name = scenario.get("scenario", "")
-                    if scenario_name not in base_scenarios_added:
-                        comparison_chart.append({
-                            "country": "Base case",
-                            "scenario": scenario_name,
-                            "adjusted_occ_per_kw": scenario.get("input_occ_per_kw"),
-                            "local_per_kw": scenario.get("input_occ_per_kw"),
-                            "foreign_per_kw": 0.0,
-                            "label": f"Base case — {scenario_name}",
-                        })
-                        base_scenarios_added.add(scenario_name)
                     comparison_chart.append({
                         "country": country,
                         "scenario": scenario_name,
@@ -3013,14 +3024,6 @@ def run_workflow(payload: dict) -> dict:
                 summary = _summarize_iat_result(result, power_kwe)
                 if "base_case" not in response:
                     response["base_case"] = _base_case_from_iat_result(result, power_kwe)
-                comparison_chart.append({
-                    "country": "Base case",
-                    "scenario": "Original OCC",
-                    "adjusted_occ_per_kw": summary.get("input_occ_per_kw"),
-                    "local_per_kw": summary.get("input_occ_per_kw"),
-                    "foreign_per_kw": 0.0,
-                    "label": "Base case",
-                })
                 comparison_chart.append({
                     "country": country,
                     "scenario": "Adjusted OCC",
