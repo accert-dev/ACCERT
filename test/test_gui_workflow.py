@@ -375,6 +375,33 @@ def test_crt_summary_cards_show_foak_gross_and_net_values():
     assert 'crt.net_tci_1' in crt_iat_gui.HTML
 
 
+def test_crt_result_grid_uses_net_values_when_itc_reduces_cost():
+    assert 'const foakOccReduction = Math.max(0, Number(foak.OCC) - Number(foakOccNet));' in crt_iat_gui.HTML
+    assert 'const foakTciReduction = Math.max(0, Number(foak.TCI) - Number(foakTciNet));' in crt_iat_gui.HTML
+    assert 'label: foakOccReduction > 0 ? "FOAK OCC / Net OCC" : "FOAK OCC"' in crt_iat_gui.HTML
+    assert 'label: foakTciReduction > 0 ? "FOAK TCI / NCI" : "FOAK TCI"' in crt_iat_gui.HTML
+
+
+def test_iat_source_labels_and_connected_workflow_are_clear():
+    assert 'label for="iatInputMode">IAT source</label>' in crt_iat_gui.HTML
+    assert '<option value="occ" selected>Standard OCC</option>' in crt_iat_gui.HTML
+    assert '<option value="csv">Code of Account structure</option>' in crt_iat_gui.HTML
+    assert 'IAT source file' in crt_iat_gui.HTML
+    assert 'Built-in ACCERT baseline' in crt_iat_gui.HTML
+    assert 'ACCERT account output / uploaded file' in crt_iat_gui.HTML
+    assert '$("iatInputMode").disabled = workflow === "iat_crt";' in crt_iat_gui.HTML
+
+
+def test_advanced_crt_inputs_have_limits_and_preflight_validation():
+    assert 'id="numOrders" type="number" min="2" step="1"' in crt_iat_gui.HTML
+    assert 'id="itcPercent" type="number" min="0" max="100" step="1"' in crt_iat_gui.HTML
+    assert 'id="numNoak" type="number" min="0" step="1"' in crt_iat_gui.HTML
+    assert 'id="nItc" type="number" min="0" step="1"' in crt_iat_gui.HTML
+    assert 'function validateAdvancedInputs()' in crt_iat_gui.HTML
+    assert 'NOAK unit must be between 0 and firm orders.' in crt_iat_gui.HTML
+    assert 'ITC units cannot exceed firm orders.' in crt_iat_gui.HTML
+
+
 def test_crt_fixed_inputs_use_short_labels_and_structural_field_alignment():
     assert ".row > div" in crt_iat_gui.HTML
     assert ".triple > div" in crt_iat_gui.HTML
