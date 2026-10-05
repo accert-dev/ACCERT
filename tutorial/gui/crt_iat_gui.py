@@ -1507,33 +1507,6 @@ HTML = r"""<!doctype html>
       `).join("")}</div>`;
     }
 
-    function resultSummaryCards(data) {
-      const crt = data.crt;
-      let cards;
-      if (crt) {
-        cards = [
-          {label: "Total OCC", value: fmtPerKw(crt.occ_1), sub: "FOAK gross"},
-          {label: "Adjusted OCC", value: fmtPerKw(crt.net_occ_1 ?? crt.occ_1), sub: "After ITC, when applicable"},
-          {label: "$/kW", value: fmtPerKw(crt.avg_occ), sub: "Average OCC"},
-          {label: "Cost change", value: `${fmt(crt.occ_reduction_percent)}%`, sub: "OCC reduction"},
-          {label: "Construction duration", value: `${fmtInt(crt.avg_duration)} months`, sub: "Average duration"}
-        ];
-      } else {
-        const scenario = data.iat?.scenarios?.[0] || data.iat?.country_results?.[0]?.data?.scenarios?.[0] || data.iat || {};
-        const total = scenario.input_occ_per_kw ?? scenario.input_occ ?? scenario["Input OCC"];
-        const adjusted = scenario.adjusted_occ_per_kw ?? scenario.adjusted_occ ?? scenario["Adjusted OCC"];
-        const ratio = scenario.adjustment_ratio ?? scenario["Adjustment Ratio of OCC"];
-        cards = [
-          {label: "Total OCC", value: fmtPerKw(total), sub: "Input OCC"},
-          {label: "Adjusted OCC", value: fmtPerKw(adjusted), sub: "After IAT adjustment"},
-          {label: "$/kW", value: fmtPerKw(adjusted), sub: "Adjusted OCC basis"},
-          {label: "Cost change", value: ratio == null ? "—" : `${fmt((Number(ratio) - 1) * 100)}%`, sub: "Adjustment from input"},
-          {label: "Construction duration", value: "—", sub: "Not part of IAT"}
-        ];
-      }
-      return `<div class="result-summary-cards">${cards.map(card => `<div class="metric"><div class="label">${card.label}</div><div class="value">${card.value || "—"}</div><div class="subvalue">${card.sub}</div></div>`).join("")}</div>`;
-    }
-
     function table(rows, columns) {
       if (!rows || !rows.length) return "";
       return `<table><thead><tr>${columns.map(c => `<th>${c.label}</th>`).join("")}</tr></thead><tbody>
@@ -2190,135 +2163,111 @@ HTML = r"""<!doctype html>
       return svg;
     }
 
+    function workflowHero(data) {
+      return `<div class="hero"><h2>${data.workflow_label}</h2><p>ACCERT workflow results with saved outputs and interactive cost plots.</p></div>${links(data.files)}`;
+    }
+
+    function iatTransformationCards(iat) {
+      const country = iat.country || "Selected country";
+      return `<div class="summary iat-summary-cards">
+        <div class="metric"><div class="label">Original OCC (United States)</div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">U.S. baseline entering IAT</div></div>
+        <div class="metric"><div class="label">Adjusted OCC (${esc(country)})</div><div class="value">${fmtKwe(iat.adjusted_occ_per_kw)}</div><div class="subvalue">After IAT country adjustment</div></div>
+        <div class="metric"><div class="label">IAT adjustment</div><div class="value">${fmt((Number(iat.adjustment_ratio || 1) - 1) * 100)}%</div><div class="subvalue">Passed to CRT</div></div>
+      </div>`;
+    }
+
+    function renderIatOnlyResults(data) {
+      const countries = data.iat.country_results || [];
+      let html = workflowHero(data) + `<section class="iat-results-section"><h3>IAT Results</h3>`;
+      if (!countries.length) return html + iatTransformationCards(data.iat) + `</section>`;
+      html += `<div class="tabs">`;
+      countries.forEach((cr, idx) => {
+        html += `<button class="${idx === 0 ? "active" : ""}" data-tab="iat-country-${tabSafe(cr.country)}">${esc(cr.country)}</button>`;
+      });
+      html += `<button data-tab="iat-comparison">Country Comparison</button></div>`;
+      countries.forEach((cr, idx) => {
+        const d = cr.data;
+        html += `<div id="tab-iat-country-${tabSafe(cr.country)}" class="tab-panel ${idx === 0 ? "active" : ""}">`;
+        html += `<h3>${esc(cr.country)}</h3>`;
+        html += fileLink(`IAT CSV (${cr.country})`, data.files && data.files[`IAT CSV (${cr.country})`]);
+        if (d.scenarios && d.scenarios.length) {
+          html += table(d.summary, [
+            {key: "Scenario", label: "Scenario"},
+            {key: "Input OCC", label: "Input OCC ($/kWe)", format: fmt},
+            {key: "Adjusted OCC", label: "Adjusted OCC ($/kWe)", format: fmt},
+            {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
+          ]);
+          d.scenarios.forEach((s, i) => { html += iatBlock(s, `${s.scenario || `Scenario ${i + 1}`} result`); });
+        } else {
+          html += iatBlock(d);
+        }
+        html += `</div>`;
+      });
+      html += `<div id="tab-iat-comparison" class="tab-panel"><div class="chart-grid">
+        <div class="chart-panel"><h3>OCC Comparison by Country</h3><div id="iatOccCompChart"></div></div>
+        <div class="chart-panel"><h3>Local vs Foreign OCC</h3><div id="iatLfChart"></div></div>
+      </div></div></section>`;
+      return html;
+    }
+
+    function renderCrtResults(data, combined = false) {
+      const crt = data.crt;
+      let html = `<section class="crt-results-section"><h3>CRT Results</h3>${crtResultsGrid(crt)}`;
+      if (combined) html += `<div class="result-note">CRT recalculates FOAK from the IAT-adjusted baseline using the CRT fixed inputs and first-unit project effects.</div>`;
+      html += metrics([
+        {label: `Years to build ${fmtInt(crt.num_noak)} plants`, value: `${fmtInt(crt.years_to_noak)} years`},
+        {label: `Years to build ${fmtInt(crt.num_orders)} plants`, value: `${fmtInt(crt.years_to_orderbook)} years`}
+      ], "crt-key-cards");
+      html += `<div class="tabs">
+        <button class="active" data-tab="capital">Capital Cost</button><button data-tab="levers">Reduction Levers</button>
+        <button data-tab="durations">Construction Durations</button><button data-tab="breakdown">Cost Breakdown</button>
+        <button data-tab="dashboard">Dashboard Image</button><button data-tab="results">Results Table</button>
+      </div>`;
+      html += `<div id="tab-capital" class="tab-panel active"><div class="chart-grid">
+        <div class="chart-panel"><h3>Capital Cost: TCI/NCI and OCC</h3><div id="capitalChart"></div></div>
+        <div class="chart-panel"><h3>10-60 - TCI Breakdown</h3><div id="breakdownPreview"></div></div>
+      </div></div>`;
+      html += `<div id="tab-levers" class="tab-panel"><div class="chart-panel"><h3>TCI Savings by Reduction Lever</h3><div id="waterfallChart"></div></div></div>`;
+      html += `<div id="tab-durations" class="tab-panel"><div class="chart-grid">
+        <div class="chart-panel"><h3>Total Construction Duration</h3><div id="durationChart"></div></div>
+        <div class="chart-panel"><h3>Sequential Construction Timeline</h3><div id="timelineChart"></div></div>
+      </div></div>`;
+      html += `<div id="tab-breakdown" class="tab-panel"><div class="chart-grid">
+        <div class="chart-panel"><h3>10-60 - TCI Breakdown</h3><div id="breakdownTciChart"></div></div>
+        <div class="chart-panel"><h3>10-50 - OCC Components</h3><div id="breakdownOccChart"></div></div>
+      </div></div>`;
+      html += `<div id="tab-dashboard" class="tab-panel">`;
+      if (crt.dashboard_url) {
+        const dashUrl = `${crt.dashboard_url}?t=${Date.now()}`;
+        html += `<div class="download-bar"><span>Dashboard image${crt.show_levers ? " with lever table" : " without lever table"}</span><a href="${dashUrl}" target="_blank">Download PNG</a></div><img class="dashboard" src="${dashUrl}" alt="CRT dashboard">`;
+      }
+      html += `</div><div id="tab-results" class="tab-panel">${fileLink("Download CRT results CSV", data.files && data.files["CRT results CSV"])}${table(crt.plants, crtResultsColumns())}</div></section>`;
+      return html;
+    }
+
+    function renderCombinedResults(data) {
+      const iat = data.iat;
+      let html = workflowHero(data) + `<section class="iat-results-section"><h3>IAT Results</h3>`;
+      html += iatTransformationCards(iat) + iatBreakdown(iat);
+      html += fileLink("IAT adjusted CSV", data.files && data.files["IAT adjusted CSV"]);
+      html += `</section>${renderCrtResults(data, true)}`;
+      return html;
+    }
+
+    function renderCrtOnlyResults(data) {
+      const source = data.base_case?.source || "Selected CRT baseline";
+      return workflowHero(data) + `<section class="crt-only-baseline"><h3>CRT-only baseline</h3><p>${esc(source)}</p></section>${renderCrtResults(data)}`;
+    }
+
     function render(data) {
       lastData = data;
       const result = $("result");
-      let html = `<div class="hero"><h2>${data.workflow_label}</h2><p>ACCERT workflow results with saved outputs and interactive cost plots.</p></div>`;
-      if (!data.iat) html += resultSummaryCards(data);
-      const isStandaloneMultiCountryIat = data.workflow === "iat_only"
-        && data.iat
-        && data.iat.country_results
-        && data.iat.country_results.some(cr => cr.data && cr.data.scenarios && cr.data.scenarios.length);
-      if (!isStandaloneMultiCountryIat) {
-        html += links(data.files);
-      }
-      if (data.iat) {
-        html += `<section class="iat-results-section"><h3>IAT Results</h3>`;
-        if (!data.crt) html += baseCaseBlock(data.base_case);
-        if (data.iat.country_results && data.iat.country_results.length) {
-          if (isStandaloneMultiCountryIat) {
-            html += `<div class="tabs">`;
-            data.iat.country_results.forEach((cr, idx) => {
-              html += `<button class="${idx === 0 ? "active" : ""}" data-tab="iat-country-${tabSafe(cr.country)}">${esc(cr.country)}</button>`;
-            });
-            html += `<button data-tab="iat-comparison">Country Comparison</button>`;
-            html += `</div>`;
-            data.iat.country_results.forEach((cr, idx) => {
-              const d = cr.data;
-              html += `<div id="tab-iat-country-${tabSafe(cr.country)}" class="tab-panel ${idx === 0 ? "active" : ""}">`;
-              html += `<h3>${esc(cr.country)}</h3>`;
-              html += fileLink(`IAT CSV (${cr.country})`, data.files && data.files[`IAT CSV (${cr.country})`]);
-              html += table(d.summary, [
-                {key: "Scenario", label: "Scenario"},
-                {key: "Input OCC", label: "Input OCC ($/kWe)", format: fmt},
-                {key: "Adjusted OCC", label: "Adjusted OCC ($/kWe)", format: fmt},
-                {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
-              ]);
-              d.scenarios.forEach((s, i) => { html += iatBlock(s, `${s.scenario || `Scenario ${i + 1}`} result`); });
-              html += `</div>`;
-            });
-            html += `<div id="tab-iat-comparison" class="tab-panel">
-              <div class="chart-grid">
-                <div class="chart-panel"><h3>OCC Comparison by Country</h3><div id="iatOccCompChart"></div></div>
-                <div class="chart-panel"><h3>Local vs Foreign OCC</h3><div id="iatLfChart"></div></div>
-              </div>
-            </div>`;
-          } else {
-            html += `<div class="tabs">
-              <button class="active" data-tab="iat-results">IAT Results</button>
-              <button data-tab="iat-comparison">Country Comparison</button>
-            </div>`;
-            html += `<div id="tab-iat-results" class="tab-panel active">`;
-            data.iat.country_results.forEach(cr => {
-              const d = cr.data;
-              html += `<h3>${esc(cr.country)}</h3>`;
-              html += fileLink(`IAT CSV (${cr.country})`, data.files && data.files[`IAT CSV (${cr.country})`]);
-              html += iatBlock(d);
-            });
-            html += `</div>`;
-            html += `<div id="tab-iat-comparison" class="tab-panel">
-              <div class="chart-grid">
-                <div class="chart-panel"><h3>OCC Comparison by Country</h3><div id="iatOccCompChart"></div></div>
-                <div class="chart-panel"><h3>Local vs Foreign OCC</h3><div id="iatLfChart"></div></div>
-              </div>
-            </div>`;
-          }
-        } else {
-          html += iatSummaryCards(data.iat);
-          html += iatBreakdown(data.iat);
-          if (data.iat.scenarios && data.iat.scenarios.length) {
-            html += table(data.iat.summary, [
-              {key: "Scenario", label: "Scenario"},
-              {key: "Input OCC", label: "Input OCC ($/kWe)", format: fmt},
-              {key: "Adjusted OCC", label: "Adjusted OCC ($/kWe)", format: fmt},
-              {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
-            ]);
-            data.iat.scenarios.forEach((scenario, idx) => {
-              html += iatBlock(scenario, `${scenario.scenario || `Scenario ${idx + 1}`} result`);
-            });
-          } else {
-            html += iatBlock(data.iat, "", false);
-          }
-        }
-        html += `</section>`;
-      }
-      if (data.crt) {
-        if (!data.iat) html += baseCaseBlock(data.base_case);
-        html += `<section class="crt-results-section"><h3>CRT Results</h3>`;
-        html += crtResultsGrid(data.crt);
-        if (data.iat) html += `<div class="result-note">CRT recalculates FOAK from the IAT-adjusted baseline using the CRT fixed inputs and first-unit project effects.</div>`;
-        html += metrics([
-          {label: `Years to build ${fmtInt(data.crt.num_noak)} plants`, value: `${fmtInt(data.crt.years_to_noak)} years`},
-          {label: `Years to build ${fmtInt(data.crt.num_orders)} plants`, value: `${fmtInt(data.crt.years_to_orderbook)} years`}
-        ]);
-        html += `<div class="tabs">
-          <button class="active" data-tab="capital">Capital Cost</button>
-          <button data-tab="levers">Reduction Levers</button>
-          <button data-tab="durations">Construction Durations</button>
-          <button data-tab="breakdown">Cost Breakdown</button>
-          <button data-tab="dashboard">Dashboard Image</button>
-          <button data-tab="results">Results Table</button>
-        </div>`;
-        html += `<div id="tab-capital" class="tab-panel active"><div class="chart-grid">
-          <div class="chart-panel"><h3>Capital Cost: TCI/NCI and OCC</h3><div id="capitalChart"></div></div>
-          <div class="chart-panel"><h3>10-60 - TCI Breakdown</h3><div id="breakdownPreview"></div></div>
-        </div></div>`;
-        html += `<div id="tab-levers" class="tab-panel"><div class="chart-panel"><h3>TCI Savings by Reduction Lever</h3><div id="waterfallChart"></div></div></div>`;
-        html += `<div id="tab-durations" class="tab-panel"><div class="chart-grid">
-          <div class="chart-panel"><h3>Total Construction Duration</h3><div id="durationChart"></div></div>
-          <div class="chart-panel"><h3>Sequential Construction Timeline</h3><div id="timelineChart"></div></div>
-        </div></div>`;
-        html += `<div id="tab-breakdown" class="tab-panel"><div class="chart-grid">
-          <div class="chart-panel"><h3>10-60 - TCI Breakdown</h3><div id="breakdownTciChart"></div></div>
-          <div class="chart-panel"><h3>10-50 - OCC Components</h3><div id="breakdownOccChart"></div></div>
-        </div></div>`;
-        html += `<div id="tab-dashboard" class="tab-panel">`;
-        if (data.crt.dashboard_url) {
-          const dashUrl = `${data.crt.dashboard_url}?t=${Date.now()}`;
-          html += `<div class="download-bar"><span>Dashboard image${data.crt.show_levers ? " with lever table" : " without lever table"}</span><a href="${dashUrl}" target="_blank">Download PNG</a></div>`;
-          html += `<img class="dashboard" src="${dashUrl}" alt="CRT dashboard">`;
-        }
-        html += `</div>`;
-        html += `<div id="tab-results" class="tab-panel">
-          ${fileLink("Download CRT results CSV", data.files && data.files["CRT results CSV"])}
-          ${table(data.crt.plants, crtResultsColumns())}
-        </div>`;
-        html += `</section>`;
-        if (data.iat) html += baseCaseBlock(data.base_case);
-      }
-      if (data.notes && data.notes.length) {
-        html += `<h3>Notes</h3><ul>${data.notes.map(n => `<li>${n}</li>`).join("")}</ul>`;
-      }
+      let html;
+      if (data.workflow === "iat_only") html = renderIatOnlyResults(data);
+      else if (data.workflow === "iat_crt") html = renderCombinedResults(data);
+      else if (data.workflow === "crt_only") html = renderCrtOnlyResults(data);
+      else html = workflowHero(data);
+      if (data.notes && data.notes.length) html += `<h3>Notes</h3><ul>${data.notes.map(n => `<li>${n}</li>`).join("")}</ul>`;
       result.innerHTML = html;
       document.querySelectorAll(".coaUnit").forEach(select => {
         select.addEventListener("change", event => {
