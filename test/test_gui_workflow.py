@@ -207,6 +207,14 @@ def test_iat_country_assumption_selector_is_separate_from_country_multi_select()
     assert 'return $("iatAssumptionCountry").value || selectedCountries()[0]' in crt_iat_gui.HTML
 
 
+def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
+    assert "function iatCountryColor(country, index)" in crt_iat_gui.HTML
+    assert 'id="iatForeignHatch"' in crt_iat_gui.HTML
+    assert 'fill="url(#iatForeignHatch)"' in crt_iat_gui.HTML
+    assert "Country color = country; fill = Local vs Foreign" in crt_iat_gui.HTML
+    assert "United States is the reference case; no country adjustment is applied." in crt_iat_gui.HTML
+
+
 def test_capital_chart_uses_calculated_itc_portion_pattern():
     assert 'id="itcHatch"' in crt_iat_gui.HTML
     assert "ITC reduction" in crt_iat_gui.HTML

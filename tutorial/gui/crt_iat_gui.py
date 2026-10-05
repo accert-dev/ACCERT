@@ -2089,6 +2089,13 @@ HTML = r"""<!doctype html>
       return title ? `${html}</div>` : html;
     }
 
+    const IAT_COUNTRY_COLORS = ["#2f6f9f", "#d97745", "#4f8a62", "#8a6cae", "#b28a3b", "#3f8791"];
+
+    function iatCountryColor(country, index) {
+      const known = {"United States": "#2f6f9f", "China": "#d97745", "Poland": "#4f8a62", "Korea": "#8a6cae", "UAE": "#b28a3b", "El Salvador": "#3f8791"};
+      return known[country] || IAT_COUNTRY_COLORS[index % IAT_COUNTRY_COLORS.length];
+    }
+
     function occComparisonChart(rows) {
       if (!rows || !rows.length) return "";
       const countries = [...new Set(rows.map(r => r.country))];
@@ -2099,9 +2106,8 @@ HTML = r"""<!doctype html>
       const innerH = h - m.top - m.bottom;
       const maxVal = Math.max(...rows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
       const yScale = v => m.top + innerH - (Number(v || 0) / maxVal) * innerH;
-      const palette = ["#4e79a7", "#f28e2b", "#59a14f", "#b07aa1"];
       const groupW = innerW / countries.length;
-      const barW = Math.max(28, Math.min(58, groupW / Math.max(1, scenarios.length) * 0.62));
+      const barW = Math.max(28, Math.min(58, groupW / Math.max(1, scenarios.length) * 0.56));
       let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="OCC comparison by country">`;
       for (let i = 0; i <= 4; i++) {
         const v = maxVal * i / 4;
@@ -2112,23 +2118,23 @@ HTML = r"""<!doctype html>
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8093a7"></line>`;
       svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#41566d" font-size="15" font-weight="700">Adjusted OCC ($/kWe)</text>`;
       countries.forEach((country, ci) => {
-        const cxBase = m.left + groupW * ci + groupW / 2 - (scenarios.length - 1) * (barW + 6) / 2;
-        scenarios.forEach((scenario, si) => {
+        const countryRows = scenarios.filter(scenario => rows.some(r => r.country === country && r.scenario === scenario));
+        const cxBase = m.left + groupW * ci + groupW / 2 - (countryRows.length - 1) * (barW + 6) / 2;
+        const color = iatCountryColor(country, ci);
+        countryRows.forEach((scenario, si) => {
           const row = rows.find(r => r.country === country && r.scenario === scenario);
           if (!row) return;
           const val = Number(row.adjusted_occ_per_kw || 0);
           const x = cxBase + si * (barW + 6);
           const barH = innerH - (yScale(val) - m.top);
-          const color = palette[si % palette.length];
           svg += `<rect class="hoverable" data-tip="<b>${esc(country)} — ${esc(scenario)}</b><br>Adjusted OCC: ${fmt(Math.round(val))} $/kWe" x="${x}" y="${yScale(val)}" width="${barW}" height="${barH}" fill="${color}" rx="2"></rect>`;
-          svg += `<text x="${x + barW / 2}" y="${yScale(val) - 8}" text-anchor="middle" fill="#30465c" font-size="13" font-weight="800">$${fmt(Math.round(val))}</text>`;
         });
         svg += `<text x="${m.left + groupW * ci + groupW / 2}" y="${h - 22}" text-anchor="middle" fill="#41566d" font-size="15" font-weight="700">${esc(country)}</text>`;
       });
-      scenarios.forEach((scenario, si) => {
-        const lx = m.left + si * 170;
-        svg += `<rect x="${lx}" y="${m.top - 28}" width="14" height="14" fill="${palette[si % palette.length]}"></rect>`;
-        svg += `<text x="${lx + 22}" y="${m.top - 16}" fill="#41566d" font-size="14" font-weight="700">${esc(scenario)}</text>`;
+      countries.forEach((country, ci) => {
+        const lx = m.left + ci * 170;
+        svg += `<rect x="${lx}" y="${m.top - 28}" width="14" height="14" fill="${iatCountryColor(country, ci)}"></rect>`;
+        svg += `<text x="${lx + 22}" y="${m.top - 16}" fill="#41566d" font-size="14" font-weight="700">${esc(country)}</text>`;
       });
       svg += `</svg>`;
       return svg;
@@ -2136,6 +2142,11 @@ HTML = r"""<!doctype html>
 
     function localForeignChart(rows) {
       if (!rows || !rows.length) return "";
+      const meaningfulRows = rows.filter(r => Number(r.foreign_per_kw || 0) > 0.000001 || r.country !== "United States");
+      if (!meaningfulRows.some(r => Number(r.foreign_per_kw || 0) > 0.000001)) {
+        return `<div class="chart-empty">United States is the reference case; no country adjustment is applied.</div>`;
+      }
+      rows = meaningfulRows;
       const countryOrder = [...new Set(rows.map(r => r.country))];
       const scenarioOrder = [...new Set(rows.map(r => r.scenario))];
       rows = [...rows].sort((a, b) => {
@@ -2151,7 +2162,7 @@ HTML = r"""<!doctype html>
       const yScale = v => m.top + innerH - (Number(v || 0) / maxVal) * innerH;
       const step = innerW / rows.length;
       const barW = Math.max(28, Math.min(58, step * 0.62));
-      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Local vs Foreign OCC breakdown">`;
+      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Local vs Foreign OCC breakdown"><defs><pattern id="iatForeignHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="white" stroke-width="3" opacity="0.7"></line></pattern></defs>`;
       for (let i = 0; i <= 4; i++) {
         const v = maxVal * i / 4;
         const yy = yScale(v);
@@ -2168,17 +2179,17 @@ HTML = r"""<!doctype html>
         const yLocal = yScale(local);
         const localH = Math.max(1, yScale(0) - yLocal);
         const foreignH = Math.max(1, yLocal - yForeign);
-        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Foreign: ${fmt(Math.round(foreign))} $/kWe" x="${x}" y="${yLocal - foreignH}" width="${barW}" height="${foreignH}" fill="#9c755f" rx="1"></rect>`;
-        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Local: ${fmt(Math.round(local))} $/kWe" x="${x}" y="${yLocal}" width="${barW}" height="${localH}" fill="#4e79a7" rx="1"></rect>`;
-        if (foreign > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal - foreignH / 2 + 4}" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">$${fmt(Math.round(foreign))}</text>`;
-        if (local > maxVal * 0.05) svg += `<text x="${x + barW / 2}" y="${yLocal + localH / 2 + 4}" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">$${fmt(Math.round(local))}</text>`;
+        const color = iatCountryColor(r.country, countryOrder.indexOf(r.country));
+        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Foreign: ${fmt(Math.round(foreign))} $/kWe" x="${x}" y="${yLocal - foreignH}" width="${barW}" height="${foreignH}" fill="${color}" fill-opacity="0.88" style="fill: ${color}; fill-opacity: 0.88;" rx="1"></rect>`;
+        svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Local: ${fmt(Math.round(local))} $/kWe" x="${x}" y="${yLocal}" width="${barW}" height="${localH}" fill="${color}" rx="1"></rect>`;
+        svg += `<rect pointer-events="none" x="${x}" y="${yLocal - foreignH}" width="${barW}" height="${foreignH}" fill="url(#iatForeignHatch)" rx="1"></rect>`;
         const country = String(r.country || "").slice(0, 16);
         const scenario = String(r.scenario || "").slice(0, 18);
         svg += `<text x="${x + barW / 2}" y="${h - 96}" text-anchor="middle" fill="#41566d" font-size="12" font-weight="800">${esc(scenario)}</text>`;
         svg += `<text x="${x + barW / 2}" y="${h - 78}" text-anchor="middle" fill="#41566d" font-size="12" font-weight="700">${esc(country)}</text>`;
       });
-      svg += `<rect x="${m.left}" y="${h - 28}" width="14" height="14" fill="#4e79a7"></rect><text x="${m.left + 22}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Local (domestically sourced)</text>`;
-      svg += `<rect x="${m.left + 280}" y="${h - 28}" width="14" height="14" fill="#9c755f"></rect><text x="${m.left + 302}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Foreign / imported</text>`;
+      svg += `<rect x="${m.left}" y="${h - 28}" width="14" height="14" fill="#2f6f9f"></rect><text x="${m.left + 22}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Country color = country; fill = Local vs Foreign</text>`;
+      svg += `<rect x="${m.left + 420}" y="${h - 28}" width="14" height="14" fill="#2f6f9f"></rect><rect x="${m.left + 420}" y="${h - 28}" width="14" height="14" fill="url(#iatForeignHatch)"></rect><text x="${m.left + 442}" y="${h - 16}" fill="#41566d" font-size="14" font-weight="700">Hatched = Foreign</text>`;
       svg += `</svg>`;
       return svg;
     }
