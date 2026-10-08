@@ -910,7 +910,7 @@ HTML = r"""<!doctype html>
             <select id="countrySingle" class="hidden">
               <option value="United States" selected>United States / U.S. Baseline</option>
               <option value="China">China</option>
-              <option value="Korea">Korea</option>
+              <option value="Korea">South Korea</option>
               <option value="UAE">UAE</option>
               <option value="Poland">Poland</option>
               <option value="El Salvador">El Salvador</option>
@@ -921,7 +921,7 @@ HTML = r"""<!doctype html>
               </button>
               <div class="country-dropdown-menu hidden" id="countryDropdownMenu">
                 <label class="country-option"><input type="checkbox" value="United States" checked> United States / U.S. Baseline</label>
-                <label class="country-option"><input type="checkbox" value="Korea"> Korea</label>
+                <label class="country-option"><input type="checkbox" value="Korea"> South Korea</label>
                 <label class="country-option"><input type="checkbox" value="China"> China</label>
                 <label class="country-option"><input type="checkbox" value="UAE"> UAE</label>
                 <label class="country-option"><input type="checkbox" value="Poland"> Poland</label>
@@ -935,9 +935,9 @@ HTML = r"""<!doctype html>
           </div>
         </div>
         <details class="advanced-section">
-          <summary>Advanced IAT assumptions</summary>
+          <summary id="iatAssumptionsHeading">Advanced IAT Assumptions</summary>
         <div class="row">
-          <div>
+          <div id="iatAssumptionCountryGroup">
             <label for="iatAssumptionCountry">Assumption country</label>
             <select id="iatAssumptionCountry"></select>
             <div class="field-note">Choose which selected country's factors you are editing.</div>
@@ -1099,6 +1099,7 @@ HTML = r"""<!doctype html>
     const iatFactorIds = {import_tariff: "iatTariffFactor", equipment: "iatEquipmentFactor", material: "iatMaterialFactor", labor: "iatLaborFactor", labor_o_and_m: "iatLaborOandMFactor", land: "iatLandFactor", catchall: "iatCatchallFactor"};
     const iatFactorOverrides = {};
     const reactorConfigs = {{REACTOR_CONFIGS}};
+    let loadedIatCountry = null;
 
     function numberValue(id) {
       const value = $(id).value.trim().replace(/,/g, "");
@@ -1125,19 +1126,18 @@ HTML = r"""<!doctype html>
     }
 
     function selectedCountries() {
-      const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crt";
-      if (isCsvMode) return [$("countrySingle").value];
+      if ($("workflow").value === "iat_crt") return [$("countrySingle").value];
       return Array.from(document.querySelectorAll("#countryDropdownMenu input[type='checkbox']:checked"))
         .map(cb => cb.value);
     }
 
     function activeIatCountry() {
-      if ($("iatInputMode").value === "csv" || $("workflow").value === "iat_crt") return $("countrySingle").value;
+      if ($("workflow").value === "iat_crt") return $("countrySingle").value;
       return $("iatAssumptionCountry").value || selectedCountries()[0] || "United States";
     }
 
-    function saveIatFactorOverrides() {
-      const country = activeIatCountry();
+    function saveIatFactorOverrides(country = activeIatCountry()) {
+      if (!country) return;
       const values = {};
       Object.entries(iatFactorIds).forEach(([name, id]) => values[name] = numberValue(id));
       iatFactorOverrides[country] = values;
@@ -1145,29 +1145,43 @@ HTML = r"""<!doctype html>
 
     function loadIatFactorDefaults() {
       const country = activeIatCountry();
+      if (loadedIatCountry && loadedIatCountry !== country) saveIatFactorOverrides(loadedIatCountry);
       const values = iatFactorOverrides[country] || iatFactorDefaults[country] || {};
       Object.entries(iatFactorIds).forEach(([name, id]) => {
         const value = values[name];
         $(id).value = value === undefined || value === null ? "" : Number(value).toFixed(4);
       });
+      loadedIatCountry = country;
+    }
+
+    function displayCountryName(country) {
+      return country === "Korea" ? "South Korea" : country;
     }
 
     function updateCountryDropdownLabel() {
       const selected = Array.from(
         document.querySelectorAll("#countryDropdownMenu input[type='checkbox']:checked")
-      ).map(cb => cb.value);
+      ).map(cb => displayCountryName(cb.value));
       $("countryDropdownLabel").textContent = selected.length ? selected.join(", ") : "Select countries";
       updateIatAssumptionCountryOptions();
     }
 
     function updateIatAssumptionCountryOptions() {
-      const countries = ($("iatInputMode").value === "csv" || $("workflow").value === "iat_crt")
+      const countries = $("workflow").value === "iat_crt"
         ? [$("countrySingle").value]
         : selectedCountries();
       const select = $("iatAssumptionCountry");
       const current = activeIatCountry();
-      select.innerHTML = countries.map(country => `<option value="${esc(country)}">${esc(country)}</option>`).join("");
+      select.innerHTML = countries.map(country => `<option value="${esc(country)}">${esc(displayCountryName(country))}</option>`).join("");
       select.value = countries.includes(current) ? current : (countries[0] || "United States");
+      updateIatAssumptionContext(countries);
+    }
+
+    function updateIatAssumptionContext(countries = selectedCountries()) {
+      const isConnected = $("workflow").value === "iat_crt";
+      const country = isConnected ? $("countrySingle").value : ($("iatAssumptionCountry").value || countries[0] || "United States");
+      $("iatAssumptionsHeading").textContent = `Advanced IAT Assumptions — ${displayCountryName(country)}`;
+      $("iatAssumptionCountryGroup").classList.toggle("hidden", isConnected || countries.length <= 1);
     }
 
     function baselineOptionsForIat() {
@@ -1311,6 +1325,7 @@ HTML = r"""<!doctype html>
 
     function updatePanels() {
       const workflow = $("workflow").value;
+      const isConnected = workflow === "iat_crt";
       $("iatInputMode").disabled = workflow === "iat_crt";
       $("iatPanel").classList.toggle("hidden", workflow === "crt_only");
       $("crtPanel").classList.toggle("hidden", workflow === "iat_only");
@@ -1324,14 +1339,14 @@ HTML = r"""<!doctype html>
       }
       syncCrtOptionsToIat();
       const inputMode = $("iatInputMode").value;
-      const isCsvMode = inputMode === "csv" || workflow === "iat_crt";
+      const isCsvMode = inputMode === "csv";
       if (workflow !== "iat_crt") {
         const isCsv = inputMode === "csv";
         $("iatCsvGroup").classList.toggle("hidden", !isCsv);
         $("occScenarioGroup").classList.toggle("hidden", isCsv);
       }
-      $("countrySingle").classList.toggle("hidden", !isCsvMode);
-      $("countryMulti").classList.toggle("hidden", isCsvMode);
+      $("countrySingle").classList.toggle("hidden", !isConnected);
+      $("countryMulti").classList.toggle("hidden", isConnected);
       updateIatAssumptionCountryOptions();
       $("electricOutputGroup").classList.toggle("hidden", !isCsvMode);
       if (isCsvMode) {
@@ -1435,7 +1450,11 @@ HTML = r"""<!doctype html>
     function outputNameParts() {
       const workflow = $("workflow").value;
       const reactor = workflow === "iat_only" ? $("iatReactorType").value : $("crtReactorType").value;
-      const country = $("countrySingle").value || "United States";
+      const country = workflow === "crt_only"
+        ? "United States"
+        : workflow === "iat_crt"
+          ? ($("countrySingle").value || "United States")
+          : (selectedCountries()[0] || "United States");
       return {reactor: reactor || "ACCERT", country};
     }
 
@@ -2004,9 +2023,9 @@ HTML = r"""<!doctype html>
     }
 
     function iatSummaryCards(iat) {
-      return `<div class="iat-country">Selected country: <strong>${esc(iat.country || "Selected country")}</strong></div><div class="summary iat-summary-cards">
+      return `<div class="iat-country">Selected country: <strong>${esc(displayCountryName(iat.country || "Selected country"))}</strong></div><div class="summary iat-summary-cards">
         <div class="metric"><div class="label">Original OCC</div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">Original ACCERT cost</div></div>
-        <div class="metric"><div class="label">IAT-adjusted OCC</div><div class="value">${fmtKwe(iat.adjusted_occ_per_kw)}</div><div class="subvalue">${esc(iat.country || "Selected country")}</div></div>
+        <div class="metric"><div class="label">IAT-adjusted OCC</div><div class="value">${fmtKwe(iat.adjusted_occ_per_kw)}</div><div class="subvalue">${esc(displayCountryName(iat.country || "Selected country"))}</div></div>
         <div class="metric"><div class="label">OCC Change</div><div class="value">${fmt((Number(iat.adjustment_ratio || 1) - 1) * 100)}%</div><div class="subvalue">Change from original</div></div>
       </div>`;
     }
@@ -2091,7 +2110,7 @@ HTML = r"""<!doctype html>
           {label: "Base case OCC", value: fmtKwe(iat.input_occ_per_kw)},
           {label: "WE-FOAK OCC ($/kWe)", value: fmtKwe(iat.adjusted_occ_per_kw)},
           {label: "OCC adjustment factor", value: fmt(iat.occ_adjustment_factor)},
-          {label: "Country", value: iat.country}
+          {label: "Country", value: displayCountryName(iat.country)}
         ]);
       }
       const isStandalone = !iat.power_kwe || iat.power_kwe === 1.0;
@@ -2137,20 +2156,21 @@ HTML = r"""<!doctype html>
         const countryRows = scenarios.filter(scenario => rows.some(r => r.country === country && r.scenario === scenario));
         const cxBase = m.left + groupW * ci + groupW / 2 - (countryRows.length - 1) * (barW + 6) / 2;
         const color = iatCountryColor(country, ci);
+        const countryLabel = displayCountryName(country);
         countryRows.forEach((scenario, si) => {
           const row = rows.find(r => r.country === country && r.scenario === scenario);
           if (!row) return;
           const val = Number(row.adjusted_occ_per_kw || 0);
           const x = cxBase + si * (barW + 6);
           const barH = innerH - (yScale(val) - m.top);
-          svg += `<rect class="hoverable" data-tip="<b>${esc(country)} — ${esc(scenario)}</b><br>Adjusted OCC: ${fmt(Math.round(val))} $/kWe" x="${x}" y="${yScale(val)}" width="${barW}" height="${barH}" fill="${color}" rx="2"></rect>`;
+          svg += `<rect class="hoverable" data-tip="<b>${esc(countryLabel)} — ${esc(scenario)}</b><br>Adjusted OCC: ${fmt(Math.round(val))} $/kWe" x="${x}" y="${yScale(val)}" width="${barW}" height="${barH}" fill="${color}" rx="2"></rect>`;
         });
-        svg += `<text x="${m.left + groupW * ci + groupW / 2}" y="${h - 22}" text-anchor="middle" fill="#41566d" font-size="15" font-weight="700">${esc(country)}</text>`;
+        svg += `<text x="${m.left + groupW * ci + groupW / 2}" y="${h - 22}" text-anchor="middle" fill="#41566d" font-size="15" font-weight="700">${esc(countryLabel)}</text>`;
       });
       countries.forEach((country, ci) => {
         const lx = m.left + ci * 170;
         svg += `<rect x="${lx}" y="${m.top - 28}" width="14" height="14" fill="${iatCountryColor(country, ci)}"></rect>`;
-        svg += `<text x="${lx + 22}" y="${m.top - 16}" fill="#41566d" font-size="14" font-weight="700">${esc(country)}</text>`;
+        svg += `<text x="${lx + 22}" y="${m.top - 16}" fill="#41566d" font-size="14" font-weight="700">${esc(displayCountryName(country))}</text>`;
       });
       svg += `</svg>`;
       return svg;
@@ -2199,7 +2219,7 @@ HTML = r"""<!doctype html>
         svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Foreign: ${fmt(Math.round(foreign))} $/kWe" x="${x}" y="${yLocal - foreignH}" width="${barW}" height="${foreignH}" fill="${color}" fill-opacity="0.88" style="fill: ${color}; fill-opacity: 0.88;" rx="1"></rect>`;
         svg += `<rect class="hoverable" data-tip="<b>${esc(r.label)}</b><br>Local: ${fmt(Math.round(local))} $/kWe" x="${x}" y="${yLocal}" width="${barW}" height="${localH}" fill="${color}" rx="1"></rect>`;
         svg += `<rect pointer-events="none" x="${x}" y="${yLocal - foreignH}" width="${barW}" height="${foreignH}" fill="url(#iatForeignHatch)" rx="1"></rect>`;
-        const country = String(r.country || "").slice(0, 16);
+        const country = displayCountryName(String(r.country || "")).slice(0, 16);
         const scenario = String(r.scenario || "").slice(0, 18);
         svg += `<text x="${x + barW / 2}" y="${h - 96}" text-anchor="middle" fill="#41566d" font-size="12" font-weight="800">${esc(scenario)}</text>`;
         svg += `<text x="${x + barW / 2}" y="${h - 78}" text-anchor="middle" fill="#41566d" font-size="12" font-weight="700">${esc(country)}</text>`;
@@ -2215,10 +2235,17 @@ HTML = r"""<!doctype html>
     }
 
     function iatTransformationCards(iat) {
-      const country = iat.country || "Selected country";
+      const country = displayCountryName(iat.country || "Selected country");
+      const basis = iat.baseline_basis || "WE-FOAK";
+      const originalTip = basis === "WE-FOAK"
+        ? "U.S. overnight capital cost based on the well-executed first-of-a-kind (WE-FOAK) baseline, before international cost adjustment."
+        : "U.S. overnight capital cost from the selected user-provided baseline, before international cost adjustment.";
+      const adjustedTip = basis === "WE-FOAK"
+        ? "WE-FOAK overnight capital cost after applying the selected country's IAT cost factors."
+        : "Overnight capital cost after applying the selected country's IAT cost factors to the user-provided baseline.";
       return `<div class="summary iat-summary-cards">
-        <div class="metric"><div class="label">Original OCC (United States)</div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">U.S. baseline entering IAT</div></div>
-        <div class="metric"><div class="label">Adjusted OCC (${esc(country)})</div><div class="value">${fmtKwe(iat.adjusted_occ_per_kw)}</div><div class="subvalue">After IAT country adjustment</div></div>
+        <div class="metric"><div class="label">Original OCC (${esc("United States")}, ${esc(basis)}) <span class="help" title="${esc(originalTip)}">?</span></div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">U.S. baseline entering IAT</div></div>
+        <div class="metric"><div class="label">Adjusted OCC (${esc(country)}, ${esc(basis)}) <span class="help" title="${esc(adjustedTip)}">?</span></div><div class="value">${fmtKwe(iat.adjusted_occ_per_kw)}</div><div class="subvalue">After IAT country adjustment</div></div>
         <div class="metric"><div class="label">IAT adjustment</div><div class="value">${fmt((Number(iat.adjustment_ratio || 1) - 1) * 100)}%</div><div class="subvalue">Passed to CRT</div></div>
       </div>`;
     }
@@ -2229,13 +2256,13 @@ HTML = r"""<!doctype html>
       if (!countries.length) return html + iatTransformationCards(data.iat) + `</section>`;
       html += `<div class="tabs">`;
       countries.forEach((cr, idx) => {
-        html += `<button class="${idx === 0 ? "active" : ""}" data-tab="iat-country-${tabSafe(cr.country)}">${esc(cr.country)}</button>`;
+        html += `<button class="${idx === 0 ? "active" : ""}" data-tab="iat-country-${tabSafe(cr.country)}">${esc(displayCountryName(cr.country))}</button>`;
       });
       html += `<button data-tab="iat-comparison">Country Comparison</button></div>`;
       countries.forEach((cr, idx) => {
         const d = cr.data;
         html += `<div id="tab-iat-country-${tabSafe(cr.country)}" class="tab-panel ${idx === 0 ? "active" : ""}">`;
-        html += `<h3>${esc(cr.country)}</h3>`;
+        html += `<h3>${esc(displayCountryName(cr.country))}</h3>`;
         html += fileLink(`IAT CSV (${cr.country})`, data.files && data.files[`IAT CSV (${cr.country})`]);
         if (d.scenarios && d.scenarios.length) {
           html += table(d.summary, [
@@ -2260,7 +2287,7 @@ HTML = r"""<!doctype html>
     function renderCrtResults(data, combined = false) {
       const crt = data.crt;
       let html = `<section class="crt-results-section"><h3>CRT Results</h3>${crtResultsGrid(crt)}`;
-      if (combined) html += `<div class="result-note">CRT recalculates FOAK from the IAT-adjusted baseline using the CRT fixed inputs and first-unit project effects.</div>`;
+      if (combined) html += `<div class="result-note"><strong>Why IAT and CRT OCC can differ</strong><br>IAT-adjusted OCC represents the country-adjusted WE-FOAK cost baseline. CRT then applies its deployment and project-execution assumptions to estimate FOAK and subsequent-unit costs, so CRT FOAK OCC may differ substantially from the IAT-adjusted baseline.</div>`;
       html += metrics([
         {label: `Years to build ${fmtInt(crt.num_noak)} plants`, value: `${fmtInt(crt.years_to_noak)} years`},
         {label: `Years to build ${fmtInt(crt.num_orders)} plants`, value: `${fmtInt(crt.years_to_orderbook)} years`}
@@ -2378,8 +2405,8 @@ HTML = r"""<!doctype html>
     }
 
     $("workflow").addEventListener("change", updatePanels);
-    $("iatInputMode").addEventListener("change", updatePanels);
-    $("countrySingle").addEventListener("change", () => { loadIatFactorDefaults(); updateOutputName(); });
+    $("iatInputMode").addEventListener("change", () => { updatePanels(); updateIatAssumptionCountryOptions(); loadIatFactorDefaults(); });
+    $("countrySingle").addEventListener("change", () => { updateIatAssumptionCountryOptions(); loadIatFactorDefaults(); updateOutputName(); });
     $("iatReactorType").addEventListener("change", () => {
       syncCrtOptionsToIat();
       updateOutputName();
@@ -2408,9 +2435,9 @@ HTML = r"""<!doctype html>
       }
     });
     document.querySelectorAll("#countryDropdownMenu input[type='checkbox']").forEach(cb => {
-      cb.addEventListener("change", () => { updateCountryDropdownLabel(); loadIatFactorDefaults(); });
+      cb.addEventListener("change", () => { saveIatFactorOverrides(); updateCountryDropdownLabel(); loadIatFactorDefaults(); updateOutputName(); });
     });
-    $("iatAssumptionCountry").addEventListener("change", loadIatFactorDefaults);
+    $("iatAssumptionCountry").addEventListener("change", () => { loadIatFactorDefaults(); updateIatAssumptionContext(); });
     $("iatBrowseBtn").addEventListener("click", () => $("iatCsvFile").click());
     $("iatCsvFile").addEventListener("change", () => {
       const file = $("iatCsvFile").files[0];
@@ -2431,6 +2458,7 @@ HTML = r"""<!doctype html>
       const reader = new FileReader();
       reader.onload = e => { _crtFileContent = e.target.result; };
       reader.readAsText(file);
+      updateOutputName();
     });
     $("crtReactorType").addEventListener("change", () => { updateCrtDefaults(true); updateOutputName(); });
     $("crtReactorType").addEventListener("change", () => { syncCrtOptionsToIat(); updateElectricOutputDefault(); updateOutputName(); });
@@ -3120,6 +3148,11 @@ def run_workflow(payload: dict) -> dict:
             show_levers=bool(payload["crt"].get("show_levers", True)),
         )
         response["iat"] = _summarize_iat_result(iat_result, _reactor_power_kwe(payload))
+        response["iat"]["baseline_basis"] = (
+            "WE-FOAK"
+            if not iat_payload["iat"].get("csv_content") and not iat_payload["iat"].get("_prepared_from_accert_csv")
+            else "user-provided baseline"
+        )
         response["crt"] = _summarize_crt_result(crt_result)
         response["crt"]["show_levers"] = bool(payload["crt"].get("show_levers", True))
         response["crt"]["dashboard_url"] = _file_info(dashboard)["url"]

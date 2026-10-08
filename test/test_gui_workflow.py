@@ -215,6 +215,27 @@ def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
     assert "United States is the reference case; no country adjustment is applied." in crt_iat_gui.HTML
 
 
+def test_country_selection_is_multi_country_for_both_iat_only_sources():
+    assert 'if ($("workflow").value === "iat_crt") return [$("countrySingle").value];' in crt_iat_gui.HTML
+    assert '$("countryMulti").classList.toggle("hidden", isConnected)' in crt_iat_gui.HTML
+    assert 'id="iatAssumptionCountryGroup"' in crt_iat_gui.HTML
+
+
+def test_combined_iat_assumptions_follow_main_country_and_explain_cost_transition():
+    assert 'id="iatAssumptionsHeading"' in crt_iat_gui.HTML
+    assert 'Advanced IAT Assumptions — ${displayCountryName(country)}' in crt_iat_gui.HTML
+    assert 'iatAssumptionCountryGroup").classList.toggle("hidden", isConnected' in crt_iat_gui.HTML
+    assert 'Original OCC (${esc("United States")}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert 'Adjusted OCC (${esc(country)}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert "IAT-adjusted OCC represents the country-adjusted WE-FOAK cost baseline" in crt_iat_gui.HTML
+
+
+def test_crt_only_output_name_uses_united_states_reference():
+    assert 'workflow === "crt_only"' in crt_iat_gui.HTML
+    assert '$("crtCsvFile").addEventListener("change", () => {' in crt_iat_gui.HTML
+    assert 'updateOutputName();' in crt_iat_gui.HTML
+
+
 def test_capital_chart_uses_calculated_itc_portion_pattern():
     assert 'id="itcHatch"' in crt_iat_gui.HTML
     assert "ITC reduction" in crt_iat_gui.HTML
@@ -318,7 +339,7 @@ def test_phase_one_gui_has_three_step_input_flow_and_advanced_sections():
     assert 'data-step="2"' in crt_iat_gui.HTML
     assert 'data-step="3"' in crt_iat_gui.HTML
     assert '<details class="advanced-section"' in crt_iat_gui.HTML
-    assert 'Advanced IAT assumptions' in crt_iat_gui.HTML
+    assert 'Advanced IAT Assumptions' in crt_iat_gui.HTML
     assert 'Advanced CRT assumptions' in crt_iat_gui.HTML
     assert 'CRT levers' in crt_iat_gui.HTML
 
@@ -353,8 +374,8 @@ def test_empty_state_updates_for_selected_workflow_and_terms_are_visible():
 def test_combined_results_keep_iat_summary_before_crt_details():
     assert 'class="iat-results-section"' in crt_iat_gui.HTML
     assert 'IAT Results' in crt_iat_gui.HTML
-    assert 'Original OCC (United States)' in crt_iat_gui.HTML
-    assert 'Adjusted OCC (${esc(country)})' in crt_iat_gui.HTML
+    assert 'Original OCC (${esc("United States")}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert 'Adjusted OCC (${esc(country)}, ${esc(basis)})' in crt_iat_gui.HTML
     assert 'IAT adjustment' in crt_iat_gui.HTML
     assert 'CRT Results' in crt_iat_gui.HTML
     assert 'class="iat-breakdown"' in crt_iat_gui.HTML
@@ -366,8 +387,8 @@ def test_results_rendering_has_explicit_workflow_policies():
     assert 'function renderIatOnlyResults(data)' in crt_iat_gui.HTML
     assert 'function renderCombinedResults(data)' in crt_iat_gui.HTML
     assert 'function renderCrtOnlyResults(data)' in crt_iat_gui.HTML
-    assert 'Original OCC (United States)' in crt_iat_gui.HTML
-    assert 'Adjusted OCC (${esc(country)})' in crt_iat_gui.HTML
+    assert 'Original OCC (${esc("United States")}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert 'Adjusted OCC (${esc(country)}, ${esc(basis)})' in crt_iat_gui.HTML
     assert 'if (data.workflow === "crt_only")' in crt_iat_gui.HTML
     assert 'resultSummaryCards(data)' not in crt_iat_gui.HTML
 
