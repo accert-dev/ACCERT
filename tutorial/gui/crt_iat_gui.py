@@ -1351,6 +1351,22 @@ HTML = r"""<!doctype html>
       if (!$('runBtn').disabled) setWorkflowStep(workflow === "iat_only" ? 2 : 1);
     }
 
+    function validateAdvancedInputs() {
+      const errors = [];
+      const orders = numberValue("numOrders");
+      const noak = numberValue("numNoak");
+      const itcPercent = numberValue("itcPercent");
+      const itcUnits = numberValue("nItc");
+      if (!Number.isInteger(orders) || orders < 2) errors.push("Firm orders must be an integer of at least 2.");
+      if (!Number.isInteger(noak) || noak < 0 || noak > orders) errors.push("NOAK unit must be between 0 and firm orders.");
+      if (!Number.isInteger(itcUnits) || itcUnits < 0 || itcUnits > orders) errors.push("ITC units cannot exceed firm orders.");
+      if (itcPercent === null || itcPercent < 0 || itcPercent > 100) errors.push("ITC must be between 0 and 100%.");
+      const validation = $("inputValidation");
+      validation.textContent = errors.join(" ");
+      validation.classList.toggle("hidden", errors.length === 0);
+      return errors.length === 0;
+    }
+
     function updateScenarioInputs() {
       const count = Math.max(1, Math.min(3, Number($("scenarioCount").value || 1)));
       $("scenarioCount").value = count;
@@ -1521,8 +1537,8 @@ HTML = r"""<!doctype html>
       return grossText === netText ? grossText : `${grossText} / ${netText}`;
     }
 
-    function metrics(items) {
-      return `<div class="summary">${items.map(item => `
+    function metrics(items, className = "summary") {
+      return `<div class="${className}">${items.map(item => `
         <div class="metric"><div class="label">${item.label}</div><div class="value">${item.value}</div>${item.sub ? `<div class="subvalue">${item.sub}</div>` : ""}</div>
       `).join("")}</div>`;
     }
@@ -1627,15 +1643,15 @@ HTML = r"""<!doctype html>
       const isStandalone = !baseCase.power_kwe || baseCase.power_kwe === 1.0;
       if (isStandalone) {
         return `<div class="base-case">
-          <h3>Base Case</h3>
-          <div class="cell-sub">${esc(baseCase.source || "Baseline")} shown as $/kWe; factory, material, and labor categories are included.</div>
+          <h3>U.S. Base Case · WE_FOAK (No Levers)</h3>
+          <div class="cell-sub">United States baseline (${esc(baseCase.source || "Baseline")}); WE_FOAK with no cost-reduction levers applied. Shown as $/kWe with factory, material, and labor categories included.</div>
           ${coaTable(baseCase.comparison, baseCostColumns(v => fmtKwe(v)), 1.0, false)}
         </div>`;
       }
       const unitLabel = coaUnit === "perkw" ? "$/kWe" : coaUnit === "million" ? "M USD" : "B USD";
       return `<div class="base-case">
-        <h3>Base Case</h3>
-        <div class="cell-sub">${esc(baseCase.source || "Baseline")} shown as ${unitLabel}; factory, material, and labor categories are included.</div>
+        <h3>U.S. Base Case · WE_FOAK (No Levers)</h3>
+        <div class="cell-sub">United States baseline (${esc(baseCase.source || "Baseline")}); WE_FOAK with no cost-reduction levers applied. Shown as ${unitLabel} with factory, material, and labor categories included.</div>
         ${coaTable(baseCase.comparison, baseCostColumns((v, row, kwe) => moneyCell(v, row, kwe)), baseCase.power_kwe, true)}
       </div>`;
     }
@@ -2056,14 +2072,14 @@ HTML = r"""<!doctype html>
           {label: avgOccReduction > 0 ? "Average OCC / Net OCC" : "Average OCC", value: `${value(crt.avg_occ, avgOccNet, avgOccReduction)} $/kWe`, sub: avgOccReduction > 0 ? "Gross / Net" : ""}
         ], "Learning reduction", `${fmt(crt.occ_reduction_percent)}%`)}
         ${crtMetricGroup("Total Capital Investment (TCI)", "Total Capital Investment (TCI) includes the model's Overnight Capital Cost plus 60-series financing costs, including interest during construction, as defined in the CRT model.", [
-          {label: "FOAK TCI", value: value(foak.TCI, foakTciNet, reduction(foak, "TCI ITC reduction")), sub: reduction(foak, "TCI ITC reduction") > 0 ? "Gross / Net" : ""},
-          {label: "NOAK TCI", value: value(noak.TCI, noakTciNet, reduction(noak, "TCI ITC reduction")), sub: reduction(noak, "TCI ITC reduction") > 0 ? "Gross / Net" : ""},
-          {label: "Average TCI", value: fmtInt(crt.avg_tci)}
+          {label: foakTciReduction > 0 ? "FOAK TCI / NCI" : "FOAK TCI", value: `${value(foak.TCI, foakTciNet, foakTciReduction)} $/kWe`, sub: foakTciReduction > 0 ? "Gross / Net" : ""},
+          {label: noakTciReduction > 0 ? "NOAK TCI / NCI" : "NOAK TCI", value: `${value(noak.TCI, noakTciNet, noakTciReduction)} $/kWe`, sub: noakTciReduction > 0 ? "Gross / Net" : ""},
+          {label: avgTciReduction > 0 ? "Average TCI / NCI" : "Average TCI", value: `${value(crt.avg_tci, avgTciNet, avgTciReduction)} $/kWe`, sub: avgTciReduction > 0 ? "Gross / Net" : ""}
         ], "Learning reduction", `${fmt(crt.tci_reduction_percent)}%`)}
         ${crtMetricGroup("Construction Duration", "Construction duration is the modeled time to build each unit; startup duration is reported separately in the detailed results.", [
-          {label: "FOAK", value: fmt(foak["Construction duration"])},
-          {label: "NOAK", value: fmt(noak["Construction duration"])},
-          {label: "Average", value: fmt(crt.avg_duration)}
+          {label: "FOAK", value: `${fmtInt(foak["Construction duration"])} months`},
+          {label: "NOAK", value: `${fmtInt(noak["Construction duration"])} months`},
+          {label: "Average", value: `${fmtInt(crt.avg_duration)} months`}
         ])}
       </div>`;
     }
