@@ -198,6 +198,17 @@ def test_iat_only_comparison_has_no_synthetic_base_case_rows(monkeypatch, tmp_pa
 
     assert result["iat"]["country_results"]
     assert {row["country"] for row in result["iat"]["comparison_chart"]} == {"United States", "China"}
+    assert len(result["iat"]["comparison_chart"]) == 2
+    for row in result["iat"]["comparison_chart"]:
+        assert row["adjusted_occ_per_kw"] == pytest.approx(
+            row["local_per_kw"] + row["foreign_per_kw"], abs=0.01
+        )
+
+    us_row = next(row for row in result["iat"]["comparison_chart"] if row["country"] == "United States")
+    assert us_row["reference_case"] is True
+    assert us_row["local_per_kw"] == pytest.approx(us_row["adjusted_occ_per_kw"])
+    assert us_row["foreign_per_kw"] == 0
+    assert us_row["model_foreign_per_kw"] > 0
 
 
 def test_iat_country_assumption_selector_is_separate_from_country_multi_select():
@@ -208,11 +219,17 @@ def test_iat_country_assumption_selector_is_separate_from_country_multi_select()
 
 
 def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
+    assert "function countryComparisonChart(rows)" in crt_iat_gui.HTML
+    assert 'aria-label="Adjusted OCC by country"' in crt_iat_gui.HTML
+    assert 'id="iatCountryCompChart"' in crt_iat_gui.HTML
     assert "function iatCountryColor(country, index)" in crt_iat_gui.HTML
     assert 'id="iatForeignHatch"' in crt_iat_gui.HTML
     assert 'fill="url(#iatForeignHatch)"' in crt_iat_gui.HTML
-    assert "Country color = country; fill = Local vs Foreign" in crt_iat_gui.HTML
-    assert "United States is the reference case; no country adjustment is applied." in crt_iat_gui.HTML
+    assert "Solid: Local" in crt_iat_gui.HTML
+    assert "Hatched: Foreign" in crt_iat_gui.HTML
+    assert "Model check difference" in crt_iat_gui.HTML
+    assert "iatOccCompChart" not in crt_iat_gui.HTML
+    assert "iatLfChart" not in crt_iat_gui.HTML
 
 
 def test_country_selection_is_multi_country_for_both_iat_only_sources():
