@@ -497,6 +497,27 @@ HTML = r"""<!doctype html>
       margin: 10px 0 16px;
     }
     .iat-summary-cards .metric { border-top: 3px solid var(--accent); }
+    .iat-only-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 10px 0 12px;
+    }
+    .iat-only-summary .metric { border-top: 3px solid var(--accent); min-height: 88px; }
+    .iat-only-summary .metric-emphasis { border: 2px solid var(--accent); border-top-width: 4px; background: #f8fcfd; }
+    .iat-only-summary .metric-emphasis .label { color: var(--accent); }
+    .iat-scenario-note {
+      border-left: 4px solid var(--accent);
+      background: var(--surface-soft);
+      color: var(--muted);
+      padding: 9px 12px;
+      margin: 8px 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+    .iat-scenario-table { margin-bottom: 14px; }
+    .iat-scenario-table th:nth-child(3), .iat-scenario-table td:nth-child(3) { background: #eef8fa; font-weight: 800; }
     .iat-country {
       margin: 2px 0 8px;
       color: var(--muted);
@@ -861,7 +882,7 @@ HTML = r"""<!doctype html>
       .workflow-steps { grid-template-columns: 1fr; }
       .baseline-control-row { flex-direction: column; }
       .baseline-control-row .file-input-row { flex-basis: auto; }
-    .result-summary-cards, .summary, .iat-summary-cards, .crt-key-cards, .crt-metric-cards { grid-template-columns: 1fr; }
+      .result-summary-cards, .summary, .iat-summary-cards, .iat-only-summary, .crt-key-cards, .crt-metric-cards { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -2048,6 +2069,26 @@ HTML = r"""<!doctype html>
       return `<div class="iat-breakdown"><div class="breakdown-label">Cost breakdown</div><div class="breakdown-items"><span>Material <strong>${value("Adjusted Material Cost")}</strong></span><span>Factory <strong>${value("Adjusted Equipment Cost")}</strong></span><span>Labor <strong>${value("Adjusted Labor Cost")}</strong></span></div></div>`;
     }
 
+    function iatOnlyCountrySummary(iat) {
+      const country = displayCountryName(iat.country || "Selected country");
+      const rows = iat.comparison || [];
+      const power = Number(iat.power_kwe || 1);
+      const total = key => rows.reduce((sum, row) => sum + Number(row[key] || 0), 0) / power;
+      const change = (Number(iat.adjustment_ratio || 1) - 1) * 100;
+      return `<div class="iat-only-summary">
+        <div class="metric"><div class="label">Original OCC</div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">Base Case entering IAT</div></div>
+        <div class="metric metric-emphasis"><div class="label">Adjusted OCC</div><div class="value">${fmtKwe(iat.adjusted_occ_per_kw)}</div><div class="subvalue">${esc(country)} result after IAT</div></div>
+        <div class="metric"><div class="label">OCC adjustment</div><div class="value">${fmt(change)}%</div><div class="subvalue">Change from Original OCC</div></div>
+        <div class="metric"><div class="label">Country</div><div class="value">${esc(country)}</div><div class="subvalue">Selected IAT location</div></div>
+      </div>
+      <div class="iat-breakdown"><div class="breakdown-label">Adjusted OCC cost breakdown</div><div class="breakdown-items"><span>Adjusted material <strong>${fmtKwe(total("Adjusted Material Cost"))}</strong></span><span>Adjusted factory <strong>${fmtKwe(total("Adjusted Equipment Cost"))}</strong></span><span>Adjusted labor <strong>${fmtKwe(total("Adjusted Labor Cost"))}</strong></span></div></div>`;
+    }
+
+    function iatScenarioTable(rows) {
+      if (!rows || !rows.length) return "";
+      return `<div class="iat-scenario-note"><strong>Scenario input and adjusted result</strong><br>Base Case is the original OCC entering IAT. Adjusted OCC is the country-adjusted result used for this scenario.</div><table class="iat-scenario-table"><thead><tr><th>Scenario</th><th>Input OCC ($/kWe)</th><th>Adjusted OCC ($/kWe)</th><th>OCC Ratio</th></tr></thead><tbody>${rows.map(row => `<tr><td>${esc(row.Scenario || "")}</td><td>${fmt(row["Input OCC"])}</td><td>${fmt(row["Adjusted OCC"])}</td><td>${fmt(row["Adjustment Ratio of OCC"])}</td></tr>`).join("")}</tbody></table>`;
+    }
+
     function crtKeySummaryCards(crt) {
       return `<div class="summary crt-key-cards">
         <div class="metric"><div class="label">FOAK OCC / Net OCC ($/kW)</div><div class="value">${fmtPerKw(crt.occ_1)} / ${fmtPerKw(crt.net_occ_1 ?? crt.occ_1)}</div><div class="subvalue">Gross / Net</div></div>
@@ -2116,12 +2157,7 @@ HTML = r"""<!doctype html>
     function iatBlock(iat, title = "", includeMetrics = true) {
       let html = title ? `<div class="scenario-card"><h4>${title}</h4>` : "";
       if (includeMetrics) {
-        html += metrics([
-          {label: "Base case OCC", value: fmtKwe(iat.input_occ_per_kw)},
-          {label: "WE-FOAK OCC ($/kWe)", value: fmtKwe(iat.adjusted_occ_per_kw)},
-          {label: "OCC adjustment factor", value: fmt(iat.occ_adjustment_factor)},
-          {label: "Country", value: displayCountryName(iat.country)}
-        ]);
+        html += iatOnlyCountrySummary(iat);
       }
       const isStandalone = !iat.power_kwe || iat.power_kwe === 1.0;
       if (isStandalone) {
@@ -2259,12 +2295,7 @@ HTML = r"""<!doctype html>
         html += `<h3>${esc(displayCountryName(cr.country))}</h3>`;
         html += fileLink(`IAT CSV (${cr.country})`, data.files && data.files[`IAT CSV (${cr.country})`]);
         if (d.scenarios && d.scenarios.length) {
-          html += table(d.summary, [
-            {key: "Scenario", label: "Scenario"},
-            {key: "Input OCC", label: "Input OCC ($/kWe)", format: fmt},
-            {key: "Adjusted OCC", label: "Adjusted OCC ($/kWe)", format: fmt},
-            {key: "Adjustment Ratio of OCC", label: "OCC Ratio", format: fmt}
-          ]);
+          html += iatScenarioTable(d.summary);
           d.scenarios.forEach((s, i) => { html += iatBlock(s, `${s.scenario || `Scenario ${i + 1}`} result`); });
         } else {
           html += iatBlock(d);

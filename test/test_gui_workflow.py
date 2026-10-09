@@ -483,6 +483,16 @@ def test_results_rendering_has_explicit_workflow_policies():
     assert 'resultSummaryCards(data)' not in crt_iat_gui.HTML
 
 
+def test_iat_only_results_prioritize_adjusted_occ_and_cost_breakdown():
+    assert 'function iatOnlyCountrySummary(iat)' in crt_iat_gui.HTML
+    assert 'Adjusted OCC' in crt_iat_gui.HTML
+    assert 'Adjusted material' in crt_iat_gui.HTML
+    assert 'Adjusted factory' in crt_iat_gui.HTML
+    assert 'Adjusted labor' in crt_iat_gui.HTML
+    assert 'Base Case is the original OCC entering IAT' in crt_iat_gui.HTML
+    assert 'Scenario input and adjusted result' in crt_iat_gui.HTML
+
+
 def test_workflow_result_sections_exclude_irrelevant_content():
     assert 'IAT Results' in crt_iat_gui.HTML
     assert 'CRT Results' in crt_iat_gui.HTML
