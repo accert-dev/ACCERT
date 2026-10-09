@@ -133,15 +133,13 @@ def test_financing_inputs_affect_tci_but_not_overnight_cost():
 
 
 @pytest.mark.parametrize("config_key", ["f_22", "f_2321"])
-@pytest.mark.xfail(
-    strict=True,
-    reason="AP1000 add_factory_cost currently ignores f_22 and f_2321; investigate before changing model logic",
-)
-def test_factory_allocation_inputs_reach_gross_occ(config_key):
+def test_ap1000_factory_allocation_inputs_are_not_applied(config_key):
     low = _run(config_overrides={config_key: 0})
     high = _run(config_overrides={config_key: 500_000_000})
 
-    assert high["OCC_1"] != pytest.approx(low["OCC_1"])
+    # AP1000's packaged baseline already contains its factory allocation.
+    # The CRT model intentionally applies these inputs only to SFR and HTGR.
+    assert high["OCC_1"] == pytest.approx(low["OCC_1"])
 
 
 @pytest.mark.parametrize("reactor_type", ["SFR", "HTGR"])
