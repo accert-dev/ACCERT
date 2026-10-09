@@ -759,6 +759,19 @@ def test_phase_2b_presets_use_existing_configs_and_track_modifications():
     assert '$("presetSelector").addEventListener("change"' in crt_iat_gui.HTML
 
 
+def test_phase_2c_preflight_validation_marks_fields_and_preserves_run_gate():
+    assert "function clearPreflightErrors()" in crt_iat_gui.HTML
+    assert "function addPreflightError(id, message, errors)" in crt_iat_gui.HTML
+    assert "aria-invalid" in crt_iat_gui.HTML
+    assert "input issue" in crt_iat_gui.HTML
+    assert "Choose a built-in baseline or upload an ACCERT CSV." in crt_iat_gui.HTML
+    assert "Electric output must be greater than 0 MWe." in crt_iat_gui.HTML
+    assert "Startup must be nonnegative and no longer than construction duration." in crt_iat_gui.HTML
+    assert "This CRT reactor type is not compatible with the selected IAT reactor type." in crt_iat_gui.HTML
+    assert "if (!validateAdvancedInputs()) return;" in crt_iat_gui.HTML
+    assert "field-error" in crt_iat_gui.HTML
+
+
 def test_crt_fixed_inputs_use_short_labels_and_structural_field_alignment():
     assert ".row > div" in crt_iat_gui.HTML
     assert ".triple > div" in crt_iat_gui.HTML

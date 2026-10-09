@@ -223,6 +223,17 @@ HTML = r"""<!doctype html>
       font-size: 11px;
       line-height: 1.35;
     }
+    .field-error {
+      margin-top: 4px;
+      color: #ffd0d0;
+      font-size: 11px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+    input[aria-invalid="true"], select[aria-invalid="true"] {
+      border-color: #ff9d9d;
+      box-shadow: 0 0 0 2px rgba(255,157,157,0.18);
+    }
     input[type="checkbox"] {
       width: auto;
       margin-right: 7px;
@@ -1543,19 +1554,94 @@ HTML = r"""<!doctype html>
       if (!$('runBtn').disabled) setWorkflowStep(workflow === "iat_only" ? 2 : 1);
     }
 
+    const preflightFieldIds = [
+      "iatBaseline", "electricOutputMwe", "scenarioCount", "occValue1", "occValue2", "occValue3",
+      "constructionDuration", "startup", "staggering", "numOrders", "numNoak", "nItc", "itcPercent",
+      "designCompletion", "designMaturity", "interest", "standardization", "nProc", "procExp", "nCons",
+      "ceExp", "nAe", "aeExp", "iatReactorType", "crtReactorType"
+    ];
+
+    function clearPreflightErrors() {
+      preflightFieldIds.forEach(id => {
+        const field = $(id);
+        if (!field) return;
+        field.removeAttribute("aria-invalid");
+        const describedBy = (field.getAttribute("aria-describedby") || "").split(/\s+/).filter(value => value && value !== `${id}Error`);
+        if (describedBy.length) field.setAttribute("aria-describedby", describedBy.join(" "));
+        else field.removeAttribute("aria-describedby");
+        document.getElementById(`${id}Error`)?.remove();
+      });
+    }
+
+    function addPreflightError(id, message, errors) {
+      const field = $(id);
+      if (!field) { errors.push(message); return; }
+      field.setAttribute("aria-invalid", "true");
+      field.setAttribute("aria-describedby", `${field.getAttribute("aria-describedby") || ""} ${id}Error`.trim());
+      const node = document.createElement("div");
+      node.id = `${id}Error`;
+      node.className = "field-error";
+      node.textContent = message;
+      field.insertAdjacentElement("afterend", node);
+      errors.push(message);
+    }
+
     function validateAdvancedInputs() {
+      clearPreflightErrors();
       const errors = [];
+      const workflow = $("workflow").value;
+      const inputMode = $("iatInputMode").value;
       const orders = numberValue("numOrders");
       const noak = numberValue("numNoak");
       const itcPercent = numberValue("itcPercent");
       const itcUnits = numberValue("nItc");
-      if (!Number.isInteger(orders) || orders < 2) errors.push("Firm orders must be an integer of at least 2.");
-      if (!Number.isInteger(noak) || noak < 0 || noak > orders) errors.push("NOAK unit must be between 0 and firm orders.");
-      if (!Number.isInteger(itcUnits) || itcUnits < 0 || itcUnits > orders) errors.push("ITC units cannot exceed firm orders.");
-      if (itcPercent === null || itcPercent < 0 || itcPercent > 100) errors.push("ITC must be between 0 and 100%.");
+      const construction = numberValue("constructionDuration");
+      const startup = numberValue("startup");
+
+      if (inputMode === "csv") {
+        const sourceAvailable = Boolean(_csvFileContent || _csvFilePath || $("iatBaseline").value !== "custom");
+        if (!sourceAvailable) addPreflightError("iatBaseline", "Choose a built-in baseline or upload an ACCERT CSV.", errors);
+        const output = numberValue("electricOutputMwe");
+        if (output === null || !Number.isFinite(output) || output <= 0) addPreflightError("electricOutputMwe", "Electric output must be greater than 0 MWe.", errors);
+      }
+      if (workflow !== "crt_only" && inputMode === "occ") {
+        const count = numberValue("scenarioCount");
+        if (!Number.isInteger(count) || count < 1 || count > 3) addPreflightError("scenarioCount", "Scenario count must be an integer from 1 to 3.", errors);
+        else occScenarioValues().forEach((value, index) => {
+          if (value === null || !Number.isFinite(value) || value <= 0) addPreflightError(`occValue${index + 1}`, "Standalone OCC must be greater than 0 $/kWe.", errors);
+        });
+      }
+      if (construction === null || !Number.isFinite(construction) || construction <= 0) addPreflightError("constructionDuration", "Construction duration must be greater than 0 months.", errors);
+      if (startup === null || !Number.isFinite(startup) || startup < 0 || (construction !== null && startup > construction)) addPreflightError("startup", "Startup must be nonnegative and no longer than construction duration.", errors);
+      const staggering = numberValue("staggering");
+      if (staggering === null || staggering < 0 || staggering > 1) addPreflightError("staggering", "Staggering ratio must be between 0 and 1.", errors);
+      if (!Number.isInteger(orders) || orders < 2) addPreflightError("numOrders", "Firm orders must be an integer of at least 2.", errors);
+      if (!Number.isInteger(noak) || noak < 0 || noak > (orders ?? 0)) addPreflightError("numNoak", "NOAK unit must be between 0 and firm orders.", errors);
+      if (!Number.isInteger(itcUnits) || itcUnits < 0 || itcUnits > (orders ?? 0)) addPreflightError("nItc", "ITC units cannot exceed firm orders.", errors);
+      if (itcPercent === null || !Number.isFinite(itcPercent) || itcPercent < 0 || itcPercent > 100) addPreflightError("itcPercent", "ITC must be between 0 and 100%.", errors);
+      [["designCompletion", 0, 100, "Design completion must be between 0 and 100%."], ["standardization", 0, 100, "Standardization must be between 0 and 100%"], ["interest", 0, 100, "Interest must be between 0 and 100%."], ["designMaturity", 0, 2, "Design maturity must be between 0 and 2."]].forEach(([id, min, max, message]) => {
+        const value = numberValue(id);
+        if (value === null || !Number.isFinite(value) || value < min || value > max) addPreflightError(id, message, errors);
+      });
+      ["nProc", "nCons", "nAe"].forEach(id => {
+        const value = numberValue(id);
+        if (!Number.isInteger(value) || value < 0 || value > (orders ?? 0)) addPreflightError(id, `${$(id).previousElementSibling?.textContent || id} must be an integer from 0 to firm orders.`, errors);
+      });
+      [["procExp", "Supply-chain proficiency must be between 0 and 2."], ["ceExp", "Construction proficiency must be between 0 and 2."], ["aeExp", "A/E proficiency must be between 0 and 2."]].forEach(([id, message]) => {
+        const value = numberValue(id);
+        if (value === null || !Number.isFinite(value) || value < 0 || value > 2) addPreflightError(id, message, errors);
+      });
+      if (workflow === "iat_crt") {
+        const allowed = baselineOptionsForIat();
+        if (!allowed.includes($("crtReactorType").value)) addPreflightError("crtReactorType", "This CRT reactor type is not compatible with the selected IAT reactor type.", errors);
+      }
       const validation = $("inputValidation");
-      validation.textContent = errors.join(" ");
+      validation.textContent = errors.length ? `${errors.length} input issue${errors.length === 1 ? "" : "s"} must be fixed before running: ${errors.join(" ")}` : "";
       validation.classList.toggle("hidden", errors.length === 0);
+      if (errors.length) {
+        const firstInvalid = document.querySelector('[aria-invalid="true"]');
+        firstInvalid?.focus();
+      }
       return errors.length === 0;
     }
 
