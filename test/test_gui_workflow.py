@@ -3,7 +3,8 @@ import re
 
 import pandas as pd
 import pytest
-import pytest
+
+pytestmark = [pytest.mark.workflow, pytest.mark.gui]
 
 from tutorial.gui import crt_iat_gui
 

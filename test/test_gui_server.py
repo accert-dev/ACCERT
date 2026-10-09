@@ -6,6 +6,8 @@ import urllib.request
 
 import pytest
 
+pytestmark = pytest.mark.gui
+
 from tutorial.gui import crt_iat_gui
 
 

@@ -1,5 +1,7 @@
 import pytest
 
+pytestmark = pytest.mark.core
+
 from crt.reactor_config import (
     REACTOR_CONFIGS,
     compatible_crt_types,

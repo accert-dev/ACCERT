@@ -4,6 +4,8 @@ import math
 
 import pytest
 
+pytestmark = [pytest.mark.slow, pytest.mark.regression]
+
 from crt import run_one_scenario
 
 

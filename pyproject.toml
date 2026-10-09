@@ -48,6 +48,14 @@ Homepage = "https://github.com/accert-dev/ACCERT"
 where = ["src"]
 
 [tool.pytest.ini_options]
+addopts = "-m 'not gui and not slow and not regression'"
+markers = [
+    "core: fast deterministic ACCERT, IAT, CRT, and utility tests",
+    "workflow: direct IAT/CRT/ACCERT workflow integration tests",
+    "gui: GUI source, server, and browser-facing behavior tests",
+    "slow: computationally expensive tests excluded from the default run",
+    "regression: release-level regression coverage, including broad matrices",
+]
 filterwarnings = [
     "ignore:datetime\\.datetime\\.utcnow\\(\\) is deprecated and scheduled for removal in a future version:DeprecationWarning:openpyxl\\.packaging\\.core",
 ]

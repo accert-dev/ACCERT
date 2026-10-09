@@ -3,6 +3,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+pytestmark = pytest.mark.core
+
 from iat import available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 from crt import accert_output_to_crt_baseline

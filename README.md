@@ -65,6 +65,41 @@ python3.12 tutorial/gui/stop_gui.py
 This is a local browser application. It listens only on `127.0.0.1`; it is
 not a remotely deployed web service.
 
+## Running Tests
+
+Use the configured Python 3.12 environment for all test commands:
+
+```text
+PYTHON=/opt/anaconda3/envs/py312/bin/python
+$PYTHON -m pytest                 # fast default: excludes GUI, slow, and release regression tests
+$PYTHON -m pytest -m core         # ACCERT/IAT/CRT calculations and utilities
+$PYTHON -m pytest -m workflow     # direct IAT/CRT/ACCERT workflow tests
+$PYTHON -m pytest -m gui          # GUI source, server, and GUI-facing behavior tests
+$PYTHON -m pytest -m "slow or regression"  # expensive release-level checks
+$PYTHON -m pytest -o addopts=""   # every collected test, including GUI and slow tests
+```
+
+The complete command may need permission to bind temporary localhost ports for
+GUI server tests. A GUI-only change normally needs the `gui` suite plus the
+affected workflow smoke tests. A calculation change needs `core` and the
+affected `workflow` or regression tests. Country-data changes should run the
+IAT core and workflow suites. Before a release, run the complete command.
+
+Useful focused commands:
+
+```text
+$PYTHON -m pytest test/test_iat_api.py -q
+$PYTHON -m pytest test/test_gui_server.py::test_gui_server_health_endpoint_and_graceful_shutdown -q
+$PYTHON -m pytest --durations=20
+$PYTHON -m pytest --collect-only -q -m core
+```
+
+Markers are registered in `pyproject.toml`. Tests may carry more than one
+marker; for example, GUI workflow tests are both `workflow` and `gui`, while
+CRT sensitivity and legacy integration matrices are `slow` and `regression`.
+The default command does not silently drop unmarked tests: it excludes only
+the explicitly expensive categories.
+
 After changing GUI code, stop the current session, launch it again, and reload
 the browser page. Confirm that the page opens and that `/health` reports the
 local server as healthy. The launcher does not depend on closing a browser tab

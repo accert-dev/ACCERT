@@ -3,6 +3,7 @@ import os
 import glob
 import contextlib
 import io
+import pytest
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -12,6 +13,8 @@ SRC_PATH = PROJECT_ROOT / 'src'
 sys.path.insert(0, str(SRC_PATH))
 from utility_accert import Utility_methods 
 from Main import Accert, AccertPostProcessor, TARGET_DOLLAR_YEAR
+
+pytestmark = pytest.mark.core
 import pytest
 
 

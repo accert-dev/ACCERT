@@ -2,6 +2,20 @@
 
 Use this checklist for changes to the local IAT/CRT GUI.
 
+## Test selection
+
+Always use Python 3.12 (`/opt/anaconda3/envs/py312/bin/python`). The pytest
+markers are `core`, `workflow`, `gui`, `slow`, and `regression`:
+
+- UI styling or GUI behavior: run `-m gui` and the affected workflow smoke tests.
+- IAT formula or country data: run `-m core` and `-m workflow`.
+- CRT calculation changes: run `-m core`, `-m workflow`, and affected regression tests.
+- Release preparation: run `-o addopts=""` to execute every collected test.
+
+The default pytest command intentionally excludes only `gui`, `slow`, and
+`regression` tests. It does not exclude unmarked tests. GUI server tests bind
+temporary localhost ports; run them with the local-port permission available.
+
 ## Before implementation
 
 - Review the affected GUI source and existing GUI tests.
