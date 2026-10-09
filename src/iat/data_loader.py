@@ -35,6 +35,12 @@ COUNTRY_ALIASES = {
     "el salvador": "El Salvador",
     "elsalvador": "El Salvador",
     "slv": "El Salvador",
+    "thailand": "Thailand",
+    "tha": "Thailand",
+    "vietnam": "Vietnam",
+    "vnm": "Vietnam",
+    "indonesia": "Indonesia",
+    "idn": "Indonesia",
 }
 
 _DATA_DIR = Path(__file__).resolve().parent / "data"

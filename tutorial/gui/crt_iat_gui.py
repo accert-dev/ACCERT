@@ -947,6 +947,9 @@ HTML = r"""<!doctype html>
               <option value="UAE">UAE</option>
               <option value="Poland">Poland</option>
               <option value="El Salvador">El Salvador</option>
+              <option value="Thailand">Thailand</option>
+              <option value="Vietnam">Vietnam</option>
+              <option value="Indonesia">Indonesia</option>
             </select>
             <div id="countryMulti" class="country-dropdown">
               <button type="button" class="country-dropdown-btn" id="countryDropdownBtn">
@@ -959,6 +962,9 @@ HTML = r"""<!doctype html>
                 <label class="country-option"><input type="checkbox" value="UAE"> UAE</label>
                 <label class="country-option"><input type="checkbox" value="Poland"> Poland</label>
                 <label class="country-option"><input type="checkbox" value="El Salvador"> El Salvador</label>
+                <label class="country-option"><input type="checkbox" value="Thailand"> Thailand</label>
+                <label class="country-option"><input type="checkbox" value="Vietnam"> Vietnam</label>
+                <label class="country-option"><input type="checkbox" value="Indonesia"> Indonesia</label>
               </div>
             </div>
           </div>
@@ -2064,18 +2070,13 @@ HTML = r"""<!doctype html>
     }
 
     function iatBreakdown(iat) {
-      const rows = iat.comparison || [];
-      const total = key => rows.reduce((sum, row) => sum + Number(row[key] || 0), 0);
-      const power = Number(iat.power_kwe || 1);
-      const value = (...keys) => fmtKwe(keys.reduce((sum, key) => sum + total(key), 0) / power);
-      return `<div class="iat-breakdown"><div class="breakdown-label">Cost breakdown</div><div class="breakdown-items"><span>Material <strong>${value("Adjusted Material Cost")}</strong></span><span>Factory <strong>${value("Adjusted Equipment Cost")}</strong></span><span>Labor <strong>${value("Adjusted Labor Cost")}</strong></span></div></div>`;
+      const breakdown = iat.breakdown || {};
+      const value = name => fmtKwe(breakdown[`${name}_per_kw`]);
+      return `<div class="iat-breakdown"><div class="breakdown-label">Adjusted OCC cost breakdown</div><div class="breakdown-items"><span>Material <strong>${value("material")}</strong></span><span>Factory <strong>${value("factory")}</strong></span><span>Labor <strong>${value("labor")}</strong></span><span>Other OCC (land + catch-all) <strong>${value("other")}</strong></span></div><div class="cell-sub">Categories are additive and reconcile to Adjusted OCC.</div></div>`;
     }
 
     function iatOnlyCountrySummary(iat) {
       const country = displayCountryName(iat.country || "Selected country");
-      const rows = iat.comparison || [];
-      const power = Number(iat.power_kwe || 1);
-      const total = key => rows.reduce((sum, row) => sum + Number(row[key] || 0), 0) / power;
       const change = (Number(iat.adjustment_ratio || 1) - 1) * 100;
       return `<div class="iat-only-summary">
         <div class="metric"><div class="label">Original OCC</div><div class="value">${fmtKwe(iat.input_occ_per_kw)}</div><div class="subvalue">Base Case entering IAT</div></div>
@@ -2083,7 +2084,7 @@ HTML = r"""<!doctype html>
         <div class="metric"><div class="label">OCC adjustment</div><div class="value">${fmt(change)}%</div><div class="subvalue">Change from Original OCC</div></div>
         <div class="metric"><div class="label">Country</div><div class="value">${esc(country)}</div><div class="subvalue">Selected IAT location</div></div>
       </div>
-      <div class="iat-breakdown"><div class="breakdown-label">Adjusted OCC cost breakdown</div><div class="breakdown-items"><span>Adjusted material <strong>${fmtKwe(total("Adjusted Material Cost"))}</strong></span><span>Adjusted factory <strong>${fmtKwe(total("Adjusted Equipment Cost"))}</strong></span><span>Adjusted labor <strong>${fmtKwe(total("Adjusted Labor Cost"))}</strong></span></div></div>`;
+      ${iatBreakdown(iat)}`;
     }
 
     function iatScenarioTable(rows) {
@@ -2172,14 +2173,21 @@ HTML = r"""<!doctype html>
       return title ? `${html}</div>` : html;
     }
 
-    const IAT_COUNTRY_COLORS = ["#4e79a7", "#f28e2b", "#59a14f", "#b07aa1", "#e15759", "#76b7b2"];
+    const IAT_COUNTRY_COLORS = [
+      "#1f77b4", "#ff7f0e", "#2ca02c", "#9467bd", "#d62728", "#17becf",
+      "#8c564b", "#e377c2", "#bcbd22", "#4e79a7", "#59a14f", "#f28e2b"
+    ];
 
     function iatCountryColor(country, index) {
-      const known = {"United States": "#4e79a7", "China": "#f28e2b", "South Korea": "#59a14f", "Korea": "#59a14f", "Poland": "#b07aa1", "UAE": "#e15759", "El Salvador": "#76b7b2"};
+      const known = {
+        "United States": "#1f77b4", "China": "#ff7f0e", "South Korea": "#2ca02c", "Korea": "#2ca02c",
+        "UAE": "#9467bd", "Poland": "#d62728", "El Salvador": "#17becf",
+        "Thailand": "#8c564b", "Vietnam": "#e377c2", "Indonesia": "#bcbd22"
+      };
       if (known[country]) return known[country];
       let hash = 0;
       for (const char of String(country || "")) hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0;
-      return IAT_COUNTRY_COLORS[Math.abs(hash || index) % IAT_COUNTRY_COLORS.length];
+      return IAT_COUNTRY_COLORS[Math.abs(hash) % IAT_COUNTRY_COLORS.length];
     }
 
     function finalCountryComparisonRows(rows) {
@@ -2349,6 +2357,9 @@ HTML = r"""<!doctype html>
       const iat = data.iat;
       let html = workflowHero(data) + `<section class="iat-results-section"><h3>IAT Results</h3>`;
       html += iatTransformationCards(iat) + iatBreakdown(iat);
+      if (iat.comparison_chart && iat.comparison_chart.length) {
+        html += `<div class="chart-panel iat-combined-comparison"><h3>Original vs. Adjusted OCC</h3><div id="iatCombinedComparisonChart"></div></div>`;
+      }
       html += fileLink("IAT adjusted CSV", data.files && data.files["IAT adjusted CSV"]);
       html += `</section>${renderCrtResults(data, true)}`;
       return html;
@@ -2376,6 +2387,9 @@ HTML = r"""<!doctype html>
         });
       });
       if (data.crt) {
+        if (data.iat && data.iat.comparison_chart && data.iat.comparison_chart.length && $("iatCombinedComparisonChart")) {
+          $("iatCombinedComparisonChart").innerHTML = countryComparisonChart(data.iat.comparison_chart);
+        }
         $("capitalChart").innerHTML = capitalChart(data.crt.capital_cost || data.crt.plants);
         $("breakdownPreview").innerHTML = breakdownChart(data.crt.plants, "tci");
         $("waterfallChart").innerHTML = waterfallChart(data.crt.waterfall);
@@ -2706,6 +2720,23 @@ def _iat_metrics(adjusted_costs: pd.DataFrame, power_kwe: float) -> dict:
     adjusted_occ = float(occ["Adjusted Total Cost"].sum())
     factor = adjusted_occ / input_occ if input_occ else 0.0
     lf = occ_local_foreign_totals(adjusted_costs)
+    data = adjusted_costs.copy()
+    accounts = _normalize_accounts(data["Account"])
+    if "Is Leaf Account" in data.columns:
+        leaf_mask = data["Is Leaf Account"].astype(bool)
+    else:
+        leaf_mask = _leaf_mask(accounts)
+    occ_mask = accounts.str.startswith(("1", "2", "3", "5"))
+    leaf_occ = data.loc[leaf_mask & occ_mask]
+    category_totals = {
+        "factory": float(leaf_occ["Adjusted Factory Equipment Cost"].sum()),
+        "material": float(leaf_occ["Adjusted Site Material Cost"].sum()),
+        "labor": float(leaf_occ["Adjusted Site Labor Cost"].sum()),
+        "other": float(
+            leaf_occ["Adjusted Land Cost"].sum()
+            + leaf_occ["Adjusted Catch-All Cost"].sum()
+        ),
+    }
     return {
         "input_occ_total": input_occ,
         "adjusted_occ_total": adjusted_occ,
@@ -2715,6 +2746,13 @@ def _iat_metrics(adjusted_costs: pd.DataFrame, power_kwe: float) -> dict:
         "adjusted_occ_per_kw": adjusted_occ / power_kwe if power_kwe else None,
         "local_occ_per_kw": lf["local"] / power_kwe if power_kwe else None,
         "foreign_occ_per_kw": lf["foreign"] / power_kwe if power_kwe else None,
+        "breakdown": {
+            **category_totals,
+            **{
+                f"{name}_per_kw": value / power_kwe if power_kwe else None
+                for name, value in category_totals.items()
+            },
+        },
         "comparison": _records(summary),
     }
 
@@ -3172,6 +3210,7 @@ def run_workflow(payload: dict) -> dict:
         crt_result = run_one_scenario(_crt_config(payload, baseline_csv=iat_csv), _levers(payload))
         _write_crt_results_csv(crt_result, results_csv)
         _crt_countries = payload["iat"].get("countries") or [payload["iat"].get("country", "")]
+        selected_country = _crt_countries[0] if _crt_countries else "United States"
         save_dashboard(
             crt_result,
             dashboard,
@@ -3179,11 +3218,27 @@ def run_workflow(payload: dict) -> dict:
                 payload.get("output_name", ""),
                 workflow,
                 payload["crt"]["reactor_type"],
-                _crt_countries[0],
+                selected_country,
             ),
             show_levers=bool(payload["crt"].get("show_levers", True)),
         )
-        response["iat"] = _summarize_iat_result(iat_result, _reactor_power_kwe(payload))
+        iat_summary = _summarize_iat_result(iat_result, _reactor_power_kwe(payload))
+        comparison_chart = []
+        if selected_country != "United States":
+            comparison_chart = [
+                _comparison_chart_row(
+                    "United States",
+                    {
+                        "adjusted_occ_per_kw": iat_summary["input_occ_per_kw"],
+                        "local_occ_per_kw": iat_summary["input_occ_per_kw"],
+                        "foreign_occ_per_kw": 0.0,
+                    },
+                    True,
+                ),
+                _comparison_chart_row(selected_country, iat_summary, False),
+            ]
+        iat_summary["comparison_chart"] = comparison_chart
+        response["iat"] = iat_summary
         response["iat"]["baseline_basis"] = (
             "WE-FOAK"
             if not iat_payload["iat"].get("csv_content") and not iat_payload["iat"].get("_prepared_from_accert_csv")

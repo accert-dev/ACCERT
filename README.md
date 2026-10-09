@@ -47,6 +47,24 @@ available from a terminal if needed:
 /opt/anaconda3/envs/py312/bin/python tutorial/gui/stop_gui.py
 ```
 
+On Windows, run the equivalent commands from the repository root with
+Python 3.12:
+
+```text
+py -3.12 tutorial/gui/launch_gui.py
+py -3.12 tutorial/gui/stop_gui.py
+```
+
+On Linux, use the installed Python 3.12 executable:
+
+```text
+python3.12 tutorial/gui/launch_gui.py
+python3.12 tutorial/gui/stop_gui.py
+```
+
+This is a local browser application. It listens only on `127.0.0.1`; it is
+not a remotely deployed web service.
+
 After changing GUI code, stop the current session, launch it again, and reload
 the browser page. Confirm that the page opens and that `/health` reports the
 local server as healthy. The launcher does not depend on closing a browser tab

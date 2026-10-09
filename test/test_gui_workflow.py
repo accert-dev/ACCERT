@@ -275,9 +275,12 @@ def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
     assert "display_foreign_per_kw: isUnitedStates ? 0" in crt_iat_gui.HTML
     assert "Color: Country" in crt_iat_gui.HTML
     assert "Cost origin" in crt_iat_gui.HTML
-    assert '"China": "#f28e2b"' in crt_iat_gui.HTML
-    assert '"South Korea": "#59a14f"' in crt_iat_gui.HTML
-    assert '"Poland": "#b07aa1"' in crt_iat_gui.HTML
+    assert '"China": "#ff7f0e"' in crt_iat_gui.HTML
+    assert '"South Korea": "#2ca02c"' in crt_iat_gui.HTML
+    assert '"Poland": "#d62728"' in crt_iat_gui.HTML
+    assert '"Thailand": "#8c564b"' in crt_iat_gui.HTML
+    assert '"Vietnam": "#e377c2"' in crt_iat_gui.HTML
+    assert '"Indonesia": "#bcbd22"' in crt_iat_gui.HTML
     assert "Solid — Local" in crt_iat_gui.HTML
     assert "Transparent hatch — Foreign / Imported" in crt_iat_gui.HTML
     assert 'const isUnitedStates = String(row.country || "").trim() === "United States"' in crt_iat_gui.HTML
@@ -309,6 +312,8 @@ def test_country_selection_is_multi_country_for_both_iat_only_sources():
     assert 'if ($("workflow").value === "iat_crt") return [$("countrySingle").value];' in crt_iat_gui.HTML
     assert '$("countryMulti").classList.toggle("hidden", isConnected)' in crt_iat_gui.HTML
     assert 'id="iatAssumptionCountryGroup"' in crt_iat_gui.HTML
+    for country in ("Thailand", "Vietnam", "Indonesia"):
+        assert f'value="{country}"' in crt_iat_gui.HTML
 
 
 def test_combined_iat_assumptions_follow_main_country_and_explain_cost_transition():
@@ -471,6 +476,8 @@ def test_combined_results_keep_iat_summary_before_crt_details():
     assert 'class="iat-breakdown"' in crt_iat_gui.HTML
     assert 'crt-key-cards' in crt_iat_gui.HTML
     assert 'function renderCombinedResults(data)' in crt_iat_gui.HTML
+    assert 'Original vs. Adjusted OCC' in crt_iat_gui.HTML
+    assert 'id="iatCombinedComparisonChart"' in crt_iat_gui.HTML
 
 
 def test_results_rendering_has_explicit_workflow_policies():
@@ -486,11 +493,92 @@ def test_results_rendering_has_explicit_workflow_policies():
 def test_iat_only_results_prioritize_adjusted_occ_and_cost_breakdown():
     assert 'function iatOnlyCountrySummary(iat)' in crt_iat_gui.HTML
     assert 'Adjusted OCC' in crt_iat_gui.HTML
-    assert 'Adjusted material' in crt_iat_gui.HTML
-    assert 'Adjusted factory' in crt_iat_gui.HTML
-    assert 'Adjusted labor' in crt_iat_gui.HTML
+    assert 'Material <strong>${value("material")}</strong>' in crt_iat_gui.HTML
+    assert 'Factory <strong>${value("factory")}</strong>' in crt_iat_gui.HTML
+    assert 'Labor <strong>${value("labor")}</strong>' in crt_iat_gui.HTML
+    assert 'Other OCC (land + catch-all)' in crt_iat_gui.HTML
     assert 'Base Case is the original OCC entering IAT' in crt_iat_gui.HTML
     assert 'Scenario input and adjusted result' in crt_iat_gui.HTML
+
+
+def test_iat_breakdown_uses_additive_leaf_category_totals(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": ["Korea", "Vietnam"],
+        "occ_values": [5250],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    for country_result in result["iat"]["country_results"]:
+        data = country_result["data"]
+        breakdown = data["breakdown"]
+        total = sum(breakdown[f"{name}_per_kw"] for name in ("factory", "material", "labor", "other"))
+        assert total == pytest.approx(data["adjusted_occ_per_kw"], abs=0.01)
+
+
+def test_combined_iat_includes_only_selected_country_comparison_chart(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["countries"] = ["Vietnam"]
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert [row["country"] for row in result["iat"]["comparison_chart"]] == [
+        "United States", "Vietnam"
+    ]
+    assert len(result["iat"]["comparison_chart"]) == 2
+
+
+@pytest.mark.parametrize("country", ["United States", "China", "Korea", "UAE", "Poland", "El Salvador", "Thailand", "Vietnam", "Indonesia"])
+def test_combined_iat_comparison_chart_has_expected_reference_rule(monkeypatch, tmp_path, country):
+    payload = _gui_payload("")
+    payload["iat"]["countries"] = [country]
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+    rows = result["iat"]["comparison_chart"]
+
+    if country == "United States":
+        assert rows == []
+    else:
+        assert [row["country"] for row in rows] == ["United States", country]
+        assert rows[0]["foreign_per_kw"] == 0
+        assert rows[0]["local_per_kw"] == pytest.approx(rows[0]["adjusted_occ_per_kw"])
+        assert rows[1]["adjusted_occ_per_kw"] == pytest.approx(
+            rows[1]["local_per_kw"] + rows[1]["foreign_per_kw"], abs=0.01
+        )
+
+
+def test_iat_only_all_supported_countries_have_unique_comparison_rows(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": [
+            "United States", "China", "Korea", "UAE", "Poland", "El Salvador",
+            "Thailand", "Vietnam", "Indonesia",
+        ],
+        "occ_values": [5750],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+    rows = result["iat"]["comparison_chart"]
+
+    assert [row["country"] for row in rows] == payload["iat"]["countries"]
+    assert len({row["country"] for row in rows}) == len(rows)
+    for row in rows:
+        assert row["adjusted_occ_per_kw"] == pytest.approx(
+            row["local_per_kw"] + row["foreign_per_kw"], abs=0.01
+        )
 
 
 def test_iat_adjusted_occ_highlight_is_scoped_to_readable_data_cells():

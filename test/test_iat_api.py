@@ -14,7 +14,15 @@ AP1000_BASELINE = REPO_ROOT / "src" / "crt" / "data" / "AP1000_baseline.csv"
 
 def test_iat_available_countries():
     assert available_countries() == [
-        "China", "El Salvador", "Korea", "Poland", "UAE", "United States"
+        "China",
+        "El Salvador",
+        "Indonesia",
+        "Korea",
+        "Poland",
+        "Thailand",
+        "UAE",
+        "United States",
+        "Vietnam",
     ]
 
 
@@ -447,6 +455,63 @@ def test_iat_v45_smr_occ_matches_workbook_summary_values():
             }
         )
         assert result["summary"]["Adjusted OCC"].tolist() == pytest.approx(values)
+
+
+@pytest.mark.parametrize(
+    ("country", "reactor_type", "occ_values", "expected"),
+    [
+        (
+            "Thailand",
+            "large reactor",
+            [5250, 5750, 7750],
+            [4701.714249, 5149.496559, 6940.625796],
+        ),
+        (
+            "Vietnam",
+            "large reactor",
+            [5250, 5750, 7750],
+            [4890.497085, 5356.258712, 7219.305220],
+        ),
+        (
+            "Indonesia",
+            "large reactor",
+            [5250, 5750, 7750],
+            [4493.833069, 4921.817170, 6633.753578],
+        ),
+        (
+            "Thailand",
+            "SMR",
+            [5500, 8000, 10000],
+            [5047.527103, 7341.857605, 9177.322006],
+        ),
+        (
+            "Vietnam",
+            "SMR",
+            [5500, 8000, 10000],
+            [5355.943323, 7790.463016, 9738.078770],
+        ),
+        (
+            "Indonesia",
+            "SMR",
+            [5500, 8000, 10000],
+            [4414.717476, 6421.407237, 8026.759047],
+        ),
+    ],
+)
+def test_iat_new_country_occ_matches_supplied_results(
+    country, reactor_type, occ_values, expected
+):
+    result = run_occ_scenarios(
+        {
+            "reactor_type": reactor_type,
+            "country": country,
+            "year_dollar": 2024,
+            "occ_values": occ_values,
+        }
+    )
+    assert result["summary"]["Adjusted OCC"].tolist() == pytest.approx(
+        expected, abs=0.01
+    )
 
 
 def test_iat_runs_multiple_standalone_occ_scenarios():
