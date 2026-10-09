@@ -17,8 +17,10 @@ import errno
 import mimetypes
 import os
 import re
+import signal
 import sys
 import tempfile
+import threading
 import traceback
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -3242,6 +3244,20 @@ def pid_file(port: int | str) -> Path:
     return RUNTIME_DIR / f"gui-{resolve_gui_port(port)}.pid"
 
 
+def find_available_port(host: str = HOST, preferred: int = PORT) -> int:
+    """Return the preferred port when free, otherwise the next free local port."""
+    for candidate in range(preferred, 65536):
+        try:
+            probe = ReusableThreadingHTTPServer((host, candidate), Handler)
+        except OSError as exc:
+            if exc.errno in {errno.EADDRINUSE, errno.EADDRNOTAVAIL}:
+                continue
+            raise
+        probe.server_close()
+        return candidate
+    raise OSError("No available local port was found for the ACCERT GUI.")
+
+
 def is_gui_running(host: str = HOST, port: int | str | None = None, timeout: float = 0.5) -> bool:
     try:
         with urlopen(f"{gui_url(host, port)}/health", timeout=timeout) as response:
@@ -3283,6 +3299,13 @@ def main(argv: list[str] | None = None) -> None:
     runtime_pid = pid_file(server.server_port)
     RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
     runtime_pid.write_text(str(os.getpid()), encoding="utf-8")
+
+    def request_shutdown(_signum: int, _frame: object) -> None:
+        # HTTPServer.shutdown() must run outside serve_forever()'s thread.
+        threading.Thread(target=server.shutdown, daemon=True).start()
+
+    signal.signal(signal.SIGTERM, request_shutdown)
+    signal.signal(signal.SIGINT, request_shutdown)
     try:
         if not args.no_browser:
             webbrowser.open(url)

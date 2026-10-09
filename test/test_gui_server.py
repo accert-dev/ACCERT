@@ -1,5 +1,6 @@
 import json
 import threading
+import socket
 import urllib.error
 import urllib.request
 
@@ -35,3 +36,13 @@ def test_gui_port_can_be_selected_without_changing_default(monkeypatch):
 
     monkeypatch.setenv("ACCERT_GUI_PORT", "9876")
     assert crt_iat_gui.resolve_gui_port() == 9876
+
+
+def test_find_available_port_skips_an_occupied_port():
+    occupied = socket.socket()
+    occupied.bind((crt_iat_gui.HOST, 0))
+    occupied_port = occupied.getsockname()[1]
+    try:
+        assert crt_iat_gui.find_available_port(preferred=occupied_port) != occupied_port
+    finally:
+        occupied.close()
