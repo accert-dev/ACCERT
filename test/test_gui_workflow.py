@@ -739,24 +739,22 @@ def test_phase_2a_separates_basic_inputs_from_collapsed_advanced_inputs():
     assert '<details class="advanced-section" id="advancedLevers">' in crt_iat_gui.HTML
 
 
-def test_phase_2b_presets_use_existing_configs_and_track_modifications():
-    assert 'id="presetSelector"' in crt_iat_gui.HTML
-    for label in [
-        "AP1000 — United States baseline",
-        "AP1000 — China",
-        "SFR baseline",
-        "HTGR baseline",
-        "Custom ACCERT output",
-    ]:
-        assert label in crt_iat_gui.HTML
-    assert "const presetDefinitions =" in crt_iat_gui.HTML
-    assert "reactorConfigs[preset.model]" in crt_iat_gui.HTML
-    assert "Automatically populated" in crt_iat_gui.HTML
-    assert "presetFieldSnapshot()" in crt_iat_gui.HTML
-    assert "· Modified" in crt_iat_gui.HTML
-    assert 'id="presetSource"' in crt_iat_gui.HTML
-    assert 'id="presetStatus" role="status"' in crt_iat_gui.HTML
-    assert '$("presetSelector").addEventListener("change"' in crt_iat_gui.HTML
+def test_phase_2_followup_removes_starting_preset_and_keeps_workflows():
+    assert 'id="presetSelector"' not in crt_iat_gui.HTML
+    assert "Starting preset" not in crt_iat_gui.HTML
+    assert 'value="iat_only"' in crt_iat_gui.HTML
+    assert 'value="crt_only"' in crt_iat_gui.HTML
+    assert 'value="iat_crt"' in crt_iat_gui.HTML
+    assert "reactorConfigs" in crt_iat_gui.HTML
+
+
+def test_phase_2_followup_combined_results_include_iAT_numerical_table():
+    assert 'function renderCombinedResults(data)' in crt_iat_gui.HTML
+    assert 'class="chart-panel iat-combined-table"' in crt_iat_gui.HTML
+    assert 'Numerical account-level results from the IAT-adjusted baseline.' in crt_iat_gui.HTML
+    assert 'iatBlock(iat, "", false)' in crt_iat_gui.HTML
+    assert 'iatResultColumns' in crt_iat_gui.HTML
+    assert 'IAT adjusted CSV' in crt_iat_gui.HTML
 
 
 def test_phase_2c_preflight_validation_marks_fields_and_preserves_run_gate():
