@@ -10,7 +10,7 @@ authors = [
     { name = "Argonne National Laboratory", email = "jia.zhou@anl.gov" }
 ]
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 license = { file = "LICENSE" }
 dependencies = [
     "configparser",
@@ -34,11 +34,9 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 
 [project.urls]
@@ -48,6 +46,14 @@ Homepage = "https://github.com/accert-dev/ACCERT"
 where = ["src"]
 
 [tool.pytest.ini_options]
+addopts = "-m 'not gui and not slow and not regression'"
+markers = [
+    "core: fast deterministic ACCERT, IAT, CRT, and utility tests",
+    "workflow: direct IAT/CRT/ACCERT workflow integration tests",
+    "gui: GUI source, server, and browser-facing behavior tests",
+    "slow: computationally expensive tests excluded from the default run",
+    "regression: release-level regression coverage, including broad matrices",
+]
 filterwarnings = [
     "ignore:datetime\\.datetime\\.utcnow\\(\\) is deprecated and scheduled for removal in a future version:DeprecationWarning:openpyxl\\.packaging\\.core",
 ]

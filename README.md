@@ -1,28 +1,69 @@
-# Getting Started
+# ACCERT
 
-The main function of ACCERT (The Algorithm for the Capital Cost Estimation of Reactor Technologies) is to provide an item-by-item estimate of the cost of a facility, at present a nuclear reactor complex, primarily nuclear power stations. The core of ACCERT is the large number of algorithms that have been developed and will continue to be developed. ACCERT is also a general methodology for identifying and organizing the individual items that are estimated using the ACCERT algorithms. ACCERT also summarize status and results; to save results and pull information from previous analyses; and to provide an interactive dynamic graphical user interface for a wide range of functions and visualizations. 
+ACCERT (the Algorithm for the Capital Cost Estimation of Reactor
+Technologies) estimates reactor-facility costs item by item. It includes
+capital-cost algorithms, a SQLite database, International Adjustment Tool
+(IAT) and Cost Reduction Tool (CRT) workflows, and an interactive GUI for
+reviewing results and visualizations.
 
+ACCERT can integrate with the [NEAMS
+Workbench](https://www.ornl.gov/project/neams-workbench) and can use
+Workbench SON input files. The repository includes the SQLite database at
+`src/accertdb.sqlite`.
 
-The software comprises three major components:
-*	Relational Database
-    *	Creation, editing, and linking of different element types
-    *	Report generation (queries)
-    *	Search
-*	Equation solvers (extraction of information from elements and evaluation/updating of fields in the database)
-    *	Algorithms
-    *	Escalation
-    *	Cost aggregation
-*	Interactive Graphical User Interface
-    *	Dynamic windows
+## Requirements
 
+The project metadata supports Python 3.10 and newer. The application and test
+suite have been tested with Python 3.12. If you encounter compatibility
+issues, check your Python version.
 
-ACCERT is designed for integration with the [NEAMS
-Workbench](https://www.ornl.gov/project/neams-workbench) and relies on input
-files using Workbench's SON format. ACCERT uses the bundled SQLite database at
-`src/accertdb.sqlite`. Instructions for installing ACCERT both
-with and without Workbench are provided in this README.
+Install the Python dependencies from the repository root:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Conda is not required by the project.
+
+## Start the GUI on macOS
+
+The macOS launcher is the supported, tested GUI startup path:
+
+1. Install Python and the project dependencies.
+2. Double-click [Launch ACCERT GUI.command](tutorial/gui/Launch%20ACCERT%20GUI.command).
+3. The launcher starts the local GUI server and opens the GUI in the default browser.
+
+To stop a launcher-managed session, double-click
+[Stop ACCERT GUI.command](tutorial/gui/Stop%20ACCERT%20GUI.command).
+
+The macOS launcher has been tested successfully. Windows and Linux launchers
+have not been confirmed as tested. The underlying Python modules may be useful
+on other platforms, but this README does not claim that the GUI launcher works
+there.
+
+## Basic GUI use
+
+Choose an IAT-only, CRT-only, or connected IAT-then-CRT workflow. Select the
+source and country, review the visible assumptions, expand advanced sections
+when needed, and select **Run analysis**. Results include summary cards,
+interactive charts, tables, and downloadable output files.
+
+## Running tests
+
+These commands use the pytest configuration in `pyproject.toml`:
+
+```bash
+# Quick default suite
+python -m pytest
+
+# GUI-related tests
+python -m pytest -m gui
+
+# Complete collected suite, including GUI and slow regression tests
+python -m pytest -o addopts=""
+```
 
 ## Documentation
 
-Documentation for ACCERT can be found
-[__here__](https://accert.readthedocs.io/en/latest/index.html).
+More detailed ACCERT documentation is available at
+[Read the Docs](https://accert.readthedocs.io/en/latest/index.html).

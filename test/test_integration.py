@@ -10,6 +10,8 @@ from itertools import zip_longest
 from pathlib import Path
 import pytest
 
+pytestmark = [pytest.mark.workflow, pytest.mark.slow, pytest.mark.regression]
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TEST_DIR = Path(__file__).resolve().parent

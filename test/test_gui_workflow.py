@@ -1,5 +1,10 @@
+import inspect
+import re
+
 import pandas as pd
 import pytest
+
+pytestmark = [pytest.mark.workflow, pytest.mark.gui]
 
 from tutorial.gui import crt_iat_gui
 
@@ -113,3 +118,633 @@ def test_gui_crt_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
     base_coas = [row["COA"] for row in result["base_case"]["comparison"]]
     assert base_coas.index("21") == base_coas.index("20") + 1
     assert base_coas.index("22") == base_coas.index("21") + 1
+
+
+def test_gui_accepts_large_reactor_with_ap1000(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+    result = crt_iat_gui.run_workflow(payload)
+    assert result["crt"]["plants"]
+
+
+def test_gui_rejects_large_reactor_with_sfr():
+    payload = _gui_payload("")
+    payload["crt"]["reactor_type"] = "SFR"
+
+    with pytest.raises(ValueError, match="not compatible with IAT reactor type"):
+        crt_iat_gui.run_workflow(payload)
+
+
+def test_gui_rejects_large_reactor_with_htgr():
+    payload = _gui_payload("")
+    payload["crt"]["reactor_type"] = "HTGR"
+
+    with pytest.raises(ValueError, match="not compatible with IAT reactor type"):
+        crt_iat_gui.run_workflow(payload)
+
+
+def test_gui_accepts_smr_with_sfr(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["reactor_type"] = "ACCERT output-SMR"
+    payload["crt"]["reactor_type"] = "SFR"
+    payload["iat"]["electric_output_mwe"] = 310.8
+    payload["iat"]["input_csv"] = "src/crt/data/SFR_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+    assert result["crt"]["plants"]
+
+
+def test_gui_accepts_smr_with_htgr_and_uses_iat_output(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["reactor_type"] = "ACCERT output-SMR"
+    payload["iat"]["input_csv"] = "src/crt/data/HTGR_baseline.csv"
+    payload["iat"]["electric_output_mwe"] = 1056
+    payload["iat"]["baseline_reactor_type"] = "HTGR"
+    payload["crt"]["reactor_type"] = "HTGR"
+    payload["crt"]["baseline_csv_content"] = "not-used-in-iat-crt"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert result["crt"]["plants"]
+    assert result["files"]["IAT adjusted CSV"]
+
+
+def test_gui_honors_only_iat_output_for_iat_crt_baseline(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    payload["crt"]["baseline_csv_content"] = "not-used-in-iat-crt"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert result["crt"]["plants"]
+    assert "Optional CRT baseline" not in result["notes"]
+
+
+def test_iat_only_comparison_has_no_synthetic_base_case_rows(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": ["United States", "China"],
+        "occ_values": [5750],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert result["iat"]["country_results"]
+    assert {row["country"] for row in result["iat"]["comparison_chart"]} == {"United States", "China"}
+    assert len(result["iat"]["comparison_chart"]) == 2
+    for row in result["iat"]["comparison_chart"]:
+        assert row["adjusted_occ_per_kw"] == pytest.approx(
+            row["local_per_kw"] + row["foreign_per_kw"], abs=0.01
+        )
+
+    us_row = next(row for row in result["iat"]["comparison_chart"] if row["country"] == "United States")
+    assert us_row["reference_case"] is True
+    assert us_row["local_per_kw"] == pytest.approx(us_row["adjusted_occ_per_kw"])
+    assert us_row["foreign_per_kw"] == 0
+    assert us_row["model_foreign_per_kw"] > 0
+
+
+def test_us_iat_chart_always_uses_reference_display_even_with_custom_model_foreign(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": ["United States"],
+        "occ_values": [5750],
+        "adjustment_factor_overrides": {"United States": {"labor": 1.1}},
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    row = crt_iat_gui.run_workflow(payload)["iat"]["comparison_chart"][0]
+
+    assert row["reference_case"] is True
+    assert row["foreign_per_kw"] == 0
+    assert row["local_per_kw"] == pytest.approx(row["adjusted_occ_per_kw"])
+    assert row["model_foreign_per_kw"] > 0
+
+
+@pytest.mark.parametrize("input_mode", ["occ", "csv"])
+def test_iat_only_supports_both_cost_structures_for_multiple_countries(monkeypatch, tmp_path, input_mode):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": input_mode,
+        "reactor_type": "large reactor" if input_mode == "occ" else "ACCERT output-LR",
+        "countries": ["United States", "China", "Poland"],
+        "occ_values": [5750],
+    })
+    if input_mode == "csv":
+        payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert [row["country"] for row in result["iat"]["comparison_chart"]] == [
+        "United States", "China", "Poland"
+    ]
+    assert len(result["iat"]["country_results"]) == 3
+    assert len(result["files"]) == 3
+
+
+def test_iat_standalone_occ_comparison_preserves_country_and_scenario_order(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": ["United States", "China", "Poland"],
+        "occ_values": [7000, 5000, 6000],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    rows = crt_iat_gui.run_workflow(payload)["iat"]["comparison_chart"]
+
+    assert len(rows) == 9
+    assert [(row["country"], row["scenario"]) for row in rows] == [
+        (country, scenario)
+        for country in ["United States", "China", "Poland"]
+        for scenario in ["Scenario 1", "Scenario 2", "Scenario 3"]
+    ]
+    for country in ["United States", "China", "Poland"]:
+        country_rows = [row for row in rows if row["country"] == country]
+        assert [row["scenario"] for row in country_rows] == ["Scenario 1", "Scenario 2", "Scenario 3"]
+        assert len({row["country"] for row in country_rows}) == 1
+    assert all(row["foreign_per_kw"] == 0 for row in rows if row["country"] == "United States")
+    assert all(row["reference_case"] is True for row in rows if row["country"] == "United States")
+    assert all(row["foreign_per_kw"] > 0 for row in rows if row["country"] != "United States")
+
+
+def test_iat_country_assumption_selector_is_separate_from_country_multi_select():
+    assert 'id="iatAssumptionCountry"' in crt_iat_gui.HTML
+    assert 'function updateIatAssumptionCountryOptions()' in crt_iat_gui.HTML
+    assert 'iatFactorOverrides[country]' in crt_iat_gui.HTML
+    assert 'return $("iatAssumptionCountry").value || selectedCountries()[0]' in crt_iat_gui.HTML
+
+
+def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
+    assert "function countryComparisonChart(rows)" in crt_iat_gui.HTML
+    assert 'aria-label="Adjusted OCC by country and scenario"' in crt_iat_gui.HTML
+    assert 'id="iatCountryCompChart"' in crt_iat_gui.HTML
+    assert "function iatCountryColor(country, index)" in crt_iat_gui.HTML
+    assert 'id="${patternId}"' in crt_iat_gui.HTML
+    assert 'fill="url(#${patternId})"' in crt_iat_gui.HTML
+    assert 'patternTransform="rotate(35)"' in crt_iat_gui.HTML
+    assert 'fill="none" stroke="${color}"' in crt_iat_gui.HTML
+    assert 'stroke="white"' not in crt_iat_gui.HTML
+    assert "function finalCountryComparisonRows(rows)" in crt_iat_gui.HTML
+    assert "display_foreign_per_kw: isUnitedStates ? 0" in crt_iat_gui.HTML
+    assert "Color: Country" in crt_iat_gui.HTML
+    assert "Cost origin" in crt_iat_gui.HTML
+    assert '"China": "#ff7f0e"' in crt_iat_gui.HTML
+    assert '"South Korea": "#2ca02c"' in crt_iat_gui.HTML
+    assert '"Poland": "#d62728"' in crt_iat_gui.HTML
+    assert '"Thailand": "#8c564b"' in crt_iat_gui.HTML
+    assert '"Vietnam": "#e377c2"' in crt_iat_gui.HTML
+    assert '"Indonesia": "#bcbd22"' in crt_iat_gui.HTML
+    assert "Solid — Local" in crt_iat_gui.HTML
+    assert "Transparent hatch — Foreign / Imported" in crt_iat_gui.HTML
+    assert 'const isUnitedStates = String(row.country || "").trim() === "United States"' in crt_iat_gui.HTML
+    assert "Foreign / Imported OCC ($/kW)" in crt_iat_gui.HTML
+    assert "Model check difference" in crt_iat_gui.HTML
+    assert "const groups = countries.map(country => ({" in crt_iat_gui.HTML
+    assert "rows: finalRows.filter(row => row.country === country)" in crt_iat_gui.HTML
+    assert "const scenarioLabel = row.scenario || `Scenario ${scenarioIndex + 1}`" in crt_iat_gui.HTML
+    assert "const scenarioShortLabel =" in crt_iat_gui.HTML
+    assert "${esc(scenarioShortLabel)}</text>" in crt_iat_gui.HTML
+    assert "${esc(scenarioLabel)}</b><br>Original OCC" in crt_iat_gui.HTML
+    assert "group.rows.forEach((row, scenarioIndex)" in crt_iat_gui.HTML
+    assert "iatForeignHatch-${tabSafe(country)}" in crt_iat_gui.HTML
+    assert "iatOccCompChart" not in crt_iat_gui.HTML
+    assert "iatLfChart" not in crt_iat_gui.HTML
+
+
+def test_iat_reference_display_transform_preserves_raw_model_decomposition():
+    summary = {
+        "adjusted_occ_per_kw": 100.0,
+        "local_occ_per_kw": 72.0,
+        "foreign_occ_per_kw": 28.0,
+    }
+
+    reference = crt_iat_gui._comparison_chart_row("United States", summary, True)
+    custom = crt_iat_gui._comparison_chart_row("United States", summary, False)
+
+    assert reference["local_per_kw"] == 100.0
+    assert reference["foreign_per_kw"] == 0.0
+    assert reference["model_local_per_kw"] == 72.0
+    assert reference["model_foreign_per_kw"] == 28.0
+    assert custom["local_per_kw"] == 72.0
+    assert custom["foreign_per_kw"] == 28.0
+
+
+def test_country_selection_is_multi_country_for_both_iat_only_sources():
+    assert 'if ($("workflow").value === "iat_crt") return [$("countrySingle").value];' in crt_iat_gui.HTML
+    assert '$("countryMulti").classList.toggle("hidden", isConnected)' in crt_iat_gui.HTML
+    assert 'id="iatAssumptionCountryGroup"' in crt_iat_gui.HTML
+    for country in ("Thailand", "Vietnam", "Indonesia"):
+        assert f'value="{country}"' in crt_iat_gui.HTML
+
+
+def test_combined_iat_assumptions_follow_main_country_and_explain_cost_transition():
+    assert 'id="iatAssumptionsHeading"' in crt_iat_gui.HTML
+    assert 'Advanced IAT Assumptions — ${displayCountryName(country)}' in crt_iat_gui.HTML
+    assert 'iatAssumptionCountryGroup").classList.toggle("hidden", isConnected' in crt_iat_gui.HTML
+    assert 'Original OCC (${esc("United States")}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert 'Adjusted OCC (${esc(country)}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert "IAT-adjusted OCC represents the country-adjusted WE-FOAK cost baseline" in crt_iat_gui.HTML
+
+
+def test_crt_only_output_name_uses_united_states_reference():
+    assert 'workflow === "crt_only"' in crt_iat_gui.HTML
+    assert '$("crtCsvFile").addEventListener("change", () => {' in crt_iat_gui.HTML
+    assert 'updateOutputName();' in crt_iat_gui.HTML
+
+
+def test_capital_chart_uses_calculated_itc_portion_pattern():
+    assert 'id="itcHatch"' in crt_iat_gui.HTML
+    assert "ITC reduction" in crt_iat_gui.HTML
+    assert 'fill="url(#itcHatch)"' in crt_iat_gui.HTML
+
+
+def test_capital_cost_records_split_tci_into_nci_and_actual_itc_reduction():
+    rows = pd.DataFrame(
+        [
+            {"Plant number": 1, "TCI": 6000.0, "NCI": 4000.0, "OCC": 5000.0, "Net OCC": 3200.0},
+            {"Plant number": 2, "TCI": 5000.0, "NCI": None, "OCC": 4200.0, "Net OCC": None},
+        ]
+    )
+
+    records = crt_iat_gui._capital_cost_records(rows)
+
+    assert records[0]["NCI"] == pytest.approx(4000.0)
+    assert records[0]["ITC reduction"] == pytest.approx(2000.0)
+    assert records[0]["TCI ITC reduction"] == pytest.approx(2000.0)
+    assert records[0]["OCC ITC reduction"] == pytest.approx(1800.0)
+    assert records[0]["NCI"] + records[0]["ITC reduction"] == pytest.approx(records[0]["TCI"])
+    assert records[1]["NCI"] == pytest.approx(records[1]["TCI"])
+    assert records[1]["ITC reduction"] == pytest.approx(0.0)
+    assert records[1]["TCI ITC reduction"] == pytest.approx(0.0)
+    assert records[1]["OCC ITC reduction"] == pytest.approx(0.0)
+    assert records[0]["OCC"] == pytest.approx(5000.0)
+    assert records[0]["Net OCC"] == pytest.approx(3200.0)
+
+
+def test_capital_chart_uses_trace_specific_tooltips_and_reductions():
+    assert 'const tciReduction = Math.max(0, Number(r["TCI ITC reduction"] ?? (tci - netTci)));' in crt_iat_gui.HTML
+    assert 'const occReduction = Math.max(0, Number(r["OCC ITC reduction"] ?? (occ - netOccValueActual)));' in crt_iat_gui.HTML
+    assert 'const tciTip =' in crt_iat_gui.HTML
+    assert 'const occTip =' in crt_iat_gui.HTML
+    assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
+    assert 'data-tip="${occTip}"' in crt_iat_gui.HTML
+    assert 'TCI / Net TCI ($/kW)' in crt_iat_gui.HTML
+    assert 'OCC / Net OCC ($/kW)' in crt_iat_gui.HTML
+    assert "tciReduction > 0" in crt_iat_gui.HTML
+    assert "occReduction > 0" in crt_iat_gui.HTML
+    assert "TCI ($/kW)" in crt_iat_gui.HTML
+    assert "OCC ($/kW)" in crt_iat_gui.HTML
+
+
+def test_gui_display_units_convert_to_native_crt_units():
+    assert crt_iat_gui.land_cost_from_gui(22) == pytest.approx(22_000.0)
+    assert crt_iat_gui.land_cost_from_gui(25) == pytest.approx(25_000.0)
+    assert crt_iat_gui.labor_hours_from_gui(51.11) == pytest.approx(51_110_000.0)
+    assert crt_iat_gui.labor_hours_from_gui(52.5) == pytest.approx(52_500_000.0)
+
+
+def test_gui_defaults_are_derived_from_native_reactor_config():
+    ap1000 = crt_iat_gui.REACTOR_CONFIGS["AP1000"]
+    assert crt_iat_gui.DEFAULT_LAND_COST_PER_ACRE == pytest.approx(22_000.0)
+    assert crt_iat_gui.land_cost_from_gui(
+        crt_iat_gui.DEFAULT_LAND_COST_PER_ACRE / crt_iat_gui.LAND_COST_PER_GUI_UNIT
+    ) == pytest.approx(22_000.0)
+    assert ap1000["labor_hours_20s"] / crt_iat_gui.LABOR_HOURS_PER_MILLION == pytest.approx(51.112635470753975)
+
+
+def test_gui_uses_human_scale_labels_and_explicit_conversion_layer():
+    assert 'Land Cost ($k/acre)' in crt_iat_gui.HTML
+    assert 'Total labor hours (million)' in crt_iat_gui.HTML
+    assert "landCostToBackend(numberValue(\"landCost\"))" in crt_iat_gui.HTML
+    assert "laborHoursToBackend(numberValue(\"total20sLaborHours\"))" in crt_iat_gui.HTML
+
+
+def test_gui_groups_conditional_inputs_and_aligns_crt_cost_fields():
+    assert 'class="triple crt-cost-row"' in crt_iat_gui.HTML
+    assert 'class="baseline-control-row"' in crt_iat_gui.HTML
+    assert 'id="iatUploadGroup"' in crt_iat_gui.HTML
+    assert 'id="crtReactorTypeGroup"' in crt_iat_gui.HTML
+    assert '$("iatUploadGroup").classList.toggle("hidden", !isCustom)' in crt_iat_gui.HTML
+    assert '$("crtReactorTypeGroup").classList.toggle("hidden", workflow !== "crt_only")' in crt_iat_gui.HTML
+
+
+def test_capital_chart_keeps_paired_bars_compact():
+    assert "Math.min(34, groupW * 0.28)" in crt_iat_gui.HTML
+
+
+def test_capital_chart_uses_consistent_outlines_and_compact_legend_tooltip():
+    assert 'top: 58' in crt_iat_gui.HTML
+    assert 'fill="#2ca02c" stroke="#2ca02c" stroke-width="1.5"' in crt_iat_gui.HTML
+    assert 'TCI / Net TCI ($/kW)' in crt_iat_gui.HTML
+    assert 'OCC / Net OCC ($/kW)' in crt_iat_gui.HTML
+    assert 'ITC Reduction ($/kW)' in crt_iat_gui.HTML
+    assert 'TCI / Net TCI' in crt_iat_gui.HTML
+    assert 'OCC / Net OCC' in crt_iat_gui.HTML
+
+
+def test_capital_tooltip_keeps_gross_net_pairs_together():
+    assert '#tooltip .tip-label' in crt_iat_gui.HTML
+    assert 'white-space: nowrap' in crt_iat_gui.HTML
+    assert "class='tip-label'>TCI / Net TCI ($/kW)</span><span class='tip-value'>" in crt_iat_gui.HTML
+    assert "class='tip-label'>OCC / Net OCC ($/kW)</span><span class='tip-value'>" in crt_iat_gui.HTML
+
+
+def test_phase_one_gui_has_three_step_input_flow_and_advanced_sections():
+    assert 'class="workflow-steps"' in crt_iat_gui.HTML
+    assert '<nav class="workflow-steps"' in crt_iat_gui.HTML
+    assert 'class="workflow-step active" type="button"' in crt_iat_gui.HTML
+    assert 'aria-controls="taskSourcePanel"' in crt_iat_gui.HTML
+    assert 'aria-controls="runSummary"' in crt_iat_gui.HTML
+    assert 'function navigateToWorkflowStep(step)' in crt_iat_gui.HTML
+    assert 'data-step="1"' in crt_iat_gui.HTML
+    assert 'data-step="2"' in crt_iat_gui.HTML
+    assert 'data-step="3"' in crt_iat_gui.HTML
+    assert '<details class="advanced-section"' in crt_iat_gui.HTML
+    assert 'Advanced IAT Assumptions' in crt_iat_gui.HTML
+    assert 'Advanced CRT assumptions' in crt_iat_gui.HTML
+    assert 'CRT levers' in crt_iat_gui.HTML
+    assert 'aria-controls="iatAdvancedFields"' in crt_iat_gui.HTML
+    assert 'aria-controls="leverPanel"' in crt_iat_gui.HTML
+
+
+def test_phase_one_gui_preserves_workflow_fields_and_improves_narrow_layout():
+    for field_id in ["workflow", "iatInputMode", "iatReactorType", "iatBaseline", "crtReactorType", "crtCsvFile", "runSummary"]:
+        assert f'id="{field_id}"' in crt_iat_gui.HTML
+    assert 'input, select {' in crt_iat_gui.HTML
+    assert 'box-sizing: border-box' in crt_iat_gui.HTML
+    assert '.row, .triple, .lever-matrix { grid-template-columns: 1fr; }' in crt_iat_gui.HTML
+    assert 'item.setAttribute("aria-current"' in crt_iat_gui.HTML
+
+
+def test_phase_one_gui_help_controls_are_keyboard_reachable():
+    assert 'help.setAttribute("tabindex", "0")' in crt_iat_gui.HTML
+    assert 'help.setAttribute("aria-label"' in crt_iat_gui.HTML
+    assert 'help.addEventListener("focus"' in crt_iat_gui.HTML
+
+
+def test_phase_one_gui_explains_terms_and_exposes_run_summary_states():
+    for term in ["International Adjustment Tool", "Cost Reduction Tool", "First-of-a-Kind", "Nth-of-a-Kind", "cost-reduction levers"]:
+        assert term in crt_iat_gui.HTML
+    assert 'id="runSummary"' in crt_iat_gui.HTML
+    assert 'id="processingStage"' in crt_iat_gui.HTML
+    assert 'id="emptyState"' in crt_iat_gui.HTML
+    assert "Running IAT" in crt_iat_gui.HTML
+    assert "Running CRT" in crt_iat_gui.HTML
+
+
+def test_phase_one_results_include_prominent_summary_cards():
+    for label in ["Overnight Capital Cost (OCC)", "Total Capital Investment (TCI)", "Construction Duration"]:
+        assert label in crt_iat_gui.HTML
+    assert 'class="crt-metric-cards"' in crt_iat_gui.HTML
+
+
+def test_empty_state_updates_for_selected_workflow_and_terms_are_visible():
+    assert 'id="emptyTitle"' in crt_iat_gui.HTML
+    assert 'id="emptyDescription"' in crt_iat_gui.HTML
+    assert 'id="termGuide"' in crt_iat_gui.HTML
+    assert 'function updateEmptyState()' in crt_iat_gui.HTML
+    assert 'IAT results will appear here' in crt_iat_gui.HTML
+    assert 'CRT results will appear here' in crt_iat_gui.HTML
+    assert 'Connected IAT → CRT results will appear here' in crt_iat_gui.HTML
+    assert 'color: var(--ink);' in crt_iat_gui.HTML
+
+
+def test_combined_results_keep_iat_summary_before_crt_details():
+    assert 'class="iat-results-section"' in crt_iat_gui.HTML
+    assert 'IAT Results' in crt_iat_gui.HTML
+    assert 'Original OCC (${esc("United States")}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert 'Adjusted OCC (${esc(country)}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert 'IAT adjustment' in crt_iat_gui.HTML
+    assert 'CRT Results' in crt_iat_gui.HTML
+    assert 'class="iat-breakdown"' in crt_iat_gui.HTML
+    assert 'crt-key-cards' in crt_iat_gui.HTML
+    assert 'function renderCombinedResults(data)' in crt_iat_gui.HTML
+    assert 'Original vs. Adjusted OCC' in crt_iat_gui.HTML
+    assert 'id="iatCombinedComparisonChart"' in crt_iat_gui.HTML
+
+
+def test_results_rendering_has_explicit_workflow_policies():
+    assert 'function renderIatOnlyResults(data)' in crt_iat_gui.HTML
+    assert 'function renderCombinedResults(data)' in crt_iat_gui.HTML
+    assert 'function renderCrtOnlyResults(data)' in crt_iat_gui.HTML
+    assert 'Original OCC (${esc("United States")}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert 'Adjusted OCC (${esc(country)}, ${esc(basis)})' in crt_iat_gui.HTML
+    assert 'if (data.workflow === "crt_only")' in crt_iat_gui.HTML
+    assert 'resultSummaryCards(data)' not in crt_iat_gui.HTML
+
+
+def test_iat_only_results_prioritize_adjusted_occ_and_cost_breakdown():
+    assert 'function iatOnlyCountrySummary(iat)' in crt_iat_gui.HTML
+    assert 'Adjusted OCC' in crt_iat_gui.HTML
+    assert 'Material <strong>${value("material")}</strong>' in crt_iat_gui.HTML
+    assert 'Factory <strong>${value("factory")}</strong>' in crt_iat_gui.HTML
+    assert 'Labor <strong>${value("labor")}</strong>' in crt_iat_gui.HTML
+    assert 'Other OCC (land + catch-all)' in crt_iat_gui.HTML
+    assert 'Base Case is the original OCC entering IAT' in crt_iat_gui.HTML
+    assert 'Scenario input and adjusted result' in crt_iat_gui.HTML
+
+
+def test_iat_breakdown_uses_additive_leaf_category_totals(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": ["Korea", "Vietnam"],
+        "occ_values": [5250],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    for country_result in result["iat"]["country_results"]:
+        data = country_result["data"]
+        breakdown = data["breakdown"]
+        total = sum(breakdown[f"{name}_per_kw"] for name in ("factory", "material", "labor", "other"))
+        assert total == pytest.approx(data["adjusted_occ_per_kw"], abs=0.01)
+
+
+def test_combined_iat_includes_only_selected_country_comparison_chart(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["countries"] = ["Vietnam"]
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert [row["country"] for row in result["iat"]["comparison_chart"]] == [
+        "United States", "Vietnam"
+    ]
+    assert len(result["iat"]["comparison_chart"]) == 2
+
+
+@pytest.mark.parametrize("country", ["United States", "China", "Korea", "UAE", "Poland", "El Salvador", "Thailand", "Vietnam", "Indonesia"])
+def test_combined_iat_comparison_chart_has_expected_reference_rule(monkeypatch, tmp_path, country):
+    payload = _gui_payload("")
+    payload["iat"]["countries"] = [country]
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+    rows = result["iat"]["comparison_chart"]
+
+    if country == "United States":
+        assert rows == []
+    else:
+        assert [row["country"] for row in rows] == ["United States", country]
+        assert rows[0]["foreign_per_kw"] == 0
+        assert rows[0]["local_per_kw"] == pytest.approx(rows[0]["adjusted_occ_per_kw"])
+        assert rows[1]["adjusted_occ_per_kw"] == pytest.approx(
+            rows[1]["local_per_kw"] + rows[1]["foreign_per_kw"], abs=0.01
+        )
+
+
+def test_iat_only_all_supported_countries_have_unique_comparison_rows(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": [
+            "United States", "China", "Korea", "UAE", "Poland", "El Salvador",
+            "Thailand", "Vietnam", "Indonesia",
+        ],
+        "occ_values": [5750],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+    rows = result["iat"]["comparison_chart"]
+
+    assert [row["country"] for row in rows] == payload["iat"]["countries"]
+    assert len({row["country"] for row in rows}) == len(rows)
+    for row in rows:
+        assert row["adjusted_occ_per_kw"] == pytest.approx(
+            row["local_per_kw"] + row["foreign_per_kw"], abs=0.01
+        )
+
+
+def test_iat_adjusted_occ_highlight_is_scoped_to_readable_data_cells():
+    assert 'class="iat-adjusted-occ"' in crt_iat_gui.HTML
+    assert '.iat-scenario-table td.iat-adjusted-occ' in crt_iat_gui.HTML
+    assert '.iat-scenario-table th:nth-child(3)' not in crt_iat_gui.HTML
+    assert '--highlight: #e7f3f4' in crt_iat_gui.HTML
+    assert '--highlight-ink: #123b4a' in crt_iat_gui.HTML
+
+
+def test_workflow_result_sections_exclude_irrelevant_content():
+    assert 'IAT Results' in crt_iat_gui.HTML
+    assert 'CRT Results' in crt_iat_gui.HTML
+    assert 'CRT-only baseline' in crt_iat_gui.HTML
+    assert 'Country Comparison' in crt_iat_gui.HTML
+    assert 'Connected IAT → CRT' in crt_iat_gui.HTML
+
+
+def test_dashboard_title_uses_custom_display_name_but_sanitizes_filename():
+    assert crt_iat_gui._dashboard_title("China AP1000 – Fast Learning", "iat_crt", "AP1000", "China") == "China AP1000 – Fast Learning"
+    assert crt_iat_gui._dashboard_title("AP1000_China_Fast_Learning", "iat_crt", "AP1000", "China") == "AP1000 China Fast Learning"
+    assert crt_iat_gui._dashboard_title("", "crt_only", "AP1000", "") == "AP1000 CRT Dashboard"
+    assert crt_iat_gui._safe_name("China AP1000 – Fast Learning") == "China_AP1000_Fast_Learning"
+
+
+def test_crt_summary_uses_consistent_metric_grid_and_conditional_gross_net_values():
+    assert "function crtResultsGrid(crt)" in crt_iat_gui.HTML
+    assert "function crtMetricGroup(title, explanation, cards" in crt_iat_gui.HTML
+    assert "crt-metric-cards" in crt_iat_gui.HTML
+    assert "Construction duration (months)" in crt_iat_gui.HTML
+    assert "function crtGridValue(gross, net, reduction)" in crt_iat_gui.HTML
+    assert "reduction > 0" in crt_iat_gui.HTML
+
+
+def test_output_name_is_generated_from_reactor_and_country_without_overwriting_custom_text():
+    assert "function outputNameParts()" in crt_iat_gui.HTML
+    assert "function updateOutputName()" in crt_iat_gui.HTML
+    assert "_outputNameCustomized" in crt_iat_gui.HTML
+    assert "${parts.reactor} ${parts.country} Baseline" in crt_iat_gui.HTML
+
+
+def test_crt_result_cards_explain_occ_tci_and_duration_accessibly():
+    assert "Overnight Capital Cost (OCC)" in crt_iat_gui.HTML
+    assert "Total Capital Investment (TCI)" in crt_iat_gui.HTML
+    assert "Construction Duration" in crt_iat_gui.HTML
+    assert "excluding financing costs incurred during construction" in crt_iat_gui.HTML
+    assert "60-series financing costs, including interest during construction" in crt_iat_gui.HTML
+    assert "info-tip" in crt_iat_gui.HTML
+    assert 'aria-label="Explain ${esc(label)}"' in crt_iat_gui.HTML
+    assert 'node.addEventListener("focus"' in crt_iat_gui.HTML
+    assert 'node.addEventListener("click"' in crt_iat_gui.HTML
+    assert "class='tip-label'" in crt_iat_gui.HTML
+    assert 'data-tip="${tciTip}"' in crt_iat_gui.HTML
+    assert 'data-tip="${occTip}"' in crt_iat_gui.HTML
+
+
+def test_crt_summary_cards_show_foak_gross_and_net_values():
+    assert 'FOAK OCC / Net OCC ($/kW)' in crt_iat_gui.HTML
+    assert 'FOAK TCI / Net TCI ($/kW)' in crt_iat_gui.HTML
+    assert 'crt.net_occ_1' in crt_iat_gui.HTML
+    assert 'crt.net_tci_1' in crt_iat_gui.HTML
+
+
+def test_crt_result_grid_uses_net_values_when_itc_reduces_cost():
+    assert 'const foakOccReduction = Math.max(0, Number(foak.OCC) - Number(foakOccNet));' in crt_iat_gui.HTML
+    assert 'const foakTciReduction = Math.max(0, Number(foak.TCI) - Number(foakTciNet));' in crt_iat_gui.HTML
+    assert 'label: foakOccReduction > 0 ? "FOAK OCC / Net OCC" : "FOAK OCC"' in crt_iat_gui.HTML
+    assert 'label: foakTciReduction > 0 ? "FOAK TCI / NCI" : "FOAK TCI"' in crt_iat_gui.HTML
+
+
+def test_iat_source_labels_and_connected_workflow_are_clear():
+    assert 'label for="iatInputMode">IAT source</label>' in crt_iat_gui.HTML
+    assert '<option value="occ" selected>Standard OCC</option>' in crt_iat_gui.HTML
+    assert '<option value="csv">Code of Account structure</option>' in crt_iat_gui.HTML
+    assert 'IAT source file' in crt_iat_gui.HTML
+    assert 'Built-in ACCERT baseline' in crt_iat_gui.HTML
+    assert 'ACCERT account output / uploaded file' in crt_iat_gui.HTML
+    assert '$("iatInputMode").disabled = workflow === "iat_crt";' in crt_iat_gui.HTML
+
+
+def test_advanced_crt_inputs_have_limits_and_preflight_validation():
+    assert 'id="numOrders" type="number" min="2" step="1"' in crt_iat_gui.HTML
+    assert 'id="itcPercent" type="number" min="0" max="100" step="1"' in crt_iat_gui.HTML
+    assert 'id="numNoak" type="number" min="0" step="1"' in crt_iat_gui.HTML
+    assert 'id="nItc" type="number" min="0" step="1"' in crt_iat_gui.HTML
+    assert 'function validateAdvancedInputs()' in crt_iat_gui.HTML
+    assert 'NOAK unit must be between 0 and firm orders.' in crt_iat_gui.HTML
+    assert 'ITC units cannot exceed firm orders.' in crt_iat_gui.HTML
+
+
+def test_crt_fixed_inputs_use_short_labels_and_structural_field_alignment():
+    assert ".row > div" in crt_iat_gui.HTML
+    assert ".triple > div" in crt_iat_gui.HTML
+    assert "Account 22 ($M)" in crt_iat_gui.HTML
+    assert "Account 232.1 ($M)" in crt_iat_gui.HTML
+    assert "Land Cost ($k/acre)" in crt_iat_gui.HTML
+    assert "Construction duration (months)" in crt_iat_gui.HTML
+    assert "Total labor hours (million)" in crt_iat_gui.HTML
+
+
+def test_gui_startup_opens_local_address_automatically():
+    source = inspect.getsource(crt_iat_gui.main)
+    assert "webbrowser.open(url)" in source
+    assert "if \"--open\" in sys.argv" not in source
+
+
+def test_gui_http_handler_does_not_mask_request_errors_with_broken_pipe():
+    source = inspect.getsource(crt_iat_gui.Handler.do_POST)
+    assert "except BrokenPipeError" in source
+    assert "traceback.print_exc()" in source

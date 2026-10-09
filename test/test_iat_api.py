@@ -3,6 +3,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+pytestmark = pytest.mark.core
+
 from iat import available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 from crt import accert_output_to_crt_baseline
@@ -13,7 +15,17 @@ AP1000_BASELINE = REPO_ROOT / "src" / "crt" / "data" / "AP1000_baseline.csv"
 
 
 def test_iat_available_countries():
-    assert available_countries() == ["China", "El Salvador", "Korea", "Poland", "UAE"]
+    assert available_countries() == [
+        "China",
+        "El Salvador",
+        "Indonesia",
+        "Korea",
+        "Poland",
+        "Thailand",
+        "UAE",
+        "United States",
+        "Vietnam",
+    ]
 
 
 def test_iat_packaged_localization_csvs_store_leaf_level_2_accounts_only():
@@ -44,6 +56,66 @@ def test_iat_requires_accert_csv_or_occ_input():
                 "year_dollar": 2024,
             }
         )
+
+
+def test_iat_united_states_reproduces_accert_baseline():
+    baseline = AP1000_BASELINE
+    result = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "United States",
+            "year_dollar": 2024,
+            "input_csv": baseline,
+        }
+    )
+
+    assert result["country"] == "United States"
+    assert result["adjustment_ratio"] == pytest.approx(1.0)
+    assert result["occ_adjustment_ratio"] == pytest.approx(1.0)
+    adjusted = result["adjusted_costs"]
+    assert adjusted["Adjusted Total Cost"].tolist() == pytest.approx(
+        adjusted["Original Total Cost"].tolist()
+    )
+
+
+def test_iat_factor_overrides_apply_to_one_run_without_changing_presets(tmp_path):
+    csv_path = tmp_path / "accert_output.csv"
+    pd.DataFrame(
+        [
+            {
+                "Account": "22",
+                "Title": "Reactor System",
+                "Total Cost (USD)": 1_000.0,
+                "Factory Equipment Cost": 1_000.0,
+                "Site Labor Hours": 0.0,
+                "Site Labor Cost": 0.0,
+                "Site Material Cost": 0.0,
+            }
+        ]
+    ).to_csv(csv_path, index=False)
+
+    preset = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "China",
+            "year_dollar": 2024,
+            "input_csv": csv_path,
+        }
+    )
+    overridden = run_adjustment(
+        {
+            "reactor_type": "ACCERT output-LR",
+            "country": "China",
+            "year_dollar": 2024,
+            "input_csv": csv_path,
+            "adjustment_factor_overrides": {"equipment": 1.0},
+        }
+    )
+
+    assert overridden["adjusted_total"] > preset["adjusted_total"]
+    assert load_assumptions()["adjustment_factors"]["China"]["equipment"] == pytest.approx(
+        0.6586985391766269
+    )
 
 
 def test_iat_china_account_22_formula(tmp_path):
@@ -385,6 +457,63 @@ def test_iat_v45_smr_occ_matches_workbook_summary_values():
             }
         )
         assert result["summary"]["Adjusted OCC"].tolist() == pytest.approx(values)
+
+
+@pytest.mark.parametrize(
+    ("country", "reactor_type", "occ_values", "expected"),
+    [
+        (
+            "Thailand",
+            "large reactor",
+            [5250, 5750, 7750],
+            [4701.714249, 5149.496559, 6940.625796],
+        ),
+        (
+            "Vietnam",
+            "large reactor",
+            [5250, 5750, 7750],
+            [4890.497085, 5356.258712, 7219.305220],
+        ),
+        (
+            "Indonesia",
+            "large reactor",
+            [5250, 5750, 7750],
+            [4493.833069, 4921.817170, 6633.753578],
+        ),
+        (
+            "Thailand",
+            "SMR",
+            [5500, 8000, 10000],
+            [5047.527103, 7341.857605, 9177.322006],
+        ),
+        (
+            "Vietnam",
+            "SMR",
+            [5500, 8000, 10000],
+            [5355.943323, 7790.463016, 9738.078770],
+        ),
+        (
+            "Indonesia",
+            "SMR",
+            [5500, 8000, 10000],
+            [4414.717476, 6421.407237, 8026.759047],
+        ),
+    ],
+)
+def test_iat_new_country_occ_matches_supplied_results(
+    country, reactor_type, occ_values, expected
+):
+    result = run_occ_scenarios(
+        {
+            "reactor_type": reactor_type,
+            "country": country,
+            "year_dollar": 2024,
+            "occ_values": occ_values,
+        }
+    )
+    assert result["summary"]["Adjusted OCC"].tolist() == pytest.approx(
+        expected, abs=0.01
+    )
 
 
 def test_iat_runs_multiple_standalone_occ_scenarios():
