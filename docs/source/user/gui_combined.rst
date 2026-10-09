@@ -10,20 +10,14 @@ files in ``src/crt/data``.
 Start and stop the GUI
 ----------------------
 
-Run the GUI from the ACCERT repository root:
-
-.. code-block:: bash
-
-   cd ACCERT
-   /opt/anaconda3/envs/py312/bin/python tutorial/gui/launch_gui.py
-
-Then open ``http://127.0.0.1:8765/`` in a browser.
+On macOS, double-click ``tutorial/gui/Launch ACCERT GUI.command`` from the
+ACCERT repository. The tested launcher starts the local server and opens the
+GUI in the default browser automatically.
 
 Stop the local server with:
 
-.. code-block:: bash
-
-   /opt/anaconda3/envs/py312/bin/python tutorial/gui/stop_gui.py
+On macOS, double-click ``tutorial/gui/Stop ACCERT GUI.command`` to stop a
+launcher-managed session.
 
 The combined IAT-to-CRT GUI workflow is shown in this walkthrough:
 
