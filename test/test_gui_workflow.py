@@ -211,7 +211,7 @@ def test_iat_only_comparison_has_no_synthetic_base_case_rows(monkeypatch, tmp_pa
     assert us_row["model_foreign_per_kw"] > 0
 
 
-def test_custom_us_iat_case_preserves_model_foreign_component(monkeypatch, tmp_path):
+def test_us_iat_chart_always_uses_reference_display_even_with_custom_model_foreign(monkeypatch, tmp_path):
     payload = _gui_payload("")
     payload["workflow"] = "iat_only"
     payload["iat"].update({
@@ -225,9 +225,10 @@ def test_custom_us_iat_case_preserves_model_foreign_component(monkeypatch, tmp_p
 
     row = crt_iat_gui.run_workflow(payload)["iat"]["comparison_chart"][0]
 
-    assert row["reference_case"] is False
-    assert row["foreign_per_kw"] == pytest.approx(row["model_foreign_per_kw"])
-    assert row["foreign_per_kw"] > 0
+    assert row["reference_case"] is True
+    assert row["foreign_per_kw"] == 0
+    assert row["local_per_kw"] == pytest.approx(row["adjusted_occ_per_kw"])
+    assert row["model_foreign_per_kw"] > 0
 
 
 @pytest.mark.parametrize("input_mode", ["occ", "csv"])
@@ -265,17 +266,21 @@ def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
     assert 'aria-label="Adjusted OCC by country"' in crt_iat_gui.HTML
     assert 'id="iatCountryCompChart"' in crt_iat_gui.HTML
     assert "function iatCountryColor(country, index)" in crt_iat_gui.HTML
-    assert 'id="iatForeignHatch"' in crt_iat_gui.HTML
-    assert 'fill="url(#iatForeignHatch)"' in crt_iat_gui.HTML
+    assert 'id="iatForeignHatch-${idx}"' in crt_iat_gui.HTML
+    assert 'fill="url(#iatForeignHatch-${idx})"' in crt_iat_gui.HTML
     assert 'patternTransform="rotate(35)"' in crt_iat_gui.HTML
+    assert 'fill="none" stroke="${color}"' in crt_iat_gui.HTML
+    assert 'stroke="white"' not in crt_iat_gui.HTML
+    assert "function finalCountryComparisonRows(rows)" in crt_iat_gui.HTML
+    assert "display_foreign_per_kw: isUnitedStates ? 0" in crt_iat_gui.HTML
     assert "Color: Country" in crt_iat_gui.HTML
     assert "Cost origin" in crt_iat_gui.HTML
     assert '"China": "#f28e2b"' in crt_iat_gui.HTML
     assert '"South Korea": "#59a14f"' in crt_iat_gui.HTML
     assert '"Poland": "#b07aa1"' in crt_iat_gui.HTML
     assert "Solid — Local" in crt_iat_gui.HTML
-    assert "Hatched — Foreign / Imported" in crt_iat_gui.HTML
-    assert "const isReferenceCase = row.reference_case === true" in crt_iat_gui.HTML
+    assert "Transparent hatch — Foreign / Imported" in crt_iat_gui.HTML
+    assert 'const isUnitedStates = String(row.country || "").trim() === "United States"' in crt_iat_gui.HTML
     assert "Foreign / Imported OCC ($/kW)" in crt_iat_gui.HTML
     assert "Model check difference" in crt_iat_gui.HTML
     assert "iatOccCompChart" not in crt_iat_gui.HTML

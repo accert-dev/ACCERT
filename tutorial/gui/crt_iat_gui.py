@@ -2144,10 +2144,24 @@ HTML = r"""<!doctype html>
       return IAT_COUNTRY_COLORS[Math.abs(hash || index) % IAT_COUNTRY_COLORS.length];
     }
 
+    function finalCountryComparisonRows(rows) {
+      return (rows || []).map(row => {
+        const adjusted = Number(row.adjusted_occ_per_kw || 0);
+        const isUnitedStates = String(row.country || "").trim() === "United States";
+        return {
+          ...row,
+          reference_case: isUnitedStates,
+          display_local_per_kw: isUnitedStates ? adjusted : Number(row.local_per_kw || 0),
+          display_foreign_per_kw: isUnitedStates ? 0 : Number(row.foreign_per_kw || 0)
+        };
+      });
+    }
+
     function countryComparisonChart(rows) {
       if (!rows || !rows.length) return "";
-      const countries = [...new Set(rows.map(r => r.country))];
-      const chartRows = countries.map(country => rows.find(r => r.country === country));
+      const finalRows = finalCountryComparisonRows(rows);
+      const countries = [...new Set(finalRows.map(r => r.country))];
+      const chartRows = countries.map(country => finalRows.find(r => r.country === country));
       const w = 1120, h = 520;
       const m = {left: 108, right: 28, top: 76, bottom: 106};
       const innerW = w - m.left - m.right;
@@ -2157,7 +2171,12 @@ HTML = r"""<!doctype html>
       const step = innerW / countries.length;
       const barW = Math.max(32, Math.min(82, step * 0.54));
       const tolerance = 0.01;
-      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Adjusted OCC by country"><defs><pattern id="iatForeignHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="white" stroke-width="3" opacity="0.7"></line></pattern></defs>`;
+      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Adjusted OCC by country"><defs>`;
+      chartRows.forEach((row, idx) => {
+        const color = iatCountryColor(row.country, idx);
+        svg += `<pattern id="iatForeignHatch-${idx}" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="${color}" stroke-width="3" opacity="0.75"></line></pattern>`;
+      });
+      svg += `<pattern id="iatForeignLegendHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="#64748b" stroke-width="3" opacity="0.75"></line></pattern></defs>`;
       svg += `<text x="${m.left}" y="24" fill="#596775" font-size="13" font-weight="800">Color: Country</text>`;
       const colorLegendColumns = Math.min(3, countries.length);
       const colorLegendWidth = innerW / Math.max(1, colorLegendColumns);
@@ -2182,9 +2201,8 @@ HTML = r"""<!doctype html>
         const countryLabel = displayCountryName(country);
         const color = iatCountryColor(country, idx);
         const adjusted = Number(row.adjusted_occ_per_kw || 0);
-        const isReferenceCase = row.reference_case === true;
-        const local = Math.max(0, Number(isReferenceCase ? adjusted : row.local_per_kw || 0));
-        const foreign = Math.max(0, Number(isReferenceCase ? 0 : row.foreign_per_kw || 0));
+        const local = Math.max(0, Number(row.display_local_per_kw || 0));
+        const foreign = Math.max(0, Number(row.display_foreign_per_kw || 0));
         const mismatch = adjusted - (local + foreign);
         const x = m.left + step * idx + (step - barW) / 2;
         const localY = yScale(local);
@@ -2194,14 +2212,14 @@ HTML = r"""<!doctype html>
         const tip = `<b>${esc(countryLabel)}</b><br>Adjusted OCC ($/kW): ${fmt(Math.round(adjusted))}<br>Local OCC ($/kW): ${fmt(Math.round(local))}<br>Foreign / Imported OCC ($/kW): ${fmt(Math.round(foreign))}${Math.abs(mismatch) > tolerance ? `<br>Model check difference: ${fmt(Math.round(mismatch))} $/kW` : ""}`;
         if (localH > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${localY}" width="${barW}" height="${localH}" fill="${color}" stroke="${color}" rx="2"></rect>`;
         if (foreignH > 0) {
-          svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="${color}" stroke="${color}" rx="2"></rect>`;
-          svg += `<rect pointer-events="none" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="url(#iatForeignHatch)" stroke="${color}" rx="2"></rect>`;
+          svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="none" stroke="${color}" rx="2"></rect>`;
+          svg += `<rect pointer-events="none" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="url(#iatForeignHatch-${idx})" stroke="none"></rect>`;
         }
         svg += `<text x="${x + barW / 2}" y="${h - 54}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="700">${esc(countryLabel)}</text>`;
       });
       svg += `<text x="${m.left}" y="${h - 30}" fill="#596775" font-size="13" font-weight="800">Cost origin</text>`;
       svg += `<rect x="${m.left + 106}" y="${h - 43}" width="14" height="14" fill="#64748b" stroke="#64748b" rx="2"></rect><text x="${m.left + 128}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Solid — Local</text>`;
-      svg += `<rect x="${m.left + 262}" y="${h - 43}" width="14" height="14" fill="#64748b" stroke="#64748b" rx="2"></rect><rect x="${m.left + 262}" y="${h - 43}" width="14" height="14" fill="url(#iatForeignHatch)" stroke="#64748b" rx="2"></rect><text x="${m.left + 284}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Hatched — Foreign / Imported</text>`;
+      svg += `<rect x="${m.left + 262}" y="${h - 43}" width="14" height="14" fill="none" stroke="#64748b" rx="2"></rect><rect x="${m.left + 262}" y="${h - 43}" width="14" height="14" fill="url(#iatForeignLegendHatch)" stroke="none" rx="2"></rect><text x="${m.left + 284}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Transparent hatch — Foreign / Imported</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -2623,25 +2641,14 @@ def _reactor_power_kwe(payload: dict) -> float:
     return 310.8 * 1000.0 if "SMR" in reactor else 2234.0 * 1000.0
 
 
-def _is_standard_us_reference(iat: dict, country: str) -> bool:
-    if country != "United States":
-        return False
-    overrides = iat.get("adjustment_factor_overrides") or {}
-    values = overrides.get(country) or {}
-    defaults = DEFAULT_IAT_FACTORS["United States"]
-    return all(
-        abs(float(values.get(name, default) or default) - float(default)) <= 1e-9
-        for name, default in defaults.items()
-    )
-
-
 def _comparison_chart_row(country: str, summary: dict, reference_case: bool) -> dict:
     """Build chart-only local/foreign values without changing raw IAT metrics.
 
     The standard U.S. case is a visual reference convention: its full adjusted
     OCC is shown as local and its displayed foreign portion is zero. The raw
-    model decomposition remains available in the ``model_*`` fields, and a
-    custom U.S. scenario is passed through unchanged by ``reference_case``.
+    model decomposition remains available in the ``model_*`` fields. The
+    caller applies this convention to every U.S. chart row, including custom
+    scenarios, because the chart's U.S. bar is always the visual reference.
     """
     adjusted = summary.get("adjusted_occ_per_kw")
     model_local = summary.get("local_occ_per_kw")
@@ -3071,7 +3078,7 @@ def run_workflow(payload: dict) -> dict:
                 summary = _summarize_occ_result(result, power_kwe)
                 if "base_case" not in response and result["scenario_results"]:
                     response["base_case"] = _base_case_from_iat_result(result["scenario_results"][0], power_kwe)
-                reference_case = _is_standard_us_reference(iat, country)
+                reference_case = country == "United States"
                 comparison_chart.append(_comparison_chart_row(country, summary, reference_case))
             else:
                 result = run_adjustment(config)
@@ -3081,7 +3088,7 @@ def run_workflow(payload: dict) -> dict:
                 summary = _summarize_iat_result(result, power_kwe)
                 if "base_case" not in response:
                     response["base_case"] = _base_case_from_iat_result(result, power_kwe)
-                reference_case = _is_standard_us_reference(iat, country)
+                reference_case = country == "United States"
                 comparison_chart.append(_comparison_chart_row(country, summary, reference_case))
             country_results.append({"country": country, "data": summary})
             files[f"IAT CSV ({country})"] = _file_info(iat_csv)
