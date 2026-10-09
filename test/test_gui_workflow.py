@@ -255,6 +255,34 @@ def test_iat_only_supports_both_cost_structures_for_multiple_countries(monkeypat
     assert len(result["files"]) == 3
 
 
+def test_iat_standalone_occ_comparison_preserves_country_and_scenario_order(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": ["United States", "China", "Poland"],
+        "occ_values": [7000, 5000, 6000],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    rows = crt_iat_gui.run_workflow(payload)["iat"]["comparison_chart"]
+
+    assert len(rows) == 9
+    assert [(row["country"], row["scenario"]) for row in rows] == [
+        (country, scenario)
+        for country in ["United States", "China", "Poland"]
+        for scenario in ["Scenario 1", "Scenario 2", "Scenario 3"]
+    ]
+    for country in ["United States", "China", "Poland"]:
+        country_rows = [row for row in rows if row["country"] == country]
+        assert [row["scenario"] for row in country_rows] == ["Scenario 1", "Scenario 2", "Scenario 3"]
+        assert len({row["country"] for row in country_rows}) == 1
+    assert all(row["foreign_per_kw"] == 0 for row in rows if row["country"] == "United States")
+    assert all(row["reference_case"] is True for row in rows if row["country"] == "United States")
+    assert all(row["foreign_per_kw"] > 0 for row in rows if row["country"] != "United States")
+
+
 def test_iat_country_assumption_selector_is_separate_from_country_multi_select():
     assert 'id="iatAssumptionCountry"' in crt_iat_gui.HTML
     assert 'function updateIatAssumptionCountryOptions()' in crt_iat_gui.HTML
@@ -264,11 +292,11 @@ def test_iat_country_assumption_selector_is_separate_from_country_multi_select()
 
 def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
     assert "function countryComparisonChart(rows)" in crt_iat_gui.HTML
-    assert 'aria-label="Adjusted OCC by country"' in crt_iat_gui.HTML
+    assert 'aria-label="Adjusted OCC by country and scenario"' in crt_iat_gui.HTML
     assert 'id="iatCountryCompChart"' in crt_iat_gui.HTML
     assert "function iatCountryColor(country, index)" in crt_iat_gui.HTML
-    assert 'id="iatForeignHatch-${idx}"' in crt_iat_gui.HTML
-    assert 'fill="url(#iatForeignHatch-${idx})"' in crt_iat_gui.HTML
+    assert 'id="${patternId}"' in crt_iat_gui.HTML
+    assert 'fill="url(#${patternId})"' in crt_iat_gui.HTML
     assert 'patternTransform="rotate(35)"' in crt_iat_gui.HTML
     assert 'fill="none" stroke="${color}"' in crt_iat_gui.HTML
     assert 'stroke="white"' not in crt_iat_gui.HTML
@@ -287,6 +315,11 @@ def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
     assert 'const isUnitedStates = String(row.country || "").trim() === "United States"' in crt_iat_gui.HTML
     assert "Foreign / Imported OCC ($/kW)" in crt_iat_gui.HTML
     assert "Model check difference" in crt_iat_gui.HTML
+    assert "const groups = countries.map(country => ({" in crt_iat_gui.HTML
+    assert "rows: finalRows.filter(row => row.country === country)" in crt_iat_gui.HTML
+    assert "const scenarioLabel = row.scenario || `Scenario ${scenarioIndex + 1}`" in crt_iat_gui.HTML
+    assert "group.rows.forEach((row, scenarioIndex)" in crt_iat_gui.HTML
+    assert "iatForeignHatch-${tabSafe(country)}" in crt_iat_gui.HTML
     assert "iatOccCompChart" not in crt_iat_gui.HTML
     assert "iatLfChart" not in crt_iat_gui.HTML
 

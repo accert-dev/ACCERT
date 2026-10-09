@@ -2245,21 +2245,26 @@ HTML = r"""<!doctype html>
     function countryComparisonChart(rows) {
       if (!rows || !rows.length) return "";
       const finalRows = finalCountryComparisonRows(rows);
+      // The backend emits rows in selected-country then scenario input order.
+      // Keep that order: scenario identifiers, never cost values, determine x-position.
       const countries = [...new Set(finalRows.map(r => r.country))];
-      const chartRows = countries.map(country => finalRows.find(r => r.country === country));
+      const groups = countries.map(country => ({
+        country,
+        rows: finalRows.filter(row => row.country === country)
+      }));
       const w = 1120, h = 520;
       const m = {left: 108, right: 28, top: 76, bottom: 106};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
-      const maxVal = Math.max(1, ...chartRows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
+      const maxVal = Math.max(1, ...finalRows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
       const yScale = v => m.top + innerH - (Number(v || 0) / maxVal) * innerH;
       const step = innerW / countries.length;
-      const barW = Math.max(32, Math.min(82, step * 0.54));
       const tolerance = 0.01;
-      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Adjusted OCC by country"><defs>`;
-      chartRows.forEach((row, idx) => {
-        const color = iatCountryColor(row.country, idx);
-        svg += `<pattern id="iatForeignHatch-${idx}" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="${color}" stroke-width="3" opacity="0.75"></line></pattern>`;
+      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Adjusted OCC by country and scenario"><defs>`;
+      groups.forEach(group => {
+        const color = iatCountryColor(group.country, countries.indexOf(group.country));
+        const patternId = `iatForeignHatch-${tabSafe(group.country)}`;
+        svg += `<pattern id="${patternId}" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="${color}" stroke-width="3" opacity="0.75"></line></pattern>`;
       });
       svg += `<pattern id="iatForeignLegendHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="#64748b" stroke-width="3" opacity="0.75"></line></pattern></defs>`;
       svg += `<text x="${m.left}" y="24" fill="#596775" font-size="13" font-weight="800">Color: Country</text>`;
@@ -2281,26 +2286,34 @@ HTML = r"""<!doctype html>
       }
       svg += `<line x1="${m.left}" y1="${m.top + innerH}" x2="${w - m.right}" y2="${m.top + innerH}" stroke="#8093a7"></line>`;
       svg += `<text transform="translate(18,${m.top + innerH / 2}) rotate(-90)" text-anchor="middle" fill="#41566d" font-size="15" font-weight="700">Adjusted OCC ($/kWe)</text>`;
-      chartRows.forEach((row, idx) => {
-        const country = row.country;
+      groups.forEach((group, groupIndex) => {
+        const country = group.country;
         const countryLabel = displayCountryName(country);
-        const color = iatCountryColor(country, idx);
-        const adjusted = Number(row.adjusted_occ_per_kw || 0);
-        const local = Math.max(0, Number(row.display_local_per_kw || 0));
-        const foreign = Math.max(0, Number(row.display_foreign_per_kw || 0));
-        const mismatch = adjusted - (local + foreign);
-        const x = m.left + step * idx + (step - barW) / 2;
-        const localY = yScale(local);
-        const stackY = yScale(local + foreign);
-        const localH = Math.max(0, yScale(0) - localY);
-        const foreignH = Math.max(0, localY - stackY);
-        const tip = `<b>${esc(countryLabel)}</b><br>Adjusted OCC ($/kW): ${fmt(Math.round(adjusted))}<br>Local OCC ($/kW): ${fmt(Math.round(local))}<br>Foreign / Imported OCC ($/kW): ${fmt(Math.round(foreign))}${Math.abs(mismatch) > tolerance ? `<br>Model check difference: ${fmt(Math.round(mismatch))} $/kW` : ""}`;
-        if (localH > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${localY}" width="${barW}" height="${localH}" fill="${color}" stroke="${color}" rx="2"></rect>`;
-        if (foreignH > 0) {
-          svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="none" stroke="${color}" rx="2"></rect>`;
-          svg += `<rect pointer-events="none" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="url(#iatForeignHatch-${idx})" stroke="none"></rect>`;
-        }
-        svg += `<text x="${x + barW / 2}" y="${h - 54}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="700">${esc(countryLabel)}</text>`;
+        const color = iatCountryColor(country, groupIndex);
+        const groupStep = step / (group.rows.length + 1);
+        const barW = Math.max(24, Math.min(54, groupStep * 0.62));
+        const patternId = `iatForeignHatch-${tabSafe(country)}`;
+        group.rows.forEach((row, scenarioIndex) => {
+          const adjusted = Number(row.adjusted_occ_per_kw || 0);
+          const local = Math.max(0, Number(row.display_local_per_kw || 0));
+          const foreign = Math.max(0, Number(row.display_foreign_per_kw || 0));
+          const mismatch = adjusted - (local + foreign);
+          const x = m.left + step * groupIndex + groupStep * (scenarioIndex + 1) - barW / 2;
+          const localY = yScale(local);
+          const stackY = yScale(local + foreign);
+          const localH = Math.max(0, yScale(0) - localY);
+          const foreignH = Math.max(0, localY - stackY);
+          const scenarioLabel = row.scenario || `Scenario ${scenarioIndex + 1}`;
+          const tip = `<b>${esc(countryLabel)} · ${esc(scenarioLabel)}</b><br>Original OCC ($/kW): ${fmt(Math.round(Number(row.input_occ_per_kw || 0)))}<br>Adjusted OCC ($/kW): ${fmt(Math.round(adjusted))}<br>Local OCC ($/kW): ${fmt(Math.round(local))}<br>Foreign / Imported OCC ($/kW): ${fmt(Math.round(foreign))}${Math.abs(mismatch) > tolerance ? `<br>Model check difference: ${fmt(Math.round(mismatch))} $/kW` : ""}`;
+          if (localH > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${localY}" width="${barW}" height="${localH}" fill="${color}" stroke="${color}" rx="2"></rect>`;
+          if (foreignH > 0) {
+            svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="none" stroke="${color}" rx="2"></rect>`;
+            svg += `<rect pointer-events="none" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="url(#${patternId})" stroke="none"></rect>`;
+          }
+          svg += `<text x="${x + barW / 2}" y="${h - 54}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="700">${esc(scenarioLabel)}</text>`;
+        });
+        const groupCenter = m.left + step * groupIndex + step / 2;
+        svg += `<text x="${groupCenter}" y="${h - 78}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="800">${esc(countryLabel)}</text>`;
       });
       svg += `<text x="${m.left}" y="${h - 30}" fill="#596775" font-size="13" font-weight="800">Cost origin</text>`;
       svg += `<rect x="${m.left + 106}" y="${h - 43}" width="14" height="14" fill="#64748b" stroke="#64748b" rx="2"></rect><text x="${m.left + 128}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Solid — Local</text>`;
@@ -2730,7 +2743,12 @@ def _reactor_power_kwe(payload: dict) -> float:
     return 310.8 * 1000.0 if "SMR" in reactor else 2234.0 * 1000.0
 
 
-def _comparison_chart_row(country: str, summary: dict, reference_case: bool) -> dict:
+def _comparison_chart_row(
+    country: str,
+    summary: dict,
+    reference_case: bool,
+    scenario: str = "Adjusted OCC",
+) -> dict:
     """Build chart-only local/foreign values without changing raw IAT metrics.
 
     The standard U.S. case is a visual reference convention: its full adjusted
@@ -2744,7 +2762,8 @@ def _comparison_chart_row(country: str, summary: dict, reference_case: bool) -> 
     model_foreign = summary.get("foreign_occ_per_kw")
     return {
         "country": country,
-        "scenario": "Adjusted OCC",
+        "scenario": scenario,
+        "input_occ_per_kw": summary.get("input_occ_per_kw"),
         "adjusted_occ_per_kw": adjusted,
         "local_per_kw": adjusted if reference_case else model_local,
         "foreign_per_kw": 0.0 if reference_case else model_foreign,
@@ -3192,7 +3211,15 @@ def run_workflow(payload: dict) -> dict:
                 if "base_case" not in response and result["scenario_results"]:
                     response["base_case"] = _base_case_from_iat_result(result["scenario_results"][0], power_kwe)
                 reference_case = country == "United States"
-                comparison_chart.append(_comparison_chart_row(country, summary, reference_case))
+                for scenario in summary["scenarios"]:
+                    comparison_chart.append(
+                        _comparison_chart_row(
+                            country,
+                            scenario,
+                            reference_case,
+                            scenario=scenario.get("scenario") or "Scenario 1",
+                        )
+                    )
             else:
                 result = run_adjustment(config)
                 if iat.get("_prepared_from_accert_csv") and "Converted ACCERT baseline" not in files:
