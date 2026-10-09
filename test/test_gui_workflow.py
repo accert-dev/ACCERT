@@ -230,6 +230,29 @@ def test_custom_us_iat_case_preserves_model_foreign_component(monkeypatch, tmp_p
     assert row["foreign_per_kw"] > 0
 
 
+@pytest.mark.parametrize("input_mode", ["occ", "csv"])
+def test_iat_only_supports_both_cost_structures_for_multiple_countries(monkeypatch, tmp_path, input_mode):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update({
+        "input_mode": input_mode,
+        "reactor_type": "large reactor" if input_mode == "occ" else "ACCERT output-LR",
+        "countries": ["United States", "China", "Poland"],
+        "occ_values": [5750],
+    })
+    if input_mode == "csv":
+        payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+
+    result = crt_iat_gui.run_workflow(payload)
+
+    assert [row["country"] for row in result["iat"]["comparison_chart"]] == [
+        "United States", "China", "Poland"
+    ]
+    assert len(result["iat"]["country_results"]) == 3
+    assert len(result["files"]) == 3
+
+
 def test_iat_country_assumption_selector_is_separate_from_country_multi_select():
     assert 'id="iatAssumptionCountry"' in crt_iat_gui.HTML
     assert 'function updateIatAssumptionCountryOptions()' in crt_iat_gui.HTML
