@@ -367,6 +367,22 @@ HTML = r"""<!doctype html>
       font-size: 11px;
       line-height: 1.4;
     }
+    .preset-box {
+      margin: 0 0 12px;
+      padding: 10px 11px;
+      border: 1px solid rgba(242,140,52,0.45);
+      border-radius: 7px;
+      background: rgba(242,140,52,0.08);
+    }
+    .preset-box .label-row { margin-top: 0; }
+    .preset-box .field-note { margin-bottom: 0; }
+    .preset-status {
+      margin-top: 8px;
+      color: #d9f5e7;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    .preset-status.modified { color: #ffd0a8; }
     .workflow-steps {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -950,6 +966,18 @@ HTML = r"""<!doctype html>
           <option value="crt_only">CRT only</option>
           <option value="iat_crt" selected>IAT then CRT</option>
         </select>
+        <div class="preset-box" id="presetBox">
+          <div class="label-row"><label for="presetSelector">Starting preset</label><span class="help" title="A preset fills supported existing inputs; it does not change the calculation model.">?</span></div>
+          <select id="presetSelector" aria-describedby="presetStatus">
+            <option value="custom" selected>Custom ACCERT output</option>
+            <option value="ap1000_us">AP1000 — United States baseline</option>
+            <option value="ap1000_china">AP1000 — China</option>
+            <option value="sfr_baseline">SFR baseline</option>
+            <option value="htgr_baseline">HTGR baseline</option>
+          </select>
+          <div class="preset-status" id="presetStatus" role="status" aria-live="polite">Custom inputs are unchanged.</div>
+          <div class="field-note" id="presetSource">Source, reactor, country, and dollar-year basis will be shown after a preset is selected.</div>
+        </div>
         <label for="outputName">Output name</label>
         <input id="outputName" value="AP1000 United States Baseline">
         <div class="field-note" id="outputNameHint">Auto-generated from reactor and country. Edit it to add a description.</div>
@@ -1169,6 +1197,9 @@ HTML = r"""<!doctype html>
     let _lastCrtReactorType = null;
     let _lastGeneratedOutputName = "";
     let _outputNameCustomized = false;
+    let _presetApplying = false;
+    let _activePreset = "custom";
+    let _presetSnapshot = null;
     const defaultIatYearDollar = Number("{{IAT_YEAR_DOLLAR}}");
     const LAND_COST_GUI_TO_BACKEND = Number("{{LAND_COST_PER_GUI_UNIT}}");
     const LABOR_HOURS_GUI_TO_BACKEND = Number("{{LABOR_HOURS_PER_MILLION}}");
@@ -1206,6 +1237,75 @@ HTML = r"""<!doctype html>
       if ($("workflow").value === "iat_crt") return [$("countrySingle").value];
       return Array.from(document.querySelectorAll("#countryDropdownMenu input[type='checkbox']:checked"))
         .map(cb => cb.value);
+    }
+
+    const presetDefinitions = {
+      ap1000_us: {label: "AP1000 — United States baseline", model: "AP1000", country: "United States"},
+      ap1000_china: {label: "AP1000 — China", model: "AP1000", country: "China"},
+      sfr_baseline: {label: "SFR baseline", model: "SFR", country: "United States"},
+      htgr_baseline: {label: "HTGR baseline", model: "HTGR", country: "United States"}
+    };
+
+    function presetFieldSnapshot() {
+      return JSON.stringify({
+        workflow: $("workflow").value,
+        iatInputMode: $("iatInputMode").value,
+        iatReactorType: $("iatReactorType").value,
+        crtReactorType: $("crtReactorType").value,
+        countrySingle: $("countrySingle").value,
+        countries: selectedCountries(),
+        iatBaseline: $("iatBaseline").value,
+        electricOutputMwe: $("electricOutputMwe").value,
+        constructionDuration: $("constructionDuration").value,
+        total20sLaborHours: $("total20sLaborHours").value
+      });
+    }
+
+    function updatePresetModifiedState() {
+      if (_activePreset === "custom" || !_presetSnapshot || _presetApplying) return;
+      const modified = presetFieldSnapshot() !== _presetSnapshot;
+      const status = $("presetStatus");
+      status.textContent = modified ? `${presetDefinitions[_activePreset].label} · Modified` : `${presetDefinitions[_activePreset].label} · Automatically populated`;
+      status.classList.toggle("modified", modified);
+    }
+
+    function setPresetCountry(country) {
+      $("countrySingle").value = country;
+      document.querySelectorAll("#countryDropdownMenu input[type='checkbox']").forEach(cb => { cb.checked = cb.value === country; });
+      updateCountryDropdownLabel();
+    }
+
+    function applyPreset(value) {
+      if (!value || value === "custom") {
+        _activePreset = "custom";
+        _presetSnapshot = null;
+        $("presetStatus").textContent = "Custom inputs are unchanged.";
+        $("presetStatus").classList.remove("modified");
+        $("presetSource").textContent = "Source, reactor, country, and dollar-year basis will be shown after a preset is selected.";
+        return;
+      }
+      const preset = presetDefinitions[value];
+      const config = reactorConfigs[preset.model];
+      if (!preset || !config) return;
+      _presetApplying = true;
+      _activePreset = value;
+      $("workflow").value = "iat_crt";
+      $("iatInputMode").value = "csv";
+      $("iatReactorType").value = config.iat_label;
+      $("crtReactorType").value = preset.model;
+      setPresetCountry(preset.country);
+      $("iatBaseline").value = preset.model;
+      $("electricOutputMwe").value = String(config.power_mwe);
+      $("constructionDuration").value = String(config.construction_duration_months);
+      $("total20sLaborHours").value = formatMillionLaborHours(config.labor_hours_20s);
+      syncBaselineSelection();
+      updatePanels();
+      _presetSnapshot = presetFieldSnapshot();
+      _presetApplying = false;
+      const source = `src/crt/data/${config.baseline_csv}`;
+      $("presetStatus").textContent = `${preset.label} · Automatically populated`;
+      $("presetStatus").classList.remove("modified");
+      $("presetSource").textContent = `Source: ${source} · Reactor: ${preset.model} · Country: ${displayCountryName(preset.country)} · Dollar-year: ${defaultIatYearDollar} CPI-U basis · Automatically populated: source, reactor, country, output, construction duration, and labor hours.`;
     }
 
     function activeIatCountry() {
@@ -2523,6 +2623,7 @@ HTML = r"""<!doctype html>
     }
 
     $("workflow").addEventListener("change", updatePanels);
+    $("presetSelector").addEventListener("change", () => applyPreset($("presetSelector").value));
     $("iatInputMode").addEventListener("change", () => { updatePanels(); updateIatAssumptionCountryOptions(); loadIatFactorDefaults(); });
     $("countrySingle").addEventListener("change", () => { updateIatAssumptionCountryOptions(); loadIatFactorDefaults(); updateOutputName(); });
     $("iatReactorType").addEventListener("change", () => {
@@ -2594,6 +2695,8 @@ HTML = r"""<!doctype html>
       if (control.type === "file") return;
       control.addEventListener("input", updateRunSummary);
       control.addEventListener("change", updateRunSummary);
+      control.addEventListener("input", updatePresetModifiedState);
+      control.addEventListener("change", updatePresetModifiedState);
     });
     $("outputName").addEventListener("input", () => {
       _outputNameCustomized = $("outputName").value.trim() !== _lastGeneratedOutputName;

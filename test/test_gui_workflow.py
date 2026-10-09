@@ -739,6 +739,26 @@ def test_phase_2a_separates_basic_inputs_from_collapsed_advanced_inputs():
     assert '<details class="advanced-section" id="advancedLevers">' in crt_iat_gui.HTML
 
 
+def test_phase_2b_presets_use_existing_configs_and_track_modifications():
+    assert 'id="presetSelector"' in crt_iat_gui.HTML
+    for label in [
+        "AP1000 — United States baseline",
+        "AP1000 — China",
+        "SFR baseline",
+        "HTGR baseline",
+        "Custom ACCERT output",
+    ]:
+        assert label in crt_iat_gui.HTML
+    assert "const presetDefinitions =" in crt_iat_gui.HTML
+    assert "reactorConfigs[preset.model]" in crt_iat_gui.HTML
+    assert "Automatically populated" in crt_iat_gui.HTML
+    assert "presetFieldSnapshot()" in crt_iat_gui.HTML
+    assert "· Modified" in crt_iat_gui.HTML
+    assert 'id="presetSource"' in crt_iat_gui.HTML
+    assert 'id="presetStatus" role="status"' in crt_iat_gui.HTML
+    assert '$("presetSelector").addEventListener("change"' in crt_iat_gui.HTML
+
+
 def test_crt_fixed_inputs_use_short_labels_and_structural_field_alignment():
     assert ".row > div" in crt_iat_gui.HTML
     assert ".triple > div" in crt_iat_gui.HTML
