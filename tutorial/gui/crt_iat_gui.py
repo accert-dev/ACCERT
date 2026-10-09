@@ -12,14 +12,20 @@ Then open:
 from __future__ import annotations
 
 import json
+import argparse
+import errno
 import mimetypes
+import os
 import re
 import sys
+import tempfile
 import traceback
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote
+from urllib.request import urlopen
+from urllib.error import URLError
 
 import pandas as pd
 
@@ -49,6 +55,8 @@ from cost_escalation import TARGET_DOLLAR_YEAR
 
 HOST = "127.0.0.1"
 PORT = 8765
+APP_VERSION = os.environ.get("ACCERT_GUI_VERSION", "local")
+RUNTIME_DIR = Path(tempfile.gettempdir()) / "accert-gui"
 OUTPUT_DIR = REPO_ROOT / "tutorial" / "gui_outputs"
 DEFAULT_IAT_YEAR_DOLLAR = TARGET_DOLLAR_YEAR
 LAND_COST_PER_GUI_UNIT = 1_000.0
@@ -3143,6 +3151,13 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self) -> None:
+        if self.path == "/health":
+            self._send(
+                200,
+                json.dumps({"status": "ok", "version": APP_VERSION, "port": self.server.server_port}).encode("utf-8"),
+                "application/json",
+            )
+            return
         if self.path in {"/", "/index.html"}:
             html = HTML.replace("{{IAT_YEAR_DOLLAR}}", str(DEFAULT_IAT_YEAR_DOLLAR))
             html = html.replace("{{LAND_COST_PER_GUI_UNIT}}", str(LAND_COST_PER_GUI_UNIT))
@@ -3188,17 +3203,81 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
 
-def main() -> None:
+class ReusableThreadingHTTPServer(ThreadingHTTPServer):
+    allow_reuse_address = True
+
+
+def resolve_gui_port(port: int | str | None = None) -> int:
+    raw_port = os.environ.get("ACCERT_GUI_PORT", str(PORT)) if port is None else port
+    resolved = int(raw_port)
+    if resolved < 0 or resolved > 65535:
+        raise ValueError("GUI port must be between 0 and 65535.")
+    return resolved
+
+
+def create_server(host: str = HOST, port: int | str | None = None) -> ReusableThreadingHTTPServer:
+    return ReusableThreadingHTTPServer((host, resolve_gui_port(port)), Handler)
+
+
+def gui_url(host: str = HOST, port: int | str | None = None) -> str:
+    return f"http://{host}:{resolve_gui_port(port)}"
+
+
+def pid_file(port: int | str) -> Path:
+    return RUNTIME_DIR / f"gui-{resolve_gui_port(port)}.pid"
+
+
+def is_gui_running(host: str = HOST, port: int | str | None = None, timeout: float = 0.5) -> bool:
+    try:
+        with urlopen(f"{gui_url(host, port)}/health", timeout=timeout) as response:
+            return response.status == 200 and json.load(response).get("status") == "ok"
+    except (OSError, URLError, ValueError):
+        return False
+
+
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run the local ACCERT IAT/CRT GUI.")
+    parser.add_argument("--port", type=int, default=None, help=f"Listening port (default: {PORT} or ACCERT_GUI_PORT).")
+    parser.add_argument("--host", default=HOST, help=f"Listening host (default: {HOST}).")
+    parser.add_argument("--no-browser", action="store_true", help="Start the server without opening a browser.")
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = _parse_args(argv)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    server = ThreadingHTTPServer((HOST, PORT), Handler)
-    url = f"http://{HOST}:{PORT}"
+    port = resolve_gui_port(args.port)
+    if is_gui_running(args.host, port):
+        url = gui_url(args.host, port)
+        print(f"ACCERT GUI is already running at {url}; reusing that instance.")
+        if not args.no_browser:
+            webbrowser.open(url)
+        return
+    try:
+        server = create_server(args.host, port)
+    except OSError as exc:
+        if exc.errno == errno.EADDRINUSE:
+            raise SystemExit(
+                f"ACCERT GUI could not start: port {port} is already in use. "
+                f"Use --port or ACCERT_GUI_PORT to choose another port; unrelated processes are not stopped automatically."
+            ) from exc
+        raise
+    url = gui_url(args.host, server.server_port)
     print(f"ACCERT IAT and CRT GUI running at {url}")
     print(f"Outputs will be written to {OUTPUT_DIR}")
+    runtime_pid = pid_file(server.server_port)
+    RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+    runtime_pid.write_text(str(os.getpid()), encoding="utf-8")
     try:
-        webbrowser.open(url)
-    except Exception:
-        pass
-    server.serve_forever()
+        if not args.no_browser:
+            webbrowser.open(url)
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("Stopping ACCERT GUI.")
+    finally:
+        server.server_close()
+        if runtime_pid.exists() and runtime_pid.read_text(encoding="utf-8").strip() == str(os.getpid()):
+            runtime_pid.unlink()
 
 
 if __name__ == "__main__":
