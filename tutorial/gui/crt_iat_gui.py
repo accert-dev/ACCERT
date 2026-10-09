@@ -2304,13 +2304,16 @@ HTML = r"""<!doctype html>
           const localH = Math.max(0, yScale(0) - localY);
           const foreignH = Math.max(0, localY - stackY);
           const scenarioLabel = row.scenario || `Scenario ${scenarioIndex + 1}`;
+          const scenarioShortLabel = /^Scenario\s+(\d+)$/i.test(scenarioLabel)
+            ? `S${scenarioLabel.match(/\d+/)[0]}`
+            : `S${scenarioIndex + 1}`;
           const tip = `<b>${esc(countryLabel)} · ${esc(scenarioLabel)}</b><br>Original OCC ($/kW): ${fmt(Math.round(Number(row.input_occ_per_kw || 0)))}<br>Adjusted OCC ($/kW): ${fmt(Math.round(adjusted))}<br>Local OCC ($/kW): ${fmt(Math.round(local))}<br>Foreign / Imported OCC ($/kW): ${fmt(Math.round(foreign))}${Math.abs(mismatch) > tolerance ? `<br>Model check difference: ${fmt(Math.round(mismatch))} $/kW` : ""}`;
           if (localH > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${localY}" width="${barW}" height="${localH}" fill="${color}" stroke="${color}" rx="2"></rect>`;
           if (foreignH > 0) {
             svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="none" stroke="${color}" rx="2"></rect>`;
             svg += `<rect pointer-events="none" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="url(#${patternId})" stroke="none"></rect>`;
           }
-          svg += `<text x="${x + barW / 2}" y="${h - 54}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="700">${esc(scenarioLabel)}</text>`;
+          svg += `<text x="${x + barW / 2}" y="${h - 54}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="700">${esc(scenarioShortLabel)}</text>`;
         });
         const groupCenter = m.left + step * groupIndex + step / 2;
         svg += `<text x="${groupCenter}" y="${h - 78}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="800">${esc(countryLabel)}</text>`;

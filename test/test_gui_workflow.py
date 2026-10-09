@@ -318,6 +318,9 @@ def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
     assert "const groups = countries.map(country => ({" in crt_iat_gui.HTML
     assert "rows: finalRows.filter(row => row.country === country)" in crt_iat_gui.HTML
     assert "const scenarioLabel = row.scenario || `Scenario ${scenarioIndex + 1}`" in crt_iat_gui.HTML
+    assert "const scenarioShortLabel =" in crt_iat_gui.HTML
+    assert "${esc(scenarioShortLabel)}</text>" in crt_iat_gui.HTML
+    assert "${esc(scenarioLabel)}</b><br>Original OCC" in crt_iat_gui.HTML
     assert "group.rows.forEach((row, scenarioIndex)" in crt_iat_gui.HTML
     assert "iatForeignHatch-${tabSafe(country)}" in crt_iat_gui.HTML
     assert "iatOccCompChart" not in crt_iat_gui.HTML
