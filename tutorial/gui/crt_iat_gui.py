@@ -105,6 +105,8 @@ HTML = r"""<!doctype html>
       --panel: #f7f9fc;
       --surface: #ffffff;
       --surface-soft: #f3f7fa;
+      --highlight: #e7f3f4;
+      --highlight-ink: #123b4a;
       --accent: #17647f;
       --accent-2: #2f7d57;
       --orange: #f28c34;
@@ -517,7 +519,7 @@ HTML = r"""<!doctype html>
       line-height: 1.45;
     }
     .iat-scenario-table { margin-bottom: 14px; }
-    .iat-scenario-table th:nth-child(3), .iat-scenario-table td:nth-child(3) { background: #eef8fa; font-weight: 800; }
+    .iat-scenario-table td.iat-adjusted-occ { background: var(--highlight); color: var(--highlight-ink); font-weight: 800; }
     .iat-country {
       margin: 2px 0 8px;
       color: var(--muted);
@@ -2086,7 +2088,7 @@ HTML = r"""<!doctype html>
 
     function iatScenarioTable(rows) {
       if (!rows || !rows.length) return "";
-      return `<div class="iat-scenario-note"><strong>Scenario input and adjusted result</strong><br>Base Case is the original OCC entering IAT. Adjusted OCC is the country-adjusted result used for this scenario.</div><table class="iat-scenario-table"><thead><tr><th>Scenario</th><th>Input OCC ($/kWe)</th><th>Adjusted OCC ($/kWe)</th><th>OCC Ratio</th></tr></thead><tbody>${rows.map(row => `<tr><td>${esc(row.Scenario || "")}</td><td>${fmt(row["Input OCC"])}</td><td>${fmt(row["Adjusted OCC"])}</td><td>${fmt(row["Adjustment Ratio of OCC"])}</td></tr>`).join("")}</tbody></table>`;
+      return `<div class="iat-scenario-note"><strong>Scenario input and adjusted result</strong><br>Base Case is the original OCC entering IAT. Adjusted OCC is the country-adjusted result used for this scenario.</div><table class="iat-scenario-table"><thead><tr><th>Scenario</th><th>Input OCC ($/kWe)</th><th>Adjusted OCC ($/kWe)</th><th>OCC Ratio</th></tr></thead><tbody>${rows.map(row => `<tr><td>${esc(row.Scenario || "")}</td><td>${fmt(row["Input OCC"])}</td><td class="iat-adjusted-occ">${fmt(row["Adjusted OCC"])}</td><td>${fmt(row["Adjustment Ratio of OCC"])}</td></tr>`).join("")}</tbody></table>`;
     }
 
     function crtKeySummaryCards(crt) {

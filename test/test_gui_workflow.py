@@ -493,6 +493,14 @@ def test_iat_only_results_prioritize_adjusted_occ_and_cost_breakdown():
     assert 'Scenario input and adjusted result' in crt_iat_gui.HTML
 
 
+def test_iat_adjusted_occ_highlight_is_scoped_to_readable_data_cells():
+    assert 'class="iat-adjusted-occ"' in crt_iat_gui.HTML
+    assert '.iat-scenario-table td.iat-adjusted-occ' in crt_iat_gui.HTML
+    assert '.iat-scenario-table th:nth-child(3)' not in crt_iat_gui.HTML
+    assert '--highlight: #e7f3f4' in crt_iat_gui.HTML
+    assert '--highlight-ink: #123b4a' in crt_iat_gui.HTML
+
+
 def test_workflow_result_sections_exclude_irrelevant_content():
     assert 'IAT Results' in crt_iat_gui.HTML
     assert 'CRT Results' in crt_iat_gui.HTML
