@@ -354,6 +354,19 @@ HTML = r"""<!doctype html>
       line-height: 1.45;
     }
     .panel-intro strong { color: #fff; }
+    .input-layer-heading {
+      margin: 16px 2px 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .input-layer-note {
+      margin: -3px 2px 10px;
+      color: rgba(255,255,255,0.7);
+      font-size: 11px;
+      line-height: 1.4;
+    }
     .workflow-steps {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -407,6 +420,14 @@ HTML = r"""<!doctype html>
       color: #d9f5e7;
       font-weight: 750;
       cursor: pointer;
+    }
+    .advanced-section > summary::marker { color: var(--orange); }
+    .advanced-section > summary .subvalue {
+      display: block;
+      margin-top: 3px;
+      color: rgba(255,255,255,0.62);
+      font-size: 11px;
+      font-weight: 500;
     }
     .advanced-section > fieldset {
       margin: 0;
@@ -918,6 +939,9 @@ HTML = r"""<!doctype html>
         <button class="secondary" id="resetBtn" type="button">Reset</button>
       </div>
 
+      <div class="input-layer-heading" id="basicInputsHeading">Basic inputs</div>
+      <div class="input-layer-note">The fields below cover the choices most users need for a normal run. Technical assumptions remain available in the advanced sections.</div>
+
       <fieldset id="taskSourcePanel" tabindex="-1">
         <legend>Workflow</legend>
         <label for="workflow">Mode</label>
@@ -986,7 +1010,7 @@ HTML = r"""<!doctype html>
           </div>
         </div>
         <details class="advanced-section" id="iatAdvancedSection">
-          <summary id="iatAssumptionsHeading" aria-controls="iatAdvancedFields">Advanced IAT Assumptions</summary>
+          <summary id="iatAssumptionsHeading" aria-controls="iatAdvancedFields">Advanced IAT assumptions <span class="subvalue">Adjustment factors and country-specific overrides</span></summary>
         <div id="iatAdvancedFields">
         <div class="row">
           <div id="iatAssumptionCountryGroup">
@@ -1082,7 +1106,7 @@ HTML = r"""<!doctype html>
       </fieldset>
 
       <details class="advanced-section" id="advancedLevers">
-        <summary aria-controls="leverPanel">Advanced CRT assumptions · CRT levers <span class="subvalue">Cost-reduction assumptions</span></summary>
+        <summary aria-controls="leverPanel">Advanced CRT assumptions · CRT levers <span class="subvalue">Financing, learning, standardization, proficiency, and design assumptions</span></summary>
       <fieldset id="leverPanel">
         <legend>CRT Levers</legend>
         <div class="triple">

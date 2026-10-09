@@ -728,6 +728,17 @@ def test_advanced_crt_inputs_have_limits_and_preflight_validation():
     assert 'ITC units cannot exceed firm orders.' in crt_iat_gui.HTML
 
 
+def test_phase_2a_separates_basic_inputs_from_collapsed_advanced_inputs():
+    assert 'id="basicInputsHeading">Basic inputs</div>' in crt_iat_gui.HTML
+    assert 'The fields below cover the choices most users need' in crt_iat_gui.HTML
+    assert 'id="iatAdvancedSection"' in crt_iat_gui.HTML
+    assert 'id="advancedLevers"' in crt_iat_gui.HTML
+    assert 'Adjustment factors and country-specific overrides' in crt_iat_gui.HTML
+    assert 'Financing, learning, standardization, proficiency, and design assumptions' in crt_iat_gui.HTML
+    assert '<details class="advanced-section" id="iatAdvancedSection">' in crt_iat_gui.HTML
+    assert '<details class="advanced-section" id="advancedLevers">' in crt_iat_gui.HTML
+
+
 def test_crt_fixed_inputs_use_short_labels_and_structural_field_alignment():
     assert ".row > div" in crt_iat_gui.HTML
     assert ".triple > div" in crt_iat_gui.HTML
