@@ -2137,7 +2137,7 @@ HTML = r"""<!doctype html>
     const IAT_COUNTRY_COLORS = ["#4e79a7", "#f28e2b", "#59a14f", "#b07aa1", "#e15759", "#76b7b2"];
 
     function iatCountryColor(country, index) {
-      const known = {"United States": "#4e79a7", "China": "#f28e2b", "Poland": "#59a14f", "Korea": "#b07aa1", "UAE": "#e15759", "El Salvador": "#76b7b2"};
+      const known = {"United States": "#4e79a7", "China": "#f28e2b", "South Korea": "#59a14f", "Korea": "#59a14f", "Poland": "#b07aa1", "UAE": "#e15759", "El Salvador": "#76b7b2"};
       if (known[country]) return known[country];
       let hash = 0;
       for (const char of String(country || "")) hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0;
@@ -2182,15 +2182,16 @@ HTML = r"""<!doctype html>
         const countryLabel = displayCountryName(country);
         const color = iatCountryColor(country, idx);
         const adjusted = Number(row.adjusted_occ_per_kw || 0);
-        const local = Math.max(0, Number(row.local_per_kw || 0));
-        const foreign = Math.max(0, Number(row.foreign_per_kw || 0));
+        const isReferenceCase = row.reference_case === true;
+        const local = Math.max(0, Number(isReferenceCase ? adjusted : row.local_per_kw || 0));
+        const foreign = Math.max(0, Number(isReferenceCase ? 0 : row.foreign_per_kw || 0));
         const mismatch = adjusted - (local + foreign);
         const x = m.left + step * idx + (step - barW) / 2;
         const localY = yScale(local);
         const stackY = yScale(local + foreign);
         const localH = Math.max(0, yScale(0) - localY);
         const foreignH = Math.max(0, localY - stackY);
-        const tip = `<b>${esc(countryLabel)}</b><br>Adjusted OCC ($/kW): ${fmt(Math.round(adjusted))}<br>Local OCC ($/kW): ${fmt(Math.round(local))}${foreign > tolerance ? `<br>Foreign OCC ($/kW): ${fmt(Math.round(foreign))}` : ""}${Math.abs(mismatch) > tolerance ? `<br>Model check difference: ${fmt(Math.round(mismatch))} $/kW` : ""}`;
+        const tip = `<b>${esc(countryLabel)}</b><br>Adjusted OCC ($/kW): ${fmt(Math.round(adjusted))}<br>Local OCC ($/kW): ${fmt(Math.round(local))}<br>Foreign / Imported OCC ($/kW): ${fmt(Math.round(foreign))}${Math.abs(mismatch) > tolerance ? `<br>Model check difference: ${fmt(Math.round(mismatch))} $/kW` : ""}`;
         if (localH > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${localY}" width="${barW}" height="${localH}" fill="${color}" stroke="${color}" rx="2"></rect>`;
         if (foreignH > 0) {
           svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="${color}" stroke="${color}" rx="2"></rect>`;
@@ -2198,9 +2199,9 @@ HTML = r"""<!doctype html>
         }
         svg += `<text x="${x + barW / 2}" y="${h - 54}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="700">${esc(countryLabel)}</text>`;
       });
-      svg += `<text x="${m.left}" y="${h - 30}" fill="#596775" font-size="13" font-weight="800">Fill style: Cost origin</text>`;
-      svg += `<rect x="${m.left + 142}" y="${h - 43}" width="14" height="14" fill="#4e79a7" rx="2"></rect><text x="${m.left + 164}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Solid: Local</text>`;
-      svg += `<rect x="${m.left + 290}" y="${h - 43}" width="14" height="14" fill="#4e79a7" rx="2"></rect><rect x="${m.left + 290}" y="${h - 43}" width="14" height="14" fill="url(#iatForeignHatch)" rx="2"></rect><text x="${m.left + 312}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Hatched: Foreign</text>`;
+      svg += `<text x="${m.left}" y="${h - 30}" fill="#596775" font-size="13" font-weight="800">Cost origin</text>`;
+      svg += `<rect x="${m.left + 106}" y="${h - 43}" width="14" height="14" fill="#64748b" stroke="#64748b" rx="2"></rect><text x="${m.left + 128}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Solid — Local</text>`;
+      svg += `<rect x="${m.left + 262}" y="${h - 43}" width="14" height="14" fill="#64748b" stroke="#64748b" rx="2"></rect><rect x="${m.left + 262}" y="${h - 43}" width="14" height="14" fill="url(#iatForeignHatch)" stroke="#64748b" rx="2"></rect><text x="${m.left + 284}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Hatched — Foreign / Imported</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -2634,6 +2635,30 @@ def _is_standard_us_reference(iat: dict, country: str) -> bool:
     )
 
 
+def _comparison_chart_row(country: str, summary: dict, reference_case: bool) -> dict:
+    """Build chart-only local/foreign values without changing raw IAT metrics.
+
+    The standard U.S. case is a visual reference convention: its full adjusted
+    OCC is shown as local and its displayed foreign portion is zero. The raw
+    model decomposition remains available in the ``model_*`` fields, and a
+    custom U.S. scenario is passed through unchanged by ``reference_case``.
+    """
+    adjusted = summary.get("adjusted_occ_per_kw")
+    model_local = summary.get("local_occ_per_kw")
+    model_foreign = summary.get("foreign_occ_per_kw")
+    return {
+        "country": country,
+        "scenario": "Adjusted OCC",
+        "adjusted_occ_per_kw": adjusted,
+        "local_per_kw": adjusted if reference_case else model_local,
+        "foreign_per_kw": 0.0 if reference_case else model_foreign,
+        "model_local_per_kw": model_local,
+        "model_foreign_per_kw": model_foreign,
+        "reference_case": reference_case,
+        "label": country,
+    }
+
+
 def _iat_metrics(adjusted_costs: pd.DataFrame, power_kwe: float) -> dict:
     summary = _coa_sorted_summary(adjusted_costs)
     occ = _occ_rows(summary)
@@ -3047,17 +3072,7 @@ def run_workflow(payload: dict) -> dict:
                 if "base_case" not in response and result["scenario_results"]:
                     response["base_case"] = _base_case_from_iat_result(result["scenario_results"][0], power_kwe)
                 reference_case = _is_standard_us_reference(iat, country)
-                comparison_chart.append({
-                    "country": country,
-                    "scenario": "Adjusted OCC",
-                    "adjusted_occ_per_kw": summary.get("adjusted_occ_per_kw"),
-                    "local_per_kw": summary.get("adjusted_occ_per_kw") if reference_case else summary.get("local_occ_per_kw"),
-                    "foreign_per_kw": 0.0 if reference_case else summary.get("foreign_occ_per_kw"),
-                    "model_local_per_kw": summary.get("local_occ_per_kw"),
-                    "model_foreign_per_kw": summary.get("foreign_occ_per_kw"),
-                    "reference_case": reference_case,
-                    "label": country,
-                })
+                comparison_chart.append(_comparison_chart_row(country, summary, reference_case))
             else:
                 result = run_adjustment(config)
                 if iat.get("_prepared_from_accert_csv") and "Converted ACCERT baseline" not in files:
@@ -3067,17 +3082,7 @@ def run_workflow(payload: dict) -> dict:
                 if "base_case" not in response:
                     response["base_case"] = _base_case_from_iat_result(result, power_kwe)
                 reference_case = _is_standard_us_reference(iat, country)
-                comparison_chart.append({
-                    "country": country,
-                    "scenario": "Adjusted OCC",
-                    "adjusted_occ_per_kw": summary.get("adjusted_occ_per_kw"),
-                    "local_per_kw": summary.get("adjusted_occ_per_kw") if reference_case else summary.get("local_occ_per_kw"),
-                    "foreign_per_kw": 0.0 if reference_case else summary.get("foreign_occ_per_kw"),
-                    "model_local_per_kw": summary.get("local_occ_per_kw"),
-                    "model_foreign_per_kw": summary.get("foreign_occ_per_kw"),
-                    "reference_case": reference_case,
-                    "label": country,
-                })
+                comparison_chart.append(_comparison_chart_row(country, summary, reference_case))
             country_results.append({"country": country, "data": summary})
             files[f"IAT CSV ({country})"] = _file_info(iat_csv)
         response["iat"] = {

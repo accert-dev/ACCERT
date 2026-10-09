@@ -269,13 +269,35 @@ def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
     assert 'fill="url(#iatForeignHatch)"' in crt_iat_gui.HTML
     assert 'patternTransform="rotate(35)"' in crt_iat_gui.HTML
     assert "Color: Country" in crt_iat_gui.HTML
-    assert "Fill style: Cost origin" in crt_iat_gui.HTML
+    assert "Cost origin" in crt_iat_gui.HTML
     assert '"China": "#f28e2b"' in crt_iat_gui.HTML
-    assert "Solid: Local" in crt_iat_gui.HTML
-    assert "Hatched: Foreign" in crt_iat_gui.HTML
+    assert '"South Korea": "#59a14f"' in crt_iat_gui.HTML
+    assert '"Poland": "#b07aa1"' in crt_iat_gui.HTML
+    assert "Solid — Local" in crt_iat_gui.HTML
+    assert "Hatched — Foreign / Imported" in crt_iat_gui.HTML
+    assert "const isReferenceCase = row.reference_case === true" in crt_iat_gui.HTML
+    assert "Foreign / Imported OCC ($/kW)" in crt_iat_gui.HTML
     assert "Model check difference" in crt_iat_gui.HTML
     assert "iatOccCompChart" not in crt_iat_gui.HTML
     assert "iatLfChart" not in crt_iat_gui.HTML
+
+
+def test_iat_reference_display_transform_preserves_raw_model_decomposition():
+    summary = {
+        "adjusted_occ_per_kw": 100.0,
+        "local_occ_per_kw": 72.0,
+        "foreign_occ_per_kw": 28.0,
+    }
+
+    reference = crt_iat_gui._comparison_chart_row("United States", summary, True)
+    custom = crt_iat_gui._comparison_chart_row("United States", summary, False)
+
+    assert reference["local_per_kw"] == 100.0
+    assert reference["foreign_per_kw"] == 0.0
+    assert reference["model_local_per_kw"] == 72.0
+    assert reference["model_foreign_per_kw"] == 28.0
+    assert custom["local_per_kw"] == 72.0
+    assert custom["foreign_per_kw"] == 28.0
 
 
 def test_country_selection_is_multi_country_for_both_iat_only_sources():
