@@ -431,6 +431,11 @@ def test_capital_tooltip_keeps_gross_net_pairs_together():
 
 def test_phase_one_gui_has_three_step_input_flow_and_advanced_sections():
     assert 'class="workflow-steps"' in crt_iat_gui.HTML
+    assert '<nav class="workflow-steps"' in crt_iat_gui.HTML
+    assert 'class="workflow-step active" type="button"' in crt_iat_gui.HTML
+    assert 'aria-controls="taskSourcePanel"' in crt_iat_gui.HTML
+    assert 'aria-controls="runSummary"' in crt_iat_gui.HTML
+    assert 'function navigateToWorkflowStep(step)' in crt_iat_gui.HTML
     assert 'data-step="1"' in crt_iat_gui.HTML
     assert 'data-step="2"' in crt_iat_gui.HTML
     assert 'data-step="3"' in crt_iat_gui.HTML
@@ -438,6 +443,23 @@ def test_phase_one_gui_has_three_step_input_flow_and_advanced_sections():
     assert 'Advanced IAT Assumptions' in crt_iat_gui.HTML
     assert 'Advanced CRT assumptions' in crt_iat_gui.HTML
     assert 'CRT levers' in crt_iat_gui.HTML
+    assert 'aria-controls="iatAdvancedFields"' in crt_iat_gui.HTML
+    assert 'aria-controls="leverPanel"' in crt_iat_gui.HTML
+
+
+def test_phase_one_gui_preserves_workflow_fields_and_improves_narrow_layout():
+    for field_id in ["workflow", "iatInputMode", "iatReactorType", "iatBaseline", "crtReactorType", "crtCsvFile", "runSummary"]:
+        assert f'id="{field_id}"' in crt_iat_gui.HTML
+    assert 'input, select {' in crt_iat_gui.HTML
+    assert 'box-sizing: border-box' in crt_iat_gui.HTML
+    assert '.row, .triple, .lever-matrix { grid-template-columns: 1fr; }' in crt_iat_gui.HTML
+    assert 'item.setAttribute("aria-current"' in crt_iat_gui.HTML
+
+
+def test_phase_one_gui_help_controls_are_keyboard_reachable():
+    assert 'help.setAttribute("tabindex", "0")' in crt_iat_gui.HTML
+    assert 'help.setAttribute("aria-label"' in crt_iat_gui.HTML
+    assert 'help.addEventListener("focus"' in crt_iat_gui.HTML
 
 
 def test_phase_one_gui_explains_terms_and_exposes_run_summary_states():

@@ -200,6 +200,8 @@ HTML = r"""<!doctype html>
     }
     input, select {
       width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
       border: 1px solid #90b9cb;
       border-radius: 6px;
       padding: 9px 10px;
@@ -243,6 +245,8 @@ HTML = r"""<!doctype html>
       min-height: 2.8em;
       display: flex;
       align-items: flex-end;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
     }
     .triple {
       display: grid;
@@ -357,6 +361,8 @@ HTML = r"""<!doctype html>
       margin-bottom: 14px;
     }
     .workflow-step {
+      appearance: none;
+      width: 100%;
       min-height: 64px;
       padding: 8px;
       border: 1px solid rgba(207,239,248,0.2);
@@ -365,6 +371,9 @@ HTML = r"""<!doctype html>
       color: rgba(255,255,255,0.66);
       font-size: 11px;
       line-height: 1.25;
+      text-align: left;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
     .workflow-step .step-number {
       display: inline-flex;
@@ -385,6 +394,8 @@ HTML = r"""<!doctype html>
     }
     .workflow-step.done { border-color: rgba(93,196,146,0.7); color: #d9f5e7; }
     .workflow-step.done .step-number { background: var(--accent-2); }
+    .workflow-step:hover { border-color: rgba(242,140,52,0.7); color: #fff; }
+    .workflow-step[aria-current="step"] { box-shadow: inset 3px 0 0 var(--orange); }
     .advanced-section {
       margin: 10px 0 12px;
       border: 1px solid rgba(207,239,248,0.2);
@@ -882,6 +893,7 @@ HTML = r"""<!doctype html>
     }
     @media (max-width: 520px) {
       .workflow-steps { grid-template-columns: 1fr; }
+      .row, .triple, .lever-matrix { grid-template-columns: 1fr; }
       .baseline-control-row { flex-direction: column; }
       .baseline-control-row .file-input-row { flex-basis: auto; }
       .result-summary-cards, .summary, .iat-summary-cards, .iat-only-summary, .crt-key-cards, .crt-metric-cards { grid-template-columns: 1fr; }
@@ -896,17 +908,17 @@ HTML = r"""<!doctype html>
   <main>
     <aside>
       <div class="panel-intro"><strong>Build a clear cost scenario.</strong><br>Choose a source, review the key assumptions, then run the analysis.</div>
-      <div class="workflow-steps" aria-label="Workflow steps">
-        <div class="workflow-step active" data-step="1"><span class="step-number">1</span><br>Select task &amp; source</div>
-        <div class="workflow-step" data-step="2"><span class="step-number">2</span><br>Configure assumptions</div>
-        <div class="workflow-step" data-step="3"><span class="step-number">3</span><br>Run &amp; review</div>
-      </div>
+      <nav class="workflow-steps" aria-label="Workflow steps">
+        <button class="workflow-step active" type="button" data-step="1" aria-controls="taskSourcePanel" aria-current="step"><span class="step-number">1</span><br>Select task and source</button>
+        <button class="workflow-step" type="button" data-step="2" aria-controls="iatPanel" aria-current="false"><span class="step-number">2</span><br>Configure assumptions</button>
+        <button class="workflow-step" type="button" data-step="3" aria-controls="runSummary" aria-current="false"><span class="step-number">3</span><br>Run and review</button>
+      </nav>
       <div class="actions">
         <button id="runBtn">Run analysis</button>
         <button class="secondary" id="resetBtn" type="button">Reset</button>
       </div>
 
-      <fieldset>
+      <fieldset id="taskSourcePanel" tabindex="-1">
         <legend>Workflow</legend>
         <label for="workflow">Mode</label>
         <select id="workflow">
@@ -919,7 +931,7 @@ HTML = r"""<!doctype html>
         <div class="field-note" id="outputNameHint">Auto-generated from reactor and country. Edit it to add a description.</div>
       </fieldset>
 
-      <fieldset id="iatPanel">
+      <fieldset id="iatPanel" tabindex="-1">
         <legend>IAT Inputs</legend>
         <div class="row">
           <div>
@@ -973,8 +985,9 @@ HTML = r"""<!doctype html>
             <div class="readonly-note">{{IAT_YEAR_DOLLAR}} CPI-U basis</div>
           </div>
         </div>
-        <details class="advanced-section">
-          <summary id="iatAssumptionsHeading">Advanced IAT Assumptions</summary>
+        <details class="advanced-section" id="iatAdvancedSection">
+          <summary id="iatAssumptionsHeading" aria-controls="iatAdvancedFields">Advanced IAT Assumptions</summary>
+        <div id="iatAdvancedFields">
         <div class="row">
           <div id="iatAssumptionCountryGroup">
             <label for="iatAssumptionCountry">Assumption country</label>
@@ -1000,6 +1013,7 @@ HTML = r"""<!doctype html>
           <div></div>
         </div>
         <div class="status">Preset factors load with the selected country; edits apply only to this run.</div>
+        </div>
         </details>
         <div id="iatCsvGroup" class="hidden">
           <label for="iatBaseline">IAT source file</label>
@@ -1033,7 +1047,7 @@ HTML = r"""<!doctype html>
         </div>
       </fieldset>
 
-      <fieldset id="crtPanel">
+      <fieldset id="crtPanel" tabindex="-1">
         <legend>CRT Fixed Inputs</legend>
         <div id="crtReactorTypeGroup">
           <label for="crtReactorType">Reactor type</label>
@@ -1068,7 +1082,7 @@ HTML = r"""<!doctype html>
       </fieldset>
 
       <details class="advanced-section" id="advancedLevers">
-        <summary>Advanced CRT assumptions · CRT levers <span class="subvalue">Cost-reduction assumptions</span></summary>
+        <summary aria-controls="leverPanel">Advanced CRT assumptions · CRT levers <span class="subvalue">Cost-reduction assumptions</span></summary>
       <fieldset id="leverPanel">
         <legend>CRT Levers</legend>
         <div class="triple">
@@ -1106,12 +1120,12 @@ HTML = r"""<!doctype html>
         </div>
       </fieldset>
       </details>
-      <div class="run-summary" id="runSummary"><strong>Ready to run</strong>Choose a workflow and review the selected source and assumptions here before starting.</div>
+      <div class="run-summary" id="runSummary" tabindex="-1" aria-live="polite"><strong>Ready to run</strong>Choose a workflow and review the selected source and assumptions here before starting.</div>
       <div class="status error hidden" id="inputValidation" role="alert"></div>
     </aside>
     <section>
       <div id="result">
-        <div class="empty-state" id="emptyState">
+        <div class="empty-state" id="emptyState" role="status" aria-live="polite">
           <div><h2 id="emptyTitle">Connected IAT → CRT results will appear here</h2><p id="emptyDescription">Run the connected workflow to see summary cards, interactive charts, tables, and downloadable output files.</p><div class="term-guide" id="termGuide"><span>IAT · International Adjustment Tool</span><span>CRT · Cost Reduction Tool</span><span>FOAK · First-of-a-Kind</span><span>NOAK · Nth-of-a-Kind</span><span>Levers · cost-reduction levers</span></div></div>
         </div>
       </div>
@@ -1432,11 +1446,28 @@ HTML = r"""<!doctype html>
     }
 
     function setWorkflowStep(step) {
+      const targetId = workflowStepTarget(step)?.id || "";
       document.querySelectorAll(".workflow-step").forEach(item => {
         const itemStep = Number(item.dataset.step);
         item.classList.toggle("active", itemStep === step);
         item.classList.toggle("done", itemStep < step);
+        item.setAttribute("aria-current", itemStep === step ? "step" : "false");
+        if (itemStep === 2 && targetId) item.setAttribute("aria-controls", targetId);
       });
+    }
+
+    function workflowStepTarget(step) {
+      if (step === 1) return $("taskSourcePanel");
+      if (step === 2) return $("crtPanel").classList.contains("hidden") ? $("iatPanel") : $("crtPanel");
+      return $("runSummary");
+    }
+
+    function navigateToWorkflowStep(step) {
+      const target = workflowStepTarget(step);
+      if (!target) return;
+      setWorkflowStep(step);
+      target.scrollIntoView({behavior: "smooth", block: "start"});
+      window.setTimeout(() => target.focus({preventScroll: true}), 250);
     }
 
     function setProcessingStage(stage, message) {
@@ -1560,9 +1591,17 @@ HTML = r"""<!doctype html>
         const help = document.createElement("span");
         help.className = "help";
         help.textContent = "?";
+        help.setAttribute("role", "img");
+        help.setAttribute("tabindex", "0");
+        help.setAttribute("aria-label", `Help for ${label.textContent.trim()}`);
         help.dataset.tip = esc(helpText[id]);
         help.addEventListener("mousemove", event => showTip(event, help.dataset.tip));
         help.addEventListener("mouseleave", hideTip);
+        help.addEventListener("focus", () => {
+          const rect = help.getBoundingClientRect();
+          showTip({clientX: rect.right, clientY: rect.top}, help.dataset.tip);
+        });
+        help.addEventListener("blur", hideTip);
         row.appendChild(help);
       });
     }
@@ -2477,6 +2516,9 @@ HTML = r"""<!doctype html>
       cb.addEventListener("change", () => { saveIatFactorOverrides(); updateCountryDropdownLabel(); loadIatFactorDefaults(); updateOutputName(); });
     });
     $("iatAssumptionCountry").addEventListener("change", () => { loadIatFactorDefaults(); updateIatAssumptionContext(); });
+    document.querySelectorAll(".workflow-step").forEach(step => {
+      step.addEventListener("click", () => navigateToWorkflowStep(Number(step.dataset.step)));
+    });
     $("iatBrowseBtn").addEventListener("click", () => $("iatCsvFile").click());
     $("iatCsvFile").addEventListener("change", () => {
       const file = $("iatCsvFile").files[0];
