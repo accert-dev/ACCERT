@@ -2132,19 +2132,22 @@ HTML = r"""<!doctype html>
       return title ? `${html}</div>` : html;
     }
 
-    const IAT_COUNTRY_COLORS = ["#2f6f9f", "#d97745", "#4f8a62", "#8a6cae", "#b28a3b", "#3f8791"];
+    const IAT_COUNTRY_COLORS = ["#4e79a7", "#f28e2b", "#59a14f", "#b07aa1", "#e15759", "#76b7b2"];
 
     function iatCountryColor(country, index) {
-      const known = {"United States": "#2f6f9f", "China": "#d97745", "Poland": "#4f8a62", "Korea": "#8a6cae", "UAE": "#b28a3b", "El Salvador": "#3f8791"};
-      return known[country] || IAT_COUNTRY_COLORS[index % IAT_COUNTRY_COLORS.length];
+      const known = {"United States": "#4e79a7", "China": "#f28e2b", "Poland": "#59a14f", "Korea": "#b07aa1", "UAE": "#e15759", "El Salvador": "#76b7b2"};
+      if (known[country]) return known[country];
+      let hash = 0;
+      for (const char of String(country || "")) hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0;
+      return IAT_COUNTRY_COLORS[Math.abs(hash || index) % IAT_COUNTRY_COLORS.length];
     }
 
     function countryComparisonChart(rows) {
       if (!rows || !rows.length) return "";
       const countries = [...new Set(rows.map(r => r.country))];
       const chartRows = countries.map(country => rows.find(r => r.country === country));
-      const w = 1120, h = 470;
-      const m = {left: 108, right: 28, top: 54, bottom: 94};
+      const w = 1120, h = 520;
+      const m = {left: 108, right: 28, top: 76, bottom: 106};
       const innerW = w - m.left - m.right;
       const innerH = h - m.top - m.bottom;
       const maxVal = Math.max(1, ...chartRows.map(r => Number(r.adjusted_occ_per_kw || 0))) * 1.12;
@@ -2152,7 +2155,18 @@ HTML = r"""<!doctype html>
       const step = innerW / countries.length;
       const barW = Math.max(32, Math.min(82, step * 0.54));
       const tolerance = 0.01;
-      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Adjusted OCC by country"><defs><pattern id="iatForeignHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="white" stroke-width="3" opacity="0.7"></line></pattern></defs>`;
+      let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Adjusted OCC by country"><defs><pattern id="iatForeignHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="8" stroke="white" stroke-width="3" opacity="0.7"></line></pattern></defs>`;
+      svg += `<text x="${m.left}" y="24" fill="#596775" font-size="13" font-weight="800">Color: Country</text>`;
+      const colorLegendColumns = Math.min(3, countries.length);
+      const colorLegendWidth = innerW / Math.max(1, colorLegendColumns);
+      countries.forEach((country, idx) => {
+        const col = idx % colorLegendColumns;
+        const row = Math.floor(idx / colorLegendColumns);
+        const lx = m.left + 112 + col * colorLegendWidth;
+        const ly = 24 + row * 20;
+        const color = iatCountryColor(country, idx);
+        svg += `<rect x="${lx}" y="${ly - 11}" width="12" height="12" fill="${color}" rx="2"></rect><text x="${lx + 19}" y="${ly}" fill="#596775" font-size="13" font-weight="700">${esc(displayCountryName(country))}</text>`;
+      });
       for (let i = 0; i <= 4; i++) {
         const v = maxVal * i / 4;
         const yy = yScale(v);
@@ -2182,8 +2196,9 @@ HTML = r"""<!doctype html>
         }
         svg += `<text x="${x + barW / 2}" y="${h - 54}" text-anchor="middle" fill="#41566d" font-size="14" font-weight="700">${esc(countryLabel)}</text>`;
       });
-      svg += `<rect x="${m.left}" y="${h - 26}" width="14" height="14" fill="#2f6f9f"></rect><text x="${m.left + 22}" y="${h - 14}" fill="#41566d" font-size="14" font-weight="700">Solid: Local</text>`;
-      svg += `<rect x="${m.left + 150}" y="${h - 26}" width="14" height="14" fill="#2f6f9f"></rect><rect x="${m.left + 150}" y="${h - 26}" width="14" height="14" fill="url(#iatForeignHatch)"></rect><text x="${m.left + 172}" y="${h - 14}" fill="#41566d" font-size="14" font-weight="700">Hatched: Foreign</text>`;
+      svg += `<text x="${m.left}" y="${h - 30}" fill="#596775" font-size="13" font-weight="800">Fill style: Cost origin</text>`;
+      svg += `<rect x="${m.left + 142}" y="${h - 43}" width="14" height="14" fill="#4e79a7" rx="2"></rect><text x="${m.left + 164}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Solid: Local</text>`;
+      svg += `<rect x="${m.left + 290}" y="${h - 43}" width="14" height="14" fill="#4e79a7" rx="2"></rect><rect x="${m.left + 290}" y="${h - 43}" width="14" height="14" fill="url(#iatForeignHatch)" rx="2"></rect><text x="${m.left + 312}" y="${h - 31}" fill="#596775" font-size="13" font-weight="700">Hatched: Foreign</text>`;
       svg += `</svg>`;
       return svg;
     }
