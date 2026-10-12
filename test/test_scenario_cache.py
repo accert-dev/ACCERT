@@ -72,3 +72,18 @@ def test_key_lock_serializes_identical_in_flight_work(tmp_path):
         thread.join()
 
     assert maximum == 1
+
+
+def test_result_affecting_inputs_and_versions_invalidate_key(tmp_path):
+    cache = ScenarioCache(tmp_path / "cache")
+    base = {
+        "country": "United States",
+        "num_orders": 10,
+        "year_dollar": 2025,
+    }
+    first = cache.key_for(base, model_version="model-a")
+
+    assert cache.key_for({**base, "country": "China"}, model_version="model-a") != first
+    assert cache.key_for({**base, "num_orders": 20}, model_version="model-a") != first
+    assert cache.key_for({**base, "year_dollar": 2024}, model_version="model-a") != first
+    assert cache.key_for(base, model_version="model-b") != first
