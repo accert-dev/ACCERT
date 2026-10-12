@@ -53,6 +53,10 @@ from crt.reactor_config import (
 from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 from cost_escalation import TARGET_DOLLAR_YEAR
+try:
+    from tutorial.gui.scenario_cache import ScenarioCache
+except ModuleNotFoundError:  # Direct execution from tutorial/gui.
+    from scenario_cache import ScenarioCache
 
 
 HOST = "127.0.0.1"
@@ -60,6 +64,8 @@ PORT = 8765
 APP_VERSION = os.environ.get("ACCERT_GUI_VERSION", "local")
 RUNTIME_DIR = Path(tempfile.gettempdir()) / "accert-gui"
 OUTPUT_DIR = REPO_ROOT / "tutorial" / "gui_outputs"
+CACHE_DIR = Path(os.environ.get("ACCERT_GUI_CACHE_DIR", str(RUNTIME_DIR / "cache")))
+SCENARIO_CACHE = ScenarioCache(CACHE_DIR)
 DEFAULT_IAT_YEAR_DOLLAR = TARGET_DOLLAR_YEAR
 LAND_COST_PER_GUI_UNIT = 1_000.0
 LABOR_HOURS_PER_MILLION = 1_000_000.0
@@ -3265,7 +3271,7 @@ def _write_crt_results_csv(result: dict, path: Path) -> pd.DataFrame:
     return plants
 
 
-def run_workflow(payload: dict) -> dict:
+def _run_workflow_uncached(payload: dict) -> dict:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     name = _safe_name(payload.get("output_name", "accert_gui_run"))
     workflow = payload["workflow"]
@@ -3437,6 +3443,38 @@ def run_workflow(payload: dict) -> dict:
         return response
 
     raise ValueError(f"Unknown workflow: {workflow}")
+
+
+def _cache_dependency_paths() -> list[Path]:
+    paths = [Path(__file__), SRC_PATH / "cost_escalation.py"]
+    for directory in (SRC_PATH / "crt", SRC_PATH / "iat"):
+        paths.extend(directory.rglob("*.py"))
+        paths.extend(directory.rglob("*.csv"))
+    return sorted({path for path in paths if path.is_file()}, key=str)
+
+
+def _cached_workflow_key(payload: dict) -> str:
+    return SCENARIO_CACHE.key_for(
+        payload,
+        model_version=os.environ.get("ACCERT_MODEL_VERSION", "local"),
+        dependencies=_cache_dependency_paths(),
+        context={"output_dir": str(OUTPUT_DIR.resolve())},
+    )
+
+
+def run_workflow(payload: dict) -> dict:
+    """Run a scenario once, reusing only a validated identical result."""
+    key = _cached_workflow_key(payload)
+    cached = SCENARIO_CACHE.get(key)
+    if cached is not None:
+        return cached
+    with SCENARIO_CACHE.key_lock(key):
+        cached = SCENARIO_CACHE.get(key)
+        if cached is not None:
+            return cached
+        result = _run_workflow_uncached(payload)
+        SCENARIO_CACHE.put(key, result)
+        return result
 
 
 class Handler(BaseHTTPRequestHandler):

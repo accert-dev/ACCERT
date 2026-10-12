@@ -7,6 +7,7 @@ import pytest
 pytestmark = [pytest.mark.workflow, pytest.mark.gui]
 
 from tutorial.gui import crt_iat_gui
+from tutorial.gui.scenario_cache import ScenarioCache
 
 
 def _gui_payload(csv_content: str) -> dict:
@@ -91,6 +92,26 @@ def test_gui_iat_crt_converts_raw_accert_account_csv(monkeypatch, tmp_path):
     assert result["crt"]["years_to_orderbook"] > 0
     assert crt_iat_gui._crt_config(_gui_payload(raw_accert.to_csv(index=False)))["construction_duration_0"] == pytest.approx(76)
     assert result["crt"]["plants"][0]["Construction duration"] > 0
+
+
+def test_repeated_identical_iat_scenario_uses_cache(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["output_name"] = "cached_iat_scenario"
+    payload["iat"].update({
+        "input_mode": "occ",
+        "reactor_type": "large reactor",
+        "countries": ["United States"],
+        "occ_values": [5750],
+    })
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path / "outputs")
+    monkeypatch.setattr(crt_iat_gui, "SCENARIO_CACHE", ScenarioCache(tmp_path / "cache"))
+
+    first = crt_iat_gui.run_workflow(payload)
+    second = crt_iat_gui.run_workflow(payload)
+
+    assert second == first
+    assert crt_iat_gui.SCENARIO_CACHE.stats()["hits"] == 1
 
 
 def test_gui_crt_only_converts_raw_accert_baseline(monkeypatch, tmp_path):
