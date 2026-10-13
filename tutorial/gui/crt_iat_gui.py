@@ -1195,6 +1195,7 @@ HTML = r"""<!doctype html>
     const defaultIatYearDollar = Number("{{IAT_YEAR_DOLLAR}}");
     const LAND_COST_GUI_TO_BACKEND = Number("{{LAND_COST_PER_GUI_UNIT}}");
     const LABOR_HOURS_GUI_TO_BACKEND = Number("{{LABOR_HOURS_PER_MILLION}}");
+    const ATB_INTERNAL_ELECTRIC_OUTPUT_MWE = 0.0001;
     const iatFactorDefaults = {{IAT_FACTOR_DEFAULTS}};
     const nrelAtbCases = {{NREL_ATB_CASES}};
     const iatFactorIds = {import_tariff: "iatTariffFactor", equipment: "iatEquipmentFactor", material: "iatMaterialFactor", labor: "iatLaborFactor", labor_o_and_m: "iatLaborOandMFactor", land: "iatLandFactor", catchall: "iatCatchallFactor"};
@@ -1339,7 +1340,7 @@ HTML = r"""<!doctype html>
         _csvFileContent = null;
         _csvFilePath = `src/iat/data/${atb.baseline_csv}`;
         $("iatCsvName").value = `${atb.baseline_csv} (${atb.label})`;
-        $("electricOutputMwe").value = "";
+        $("electricOutputMwe").value = String(ATB_INTERNAL_ELECTRIC_OUTPUT_MWE);
       }
       const crtSelect = $("crtReactorType");
       Array.from(crtSelect.options).forEach(option => {
@@ -1361,7 +1362,7 @@ HTML = r"""<!doctype html>
 
     function updateElectricOutputDefault() {
       if (isAtbBaseline()) {
-        $("electricOutputMwe").value = "";
+        $("electricOutputMwe").value = String(ATB_INTERNAL_ELECTRIC_OUTPUT_MWE);
         return;
       }
       const model = selectedBaselineModel();

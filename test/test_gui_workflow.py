@@ -768,6 +768,8 @@ def test_atb_base_case_uses_csv_and_hides_electric_output(monkeypatch, tmp_path)
     assert result["iat"]["country_results"][0]["data"]["input_occ_per_kw"] == pytest.approx(5250, abs=0.01)
     assert "isAtbBaseline" in crt_iat_gui.HTML
     assert 'baseline_case: $("iatBaseline").value' in crt_iat_gui.HTML
+    assert 'const ATB_INTERNAL_ELECTRIC_OUTPUT_MWE = 0.0001;' in crt_iat_gui.HTML
+    assert '$("electricOutputMwe").value = String(ATB_INTERNAL_ELECTRIC_OUTPUT_MWE);' in crt_iat_gui.HTML
 
 
 def test_combined_us_baseline_chart_row_keeps_absolute_original_occ(monkeypatch, tmp_path):
