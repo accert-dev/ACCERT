@@ -7,17 +7,18 @@ U.S.-based ACCERT or CRT baseline CSV to the selected country. CRT then uses
 that IAT-adjusted CSV as its baseline, without changing the packaged baseline
 files in ``src/crt/data``.
 
-Start and stop the GUI
-----------------------
+Start the GUI
+-------------
 
-On macOS, double-click ``tutorial/gui/Launch ACCERT GUI.command`` from the
-ACCERT repository. The tested launcher starts the local server and opens the
-GUI in the default browser automatically.
+From the ACCERT repository root, run:
 
-Stop the local server with:
+.. code-block:: bash
 
-On macOS, double-click ``tutorial/gui/Stop ACCERT GUI.command`` to stop a
-launcher-managed session.
+   python tutorial/gui/launch_gui.py
+
+The Python entry point starts the local server and opens the GUI in the default
+browser automatically. Stop a foreground session with ``Ctrl-C`` or use
+``python tutorial/gui/stop_gui.py`` for a server recorded by the GUI.
 
 The combined IAT-to-CRT GUI workflow is shown in this walkthrough:
 

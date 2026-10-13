@@ -25,21 +25,19 @@ python -m pip install -r requirements.txt
 
 Conda is not required by the project.
 
-## Start the GUI on macOS
+## Start the GUI
 
-The macOS launcher is the supported, tested GUI startup path:
+Install Python and the project dependencies, then run the portable Python entry
+point from the repository root:
 
-1. Install Python and the project dependencies.
-2. Double-click [Launch ACCERT GUI.command](tutorial/gui/Launch%20ACCERT%20GUI.command).
-3. The launcher starts the local GUI server and opens the GUI in the default browser.
+```bash
+python tutorial/gui/launch_gui.py
+```
 
-To stop a launcher-managed session, double-click
-[Stop ACCERT GUI.command](tutorial/gui/Stop%20ACCERT%20GUI.command).
-
-The macOS launcher has been tested successfully. Windows and Linux launchers
-have not been confirmed as tested. The underlying Python modules may be useful
-on other platforms, but this README does not claim that the GUI launcher works
-there.
+The command starts the local GUI server and opens the GUI in the default
+browser. Python 3.10 or newer is required; the project has been tested with
+Python 3.12. The Python GUI entry point is the supported startup path on macOS;
+Windows and Linux launchers have not been separately tested.
 
 ## Basic GUI use
 

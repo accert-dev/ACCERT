@@ -11,13 +11,7 @@ import time
 import webbrowser
 from pathlib import Path
 
-try:
-    from crt_iat_gui import HOST, PORT, find_available_port, gui_url, is_gui_running, pid_file, resolve_gui_port
-except ModuleNotFoundError as exc:
-    raise SystemExit(
-        f"ACCERT GUI dependencies are missing ({exc.name}). "
-        "Install the project dependencies from requirements.txt or pyproject.toml."
-    ) from exc
+from crt_iat_gui import HOST, PORT, find_available_port, gui_url, is_gui_running, pid_file, resolve_gui_port
 
 
 def _pid_command(pid: int) -> str:
