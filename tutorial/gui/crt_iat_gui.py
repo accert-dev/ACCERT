@@ -2466,7 +2466,9 @@ HTML = r"""<!doctype html>
           const scenarioShortLabel = /^Scenario\s+(\d+)$/i.test(scenarioLabel)
             ? `S${scenarioLabel.match(/\d+/)[0]}`
             : `S${scenarioIndex + 1}`;
-          const tip = `<b>${esc(countryLabel)} · ${esc(scenarioLabel)}</b><br>Original OCC ($/kW): ${fmt(Math.round(Number(row.input_occ_per_kw || 0)))}<br>Adjusted OCC ($/kW): ${fmt(Math.round(adjusted))}<br>Local OCC ($/kW): ${fmt(Math.round(local))}<br>Foreign / Imported OCC ($/kW): ${fmt(Math.round(foreign))}${Math.abs(mismatch) > tolerance ? `<br>Model check difference: ${fmt(Math.round(mismatch))} $/kW` : ""}`;
+          const originalTip = `<b>${esc(countryLabel)} · ${esc(scenarioLabel)}</b><br>Original OCC ($/kW): ${fmt(Math.round(Number(row.input_occ_per_kw || 0)))}`;
+          const fullTip = `${originalTip}<br>Adjusted OCC ($/kW): ${fmt(Math.round(adjusted))}<br>Local OCC ($/kW): ${fmt(Math.round(local))}<br>Foreign / Imported OCC ($/kW): ${fmt(Math.round(foreign))}${Math.abs(mismatch) > tolerance ? `<br>Model check difference: ${fmt(Math.round(mismatch))} $/kW` : ""}`;
+          const tip = row.reference_case ? originalTip : fullTip;
           if (localH > 0) svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${localY}" width="${barW}" height="${localH}" fill="${color}" stroke="${color}" rx="2"></rect>`;
           if (foreignH > 0) {
             svg += `<rect class="hoverable" data-tip="${tip}" x="${x}" y="${stackY}" width="${barW}" height="${foreignH}" fill="none" stroke="${color}" rx="2"></rect>`;
