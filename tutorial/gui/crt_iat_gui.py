@@ -50,7 +50,7 @@ from crt.reactor_config import (
     iat_api_type_from_label,
     reactor_power_mwe,
 )
-from iat import level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
+from iat import NREL_ATB_CASES, level_account_summary, occ_local_foreign_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 from cost_escalation import TARGET_DOLLAR_YEAR
 try:
@@ -1061,8 +1061,14 @@ HTML = r"""<!doctype html>
           <div class="baseline-control-row">
             <select id="iatBaseline">
               <option value="AP1000">Built-in ACCERT baseline · AP1000</option>
+              <option value="nrel_atb_large_advanced">ATB Large Reactor – Advanced</option>
+              <option value="nrel_atb_large_moderate">ATB Large Reactor – Moderate</option>
+              <option value="nrel_atb_large_conservative">ATB Large Reactor – Conservative</option>
               <option value="SFR">Built-in ACCERT baseline · SFR</option>
               <option value="HTGR">Built-in ACCERT baseline · HTGR</option>
+              <option value="nrel_atb_smr_advanced">ATB Small Reactor – Advanced</option>
+              <option value="nrel_atb_smr_moderate">ATB Small Reactor – Moderate</option>
+              <option value="nrel_atb_smr_conservative">ATB Small Reactor – Conservative</option>
               <option value="custom">ACCERT account output / uploaded file</option>
             </select>
             <div id="iatUploadGroup" class="file-input-row hidden">
@@ -1190,6 +1196,7 @@ HTML = r"""<!doctype html>
     const LAND_COST_GUI_TO_BACKEND = Number("{{LAND_COST_PER_GUI_UNIT}}");
     const LABOR_HOURS_GUI_TO_BACKEND = Number("{{LABOR_HOURS_PER_MILLION}}");
     const iatFactorDefaults = {{IAT_FACTOR_DEFAULTS}};
+    const nrelAtbCases = {{NREL_ATB_CASES}};
     const iatFactorIds = {import_tariff: "iatTariffFactor", equipment: "iatEquipmentFactor", material: "iatMaterialFactor", labor: "iatLaborFactor", labor_o_and_m: "iatLaborOandMFactor", land: "iatLandFactor", catchall: "iatCatchallFactor"};
     const iatFactorOverrides = {};
     const reactorConfigs = {{REACTOR_CONFIGS}};
@@ -1279,7 +1286,29 @@ HTML = r"""<!doctype html>
     }
 
     function baselineOptionsForIat() {
-      return $("iatReactorType").value === "Large Reactor" ? ["AP1000"] : ["SFR", "HTGR"];
+      const atbAllowed = $("workflow").value === "iat_only";
+      return $("iatReactorType").value === "Large Reactor"
+        ? ["AP1000", ...(atbAllowed ? ["nrel_atb_large_advanced", "nrel_atb_large_moderate", "nrel_atb_large_conservative"] : []), "custom"]
+        : ["SFR", "HTGR", ...(atbAllowed ? ["nrel_atb_smr_advanced", "nrel_atb_smr_moderate", "nrel_atb_smr_conservative"] : []), "custom"];
+    }
+
+    function isAtbBaseline() {
+      return Boolean(nrelAtbCases[$("iatBaseline").value]);
+    }
+
+    function updateAtbOptions() {
+      const select = $("iatBaseline");
+      const family = $("iatReactorType").value === "SMR" ? "SMR" : "LR";
+      Array.from(select.options).forEach(option => {
+        const metadata = nrelAtbCases[option.value];
+        if (!metadata) return;
+        const supported = metadata.reactor_family === family;
+        option.disabled = !supported;
+        option.classList.toggle("hidden", !supported);
+      });
+      if (select.options[select.selectedIndex]?.disabled) {
+        select.value = family === "LR" ? "AP1000" : "SFR";
+      }
     }
 
     function selectedBaselineModel() {
@@ -1305,6 +1334,13 @@ HTML = r"""<!doctype html>
         $("iatCsvName").value = `${config.baseline_csv} (${model})`;
         $("electricOutputMwe").value = String(config.power_mwe);
       }
+      const atb = nrelAtbCases[baseline.value];
+      if (atb) {
+        _csvFileContent = null;
+        _csvFilePath = `src/iat/data/${atb.baseline_csv}`;
+        $("iatCsvName").value = `${atb.baseline_csv} (${atb.label})`;
+        $("electricOutputMwe").value = "";
+      }
       const crtSelect = $("crtReactorType");
       Array.from(crtSelect.options).forEach(option => {
         option.disabled = shared ? !allowed.includes(option.value) : false;
@@ -1324,6 +1360,10 @@ HTML = r"""<!doctype html>
     }
 
     function updateElectricOutputDefault() {
+      if (isAtbBaseline()) {
+        $("electricOutputMwe").value = "";
+        return;
+      }
       const model = selectedBaselineModel();
       if (reactorConfigs[model]) $("electricOutputMwe").value = String(reactorConfigs[model].power_mwe);
     }
@@ -1379,7 +1419,8 @@ HTML = r"""<!doctype html>
           csv_filename: _csvFileContent ? $("iatCsvName").value : null,
           electric_output_mwe: numberValue("electricOutputMwe"),
           scenario_count: numberValue("scenarioCount"),
-          occ_values: occScenarioValues()
+          occ_values: occScenarioValues(),
+          baseline_case: $("iatBaseline").value
         },
         crt: {
           reactor_type: $("crtReactorType").value,
@@ -1442,7 +1483,8 @@ HTML = r"""<!doctype html>
       $("countrySingle").classList.toggle("hidden", !isConnected);
       $("countryMulti").classList.toggle("hidden", isConnected);
       updateIatAssumptionCountryOptions();
-      $("electricOutputGroup").classList.toggle("hidden", !isCsvMode);
+      $("electricOutputGroup").classList.toggle("hidden", !isCsvMode || isAtbBaseline());
+      updateAtbOptions();
       if (isCsvMode) {
         updateDefaultCsvPath();
         updateElectricOutputDefault();
@@ -2632,7 +2674,7 @@ HTML = r"""<!doctype html>
         _csvFilePath = null;
         $("iatCsvName").value = "";
       }
-      syncBaselineSelection();
+      updatePanels();
     });
     $("scenarioCount").addEventListener("input", updatePanels);
     $("numOrders").addEventListener("input", updatePanels);
@@ -2854,6 +2896,9 @@ def _reactor_power_kwe(payload: dict) -> float:
     if payload.get("workflow") == "iat_crt":
         return reactor_power_mwe(payload["crt"]["reactor_type"]) * 1000.0
     iat = payload.get("iat", {})
+    if iat.get("baseline_case") in NREL_ATB_CASES:
+        # ATB CSVs are already allocated in $/kWe and need no MWe scaling.
+        return 1.0
     if iat.get("input_mode") == "occ":
         return 1.0
     mwe = _num(iat.get("electric_output_mwe"), 0.0)
@@ -2994,6 +3039,10 @@ def _iat_config(payload: dict, output_csv: Path | None = None, country: str | No
         config["adjustment_factor_overrides"] = overrides.get(country, {})
     if output_csv is not None:
         config["output_csv"] = output_csv
+    baseline_case = iat.get("baseline_case")
+    if baseline_case in NREL_ATB_CASES:
+        config["input_csv"] = SRC_PATH / "iat" / "data" / NREL_ATB_CASES[baseline_case]["baseline_csv"]
+        return config
     if iat["input_mode"] == "occ":
         config["occ_values"] = _parse_occ_values(iat["occ_values"])
         return config
@@ -3275,6 +3324,9 @@ def _run_workflow_uncached(payload: dict) -> dict:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     name = _safe_name(payload.get("output_name", "accert_gui_run"))
     workflow = payload["workflow"]
+    baseline_case = payload.get("iat", {}).get("baseline_case")
+    if baseline_case in NREL_ATB_CASES and workflow != "iat_only":
+        raise ValueError("NREL ATB reference cases are available only for IAT-only mode.")
     files: dict[str, dict] = {}
     notes: list[str] = []
     response: dict = {
@@ -3418,6 +3470,7 @@ def _run_workflow_uncached(payload: dict) -> dict:
                 _comparison_chart_row(
                     "United States",
                     {
+                        "input_occ_per_kw": iat_summary["input_occ_per_kw"],
                         "adjusted_occ_per_kw": iat_summary["input_occ_per_kw"],
                         "local_occ_per_kw": iat_summary["input_occ_per_kw"],
                         "foreign_occ_per_kw": 0.0,
@@ -3501,6 +3554,7 @@ class Handler(BaseHTTPRequestHandler):
             html = html.replace("{{LAND_COST_PER_GUI_UNIT}}", str(LAND_COST_PER_GUI_UNIT))
             html = html.replace("{{LABOR_HOURS_PER_MILLION}}", str(LABOR_HOURS_PER_MILLION))
             html = html.replace("{{IAT_FACTOR_DEFAULTS}}", json.dumps(DEFAULT_IAT_FACTORS))
+            html = html.replace("{{NREL_ATB_CASES}}", json.dumps(NREL_ATB_CASES))
             html = html.replace("{{REACTOR_CONFIGS}}", json.dumps(REACTOR_CONFIGS))
             self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
             return

@@ -16,6 +16,52 @@ from .data_loader import (
 )
 
 
+NREL_ATB_CASES: dict[str, dict[str, Any]] = {
+    "nrel_atb_large_advanced": {
+        "label": "NREL ATB · Large Reactor · Advanced",
+        "reactor_family": "LR",
+        "occ_value": 5250.0,
+        "distribution": "AP1000",
+        "baseline_csv": "atb_large_advanced.csv",
+    },
+    "nrel_atb_large_moderate": {
+        "label": "NREL ATB · Large Reactor · Moderate",
+        "reactor_family": "LR",
+        "occ_value": 5750.0,
+        "distribution": "AP1000",
+        "baseline_csv": "atb_large_moderate.csv",
+    },
+    "nrel_atb_large_conservative": {
+        "label": "NREL ATB · Large Reactor · Conservative",
+        "reactor_family": "LR",
+        "occ_value": 7750.0,
+        "distribution": "AP1000",
+        "baseline_csv": "atb_large_conservative.csv",
+    },
+    "nrel_atb_smr_advanced": {
+        "label": "NREL ATB · SMR · Advanced",
+        "reactor_family": "SMR",
+        "occ_value": 5500.0,
+        "distribution": "SMR",
+        "baseline_csv": "atb_small_advanced.csv",
+    },
+    "nrel_atb_smr_moderate": {
+        "label": "NREL ATB · SMR · Moderate",
+        "reactor_family": "SMR",
+        "occ_value": 8000.0,
+        "distribution": "SMR",
+        "baseline_csv": "atb_small_moderate.csv",
+    },
+    "nrel_atb_smr_conservative": {
+        "label": "NREL ATB · SMR · Conservative",
+        "reactor_family": "SMR",
+        "occ_value": 10000.0,
+        "distribution": "SMR",
+        "baseline_csv": "atb_small_conservative.csv",
+    },
+}
+
+
 ADJUSTED_COLUMNS = {
     "equipment": "Adjusted Factory Equipment Cost",
     "material": "Adjusted Site Material Cost",

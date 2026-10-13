@@ -739,6 +739,49 @@ def test_iat_source_labels_and_connected_workflow_are_clear():
     assert '$("iatInputMode").disabled = workflow === "iat_crt";' in crt_iat_gui.HTML
 
 
+def test_atb_cases_extend_code_of_accounts_without_changing_standard_occ():
+    assert 'id="atbCase"' not in crt_iat_gui.HTML
+    assert '<option value="occ" selected>Standard OCC</option>' in crt_iat_gui.HTML
+    assert '<option value="nrel_atb_large_advanced">ATB Large Reactor – Advanced</option>' in crt_iat_gui.HTML
+    assert '<option value="nrel_atb_large_moderate">ATB Large Reactor – Moderate</option>' in crt_iat_gui.HTML
+    assert '<option value="nrel_atb_large_conservative">ATB Large Reactor – Conservative</option>' in crt_iat_gui.HTML
+    assert '<option value="nrel_atb_smr_advanced">ATB Small Reactor – Advanced</option>' in crt_iat_gui.HTML
+    assert '<option value="nrel_atb_smr_moderate">ATB Small Reactor – Moderate</option>' in crt_iat_gui.HTML
+    assert '<option value="nrel_atb_smr_conservative">ATB Small Reactor – Conservative</option>' in crt_iat_gui.HTML
+    assert 'const atbAllowed = $("workflow").value === "iat_only";' in crt_iat_gui.HTML
+
+
+def test_atb_base_case_uses_csv_and_hides_electric_output(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["workflow"] = "iat_only"
+    payload["iat"].update(
+        {
+            "input_mode": "csv",
+            "reactor_type": "ACCERT output-LR",
+            "baseline_case": "nrel_atb_large_advanced",
+            "countries": ["United States"],
+            "electric_output_mwe": 9999,
+        }
+    )
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+    result = crt_iat_gui.run_workflow(payload)
+    assert result["iat"]["country_results"][0]["data"]["input_occ_per_kw"] == pytest.approx(5250, abs=0.01)
+    assert "isAtbBaseline" in crt_iat_gui.HTML
+    assert 'baseline_case: $("iatBaseline").value' in crt_iat_gui.HTML
+
+
+def test_combined_us_baseline_chart_row_keeps_absolute_original_occ(monkeypatch, tmp_path):
+    payload = _gui_payload("")
+    payload["iat"]["countries"] = ["China"]
+    payload["iat"]["input_csv"] = "src/crt/data/AP1000_baseline.csv"
+    monkeypatch.setattr(crt_iat_gui, "OUTPUT_DIR", tmp_path)
+    result = crt_iat_gui.run_workflow(payload)
+    us_row = result["iat"]["comparison_chart"][0]
+    assert us_row["input_occ_per_kw"] == pytest.approx(result["iat"]["input_occ_per_kw"])
+    assert us_row["foreign_per_kw"] == 0
+    assert '"input_occ_per_kw": iat_summary["input_occ_per_kw"]' in inspect.getsource(crt_iat_gui._run_workflow_uncached)
+
+
 def test_advanced_crt_inputs_have_limits_and_preflight_validation():
     assert 'id="numOrders" type="number" min="2" step="1"' in crt_iat_gui.HTML
     assert 'id="itcPercent" type="number" min="0" max="100" step="1"' in crt_iat_gui.HTML
