@@ -1089,7 +1089,7 @@ HTML = r"""<!doctype html>
           <div id="occInputs" class="triple">
             <div><label for="occValue1">Scenario 1 ($/kWe)</label><input id="occValue1" type="number" value="5250"></div>
             <div><label for="occValue2">Scenario 2 ($/kWe)</label><input id="occValue2" type="number" value="5750"></div>
-            <div><label for="occValue3">Scenario 3 ($/kWe)</label><input id="occValue3" type="number" value="6250"></div>
+            <div><label for="occValue3">Scenario 3 ($/kWe)</label><input id="occValue3" type="number" value="7750"></div>
           </div>
         </div>
       </fieldset>
@@ -1225,6 +1225,12 @@ HTML = r"""<!doctype html>
       const values = [];
       for (let i = 1; i <= count; i++) values.push(numberValue(`occValue${i}`));
       return values;
+    }
+
+    function setStandaloneOccDefaults() {
+      if ($("workflow").value !== "iat_only" || $("iatInputMode").value !== "occ") return;
+      const values = $("iatReactorType").value === "SMR" ? [5500, 8000, 10000] : [5250, 5750, 7750];
+      values.forEach((value, index) => { $(`occValue${index + 1}`).value = String(value); });
     }
 
     function selectedCountries() {
@@ -2661,9 +2667,15 @@ HTML = r"""<!doctype html>
     }
 
     $("workflow").addEventListener("change", updatePanels);
-    $("iatInputMode").addEventListener("change", () => { updatePanels(); updateIatAssumptionCountryOptions(); loadIatFactorDefaults(); });
+    $("iatInputMode").addEventListener("change", () => {
+      setStandaloneOccDefaults();
+      updatePanels();
+      updateIatAssumptionCountryOptions();
+      loadIatFactorDefaults();
+    });
     $("countrySingle").addEventListener("change", () => { updateIatAssumptionCountryOptions(); loadIatFactorDefaults(); updateOutputName(); });
     $("iatReactorType").addEventListener("change", () => {
+      setStandaloneOccDefaults();
       syncCrtOptionsToIat();
       updateOutputName();
       const isCsvMode = $("iatInputMode").value === "csv" || $("workflow").value === "iat_crt";
@@ -2724,6 +2736,7 @@ HTML = r"""<!doctype html>
     $("runBtn").addEventListener("click", runWorkflow);
     $("resetBtn").addEventListener("click", () => location.reload());
     enhanceLabels();
+    setStandaloneOccDefaults();
     updatePanels();
     syncCrtOptionsToIat();
     updateIatAssumptionCountryOptions();

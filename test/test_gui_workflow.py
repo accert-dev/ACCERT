@@ -311,6 +311,14 @@ def test_iat_country_assumption_selector_is_separate_from_country_multi_select()
     assert 'return $("iatAssumptionCountry").value || selectedCountries()[0]' in crt_iat_gui.HTML
 
 
+def test_iat_standard_occ_defaults_match_atb_scenarios_by_reactor_type():
+    assert '<input id="occValue1" type="number" value="5250">' in crt_iat_gui.HTML
+    assert '<input id="occValue2" type="number" value="5750">' in crt_iat_gui.HTML
+    assert '<input id="occValue3" type="number" value="7750">' in crt_iat_gui.HTML
+    assert 'const values = $("iatReactorType").value === "SMR" ? [5500, 8000, 10000] : [5250, 5750, 7750];' in crt_iat_gui.HTML
+    assert 'if ($("workflow").value !== "iat_only" || $("iatInputMode").value !== "occ") return;' in crt_iat_gui.HTML
+
+
 def test_iat_comparison_charts_use_country_colors_and_local_foreign_hatching():
     assert "function countryComparisonChart(rows)" in crt_iat_gui.HTML
     assert 'aria-label="Adjusted OCC by country and scenario"' in crt_iat_gui.HTML
