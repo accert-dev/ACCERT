@@ -5,7 +5,7 @@ import pytest
 
 pytestmark = pytest.mark.core
 
-from iat import available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
+from iat import NREL_ATB_CASES, available_countries, level_account_summary, occ_cost_dataframe, occ_totals, run_adjustment, run_occ_scenarios
 from iat.data_loader import load_assumptions
 from crt import accert_output_to_crt_baseline
 from crt.io.excel_inputs import InputStore
@@ -76,6 +76,22 @@ def test_iat_united_states_reproduces_accert_baseline():
     assert adjusted["Adjusted Total Cost"].tolist() == pytest.approx(
         adjusted["Original Total Cost"].tolist()
     )
+
+
+def test_atb_cases_are_real_coa_baseline_files_and_us_occ_matches_value():
+    for case, metadata in NREL_ATB_CASES.items():
+        path = REPO_ROOT / "src" / "iat" / "data" / metadata["baseline_csv"]
+        assert path.exists(), case
+        result = run_adjustment(
+            {
+                "reactor_type": "ACCERT output-LR" if metadata["reactor_family"] == "LR" else "ACCERT output-SMR",
+                "country": "United States",
+                "year_dollar": 2025,
+                "input_csv": path,
+            }
+        )
+        assert result["input_occ"] == pytest.approx(metadata["occ_value"], abs=0.01)
+        assert result["adjusted_occ"] == pytest.approx(metadata["occ_value"], abs=0.01)
 
 
 def test_iat_factor_overrides_apply_to_one_run_without_changing_presets(tmp_path):
