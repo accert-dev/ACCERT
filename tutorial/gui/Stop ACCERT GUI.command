@@ -2,12 +2,9 @@
 set -e
 cd "$(dirname "$0")/../.."
 
-if [[ -x /opt/anaconda3/envs/py312/bin/python ]]; then
-  PYTHON=/opt/anaconda3/envs/py312/bin/python
-elif command -v python3.12 >/dev/null 2>&1; then
-  PYTHON=$(command -v python3.12)
-else
-  osascript -e 'display alert "ACCERT GUI could not stop" message "Python 3.12 was not found." as critical'
+source "$(dirname "$0")/find_compatible_python.zsh"
+if ! PYTHON=$(find_compatible_python); then
+  osascript -e 'display alert "ACCERT GUI could not stop" message "Python 3.10 or newer is required. Please install a compatible Python version." as critical'
   exit 1
 fi
 

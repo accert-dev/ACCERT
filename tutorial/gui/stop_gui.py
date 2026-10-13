@@ -8,7 +8,13 @@ import signal
 import subprocess
 import time
 
-from crt_iat_gui import HOST, PORT, pid_file, resolve_gui_port
+try:
+    from crt_iat_gui import HOST, PORT, pid_file, resolve_gui_port
+except ModuleNotFoundError as exc:
+    raise SystemExit(
+        f"ACCERT GUI dependencies are missing ({exc.name}). "
+        "Install the project dependencies from requirements.txt or pyproject.toml."
+    ) from exc
 
 
 def _command_for_pid(pid: int) -> str:

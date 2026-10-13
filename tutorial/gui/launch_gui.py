@@ -11,7 +11,13 @@ import time
 import webbrowser
 from pathlib import Path
 
-from crt_iat_gui import HOST, PORT, find_available_port, gui_url, is_gui_running, pid_file, resolve_gui_port
+try:
+    from crt_iat_gui import HOST, PORT, find_available_port, gui_url, is_gui_running, pid_file, resolve_gui_port
+except ModuleNotFoundError as exc:
+    raise SystemExit(
+        f"ACCERT GUI dependencies are missing ({exc.name}). "
+        "Install the project dependencies from requirements.txt or pyproject.toml."
+    ) from exc
 
 
 def _pid_command(pid: int) -> str:
@@ -57,8 +63,8 @@ def _stop_managed(port: int) -> bool:
 
 
 def main(argv: list[str] | None = None) -> int:
-    if sys.version_info < (3, 12):
-        print("ACCERT GUI requires Python 3.12 or newer. Use the provided macOS launcher or the py312 environment.")
+    if sys.version_info < (3, 10):
+        print("Python 3.10 or newer is required. Please install a compatible Python version.")
         return 2
     parser = argparse.ArgumentParser(description="Launch the local ACCERT GUI.")
     parser.add_argument("--port", type=int, default=None, help="Optional fixed listening port.")

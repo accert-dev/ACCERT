@@ -198,11 +198,10 @@ The IAT and Cost Reduction Framework Tool can also be run through the local GUI:
 
 .. code-block:: bash
 
-   cd ACCERT
-   python tutorial/gui/crt_iat_gui.py
+   python tutorial/gui/launch_gui.py
 
-Then open ``http://127.0.0.1:8765/`` in a browser. The GUI supports three
-workflows:
+The launcher starts the local server and opens the GUI in the default browser.
+The GUI supports three workflows:
 
 * ``IAT only`` applies international adjustment to either an ACCERT output CSV
   or standalone OCC values. In standalone mode, enter the scenario count and
