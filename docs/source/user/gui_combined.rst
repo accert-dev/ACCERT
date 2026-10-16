@@ -10,22 +10,32 @@ files in ``src/crt/data``.
 Start the GUI
 -------------
 
-Run the GUI from the ACCERT repository root:
+From the ACCERT repository root, run:
 
 .. code-block:: bash
 
-   cd ACCERT
-   python tutorial/gui/crt_iat_gui.py
+   python tutorial/gui/launch_gui.py
 
-Then open ``http://127.0.0.1:8765/`` in a browser.
+The Python entry point starts the local server and opens the GUI in the default
+browser automatically. Stop a foreground session with ``Ctrl-C`` or use
+``python tutorial/gui/stop_gui.py`` for a server recorded by the GUI.
 
 The combined IAT-to-CRT GUI workflow is shown in this walkthrough:
 
 .. image:: ../../../tutorial/gui/CRTwithIAT.gif
    :alt: Combined IAT-to-CRT GUI walkthrough
 
-Choose the Workflow
+Choose the workflow
 -------------------
+
+The left panel follows a three-step flow. The numbered steps are keyboard-accessible
+navigation buttons:
+
+* ``Select task and source`` chooses IAT only, CRT only, or IAT then CRT, plus the
+  source and output name.
+* ``Configure assumptions`` jumps to the relevant IAT and/or CRT inputs. Less
+  frequently changed factors are grouped in expandable advanced sections.
+* ``Run and review`` jumps to the run summary and results area.
 
 In the ``Workflow`` panel:
 
@@ -41,14 +51,15 @@ Set the IAT Inputs
 
 In the ``IAT Inputs`` panel:
 
-* Set ``Input type`` to ``ACCERT output``.
+* Set ``IAT source`` to ``Code of Account structure`` for an ACCERT account CSV, or
+  leave it as ``Standard OCC`` for standalone OCC scenarios.
 * Set ``Reactor type`` to ``Large Reactor`` for AP1000-style large-reactor
   COA inputs, or ``SMR`` for SMR-style inputs.
 * Set ``Country`` to the destination country, such as ``China``, ``Korea``,
   ``UAE``, ``Poland``, or ``El Salvador``.
 * ``Year dollar`` is shown as a fixed message. The GUI reports the workflow on
   the configured CPI-U target-dollar basis.
-* Set ``ACCERT CSV file`` to the input CSV path. This can be either a
+* Set ``IAT source file`` to the input CSV path. This can be either a
   CRT/IAT-ready baseline such as ``src/crt/data/AP1000_baseline.csv`` or a raw
   ACCERT updated-account CSV such as ``ap1000_upd_acc_*.csv``. When a raw
   ACCERT account CSV is selected, the GUI automatically converts it to the
@@ -68,12 +79,13 @@ In the ``CRT Fixed Inputs`` panel:
 * Set ``Reactor type`` to the CRT reactor baseline, such as ``AP1000``.
 * Leave ``Optional CRT baseline CSV`` blank for the combined workflow. The GUI
   automatically passes the IAT output CSV to CRT.
-* Set fixed project values such as ``f_22``, ``f_2321``, ``Land $/acre``,
-  ``Startup months``, ``Construction duration months``, ``20s labor hours``,
+* Set fixed project values such as ``Account 22``, ``Account 232.1``,
+  ``Land Cost ($k/acre)``, ``Startup months``, ``Construction duration (months)``,
+  ``Total labor hours (million)``,
   and ``Staggering ratio``.
 * ``Construction duration months`` defaults to ``76`` for AP1000, ``80`` for
-  SFR, and ``125`` for HTGR. ``20s labor hours`` is an integer input used when
-  converting a raw ACCERT account CSV into a CRT/IAT baseline.
+  SFR, and ``125`` for HTGR. ``Total labor hours`` is displayed in millions for
+  readability and converted back to full labor-hours before calculation.
 * Keep ``Include lever table in dashboard image`` unchecked for a compact
   dashboard image, or check it when you want the lever table included in the
   exported PNG.
@@ -101,7 +113,8 @@ expected input range.
 Run and Read the Results
 ------------------------
 
-Click ``Run workflow``. The result area will show:
+Click ``Run analysis``. While processing, the status area identifies the current
+stage. The result area will show:
 
 * A ``Base Case`` section at the top with the original baseline COA table and
   factory, material, and labor cost-category columns.
@@ -110,13 +123,16 @@ Click ``Run workflow``. The result area will show:
   category breakdowns for each displayed COA row.
 * A CRT result summary with FOAK, NOAK, average OCC, average TCI, construction
   duration, and reduction percentage metrics.
+* Prominent result cards before detailed charts and tables, including OCC, TCI,
+  $/kW, cost change, and construction duration where applicable.
 * A note explaining that the IAT value is the internationally adjusted WE-FOAK
   OCC baseline, while CRT recalculates FOAK OCC using the CRT fixed inputs and
   first-unit project effects.
 * Interactive plots for capital cost, reduction levers, construction duration,
   cost breakdown, a results-table tab, and the dashboard image.
 
-Hover over bars and chart points to see exact values. Use the result buttons to
+Hover over bars and chart points to see exact values. Empty-state text updates when
+the workflow changes, and errors are announced in the status area. Use the result buttons to
 download the generated IAT CSV, CRT results CSV, and CRT dashboard PNG.
 
 Generated Outputs

@@ -307,6 +307,6 @@ To use the local GUI for CRT, IAT, or the connected IAT-then-CRT workflow, run:
 
 .. code-block:: bash
 
-   python tutorial/gui/crt_iat_gui.py
+   python tutorial/gui/launch_gui.py
 
-Then open ``http://127.0.0.1:8765/`` in a browser.
+The launcher starts the local server and opens the GUI in the default browser.

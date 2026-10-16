@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 # src/crt/model/direct_cost.py
 # Direct-cost pipeline:
 #   add_factory_cost -> add_land_cost -> add_commercial_bop

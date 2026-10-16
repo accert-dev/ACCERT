@@ -16,6 +16,52 @@ from .data_loader import (
 )
 
 
+NREL_ATB_CASES: dict[str, dict[str, Any]] = {
+    "nrel_atb_large_advanced": {
+        "label": "NREL ATB · Large Reactor · Advanced",
+        "reactor_family": "LR",
+        "occ_value": 5250.0,
+        "distribution": "AP1000",
+        "baseline_csv": "atb_large_advanced.csv",
+    },
+    "nrel_atb_large_moderate": {
+        "label": "NREL ATB · Large Reactor · Moderate",
+        "reactor_family": "LR",
+        "occ_value": 5750.0,
+        "distribution": "AP1000",
+        "baseline_csv": "atb_large_moderate.csv",
+    },
+    "nrel_atb_large_conservative": {
+        "label": "NREL ATB · Large Reactor · Conservative",
+        "reactor_family": "LR",
+        "occ_value": 7750.0,
+        "distribution": "AP1000",
+        "baseline_csv": "atb_large_conservative.csv",
+    },
+    "nrel_atb_smr_advanced": {
+        "label": "NREL ATB · SMR · Advanced",
+        "reactor_family": "SMR",
+        "occ_value": 5500.0,
+        "distribution": "SMR",
+        "baseline_csv": "atb_small_advanced.csv",
+    },
+    "nrel_atb_smr_moderate": {
+        "label": "NREL ATB · SMR · Moderate",
+        "reactor_family": "SMR",
+        "occ_value": 8000.0,
+        "distribution": "SMR",
+        "baseline_csv": "atb_small_moderate.csv",
+    },
+    "nrel_atb_smr_conservative": {
+        "label": "NREL ATB · SMR · Conservative",
+        "reactor_family": "SMR",
+        "occ_value": 10000.0,
+        "distribution": "SMR",
+        "baseline_csv": "atb_small_conservative.csv",
+    },
+}
+
+
 ADJUSTED_COLUMNS = {
     "equipment": "Adjusted Factory Equipment Cost",
     "material": "Adjusted Site Material Cost",
@@ -82,6 +128,7 @@ def run_adjustment(config: dict[str, Any]) -> dict[str, Any]:
         country=country,
         reactor_type=reactor_type,
         assumptions=assumptions,
+        factor_overrides=config.get("adjustment_factor_overrides"),
     )
 
     output_csv = config.get("output_csv")
@@ -227,6 +274,7 @@ def adjust_cost_dataframe(
     country: str,
     reactor_type: str,
     assumptions: dict[str, Any] | None = None,
+    factor_overrides: dict[str, float] | None = None,
 ) -> pd.DataFrame:
     """Apply IAT localization and country adjustment factors to a COA dataframe."""
     assumptions = load_assumptions() if assumptions is None else assumptions
@@ -238,7 +286,12 @@ def adjust_cost_dataframe(
         )
 
     records = assumptions["families"][family]
-    factors = assumptions["adjustment_factors"][country]
+    factors = dict(assumptions["adjustment_factors"][country])
+    if factor_overrides:
+        for category, value in factor_overrides.items():
+            if category not in factors:
+                raise ValueError(f"Unsupported IAT adjustment factor: {category}")
+            factors[category] = float(value)
 
     out = df.copy()
     out["Account"] = out["Account"].map(normalize_account)

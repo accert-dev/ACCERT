@@ -19,6 +19,10 @@ STANDARD_COST_COLUMNS = [
 ]
 
 COUNTRY_ALIASES = {
+    "united states": "United States",
+    "united states of america": "United States",
+    "usa": "United States",
+    "us": "United States",
     "korea": "Korea",
     "kor": "Korea",
     "south korea": "Korea",
@@ -31,6 +35,12 @@ COUNTRY_ALIASES = {
     "el salvador": "El Salvador",
     "elsalvador": "El Salvador",
     "slv": "El Salvador",
+    "thailand": "Thailand",
+    "tha": "Thailand",
+    "vietnam": "Vietnam",
+    "vnm": "Vietnam",
+    "indonesia": "Indonesia",
+    "idn": "Indonesia",
 }
 
 _DATA_DIR = Path(__file__).resolve().parent / "data"

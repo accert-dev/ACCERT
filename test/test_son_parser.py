@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+import pytest
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -9,6 +10,8 @@ sys.path.insert(0, str(SRC_PATH))
 import xml2obj
 from Main import Accert
 from son_parser import son_to_xml
+
+pytestmark = pytest.mark.core
 
 
 def test_fallback_son_parser_matches_accert_object_shape():

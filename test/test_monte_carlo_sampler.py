@@ -2,6 +2,7 @@ import os
 import sys
 
 import numpy as np
+import pytest
 
 # Add the root folder to the system paths so python can resolve the project imports
 # TODO: Add src folder to path
@@ -9,6 +10,8 @@ import numpy as np
 src_path = os.path.abspath(os.path.join(os.pardir, 'src'))
 sys.path.insert(0, src_path)
 from necost import generate_monte_carlo_samples
+
+pytestmark = pytest.mark.core
 
 
 def test_generate_monte_carlo_samples__sampling_level(input_params_data):

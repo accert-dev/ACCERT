@@ -1,9 +1,12 @@
 import csv
+import inspect
 import pickle
 from pathlib import Path
 
 import pandas as pd
 import pytest
+
+pytestmark = pytest.mark.core
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,6 +25,7 @@ from crt.api import normalize_levers
 from crt.io.excel_inputs import InputStore
 from crt.model.schedule import build_schedule_timeline
 from crt.sampling.lever_schema import EXCEL_NAME_TO_ID_ORDERED
+from crt.visualization import _plot_lever_table, plot_dashboard
 
 
 def _config():
@@ -85,9 +89,9 @@ def _lever_workbook(path):
 
 
 def test_normalize_levers_converts_external_inputs_to_model_values():
-    normalized = normalize_levers(_levers(num_NOAK=5))
+    normalized = normalize_levers(_levers(num_orders=5, num_NOAK=5))
 
-    assert normalized["num_orders"] == 2
+    assert normalized["num_orders"] == 5
     assert normalized["num_NOAK"] == 5
     assert normalized["ITC_0"] == pytest.approx(0.30)
     assert normalized["interest_rate_0"] == pytest.approx(0.06)
@@ -96,6 +100,110 @@ def test_normalize_levers_converts_external_inputs_to_model_values():
     assert normalized["mod_0"] == "modularized"
     assert normalized["BOP_grade_0"] == "non_nuclear"
     assert normalized["RB_grade_0"] == "nuclear"
+
+
+def test_zero_itc_is_preserved_and_does_not_create_itc_outputs():
+    result = run_one_scenario(_config(), _levers(itc_percent=0, n_itc=0))
+
+    assert result["ITC"] == 0
+    assert result["n_ITC"] == 0
+    assert "NETOCC_1" not in result
+    assert "NCI_1" not in result
+
+
+def test_itc_changes_only_itc_adjusted_metrics_for_supported_units():
+    credited = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=40, n_itc=4)
+    )
+
+    assert credited["ITC"] == 40
+    assert credited["n_ITC"] == 4
+    baseline = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0)
+    )
+    assert credited["OCC_1"] == pytest.approx(baseline["OCC_1"])
+    assert credited["TCI_1"] == pytest.approx(baseline["TCI_1"])
+    assert credited["NETOCC_1"] < credited["OCC_1"]
+    assert credited["NCI_1"] < credited["TCI_1"]
+    assert credited["NETOCC_4"] < credited["OCC_4"]
+    assert credited["NCI_4"] < credited["TCI_4"]
+    assert "NETOCC_5" not in credited
+    assert "NCI_5" not in credited
+
+
+def test_crt_rejects_more_itc_units_than_firm_orders():
+    with pytest.raises(ValueError, match="n_itc.*num_orders"):
+        run_one_scenario(_config(), _levers(num_orders=2, n_itc=3))
+
+
+def test_crt_rejects_invalid_noak_and_factory_allocations():
+    with pytest.raises(ValueError, match="num_NOAK.*num_orders"):
+        run_one_scenario(_config(), _levers(num_orders=2, num_NOAK=3))
+    with pytest.raises(ValueError, match="f_22.*nonnegative"):
+        run_one_scenario({**_config(), "f_22": -1}, _levers())
+
+
+@pytest.mark.parametrize(
+    "lever, changed, output_key",
+    [
+        ("num_orders", {"num_orders": 2, "num_NOAK": 2}, "avg_OCC"),
+        ("num_NOAK", {"num_NOAK": 2}, "occ_reduction_from_FOAK_to_NOAK_percent"),
+        ("design_completion_percent", {"design_completion_percent": 100}, "avg_OCC"),
+        ("design_maturity", {"design_maturity": 2}, "avg_OCC"),
+        ("proc_exp", {"proc_exp": 2}, "avg_OCC"),
+        ("N_proc", {"N_proc": 5}, "avg_OCC"),
+        ("ce_exp", {"ce_exp": 2}, "avg_OCC"),
+        ("N_cons", {"N_cons": 2}, "avg_OCC"),
+        ("ae_exp", {"ae_exp": 2}, "avg_OCC"),
+        ("N_AE", {"N_AE": 2}, "avg_OCC"),
+        ("standardization_percent", {"standardization_percent": 100}, "avg_OCC"),
+        ("rb_grade_code", {"rb_grade_code": 1}, "avg_OCC"),
+    ],
+)
+def test_major_crt_levers_reach_calculation_and_change_expected_output(lever, changed, output_key):
+    baseline_levers = _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0)
+    changed_levers = dict(baseline_levers)
+    changed_levers.update(changed)
+
+    baseline = run_one_scenario(_config(), baseline_levers)
+    result = run_one_scenario(_config(), changed_levers)
+
+    assert result[output_key] != pytest.approx(baseline[output_key])
+
+
+def test_ap1000_modularity_and_commercial_bop_are_documented_no_effects():
+    baseline = run_one_scenario(_config(), _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0))
+    modular = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0, modularity_code=1)
+    )
+    bop = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=0, n_itc=0, bop_grade_code=1)
+    )
+
+    assert modular["avg_OCC"] == pytest.approx(baseline["avg_OCC"])
+    assert bop["avg_OCC"] == pytest.approx(baseline["avg_OCC"])
+
+
+def test_itc_plot_and_display_dataframe_use_returned_itc_results():
+    result = run_one_scenario(
+        _config(), _levers(num_orders=5, num_NOAK=5, itc_percent=40, n_itc=4)
+    )
+    frame = results_to_dataframe(result)
+
+    assert frame.loc[0, "Net OCC"] == pytest.approx(result["NETOCC_1"])
+    assert frame.loc[3, "NCI"] == pytest.approx(result["NCI_4"])
+
+
+@pytest.mark.parametrize("itc_percent", [30, 40])
+def test_supported_itc_levels_reduce_itc_adjusted_costs(itc_percent):
+    result = run_one_scenario(
+        _config(),
+        _levers(num_orders=5, num_NOAK=5, itc_percent=itc_percent, n_itc=1),
+    )
+
+    assert result["ITC"] == itc_percent
+    assert result["NETOCC_1"] < result["OCC_1"]
+    assert result["NCI_1"] < result["TCI_1"]
 
 
 def test_run_one_scenario_returns_static_inputs_and_unit_results():
@@ -258,6 +366,23 @@ def test_visualization_helpers_create_dashboard(tmp_path):
     assert out_png.stat().st_size > 0
     assert compact_png.exists()
     assert compact_png.stat().st_size > 0
+
+
+def test_dashboard_capital_cost_uses_solid_and_hatched_net_cost_bars():
+    source = inspect.getsource(plot_dashboard)
+    assert 'tci_itc = (df["TCI"].astype(float) - tci_net).clip(lower=0)' in source
+    assert 'occ_itc = (df["OCC"].astype(float) - occ_net).clip(lower=0)' in source
+    assert 'hatch="///"' in source
+    assert 'ax.plot(x + 0.18' not in source
+    assert 'ax.plot(x - 0.18' not in source
+    assert "plant_axis.set_xticks(x)" in source
+
+
+def test_dashboard_lever_table_wraps_content_and_uses_clear_title():
+    source = inspect.getsource(_plot_lever_table)
+    assert "CRT Lever Settings" in source
+    assert "wrap" in source
+    assert "cell.set_height" in source
 
 
 def test_run_sampling_from_excel_writes_csv_and_pickle_outputs(tmp_path):

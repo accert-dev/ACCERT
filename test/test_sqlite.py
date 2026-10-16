@@ -1,5 +1,9 @@
 """Smoke tests for the bundled ACCERT SQLite database."""
 
+import pytest
+
+pytestmark = pytest.mark.core
+
 
 def _sqlite_tables(cursor):
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")

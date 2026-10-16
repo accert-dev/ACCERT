@@ -1,6 +1,7 @@
 """International Adjustment Tool API."""
 
 from .api import (
+    NREL_ATB_CASES,
     account_group_comparison,
     adjust_cost_dataframe,
     available_countries,
@@ -14,6 +15,7 @@ from .api import (
 )
 
 __all__ = [
+    "NREL_ATB_CASES",
     "account_group_comparison",
     "adjust_cost_dataframe",
     "available_countries",

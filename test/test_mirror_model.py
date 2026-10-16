@@ -4,6 +4,8 @@ from types import SimpleNamespace
 
 import pytest
 
+pytestmark = pytest.mark.core
+
 from Main import Accert
 from Algorithm.MirrorFunc import MirrorFunc
 
