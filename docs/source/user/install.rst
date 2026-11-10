@@ -36,7 +36,7 @@ local GUI:
 
 .. code-block:: shell
 
-   $ python -m pip install -r requirements-gui.txt
+   $ python -m pip install -r requirements.txt
 
 Start the GUI from the repository root with:
 
@@ -51,12 +51,7 @@ environment or separate launcher is required.
 Developer and Workbench setup
 -----------------------------
 
-Developers who need to run the test suite can install the additional test
-dependency with:
-
-.. code-block:: shell
-
-   $ python -m pip install -r requirements-dev.txt
+The same requirements file includes the dependencies used by the test suite.
 
 NEAMS Workbench is optional for the Python application and GUI. Install it
 only when using the Workbench interface or Workbench-specific SON validation

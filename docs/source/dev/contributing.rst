@@ -39,7 +39,7 @@ Getting Started
 
     python3 -m venv venv
     source venv/bin/activate  # On Windows use: venv\Scripts\activate
-    python -m pip install -r requirements-dev.txt
+    python -m pip install -r requirements.txt
 
 5. **Run Tests**:
 

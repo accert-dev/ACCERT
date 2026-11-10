@@ -17,21 +17,16 @@ The project metadata supports Python 3.10 and newer. The application and test
 suite have been tested with Python 3.12. If you encounter compatibility
 issues, check your Python version.
 
-For the local GUI, install the runtime dependencies from the repository root:
+To use the local GUI, install the project dependencies from the repository root:
 
 ```bash
-python -m pip install -r requirements-gui.txt
+python -m pip install -r requirements.txt
 ```
 
-Developers who will run the test suite can install the additional test
-dependency with:
-
-```bash
-python -m pip install -r requirements-dev.txt
-```
-
-Conda is not required by the project. NEAMS Workbench is only needed for
-Workbench-specific workflows, not for the Python GUI.
+This single requirements file includes the GUI runtime and test dependencies;
+no separate GUI or development requirements file is needed. Conda is not
+required by the project. NEAMS Workbench is only needed for Workbench-specific
+workflows, not for the Python GUI.
 
 ## Start the GUI
 

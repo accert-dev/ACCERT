@@ -14,7 +14,7 @@ Install the GUI dependencies from the repository root if needed:
 
 .. code-block:: bash
 
-   python -m pip install -r requirements-gui.txt
+   python -m pip install -r requirements.txt
 
 From the ACCERT repository root, run:
 
