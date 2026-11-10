@@ -1,15 +1,19 @@
 Installation Guide
 ==================
 
-This guide describes how to install ACCERT on Windows, macOS, and Linux.
+This guide describes how to install ACCERT and its local Python GUI.
 ACCERT uses the bundled SQLite database at ``src/accertdb.sqlite``.
 
 Prerequisites
 -------------
 
 - **Git**: Install from `Git Downloads <https://git-scm.com/downloads>`_ if needed.
-- **Python**: Python 3.9 or newer is recommended.
-- **NEAMS Workbench**: Optional for command-line Python runs; required for the Workbench interface and full SON schema validation tools.
+- **Python**: Python 3.10 or newer is required. The project has been tested
+  with Python 3.12.
+
+The Python GUI is tested on macOS. The underlying Python application may also
+run on other platforms, but a platform-specific GUI launcher has not been
+separately tested.
 
 Clone ACCERT
 ------------
@@ -24,8 +28,34 @@ Clone ACCERT
       $ git clone https://github.com/accert-dev/ACCERT.git
       $ cd ACCERT
 
-Optional: Install NEAMS Workbench
----------------------------------
+Install the Python GUI dependencies
+-----------------------------------
+
+From the repository root, install the dependencies used by the application and
+local GUI:
+
+.. code-block:: shell
+
+   $ python -m pip install -r requirements.txt
+
+Start the GUI from the repository root with:
+
+.. code-block:: shell
+
+   $ python tutorial/gui/launch_gui.py
+
+The command starts the local server and opens the GUI in the default browser.
+The Python entry point is the supported GUI startup path; no Conda
+environment or separate launcher is required.
+
+Developer and Workbench setup
+-----------------------------
+
+The same requirements file includes the dependencies used by the test suite.
+
+NEAMS Workbench is optional for the Python application and GUI. Install it
+only when using the Workbench interface or Workbench-specific SON validation
+tools:
 
 Download NEAMS Workbench from
 `NEAMS Workbench Downloads <https://code.ornl.gov/neams-workbench/downloads>`_.
@@ -34,8 +64,8 @@ Download NEAMS Workbench from
 - macOS: download and open the ``.dmg`` installer.
 - Linux: download and extract the ``.tar.gz`` package, then follow the bundled instructions.
 
-Launch Workbench once before running the ACCERT setup script if you plan to use
-the Workbench interface or Workbench's SON validation executable.
+Launch Workbench once before using the Workbench interface or Workbench's SON
+validation executable.
 
 Configure Workbench Path
 ------------------------
@@ -54,8 +84,8 @@ installation. Examples:
    # Linux
    workbench_path="/path/to/Workbench-5.3.1"
 
-Run Setup
----------
+Legacy Workbench setup
+~~~~~~~~~~~~~~~~~~~~~~
 
 From the ``src`` directory, run:
 
@@ -65,7 +95,7 @@ From the ``src`` directory, run:
    $ chmod +x setup_accert.sh
    $ ./setup_accert.sh
 
-The setup script installs Python requirements, refreshes
+The setup script installs the full legacy requirements, refreshes
 ``src/accertdb.sqlite`` from ``src/accertdb_sqlite_schema_data.sql``, copies the
 Workbench integration file when Workbench is available, and creates the local
 ``bin/sonvalidxml`` link when the Workbench executable can be found.
@@ -109,18 +139,29 @@ To use a different database file for a run, set ``ACCERT_SQLITE_DB``:
 Testing the Installation
 ------------------------
 
-Run the test suite from the repository root:
+For a quick default test run from the repository root:
 
 .. code-block:: shell
 
-   $ pytest test
+   $ python -m pytest
+
+For GUI tests:
+
+.. code-block:: shell
+
+   $ python -m pytest -m gui
+
+For every collected test, including GUI and slow regression tests:
+
+.. code-block:: shell
+
+   $ python -m pytest -o addopts=""
 
 Troubleshooting
 ---------------
 
-- If setup cannot find Workbench, check the ``workbench_path`` value in
-  ``src/workbench.sh``. Command-line ACCERT runs can still use the built-in SON
-  parser.
+- Command-line ACCERT runs can use the built-in SON parser when Workbench is
+  not installed.
 - If ``sonvalidxml`` is missing, verify that Workbench has a ``bin`` directory
   and rerun ``src/setup_accert.sh``. You can also set ``ACCERT_SONVALIDXML`` to
   a WASP-built ``sonvalidxml`` executable.

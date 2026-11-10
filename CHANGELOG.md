@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-11-05
+
+### Added
+- Six NREL Annual Technology Baseline Code of Account scenarios for large reactors and SMRs.
+- Editable per-run IAT adjustment factors and country support for Thailand, Vietnam, and Indonesia.
+- Validated scenario caching and managed local GUI startup, reuse, health reporting, and shutdown.
+
+### Changed
+- Redesigned the IAT/CRT GUI with clearer workflow navigation, preflight validation, result summaries, charts, tables, and responsive behavior.
+- Synchronized reactor settings across IAT and CRT and expanded CRT sensitivity and workflow validation coverage.
+- Updated installation and GUI documentation for Python 3.10 and newer.
+
+### Fixed
+- Preserved the United States IAT baseline and corrected country-comparison behavior.
+- Corrected zero-ITC handling, CRT input constraints, capital-cost charts, dashboard exports, and local GUI lifecycle behavior.
+
 ## [2.0.0] - 2026-09-14
 
 ### Added

@@ -26,6 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import argparse
+import os
 import shutil
 import sys
 
@@ -42,10 +43,7 @@ from necostmain import run_necost
 
 
 OUTPUT_DIR = Path(__file__).with_name("outputs") / "ap1000_report_scenarios"
-DEFAULT_IAT_WORKBOOK = Path(
-    "/Users/jia.zhou/Library/CloudStorage/Box-Box/EMANES6-FY26/"
-    "International Adjustments/IAT-v4.5.xlsx"
-)
+DEFAULT_IAT_WORKBOOK = REPO_ROOT / "tutorial" / "iat" / "IAT-v4.5.xlsx"
 SAMPLE_SIZE = 1000
 OM_TARGET_US_BASELINE = 18.81
 OM_FIXED_NOMINAL = 1.9
@@ -143,6 +141,14 @@ def build_scenarios(iat_workbook: Path) -> list[Scenario]:
             description="U.S. cost structure with fast-learning CRT endpoint; U.S. base O&M retained.",
         ),
     ]
+
+
+def default_iat_workbook() -> Path | None:
+    """Return an explicit or repository-local workbook, if one is available."""
+    configured = os.environ.get("ACCERT_IAT_WORKBOOK")
+    if configured:
+        return Path(configured).expanduser()
+    return DEFAULT_IAT_WORKBOOK if DEFAULT_IAT_WORKBOOK.exists() else None
 
 
 SON_TEMPLATE = """necost {{
@@ -253,9 +259,16 @@ def summarize(results: pd.DataFrame, scenario: Scenario) -> dict[str, float | st
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run AP1000 NE-COST scenarios for International Nuclear Cost Comparison Using an Integrated ACCERT Framework.")
-    parser.add_argument("--iat-workbook", type=Path, default=DEFAULT_IAT_WORKBOOK, help="IAT workbook used for localization factors.")
+    parser.add_argument(
+        "--iat-workbook",
+        type=Path,
+        default=default_iat_workbook(),
+        help="IAT workbook used for localization factors (or set ACCERT_IAT_WORKBOOK).",
+    )
     args = parser.parse_args()
 
+    if args.iat_workbook is None:
+        parser.error("Provide --iat-workbook or set ACCERT_IAT_WORKBOOK to an IAT workbook path.")
     if OUTPUT_DIR.exists():
         shutil.rmtree(OUTPUT_DIR)
     OUTPUT_DIR.mkdir(parents=True)

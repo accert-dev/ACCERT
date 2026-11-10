@@ -6,6 +6,8 @@ sys.path.insert(0, src_path)
 from utility_accert import Utility_methods 
 import pytest
 
+pytestmark = pytest.mark.core
+
 
 ut = Utility_methods()
 ut.acc_tabl = 'account'

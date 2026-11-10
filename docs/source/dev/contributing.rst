@@ -39,7 +39,7 @@ Getting Started
 
     python3 -m venv venv
     source venv/bin/activate  # On Windows use: venv\Scripts\activate
-    pip install -r requirements.txt
+    python -m pip install -r requirements.txt
 
 5. **Run Tests**:
 
@@ -47,7 +47,7 @@ Getting Started
 
 .. code-block:: console
 
-    pytest
+    python -m pytest
 
 
 Reporting Bugs
@@ -108,7 +108,7 @@ If you'd like to contribute code, follow these steps:
      
 .. code-block:: console
 
-    pytest
+    python -m pytest
 
 
 5. **Commit Your Changes**:

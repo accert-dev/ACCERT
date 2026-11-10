@@ -1,6 +1,8 @@
 from pathlib import Path
 import pandas as pd
 
+from ..reactor_config import reactor_power_mwe
+
 COLS = [
   "Account", "Title", "Total Cost (USD)",
   "Factory Equipment Cost", "Site Labor Hours",
@@ -45,13 +47,13 @@ class InputStore:
             return df.copy(), power
         if reactor_type == "HTGR":
             path = self.data_dir / "HTGR_baseline.csv"
-            power = 1056 * 1000
+            power = reactor_power_mwe(reactor_type) * 1000
         elif reactor_type == "SFR":
             path = self.data_dir / "SFR_baseline.csv"
-            power = 310.8 * 1000
+            power = reactor_power_mwe(reactor_type) * 1000
         elif reactor_type == "AP1000":
             path = self.data_dir / "AP1000_baseline.csv"
-            power = 2234 * 1000
+            power = reactor_power_mwe(reactor_type) * 1000
         else:
             raise ValueError(f"Unknown reactor_type: {reactor_type}")
         if self.baseline_csv is not None:
