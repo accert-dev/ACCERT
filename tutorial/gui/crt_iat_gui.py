@@ -1,12 +1,12 @@
 """Local GUI for IAT, CRT, and connected IAT-to-CRT workflows.
 
-Run from the repository root with:
+Start from the repository root with the supported entry point:
 
-    python tutorial/gui/crt_iat_gui.py
+    python tutorial/gui/launch_gui.py
 
-Then open:
-
-    http://127.0.0.1:8765
+The entry point starts the local server and opens the GUI in the default
+browser. This module contains the server implementation and is not the
+documented startup command.
 """
 
 from __future__ import annotations

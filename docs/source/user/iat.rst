@@ -200,7 +200,8 @@ The IAT and Cost Reduction Framework Tool can also be run through the local GUI:
 
    python tutorial/gui/launch_gui.py
 
-The launcher starts the local server and opens the GUI in the default browser.
+The Python entry point starts the local server and opens the GUI in the default
+browser.
 The GUI supports three workflows:
 
 * ``IAT only`` applies international adjustment to either an ACCERT output CSV

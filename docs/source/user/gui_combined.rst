@@ -10,6 +10,12 @@ files in ``src/crt/data``.
 Start the GUI
 -------------
 
+Install the GUI dependencies from the repository root if needed:
+
+.. code-block:: bash
+
+   python -m pip install -r requirements-gui.txt
+
 From the ACCERT repository root, run:
 
 .. code-block:: bash
@@ -17,7 +23,9 @@ From the ACCERT repository root, run:
    python tutorial/gui/launch_gui.py
 
 The Python entry point starts the local server and opens the GUI in the default
-browser automatically. Stop a foreground session with ``Ctrl-C`` or use
+browser automatically. It is the supported GUI startup path on macOS; Windows
+and Linux launchers have not been separately tested. Stop a foreground session
+with ``Ctrl-C`` or use
 ``python tutorial/gui/stop_gui.py`` for a server recorded by the GUI.
 
 The combined IAT-to-CRT GUI workflow is shown in this walkthrough:

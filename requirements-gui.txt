@@ -1,0 +1,9 @@
+# Runtime dependencies for the ACCERT Python application and local GUI.
+configparser
+matplotlib
+numpy>=1.26,<2.0
+openpyxl
+pandas
+pandoc
+prettytable==3.4.0
+scipy

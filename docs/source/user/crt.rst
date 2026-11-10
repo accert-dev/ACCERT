@@ -309,4 +309,5 @@ To use the local GUI for CRT, IAT, or the connected IAT-then-CRT workflow, run:
 
    python tutorial/gui/launch_gui.py
 
-The launcher starts the local server and opens the GUI in the default browser.
+The Python entry point starts the local server and opens the GUI in the default
+browser.
